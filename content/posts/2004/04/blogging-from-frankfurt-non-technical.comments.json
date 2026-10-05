@@ -1,0 +1,20 @@
+[
+  {
+    "id": 41,
+    "parent": 0,
+    "author_name": "sangmin",
+    "author_url": "http://",
+    "date": "2004-04-20T15:32:00",
+    "type": "comment",
+    "content_html": "<p>Good for you, Jef!</p>"
+  },
+  {
+    "id": 42,
+    "parent": 0,
+    "author_name": "Steve Smith",
+    "author_url": "http://",
+    "date": "2004-04-28T07:18:00",
+    "type": "comment",
+    "content_html": "<p>Glad you’re back ok, Jeff.  I just found out Monday I’m heading out for a year myself, leaving for Ft. Leonard Wood on May 22.  Send me an email some time – I’d love to hit you up for any tips you can share.</p>"
+  }
+]

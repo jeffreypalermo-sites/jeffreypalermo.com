@@ -1,0 +1,28 @@
+---
+wp_id: 500
+title: 'Linq to Entities:  Microsoft’s first go at O/R Mapping (they need our feedback now!) – level 300'
+slug: linq-to-entities-microsofts-first-go-at-or-mapping-they-need-our-feedback-now-level-300
+permalink: /2007/03/linq-to-entities-microsofts-first-go-at-or-mapping-they-need-our-feedback-now-level-300/
+date: 2007-03-15T05:40:00
+date_utc: 2007-03-15T05:40:00Z
+modified: 2007-03-15T05:40:00
+format: html
+excerpt: "First, none of this is NDA. Others discussing it are Ayende and Sam. Here's a quick rundown of how you would get Linq to entities working: Create the metadata file using the wizard. Select some database tables to map to objects. Wait for the designer to generate the mapping meta data. Wait for the designer […]"
+comments_open: true
+---
+<p>First, none of this is NDA.&nbsp; Others discussing it are <a href="http://ayende.com/Blog/archive/2007/03/15/Entity-Framework-without-Persistance-Ignorance.aspx">Ayende</a> and <a href="/blogs/sam.gentile/archive/2007/03/14/ADO.NET-3-_2D00_-Entity-Framework-without-Persistance-Ignorance.aspx">Sam</a>.&nbsp;&nbsp; Here's a quick rundown of how you would get Linq to entities working:</p>
+<ul>
+<li>Create the metadata file using the wizard.</li>
+<li>Select some database tables to map to objects.</li>
+<ul>
+<li>Wait for the designer to generate the mapping meta data.</li>
+<li>Wait for the designer to generate some partial classes that might serve as entity objects.</li>
+</ul>
+<li>Add code to these new classes to do interesting things within your domain.</li>
+<li>Using Linq queries to work with these objects and watch the SQL be generated and sent to the database.</li>
+</ul>
+<p>This sounds easy&nbsp; when you remember that the designer is generating all the ugly goo that _has_ to be there.&nbsp; First, the classes must inherit from the mapping base class.&nbsp; They are working on a way to make it implement an interface instead.&nbsp; This is a non-starter first of all because it would require the domain assembly to carry around a reference to a data access dependency.&nbsp; Next, for dirty-tracking, each property mutator must raise an event to let the framework know that a property changed.&nbsp; Every property.&nbsp; Let me repeat:&nbsp; Every property setter must raise an event for dirty tracking to work.&nbsp; This is another non-starter.&nbsp; The team plans to have all this generated for you in partial classes.&nbsp; </p>
+<p>I have email addresses for several people on the team, and I'll be letting them know what is so compelling about NHibernate and why the above issues have to be resolved before RTM and not after.</p>
+<p>In some cases, you don't care if the classes are data-transfer objects instead of domain objects.&nbsp; In that case, use Linq to SQL, not Linq for Entities.&nbsp; With Linq to SQL, you can use DTOs all over the place and work with the data pretty easily.&nbsp; Heck, you could even use Linq to SQL to create your own data layer for hydrating your domain objects manually from the DTOs you decorate with the Linq to SQL attributes.</p>
+<p>Linq to Entities is a different animal and is meant to persist domain objects.&nbsp; Domain objects ARE the most important part of the application.&nbsp; The domain defines the business problem scope.&nbsp; Persisting to a data store is secondary to the domain model's structure and behavior.&nbsp; </p>
+<p>I want Linq to Entities to succeed.&nbsp; I want frameworks and tools to continually get better; therefore, I will be communicating with the product team to voice my strong concerns over the current direction.</p>

@@ -1,0 +1,38 @@
+[
+  {
+    "id": 32,
+    "parent": 0,
+    "author_name": "Andrew",
+    "author_url": "http://",
+    "date": "2004-04-18T01:36:00",
+    "type": "comment",
+    "content_html": "<p>I found this tool to be very useful, since I can run it on IIS, and access a Sql Server database from any machine (with IE) without having to install any Sql Client tools.</p>\n<p>BTW, Cassini is included with the download already.</p>"
+  },
+  {
+    "id": 33,
+    "parent": 0,
+    "author_name": "muffDaddy",
+    "author_url": "http://",
+    "date": "2004-07-10T18:24:00",
+    "type": "comment",
+    "content_html": "<p>I like the tool as well but I seem to have a hard time figuring out the login </p>"
+  },
+  {
+    "id": 34,
+    "parent": 0,
+    "author_name": "Ellen",
+    "author_url": "http://",
+    "date": "2004-08-06T11:50:00",
+    "type": "comment",
+    "content_html": "<p>How do I find out the login information?</p>"
+  },
+  {
+    "id": 35,
+    "parent": 0,
+    "author_name": "Uday",
+    "author_url": "http://",
+    "date": "2005-03-03T01:49:00",
+    "type": "comment",
+    "content_html": "<p>GUI MSDE</p>"
+  }
+]

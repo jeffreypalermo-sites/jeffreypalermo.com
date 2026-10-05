@@ -1,0 +1,47 @@
+[
+  {
+    "id": 600,
+    "parent": 0,
+    "author_name": "Jim L",
+    "author_url": "http://",
+    "date": "2005-12-01T15:02:04",
+    "type": "comment",
+    "content_html": "<p>I can’t agree more about he usefulness of IETab and IEView. The webdeveloper ext simply rocks! </p>\n<p>I also cannot live without “Resizable TextArea” and “Colorzilla”. The do come in handy \uD83D\uDE42</p>\n<p>Thanks for your post. I am checking out FoxIE now \uD83D\uDE00</p>"
+  },
+  {
+    "id": 601,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://flimflan.com/blog",
+    "date": "2005-12-01T17:48:10",
+    "type": "comment",
+    "content_html": "<p>I’ve switched back to IE now that the 7beta is available (to MSDN subscribers). It brings IE back to feature parity with Firefox (sans extensions), and restores the 100% compatibility with the web I browse (note the qualification) that Firefox still lacks.</p>\n<p>However, when doing development, Firefox with the Web Developer extension has no peer.</p>"
+  },
+  {
+    "id": 602,
+    "parent": 0,
+    "author_name": "FoxIE Narc",
+    "author_url": "http://",
+    "date": "2005-12-09T02:35:28",
+    "type": "comment",
+    "content_html": "<p>I would think twice before touting the greatness of an application that not only rips off the likeness of FireFox, but uses illegally reverse-engineered code to provide its add-ons.</p>\n<p>Read more, and pass it on. Boycott FoxIE!!</p>\n<p>FoxIE rips off CC Cleaner blatantly:<br>\n<a href=\"http://forum.ccleaner.com/index.php?showtopic=2272\" rel=\"nofollow ugc\">http://forum.ccleaner.com/index.php?showtopic=2272</a></p>\n<p>I had it removed from download.com:<br>\n<a href=\"http://www.download.com/Foxie-Privacy-Security-Productivity-Suite/\" rel=\"nofollow ugc\">http://www.download.com/Foxie-Privacy-Security-Productivity-Suite/</a></p>\n<p>Note the comments still exist:<br>\n<a href=\"http://www.download.com/Foxie-Privacy-Security-Productivity-Suite/3640-2144_4-10453026.html\" rel=\"nofollow ugc\">http://www.download.com/Foxie-Privacy-Security-Productivity-Suite/3640-2144_4-10453026.html</a></p>"
+  },
+  {
+    "id": 603,
+    "parent": 0,
+    "author_name": "JarC",
+    "author_url": "http://",
+    "date": "2005-12-24T15:50:19",
+    "type": "comment",
+    "content_html": "<p>FoxIE Narc should get his facts straight, the links referred to deal with a tool called Foxie Cleaner, which has nothing to do with the IE toolbar add-on FoxIE</p>"
+  },
+  {
+    "id": 604,
+    "parent": 0,
+    "author_name": "JarC",
+    "author_url": "http://",
+    "date": "2005-12-24T15:52:21",
+    "type": "comment",
+    "content_html": "<p>oops, get my own facts straight, its just a small part of the toolbar…wel in that case it ain’t a rip just a lookalike…</p>"
+  }
+]

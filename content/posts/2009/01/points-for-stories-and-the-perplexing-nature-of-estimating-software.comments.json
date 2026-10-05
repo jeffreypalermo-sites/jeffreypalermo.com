@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2546,
+    "parent": 0,
+    "author_name": "Jason",
+    "author_url": "http://plog.jasonlittle.ca",
+    "date": "2009-01-28T16:27:46",
+    "type": "comment",
+    "content_html": "<p>The important thing to consider about velocity is that it’s used for longer term planning only.  For example, if the team delivers 30 points this sprint and only 20 points in the subsequent sprint, it doesn’t necessarily mean they are delivering less value.<br>\nPoints can be measured in ideal hours or bananas or whatever makes you feel good, but in general terms, they are a best guess on the effort required to deliver a feature.  As far as mandating the team deliver more points per sprint, that is actually opposite of the whole point of using Agile methods in the first place.  Sounds like there is a trust issue there.<br>\nYour metric is better software, less (or no) defects, happy customers, more sales and less calls to the helpdesk (if applicable).<br>\nIf you absolutely need a report or metric, I would suggest coming up with \"business value points\" that are associated to your user stories.  Chart a burn-up of business value relative to story points.  Then chart that against revenue (staggered of course to get a trend…) and voila, there is your \"business value chart\".  I demo’d this concept to our executives and they like the idea, we just never implemented it.<br>\nSounds like you want a metric for the sake of having a metric but in the end the effectiveness of a delivered project is much more complicated than looking at a chart.</p>"
+  }
+]

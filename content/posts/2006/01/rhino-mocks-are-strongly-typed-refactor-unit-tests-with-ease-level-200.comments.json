@@ -1,0 +1,11 @@
+[
+  {
+    "id": 622,
+    "parent": 0,
+    "author_name": "Daren Desjardins",
+    "author_url": "http://",
+    "date": "2006-01-03T17:30:26",
+    "type": "comment",
+    "content_html": "<p>For Java, they have Easymock (<a href=\"http://www.easymock.org/\" rel=\"nofollow ugc\">http://www.easymock.org/</a>). Very similar except you can mock classes as well as interfaces. Mocking classes has the great advantage of not having to make an interface for every little thing.</p>"
+  }
+]

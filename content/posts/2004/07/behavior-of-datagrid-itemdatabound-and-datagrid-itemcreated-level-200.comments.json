@@ -1,0 +1,83 @@
+[
+  {
+    "id": 105,
+    "parent": 0,
+    "author_name": "MacSqueeb",
+    "author_url": "http://",
+    "date": "2004-07-27T12:29:00",
+    "type": "comment",
+    "content_html": "<p>Thanks for a helpful datagrid post.  You cleared up some vagaries surrounding ItemDataBound that I’ve just lived with until now.</p>\n<p>BTW, I just discovered your blog on dotNetJunkies and skimmed back through mid may.  This is a *great* ASP.NET blog with a good balance between specificity and general interest.  I especially appreciate your 100 – 400 rating system as it helps me identify likely relevance to me at a glance.  Keep up the good work.</p>"
+  },
+  {
+    "id": 106,
+    "parent": 0,
+    "author_name": "Famil Jones",
+    "author_url": "http://",
+    "date": "2004-07-28T08:35:00",
+    "type": "comment",
+    "content_html": "<p>ListItemType Enumeration could also be used to test if the item type is header or footer in ItemDataBound and ItemCreated events (eg. If e.Item.ItemType = ListItemType.Header Then … End If).</p>"
+  },
+  {
+    "id": 107,
+    "parent": 0,
+    "author_name": "Abner Mendoza",
+    "author_url": "http://",
+    "date": "2004-07-28T08:35:00",
+    "type": "comment",
+    "content_html": "<p>Instead of using the ItemIndex, it would probably be easier to use ItemType. So in your event handler you can have a statement to test for e.Item.ItemType and then your header would be = ListItemType.Header and your footer would be = ListItemType.Footer. </p>"
+  },
+  {
+    "id": 108,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-07-28T09:47:00",
+    "type": "comment",
+    "content_html": "<p>Those are great comments!!  I will, in fact, use the ItemType property.  That is a little more readable than testing the ItemIndex.  That is great for accessing embedded controls during the data-binding events.  I also have to access the button in the Header at other times, and I can’t iterate through the Items collection because the Header isn’t an item, so I’m accessing my embedded button by calling DataGrid.Controls[0].Controls[0].FindControl(\"myButton\").  The first control in DataGrid is an HtmlTable, and then it has a collection of HtmlTableRow, so I have to get the table, then Controls[0] of the table, which is the first row, and then do a FindControl().  If I find a more intuitive way to do this, I’ll post it.  </p>"
+  },
+  {
+    "id": 109,
+    "parent": 0,
+    "author_name": "sa",
+    "author_url": "http://",
+    "date": "2004-08-02T05:41:00",
+    "type": "comment",
+    "content_html": "<p>as</p>"
+  },
+  {
+    "id": 110,
+    "parent": 0,
+    "author_name": "Kostas",
+    "author_url": "http://",
+    "date": "2004-10-11T12:26:00",
+    "type": "comment",
+    "content_html": "<p>Hello Jeffrey</p>\n<p>I use the ItemDataBound method to populate a column in my datagrid like this</p>\n<p>private void DataGrid1_ItemDataBound (object sender, System.Web.UI.WebControls.DataGridItemEventArgs e)<br>\n{<br>\n if (e.Item.DataItem is Employee)<br>\n  {<br>\n   Employee currentEmployee = ((Employee)(e.Item.DataItem));<br>\n   e.Item.Cells[0].Text = string.Format(\"{0:D3}\",currentEmployee.EID);<br>\n  }<br>\n} </p>\n<p>But i see no results..any suggestions?</p>"
+  },
+  {
+    "id": 111,
+    "parent": 0,
+    "author_name": "Richard Myers",
+    "author_url": "http://",
+    "date": "2004-11-10T20:55:00",
+    "type": "comment",
+    "content_html": "<p>Hello,<br>\nAnother point to make about the itemcreated vrs itemdatabound events is that assuming the data is bound on the first load of the page the item databound event will not occur OnPostBack. This is becuase the data is being drawn from ViewState and is therefore already bound. </p>\n<p>This is an essential difference if you wish to cancel out of a page via a cancel button etc. </p>\n<p>Otherwise via the ItemCreated event you may find your code throwing errors as it encounters null valued variables and the like within the event.</p>"
+  },
+  {
+    "id": 112,
+    "parent": 0,
+    "author_name": "Pyrenus",
+    "author_url": "http://",
+    "date": "2007-02-06T19:52:04",
+    "type": "comment",
+    "content_html": "<p>Wow this is old, anyways, I had this problem and just now figured it out, wanted to post my results in case someone else was searching and had this problem.</p>\n<p>I have a checkbox in the header of my datagrid and I was trying to get the value back out of it in my code.</p>\n<p>Controls(0).Controls(0).FindControl(“CheckBoxName”) was not working for me.</p>\n<p>I ended up printing out a ton of debugging code to figure it out, but for me, I had to use:</p>\n<p>Controls(0).Controls(1).FindControl(…)</p>\n<p>Not sure why, but that’s where I found my control.</p>"
+  },
+  {
+    "id": 113,
+    "parent": 0,
+    "author_name": "Lavkush",
+    "author_url": "http://lavkushsharma@hotmail.com",
+    "date": "2007-05-29T14:03:41",
+    "type": "comment",
+    "content_html": "<p>how to change the color of that row in the click of linkbutton in the datagrid</p>"
+  }
+]

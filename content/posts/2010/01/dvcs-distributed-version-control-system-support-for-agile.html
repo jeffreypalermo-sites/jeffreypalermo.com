@@ -1,0 +1,53 @@
+---
+wp_id: 1127
+title: 'DVCS (Distributed Version Control System):  support for agile?'
+slug: dvcs-distributed-version-control-system-support-for-agile
+permalink: /2010/01/dvcs-distributed-version-control-system-support-for-agile/
+date: 2010-01-17T22:52:03
+date_utc: 2010-01-17T22:52:03Z
+modified: 2010-01-17T22:52:03
+format: html
+categories:
+- blog
+excerpt: 'Glenn Block began an interesting thread on the public “altnetseattle” email list on Thursday: “Hi guys I know we just finished a nice thread about GIT, whether it’s hot and why. We also talked about alternatives like Bazzar, Mercurial, etc… A different question I have is do these tools (regardless of which one you use) […]'
+comments_open: true
+---
+<h2><a href="http://blogs.msdn.com/gblock/">Glenn Block</a> began an <a href="http://groups.google.com/group/altnetseattle/browse_thread/thread/f7a84ae8e2573418?hl=en">interesting thread</a> on the public “<a href="http://groups.google.com/group/altnetseattle?hl=en">altnetseattle</a>” email list on Thursday:</h2>
+<blockquote>
+<p><em>“Hi guys</em></p>
+<p><em>I know we just finished a nice thread about GIT, whether it’s hot and why.       <br>We also talked about alternatives like Bazzar, Mercurial, etc…</em></p>
+<p><em>A different question I have is do these tools (regardless of which one you       <br>use) actually support Agile development? Would you consider them an integral        <br>part of the agile shop of the future, or is it just "the way" to do it        <br>regardless. What I am really asking is are there specific benefits for those        <br>doing agile development?</em></p>
+<p><em>Thanks       <br>Glenn</em>” – Glenn Block</p>
+</blockquote>
+<p>Now, Glenn is one of those really smart guys.&nbsp; You can learn more from someone not by listening to what answers he gives; but by what questions he asks.</p>
+<h2>The thread has some great discussion, but here is my answer that I posted:</h2>
+<blockquote>
+<p><em>“Every VCS supports agile.&nbsp; Agile is the way the team works with the VCS, not the other way around.&nbsp; DVCS systems make branch-per-developer seamless.&nbsp; With Subversion, it is easy to have multiple people working off the trunk, and the merging is great.&nbsp; Tools like <a href="http://www.jetbrains.com/teamcity/">JetBrains TeamCity</a> will do auto-patch-upload and run the private build remotely at any time so you have build-per-developer without waiting for the local machine.</em></p>
+<p><em><a href="http://msdn.microsoft.com/en-us/teamsystem/dd408382.aspx">TFS</a> and <a href="http://www.serena.com/products/pvcs/">VersionManager</a> need more work in order to have multiple people making changes to the same files simultaneously, but agile teams still use them.</em></p>
+<p><em>Also, the VCS features have a lot more to do with supporting a team SIZE, not a team PROCESS or PHILOSOPHY.&nbsp; A BDUF team of 2 and an agile team of 2 will probably have similar experiences in wide range of VCS’s.&nbsp; BDUG teams of 10 and agile teams of 10 will have VERY different experiences based on the VCS in place.</em></p>
+<p><em>I think the essence of the situation is providing the most versioned "levels of undo" possible.&nbsp; In John Maeda’s <u><a href="http://lawsofsimplicity.com/">The Laws of Simplicity</a></u> book, he talks about how putting "undo" everywhere makes the experience of using a product seem simpler.&nbsp; It may not be simpler, but the impression is that it IS simpler.&nbsp; With Git (the only DVCS I have experience with),:</em></p>
+<ol>
+<li><em>I can revert a local commit </em></li>
+<li><em>I can revert a push to my fork </em></li>
+<li><em>I can revert a pull to the master </em></li>
+<li><em>I can revert a commit on the master </em></li>
+<li><em>I can revert a push to the master</em></li>
+</ol>
+<p><em>With a centralized system, I can only revert a commit to the centralized branch (along with roll-your-own branch commits and merges).</em></p>
+<p><em>We need only look at some of the large, fast-moving projects hosted with Git to see that is "supports" whatever it is that we are labeling "agile" these days.&nbsp; </em><a href="http://git-scm.com/"><em>http://git-scm.com/</em></a></p>
+<p><em>Best regards,       <br>Jeffrey Palermo</em>”</p>
+</blockquote>
+<h3><a href="http://www.charliepoole.org/cp.php"></a></h3>
+<h3><a href="http://www.charliepoole.org/cp.php">Charlie Poole</a>, a lead committer on the <a href="http://www.nunit.org/index.php">NUnit</a> open source project, weighed in early and posted something so profound, I just have to share it.</h3>
+<p>Charlie has so much experience in software that when he speaks, I listen intently.&nbsp; I have had the please of meeting him at several Alt.Net conferences.&nbsp; Here is his first post on the thread:</p>
+<blockquote>
+<p>“<em>Hi Glenn,</em></p>
+<p><em>I consider DVCS to be agile on a philosophical and practical level.</em></p>
+<p><em>Philosophically, agile is supposed to be *not* so much about tools. DVCSs       <br>remove many of        <br>the restrictions imposed by centralized tools. Most of them work well in        <br>either mode, so a team        <br>can set up it’s own practices and not be limited by what the tool can do.</em></p>
+<p><em>One proof of this is that some shops forbid DVCSs because they don’t give       <br>enough central        <br>control over developers – a very non-agile viewpoint.</em></p>
+<p><em>In practical terms, a DVCS allows me to work how and where I want, creating       <br>a feature        <br>branch if I need to, or keeping a common personal branch for small changes.        <br>I can work        <br>quickly on a spike, throwing it all away or merging it in as I like. This is        <br>something I used        <br>to do with multiple workspaces under SVN or CVS, but when I wanted to merge        <br>two        <br>different workspaces without touching the repository, I had to do it        <br>manually.</em></p>
+<p><em>So I’d say that DVCSs are a win no matter how you develop, but are a       <br>particularly        <br>good fit for agile development.</em></p>
+<p><em>Charlie”</em></p>
+</blockquote>
+<p>Charlie has undoubtedly used twice as many Version Control Systems than I have, so when he compares a DVCS to all the others in his past and calls it a “win”, that’s a pretty strong endorsement.</p>
+<p>My experience with <a href="http://git-scm.com/">Git</a> (the only DVCS I’ve used so far) has been positive.&nbsp; I use it for <a href="http://mvccontrib.org">MvcContrib</a> and for working on the manuscript for <a href="http://github.com/jeffreypalermo/mvc2inaction">ASP.NET MVC 2 in Action</a>.</p>

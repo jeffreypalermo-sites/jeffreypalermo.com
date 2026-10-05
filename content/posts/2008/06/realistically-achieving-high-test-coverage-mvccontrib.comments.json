@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2496,
+    "parent": 0,
+    "author_name": "Donn Felker",
+    "author_url": "http://blog.donnfelker.com/",
+    "date": "2008-06-25T14:53:28",
+    "type": "comment",
+    "content_html": "<p>Yulp, 100% agree.<br>\nI’m currently on a project that was developed test-first and I implemented CC.NET &amp; NCover to break the build if it drops below 90% code coverage. So far, this code works excellent. The problems always seem to pop up in the areas where the tests ARE NOT.  Failing early and fast has proven to be a great benefit. </p>"
+  }
+]

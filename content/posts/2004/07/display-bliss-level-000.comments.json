@@ -1,0 +1,20 @@
+[
+  {
+    "id": 103,
+    "parent": 0,
+    "author_name": "Noah Coad (MS-VSTS)",
+    "author_url": "http://",
+    "date": "2004-07-23T16:43:00",
+    "type": "comment",
+    "content_html": "<p>So is the 21\" a CRT?  I’ve used a 21\" ViewSonic P-810 for years and love it.</p>"
+  },
+  {
+    "id": 104,
+    "parent": 0,
+    "author_name": "Jefrey Palermo",
+    "author_url": "http://",
+    "date": "2004-07-24T06:43:00",
+    "type": "comment",
+    "content_html": "<p>Yeah, it’s a CRT.  Like I said, my company won’t slap down $500 just for a display.</p>"
+  }
+]

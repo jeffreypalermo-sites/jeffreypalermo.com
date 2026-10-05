@@ -1,0 +1,20 @@
+[
+  {
+    "id": 186,
+    "parent": 0,
+    "author_name": "Michael Palermo",
+    "author_url": "http://",
+    "date": "2004-10-20T06:13:00",
+    "type": "comment",
+    "content_html": "<p>Another way to accomplish this is to override the various \"On\" methods of the base class.  For example, override the protected OnLoad method.  The body of the method would look like this…</p>\n<p>{<br>\n  Trace.Warn(\"Begin Load\");<br>\n  // next line triggers the event<br>\n  base.OnLoad(e);<br>\n  Trace.Warn(\"End Load\");<br>\n}</p>\n<p>This accomplishes the same purpose.  What are your thoughts?</p>"
+  },
+  {
+    "id": 187,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-10-21T04:11:00",
+    "type": "comment",
+    "content_html": "<p>I thought about that, but if I override that method, the aspx can still override it and execute code before calling base.OnInit.  I’ve changed RaiseInit to new virtual OnInit(), and now I trap events from the base class and then reraise them with the same name.  </p>\n<p>Check out my next post for my refined code.</p>"
+  }
+]

@@ -1,0 +1,65 @@
+[
+  {
+    "id": 2433,
+    "parent": 0,
+    "author_name": "Matt",
+    "author_url": "http://mattcalla.com",
+    "date": "2008-04-02T23:41:44",
+    "type": "comment",
+    "content_html": "<p>I would love to attend one of these but I live in Melbourne, Australia – do you know of anyone holding these boot camps down here?</p>"
+  },
+  {
+    "id": 2434,
+    "parent": 0,
+    "author_name": "Mike Pond",
+    "author_url": "http://",
+    "date": "2008-04-03T02:38:38",
+    "type": "comment",
+    "content_html": "<p>I attended the February boot camp and I highly recommend it. It completely changed the way my team and I work, and I have accomplished more in the last two weeks than I previously had in the last three months. Thanks, Jeffrey!</p>"
+  },
+  {
+    "id": 2435,
+    "parent": 0,
+    "author_name": "jack",
+    "author_url": "http://",
+    "date": "2008-04-03T02:47:01",
+    "type": "comment",
+    "content_html": "<p>what is Onion architecture, please?</p>"
+  },
+  {
+    "id": 2436,
+    "parent": 0,
+    "author_name": "Brett",
+    "author_url": "http://",
+    "date": "2008-04-03T12:19:29",
+    "type": "comment",
+    "content_html": "<p>Any ideas for a 3Q or 4Q training sessions?</p>"
+  },
+  {
+    "id": 2437,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-04-03T13:58:15",
+    "type": "comment",
+    "content_html": "<p>@Matt,<br>\nCurrently, I’m only teaching these in Austin, TX</p>\n<p>@jack,<br>\nInstead of layered architecture, where each layer depends on the one below it, onion architecture defines a core, and the rest of the system relies on the core.  In the application used for the training, the domain model is the core, and the other components (screens, services, database) all depend on the domain model, but the domain model does not depend on the others.  This is particularly different with regard to the database since the database is set up as a component.  Usually, I see the data layer as the bottommost layer in a layered architecture.</p>\n<p>@Brett,<br>\nThe schedule has not been set for the rest of the year.  If you have a group wishing to take the training, we can set up special dates.</p>"
+  },
+  {
+    "id": 2438,
+    "parent": 0,
+    "author_name": "JP",
+    "author_url": "http://",
+    "date": "2008-04-03T14:12:57",
+    "type": "comment",
+    "content_html": "<p>Jeff,</p>\n<p>This sounds fantastic. Wish I could attend. Do you ever release the materials used in your class?</p>\n<p>Keep up the great work! Looking forward to the book!</p>"
+  },
+  {
+    "id": 2439,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-04-03T14:17:50",
+    "type": "comment",
+    "content_html": "<p>@JP,<br>\nI always release the materials for the class, and each student is free to share it with their company, friends, etc.</p>"
+  }
+]

@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2602,
+    "parent": 0,
+    "author_name": "a friend",
+    "author_url": "http://",
+    "date": "2009-06-10T08:22:25",
+    "type": "comment",
+    "content_html": "<p>and?<br>\nif you really must combat the evil blog rippers i’d suggest:<br>\n1) put the link at the bottom of your post<br>\n2) change the wording to indicate this is what you’re doing<br>\n3) put it in a div with a class and display:none it with css on your site<br>\n4) link back to your site, ideally with the title and permalink for the post itself. This would help increase your pagerank which should already be high enough that blogrippers don’t matter, but if you think there’s a problem then hey why not.</p>"
+  }
+]

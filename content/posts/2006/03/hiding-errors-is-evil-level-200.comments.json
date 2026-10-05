@@ -1,0 +1,56 @@
+[
+  {
+    "id": 674,
+    "parent": 0,
+    "author_name": "Jeremy D. Miller",
+    "author_url": "http://",
+    "date": "2006-03-09T15:10:40",
+    "type": "comment",
+    "content_html": "<p>A-freaking-men.  James Shore wrote a great article on this –&gt; <a href=\"http://www.martinfowler.com/ieeeSoftware/failFast.pdf\" rel=\"nofollow ugc\">http://www.martinfowler.com/ieeeSoftware/failFast.pdf</a></p>"
+  },
+  {
+    "id": 675,
+    "parent": 0,
+    "author_name": "John Wood",
+    "author_url": "http://dotnetjunkies.com/weblog/johnwood",
+    "date": "2006-03-09T15:56:54",
+    "type": "comment",
+    "content_html": "<p>According to the docs, ToAppRelative should return the path unchanged if it’s not part of the application path. So I guess that’s a bug. I’m not sure it should raise an exception unless there is another method that will tell you whether the path is relative. Hate functions that validate data by throwing an exception, it’s a misuse of exceptions.</p>"
+  },
+  {
+    "id": 676,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-03-09T16:45:37",
+    "type": "comment",
+    "content_html": "<p>John,<br>\nThanks for lookup up the documentation.  I don’t normally make that a habit since I can look at the actual code with Reflector.</p>\n<p>I don’t think it’s a misuse of exceptions.  How else can a method communicate that it can’t continue if an argument isn’t valid.  If it didn’t validate with an exception, then another exception would happen naturally:  NullReferenceException.  An exception will happen somewhere if input is invalid.  I’d rather it happen as close to where the actual error is.</p>\n<p>In my code sample, if I had an exception, I’d know that I can’t use the method in that fashin.  I would _not_ try/catch the method as a means of code flow.  I would take steps to validate my own argument before calling the method.  Even if the class had a “IsPathValid” method, all programmers aren’t going to call that method.</p>\n<p>I like the concept of pushing complexity outward.  Code that I write will only work if my assumptions are met.  I assert my assumptions  by throwing exceptions.</p>"
+  },
+  {
+    "id": 677,
+    "parent": 0,
+    "author_name": "John Wood",
+    "author_url": "http://dotnetjunkies.com/weblog/johnwood",
+    "date": "2006-03-09T16:59:08",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,<br>\nIt’s a tricky one. So long as there *is* a way to validate input independently of the function then I would tend to agree with you that throwing an exception is acceptable. I just wouldn’t want to rely on that function not throwing an exception as a means of validating the input. I think we’re on the same page though. Either way the function isn’t working the way it should \uD83D\uDE42</p>\n<p>John</p>"
+  },
+  {
+    "id": 678,
+    "parent": 0,
+    "author_name": "Eber Irigoyen",
+    "author_url": "http://ebersys.blogspot.com",
+    "date": "2006-03-09T17:05:59",
+    "type": "comment",
+    "content_html": "<p>while I agree on everything you said at the beginning, that specific example can be debatable (is that a word?), basically it all comes down to error codes (of some fashion) or exceptions, and you have to remember the rules for exception, use exceptions only in exceptional cases, I can see your point of view, and it is very convincing, but still this can be one of those religios debates</p>"
+  },
+  {
+    "id": 679,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-03-09T17:15:21",
+    "type": "comment",
+    "content_html": "<p>Debate is good.  I don’t think I’m religious about coding because I find myself being convince of different things when confronted with a good argument.  I like code to be “correct”, but I’m also party a pragmatist, though not completey.</p>\n<p>In a language that supports structured exceptions, I prefer to use them.   It’s so easy (but not for program flow).</p>"
+  }
+]

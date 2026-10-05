@@ -1,0 +1,56 @@
+[
+  {
+    "id": 808,
+    "parent": 0,
+    "author_name": "Maruis Marais",
+    "author_url": "http://exceptionz.blogspot.com/",
+    "date": "2006-04-14T03:50:45",
+    "type": "comment",
+    "content_html": "<p>It is really funny you would say that people would cringe when they hear you remarking about the amount of test code your team wrote. But the interesting thing is you can’t measure the amount of time that was cut from looking at a yellow line of a debugger. Probably the only artifact is the keyboards lasting longer, since the whole keyboard is used and not only the F10 and F11 buttons.</p>\n<p>Another interesting fact I found was that the amount of time spent isolating a bug or issue also dropped drastically, due to the ability to validate the code quicker with existing unit tests. We found that probably 90% of our bugs where found in code that wasn’t covered by unit tests.</p>"
+  },
+  {
+    "id": 809,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-04-14T03:56:46",
+    "type": "comment",
+    "content_html": "<p>Maruis.   Debugging time was definitely cut out drastically.  Unit test do isolate issues as you state.</p>\n<p>We found a couple of bugs in code, and as you say, it was code that didn’t have an integration test guarding it.</p>"
+  },
+  {
+    "id": 810,
+    "parent": 0,
+    "author_name": "jmiller",
+    "author_url": "http://",
+    "date": "2006-04-14T04:05:00",
+    "type": "comment",
+    "content_html": "<p>LoL, Maruis</p>"
+  },
+  {
+    "id": 811,
+    "parent": 0,
+    "author_name": "Brendan",
+    "author_url": "http://",
+    "date": "2006-04-14T20:10:51",
+    "type": "comment",
+    "content_html": "<p>Jeffrey, does this go throug?</p>"
+  },
+  {
+    "id": 812,
+    "parent": 0,
+    "author_name": "use_TDD_name_or_not",
+    "author_url": "http://",
+    "date": "2006-04-19T02:01:01",
+    "type": "comment",
+    "content_html": "<p>Do you use nmock or similar things? if yes, how much? do you use unit test your UI code?</p>"
+  },
+  {
+    "id": 813,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-04-19T02:36:23",
+    "type": "comment",
+    "content_html": "<p>I used to use NMock, but now I use Rhino mocks.  Rhinos are strongly typed whereas NMock relies on strings as the property constraints.   I use mocks every time I unit test because I need to simulate dependencies.  For UI code, I like the model-view-presenter pattern that allows the GUI code to be very thin, and I fake GUI and test the rest.</p>"
+  }
+]

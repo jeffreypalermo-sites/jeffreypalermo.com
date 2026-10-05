@@ -1,0 +1,16 @@
+---
+wp_id: 110
+title: Web Application architecture preference – level 300
+slug: web-application-architecture-preference-level-300
+permalink: /2004/09/web-application-architecture-preference-level-300/
+date: 2004-09-09T16:30:00
+date_utc: 2004-09-09T16:30:00Z
+modified: 2004-09-09T16:30:00
+format: html
+excerpt: I’d like to share my preference in building web applications. First, I’d like to remember that in ASP 3.0, every page posted information to another page, so every page had to know the URL to the next page. This created spaghetti-posting, and the web application became very brittle because if a page moved, other pages […]
+comments_open: true
+---
+<p>I’d like to share my preference in building web applications.&nbsp; First, I’d like to remember that in ASP 3.0, every page posted information to another page, so every page had to know the URL to the next page.&nbsp; This created spaghetti-posting, and the web application became very brittle because if a page moved, other pages declaratively linking or posting to it were broken.&nbsp; Those who implemented large web applications with ASP 3.0 know exactly what I’m talking about. </p>
+<p>With ASP.NET the potential for that problem still exists, but some simple design decisions can save&nbsp; you maintainence time down the road.&nbsp; Specifically, I’m talking about putting all visible elements and logic in user controls.&nbsp; I, personally, don’t implement any UI in my .aspx files.&nbsp; All my .aspx files are there for is to hook up .ascx files.&nbsp; This makes for no URL binding, and my control flow is all programmatic.&nbsp; All my screens are different user controls, and a master user control decides which controls to load for a particular screen.</p>
+<p>VS has some really great RAD features that make slogging out code very easy, and you will have a working application very quickly, but your maintainability will suffer.&nbsp; Since I’ve been using my user control method, my apps have been extremely easy to maintain even in the face of changing requirements and design change requests.&nbsp; Give it a try.</p>
+<p>In ASP.NET 2.0, imagine have a .aspx that sets the master page, sets the thems, and then loads a user control.&nbsp; In this way, your site is VERY flexible.&nbsp; Your custom screen (user control) could be moved to any page anywhere in the site as well as adapted to different looks by changing the master page and theme.</p>

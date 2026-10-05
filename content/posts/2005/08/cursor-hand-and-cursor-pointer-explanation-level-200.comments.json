@@ -1,0 +1,74 @@
+[
+  {
+    "id": 435,
+    "parent": 0,
+    "author_name": "Dave Donaldson",
+    "author_url": "http://www.arcware.net",
+    "date": "2005-08-28T20:30:45",
+    "type": "comment",
+    "content_html": "<p>Ah, excellent tip. I wasn’t aware of cursor:pointer. Thanks.</p>"
+  },
+  {
+    "id": 436,
+    "parent": 0,
+    "author_name": "Josh",
+    "author_url": "http://",
+    "date": "2005-08-29T02:53:45",
+    "type": "comment",
+    "content_html": "<p>How does using CSS ensure browser compatibility?  I’ve seen the opposite effect in reality.  Using the non-css approach to formatting (tables, font and bold tags, etc) seem to be a lot more consistent across browsers.<br>\nI understand the benefits of CSS and semantic HTML, but I wouldn’t tout browser compatibility as one of them.  My experience is that you have to work harder on compatibility when using CSS, because of the different implementations.</p>"
+  },
+  {
+    "id": 437,
+    "parent": 0,
+    "author_name": "Andreas Kraus",
+    "author_url": "http://www.sunlab.de",
+    "date": "2005-08-29T17:51:52",
+    "type": "comment",
+    "content_html": "<p>Yes, you have to work harder, but in my opinion it’s absolutly worth it. I stick to CSS only.</p>"
+  },
+  {
+    "id": 438,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-08-30T03:09:48",
+    "type": "comment",
+    "content_html": "<p>I guess one could say that if we stuck to Html 3.2, we’d have the best compatibility, and if we used no CSS and no Javascript, we’d have ultimate compatibility, but that’s unrealistic.  The power the new technologies bring is worth the extra effort, and while we are using the technology, there are things we can do to ensure browser compatibility, and this is one of them.</p>\n<p>I guess you’re point is valid when that sentence is read critically.</p>\n<p>Thanks for the input.</p>"
+  },
+  {
+    "id": 439,
+    "parent": 0,
+    "author_name": "Leon",
+    "author_url": "http://www.leonlandgersing.com",
+    "date": "2005-09-07T16:17:37",
+    "type": "comment",
+    "content_html": "<p>CSS may seem a foreign concept to some of us that have been doing this for a long time, but the long term flexibility and bandwidth cost reduction make it well worth the time. I would like to point out though that you may want to alter the markup slightly to comply with the CSS spec. Here’s an elegant hack for most modern browsers…</p>\n<p>.MyStyle<br>\n{<br>\n   cursor:pointer !important;<br>\n   cursor:hand;<br>\n}</p>\n<p>this will tell the standard browsers to use the first property and ignore the rest. IE doesn’t support !important yet and always implements the last definition when a duplicate appears. This way if IE 7 behaves in the same fashion it will adhere to the standard if it can and use the backup if it can’t. This trick also works well for the box model. I think of it has a forward compatible hack…not perfect but does the trick! \uD83D\uDE42</p>"
+  },
+  {
+    "id": 440,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-09-07T18:19:43",
+    "type": "comment",
+    "content_html": "<p>IE 6 supports !important.  I’ve had to use it several times.  I haven’t checked to see that it’s usage is exactly according to the standard, so if that’s what you are talking about, please elaborate on the divergence from the W3C standard.</p>"
+  },
+  {
+    "id": 441,
+    "parent": 0,
+    "author_name": "Leon",
+    "author_url": "http://www.leonlandgersing.com",
+    "date": "2005-09-07T18:49:46",
+    "type": "comment",
+    "content_html": "<p>According to the standard the last rule specified takes precedence. But if you use important after a command then that command will take precedence. IE ignores this rule I’m cutting and pasting a simple example…run them in IE and Firefox to see the difference.<br>\n.Test<br>\n{<br>\n\tcolor:red !important;<br>\n\tcolor:blue;<br>\n}</p>\n<p>so just put a div on a page, class it Test and run in both. the text should be red in FF and blue in IE. </p>\n<p>The good news is that this is somewhat of a forward compatible hack, in that, by use if IE7 supports !important (it will according to the IE Blog) then it will automatically use the !important commands while IE6- uses the hack in place. I hope that clears up my previous post! \uD83D\uDE42 PS- I really enjoy your blog. Thx, Leon</p>"
+  },
+  {
+    "id": 442,
+    "parent": 0,
+    "author_name": "Rasika",
+    "author_url": "http://",
+    "date": "2006-01-10T07:36:35",
+    "type": "comment",
+    "content_html": "<p>Although latest IE versions do not require cursor:hand, old versions still need it. But when both cursor:hand, and cursor:pointer is declared, so as to make it work on all browsers, Firefox gives an error – “Unknown Property Cursor – declaration dropped”, This happens even if you use _cursor, !important, any hacking method…</p>\n<p>Any body has an idea, how to avoid this error message on Firefox, and yet work with all browsers.</p>\n<p>Thanks</p>"
+  }
+]

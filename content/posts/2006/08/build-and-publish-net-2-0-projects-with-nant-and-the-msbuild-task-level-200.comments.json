@@ -1,0 +1,74 @@
+[
+  {
+    "id": 986,
+    "parent": 0,
+    "author_name": "P.J. van de Sande",
+    "author_url": "http://born2code.net",
+    "date": "2006-08-14T09:00:02",
+    "type": "comment",
+    "content_html": "<p>Why not calling MSBuild directly instead of using Nant only to call it?</p>"
+  },
+  {
+    "id": 987,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-08-14T12:53:13",
+    "type": "comment",
+    "content_html": "<p>I don’t call MSBuild directly from CCNet because I do quite a bit of other work with NAnt.  My build script is mostly NAnt, but I delegate to MSBuild for the compile and publish steps.</p>"
+  },
+  {
+    "id": 988,
+    "parent": 0,
+    "author_name": "Scott Dukes",
+    "author_url": "http://dotnet.org.za/scott",
+    "date": "2006-08-14T13:16:10",
+    "type": "comment",
+    "content_html": "<p>The  task accepts both a target attribure and standard  nodes as children. This makes its usage clearer (IMO).</p>\n<p>Here is your first sample re-written to take advantage of this:</p>\n<p>As you can see, its quite a lot easier to read. The target attribute also accepts a comma or semi-colon delimited list of targets.</p>\n<p>In additon, you can specify a verbostiy attribute, which is useful to reduce the output (by setting it to “Minimal”). My typical usage is as follows:</p>"
+  },
+  {
+    "id": 989,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-08-14T13:23:51",
+    "type": "comment",
+    "content_html": "<p>Scott,<br>\nThanks for the tip!  I’ll update my build script right away.</p>"
+  },
+  {
+    "id": 990,
+    "parent": 0,
+    "author_name": "P.J. van de Sande",
+    "author_url": "http://born2code.net",
+    "date": "2006-08-15T08:32:49",
+    "type": "comment",
+    "content_html": "<p>Jeffrey, I understand you do more things and that is the reason you are using Nant. But for this example it is an extra tool, it doesn’t add any extra functionality.</p>\n<p>For people who start with Continues Intergration it can be frustrating.</p>\n<p>Most (read all) the things you do with Nant, you can do with MSBuild.</p>"
+  },
+  {
+    "id": 991,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-08-15T13:26:07",
+    "type": "comment",
+    "content_html": "<p>P.J.,<br>\nYes.  there is a contrib project for MSBuild that makes the choice between the two less of an issue.  This post, however, documents my discovery of the  task for NAnt.</p>"
+  },
+  {
+    "id": 992,
+    "parent": 0,
+    "author_name": "rkibbe",
+    "author_url": "http://",
+    "date": "2006-08-22T14:28:45",
+    "type": "comment",
+    "content_html": "<p>I would agree with JPalermo. I too am partial to NAnt . I have invested a lot of time in NAnt. We can do everything we need to with it. We are just setting up Team Foundation wMSBuild.  I have tried many of the gui build tools on the market. Microsoft has done well with MSBuild from what I have seen so far. I like the transparency of NAnt and the ease of configuration. You can follow the sequence of events with a nant.build file very easily. There is no guessing on what the build tool is doing behind the scenes. NAnt also integrates well with CruiseControl and MSBuild doesn’t have a scheduler either. </p>"
+  },
+  {
+    "id": 993,
+    "parent": 0,
+    "author_name": "Daniel Villarreal",
+    "author_url": "http://none",
+    "date": "2008-03-12T18:17:23",
+    "type": "comment",
+    "content_html": "<p>I´m new to the scene, i´m working with a CM with 100+ developers, I dont see how we could manage without Nant.<br>\nI disagree, Nant isn´t just an extra tool, is automatizing many of our processes, except my learning process.</p>"
+  }
+]

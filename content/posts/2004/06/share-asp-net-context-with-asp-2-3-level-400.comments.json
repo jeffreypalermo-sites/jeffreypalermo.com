@@ -1,0 +1,29 @@
+[
+  {
+    "id": 57,
+    "parent": 0,
+    "author_name": "Chris Kinsman",
+    "author_url": "http://",
+    "date": "2004-06-05T21:51:00",
+    "type": "comment",
+    "content_html": "<p>Fairly inefficient and unless you change the connection limit it limits you to two connections to the web service at any point in time…</p>"
+  },
+  {
+    "id": 58,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-06-06T10:46:00",
+    "type": "comment",
+    "content_html": "<p>To be honest, I hadn’t thought about the connection limit.  I’m still searching for the best way to share sessions with ASP and ASP.NET.</p>"
+  },
+  {
+    "id": 59,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-06-08T06:26:00",
+    "type": "comment",
+    "content_html": "<p>The method I described above is a good way to make web service calls participate in the same session.  This method does not scale for complete Session sharing if every hit of an ASP app is making a web service call.  For high traffic like that, I think putting session information in sql server is a better option.  And if all you need is the currently logged on user, then adding a cookie with the username is a good option.</p>"
+  }
+]

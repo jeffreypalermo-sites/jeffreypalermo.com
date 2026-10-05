@@ -1,0 +1,22 @@
+---
+wp_id: 394
+title: Web service versioning for dummies – level 200
+slug: web-service-versioning-for-dummies-level-200
+permalink: /2006/03/web-service-versioning-for-dummies-level-200/
+date: 2006-03-21T14:37:00
+date_utc: 2006-03-21T14:37:00Z
+modified: 2006-03-21T14:37:00
+format: html
+tags:
+- coding-principles
+- services
+excerpt: This post is aimed at providing a good way to version web services. Note that there are many ways to do this, and this is just one way. When versioning a service, it’s important to be able to run multiple versions side by side. When you upgrade the web service for one client, you can’t […]
+comments_open: true
+---
+<p>This post is aimed at providing a good way to version web services.&nbsp; Note that there are many ways to do this, and this is just one way.</p>
+<p>When versioning a service, it’s important to be able to run multiple versions side by side.&nbsp; When you upgrade the web service for one client, you can’t immediately take away the current version from existing clients.&nbsp; Existing clients will move to the new version if/when they can/want to.</p>
+<p>The identifier for the web service is the Url, so the version number must be embedded in the url.</p>
+<p>Here is one way to do it:<br><span style="font-weight:bold"><a href="https://theServer/v1_0/theService.asmx" rel="nofollow">https://theServer/v1_0/theService.asmx</a></span><br>When you want to modify the web service, do so, but deploy it side-by-side with the current version:<br><span style="font-weight:bold"><a href="https://theServer/v1_5/theService.asmx" rel="nofollow">https://theServer/v1_5/theService.asmx</a></span></p>
+<p>With this versioning strategy, you will be able to publish upgraded web services while maintaining service to existing customers.&nbsp; Down the road, when you have confirmed that all customers of the v1.0 service have moved to the v1.5 service, you can discontinue the v1.0 version.</p>
+<p>I’ve learned that if there are urls with dots (.) in the path, then the IIS lockdown tool won’t work with them.&nbsp; For that reason, it’s probably good to use (_) instead of (.) for the version delimiter.&nbsp; I also agree with the first commenter that major and minor versions are enough.</p>
+<p>There are plenty of folks talking about web service versioning:<br><a href="http://www-128.ibm.com/developerworks/webservices/library/ws-version/" rel="nofollow">http://www-128.ibm.com/developerworks/webservices/library/ws-version/</a><br><a href="http://www.webservicesarchitect.com/content/articles/irani04.asp" rel="nofollow">http://www.webservicesarchitect.com/content/articles/irani04.asp</a></p>

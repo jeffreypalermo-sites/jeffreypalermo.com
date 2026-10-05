@@ -1,0 +1,17 @@
+---
+wp_id: 131
+title: DO NOT implement web security with your UI – level 100
+slug: do-not-implement-web-security-with-your-ui-level-100
+permalink: /2004/11/do-not-implement-web-security-with-your-ui-level-100/
+date: 2004-11-03T17:29:00
+date_utc: 2004-11-03T17:29:00Z
+modified: 2004-11-03T17:29:00
+format: html
+excerpt: I mark this post as 100 because this basic knowledge that every developer should know. I’m maintaining a semi-legacy ASP web application, and so many page implement security through the UI. For instance if a user isn’t allow to update data, then a “disabled” attribute is added to the <input type=”submit”>. That’s it! That’s all […]
+comments_open: true
+---
+<p>I mark this post as 100 because this basic knowledge that every developer should know.&nbsp; I’m maintaining a semi-legacy ASP web application, and so many page implement security through the UI.&nbsp; For instance if a user isn’t allow to update data, then a “disabled” attribute is added to the &lt;input type=”submit”&gt;.&nbsp; That’s it!&nbsp; That’s all they do to protect their data.&nbsp; So, how do you get around this?&nbsp; You change the html and repost, or you run some script to remove the disabled attribute, or just create your own HTTP request.&nbsp; The page that actually does the update does NO validation, NO checks.&nbsp; It just assumes that the request is coming from the previous page unchanged, and it blindly updates data.</p>
+<p>There is no easy fix for a site that is developed like this.&nbsp; You really have to recode all the areas that modify data.&nbsp; Some people might suggest checking the HTTP_REFERER Server Variables, but I whipped up a sample to show how easy it is to spoof that variable, and it’s not even a required variable in the HTML specification, so that’s out the window as a “real” solution.&nbsp; The only solution is to code it correctly.&nbsp; Check credentials before allowing the update.</p>
+<p>I wonder how many applications out there have this security hole.</p>
+<p>It’s common knowledge that .Text has this “feature”.&nbsp;&nbsp; The comments feature is UI only.&nbsp; If it’s not on, then the UI won’t be displayed, but if you just post a comment, the web interface will accept it but not display it.&nbsp; But that comment will be downloaded with the RSS feed.&nbsp; I’ve already informed Scott W. about this, so he knows I’m not knocking him.</p>
+<p>I think this is very common of web applications, and we need to do a better job of writing secure code.</p>

@@ -1,0 +1,20 @@
+[
+  {
+    "id": 114,
+    "parent": 0,
+    "author_name": "Eric Wise",
+    "author_url": "http://",
+    "date": "2004-07-29T05:03:00",
+    "type": "comment",
+    "content_html": "<p>When I started using .NET I used datasets for almost all databinding.  Once I learned this technique my usage of the dataset is almost nil.</p>\n<p>I often wonder if this is the case with other developers out there.</p>"
+  },
+  {
+    "id": 115,
+    "parent": 0,
+    "author_name": "Jim Wooley",
+    "author_url": "http://",
+    "date": "2004-07-29T07:01:00",
+    "type": "comment",
+    "content_html": "<p>You may want to check into the work of Rocky Lhotka (www.lhotka.net). He as a robust distributed object model that addresses this area and much more. </p>\n<p>I’ve been using variations on his archecture for 4 years now and have been very happy with the results. It takes longer to architect, but is more maintainable in the end.</p>"
+  }
+]

@@ -1,0 +1,16 @@
+---
+wp_id: 84
+title: “Best Practices” change from version 1.1 to 2.0 Beta 1 – level 200
+slug: best-practices-change-from-version-1-1-to-2-0-beta-1-level-200
+permalink: /2004/08/best-practices-change-from-version-1-1-to-2-0-beta-1-level-200/
+date: 2004-08-23T17:58:00
+date_utc: 2004-08-23T17:58:00Z
+modified: 2004-08-23T17:58:00
+format: html
+excerpt: For those of you who use FxCop, beware of version 2.0. Actually, look forward to version 2.0 and jump for joy, but it would benefit you to learn about version 2.0 now so that you can prepare to move to the next version. I’ve migrated some v1.1 code I wrote last year to v2.0 Beta 1. I had […]
+comments_open: true
+---
+<p>For those of you who use FxCop, beware of version 2.0.&nbsp;&nbsp;Actually, look forward to version 2.0 and jump for joy, but it would benefit you to learn about version 2.0 now so that you can&nbsp;prepare to move to the next version.&nbsp; I’ve migrated some&nbsp;v1.1 code I wrote last year to v2.0 Beta 1.&nbsp; I had run FxCop on my assembly last year, and I decided to follow all the Microsoft Recommended conventions.&nbsp; That included&nbsp;NOT using the default overload of the .ToString() method.&nbsp; Instead, I&nbsp;was&nbsp;supposed to use the overload that specifies an IFormatProvider, so for&nbsp;most of my code, I used ToString(CultureInfo.InvariantCulture), and now in VS 2005 Beta 1, I am getting warnings:</p>
+<p>Warning&nbsp;3&nbsp;&nbsp;‘System.Enum.ToString(System.IFormatProvider)’ is obsolete: ‘The provider argument is not used. Please use ToString().’&nbsp;C:. . .Visual StudioProjects. . File.cs&nbsp;617&nbsp;64&nbsp;&nbsp;&nbsp;</p>
+<p>I thought it was a pain to specify CultureInfo.InvariantCulture for every call, but I went along with it.&nbsp; I guess the MS people decided to agree with me.&nbsp; 🙂</p>
+<p>I’m actually glad about this change.&nbsp; Seems like most v2.0 changes are for the better. . . . but I still take issue with not having a concrete assembly in web site projects – we need a way to configure what the dynamically compiled assembly will be called.</p>

@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1053,
+    "parent": 0,
+    "author_name": "jeremiah johnson",
+    "author_url": "http://",
+    "date": "2006-11-10T04:45:39",
+    "type": "comment",
+    "content_html": "<p>only override equals if you need to.  the default equals implementation will return true if two objects are the same, and you should ALWAYS override GetHashCode() if you override Equals().</p>\n<p>Why?  Because GetHashCode() is a way of uniquely identifying your object.  By default, it returns a representation of the memory location of that object.  If you override Equals() without overriding GetHashCode() you *will* have problems.  Objects that are considered equal to one another via the Equals() method MUST return the same int from GetHashCode() or things will break.</p>\n<p>If you want to determine if two objects are the same actual object living at the exact same point in memory (i.e. they are two references to the same object), leave Equals() and GetHashCode() alone.</p>\n<p>If you want to be able to determine if the contents of two of your objects are identical, override Equals() AND GetHashCode().  There is no need to add an id field simply to determine equality.</p>\n<p>Read more here (this is a Java example, but it is valid in C# also)<br>\n<a href=\"http://www.vipan.com/htdocs/hashcode_help.html\" rel=\"nofollow ugc\">http://www.vipan.com/htdocs/hashcode_help.html</a></p>"
+  },
+  {
+    "id": 1054,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-11-10T12:49:35",
+    "type": "comment",
+    "content_html": "<p>Jeremiah,<br>\nGreat comment.  You are right:  only override equals if you need to.  If you do, be sure to override GetHashCode() as well.</p>"
+  }
+]

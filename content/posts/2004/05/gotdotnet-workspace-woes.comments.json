@@ -1,0 +1,20 @@
+[
+  {
+    "id": 48,
+    "parent": 0,
+    "author_name": "Wiebe Tijsma",
+    "author_url": "http://",
+    "date": "2005-01-24T03:12:00",
+    "type": "comment",
+    "content_html": "<p>Yes, GotDotNet is an excellent example of Microsoft.NET high performance applications. Great.</p>\n<p>I Especially love the banners above this page:</p>\n<p>‘Build high performance applications using Visual Studio .NET’ </p>\n<p>GotDotNet Workspaces<br>\nYour request cannot be processed at this time. </p>\n<p>The application may be under heavy load or may be encountering an internal error. </p>"
+  },
+  {
+    "id": 49,
+    "parent": 0,
+    "author_name": "lucas",
+    "author_url": "http://www.netindustry.nl",
+    "date": "2005-07-15T01:27:20",
+    "type": "comment",
+    "content_html": "<p>sooo good that we now booth can work on VS2005 beta 2 projects :)))<br>\ngreat that u r so into GotDotNet, now i can work on somting i like, even now, when its not realy stable.</p>"
+  }
+]

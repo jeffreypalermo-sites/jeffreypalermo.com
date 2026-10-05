@@ -1,0 +1,129 @@
+---
+wp_id: 699
+title: Linq to Xml – querying an RSS feed
+slug: linq-to-xml-querying-an-rss-feed
+permalink: /2007/10/linq-to-xml-querying-an-rss-feed/
+date: 2007-10-13T17:49:03
+date_utc: 2007-10-13T17:49:03Z
+modified: 2007-10-13T17:49:03
+format: html
+excerpt: Linq (and all its flavors) will come out with .Net 3.5 and Visual Studio 2008. Along with the Xml support are classes such as XDocument, XElement, XAttribute, etc. What’s interesting about XElement in particular is that it allows us to load some Xml from many sources and query into it. Depending on your experience with […]
+comments_open: true
+---
+<p>Linq (and all its flavors) will come out with .Net 3.5 and Visual Studio 2008. Along with the Xml support are classes such as XDocument, XElement, XAttribute, etc. What’s interesting about XElement in particular is that it allows us to load some Xml from many sources and query into it. Depending on your experience with XPath, an Xml Linq query may be easier to write AND read.</p>
+<p>Let’s look at a sample Linq to Xml query. I’m going to use my blog’s RSS feed, <a title="http://feeds.feedburner.com/jeffreypalermo" href="http://feeds.feedburner.com/jeffreypalermo">http://feeds.feedburner.com/jeffreypalermo</a>.</p>
+<p>Let’s start simple. We’ll read in the Xml from the RSS feed and enumerate through all the posts (or "items" in the RSS world).</p>
+<div>
+<div>
+<pre>XElement rssFeed = XElement.Load(<span style="color:#006080">@"http://feeds.feedburner.com/jeffreypalermo"</span>);</pre>
+<pre></pre>
+<pre>var items = from item <span style="color:#0000ff">in</span> rssFeed.Elements(<span style="color:#006080">"channel"</span>).Elements(<span style="color:#006080">"item"</span>)</pre>
+<pre> select item;</pre>
+<pre></pre>
+<pre>Console.WriteLine(items.Count());</pre>
+<pre><span style="color:#0000ff">foreach</span> (<span style="color:#0000ff">object</span> o <span style="color:#0000ff">in</span> items)</pre>
+<pre>{</pre>
+<pre> Console.WriteLine(o);</pre>
+<pre>}</pre>
+</div>
+</div>
+<p>Note that we are merely reading in the feed into an XElement and then selecting all item nodes from the document.</p>
+<p>That’s pretty interesting that we can filter to only the "item" nodes that quickly, but what if I want to find the posts with the author of "Jeffrey Palermo" (never mind that this is my feed, but imagine it was a composite feed).</p>
+<div>
+<div>
+<pre>XNamespace dc = <span style="color:#006080">"http://purl.org/dc/elements/1.1/"</span>;</pre>
+<pre></pre>
+<pre>XElement rssFeed = XElement.Load(<span style="color:#006080">@"http://feeds.feedburner.com/jeffreypalermo"</span>);</pre>
+<pre></pre>
+<pre>var items = from item <span style="color:#0000ff">in</span> rssFeed.Elements(<span style="color:#006080">"channel"</span>).Elements(<span style="color:#006080">"item"</span>)</pre>
+<pre> <span style="color:#0000ff">where</span> item.Element(dc + <span style="color:#006080">"creator"</span>).Value == <span style="color:#006080">"Jeffrey Palermo"</span></pre>
+<pre> select item;</pre>
+<pre></pre>
+<pre>Console.WriteLine(items.Count());</pre>
+<pre><span style="color:#0000ff">foreach</span> (<span style="color:#0000ff">object</span> o <span style="color:#0000ff">in</span> items)</pre>
+<pre>{</pre>
+<pre> Console.WriteLine(o);</pre>
+<pre>}</pre>
+</div>
+</div>
+<p>I gave this example to illustrate how to use the XNamespace class to help filter in nodes that declare a namespace prefix such as "dc:creator" in an RSS feed. Note the "where" clause in my Linq query.</p>
+<p>Let’s go further and filter down to just the posts that contain the term "altnetconf" (or choose another term to search for)</p>
+<div>
+<div>
+<pre>XNamespace dc = <span style="color:#006080">"http://purl.org/dc/elements/1.1/"</span>;</pre>
+<pre></pre>
+<pre>XElement rssFeed = XElement.Load(<span style="color:#006080">@"http://feeds.feedburner.com/jeffreypalermo"</span>);</pre>
+<pre></pre>
+<pre>var items = from item <span style="color:#0000ff">in</span> rssFeed.Elements(<span style="color:#006080">"channel"</span>).Elements(<span style="color:#006080">"item"</span>)</pre>
+<pre> <span style="color:#0000ff">where</span> item.Element(dc + <span style="color:#006080">"creator"</span>).Value == <span style="color:#006080">"Jeffrey Palermo"</span></pre>
+<pre> &amp;&amp; item.Element(<span style="color:#006080">"description"</span>).Value.Contains(<span style="color:#006080">"altnetconf"</span>)</pre>
+<pre> select item;</pre>
+<pre></pre>
+<pre>Console.WriteLine(items.Count());</pre>
+<pre><span style="color:#0000ff">foreach</span> (<span style="color:#0000ff">object</span> o <span style="color:#0000ff">in</span> items)</pre>
+<pre>{</pre>
+<pre> Console.WriteLine(o);</pre>
+<pre>}</pre>
+</div>
+</div>
+<p>Now we’ve seen how the where clause functions. Let’s shape the data now. I’ll drop the where clause for simplicity, and I want to grab my feed and put a title and abstract into a collection for use in my application. I’ll use an anonymous type to help me do that.</p>
+<div>
+<div>
+<pre>XElement rssFeed = XElement.Load(<span style="color:#006080">@"http://feeds.feedburner.com/jeffreypalermo"</span>);</pre>
+<pre></pre>
+<pre>var items = from item <span style="color:#0000ff">in</span> rssFeed.Elements(<span style="color:#006080">"channel"</span>).Elements(<span style="color:#006080">"item"</span>)</pre>
+<pre> select <span style="color:#0000ff">new</span> { Title = item.Element(<span style="color:#006080">"title"</span>).Value, </pre>
+<pre> Abstract = item.Element(<span style="color:#006080">"description"</span>).Value.Substring(0, 100) }</pre>
+<pre>;</pre>
+<pre></pre>
+<pre>Console.WriteLine(items.Count());</pre>
+<pre><span style="color:#0000ff">foreach</span> (<span style="color:#0000ff">object</span> o <span style="color:#0000ff">in</span> items)</pre>
+<pre>{</pre>
+<pre> Console.WriteLine(o);</pre>
+<pre>}</pre>
+</div>
+</div>
+<p>Here, I have created an anonymous type with a Title and Abstract. Now that I have the information in object form, I can work with it. I would not want to work with Xml throughout my application, but only at the edges. I prefer to pull in the information and get it into my domain model as quickly as possible because objects are easier to work with that raw Xml.</p>
+<p>I’m not finished yet because my type doesn’t have a name, so there is no way I can pass my IEnumberable&lt;whateverthetypeis&gt; to another part of my application. I need to hydrate one of my domain objects so I can work with my abstracts.</p>
+<p>I’m going to use this class:</p>
+<div>
+<div>
+<pre><span style="color:#0000ff">public</span> <span style="color:#0000ff">class</span> PostAbstract</pre>
+<pre>{</pre>
+<pre> <span style="color:#0000ff">private</span> <span style="color:#0000ff">string</span> _title;</pre>
+<pre> <span style="color:#0000ff">private</span> <span style="color:#0000ff">string</span> _abstract;</pre>
+<pre></pre>
+<pre> <span style="color:#0000ff">public</span> <span style="color:#0000ff">string</span> Title</pre>
+<pre> {</pre>
+<pre> get { <span style="color:#0000ff">return</span> _title; }</pre>
+<pre> set { _title = <span style="color:#0000ff">value</span>; }</pre>
+<pre> }</pre>
+<pre></pre>
+<pre> <span style="color:#0000ff">public</span> <span style="color:#0000ff">string</span> Abstract</pre>
+<pre> {</pre>
+<pre> get { <span style="color:#0000ff">return</span> _abstract; }</pre>
+<pre> set { _abstract = <span style="color:#0000ff">value</span>; }</pre>
+<pre> }</pre>
+<pre>}</pre>
+</div>
+</div>
+<p>I’ll have the results of my Xml query create a set of PostAbstracts, and then I can work with them.</p>
+<div>
+<div>
+<pre>XElement rssFeed = XElement.Load(<span style="color:#006080">@"http://feeds.feedburner.com/jeffreypalermo"</span>);</pre>
+<pre></pre>
+<pre>IEnumerable&lt;PostAbstract&gt; items = from item <span style="color:#0000ff">in</span> rssFeed.Elements(<span style="color:#006080">"channel"</span>).Elements(<span style="color:#006080">"item"</span>)</pre>
+<pre> select <span style="color:#0000ff">new</span> PostAbstract { Title = item.Element(<span style="color:#006080">"title"</span>).Value, </pre>
+<pre> Abstract = item.Element(<span style="color:#006080">"description"</span>).Value.Substring(0, 100) }</pre>
+<pre>;</pre>
+<pre></pre>
+<pre>Console.WriteLine(items.Count());</pre>
+<pre><span style="color:#0000ff">foreach</span> (PostAbstract anAbstract <span style="color:#0000ff">in</span> items)</pre>
+<pre>{</pre>
+<pre> Console.WriteLine(<span style="color:#006080">"{0} - {1}"</span>, anAbstract.Title, anAbstract.Abstract);</pre>
+<pre>}</pre>
+</div>
+</div>
+<p>Note that I merely gave my type a name, PostAbstract. I used object initializers to set the properties, and now I have a set of objects I can work with to accomplish my purpose.</p>
+
+<p>If you enjoyed this article, subscribe to my feed: <a title="http://feeds.feedburner.com/jeffreypalermo" href="http://feeds.feedburner.com/jeffreypalermo">http://feeds.feedburner.com/jeffreypalermo</a></p>

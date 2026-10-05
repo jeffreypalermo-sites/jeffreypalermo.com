@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2636,
+    "parent": 0,
+    "author_name": "Jay",
+    "author_url": "http://",
+    "date": "2009-10-30T08:01:51",
+    "type": "comment",
+    "content_html": "<p>First, it seems to me that if you are practicing XP correctly you wouldn’t need an issue tracker.  It would force your developers to really write bug free code and fix issues immediately as they occur.<br>\nSecondly, big businesses might not write the small app in .NET or Java but could write it fairly quickly in PHP, Python, or Ruby.  There are plenty of frameworks out there that allow for small apps to be written very quickly that return a great value at a very low cost.</p>"
+  }
+]

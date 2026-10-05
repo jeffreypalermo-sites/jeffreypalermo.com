@@ -1,0 +1,238 @@
+---
+wp_id: 555
+title: IE 5 & 6 Xml databinding – level 300
+slug: ie-5-6-xml-databinding-level-300
+permalink: /2004/06/ie-5-6-xml-databinding-level-300/
+date: 2004-06-02T10:00:00
+date_utc: 2004-06-02T10:00:00Z
+modified: 2004-06-02T10:00:00
+format: html
+excerpt: The following is not a .Net topic. It’s an Internet Explorer 5 topic. The following technique can be used with any web page that uses IE 5+ as the client, so I’ve used it with .html, .asp, and .aspx files. It’s client-side xml databinding with Internet Explorer. This feature isn’t in Mozilla, but if you […]
+comments_open: true
+---
+<p>The following is not a .Net topic.&nbsp; It’s an Internet Explorer 5 topic.&nbsp; The following technique can be used with any web page that uses IE 5+ as the client, so I’ve used it with .html, .asp, and .aspx files.&nbsp; It’s client-side xml databinding with Internet Explorer.&nbsp; This feature isn’t in Mozilla, but if you have an IE Intranet app, this is a possible way in which you can make your front end more responsive and flexible.&nbsp; </p>
+<p>If you weren’t away, you can embed a section of xml in a web page, add some attributes to some html controls, and IE will automatically duplicate your bound controls for as many nodes as exist in the xml fragment.&nbsp; There are events that are thrown throughout the binding process, so you can use JavaScript or VBScript to make the front end dynamic.&nbsp; The following is a simple binding example:</p>
+<p><span>&lt;</span><span>html</span><span>&gt;<br>
+</span></p>
+
+<p><span>&lt;</span><span>xml</span><span> </span><span>id</span><span>=”xml”&gt;<br>
+</span></p>
+
+<p><span>&lt;</span><span>MyData</span><span>&gt;<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>Node</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>CheckBox</span><span>&gt;</span>checked<span>&lt;/</span><span>CheckBox</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>Kount</span><span>&gt;</span>0<span>&lt;/</span><span>Kount</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;/</span><span>Node</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>Node</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>CheckBox</span><span>&gt;</span>1<span>&lt;/</span><span>CheckBox</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>Kount</span><span>&gt;</span>4<span>&lt;/</span><span>Kount</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;/</span><span>Node</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>Node</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>CheckBox</span><span>&gt;</span>0<span>&lt;/</span><span>CheckBox</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>Kount</span><span>&gt;</span>6<span>&lt;/</span><span>Kount</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;/</span><span>Node</span><span>&gt;<br>
+</span></span></p>
+
+<p><span>&lt;/</span><span>MyData</span><span>&gt;<br>
+</span></p>
+
+<p><span>&lt;/</span><span>xml</span><span>&gt;<br>
+</span></p>
+
+<p><span>&lt;</span><span>body</span><span>&gt;<br>
+</span></p>
+
+<p><span>&lt;</span><span>table</span><span> </span><span>datasrc</span><span>=”#xml”&gt;<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>tbody</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>tr</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>td</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>input</span><span> </span><span>type</span><span>=”checkbox”</span><span> </span><span>id</span><span>=”chk”</span><span> </span><span>datafld</span><span>=”CheckBox”&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;/</span><span>td</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>td</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>input</span><span> </span><span>type</span><span>=”button”</span><span> </span><span>id</span><span>=”btn”</span><span> </span><span>datafld</span><span>=”Kount”&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;/</span><span>td</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;/</span><span>tr</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;/</span><span>tbody</span><span>&gt;<br>
+</span></span></p>
+
+<p><span>&lt;/</span><span>table</span><span>&gt;<br>
+</span></p>
+
+<p><span>&lt;/</span><span>body</span><span>&gt;<br>
+</span></p>
+
+<p><span>&lt;/</span><span>html</span><span>&gt;</span><span><br>
+</span></p>
+
+<p>Now, one small issue I ran into was that the property bound in the button is the value property.&nbsp; The value property is the text on the face of the button, so that won’t due.&nbsp; I modified it using JavaScript and a &lt;input/&gt; tag event to solve this if I need the button to be disabled if the value isn’t 0.</p>
+<p><span>&lt;</span><span>html</span><span>&gt;<br>
+</span></p>
+
+<p><span>&lt;</span><span>script</span><span> </span><span>language</span><span>=”javascript”&gt;<br>
+</span></p>
+
+<p><span>function</span><span> changeButton(button){<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>if</span>(button.value != “0”){<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>button.disabled = <span>true</span>;<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}<span>else</span>{<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>button.disabled = <span>false</span>;<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>button.onpropertychange = “”;<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>button.value = “Delete”;<br>
+</span></p>
+
+<p><span>}<br>
+</span></p>
+
+<p><span>&lt;/</span><span>script</span><span>&gt;<br>
+</span></p>
+
+<p><span>&lt;</span><span>xml</span><span> </span><span>id</span><span>=”xml”&gt;<br>
+</span></p>
+
+<p><span>&lt;</span><span>MyData</span><span>&gt;<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>Node</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>CheckBox</span><span>&gt;</span>checked<span>&lt;/</span><span>CheckBox</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>Kount</span><span>&gt;</span>0<span>&lt;/</span><span>Kount</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;/</span><span>Node</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>Node</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>CheckBox</span><span>&gt;</span>1<span>&lt;/</span><span>CheckBox</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>Kount</span><span>&gt;</span>4<span>&lt;/</span><span>Kount</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;/</span><span>Node</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>Node</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>CheckBox</span><span>&gt;</span>0<span>&lt;/</span><span>CheckBox</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>Kount</span><span>&gt;</span>6<span>&lt;/</span><span>Kount</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;/</span><span>Node</span><span>&gt;<br>
+</span></span></p>
+
+<p><span>&lt;/</span><span>MyData</span><span>&gt;<br>
+</span></p>
+
+<p><span>&lt;/</span><span>xml</span><span>&gt;<br>
+</span></p>
+
+<p><span>&lt;</span><span>body</span><span>&gt;<br>
+</span></p>
+
+<p><span>&lt;</span><span>table</span><span> </span><span>datasrc</span><span>=”#xml”&gt;<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>tbody</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>tr</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>td</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>input</span><span> </span><span>type</span><span>=”checkbox”</span><span> </span><span>id</span><span>=”chk”</span><span> </span><span>datafld</span><span>=”CheckBox”&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;/</span><span>td</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>td</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;</span><span>input</span><span> </span><span>type</span><span>=”button”</span><span> </span><span>id</span><span>=”btn”</span><span> </span><span>datafld</span><span>=”Kount”</span><span> </span><span>onpropertychange</span><span>=”changeButton(this);”&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;/</span><span>td</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;/</span><span>tr</span><span>&gt;<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&lt;/</span><span>tbody</span><span>&gt;<br>
+</span></span></p>
+
+<p><span>&lt;/</span><span>table</span><span>&gt;<br>
+</span></p>
+
+<p><span>&lt;/</span><span>body</span><span>&gt;<br>
+</span></p>
+
+<p><span>&lt;/</span><span>html</span><span>&gt;</span></p>

@@ -1,0 +1,26 @@
+---
+wp_id: 501
+title: Big News – MVC framework for ASP.NET in the works – level 300
+slug: big-news-mvc-framework-for-asp-net-in-the-works-level-300
+permalink: /2007/03/big-news-mvc-framework-for-asp-net-in-the-works-level-300/
+date: 2007-03-16T05:59:00
+date_utc: 2007-03-16T05:59:00Z
+modified: 2007-03-16T05:59:00
+format: html
+excerpt: This is big. I arranged a special meeting (with the help of Karl) with Scott Guthrie today on the last day of the MVP Summit. I brought along fellow CodeBetter bloggers Darrell Norton, Scott Bellware and Jeremy Miller. Scott laid out a concept for how to make ASP.Net better support MVC much like Rails and MonoRail try […]
+comments_open: true
+---
+<p>This is big.&nbsp; I arranged a special meeting&nbsp;(with the help of <a href="http://codebetter.com/blogs/karlseguin/default.aspx">Karl</a>)&nbsp;with <a href="http://weblogs.asp.net/scottgu/">Scott Guthrie</a> today on the last day of the MVP Summit.&nbsp; I brought along fellow CodeBetter bloggers <a href="http://codebetter.com/blogs/darrell.norton/default.aspx">Darrell Norton</a>, <a href="http://codebetter.com/blogs/scott.bellware/default.aspx">Scott Bellware</a> and <a href="http://codebetter.com/blogs/jeremy.miller/default.aspx">Jeremy Miller</a>.&nbsp; Scott laid out a concept for how to make ASP.Net better support MVC much like Rails and MonoRail try to conform to this model.&nbsp; </p>
+<p>If you aren’t familiar with MVC frameworks, the most important thing to know is that the Controller is king.&nbsp; The view only spins up and renders if the Controller decides it is the right thing to do.&nbsp; </p>
+<p>With Scott’s prototype, there is a new handler factory that infers from the URL which controller to instantiate and load.&nbsp; The controller then decides what to do with the request.&nbsp; The controller can load a view (.aspx file) and let it render.&nbsp; The view can access properties of the Controller.&nbsp; The ASP.NET lifecycle and control model and still be used in the view, or you can let the Controller render a view of customized templates.&nbsp; Either way, the Controller is in control.&nbsp; </p>
+<p>This model allows the Controller to be unit tested easily since contact with the HttpContext, Request, Response, etc can be easily mocked with this model.&nbsp; </p>
+<p>The codebehind and markup is the view (what I’ve been saying all along), and it is completely subordinate to the Controller.&nbsp; The view isn’t even created until the Controller decides it is time.</p>
+<p>With the model, the need for Model-View-Presenter goes away for web apps.&nbsp; I used M-V-P in the passed to&nbsp; get around the control model and get control to a testable class.&nbsp; With this new MVC framework, the Controller goes first and runs the show for the whole request.</p>
+<p>A url might look like <a href="http://localhost/myApp/ShoppingCart.mvc/CheckOut">http://localhost/myApp/ShoppingCart.mvc/CheckOut</a> where ShoppingCart is the Controller class and “CheckOut” is a method like:</p>
+<p>[Action]<br>public void CheckOut(){<br>&nbsp;&nbsp;&nbsp; //do something<br>}</p>
+
+<p>For post-backs, the control model still works and the view can delegate to the controller, but I have asked that this be looked at hard with the goal of putting the controller in charge of post-backs as well when needed.&nbsp; Scott is very open to feedback, and he plans to involve community experts in the planning of this new framework.</p>
+<p>It might be hard to imagine this new framework from just this blog post, but trust me.&nbsp; <b>This is very cool, and ScottGu is headed in the right direction.&nbsp; I’ll vouch for that.&nbsp; </b>We’re going to end up with a new ASP.NET paradigm that so much easier to work with and, most importantly, easier to test!</p>
+<p>Great concept Scott.&nbsp; I love what you are doing.</p>
+
+<p>UPDATE:&nbsp; More info <a href="/blogs/jeffrey.palermo/archive/2007/10/05/altnetconf-scott-guthrie-announces-asp-net-mvc-framework-at-alt-net-conf.aspx">http://codebetter.com/blogs/jeffrey.palermo/archive/2007/10/05/altnetconf-scott-guthrie-announces-asp-net-mvc-framework-at-alt-net-conf.aspx</a>&nbsp;</p>

@@ -1,0 +1,29 @@
+---
+wp_id: 149
+title: Key to ensuring dynamic ASP.NET controls save Viewstate – level 300
+slug: key-to-ensuring-dynamic-asp-net-controls-save-viewstate-level-300
+permalink: /2004/11/key-to-ensuring-dynamic-asp-net-controls-save-viewstate-level-300/
+date: 2004-11-25T14:11:00
+date_utc: 2004-11-25T14:11:00Z
+modified: 2004-11-25T14:11:00
+format: html
+excerpt: There are a few things to keep in mind when you create controls on the fly and add them to your page. Simply put, you want to add them to the page hierarchy as soon as possible. Before they are added to the page, they have not initialized themselves. When a dynamic control is added […]
+comments_open: true
+---
+<p>There are a few things to keep in mind when you create controls on the fly and add them to your page.&nbsp; Simply put, you want to add them to the page hierarchy as soon as possible.&nbsp; Before they are added to the page, they have not initialized themselves.&nbsp; When a dynamic control is added to another control, the new control plays catch-up to get to the stage that the parent control is in.&nbsp; For instance, if in your Page_Load, you add a textbox, it will play catch-up and go through its Init and Load phases.&nbsp; This is important beceause it will start tracking its viewstate.&nbsp; Values added before it is tracking viewstate won’t make it to viewstate and will be lost on PostBack.&nbsp; Here is an example that won’t work:</p>
+<div><br>
+<p>TextBox txt = <span>new</span> TextBox();</p><br>
+<p><span>if</span>(!IsPostBack)</p><br>
+<p>{</p><br>
+<p>&nbsp;&nbsp;&nbsp; txt.Text = “test value”;</p><br>
+<p>}</p><br>
+<p><span>this</span>.Form1.Controls.Add(txt);</p></div>
+<p>This example shows setting a text property BEFORE this control is added to the page (and before it is tracking viewstate).&nbsp; Next, we’ll show the right way to do it:</p>
+<div>TextBox txt = <span>new</span> TextBox();<br>
+<p><span>this</span>.Form1.Controls.Add(txt);</p><br>
+<p><span>if</span>(!IsPostBack)</p><br>
+<p>{</p><br>
+<p>&nbsp;&nbsp;&nbsp; txt.Text = “test value”;</p><br>
+<p>}</p></div>
+<p><br>Note here that we add the control to the page BEFORE we set a property.&nbsp; This enables our dynamic control to participate in viewstate as well as the rest of the page lifecycle.</p>
+<p>To clarify, if we add a dynamic control during the Page’s PreRender, when we do the Controls.Add( ) function, the new control will go through Init, Load and PreRender immediately to catch up with its parent (the Page).</p>

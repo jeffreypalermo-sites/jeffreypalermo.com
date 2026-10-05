@@ -1,0 +1,191 @@
+[
+  {
+    "id": 2108,
+    "parent": 0,
+    "author_name": "Evan",
+    "author_url": "http://www.evanhoff.com/",
+    "date": "2007-11-04T22:52:29",
+    "type": "comment",
+    "content_html": "<p>Good post and I agree 100%.  It sounds like maybe ‘Lowest Total Cost of Ownership’ might be a bit more accurate than ‘Lowest Cost’, but I digg it.</p>"
+  },
+  {
+    "id": 2109,
+    "parent": 0,
+    "author_name": "jdn",
+    "author_url": "http://www.e-Crescendo.com",
+    "date": "2007-11-05T00:53:19",
+    "type": "comment",
+    "content_html": "<p>I don’t want you to take this the wrong way, but do you have any studies or other empirical whatnot to support what you are saying?</p>\n<p>I realize you set up the contrast for effect, but the ‘sure it is done quickly but it is full of technical debt and costs more to extend’ is a red herring.  Lots of software is written once and never needs to be maintained or extended.</p>\n<p>I mean, one can hardly argue against setting high standards, but ‘delivering the highest in quality also ends up costing the least’ seems to be hard to define and defend.</p>"
+  },
+  {
+    "id": 2110,
+    "parent": 0,
+    "author_name": "ScottBellware",
+    "author_url": "http://scottic.us",
+    "date": "2007-11-05T01:49:06",
+    "type": "comment",
+    "content_html": "<p>&gt; In fact, we give a warranty for the software.  If there is a bug<br>\n&gt; found later, it’s covered under warranty</p>\n<p>I look forward to the estate sale.  Please stock your group with Mac laptops.</p>\n<p>Ever read into software liability lawsuits?  You should… as a certification holder, you’re more liable than others.  Software liability and malpractice is a brutal bloodbath.  The chances of you getting into a liability lawsuit have more to do with the predispositions of the customer when the customer gets into a situation that puts him under extreme duress than with the quality of your delivery.</p>\n<p>Nonetheless, if you provide a warranty, you’re going to have to force a strict definition of what that liability is, which inevitably leads to an enforceable codex of definitions of a bug.  This is a fast-track, slippery-slope back to waterfall, and very much an anathema for the kinds of business relations you might want to establish over an agile development consultancy.</p>"
+  },
+  {
+    "id": 2111,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-11-05T01:54:25",
+    "type": "comment",
+    "content_html": "<p>@jdn,<br>\nI can cite McConnell’s “Code Complete”.  That book cites many, many studies that support what I have experienced and related anecdotally.</p>\n<p>You certainly can pull apart the points I’ve made and analyze them independently and dismiss them all.  I didn’t intend this post to be an empirical study in itself, but the alternative is not posting at all if I don’t have loads of data to back it up.</p>\n<p>Definitely, customer requirements are always very unique, so one approach cannot be mindlessly applied to every situation.   I agree that “highest in quality” is hard to define.  Software quality is a tough term to define, I’ll give you that.</p>"
+  },
+  {
+    "id": 2112,
+    "parent": 0,
+    "author_name": "jdn",
+    "author_url": "http://www.blogcoward.com",
+    "date": "2007-11-05T02:37:35",
+    "type": "comment",
+    "content_html": "<p>@Jeffrey</p>\n<p>Oh, certainly, if you had to footnote every blog post, no one would ever blog.  Certainly don’t want you to think I was suggesting that.  I’ll be interested to read the McConnell book and see how solid it is.</p>\n<p>I’ve written about ‘maintainability’ many times, and it is used in multiple senses.  There are times when designing off of typed datasets and wizards is *massively* more maintainable than using e.g., DI, separation of concerns, etc.  </p>\n<p>And there is a large amount of software that doesn’t need to be maintained.  ETL processes are often like this.  The only time you would ever change is if a vendor changed a file format, or if there was some overall change in underlying architecture, in which case you are rewriting in general anyways.  Otherwise, you write it once and you are done.  And so if you can do it quickly, it trumps other concerns.</p>\n<p>But, I definitely agree, you have to be judicious in how you apply approaches to software development.</p>\n<p>Cheers.</p>"
+  },
+  {
+    "id": 2113,
+    "parent": 0,
+    "author_name": "Eric Wise",
+    "author_url": "http://www.codebetter.com/blogs/eric.wise",
+    "date": "2007-11-05T13:20:40",
+    "type": "comment",
+    "content_html": "<p>To add to jdn’s comment… You always have to be mindful on the job that adding DI, 3rd party unit testing controls, 3rd party build controls, etc that you are vastly increasing the maintainability learning curve.  If you have a client with a relatively straightforward application and you know they’re going to have a lesser experienced/skilled coder someday take it over, you’re actually doing them harm by adding superfluous code and patterns.</p>\n<p>1. Make it work in the simplest way possible.<br>\n2. Clean it up, improve readability/re-use.<br>\n3. Refactor to patterns… when necessary.</p>"
+  },
+  {
+    "id": 2114,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-11-05T13:40:06",
+    "type": "comment",
+    "content_html": "<p>@Eric,<br>\nI don’t have anything to disagree with you there.</p>\n<p>I haven’t mentioned DI, 3rd party unit testing controls/3rd party build controls, so I’m a bit confused about “you are vastly increasing the maintainability learning curve.”  Keeping software maintainable is the goal, so I don’t understand what you are arguing for/against.</p>"
+  },
+  {
+    "id": 2115,
+    "parent": 0,
+    "author_name": "Craig Bowes",
+    "author_url": "http://www.dotnettricks.com",
+    "date": "2007-11-05T19:17:16",
+    "type": "comment",
+    "content_html": "<p>You what i think a lot of software quality can be defined as?  Empathy.  Empathy for the next developer that will need to read your code, fix a bug or add a new feature.</p>"
+  },
+  {
+    "id": 2116,
+    "parent": 0,
+    "author_name": "andrew",
+    "author_url": "http://andrew.myhre.tanash.net",
+    "date": "2007-11-05T20:37:11",
+    "type": "comment",
+    "content_html": "<p>I’ve worked for people in the past who maintain that ‘reuseability’ is a myth, and one should always write software bespoke and to-purpose. Needless to say every project those companies tackled ended up being mostly complete disasters, and cost the company months in maintenance. I agree with your argument here and I’m really excited about learning the practises.</p>"
+  },
+  {
+    "id": 2117,
+    "parent": 0,
+    "author_name": "Jason",
+    "author_url": "http://",
+    "date": "2007-11-05T23:03:11",
+    "type": "comment",
+    "content_html": "<p>You would assuredly provide world class consulting services following this method.</p>\n<p>However, whether it’s “right” or not, the reason people don’t do low cost consulting is because they can do high cost consulting.</p>\n<p>Keep in mind that firms like Accenture are charging $600/hour+ for their “lead architects”.  Why charge less when you’re providing more?  </p>"
+  },
+  {
+    "id": 2118,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-11-06T04:05:48",
+    "type": "comment",
+    "content_html": "<p>@Jason,<br>\nAs a businessman, I’m not arguing for low rates.  After all, value and profit go hand in hand, but I think there is so much that can be done to give the customer what they are paying for.  Software is expensive no matter how you spin it, but I try to provide the most for the client’s software dollar.</p>"
+  },
+  {
+    "id": 2119,
+    "parent": 0,
+    "author_name": "Jason",
+    "author_url": "http://",
+    "date": "2007-11-06T16:11:29",
+    "type": "comment",
+    "content_html": "<p>I 100% agree with that and I’m beyond convinced that you would provide world class consulting services with this methodology.</p>\n<p>Need any investors?</p>"
+  },
+  {
+    "id": 2120,
+    "parent": 0,
+    "author_name": "Leeor",
+    "author_url": "http://leeor.net",
+    "date": "2007-11-08T21:17:25",
+    "type": "comment",
+    "content_html": "<p>Jeffrey, you are 100% correct in this post.  My question, though, lies with the state of technology.  Yes, you can create extremely best practices for tackling a software project, from freezing requirements, to creating change-aware programs, but how do you deal with the constant barrage of new technology?  So right now you might be programming for Windows, or for the web, but what about when Silverlight comes out, and WPF, workflows, ssis, sql, linq… vs2005, 2008, masterpages, xml…  Surely .Net 2.0 has been quickly replaced by 3.0 and now 3.5.  This by itself poses challenges in development.  A client that wanted a Windows app 7 years ago, 5 years ago wanted a web app.  That same client 3 years ago wanted/needed the app to run on their cell phone.  Today they want it to have 3D multi touch, surface like visualization.  Tomorrow?  So yes, you can have great practices and great people, but you also have to somehow be ready to tackle new platforms and coding schemes in order not to be left in the dust.  How do you do this?  Devote 50%+ of your time to learning?  you must in my opinion.  The only reason why I haven’t started a software firm is because it’s just mind boggling.  It’s almost impossible to estimate deliverables, and the cost is almost always high.  I’m not saying it’s impossible, but at the end of the day it’s a mess.  It must be structured and predictable.  </p>"
+  },
+  {
+    "id": 2121,
+    "parent": 0,
+    "author_name": "Rinat Abdullin",
+    "author_url": "http://landorsystems.com",
+    "date": "2007-11-14T08:57:10",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>By saying “delivering the highest in quality” do you really mean the “highest” extreme here (complete unit test coverage, full compliance with all proper development guidelines, complete comments (spellchecked), extensive reference implementations, absolutely uniform coding style, completely clean runs by all code analysis tools etc) no matter what?))</p>\n<p>2 ScottBellware,<br>\nWarranty gives confidence and builds up reputation. It gotta be worth risk of bumping into wrong customer. And the solution could be quite simple – de juro do not imply any warranty. De facto – fix all issues that are really your issues (and a bit more). </p>"
+  },
+  {
+    "id": 2122,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-11-14T13:33:30",
+    "type": "comment",
+    "content_html": "<p>@Rinat,<br>\nI do mean the “highest” in quality, but I do recognize that the term is highly subjective because there is not an agree-upon definition of quality in software.  I correlate quality with correctness first and maintainability second.  Both are required, however.  I don’t believe that, for instance, uniform coding style is a requirement for correctness or maintainability.  It helps if the style isn’t all over the place, but not absolutely necessary.  Code analysis tools is an example of another I wouldn’t consider for high quality.  There are better measures, and, again, it’s highly subjective.</p>\n<p>As the codebase increases, adding features should not slow to a crawl.  Invasive changes shouldn’t be a “big deal”.  Quality, maintainable software will continue to be correct even in the face of changes because the structure will make the changes not so invasive.</p>"
+  },
+  {
+    "id": 2123,
+    "parent": 0,
+    "author_name": "Rinat Abdullin",
+    "author_url": "http://landorsystems.com",
+    "date": "2007-11-15T06:38:09",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>Would you agree then that “highest in quality” definitely implies that there are absolutely no bugs discovered by the customer? ))</p>\n<p>I absolutely agree with the value of the flexibility in structure followed by the quality and maintainable code. And this value is even bigger if this flexibility was specifically created for this customer and designed to solve his problems even long term (or simplify solving them), considering all the primary future paths the customer might take in that period. This way the majority of changes coming down the road will not be something unexpected and would be already introduced to the structure (even if this introduction involves just slight bending of the in-structure interaction one way instead of the other or hard-coding some subtle coding restriction in). And then instead of just “no big deal” customers would get “Well, that’s trivial, low risk, low cost feature, since we’ve already considered it”. </p>"
+  },
+  {
+    "id": 2124,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-11-15T16:32:05",
+    "type": "comment",
+    "content_html": "<p>@Rinat,<br>\nThat’s exactly what that means.  If the software was supposed to behave a certain way, and it doesn’t, then the customer didn’t get what they paid for.  UI perfection is a separate issue, but functionality has to be correct.  It’s  a very slippery slope if the software doesn’t meet the customers’ expectations because that points to a lack of understanding of the problem, and that’s no way to run a project.  You have to build the right thing.  After that, the thing as to be right.</p>\n<p>I disagree with the notion that for future things to be easy they have to be considered up front.  Good architecture and design is resilient to change, especially unforeseen change.  We can’t predict every change, so we have to design for easy change, no matter what the change (almost).  I doubt we would change Java -&gt; .Net or vice versa as a v2 change.  Might, but doubt it.</p>"
+  },
+  {
+    "id": 2125,
+    "parent": 0,
+    "author_name": "Rinat Abdullin",
+    "author_url": "http://landorsystems.com",
+    "date": "2007-11-16T07:37:11",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>Gotcha)) Ok, then there is purely logical contradiction. You say<br>\n1. The highest quality means no bugs.<br>\n2. You provide the highest quality software project deliverables<br>\n3. “When a bug is found (because, yes, it happens), it becomes the highest priority. ”<br>\nHow could a bug be found in the highest quality software if the “highest quality” means no bugs?)</p>\n<p>Why can’t you predict every change? You are working with the customer after all. He is the one who calls for changes. If you know your customer, his problems and view the project from his standpoint, not only you would have scope of what’s going to happen in the long-term, but you would also have much less problems with functionality correctness (and much less paperwork needed to verify the requirements).</p>\n<p>I agree that the architecture has to be resilient to almost all changes. But according to the normal distribution there always would be 20% of changes that cannot be implemented easily. And some of those changes could be important since the customer would ask for them in a couple of milestones. Making these important for the customer changes happen easily (although you are not being paid for that explicitly) – that’s, I believe, one of the points of the “highest quality software”. Would you agree?)</p>\n<p>Basically here we are aiming not at “easy development” for the developer, but rather at “most efficient development” from the customer’s standpoint. As if he had complete development expertise combined with the resources and his present knowledge of the business domain (or even a bit more). Could there be a mark of higher quality for the customer?)</p>\n<p>And speaking of the bugs… well they happen. And I think it is more efficient to put the resources the customer pays for into the actual development, rather than spent workdays making sure that the software will not contain any deviations, no matter what people/hackers do to it. Microsoft &amp; Novell do it this way, and I guess they know something about the software development.</p>"
+  },
+  {
+    "id": 2126,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-11-16T12:18:22",
+    "type": "comment",
+    "content_html": "<p>&gt;&gt;How could a bug be found in the highest quality software if the “highest quality” means no bugs?)</p>\n<p>During delivery, if a bug is found, it should be handled right away, not cataloged in a bug tracker and brought up later.  Software built with testing right from the beginning will be much higher quality right from the start, so the few bugs that are found won’t derail the project.  After delivery, bugs should be handled under a warranty of some kind.  </p>\n<p>&gt;&gt; Why can’t you predict every change?<br>\nI don’t know, but I’ve never met anyone who could.  Often a customer will discover something about his business that is completely new to him.  The software should be able to adapt in this case as well.  I’ve never been good at predicting the future, so we try to build software that is resilient to unexpected changes, not just open to anticipated changes.</p>"
+  },
+  {
+    "id": 2127,
+    "parent": 0,
+    "author_name": "Rinat Abdullin",
+    "author_url": "http://landorsystems.com",
+    "date": "2007-11-16T20:36:34",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>How do you deal with your warranty if some portion of the codebase that you’ve been responsible for gets altered by some other party? Do you keep it, cancel it completely, or something in between?</p>\n<p>BTW, do you do only unit-testing, or additionally some kind of self-validation? For example, if the solution being delivered includes server of some sort, then the validation tests would verify that all linked services and resources are configured properly, database checks pass and all internal exception/warning logs are empty or processed. These tests can be either component-based (check just inter-component boundaries) or solution-wide. And then the server could run these tests on a regular basis and inform the maintenance about issue before it even affected the production. Do you do that?</p>\n<p>Re: predicting changes.</p>\n<p>Well, it is actually not completely about predicting changes, but rather about estimating and managing risks and probabilities. That’s a common practice in the project management world or complex projects (like those that are run by NASA). There is already an established (and proven) statement saying that managing any project is mostly about managing risks of this project. Unfortunately for some reason (probably because of the urban myth that the software development is more “state-of-the-art” thing rather something that could be consistently measured, planned, controlled and executed) teams rarely explicitly evaluate and manage risks and modify current architecture and development procedures according to those changing estimates.</p>"
+  },
+  {
+    "id": 2128,
+    "parent": 0,
+    "author_name": "Adam Cox",
+    "author_url": "http://www.bindingdesigns.com/",
+    "date": "2008-03-19T05:55:51",
+    "type": "comment",
+    "content_html": "<p>I agree with the article. Proper design should be used while developing a system or it will be a mess. It will be nearly impossible to update later on unless if proper design techniques are applied.</p>"
+  }
+]

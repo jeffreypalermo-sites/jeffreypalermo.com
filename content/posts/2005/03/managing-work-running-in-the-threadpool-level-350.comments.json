@@ -1,0 +1,38 @@
+[
+  {
+    "id": 260,
+    "parent": 0,
+    "author_name": "Josh",
+    "author_url": "http://",
+    "date": "2005-03-03T06:06:00",
+    "type": "comment",
+    "content_html": "<p>I know you have the caveat that this has been simplified, but I think its worth pointing out that you should synchronize access to the ‘threads’ ArrayList, since it is being modified by multiple threads.</p>\n<p>Which can be as easy as:</p>\n<p>public ArrayList threads = ArrayList.Synchronized(new ArrayList);</p>"
+  },
+  {
+    "id": 261,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2005-03-03T06:57:00",
+    "type": "comment",
+    "content_html": "<p>Josh,<br>\nThat is a very good point that I left out of my example.  I’ll add (for others reading) that if there are other resources being accessed by multiple threads at once, you can wrap that code with:<br>\nmutexInstance.WaitOne();<br>\n// code<br>\nmutexInstance.Release();</p>"
+  },
+  {
+    "id": 262,
+    "parent": 0,
+    "author_name": "Willem Odendaal",
+    "author_url": "http://",
+    "date": "2005-03-03T22:06:00",
+    "type": "comment",
+    "content_html": "<p>Jeffrey, slightly off topic, but where did you get your code formatter? Or do you copy from Visual Studio into another app and from there onto the .Text editor?</p>"
+  },
+  {
+    "id": 263,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2005-03-04T11:01:00",
+    "type": "comment",
+    "content_html": "<p>I use \"CopySourceAsHtml\".  You can download it here: <a href=\"http://www.jtleigh.com/people/colin/software/CopySourceAsHtml/\" rel=\"nofollow\">http://www.jtleigh.com/people/colin/software/CopySourceAsHtml/</a></p>"
+  }
+]

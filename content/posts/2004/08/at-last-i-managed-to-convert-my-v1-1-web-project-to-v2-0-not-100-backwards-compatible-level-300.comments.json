@@ -1,0 +1,29 @@
+[
+  {
+    "id": 127,
+    "parent": 0,
+    "author_name": "J. Michael Palermo IV",
+    "author_url": "http://",
+    "date": "2004-08-18T07:48:00",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>I just read all of your blogs leading up to (and including) this one.  Thank you!  The power of blogging is having information such as this \"war story\" available for all of us to either learn from or help you with.  I am also in the middle of porting code over, and we share much misery \uD83D\uDE42</p>\n<p>(not to mention a last name)</p>\n<p>Michael Palermo</p>"
+  },
+  {
+    "id": 128,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-08-18T14:01:00",
+    "type": "comment",
+    "content_html": "<p>Sure, no problem.  I’m glad my blog is being helpful.  I’m also trying to combat the slew of other posts that only seem to announce and reannounce current events.</p>"
+  },
+  {
+    "id": 129,
+    "parent": 0,
+    "author_name": "Adarsh",
+    "author_url": "http://",
+    "date": "2005-10-12T22:00:22",
+    "type": "comment",
+    "content_html": "<p>Hi,<br>\nI am trying to build a dll for a web service that was written originally in VS.NET 2003, and I am running into the same problem. Can you tell me how to go about building a dll ?</p>\n<p>Thanks,<br>\nAdarsh</p>"
+  }
+]

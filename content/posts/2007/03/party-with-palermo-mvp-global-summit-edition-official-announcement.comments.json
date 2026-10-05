@@ -1,0 +1,2090 @@
+[
+  {
+    "id": 1177,
+    "parent": 0,
+    "author_name": "Scott Watermasysk",
+    "author_url": "http://scottwater.com/blog/",
+    "date": "2007-02-16T19:51:50",
+    "type": "comment",
+    "content_html": "<p>I should be there.</p>\n<p>-Scott</p>"
+  },
+  {
+    "id": 1178,
+    "parent": 0,
+    "author_name": "Mighell",
+    "author_url": "http://www.dotnetside.org/blogs/mighell",
+    "date": "2007-02-16T20:54:27",
+    "type": "comment",
+    "content_html": "<p>I’ll be there \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1179,
+    "parent": 0,
+    "author_name": "Marc Adler",
+    "author_url": "http://magmasystems.blogspot.com",
+    "date": "2007-02-17T13:40:57",
+    "type": "comment",
+    "content_html": "<p>DonXML just invited me, so I will show up if my plane is not delayed.</p>"
+  },
+  {
+    "id": 1180,
+    "parent": 0,
+    "author_name": "Nick Parker",
+    "author_url": "http://www.developernotes.com",
+    "date": "2007-02-17T15:03:50",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!</p>"
+  },
+  {
+    "id": 1181,
+    "parent": 0,
+    "author_name": "Dave Laribee",
+    "author_url": "http://laribee.com/blog/",
+    "date": "2007-02-17T18:35:39",
+    "type": "comment",
+    "content_html": "<p>Me too!</p>"
+  },
+  {
+    "id": 1182,
+    "parent": 0,
+    "author_name": "Jean-Paul S. Boodhoo",
+    "author_url": "http://www.jpboodhoo.com/blog",
+    "date": "2007-02-18T01:16:50",
+    "type": "comment",
+    "content_html": "<p>I’ll be there.</p>"
+  },
+  {
+    "id": 1183,
+    "parent": 0,
+    "author_name": "rlewallen",
+    "author_url": "http://www.codebetter.com/blogs/raymond.lewallen",
+    "date": "2007-02-18T13:29:17",
+    "type": "comment",
+    "content_html": "<p>I will be there.</p>"
+  },
+  {
+    "id": 1184,
+    "parent": 0,
+    "author_name": "Tomas Restrepo",
+    "author_url": "http://www.winterdom.com/weblog/",
+    "date": "2007-02-18T14:20:41",
+    "type": "comment",
+    "content_html": "<p>sounds like fun!</p>"
+  },
+  {
+    "id": 1185,
+    "parent": 0,
+    "author_name": "jmiller",
+    "author_url": "http://codebetter.com/blogs/jeremy.miller",
+    "date": "2007-02-19T11:29:02",
+    "type": "comment",
+    "content_html": "<p>I’m there.</p>"
+  },
+  {
+    "id": 1186,
+    "parent": 0,
+    "author_name": "Javier G. Lozano",
+    "author_url": "http://lozanotek.com",
+    "date": "2007-02-19T14:26:38",
+    "type": "comment",
+    "content_html": "<p>I’m there!</p>"
+  },
+  {
+    "id": 1187,
+    "parent": 0,
+    "author_name": "Mario Cardinal",
+    "author_url": "http://",
+    "date": "2007-02-20T02:35:09",
+    "type": "comment",
+    "content_html": "<p>I’m there</p>"
+  },
+  {
+    "id": 1188,
+    "parent": 0,
+    "author_name": "James Kovacs",
+    "author_url": "http://www.jameskovacs.com",
+    "date": "2007-02-20T18:34:39",
+    "type": "comment",
+    "content_html": "<p>Count me in! Looking forward to it.</p>"
+  },
+  {
+    "id": 1189,
+    "parent": 0,
+    "author_name": "Noah Coad",
+    "author_url": "http://coadblog.com",
+    "date": "2007-02-20T18:56:42",
+    "type": "comment",
+    "content_html": "<p>I’m so there!  It’s going to be great.  Party w Palermo rocks!</p>"
+  },
+  {
+    "id": 1190,
+    "parent": 0,
+    "author_name": "Shawn Weisfeld",
+    "author_url": "http://www.shawnweisfeld.com",
+    "date": "2007-02-20T23:33:40",
+    "type": "comment",
+    "content_html": "<p>Count me in!</p>"
+  },
+  {
+    "id": 1191,
+    "parent": 0,
+    "author_name": "Jeff Julian",
+    "author_url": "http://jjulian.geekswithblogs.net",
+    "date": "2007-02-21T03:09:08",
+    "type": "comment",
+    "content_html": "<p>I am in!!!!</p>"
+  },
+  {
+    "id": 1192,
+    "parent": 0,
+    "author_name": "Miguel Jimenez",
+    "author_url": "http://blogs.clearscreen.com/migs",
+    "date": "2007-02-21T12:34:30",
+    "type": "comment",
+    "content_html": "<p>I’ll be there also \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1193,
+    "parent": 0,
+    "author_name": "Jim Wooley",
+    "author_url": "http://devauthority.com/blogs/jwooley",
+    "date": "2007-02-21T14:51:17",
+    "type": "comment",
+    "content_html": "<p>One more for the festivities.</p>"
+  },
+  {
+    "id": 1194,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-02-21T16:28:00",
+    "type": "comment",
+    "content_html": "<p>Thanks to the folks so far that RSVPed.  Now, what I need EVERYONE to do is to tell all your colleagues who will be at the summit.  Tell them today so they can plan for it.  This is going to be an awesome party!!  I’m targeting attendance at 100 people, so it’s important to get the word out.</p>"
+  },
+  {
+    "id": 1195,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-02-21T16:28:30",
+    "type": "comment",
+    "content_html": "<p>Tell everyone about:</p>\n<p><a href=\"http://partywith.palermo.cc\" rel=\"nofollow ugc\">http://partywith.palermo.cc</a></p>"
+  },
+  {
+    "id": 1196,
+    "parent": 0,
+    "author_name": "Bill Vaughn",
+    "author_url": "http://www.betav.com",
+    "date": "2007-02-21T17:43:29",
+    "type": "comment",
+    "content_html": "<p>I’ll be there</p>"
+  },
+  {
+    "id": 1197,
+    "parent": 0,
+    "author_name": "David Silverlight",
+    "author_url": "http://www.community-credit.com",
+    "date": "2007-02-21T20:33:24",
+    "type": "comment",
+    "content_html": "<p>I wouldn’t miss it for the world.</p>"
+  },
+  {
+    "id": 1198,
+    "parent": 0,
+    "author_name": "Riccardo Golia",
+    "author_url": "http://blogs.aspitalia.com/rickyvr",
+    "date": "2007-02-21T21:09:20",
+    "type": "comment",
+    "content_html": "<p>I’ll be there! Count me in… \uD83D\uDE09<br>\nBye, Ricky.</p>"
+  },
+  {
+    "id": 1199,
+    "parent": 0,
+    "author_name": "Daniele Bochicchio",
+    "author_url": "http://blogs.aspitalia.com/daniele",
+    "date": "2007-02-21T21:16:32",
+    "type": "comment",
+    "content_html": "<p>Hey, I can’t miss THE party! count me in! \uD83D\uDE09</p>"
+  },
+  {
+    "id": 1200,
+    "parent": 0,
+    "author_name": "Jon Flanders",
+    "author_url": "http://www.masteringbiztalk.com/",
+    "date": "2007-02-21T21:52:22",
+    "type": "comment",
+    "content_html": "<p>I will also try to be there \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1201,
+    "parent": 0,
+    "author_name": "Scott Allen",
+    "author_url": "http://www.OdeToCode.com/blogs/scott/",
+    "date": "2007-02-22T00:48:09",
+    "type": "comment",
+    "content_html": "<p>Count me in, too. </p>"
+  },
+  {
+    "id": 1202,
+    "parent": 0,
+    "author_name": "Lorin Thwaits",
+    "author_url": "http://geekswithblogs.net/lorint",
+    "date": "2007-02-22T01:41:56",
+    "type": "comment",
+    "content_html": "<p>Dang, I won’t be able to make it.</p>\n<p>(Also I figured with the completely perfect attendance streak going so far that it may get too lopsided if I remained quiet about not going, so I decided to voice my decline to balance out the universe!)</p>"
+  },
+  {
+    "id": 1203,
+    "parent": 0,
+    "author_name": "Chris (BlogusMaximus) Williams",
+    "author_url": "http://www.blogusmaximus.com",
+    "date": "2007-02-22T01:42:12",
+    "type": "comment",
+    "content_html": "<p>I’m there yo… </p>"
+  },
+  {
+    "id": 1204,
+    "parent": 0,
+    "author_name": "Walt Ritscher",
+    "author_url": "http://wpfwonderland.com",
+    "date": "2007-02-22T02:13:58",
+    "type": "comment",
+    "content_html": "<p>I’ll be there after Rodmans BBQ!</p>"
+  },
+  {
+    "id": 1205,
+    "parent": 0,
+    "author_name": "Dennis Vroegop",
+    "author_url": "http://www.dotned.nl",
+    "date": "2007-02-22T06:41:04",
+    "type": "comment",
+    "content_html": "<p>I’ll be there. I don’t know what time, my flight doesn’t land until 7, but I wouldn’t want to miss this \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1206,
+    "parent": 0,
+    "author_name": "Sander Gerz",
+    "author_url": "http://todotnet.com",
+    "date": "2007-02-22T06:44:26",
+    "type": "comment",
+    "content_html": "<p>Count me in, as well.</p>"
+  },
+  {
+    "id": 1207,
+    "parent": 0,
+    "author_name": "André Obelink",
+    "author_url": "http://www.obelink.com",
+    "date": "2007-02-22T07:19:26",
+    "type": "comment",
+    "content_html": "<p>Great! I’ll be there too!</p>"
+  },
+  {
+    "id": 1208,
+    "parent": 0,
+    "author_name": "Armand du Plessis",
+    "author_url": "http://dotnet.org.za/armand",
+    "date": "2007-02-22T07:26:01",
+    "type": "comment",
+    "content_html": "<p>Count me in provided my flight is on time.</p>"
+  },
+  {
+    "id": 1209,
+    "parent": 0,
+    "author_name": "Ernst Kuschke",
+    "author_url": "http://dotnet.org.za/ernst",
+    "date": "2007-02-22T07:32:06",
+    "type": "comment",
+    "content_html": "<p>Count me in \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1210,
+    "parent": 0,
+    "author_name": "Mauro Servienti",
+    "author_url": "http://",
+    "date": "2007-02-22T07:43:26",
+    "type": "comment",
+    "content_html": "<p>I’ll be there \uD83D\uDE00</p>"
+  },
+  {
+    "id": 1211,
+    "parent": 0,
+    "author_name": "Ian Cooper",
+    "author_url": "http://iancooper.spaces.live.com",
+    "date": "2007-02-22T08:20:33",
+    "type": "comment",
+    "content_html": "<p>I’m in</p>"
+  },
+  {
+    "id": 1212,
+    "parent": 0,
+    "author_name": "Samer Chidiac",
+    "author_url": "http://www.samerchidiac.com",
+    "date": "2007-02-22T09:55:38",
+    "type": "comment",
+    "content_html": "<p>I’m in! SC</p>"
+  },
+  {
+    "id": 1213,
+    "parent": 0,
+    "author_name": "Wessam Zeidan",
+    "author_url": "http://wessamzeidan.net",
+    "date": "2007-02-22T10:16:06",
+    "type": "comment",
+    "content_html": "<p>Count me in</p>"
+  },
+  {
+    "id": 1214,
+    "parent": 0,
+    "author_name": "Doug Seven",
+    "author_url": "http://www.dougseven.com",
+    "date": "2007-02-22T14:59:39",
+    "type": "comment",
+    "content_html": "<p>I will be there.</p>"
+  },
+  {
+    "id": 1215,
+    "parent": 0,
+    "author_name": "Chris Brandsma",
+    "author_url": "http://www.chrisbrandsma.com",
+    "date": "2007-02-22T17:12:22",
+    "type": "comment",
+    "content_html": "<p>I will be there</p>"
+  },
+  {
+    "id": 1216,
+    "parent": 0,
+    "author_name": "Frans Bouma",
+    "author_url": "http://weblogs.asp.net/fbouma",
+    "date": "2007-02-22T17:19:02",
+    "type": "comment",
+    "content_html": "<p>I’ll try to be there as well \uD83D\uDE42 (unless I’m totally wrecked by the jetlag)</p>"
+  },
+  {
+    "id": 1217,
+    "parent": 0,
+    "author_name": "Tim Gifford",
+    "author_url": "http://blogs.giffordconsulting.com",
+    "date": "2007-02-22T17:38:49",
+    "type": "comment",
+    "content_html": "<p>I’m in!</p>"
+  },
+  {
+    "id": 1218,
+    "parent": 0,
+    "author_name": "Miha Markic",
+    "author_url": "http://cs.rthand.com/blogs/blog_with_righthand/",
+    "date": "2007-02-22T17:52:07",
+    "type": "comment",
+    "content_html": "<p>Sounds great to me, I’ll come.</p>"
+  },
+  {
+    "id": 1219,
+    "parent": 0,
+    "author_name": "Peter Ritchie",
+    "author_url": "http://www.peterRitchie.com/Blog/",
+    "date": "2007-02-22T19:12:01",
+    "type": "comment",
+    "content_html": "<p>Count me in!</p>"
+  },
+  {
+    "id": 1220,
+    "parent": 0,
+    "author_name": "Jorge Serrano - Visual Basic MVP",
+    "author_url": "http://geeks.ms/blogs/jorge/",
+    "date": "2007-02-22T19:57:12",
+    "type": "comment",
+    "content_html": "<p>Thank you very much!<br>\nI hope to be there. \uD83D\uDE42<br>\nI’ll contact with you If I go.</p>"
+  },
+  {
+    "id": 1221,
+    "parent": 0,
+    "author_name": "Tim Shakarian",
+    "author_url": "http://blog.tshak.net",
+    "date": "2007-02-22T20:49:29",
+    "type": "comment",
+    "content_html": "<p>TSHAK in the house!</p>"
+  },
+  {
+    "id": 1222,
+    "parent": 0,
+    "author_name": "Ivan Gonzalez",
+    "author_url": "http://geeks.ms/blogs/ivan",
+    "date": "2007-02-22T21:25:44",
+    "type": "comment",
+    "content_html": "<p>I’m in!</p>"
+  },
+  {
+    "id": 1223,
+    "parent": 0,
+    "author_name": "Rodrigo Corral",
+    "author_url": "http://geeks.ms/blogs/rcorral",
+    "date": "2007-02-22T21:32:05",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!!!</p>"
+  },
+  {
+    "id": 1224,
+    "parent": 0,
+    "author_name": "Pablo Pelaez",
+    "author_url": "http://",
+    "date": "2007-02-22T22:07:55",
+    "type": "comment",
+    "content_html": "<p>Great, I’ll come.</p>"
+  },
+  {
+    "id": 1225,
+    "parent": 0,
+    "author_name": "Jorge Serrano",
+    "author_url": "http://geeks.ms/blogs/jorge/",
+    "date": "2007-02-22T22:10:54",
+    "type": "comment",
+    "content_html": "<p>Confirmed. I go! \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1226,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-02-22T22:36:58",
+    "type": "comment",
+    "content_html": "<p>Pablo,<br>\nI need a URL if you want a link. \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1227,
+    "parent": 0,
+    "author_name": "Marco Amoedo",
+    "author_url": "http://www.geeks.ms/blogs/marco",
+    "date": "2007-02-22T22:38:34",
+    "type": "comment",
+    "content_html": "<p>I’ll be there \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1228,
+    "parent": 0,
+    "author_name": "Heidi Schwartz",
+    "author_url": "http://",
+    "date": "2007-02-22T23:22:56",
+    "type": "comment",
+    "content_html": "<p>Had a great time in Boston – can’t wait to party again!<br>\nHeidi</p>"
+  },
+  {
+    "id": 1229,
+    "parent": 0,
+    "author_name": "Martin Woodward",
+    "author_url": "http://www.woodwardweb.com",
+    "date": "2007-02-23T08:53:45",
+    "type": "comment",
+    "content_html": "<p>Jet lag, sleep deprivation, beer and pool – sounds like the perfect combination for me to embarrass myself.  </p>\n<p>Count me in – really looking forward to it!</p>"
+  },
+  {
+    "id": 1230,
+    "parent": 0,
+    "author_name": "Kirk Jackson",
+    "author_url": "http://",
+    "date": "2007-02-23T11:19:04",
+    "type": "comment",
+    "content_html": "<p>Hi Jeffrey, I’ll be flying in at 6:30, but keen to make the second half! Kirk</p>"
+  },
+  {
+    "id": 1231,
+    "parent": 0,
+    "author_name": "Joe Brinkman",
+    "author_url": "http://www.dotnetnuke.com",
+    "date": "2007-02-23T20:11:53",
+    "type": "comment",
+    "content_html": "<p>Count me in.  I will be coming in to visit with the parental units on Saturday so will definitely try to cross the Sound to get there. </p>"
+  },
+  {
+    "id": 1232,
+    "parent": 0,
+    "author_name": "Ngoc-Huong Nguyen",
+    "author_url": "http://huongn.spaces.live.com",
+    "date": "2007-02-23T21:53:59",
+    "type": "comment",
+    "content_html": "<p>Yag told me about this, so if i’m an utter boor, you can blame him. \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1233,
+    "parent": 0,
+    "author_name": "David M. Kean",
+    "author_url": "http://davidkean.net",
+    "date": "2007-02-24T01:45:13",
+    "type": "comment",
+    "content_html": "<p>I’ll see you there.</p>"
+  },
+  {
+    "id": 1234,
+    "parent": 0,
+    "author_name": "Mateusz Kierepka",
+    "author_url": "http://www.xna.pl",
+    "date": "2007-02-24T06:55:46",
+    "type": "comment",
+    "content_html": "<p>I’ll be there \uD83D\uDE09</p>"
+  },
+  {
+    "id": 1235,
+    "parent": 0,
+    "author_name": "karl",
+    "author_url": "http://",
+    "date": "2007-02-25T01:46:51",
+    "type": "comment",
+    "content_html": "<p>I’ll be able to stop by for a bit \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1236,
+    "parent": 0,
+    "author_name": "Leigh Pointer",
+    "author_url": "http://www.subzero-solutions.net",
+    "date": "2007-02-25T14:18:35",
+    "type": "comment",
+    "content_html": "<p>I will be flying in from the Netherlands on Saturday, so you can count me in.</p>"
+  },
+  {
+    "id": 1237,
+    "parent": 0,
+    "author_name": "Darren Gosbell",
+    "author_url": "http://geekswithblogs.net/darrengosbell",
+    "date": "2007-02-25T21:09:14",
+    "type": "comment",
+    "content_html": "<p>I am flying in from Australia on Sunday, but I am still going to try to come by for an hour or two.</p>"
+  },
+  {
+    "id": 1238,
+    "parent": 0,
+    "author_name": "Maarten van Stam",
+    "author_url": "http://blogs.officezealot.com/maarten/",
+    "date": "2007-02-25T21:18:30",
+    "type": "comment",
+    "content_html": "<p>I’ll fly over from the Netherlands to do serious technical sessions the next two weeks so it can’t hurt to start off with a party does it? \uD83D\uDE42 Count me in…</p>"
+  },
+  {
+    "id": 1239,
+    "parent": 0,
+    "author_name": "Yonghyun Kim",
+    "author_url": "http://blog.naver.com/drvoss",
+    "date": "2007-02-25T22:54:18",
+    "type": "comment",
+    "content_html": "<p>It’s so funny. ^^ I try to be there with another Korean MVPs.<br>\nHave a nicd day.</p>"
+  },
+  {
+    "id": 1240,
+    "parent": 0,
+    "author_name": "Paulo Morgado",
+    "author_url": "http://msmvps.com/blogs/paulomorgado/",
+    "date": "2007-02-25T23:01:00",
+    "type": "comment",
+    "content_html": "<p>Count me in.</p>"
+  },
+  {
+    "id": 1241,
+    "parent": 0,
+    "author_name": "Mike Ryan",
+    "author_url": "http://",
+    "date": "2007-02-26T02:08:29",
+    "type": "comment",
+    "content_html": "<p>I’m in!</p>"
+  },
+  {
+    "id": 1242,
+    "parent": 0,
+    "author_name": "Chris Dufour",
+    "author_url": "http://www.geekswithblogs.com/chrduf",
+    "date": "2007-02-26T02:56:02",
+    "type": "comment",
+    "content_html": "<p>Count me in!</p>"
+  },
+  {
+    "id": 1243,
+    "parent": 0,
+    "author_name": "João Pedro Martins",
+    "author_url": "http://www.arquitecturadesoftware.org/blogs/joaomartins",
+    "date": "2007-02-26T09:58:06",
+    "type": "comment",
+    "content_html": "<p>Count me in.</p>"
+  },
+  {
+    "id": 1244,
+    "parent": 0,
+    "author_name": "Hilton Giesenow",
+    "author_url": "http://hilton.giesenow.com/",
+    "date": "2007-02-26T11:09:55",
+    "type": "comment",
+    "content_html": "<p>Is there still space? Then count me in!</p>\n<p>Perhaps we should let Jillian know 2000 geeks are about to descend?</p>"
+  },
+  {
+    "id": 1245,
+    "parent": 0,
+    "author_name": "Oliver Sommer",
+    "author_url": "http://www.mssbsfaq.de",
+    "date": "2007-02-26T12:08:38",
+    "type": "comment",
+    "content_html": "<p>I’ll stop over if our SBS MVP party is gonna end as planed at 10pm….:)</p>"
+  },
+  {
+    "id": 1246,
+    "parent": 0,
+    "author_name": "Scott Willhite",
+    "author_url": "http://www.dotnetnuke.com",
+    "date": "2007-02-26T17:37:05",
+    "type": "comment",
+    "content_html": "<p>I’ll be late, but I’ll be there… and thirsty *grin*<br>\nThanks for your hospitality, Jeffrey!<br>\nCheers!</p>"
+  },
+  {
+    "id": 1247,
+    "parent": 0,
+    "author_name": "Rob Windsor",
+    "author_url": "http://www.msmvps.com/windsor",
+    "date": "2007-02-26T20:23:51",
+    "type": "comment",
+    "content_html": "<p>My flight doesn’t arrive until 9:00pm so it’ll be tight but hopefully I can make it for a round or two at the end of the event.</p>"
+  },
+  {
+    "id": 1248,
+    "parent": 0,
+    "author_name": "Aaron Jensen",
+    "author_url": "http://blog.eleutian.com",
+    "date": "2007-02-26T20:53:48",
+    "type": "comment",
+    "content_html": "<p>Hey, that’s right across lake union from us! \uD83D\uDE42<br>\nJacob and I (and maybe Khalil) will be there.</p>"
+  },
+  {
+    "id": 1249,
+    "parent": 0,
+    "author_name": "Maja Ciemienga - lizardsis, ASP.NET MVP",
+    "author_url": "http://",
+    "date": "2007-02-26T21:59:56",
+    "type": "comment",
+    "content_html": "<p>Hi, I will also try to be there \uD83D\uDE09</p>"
+  },
+  {
+    "id": 1250,
+    "parent": 0,
+    "author_name": "Jose Luis Manners",
+    "author_url": "http://www.josemanners.com",
+    "date": "2007-02-27T00:20:53",
+    "type": "comment",
+    "content_html": "<p>I’ll be there.</p>"
+  },
+  {
+    "id": 1251,
+    "parent": 0,
+    "author_name": "Kevin McNeish",
+    "author_url": "http://www.oakleafsd.com",
+    "date": "2007-02-27T05:00:47",
+    "type": "comment",
+    "content_html": "<p>I’ll be there…thanks for the invite!</p>"
+  },
+  {
+    "id": 1252,
+    "parent": 0,
+    "author_name": "Shawn Wildermuth",
+    "author_url": "http://adoguy.com",
+    "date": "2007-02-27T08:36:25",
+    "type": "comment",
+    "content_html": "<p>I’ll be there…</p>"
+  },
+  {
+    "id": 1253,
+    "parent": 0,
+    "author_name": "Aneesh",
+    "author_url": "http://sequelserver.blogspot.com",
+    "date": "2007-02-27T11:46:41",
+    "type": "comment",
+    "content_html": "<p>I will be there </p>"
+  },
+  {
+    "id": 1254,
+    "parent": 0,
+    "author_name": "Hemanth",
+    "author_url": "http://",
+    "date": "2007-02-27T12:16:00",
+    "type": "comment",
+    "content_html": "<p>Glad to be there with you.</p>"
+  },
+  {
+    "id": 1255,
+    "parent": 0,
+    "author_name": "Anjana",
+    "author_url": "http://weblogs.asp.net/anjanaram",
+    "date": "2007-02-27T12:28:07",
+    "type": "comment",
+    "content_html": "<p>I  would be there</p>"
+  },
+  {
+    "id": 1256,
+    "parent": 0,
+    "author_name": "Venkatanarasimha K.L",
+    "author_url": "http://",
+    "date": "2007-02-27T13:19:45",
+    "type": "comment",
+    "content_html": "<p>Count me in! I’ll be there!!</p>"
+  },
+  {
+    "id": 1257,
+    "parent": 0,
+    "author_name": "Cristian Civera",
+    "author_url": "http://blogs.aspitalia.com/ricciolo",
+    "date": "2007-02-27T14:00:54",
+    "type": "comment",
+    "content_html": "<p>I will come \uD83D\uDE09</p>"
+  },
+  {
+    "id": 1258,
+    "parent": 0,
+    "author_name": "HimaBindu Vejela",
+    "author_url": "http://himabinduvejella.blogspot.com",
+    "date": "2007-02-27T15:06:09",
+    "type": "comment",
+    "content_html": "<p>I will be there as WELL</p>"
+  },
+  {
+    "id": 1259,
+    "parent": 0,
+    "author_name": "Stefano Mostarda",
+    "author_url": "http://",
+    "date": "2007-02-27T15:20:17",
+    "type": "comment",
+    "content_html": "<p>I’m In \uD83D\uDE00</p>"
+  },
+  {
+    "id": 1260,
+    "parent": 0,
+    "author_name": "Jason Olson",
+    "author_url": "http://www.managed-world.com",
+    "date": "2007-02-27T17:28:12",
+    "type": "comment",
+    "content_html": "<p>I’m in :).</p>"
+  },
+  {
+    "id": 1261,
+    "parent": 0,
+    "author_name": "Keith Rull",
+    "author_url": "http://devpinoy.org/blogs/keithrull",
+    "date": "2007-02-27T18:16:09",
+    "type": "comment",
+    "content_html": "<p>Add me to the list Jeff! I’ll be there \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1262,
+    "parent": 0,
+    "author_name": "Shreeman",
+    "author_url": "http://Shreeman.spaces.live.com",
+    "date": "2007-02-27T19:54:36",
+    "type": "comment",
+    "content_html": "<p>I ll be there if flight is not delayed.</p>"
+  },
+  {
+    "id": 1263,
+    "parent": 0,
+    "author_name": "Maciej Pilecki",
+    "author_url": "http://",
+    "date": "2007-02-27T20:42:35",
+    "type": "comment",
+    "content_html": "<p>I will be coming straight from the slopes of Crystal Mountain!</p>"
+  },
+  {
+    "id": 1264,
+    "parent": 0,
+    "author_name": "Greg Low",
+    "author_url": "http://msmvps.com/greglow",
+    "date": "2007-02-27T23:41:23",
+    "type": "comment",
+    "content_html": "<p>Hi Jeffrey,</p>\n<p>Mai (ie: Mai Low) and I will be there.</p>\n<p>Regards,</p>\n<p>Greg Low</p>"
+  },
+  {
+    "id": 1265,
+    "parent": 0,
+    "author_name": "Laurent Duveau",
+    "author_url": "http://weblogs.asp.net/lduveau/default.aspx",
+    "date": "2007-02-28T00:50:05",
+    "type": "comment",
+    "content_html": "<p>I’ll (try to) be there!<br>\nMy flight is scheduled for 9PM.</p>"
+  },
+  {
+    "id": 1266,
+    "parent": 0,
+    "author_name": "Stuart Celarier",
+    "author_url": "http://www.ferncrk.com/blog",
+    "date": "2007-02-28T01:15:42",
+    "type": "comment",
+    "content_html": "<p>It sounds like a party. I’m hep.</p>\n<p>Say, bartender, make that a double.</p>"
+  },
+  {
+    "id": 1267,
+    "parent": 0,
+    "author_name": "Mike Ryan",
+    "author_url": "http://",
+    "date": "2007-02-28T04:34:40",
+    "type": "comment",
+    "content_html": "<p>me too!</p>"
+  },
+  {
+    "id": 1268,
+    "parent": 0,
+    "author_name": "Deepak Kumar Vasudevan",
+    "author_url": "http://lavanyadeepak.blogspot.com/",
+    "date": "2007-02-28T12:58:22",
+    "type": "comment",
+    "content_html": "<p>Count me in. I just booked the tickets and would be in Seattle from March 11.</p>"
+  },
+  {
+    "id": 1269,
+    "parent": 0,
+    "author_name": "Rich Claussen",
+    "author_url": "http://richhubbins.theclaussens.com",
+    "date": "2007-02-28T14:32:31",
+    "type": "comment",
+    "content_html": "<p>Attending + 1</p>"
+  },
+  {
+    "id": 1270,
+    "parent": 0,
+    "author_name": "Rory",
+    "author_url": "http://www.neopoleon.com",
+    "date": "2007-02-28T17:46:47",
+    "type": "comment",
+    "content_html": "<p>Hey, dawgg –</p>\n<p>I’m going to be there, and I’m bringing my little C9 camera.</p>\n<p>Please plan accordingly.</p>\n<p>– Rory</p>"
+  },
+  {
+    "id": 1271,
+    "parent": 0,
+    "author_name": "Lorenzo Benaglia",
+    "author_url": "http://blogs.dotnethell.it/lorenzo/",
+    "date": "2007-02-28T21:57:44",
+    "type": "comment",
+    "content_html": "<p>I’ll be there \uD83D\uDE09</p>"
+  },
+  {
+    "id": 1272,
+    "parent": 0,
+    "author_name": "Luca Spolidoro",
+    "author_url": "http://blogs.dotnethell.it/windowsvista",
+    "date": "2007-02-28T22:00:55",
+    "type": "comment",
+    "content_html": "<p>I’m in!<br>\n—<br>\nLicantrop0</p>"
+  },
+  {
+    "id": 1273,
+    "parent": 0,
+    "author_name": "rlewallen",
+    "author_url": "http://www.codebetter.com/blogs/raymond.lewallen",
+    "date": "2007-03-01T02:06:14",
+    "type": "comment",
+    "content_html": "<p>Aw perfect, Rory and Erik with their Channel 9 cameras to record the evidence!</p>"
+  },
+  {
+    "id": 1274,
+    "parent": 0,
+    "author_name": "Cathal Connolly",
+    "author_url": "http://",
+    "date": "2007-03-01T02:09:13",
+    "type": "comment",
+    "content_html": "<p>I’ll be there if theres still room, it’s more social than emptying the hotel minibar.</p>"
+  },
+  {
+    "id": 1275,
+    "parent": 0,
+    "author_name": "Chris Tavares",
+    "author_url": "http://",
+    "date": "2007-03-01T06:13:03",
+    "type": "comment",
+    "content_html": "<p>++numAttendees;</p>"
+  },
+  {
+    "id": 1276,
+    "parent": 0,
+    "author_name": "Jim Zimmerman",
+    "author_url": "http://www.jimzimmerman.com/blog",
+    "date": "2007-03-01T06:57:47",
+    "type": "comment",
+    "content_html": "<p>I’ll be there if there is room.  I am excited to see Seattle and meet you all!</p>"
+  },
+  {
+    "id": 1277,
+    "parent": 0,
+    "author_name": "Luca Bianchi",
+    "author_url": "http://blogs.aspitalia.com/lucabianchi",
+    "date": "2007-03-01T07:18:16",
+    "type": "comment",
+    "content_html": "<p>See you there… \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1278,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-01T12:43:29",
+    "type": "comment",
+    "content_html": "<p>There is still plenty of room!</p>"
+  },
+  {
+    "id": 1279,
+    "parent": 0,
+    "author_name": "Andrea Gallazzi",
+    "author_url": "http://",
+    "date": "2007-03-01T22:29:48",
+    "type": "comment",
+    "content_html": "<p>I’ll be there! Thanks.</p>"
+  },
+  {
+    "id": 1280,
+    "parent": 0,
+    "author_name": "Cory Smith",
+    "author_url": "http://www.addressof.com",
+    "date": "2007-03-02T00:51:36",
+    "type": "comment",
+    "content_html": "<p>Sounds like it’ll be fund.  I’ll be there!</p>"
+  },
+  {
+    "id": 1281,
+    "parent": 0,
+    "author_name": "Tobin Titus",
+    "author_url": "http://blogs.iis.net/tobintitus",
+    "date": "2007-03-02T02:16:05",
+    "type": "comment",
+    "content_html": "<p>Errr.. +1</p>"
+  },
+  {
+    "id": 1282,
+    "parent": 0,
+    "author_name": "Mark Rosenberg",
+    "author_url": "http://",
+    "date": "2007-03-02T23:21:01",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!</p>"
+  },
+  {
+    "id": 1283,
+    "parent": 0,
+    "author_name": "Savas Parastatidis",
+    "author_url": "http://savas.parastatidis.name",
+    "date": "2007-03-03T01:49:48",
+    "type": "comment",
+    "content_html": "<p>Count me in!</p>"
+  },
+  {
+    "id": 1284,
+    "parent": 0,
+    "author_name": "Andrea Montanari",
+    "author_url": "http://www.asql.biz",
+    "date": "2007-03-03T15:44:48",
+    "type": "comment",
+    "content_html": "<p>thank’s for the party… I’ll be there too..</p>"
+  },
+  {
+    "id": 1285,
+    "parent": 0,
+    "author_name": "Scott",
+    "author_url": "http://www.lazycoder.com",
+    "date": "2007-03-03T16:19:29",
+    "type": "comment",
+    "content_html": "<p>Do you have to be an MVP? If not, I’m in.</p>\n<p>Free beverage from the tap to the first person to recognize me. \uD83D\uDE09</p>"
+  },
+  {
+    "id": 1286,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-03T16:59:42",
+    "type": "comment",
+    "content_html": "<p>Scott,<br>\nNon-MVPs are welcome as well.</p>"
+  },
+  {
+    "id": 1287,
+    "parent": 0,
+    "author_name": "Doug Robbins",
+    "author_url": "http://",
+    "date": "2007-03-04T05:36:05",
+    "type": "comment",
+    "content_html": "<p>I’ll be there.  Thanks for arranging it.</p>"
+  },
+  {
+    "id": 1288,
+    "parent": 0,
+    "author_name": "Gerardo Fransecky",
+    "author_url": "http://blogs.dotnethell.it/gerardo",
+    "date": "2007-03-04T18:03:57",
+    "type": "comment",
+    "content_html": "<p>I’ll be there, count me in! \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1289,
+    "parent": 0,
+    "author_name": "Bil Simser",
+    "author_url": "http://weblogs.asp.net/bsimser",
+    "date": "2007-03-04T23:18:14",
+    "type": "comment",
+    "content_html": "<p>Holy crap this party is turning into the event of the Summit! Free geek stuff and drinks and food. What more can you ask for from 100+ drunk and rowdy MVPs all competing for attention?</p>"
+  },
+  {
+    "id": 1290,
+    "parent": 0,
+    "author_name": "Michal Stanislawek",
+    "author_url": "http://",
+    "date": "2007-03-04T23:45:05",
+    "type": "comment",
+    "content_html": "<p>You can count me in as well \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1291,
+    "parent": 0,
+    "author_name": "Woody Pewitt",
+    "author_url": "http://blog.pewitt.org",
+    "date": "2007-03-05T00:14:09",
+    "type": "comment",
+    "content_html": "<p>I will be there love the idea!</p>"
+  },
+  {
+    "id": 1292,
+    "parent": 0,
+    "author_name": "Daniel Larson",
+    "author_url": "http://daniellarson.spaces.live.com",
+    "date": "2007-03-05T00:26:43",
+    "type": "comment",
+    "content_html": "<p>I’ll be there. </p>\n<p>Daniel Larson (Dan Larson)<br>\nSharePoint Server MVP, Ajax &amp; social computing engineer @ NewsGator</p>"
+  },
+  {
+    "id": 1293,
+    "parent": 0,
+    "author_name": "Bob Mixon : SharePoint MVP",
+    "author_url": "http://www.ShareSquared.com/blogs/BobMixon",
+    "date": "2007-03-05T04:17:06",
+    "type": "comment",
+    "content_html": "<p>I’ll be there; I am looking forward to it! :;</p>\n<p>Bob Mixon<br>\nManaging Director<br>\nShareSquared, Inc.</p>"
+  },
+  {
+    "id": 1294,
+    "parent": 0,
+    "author_name": "Eduardo Quintás",
+    "author_url": "http://geeks.ms/blogs/quintas/",
+    "date": "2007-03-05T10:59:01",
+    "type": "comment",
+    "content_html": "<p>I’ll be there too…</p>"
+  },
+  {
+    "id": 1295,
+    "parent": 0,
+    "author_name": "Eli Robillard",
+    "author_url": "http://weblogs.asp.net/erobillard",
+    "date": "2007-03-05T16:33:31",
+    "type": "comment",
+    "content_html": "<p>MOSS MVP and ASPInsider</p>"
+  },
+  {
+    "id": 1296,
+    "parent": 0,
+    "author_name": "Misha Zhutov",
+    "author_url": "http://submain.com",
+    "date": "2007-03-06T14:26:16",
+    "type": "comment",
+    "content_html": "<p>I will be there!</p>"
+  },
+  {
+    "id": 1297,
+    "parent": 0,
+    "author_name": "Serge Baranovsky",
+    "author_url": "http://submain.com",
+    "date": "2007-03-06T14:27:07",
+    "type": "comment",
+    "content_html": "<p>I’m in</p>"
+  },
+  {
+    "id": 1298,
+    "parent": 0,
+    "author_name": "Dmytro Lapshyn",
+    "author_url": "http://",
+    "date": "2007-03-06T14:33:41",
+    "type": "comment",
+    "content_html": "<p>Count me in!</p>"
+  },
+  {
+    "id": 1299,
+    "parent": 0,
+    "author_name": "calebjenkins",
+    "author_url": "http://www.calebjenkins.com",
+    "date": "2007-03-06T17:18:41",
+    "type": "comment",
+    "content_html": "<p>I’ll be there… with the <a href=\"http://communitycast.tv\" rel=\"nofollow\">camera</a> rolling!  \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1300,
+    "parent": 0,
+    "author_name": "Gregorio P",
+    "author_url": "http://",
+    "date": "2007-03-07T03:28:10",
+    "type": "comment",
+    "content_html": "<p>Sounds a lot of fun!</p>\n<p>please count me in!<br>\nGregorio</p>"
+  },
+  {
+    "id": 1301,
+    "parent": 0,
+    "author_name": "Fernando Garcia",
+    "author_url": "http://",
+    "date": "2007-03-07T17:58:07",
+    "type": "comment",
+    "content_html": "<p>I´m a MVP Lead from LATAM<br>\nwould you like to share with me more details about it?<br>\nmy mail is <a href=\"mailto:fernando.garcia@microsoft.com\">fernando.garcia@microsoft.com</a></p>"
+  },
+  {
+    "id": 1302,
+    "parent": 0,
+    "author_name": "Roberto Hernández",
+    "author_url": "http://",
+    "date": "2007-03-07T17:58:10",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!!!!!!</p>"
+  },
+  {
+    "id": 1303,
+    "parent": 0,
+    "author_name": "Humberto Martinez",
+    "author_url": "http://www.HumbertoMartinez.com",
+    "date": "2007-03-07T18:00:48",
+    "type": "comment",
+    "content_html": "<p>I’m there! </p>"
+  },
+  {
+    "id": 1304,
+    "parent": 0,
+    "author_name": "Sebastian",
+    "author_url": "http://www.preemptive.com",
+    "date": "2007-03-07T18:31:02",
+    "type": "comment",
+    "content_html": "<p>Of course we will be there! I will be joined by Gabriel Torok and Bill Leach. </p>"
+  },
+  {
+    "id": 1305,
+    "parent": 0,
+    "author_name": "Sandy Khaund",
+    "author_url": "http://blogs.msdn.com/sandyk/",
+    "date": "2007-03-07T19:28:06",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!</p>"
+  },
+  {
+    "id": 1306,
+    "parent": 0,
+    "author_name": "Vishal Singh",
+    "author_url": "http://blogs.msdn.com/vishalsi",
+    "date": "2007-03-07T19:40:20",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!</p>"
+  },
+  {
+    "id": 1307,
+    "parent": 0,
+    "author_name": "Jose Alarcón",
+    "author_url": "http://www.jasoft.org",
+    "date": "2007-03-07T19:51:36",
+    "type": "comment",
+    "content_html": "<p>Great, I’ll be there too with my wife \uD83D\uDE42</p>\n<p><a href=\"https://mvp.support.microsoft.com/profile=75566160-4A0C-4EBB-ACB0-335B9F1B31C8\" rel=\"nofollow ugc\">https://mvp.support.microsoft.com/profile=75566160-4A0C-4EBB-ACB0-335B9F1B31C8</a></p>"
+  },
+  {
+    "id": 1308,
+    "parent": 0,
+    "author_name": "Brad Wilson",
+    "author_url": "http://www.agileprogrammer.com/dotnetguy",
+    "date": "2007-03-07T20:12:54",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!</p>"
+  },
+  {
+    "id": 1309,
+    "parent": 0,
+    "author_name": "James Newkirk",
+    "author_url": "http://blogs.msdn.com/jamesnewkirk",
+    "date": "2007-03-07T20:12:55",
+    "type": "comment",
+    "content_html": "<p>I’ll be there </p>"
+  },
+  {
+    "id": 1310,
+    "parent": 0,
+    "author_name": "Piotr Dobrowolski",
+    "author_url": "http://",
+    "date": "2007-03-07T20:56:16",
+    "type": "comment",
+    "content_html": "<p>Count me in!</p>"
+  },
+  {
+    "id": 1311,
+    "parent": 0,
+    "author_name": "Fabio Camara",
+    "author_url": "http://www.vstsrocks.com.br",
+    "date": "2007-03-07T22:21:12",
+    "type": "comment",
+    "content_html": "<p>I’ll be there \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1312,
+    "parent": 0,
+    "author_name": "Mauro SantAnna",
+    "author_url": "http://maurosjungle.spaces.live.com/",
+    "date": "2007-03-07T22:24:54",
+    "type": "comment",
+    "content_html": "<p>I will be there.</p>"
+  },
+  {
+    "id": 1313,
+    "parent": 0,
+    "author_name": "Ramon Durães",
+    "author_url": "http://",
+    "date": "2007-03-07T22:53:48",
+    "type": "comment",
+    "content_html": "<p>‘ll be there \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1314,
+    "parent": 0,
+    "author_name": "José Antonio Leal de Farias",
+    "author_url": "http://compactplace.blogspot.com",
+    "date": "2007-03-07T22:59:13",
+    "type": "comment",
+    "content_html": "<p>Count me in.</p>"
+  },
+  {
+    "id": 1315,
+    "parent": 0,
+    "author_name": "Aurelio Minerbo",
+    "author_url": "http://www.baboo.com.br",
+    "date": "2007-03-07T23:53:18",
+    "type": "comment",
+    "content_html": "<p>I will be there too.</p>"
+  },
+  {
+    "id": 1316,
+    "parent": 0,
+    "author_name": "Wallace Santos",
+    "author_url": "http://surferdotnet.blogspot.com/",
+    "date": "2007-03-07T23:55:42",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!!!!</p>"
+  },
+  {
+    "id": 1317,
+    "parent": 0,
+    "author_name": "Daniel Cazzulino",
+    "author_url": "http://clariusconsulting.net/kzu",
+    "date": "2007-03-08T01:04:01",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!</p>"
+  },
+  {
+    "id": 1318,
+    "parent": 0,
+    "author_name": "Wesner Moise",
+    "author_url": "http://wesnerm.blogs.com",
+    "date": "2007-03-08T04:48:35",
+    "type": "comment",
+    "content_html": "<p>I’ll be there…</p>"
+  },
+  {
+    "id": 1319,
+    "parent": 0,
+    "author_name": "Hugo Kornelis",
+    "author_url": "http://sqlblog.com/blogs/hugo_kornelis/default.aspx",
+    "date": "2007-03-08T08:39:51",
+    "type": "comment",
+    "content_html": "<p>I’ll be there (unless too tired or too jetlagged)</p>"
+  },
+  {
+    "id": 1320,
+    "parent": 0,
+    "author_name": "Nilton Pinheiro",
+    "author_url": "http://www.mcdbabrasil.com.br",
+    "date": "2007-03-08T09:23:44",
+    "type": "comment",
+    "content_html": "<p>I’ll be there too \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1321,
+    "parent": 0,
+    "author_name": "Ricardo Oneda Pereira de Toledo",
+    "author_url": "http://oneda.mvps.org/blog",
+    "date": "2007-03-08T10:41:22",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!</p>"
+  },
+  {
+    "id": 1322,
+    "parent": 0,
+    "author_name": "Fernando Guerrero",
+    "author_url": "http://",
+    "date": "2007-03-08T11:40:01",
+    "type": "comment",
+    "content_html": "<p>I will be there</p>"
+  },
+  {
+    "id": 1323,
+    "parent": 0,
+    "author_name": "Brian Loesgen",
+    "author_url": "http://geekswithblogs.com/bloesgen",
+    "date": "2007-03-08T13:05:55",
+    "type": "comment",
+    "content_html": "<p>Sounds like fun, it’s on my calendar</p>"
+  },
+  {
+    "id": 1324,
+    "parent": 0,
+    "author_name": "Leonardo Tolomelli",
+    "author_url": "http://",
+    "date": "2007-03-08T14:30:44",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!!</p>"
+  },
+  {
+    "id": 1325,
+    "parent": 0,
+    "author_name": "Michael Wiley",
+    "author_url": "http://",
+    "date": "2007-03-08T16:39:06",
+    "type": "comment",
+    "content_html": "<p>Count me in!!!</p>"
+  },
+  {
+    "id": 1326,
+    "parent": 0,
+    "author_name": "Dwayne Lamb",
+    "author_url": "http://www.mobidogs.com/",
+    "date": "2007-03-08T17:33:44",
+    "type": "comment",
+    "content_html": "<p>Hey Jeffrey… how about useing Microsoft Virtual Earth for the map on your page?</p>\n<p>Here is a quick and dirty simple HTML page as a source of sample code that you could use.</p>\n<p>      <a href=\"http://dev.virtualearth.net/mapcontrol/v4/mapcontrol.js\" rel=\"nofollow\">http://dev.virtualearth.net/mapcontrol/v4/mapcontrol.js</a> </p>\n<p> function LoadAndAddPin()<br>\n\t{</p>\n<p>\t  map = new VEMap(‘myMapDiv’);<br>\n\t  map.LoadMap(new VELatLong(47.62512617662528, -122.33969986438752), 15, ‘r’, false);</p>\n<p>\t var pin = new VEPushpin(1, new VELatLong(47.62620,  -122.33899),<br>\n\t null,<br>\n\t ‘Jillians Billiards’,<br>\n\t ‘<a href=\"http://maps.live.com/details.aspx?dt=yp.YN926x15805995&amp;style=r&amp;c=47.62720143376887&amp;d=-122.33530640602112&amp;e=47.62512617662528&amp;f=-122.33969986438752&amp;mkt=en-US\" rel=\"nofollow\">more info</a>‘);<br>\n         map.AddPushpin(pin);</p>\n<p>         }   </p>"
+  },
+  {
+    "id": 1327,
+    "parent": 0,
+    "author_name": "Chris Muench (Embedded MVP)",
+    "author_url": "http://www.c-labs.com",
+    "date": "2007-03-08T17:56:14",
+    "type": "comment",
+    "content_html": "<p>Look forward to have some fun</p>"
+  },
+  {
+    "id": 1328,
+    "parent": 0,
+    "author_name": "Amy Bang",
+    "author_url": "http://",
+    "date": "2007-03-08T18:00:03",
+    "type": "comment",
+    "content_html": "<p>I’ll be there! VSIP represent! \uD83D\uDE42 </p>\n<p>+ a few more…</p>"
+  },
+  {
+    "id": 1329,
+    "parent": 0,
+    "author_name": "Ronald van der Putten",
+    "author_url": "http://www.we-dig.org",
+    "date": "2007-03-08T18:05:28",
+    "type": "comment",
+    "content_html": "<p>Count me in!<br>\nThanks</p>"
+  },
+  {
+    "id": 1330,
+    "parent": 0,
+    "author_name": "Dwayne Lamb",
+    "author_url": "http://www.mobidogs.com/",
+    "date": "2007-03-08T18:12:23",
+    "type": "comment",
+    "content_html": "<p>The spouse wanted me to double check if spouses are welcome?</p>"
+  },
+  {
+    "id": 1331,
+    "parent": 0,
+    "author_name": "Jason Alexander",
+    "author_url": "http://JasonA.net",
+    "date": "2007-03-08T18:15:00",
+    "type": "comment",
+    "content_html": "<p>I’m not flying in until 6:30 or so, but I’m in… may be a little late. \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1332,
+    "parent": 0,
+    "author_name": "Fabio Vazquez",
+    "author_url": "http://www.phidelis.com.br/blogs/fabiovazquez",
+    "date": "2007-03-08T18:43:22",
+    "type": "comment",
+    "content_html": "<p>I will be there!</p>"
+  },
+  {
+    "id": 1333,
+    "parent": 0,
+    "author_name": "Hugo Rodríguez",
+    "author_url": "http://",
+    "date": "2007-03-08T20:57:23",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!!!</p>"
+  },
+  {
+    "id": 1334,
+    "parent": 0,
+    "author_name": "Jaun Pablo García",
+    "author_url": "http://liarjo.spaces.live.com/",
+    "date": "2007-03-08T21:00:24",
+    "type": "comment",
+    "content_html": "<p>I will be there</p>"
+  },
+  {
+    "id": 1335,
+    "parent": 0,
+    "author_name": "Ruben Dario Sanchez",
+    "author_url": "http://www.programar.net",
+    "date": "2007-03-08T21:07:41",
+    "type": "comment",
+    "content_html": "<p>I will be there.!! See you!!</p>"
+  },
+  {
+    "id": 1336,
+    "parent": 0,
+    "author_name": "Abhilah M Shanmugan",
+    "author_url": "http://biztalkland.blogspot.com/",
+    "date": "2007-03-08T21:14:07",
+    "type": "comment",
+    "content_html": "<p>Count me in .. .</p>"
+  },
+  {
+    "id": 1337,
+    "parent": 0,
+    "author_name": "Pilar Mueckay",
+    "author_url": "http://optimoffice.spaces.live.com",
+    "date": "2007-03-08T21:19:07",
+    "type": "comment",
+    "content_html": "<p>I’ll be there</p>"
+  },
+  {
+    "id": 1338,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-08T22:17:28",
+    "type": "comment",
+    "content_html": "<p>Dwayne,<br>\nYes, I’m sure Virtual Earth would work too.</p>"
+  },
+  {
+    "id": 1339,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-08T22:17:59",
+    "type": "comment",
+    "content_html": "<p>Spouses are welcome.</p>"
+  },
+  {
+    "id": 1340,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-08T22:20:54",
+    "type": "comment",
+    "content_html": "<p>Make sure to bring a business card to drop in the door prize pot.  You absolutely need a business card in order to win the XBox 360.</p>"
+  },
+  {
+    "id": 1341,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-08T22:23:27",
+    "type": "comment",
+    "content_html": "<p>If anyone wants to pitch in and help with event setup, we need a few hands at 6:30PM at Jillian’s.  We have 200 gift bags to stuff (with your goodies).  Many hands would make light work.</p>"
+  },
+  {
+    "id": 1342,
+    "parent": 0,
+    "author_name": "Steven Smith",
+    "author_url": "http://aspalliance.com/",
+    "date": "2007-03-08T22:39:42",
+    "type": "comment",
+    "content_html": "<p>I should be there, probably a bit later.</p>"
+  },
+  {
+    "id": 1343,
+    "parent": 0,
+    "author_name": "Jose Berrios",
+    "author_url": "http://",
+    "date": "2007-03-08T22:48:00",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!</p>"
+  },
+  {
+    "id": 1344,
+    "parent": 0,
+    "author_name": "Miguel Mendoza",
+    "author_url": "http://www.devsynergy.net",
+    "date": "2007-03-08T23:30:53",
+    "type": "comment",
+    "content_html": "<p>I will be there.</p>"
+  },
+  {
+    "id": 1345,
+    "parent": 0,
+    "author_name": "Ryan Olshan",
+    "author_url": "http://community.strongcoders.com",
+    "date": "2007-03-08T23:58:29",
+    "type": "comment",
+    "content_html": "<p>Count me in!</p>"
+  },
+  {
+    "id": 1346,
+    "parent": 0,
+    "author_name": "Matt Cassell",
+    "author_url": "http://",
+    "date": "2007-03-09T01:23:40",
+    "type": "comment",
+    "content_html": "<p>i’m there!</p>"
+  },
+  {
+    "id": 1347,
+    "parent": 0,
+    "author_name": "Ricardo Gonzalez",
+    "author_url": "http://",
+    "date": "2007-03-09T02:35:46",
+    "type": "comment",
+    "content_html": "<p>I will be there</p>"
+  },
+  {
+    "id": 1348,
+    "parent": 0,
+    "author_name": "Keith Nicholson",
+    "author_url": "http://www.ksdynamics.com",
+    "date": "2007-03-09T02:37:43",
+    "type": "comment",
+    "content_html": "<p>Jeff,</p>\n<p>I’ll see you there.  It’s been a while!</p>\n<p>Best Wishes,<br>\nKeith Nicholson</p>"
+  },
+  {
+    "id": 1349,
+    "parent": 0,
+    "author_name": "sean o'Driscoll",
+    "author_url": "http://www.communitygrouptherapy.com",
+    "date": "2007-03-09T04:35:22",
+    "type": "comment",
+    "content_html": "<p>Hope you don’t mind me coming by!!</p>\n<p>I’ll be there!</p>\n<p>Seanod<br>\nGM, Community and MVP<br>\nMicrosoft</p>\n<p>Personal Blog:  <a href=\"http://www.communitygrouptherapy.com\" rel=\"nofollow ugc\">http://www.communitygrouptherapy.com</a></p>"
+  },
+  {
+    "id": 1350,
+    "parent": 0,
+    "author_name": "Morten Wennevik",
+    "author_url": "http://",
+    "date": "2007-03-09T05:10:30",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!</p>"
+  },
+  {
+    "id": 1351,
+    "parent": 0,
+    "author_name": "Blake McNeill",
+    "author_url": "http://",
+    "date": "2007-03-09T06:43:09",
+    "type": "comment",
+    "content_html": "<p>I be there.  Anyone else staying at the Crowne Plaza who wants to share a cab to this?</p>"
+  },
+  {
+    "id": 1352,
+    "parent": 0,
+    "author_name": "Asia Grzywna",
+    "author_url": "http://",
+    "date": "2007-03-09T08:52:56",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!</p>"
+  },
+  {
+    "id": 1353,
+    "parent": 0,
+    "author_name": "Daniel Matey",
+    "author_url": "http://geeks.ms/blogs/dmatey",
+    "date": "2007-03-09T09:06:30",
+    "type": "comment",
+    "content_html": "<p>I’ll be there </p>"
+  },
+  {
+    "id": 1354,
+    "parent": 0,
+    "author_name": "Octavio Hernandez (SPAIN)",
+    "author_url": "http://",
+    "date": "2007-03-09T10:54:55",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!</p>"
+  },
+  {
+    "id": 1355,
+    "parent": 0,
+    "author_name": "Angel Hernández (Venezuela)",
+    "author_url": "http://msmvps.com/blogs/angelhernandez",
+    "date": "2007-03-09T13:37:32",
+    "type": "comment",
+    "content_html": "<p>I’ll be there \uD83D\uDE00</p>"
+  },
+  {
+    "id": 1356,
+    "parent": 0,
+    "author_name": "Yonathan Arrivillaga",
+    "author_url": "http://",
+    "date": "2007-03-09T13:48:08",
+    "type": "comment",
+    "content_html": "<p>I’ll be there \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1357,
+    "parent": 0,
+    "author_name": "Manuel Mendez F. (RD Venezuela)",
+    "author_url": "http://",
+    "date": "2007-03-09T13:48:39",
+    "type": "comment",
+    "content_html": "<p>I’ll be there \uD83D\uDE00</p>"
+  },
+  {
+    "id": 1358,
+    "parent": 0,
+    "author_name": "Pat Wright",
+    "author_url": "http://",
+    "date": "2007-03-09T13:53:24",
+    "type": "comment",
+    "content_html": "<p>I’ll try and make it up. </p>\n<p>Pat Wright SQL Server MVP</p>"
+  },
+  {
+    "id": 1359,
+    "parent": 0,
+    "author_name": "Alejandro L",
+    "author_url": "http://",
+    "date": "2007-03-09T14:29:21",
+    "type": "comment",
+    "content_html": "<p>I’ll be there </p>"
+  },
+  {
+    "id": 1360,
+    "parent": 0,
+    "author_name": "Simon Sabin",
+    "author_url": "https://sqlblogcasts.com/blogs/cimons",
+    "date": "2007-03-09T15:06:55",
+    "type": "comment",
+    "content_html": "<p>I’ll be there</p>"
+  },
+  {
+    "id": 1361,
+    "parent": 0,
+    "author_name": "Julio Campos",
+    "author_url": "http://juliocampos.mvps.org",
+    "date": "2007-03-09T15:23:10",
+    "type": "comment",
+    "content_html": "<p>I will there too!</p>"
+  },
+  {
+    "id": 1362,
+    "parent": 0,
+    "author_name": "Tim Landgrave",
+    "author_url": "http://timlandgrave.com",
+    "date": "2007-03-09T17:12:11",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!</p>\n<p>Tim Landgrave<br>\nMVP – Solutions Architecture</p>"
+  },
+  {
+    "id": 1363,
+    "parent": 0,
+    "author_name": "Sondre Bjellås",
+    "author_url": "http://fanms.com/",
+    "date": "2007-03-09T17:35:54",
+    "type": "comment",
+    "content_html": "<p>I’ll  be there!</p>\n<p>Sondre Bjellås</p>"
+  },
+  {
+    "id": 1364,
+    "parent": 0,
+    "author_name": "Miha Pihler",
+    "author_url": "http://",
+    "date": "2007-03-09T18:40:17",
+    "type": "comment",
+    "content_html": "<p>Count me in…</p>"
+  },
+  {
+    "id": 1365,
+    "parent": 0,
+    "author_name": "Bruce Hopkins",
+    "author_url": "http://www.dynamicvb.net",
+    "date": "2007-03-09T18:55:37",
+    "type": "comment",
+    "content_html": "<p>Just heard about this. I’m getting into Seattle right at 7:00PM, but I’ll try to stop by if I can find the place. Sounds like a lot of fun.</p>"
+  },
+  {
+    "id": 1366,
+    "parent": 0,
+    "author_name": "Luis Montenegro",
+    "author_url": "http://luimontenegro.spaces.live.com",
+    "date": "2007-03-09T19:17:00",
+    "type": "comment",
+    "content_html": "<p>Count me in!!!!</p>\n<p>I’ll be there!</p>"
+  },
+  {
+    "id": 1367,
+    "parent": 0,
+    "author_name": "CESAR DE LA TORRE (MVP-Connected Systems - SPAIN)",
+    "author_url": "http://ctorre.spaces.live.com",
+    "date": "2007-03-09T19:26:16",
+    "type": "comment",
+    "content_html": "<p>Sure!. I’ll go to the party!! COOL!!<br>\nPPPP!! \uD83D\uDE09</p>"
+  },
+  {
+    "id": 1368,
+    "parent": 0,
+    "author_name": "Ivan Saskor",
+    "author_url": "http://",
+    "date": "2007-03-09T20:14:12",
+    "type": "comment",
+    "content_html": "<p>I’m in \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1369,
+    "parent": 0,
+    "author_name": "Corrado Cavalli",
+    "author_url": "http://",
+    "date": "2007-03-09T20:48:05",
+    "type": "comment",
+    "content_html": "<p>See you there!</p>"
+  },
+  {
+    "id": 1370,
+    "parent": 0,
+    "author_name": "David Shier",
+    "author_url": "http://",
+    "date": "2007-03-09T22:31:58",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!</p>\n<p>David Shier<br>\nWindows Mobile Devices MVP</p>"
+  },
+  {
+    "id": 1371,
+    "parent": 0,
+    "author_name": "Misael Monterroca",
+    "author_url": "http://cs.neo-mx.com/blogs/neo-mx/default.aspx",
+    "date": "2007-03-09T23:17:24",
+    "type": "comment",
+    "content_html": "<p>One More!</p>"
+  },
+  {
+    "id": 1372,
+    "parent": 0,
+    "author_name": "Reymarx Gereda",
+    "author_url": "http://",
+    "date": "2007-03-09T23:22:47",
+    "type": "comment",
+    "content_html": "<p>I’ll be there!</p>"
+  },
+  {
+    "id": 1373,
+    "parent": 0,
+    "author_name": "Bruce Thomas",
+    "author_url": "http://",
+    "date": "2007-03-10T00:39:52",
+    "type": "comment",
+    "content_html": "<p>Count me in!</p>"
+  },
+  {
+    "id": 1374,
+    "parent": 0,
+    "author_name": "Oscar Soto Casali",
+    "author_url": "http://oscarsotocl.spaces.live.com",
+    "date": "2007-03-10T00:57:48",
+    "type": "comment",
+    "content_html": "<p>Hi .. Count me in</p>"
+  },
+  {
+    "id": 1375,
+    "parent": 0,
+    "author_name": "Bonnie Berent",
+    "author_url": "http://",
+    "date": "2007-03-10T05:44:51",
+    "type": "comment",
+    "content_html": "<p>Woo Hoo!! Party!! I’m coming!</p>"
+  },
+  {
+    "id": 1376,
+    "parent": 0,
+    "author_name": "Joe Fawcett",
+    "author_url": "http://joe.fawcett.name",
+    "date": "2007-03-10T12:08:14",
+    "type": "comment",
+    "content_html": "<p>This is a comment</p>"
+  },
+  {
+    "id": 1377,
+    "parent": 0,
+    "author_name": "Nick Gillott",
+    "author_url": "http://",
+    "date": "2007-03-10T12:10:47",
+    "type": "comment",
+    "content_html": "<p>Party on.</p>"
+  },
+  {
+    "id": 1378,
+    "parent": 0,
+    "author_name": "Scott Dockendorf",
+    "author_url": "http://weblogs.asp.net/scottdockendorf",
+    "date": "2007-03-10T13:01:41",
+    "type": "comment",
+    "content_html": "<p>Count me in!</p>"
+  },
+  {
+    "id": 1379,
+    "parent": 0,
+    "author_name": "Luis Fraile",
+    "author_url": "http://www.lfraile.net",
+    "date": "2007-03-10T14:54:08",
+    "type": "comment",
+    "content_html": "<p>I don’t see the comment I put yesterday so I repeat :o) </p>\n<p>I’ll be there for sure :o)</p>"
+  },
+  {
+    "id": 1380,
+    "parent": 0,
+    "author_name": "Laura E. Hunter",
+    "author_url": "http://www.shutuplaura.com",
+    "date": "2007-03-10T15:35:32",
+    "type": "comment",
+    "content_html": "<p>Mark Arnold (Exchange MVP) and I will stop by for a bit, I would never miss another installment of Party with Palermo.  \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1381,
+    "parent": 0,
+    "author_name": "Joel Semeniuk",
+    "author_url": "http://weblogs.asp.net/jsemeniuk",
+    "date": "2007-03-10T16:09:36",
+    "type": "comment",
+    "content_html": "<p>I’d like to come and play as well…</p>"
+  },
+  {
+    "id": 1382,
+    "parent": 0,
+    "author_name": "Brian Baker",
+    "author_url": "http://www.holisticdeveloper.com/",
+    "date": "2007-03-10T17:26:48",
+    "type": "comment",
+    "content_html": "<p>This former MVP will come over to see my old friends, since I’m now in the area!</p>"
+  },
+  {
+    "id": 1383,
+    "parent": 0,
+    "author_name": "Uday Shivaswamy",
+    "author_url": "http://",
+    "date": "2007-03-10T20:00:52",
+    "type": "comment",
+    "content_html": "<p>I will be there.</p>"
+  },
+  {
+    "id": 1384,
+    "parent": 0,
+    "author_name": "Hector Obregon",
+    "author_url": "http://msdnfan.blogspot.com",
+    "date": "2007-03-10T20:49:58",
+    "type": "comment",
+    "content_html": "<p>I’ll be there.</p>"
+  },
+  {
+    "id": 1385,
+    "parent": 0,
+    "author_name": "Justin Lee",
+    "author_url": "http://",
+    "date": "2007-03-10T21:49:18",
+    "type": "comment",
+    "content_html": "<p>I’ll be there. </p>"
+  },
+  {
+    "id": 1386,
+    "parent": 0,
+    "author_name": "Martin Blackstone",
+    "author_url": "http://",
+    "date": "2007-03-10T22:17:25",
+    "type": "comment",
+    "content_html": "<p>Ill be there!</p>"
+  },
+  {
+    "id": 1387,
+    "parent": 0,
+    "author_name": "Nathan Kramer",
+    "author_url": "http://www.gamereplays.org",
+    "date": "2007-03-10T23:36:43",
+    "type": "comment",
+    "content_html": "<p>I’ll be there, if there’s still enough room to squeeze in.</p>"
+  },
+  {
+    "id": 1388,
+    "parent": 0,
+    "author_name": "Nathan Kramer",
+    "author_url": "http://www.gamereplays.org",
+    "date": "2007-03-10T23:37:06",
+    "type": "comment",
+    "content_html": "<p>I’ll be there, if there’s still enough room to squeeze in.</p>"
+  },
+  {
+    "id": 1389,
+    "parent": 0,
+    "author_name": "Sergio Dias",
+    "author_url": "http://",
+    "date": "2007-03-11T03:20:14",
+    "type": "comment",
+    "content_html": "<p>I’ll be there</p>"
+  },
+  {
+    "id": 1391,
+    "parent": 0,
+    "author_name": "Nik Kalyani",
+    "author_url": "http://www.devTao.com",
+    "date": "2007-03-11T03:20:30",
+    "type": "comment",
+    "content_html": "<p>I’ll be there.</p>"
+  },
+  {
+    "id": 1390,
+    "parent": 0,
+    "author_name": "cmart02",
+    "author_url": "http://",
+    "date": "2007-03-11T03:56:41",
+    "type": "comment",
+    "content_html": "<p>Function WillBeThere() As Boolean<br>\n      WillBeThere  = False<br>\n      If Not(Me.TooTired) Then WillBeThere = True<br>\nEnd Function</p>\n<p>Add me to the list. :o)</p>\n<p>Robert Martim</p>"
+  },
+  {
+    "id": 1392,
+    "parent": 0,
+    "author_name": "Sasha Krsmanovic",
+    "author_url": "http://",
+    "date": "2007-03-11T04:48:36",
+    "type": "comment",
+    "content_html": "<p>I will do my best to be there too. </p>"
+  },
+  {
+    "id": 1393,
+    "parent": 0,
+    "author_name": "Steve Kass",
+    "author_url": "http://www.stevekass.com",
+    "date": "2007-03-11T08:49:08",
+    "type": "comment",
+    "content_html": "<p>I expect to come.</p>"
+  },
+  {
+    "id": 1394,
+    "parent": 0,
+    "author_name": "Pat Richard [Exchange MVP]",
+    "author_url": "http://",
+    "date": "2007-03-11T14:30:24",
+    "type": "comment",
+    "content_html": "<p>I’ll be there. As will the wife.</p>"
+  },
+  {
+    "id": 1395,
+    "parent": 0,
+    "author_name": "Jens K. Suessmeyer",
+    "author_url": "http://www.sqlserver2005.de",
+    "date": "2007-03-11T16:30:35",
+    "type": "comment",
+    "content_html": "<p>You can sign me up too with a colleauge of mine Markus S. (don´t know if he feels comfortable posting his name \uD83D\uDE42 )</p>"
+  },
+  {
+    "id": 1396,
+    "parent": 0,
+    "author_name": "Gregory A. Beamer",
+    "author_url": "http://",
+    "date": "2007-03-11T16:55:29",
+    "type": "comment",
+    "content_html": "<p>Sounds great. Will visit the dinner first and then pop over for some fun. \uD83D\uDE42</p>\n<p>Gregory A. Beamer<br>\nMVP Visual Developer – C#</p>"
+  },
+  {
+    "id": 1397,
+    "parent": 0,
+    "author_name": "Maurice de Beijer",
+    "author_url": "http://msmvps.com/blogs/theproblemsolver/default.aspx",
+    "date": "2007-03-11T17:08:22",
+    "type": "comment",
+    "content_html": "<p>CU there \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1398,
+    "parent": 0,
+    "author_name": "Anthony Park",
+    "author_url": "http://www.anpark.com",
+    "date": "2007-03-11T22:26:36",
+    "type": "comment",
+    "content_html": "<p>I’ll be there.</p>"
+  },
+  {
+    "id": 1399,
+    "parent": 0,
+    "author_name": "Lee Mackey",
+    "author_url": "http://",
+    "date": "2007-03-11T22:36:55",
+    "type": "comment",
+    "content_html": "<p>Please add 2 more to the list.  Found out about this on the plane ride up tonight..  \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1400,
+    "parent": 0,
+    "author_name": "David Totzke",
+    "author_url": "http://",
+    "date": "2007-03-12T00:06:48",
+    "type": "comment",
+    "content_html": "<p>There goes the neighbourhood.  Totzke’s going to be there.  \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1401,
+    "parent": 0,
+    "author_name": "richard Costall",
+    "author_url": "http://www.nxtgenug.net",
+    "date": "2007-03-12T00:23:39",
+    "type": "comment",
+    "content_html": "<p>yes please..</p>\n<p>richard Costall<br>\nDave McMahon<br>\nChris Seary<br>\nAlun Rogers</p>"
+  },
+  {
+    "id": 1402,
+    "parent": 0,
+    "author_name": "Luiz Carlos Rocha",
+    "author_url": "http://",
+    "date": "2007-03-12T00:31:44",
+    "type": "comment",
+    "content_html": "<p>I will be there</p>"
+  },
+  {
+    "id": 1403,
+    "parent": 0,
+    "author_name": "Marcello Poletti",
+    "author_url": "http://",
+    "date": "2007-03-12T00:33:29",
+    "type": "comment",
+    "content_html": "<p>I’m coming with my friend Ettore</p>"
+  },
+  {
+    "id": 1404,
+    "parent": 0,
+    "author_name": "Jorge de Almeida Pinto, Ulf B. Simon-Weidner, Paul Williams",
+    "author_url": "http://",
+    "date": "2007-03-12T01:18:33",
+    "type": "comment",
+    "content_html": "<p>We, all MVP-DS guys, will be there also</p>\n<p>Cheers<br>\nJ/U/P</p>"
+  },
+  {
+    "id": 1405,
+    "parent": 0,
+    "author_name": "Daniel Cazzulino",
+    "author_url": "http://clariusconsulting.net/kzu",
+    "date": "2007-03-14T06:01:27",
+    "type": "comment",
+    "content_html": "<p>I got a card at the event, but it doesn’t contain the URL for a site where I could get the Dotfuscator Profession from PreEmptive.</p>\n<p>Could you send me instructions by email to kzu at clariusconsulting.net?</p>\n<p>Thanks for a great party!</p>\n<p>/kzu</p>"
+  },
+  {
+    "id": 1406,
+    "parent": 0,
+    "author_name": "Mateusz Kierepka",
+    "author_url": "http://www.xna.pl",
+    "date": "2007-03-19T08:29:08",
+    "type": "comment",
+    "content_html": "<p>Thanks for a great party! It was nice to meet you all there \uD83D\uDE09</p>"
+  },
+  {
+    "id": 1407,
+    "parent": 0,
+    "author_name": "Robert Stuczynski",
+    "author_url": "http://www.8080.pl",
+    "date": "2007-03-25T15:22:01",
+    "type": "comment",
+    "content_html": "<p>Thanks for a great party!</p>"
+  },
+  {
+    "id": 1408,
+    "parent": 0,
+    "author_name": "truva",
+    "author_url": "http://www.siirvehikaye.com",
+    "date": "2007-10-25T22:54:14",
+    "type": "comment",
+    "content_html": "<p>Beatiful works. Thanx.</p>"
+  }
+]

@@ -1,0 +1,15 @@
+---
+wp_id: 608
+title: Use caution with anonymous types and other new C# language features
+slug: use-caution-with-anonymous-types-and-other-new-c-language-features
+permalink: /2008/02/use-caution-with-anonymous-types-and-other-new-c-language-features/
+date: 2008-02-08T15:02:13
+date_utc: 2008-02-08T15:02:13Z
+modified: 2008-02-08T15:02:13
+format: html
+excerpt: 'To subscribe to my feed, add the following Url: http://feeds.feedburner.com/jeffreypalermo. I think Microsoft is making a huge mistake by leaning so heavily on anonymous types as API parameters, particularly in the ASP.NET MVC Framework. Not only does this make the APIs in the system ugly and error-prone, but it’s not intuitive, and there is no intellisense for […]'
+comments_open: true
+---
+<p>To subscribe to my <a href="http://feeds.feedburner.com/jeffreypalermo">feed</a>, add the following Url:&nbsp; <a href="http://feeds.feedburner.com/jeffreypalermo">http://feeds.feedburner.com/jeffreypalermo</a>. </p>
+<p>I think Microsoft is making a huge mistake&nbsp;by leaning so heavily on anonymous types as API parameters, particularly in the ASP.NET MVC Framework. &nbsp;Not only does this make the APIs in&nbsp;the system ugly and error-prone, but it’s not intuitive, and there is no intellisense for it because the API is untyped (typed as object) in the case where an anonymous type is expected. &nbsp;I think we should stick with named types and named methods wherever possible. &nbsp;I currently don’t see a problem with lamda’s if they give an advantage over regular arguments. I’m very cautious about automatically using new, unproven language features before we fully understand how they will affect the usability and maintainability of code. &nbsp;Note: &nbsp;we have NO track record for the maintainability of these new language features, and they were developed specifically for LINQ, so using them outside of that context is suspect, in my&nbsp;opinion. </p>
+<p>I do have a conservative disposition on this, but this is through learning from the past.&nbsp; I still remeber OpenXML is SQL Server 2000: how so many developers automatically converted stored procedure interfaces to be a single XML string rather than individual arguments.&nbsp; We need to fully understand the long-term strengths and weaknesses of features in order to maximize the value of usage or non-usage.</p>

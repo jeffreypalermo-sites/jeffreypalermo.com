@@ -1,0 +1,173 @@
+[
+  {
+    "id": 1804,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-07-16T00:42:04",
+    "type": "comment",
+    "content_html": "<p>An example I can pull from a project follows:  The UI needed some information in an xml document.  The information was part of the domain model.  It just need to be translated from an object graph to the proper xml structure.  The approach taken by the developer was to create a SQL stored procedure with SQL Server 2000 and use the “For Xml Auto” capability to return the exact xml needed by the screen.  The worked initially, but it completely bypassed any application core or domain model.  The database was coupled to the needs of one specific screen.  Note that this isn’t compile-time coupling.  It’s semantic coupling, and this type of coupling can be harder to manage.</p>"
+  },
+  {
+    "id": 1805,
+    "parent": 0,
+    "author_name": "Gil Zilberfeld",
+    "author_url": "http://gil-zilberfeld.blogspot.com",
+    "date": "2007-07-16T13:53:21",
+    "type": "comment",
+    "content_html": "<p>I agree with the principal. And, there’s also a lower level connection (at least for maintainability)  that we need to consider.</p>\n<p>We just did a review of an application we developed starting in 2002. This was .Net 1.0 which went to 1.1, and then 2.0. We looked at what can be reused from this app to others that we are building now.</p>\n<p>This application has a data model (no database, just file system), that did not experience the transition to 2.0. Its collections remained ArrayList long after Generics were introduced.</p>\n<p>So the data model (the core) itself stands. However, it’s not as versatile as today’s collections, and we dropped it from our reusable component list. It would be easier to maintain newer versions.</p>\n<p>Our core, because it was tied to a technology (.Net 1.1) at the lower implementation level, would be dropped the next time. And it will cost us again if Microsoft decides to change the underlying technology.</p>"
+  },
+  {
+    "id": 1806,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-07-16T15:15:39",
+    "type": "comment",
+    "content_html": "<p>@Gil,<br>\nI’ve thought about this even when switching platforms.  Now, the underlying assumption is that you go from one object-oriented platform to another.  Let’s explore moving from C# to Ruby.  I may move by asp.net presentation from ASP.NET to Rails.  I may move my data access to Rails ActiveRecord.</p>\n<p>What doesn’t need redesigning is the domain layer, the core.  Yes, the syntax is different, and the code needs to be retyped, but the concepts remain the same, and the interfaces to the outside are the same.  It’s a mere migration to a different syntax than a wholesale rewrite.  Retyping the syntax in Ruby goes very quick, and the core of the application is intact.  The remaining steps are platform-specific services surrounding the application.</p>\n<p>I see it being similar with .Net 1.0 to .Net 2.0 and to 3.5 next year.  Sure, some of the syntax will have changed, but business concepts are the same.  Sure, I’ll change my ArrayLists to List, but that’s a small syntactical change.  Move to LINQ for data access?  Not a problem if my core is independent of data access concerns.</p>"
+  },
+  {
+    "id": 1807,
+    "parent": 0,
+    "author_name": "SBC",
+    "author_url": "http://weblogs.asp.net/sbchatterjee/",
+    "date": "2007-07-16T17:57:03",
+    "type": "comment",
+    "content_html": "<p>Focusing on the core entails knowing the business well. Unfortunately, relatively more ‘architects’ &amp; sys designers don’t posess that knowledge. This may be due to the training and/or the company (development )environment.</p>"
+  },
+  {
+    "id": 1808,
+    "parent": 0,
+    "author_name": "Liang",
+    "author_url": "http://",
+    "date": "2007-07-18T04:33:53",
+    "type": "comment",
+    "content_html": "<p>I totally agree with you. But it is very hard. Technology comes and goes. From 2000, we rewrite the client application with VB6, ASP, ASP.NET1.0, ASP.NET 2,0. Now it comes Ajax. Database will stay relatively longer. How do you convince your boss or other team members that putting all of the logic with C# 2.0 will take longer. C# 3.0 is on the coner already.</p>"
+  },
+  {
+    "id": 1809,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-07-18T13:12:38",
+    "type": "comment",
+    "content_html": "<p>@Liang,<br>\nI don’t think putting logic in C# 2.0 will take longer.  I think putting application logic in a domain model on an object-oriented platform is the way to go.  While the database tables will probably stay around for a long time as well, code written in procedures tied to a database platform will not be portable.</p>\n<p>C#1.0, 1.1, 2.0, 3.5 is nearly frictionless as far as the core domain model goes.</p>\n<p>As far as convincing, it’s tough, and it depends on the manager.</p>"
+  },
+  {
+    "id": 1810,
+    "parent": 0,
+    "author_name": "Liang",
+    "author_url": "http://",
+    "date": "2007-07-18T16:49:26",
+    "type": "comment",
+    "content_html": "<p>Thank you, Jeffrey! I understood your points. But when putting business logic into domain model, it still depends on language and platform. Some code has to be rewritten if platform changes. For example, if we need to take advantage of .NET 2.0 Generic, or LINQ in C# 3.0.<br>\nWe probably cannot put the logic into a language-independent domain model. It definitely can help create a testable and unmaintainable application using domain model. But rewriting application in 2 or 3 years really a big impact to business. And I am not sure how much percentage of business applications need to be portable on different database servers. From ROI, I guess it will be better to put some of business logic on the database side. I don’t mean entire, but there should have a balance there.</p>"
+  },
+  {
+    "id": 1811,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-07-18T18:33:22",
+    "type": "comment",
+    "content_html": "<p>@Liang,<br>\nI would say that plain old C# objects are a good place for it.  When I move to Ruby, it will be no problem to retype the syntax.  Note, this is NOT rewriting since you aren’t changing a thing.  You are merely migrating to a different syntax on another object-oriented platform.</p>"
+  },
+  {
+    "id": 1812,
+    "parent": 0,
+    "author_name": "Craig Bowes",
+    "author_url": "http://www.dotnettricks.com",
+    "date": "2007-07-19T19:55:52",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>You are preaching to the choir to me, but i’ve noticed that basic concepts like this are still relatively unknown in most shops. Most developers don’t use a domain layer at all.  Most developers don’t have basic OOP concepts down.  Its hard to get them to change too.</p>\n<p>Even a lot of the O/R Mappers out there cause you’re domain or business layer to be closely tied to that specific product.  LLBLGen and Nolics both generate a lot of code for you, but much of this code relies heavily on the underlying frameworks in those products.  We use Castle ActiveRecord and even that some issues because the attributes, query objects and base classes are mixed in w/ the domain code.  If we move to a different ORM like Linq, we won’t have to rewrite everything but some of the business layer will have to be rewritten.</p>\n<p>Wilson ORM and NHibernate are the leanest ones i’ve seen as far as making your domain layer fairly ignorant as far as the persistence framework being used.  I remember seeing on here a link to one of the Linq for Entities developers deciding to make it possible to use linq without any ties to the framework (attributes, base classes, etc.)</p>"
+  },
+  {
+    "id": 1813,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://flimflan.com/blog",
+    "date": "2007-07-21T14:14:01",
+    "type": "comment",
+    "content_html": "<p>It sounds like you are saying the body of knowledge collected during the development of your application is the most important artifact, would you agree? The core is the busines logic. Based on this premise, it really has nothing to do with code at all. Whether that “core” collection of decisions made is encoded as C#, Java, lists in a spreadsheet, or prose in a document doesn’t matter. It will be just as easy to “retype” an implementation of those decisions into a new computer language syntax, regardless of whether they are currently stored as C# classes, BASIC functions, or English sentences.</p>"
+  },
+  {
+    "id": 1814,
+    "parent": 0,
+    "author_name": "Gil Zilberfeld",
+    "author_url": "http://gil-zilberfeld.blogspot.com",
+    "date": "2007-07-22T11:52:22",
+    "type": "comment",
+    "content_html": "<p>If Joshua’s interpretation is correct, the reusability is in the knowledge itself. And we rise up to a level where we should question how is the knowledge maintained. It may be in a computer language, in someone’s or a collective head, or documents or something else.</p>\n<p>I can see the value of the saving in analysis costs, since you now have your conclusions documented. </p>"
+  },
+  {
+    "id": 1815,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-07-22T17:49:47",
+    "type": "comment",
+    "content_html": "<p>@Joshua,<br>\nActually, it’s ALL about the code.  Regardless of platform or language syntax,  knowledge or decisions that are unverified are wrong or obsolete.  It sounds great to be able to put domain knowledge in documents, but the problem with documents is that they aren’t executable and are not testable.  They have no teeth.  Executing code is verifiable.  It can be run and objectively tested, preferably automatically.  Prose in document form are prone to interpretation by humans.  Code is interpreted by machines, so it is interpreted the exact same way every time.</p>\n<p>I did include a caveat when moving from one language to another when technology changes.  The move from one object-oriented platform to another will be easy to retype, but if there is a whole  new paradigm ship from OO, then there would be more effort required.</p>\n<p>I think the word “port” is most appropriate here.  When log4j was ported to log4net, a complete redesign was unnecessary.  The only thing changing was the platform.  Both platforms were OO.  If there was a log4X document, there would be no possiblity of “porting” a document to a working library.  Word documents aren’t code.</p>"
+  },
+  {
+    "id": 1816,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-07-22T17:53:10",
+    "type": "comment",
+    "content_html": "<p>@Gil,<br>\nSee previous comment.  Joshua’s interpretation is not correct.  </p>\n<p>You are going in the right direction in saying that we should question how the knowledge is maintained.  Requirements documents tend not to be maintained or read.  Working code is more objective, and the only documentation that is relevant is documentation of a working system.</p>\n<p>So many software rewrites have to redo analysis because the code is not good enough to be salvaged as results of past analysis.  Creating a quality domain model will save that precious analysis in a form that has the potential to survive technology changes.</p>"
+  },
+  {
+    "id": 1817,
+    "parent": 0,
+    "author_name": "Dan",
+    "author_url": "http://",
+    "date": "2007-07-24T19:22:38",
+    "type": "comment",
+    "content_html": "<p>Craig said “…i’ve noticed that basic concepts like this are still relatively unknown in most shops. Most developers don’t use a domain layer at all.  Most developers don’t have basic OOP concepts down.  Its hard to get them to change too.”  </p>\n<p>I’m not proud to admit it, but that’s me he’s talking about — and the 14 other developers I work with.  Each of us have been programming for (well) over 10 years.  We write major systems for our small company.  I want to change, but I don’t know how.  How do I pull myself and my colleagues away from creating the old non-oop, monolithic, autonomous view code we’ve created daily for years?  </p>\n<p>I’m continually torn in a million directions as to which learning path to take.  So much to learn, so many knowledge points and educational detours — then Microsoft releases yet another entirely new technology.  I try continually to build my skills but I wish there was a clear cut path.  I have no mentors and I have no interest in changing jobs.  What is a veteran legacy (VB6!) programmer to do?</p>"
+  },
+  {
+    "id": 1818,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://flimflan.com/blog",
+    "date": "2007-07-25T01:56:29",
+    "type": "comment",
+    "content_html": "<p>You hit on exactly what I was trying to draw out: the “just retyping” idea really only applies if you are going from one OO language to another. I’m pretty sure it would be more effort than “retyping” to move to a functional language. The technology climate IS always changing, so assuming your next platform will be OO isn’t always safe.</p>"
+  },
+  {
+    "id": 1819,
+    "parent": 0,
+    "author_name": "Craig Bowes",
+    "author_url": "http://www.dotnettricks.com",
+    "date": "2007-07-25T18:52:45",
+    "type": "comment",
+    "content_html": "<p>Dan,</p>\n<p>It probably took me about 3 years to fully transform my knowledge from procedural programming to OOP.  It would help if you started using a fully OOP language such as C#, Java or Ruby.  VB.NET would be fine but you may be tempted to go back to your old ways.  The thing to remember is that its not just a language shift, its a “paradigm” shift.  Its a completely different way of designing your applications.  Learning the OOP features of a language is fairly easy–learning how to design your applications is not.  If you want to program OOP, you have to learn how to design OOP.</p>\n<p>Second, I have found that 3 layered/tiered development goes hand in hand with good OOP.  Its hard to make a truly object oriented application without the middle tier that jeffrey is describing.  It truly IS the core of the application.  If you are simply making classes that return DataSets, then your application is both 2 tiered and procedural.  </p>\n<p>I can recommend a few good books that will help you with the design elements:</p>\n<p>– Domain Driven Design – Haven’t read it but everyone here seems to like it.  DDD is really just a natural extension of OO as far as I can tell. <a href=\"http://domaindrivendesign.org/books/\" rel=\"nofollow ugc\">http://domaindrivendesign.org/books/</a></p>\n<p>– Object Thinking – Not an easy read but the first book that illuminated to me the difference. <a href=\"http://www.microsoft.com/MSPress/books/6820.aspx\" rel=\"nofollow ugc\">http://www.microsoft.com/MSPress/books/6820.aspx</a></p>\n<p>– Object Design – <a href=\"http://www.wirfs-brock.com/index.html\" rel=\"nofollow ugc\">http://www.wirfs-brock.com/index.html</a></p>\n<p>Feel free to come by my website and message me if you have further questions.</p>\n<p>-Craig</p>"
+  },
+  {
+    "id": 1820,
+    "parent": 0,
+    "author_name": "Dan",
+    "author_url": "http://",
+    "date": "2007-07-26T12:38:57",
+    "type": "comment",
+    "content_html": "<p>Thanks Craig.  Your advice confirms I’m taking the right approach.  I’ve attempted 3-layers in my latest project, and I’d already started Object Thinking.  I’m also looking at Rocky Lhotka’s CSLA.  </p>\n<p>Are there any solid open source projects that show how oop and n-tier layering is “really done” in .Net?  If anyone could suggest a download that’s more than just samples and snippets I’d greatly appreciate it.  Blogs and podcasts have also been a real eye opener for me.  </p>\n<p>Thanks to the community for the great sharing of knowledge.  </p>\n<p>— Dan</p>"
+  },
+  {
+    "id": 1821,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-07-26T13:26:43",
+    "type": "comment",
+    "content_html": "<p>@Dan,<br>\nYou have a good start.  You are reading!  Educate yourself.  There is so much material out there.  Digest as much as you can.</p>"
+  },
+  {
+    "id": 1822,
+    "parent": 0,
+    "author_name": "Craig",
+    "author_url": "http://www.dotnettricks.com",
+    "date": "2007-07-26T20:29:08",
+    "type": "comment",
+    "content_html": "<p>Lhotka’s book is a good start.  I didn’t like the implementation in the .NET 1.1 version but i hear it has changed a lot.  I didn’t like all the data access happening within the business objects as i felt this merged the two layers and also there was a lot of code duplication.</p>\n<p>As far as open source projects, i would look at NHibernate, Castle Project’s ActiveRecords, Wilson’s O/R Mapper (almost OS).  I’m a big O/R Mapper fan.  You can do OOP and 3 tiered development without an ORM, but these products help a lot.  One thing to be careful of is that most of them tie your Business/Domain layer very closely to the database structure.  If you have a weird database or an extremely complex project, you’ll have to do more hand-coding if you want to make a true domain layer and not simply an object representation of your database.</p>\n<p><a href=\"http://dotnettricks.com/blogs/craigbowesblog/archive/2005/09/05/33.aspx\" rel=\"nofollow ugc\">http://dotnettricks.com/blogs/craigbowesblog/archive/2005/09/05/33.aspx</a></p>\n<p><a href=\"http://codebetter.com/blogs/jeremy.miller/archive/2007/02/23/Don_2700_t-Let-the-Database-Dictate-Your-Object-Model.aspx\" rel=\"nofollow ugc\">http://codebetter.com/blogs/jeremy.miller/archive/2007/02/23/Don_2700_t-Let-the-Database-Dictate-Your-Object-Model.aspx</a></p>"
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1752,
+    "parent": 0,
+    "author_name": "Jeremy D. Miller",
+    "author_url": "http://codebetter.com/blogs/jeremy.miller",
+    "date": "2007-06-20T14:25:01",
+    "type": "comment",
+    "content_html": "<p>That’s funny because I’ve just started to use the ReSharper runner together with TD.Net.  When I’m doing large scale refactorings that could break tests, I like to run everything with the ReSharper runner so I can keep the initial record, then fix and run one by one with TD.Net.</p>"
+  },
+  {
+    "id": 1753,
+    "parent": 0,
+    "author_name": "Raymond Lewallen",
+    "author_url": "http://www.codebetter.com/blogs/raymond.lewallen",
+    "date": "2007-06-20T20:07:38",
+    "type": "comment",
+    "content_html": "<p>I tried it awhile ago and it wouldn’t work with MSFT test framework.  Has this changed, do you know?</p>"
+  },
+  {
+    "id": 1754,
+    "parent": 0,
+    "author_name": "Andy Stopford",
+    "author_url": "http://weblogs.asp.net/astopford",
+    "date": "2007-06-24T22:23:56",
+    "type": "comment",
+    "content_html": "<p>It supports csUnit and NUnit only. ExactMagic supports NUnit, MSTest runs in its own runner. TD.NET is the only tool from the list to support all these framworks and further more is the only tool to also support MbUnit.</p>"
+  },
+  {
+    "id": 1755,
+    "parent": 0,
+    "author_name": "Duane Fields",
+    "author_url": "http://www.exactmagic.com",
+    "date": "2007-12-21T06:01:20",
+    "type": "comment",
+    "content_html": "<p>We’ve recently released the 2.0 version of TestMatrix with a lot of new feature, including support for frameworks other than NUnit. We’ve also made a free product (StudioTools) that includes all the handy navigation tools.</p>"
+  }
+]

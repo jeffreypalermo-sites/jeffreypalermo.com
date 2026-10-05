@@ -1,0 +1,137 @@
+[
+  {
+    "id": 1976,
+    "parent": 0,
+    "author_name": "Joe",
+    "author_url": "http://",
+    "date": "2007-09-18T14:27:02",
+    "type": "comment",
+    "content_html": "<p>Would you reccomend this for other version control systems (such as TFS)?</p>\n<p>The “official” guidance on Codeplex seems convoluted to me, whereas your approach is similar to almost everything I’ve ever seen.</p>"
+  },
+  {
+    "id": 1977,
+    "parent": 0,
+    "author_name": "Damien Guard",
+    "author_url": "http://damieng.com",
+    "date": "2007-09-18T14:49:47",
+    "type": "comment",
+    "content_html": "<p>This is similar to what we use but we have one level above trunk where we separate the various different actual projects (not necessarily VS projects).</p>\n<p>We also have a ‘shared’ at top level where we put re-usable libraries and routines used by many separate projects.</p>\n<p>[)amien</p>"
+  },
+  {
+    "id": 1978,
+    "parent": 0,
+    "author_name": "Jeremy D. Miller",
+    "author_url": "http://codebetter.com/blogs/jeremy.miller",
+    "date": "2007-09-18T16:07:15",
+    "type": "comment",
+    "content_html": "<p>That looks strangely familiar Jeffrey.  I think Steve would approve.</p>\n<p>@Damien,</p>\n<p>We did the “Shared” piece by just using a separate repository.  I have no idea if that’s better or worse for SVN.  Regardless, I like using SVN externals underneath each project’s bin folder so that you only have to check out from Trunk.</p>"
+  },
+  {
+    "id": 1979,
+    "parent": 0,
+    "author_name": "Jeff Brown",
+    "author_url": "http://blog.bits-in-motion.com/",
+    "date": "2007-09-19T06:51:50",
+    "type": "comment",
+    "content_html": "<p>Hehe… I use a very similar layout.  I’ll often have “libs” or “tools” folders next to the “src” folder for external binary dependencies.</p>\n<p>For MbUnit.Gallio, I managed to omit the CommonAssemblyInfo.cs approach to setting assembly versions by injecting custom targets into the projects with the $(CustomBeforeMSBuildTargets) property when building from the command-line.  The common assembly info is generated in a temp folder instead and added to the @(Compile) item group dynamically.</p>"
+  },
+  {
+    "id": 1980,
+    "parent": 0,
+    "author_name": "Diego Carrion",
+    "author_url": "http://www.mouseoverstudio.com/blog/",
+    "date": "2007-09-19T11:00:00",
+    "type": "comment",
+    "content_html": "<p>How would you know which project tag w.x.y.z is from?</p>"
+  },
+  {
+    "id": 1981,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-09-19T12:19:22",
+    "type": "comment",
+    "content_html": "<p>@Joe,<br>\nI would recommend this for any source control system.  A “tag” in Subversion is a “Label” in some other systems.</p>"
+  },
+  {
+    "id": 1982,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-09-19T12:22:15",
+    "type": "comment",
+    "content_html": "<p>@Diego,<br>\nEach project has a “trunk”.  Each trunk has a “tags” and “branches”.  The tags for a particular trunk belong to the project in that trunk.</p>\n<p>Project2 has a different trunk, different tags, different branches, and most of the time, a different Subversion repository.</p>\n<p>Do NOT put more than one project (Solution in VS.Net terminology) in a single trunk.  Even if the system produces several assemblies, they are all the same version since they are part of the same system.  Different system, different trunk.</p>"
+  },
+  {
+    "id": 1983,
+    "parent": 0,
+    "author_name": "Michael",
+    "author_url": "http://",
+    "date": "2007-09-19T13:31:36",
+    "type": "comment",
+    "content_html": "<p>We use an almost identical tree with one exception.  The bin folder in our environment is the dumping ground for things built for this product and in most cases what is deployed.  We add a sibling folder “lib” that we use for all external libraries and our own framework.  Then all the projects reference the local lib folder so you don’t have to worry about external version issues with other products.</p>\n<p>Also, we use a different repository for each product.  Otherwise projects would share the revision number count.</p>"
+  },
+  {
+    "id": 1984,
+    "parent": 0,
+    "author_name": "Thomas Freudenberg",
+    "author_url": "http://thomasfreudenberg.com/",
+    "date": "2007-09-19T16:00:13",
+    "type": "comment",
+    "content_html": "<p>I use a similar structure with one exception: “bin” is called “tools”, because “bin” is my target folder for the build process, i.e. it will contain all deliverables.</p>"
+  },
+  {
+    "id": 1985,
+    "parent": 0,
+    "author_name": "Dave",
+    "author_url": "http://",
+    "date": "2007-09-20T22:50:14",
+    "type": "comment",
+    "content_html": "<p>We have a “Libraries” project for external dependencies and a “TestLibraries” project that contains nunit, Rhino.Mocks, etc… i.e. all libraries that are not shipped.</p>\n<p>Also, on projects that use code generation, I have a CodeGeneration folder that contains all the templates and config files for generating the data access layer base classes… versioning these templates alongside the code that is generated has saved some major headaches.</p>"
+  },
+  {
+    "id": 1986,
+    "parent": 0,
+    "author_name": "Sean Chambers",
+    "author_url": "http://schambers.wordpress.com",
+    "date": "2007-09-21T03:47:30",
+    "type": "comment",
+    "content_html": "<p>Excellent!</p>\n<p>Exactly how I have mine setup. I feel warm and fuzzy now =)</p>\n<p>Except mine has a dir called libs instead of bin for external dependecies.</p>\n<p>I also have a folder in the root called docs or extras for things that shouldn’t be branched all over the place like original PSD’s (if a web project), documentation etc… Branching the hell out of your PSD’s can quickly explode your file size =)</p>"
+  },
+  {
+    "id": 1987,
+    "parent": 0,
+    "author_name": "Dario Quintana",
+    "author_url": "http://blog.darioquintana.com.ar",
+    "date": "2007-09-23T14:22:16",
+    "type": "comment",
+    "content_html": "<p>I like this structure:</p>\n<p>-bin<br>\n-src<br>\n-lib<br>\n-default.build</p>\n<p>The build at level of bin,src, and lib.</p>\n<p>You forgot lib ?</p>"
+  },
+  {
+    "id": 1988,
+    "parent": 0,
+    "author_name": "Tarek Koudsi",
+    "author_url": "http://",
+    "date": "2008-01-06T15:13:58",
+    "type": "comment",
+    "content_html": "<p>Thanks Jeff for this input, helpful it is.</p>\n<p>This is how I structured SVN in our development department:</p>\n<p>– Product Root</p>\n<p>  – trunk<br>\n      – bin (product deliverables)<br>\n      – lib  (external referenced libraries/frameworks)<br>\n      – autoBuild.build</p>\n<p>  – branches</p>\n<p>  – tags</p>\n<p>  – docs (Product documentation &amp; issue tracker log)</p>\n<p>However, I’m confused in regards to NUnit &amp; NHibernate, what should be within the repository and what level?</p>\n<p>Cheers,</p>"
+  },
+  {
+    "id": 1989,
+    "parent": 0,
+    "author_name": "Tarek Koudsi",
+    "author_url": "http://",
+    "date": "2008-01-06T15:16:39",
+    "type": "comment",
+    "content_html": "<p>I forgot to mention SOURCE folder under the trunk in my previous comment.</p>"
+  },
+  {
+    "id": 1990,
+    "parent": 0,
+    "author_name": "schoetbi",
+    "author_url": "http://",
+    "date": "2008-02-19T07:27:49",
+    "type": "comment",
+    "content_html": "<p>It can be ok for one project but if you want to handle more than that, or like to reuse things it will be very hard. It is very untypical and mixes several different things together. E.G a trunk is meant to be tagged later (most of the time). Why would I like to tag project 1 and project 2 in one tag? I recomend to read.</p>\n<p><a href=\"http://svnbook.red-bean.com/en/1.0/ch05s04.html#svn-ch-5-sect-6.1\" rel=\"nofollow ugc\">http://svnbook.red-bean.com/en/1.0/ch05s04.html#svn-ch-5-sect-6.1</a></p>"
+  }
+]

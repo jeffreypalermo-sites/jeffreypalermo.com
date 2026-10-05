@@ -1,0 +1,16 @@
+---
+wp_id: 552
+title: EZWeb Beta 0.51 Released on GotDotNet!!!
+slug: ezweb-beta-0-51-released-on-gotdotnet
+permalink: /2004/05/ezweb-beta-0-51-released-on-gotdotnet/
+date: 2004-05-25T18:02:00
+date_utc: 2004-05-25T18:02:00Z
+modified: 2004-05-25T18:02:00
+format: html
+excerpt: Go to the EZWeb workspace and download the latest release of my EZWeb application framework. As I post, 63 people downloaded the first release. I am pleased that there is interest in this project. I fixed a bug involving the use of Request.ApplicationPath. If I ran EZWeb in a virtual directory, Request.ApplicationPath would return “/ezweb”, but […]
+comments_open: true
+---
+<p>Go to the <a href="http://workspaces.gotdotnet.com/ezweb">EZWeb workspace</a>&nbsp;and download the latest release of my EZWeb application framework.&nbsp; As I post, 63 people downloaded the first release.&nbsp; I am pleased that there is interest in this project.&nbsp; I fixed a bug involving the use of Request.ApplicationPath.&nbsp; </p>
+<p>If I ran EZWeb in a virtual directory, Request.ApplicationPath would return “/ezweb”, but if I ran it as the root web, it would return “/”.&nbsp; This is inconsistent, so I created a property on my base page called “AppPath” where I correctly determine the path of the application wherever it happens to run.&nbsp; I used Page.ResolveUrl(”~/”), and this always gives me the correct application path.&nbsp; </p>
+<p>If you don’t already have your own framework for web applications, EZWeb is a great place to start.&nbsp; If you are just looking for a website that will run itself and will be easy to edit, EZWeb is also for you.&nbsp; </p>
+<p>If you have implemented EZWeb on a public website, send me the URL, so I can check it out!!!</p>

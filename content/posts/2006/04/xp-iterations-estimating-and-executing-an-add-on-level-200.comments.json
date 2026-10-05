@@ -1,0 +1,20 @@
+[
+  {
+    "id": 732,
+    "parent": 0,
+    "author_name": "SamGentile",
+    "author_url": "http://codebetter.com/blogs/sam.gentile",
+    "date": "2006-04-03T15:06:38",
+    "type": "comment",
+    "content_html": "<p>Thanks, this is great stuff. I am really looking forward to seeing you down in Austin to discuss this stuff in detail!</p>"
+  },
+  {
+    "id": 733,
+    "parent": 0,
+    "author_name": "Chris Donnan",
+    "author_url": "http://chrisdonnan.com/blog",
+    "date": "2006-04-03T17:35:15",
+    "type": "comment",
+    "content_html": "<p>Estimating is always hard. I can say that my estimation skills since I started using stories, story points and small digestable tasks have gotten much better. My groups in the past have doing very close to 100% normal scrum – 1 month iterations, daily meetings, etc. That being said – the group I am with now – the shortest possible iterations – more like ~1-2 weeks seem better. Time boxing is key/ hard. My point is that I think that there is no globally ideal iteration length. It depends (IMHO) on the team and the organization that you are working in.</p>\n<p>-Chris</p>"
+  }
+]

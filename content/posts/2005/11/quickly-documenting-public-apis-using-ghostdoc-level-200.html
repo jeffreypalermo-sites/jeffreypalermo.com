@@ -1,0 +1,181 @@
+---
+wp_id: 355
+title: Quickly documenting public APIs using GhostDoc – level 200
+slug: quickly-documenting-public-apis-using-ghostdoc-level-200
+permalink: /2005/11/quickly-documenting-public-apis-using-ghostdoc-level-200/
+date: 2005-11-22T17:46:00
+date_utc: 2005-11-22T17:46:00Z
+modified: 2005-11-22T17:46:00
+format: html
+excerpt: 'Along with Resharper, the following class was created using a minimum number of keystrokes. Basically, I typed the names of the fields, and shortcut the rest. Consider the following class that I might want to have Xml documentation for: public class Person { private string _firstName; private string _lastName; private string _phoneNumber; […]'
+comments_open: true
+---
+<p>Along with <a href="http://www.jetbrains.com/resharper/">Resharper</a>, the following class was created using a minimum number of keystrokes.&nbsp; Basically, I typed the names of the fields, and shortcut the rest.&nbsp; Consider the following class that I might want to have Xml documentation for:</p>
+<div><br>
+<p><span>public</span> <span>class</span> Person</p><br>
+<p>{</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>private</span> <span>string</span> _firstName;</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>private</span> <span>string</span> _lastName;</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>private</span> <span>string</span> _phoneNumber;</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>private</span> <span>int</span> _age;</p><br>
+<br>
+<p>&nbsp;&nbsp;&nbsp; <span>public</span> <span>string</span> LastName</p><br>
+<p>&nbsp;&nbsp;&nbsp; {</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>get</span> { <span>return</span> _lastName; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>set</span> { _lastName = <span>value</span>; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; }</p><br>
+<br>
+<p>&nbsp;&nbsp;&nbsp; <span>public</span> <span>string</span> PhoneNumber</p><br>
+<p>&nbsp;&nbsp;&nbsp; {</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>get</span> { <span>return</span> _phoneNumber; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>set</span> { _phoneNumber = <span>value</span>; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; }</p><br>
+<br>
+<p>&nbsp;&nbsp;&nbsp; <span>public</span> <span>int</span> Age</p><br>
+<p>&nbsp;&nbsp;&nbsp; {</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>get</span> { <span>return</span> _age; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>set</span> { _age = <span>value</span>; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; }</p><br>
+<br>
+<p>&nbsp;&nbsp;&nbsp; <span>public</span> <span>string</span> FirstName</p><br>
+<p>&nbsp;&nbsp;&nbsp; {</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>get</span> { <span>return</span> _firstName; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>set</span> { _firstName = <span>value</span>; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; }</p><br>
+<br>
+<p>&nbsp;&nbsp;&nbsp; <span>public</span> Person(<span>string</span> firstName, <span>string</span> lastName, <span>string</span> phoneNumber, <span>int</span> age)</p><br>
+<p>&nbsp;&nbsp;&nbsp; {</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _firstName = firstName;</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _lastName = lastName;</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _phoneNumber = phoneNumber;</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _age = age;</p><br>
+<p>&nbsp;&nbsp;&nbsp; }</p><br>
+<p>}</p></div>
+<p>I could type all the Xml comments myself, but that would be considerable effort, and there isn’t anything special about this class.&nbsp; Most people could guess what this API does, so why not have a tool help with the Xml comments.&nbsp; I press CTRL + Q (my <a href="http://www.roland-weigelt.de/ghostdoc/">GhostDoc </a>shortcut key) on each of my properties as well as the constructor,&nbsp;and I immediately have the following:</p>
+<div><br>
+<p><span>public</span> <span>class</span> Person</p><br>
+<p>{</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>private</span> <span>string</span> _firstName;</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>private</span> <span>string</span> _lastName;</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>private</span> <span>string</span> _phoneNumber;</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>private</span> <span>int</span> _age;</p><br>
+<br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> Gets or sets the name of the last.</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;/summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;value&gt;</span><span>The name of the last.</span><span>&lt;/value&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>public</span> <span>string</span> LastName</p><br>
+<p>&nbsp;&nbsp;&nbsp; {</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>get</span> { <span>return</span> _lastName; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>set</span> { _lastName = <span>value</span>; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; }</p><br>
+<br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> Gets or sets the phone number.</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;/summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;value&gt;</span><span>The phone number.</span><span>&lt;/value&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>public</span> <span>string</span> PhoneNumber</p><br>
+<p>&nbsp;&nbsp;&nbsp; {</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>get</span> { <span>return</span> _phoneNumber; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>set</span> { _phoneNumber = <span>value</span>; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; }</p><br>
+<br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> Gets or sets the age.</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;/summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;value&gt;</span><span>The age.</span><span>&lt;/value&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>public</span> <span>int</span> Age</p><br>
+<p>&nbsp;&nbsp;&nbsp; {</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>get</span> { <span>return</span> _age; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>set</span> { _age = <span>value</span>; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; }</p><br>
+<br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> Gets or sets the name of the first.</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;/summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;value&gt;</span><span>The name of the first.</span><span>&lt;/value&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>public</span> <span>string</span> FirstName</p><br>
+<p>&nbsp;&nbsp;&nbsp; {</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>get</span> { <span>return</span> _firstName; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>set</span> { _firstName = <span>value</span>; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; }</p><br>
+<br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> Initializes a new instance of the </span><span>&lt;see cref=”Person”/&gt;</span><span> class.</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;/summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;param name=”firstName”&gt;</span><span>Name of the first.</span><span>&lt;/param&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;param name=”lastName”&gt;</span><span>Name of the last.</span><span>&lt;/param&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;param name=”phoneNumber”&gt;</span><span>The phone number.</span><span>&lt;/param&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;param name=”age”&gt;</span><span>The age.</span><span>&lt;/param&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>public</span> Person(<span>string</span> firstName, <span>string</span> lastName, <span>string</span> phoneNumber, <span>int</span> age)</p><br>
+<p>&nbsp;&nbsp;&nbsp; {</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _firstName = firstName;</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _lastName = lastName;</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _phoneNumber = phoneNumber;</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _age = age;</p><br>
+<p>&nbsp;&nbsp;&nbsp; }</p><br>
+<p>}</p></div>
+<p>Most of the work is done.&nbsp; There is no way GhostDoc can read my mind, so I might have to make a few adjustments to the comments, but they are minimal.&nbsp; Note that GhostDoc got confused on firstName and lastName, but that’s understandable.&nbsp; It hits the rest dead-on:</p>
+<div><br>
+<p><span>public</span> <span>class</span> Person</p><br>
+<p>{</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>private</span> <span>string</span> _firstName;</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>private</span> <span>string</span> _lastName;</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>private</span> <span>string</span> _phoneNumber;</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>private</span> <span>int</span> _age;</p><br>
+<br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> Gets or sets the last name.</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;/summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;value&gt;</span><span>The last name.</span><span>&lt;/value&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>public</span> <span>string</span> LastName</p><br>
+<p>&nbsp;&nbsp;&nbsp; {</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>get</span> { <span>return</span> _lastName; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>set</span> { _lastName = <span>value</span>; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; }</p><br>
+<br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> Gets or sets the phone number.</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;/summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;value&gt;</span><span>The phone number.</span><span>&lt;/value&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>public</span> <span>string</span> PhoneNumber</p><br>
+<p>&nbsp;&nbsp;&nbsp; {</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>get</span> { <span>return</span> _phoneNumber; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>set</span> { _phoneNumber = <span>value</span>; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; }</p><br>
+<br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> Gets or sets the age.</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;/summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;value&gt;</span><span>The age.</span><span>&lt;/value&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>public</span> <span>int</span> Age</p><br>
+<p>&nbsp;&nbsp;&nbsp; {</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>get</span> { <span>return</span> _age; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>set</span> { _age = <span>value</span>; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; }</p><br>
+<br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> Gets or sets the first name.</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;/summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;value&gt;</span><span>The first name.</span><span>&lt;/value&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>public</span> <span>string</span> FirstName</p><br>
+<p>&nbsp;&nbsp;&nbsp; {</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>get</span> { <span>return</span> _firstName; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>set</span> { _firstName = <span>value</span>; }</p><br>
+<p>&nbsp;&nbsp;&nbsp; }</p><br>
+<br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> Initializes a new instance of the </span><span>&lt;see cref=”Person”/&gt;</span><span> class.</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;/summary&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;param name=”firstName”&gt;</span><span>First name.</span><span>&lt;/param&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;param name=”lastName”&gt;</span><span>Last name.</span><span>&lt;/param&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;param name=”phoneNumber”&gt;</span><span>The phone number.</span><span>&lt;/param&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;param name=”age”&gt;</span><span>The age.</span><span>&lt;/param&gt;</span></p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>public</span> Person(<span>string</span> firstName, <span>string</span> lastName, <span>string</span> phoneNumber, <span>int</span> age)</p><br>
+<p>&nbsp;&nbsp;&nbsp; {</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _firstName = firstName;</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _lastName = lastName;</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _phoneNumber = phoneNumber;</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _age = age;</p><br>
+<p>&nbsp;&nbsp;&nbsp; }</p><br>
+<p>}</p></div><!--EndFragment-->

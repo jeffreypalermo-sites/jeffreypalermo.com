@@ -1,0 +1,22 @@
+---
+wp_id: 688
+title: Demo on automating your build with NAnt and CCNet
+slug: demo-on-automating-your-build-with-nant-and-ccnet
+permalink: /2007/09/demo-on-automating-your-build-with-nant-and-ccnet/
+date: 2007-09-25T19:46:00
+date_utc: 2007-09-25T19:46:00Z
+modified: 2007-09-25T19:46:00
+format: html
+excerpt: I’ve prepared a presentation and demo of automating a build with NAnt and CCNet. It uses Subversion for the trunk, and all you have to do is checkout the trunk and run the build. You can check it out anonymously from the Google Code Subversion repository. In order for this to work, checkout http://palermo.googlecode.com/svn/automatedbuilddemo/trunksvn checkout http://palermo.googlecode.com/svn/automatedbuilddemo/trunk […]
+comments_open: true
+---
+<p>I’ve prepared a presentation and demo of automating a build with NAnt and CCNet.&nbsp; It uses Subversion for the trunk, and all you have to do is checkout the trunk and run the build.&nbsp; You can check it out anonymously from the Google Code Subversion repository.</p>
+<p>In order for this to work, </p>
+<p>checkout&nbsp;<a href="http://palermo.googlecode.com/svn/automatedbuilddemo/trunk" rel="nofollow">http://palermo.googlecode.com/svn/automatedbuilddemo/trunk</a><br><tt>svn checkout <b><i>http</i></b>://palermo.googlecode.com/svn/automatedbuilddemo/trunk demo-trunk</tt></p>
+<p>After getting the trunk, you’ll want to run “build.bat” from the command line.&nbsp; Here are the dependencies:</p>
+<ul>
+<li>.Net 2.0</li>
+<li>SQL 2005 Express in a named instance “sqlexpress”&nbsp;– which is the default.</li>
+</ul>
+<p>That’s it.&nbsp; All other dependencies are included in the trunk.&nbsp; This demo demonstrates how to create/update a database during a build, version, compile and test.&nbsp; The tests include some unit tests and an integration test that test the database whose schema is created during the build.&nbsp; Compilation is done by delegating to msbuild.exe from NAnt.</p>
+<p>I’ve also attempted to include CCNet itself in the trunk, but there are still a few issues <i>running</i> CCNet from that location.</p>

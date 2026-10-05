@@ -1,0 +1,33 @@
+---
+wp_id: 69
+title: Evil code that will break the garbage collector – level 300
+slug: evil-code-that-will-break-the-garbage-collector-level-300
+permalink: /2004/08/evil-code-that-will-break-the-garbage-collector-level-300/
+date: 2004-08-18T15:31:00
+date_utc: 2004-08-18T15:31:00Z
+modified: 2004-08-18T15:31:00
+format: html
+excerpt: I hadn’t done any profiling on EZWeb in a while, so I thought that I had better do some. I like Application Center Test that comes with VS 2003 EA, and I also watch my performance counters while it’s running. I tell you, it’s easy to cause a memory leak in .Net. I predict that […]
+comments_open: true
+---
+<p>I hadn’t done any profiling on EZWeb in a while, so I thought that I had better do some.&nbsp; I like Application Center Test that comes with VS 2003 EA, and I also watch my performance counters while it’s running.&nbsp; I tell you, it’s easy to cause a memory leak in .Net.&nbsp; I predict that fixing .Net memory leaks will be a sizable consulting niche in the near future as more .Net apps go into production.&nbsp; Especially web applications where the Page object is being created and handed over to the garbage collector many hundred times per second.&nbsp; I found a really nasty memory leak in EZWeb this morning, and it can happen to anyone with normal code.&nbsp; If you are currently using version 0.9 or 1.0 of EZWeb, I’ll tell you what code to change to fix it, and I’m going to post a v1.1 release to GotDotNet as well.&nbsp; So, here is the scenario.&nbsp; I define my own user object, and to conform to Forms-based authentication, I never wanted my User property to be null – System.Web.UI.Page.User is never null.&nbsp; If no one is authenticated, it comes back with an empty GenericPrincipal object.&nbsp; I created an “Empty” property of my User (WebPrincipal) object much like string.Empty and Color.Empty, so whenever there is no user logged in, the User will be WebPrincipal.Empty:</p>
+<p>protected static WebPrincipal m_empty = WebPrincipal.InstantiateEmpty();</p>
+<p>Then I have my Empty property, so I can test against WebPrincipal.Empty because as a static member, there will only be one instance.&nbsp; Well, I forgot about some code from when my User property was null:</p><pre>        <span class="ColorCSKeyword">private</span> <span class="ColorCSKeyword">void</span> SetUserEventListeners()<br>
+<br>        {<br>
+<br>            <span class="ColorCSKeyword">if</span>(m_user != <span class="ColorCSKeyword">null</span>)<br>
+<br>            {<br>
+<br>                m_user.LoggingOut += <span class="ColorCSKeyword">new</span> EventHandler(User_LoggingOut);<br>
+<br>                m_user.LoggedOut += <span class="ColorCSKeyword">new</span> EventHandler(User_LoggedOut);<br>
+<br>            }<br>
+<br>        }<br>
+</pre>
+<p>So, this is what happens:&nbsp; m_user is an instance of WebPrincipal.Empty (a referenced by a static member that lives as long as the AppDomain).&nbsp; I am adding delegates in my Page class to events of WebPrincipal.Empty, so a persistent instance is maintaining references to methods of my Page class (EVERY SINGLE INSTANCE OF MY PAGE CLASS).&nbsp; What does this mean?&nbsp; It means that the garbage collector see that references are held to the Page instances, so it doesn’t garbage collect them.&nbsp; The gen 2 heap keeps getting bigger and bigger and bigger.&nbsp; </p>
+<p>So watch out for this in your code.&nbsp; If you have long-lived objects that have references to short-lived objects, those short-lived objects become long-lived!</p>
+<p>To fix this code, I only wire up event handlers when the User object is an actual good instance of WebPrincipal:</p><pre>        <span class="ColorCSKeyword">private</span> <span class="ColorCSKeyword">void</span> SetUserEventListeners()<br>
+<br>        {<br>
+<br>            <span class="ColorCSKeyword">if</span> (m_user.Identity.IsAuthenticated)<br>
+<br>            {<br>
+<br>                m_user.LoggingOut += <span class="ColorCSKeyword">new</span> EventHandler(User_LoggingOut);<br>
+<br>                m_user.LoggedOut += <span class="ColorCSKeyword">new</span> EventHandler(User_LoggedOut);<br>
+<br>            }<br>
+<br>        }</pre>The Empty instance will have it’s IsAuthenticated property as false, so if it is true, then I know I have a good instance.&nbsp; Now I profile the app, and my gen 2 managed heap stays right where it should be.

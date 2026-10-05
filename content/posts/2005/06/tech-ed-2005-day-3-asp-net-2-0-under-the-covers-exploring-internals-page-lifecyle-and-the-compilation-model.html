@@ -1,0 +1,19 @@
+---
+wp_id: 260
+title: 'Tech Ed 2005 Day 3 – ASP.NET 2.0: Under the Covers – Exploring Internals, Page Lifecyle and the Compilation Model'
+slug: tech-ed-2005-day-3-asp-net-2-0-under-the-covers-exploring-internals-page-lifecyle-and-the-compilation-model
+permalink: /2005/06/tech-ed-2005-day-3-asp-net-2-0-under-the-covers-exploring-internals-page-lifecyle-and-the-compilation-model/
+date: 2005-06-08T12:51:00
+date_utc: 2005-06-08T12:51:00Z
+modified: 2005-06-08T12:51:00
+format: html
+excerpt: This talk went over the internals of ASP.NET 2.0. Other sessions went over the RAD (*shudders*) capabilities of v2, but this session drills down to the compilation models and other more internal aspects of the runtime. There are several compilation models. One could leave all files on disk and have them autocompiled on demand, or […]
+comments_open: true
+---
+<p>This talk went over the internals of ASP.NET 2.0. Other sessions went over the RAD (*shudders*) capabilities of v2, but this session drills down to the compilation models and other more internal aspects of the runtime. There are several compilation models. One could leave all files on disk and have them autocompiled on demand, or one could compile up front. For pre-compiling, there is the v1.1 option where everything but the markup files are compiled, and then there is full pre-compilation where even the .aspx files are compiled. </p>
+<p>V2 also allows for custom build providers. Build providers recognize a particular file type. If you make a custom file extension, the system’s build provider won’t touch the file type it doesn’t know about, but you can specify a build provider that does know what to do with that file type. A build provider provides both design-time intellisense as well as the runtime compilation. The build provider actually uses the CodeDOM to generate a manged class. It also supports receiving a string containing some managed code, but in that case, your build provider would be limited to one syntax.</p>
+<p>VirtualPathProvider: This is _huge_ for the URL rewriting crowd. ASP.NET v2 will have a subsystem that will allows virtual directories and pages to be processed more cleanly than with custom HttpModules or HttpHandlers. This is exciting for me because it will help me improve my CMS.</p>
+<p>Next, the speaker went over the new parts in the page lifecycle. Here’s the rundown:</p>
+<p>OnPreInit: dynamic MasterPageFile, theme<br>OnPreLoad, OnLoadComplete<br>InitializeCulture: dynamic culture/UICulture code-gen call when attributes defined.</p>
+<p>ASP.NET 2.0 also supports cross-page posts and control post-backs which will only execute a portion of the page lifecycle. When a control does a partial post-back (AJAX-style), the page loads its state and then raises a RaiseCallbackEvent to handle the control functionality. There is also a new mechanism to allow a page to post back to another. The control causing the postback declares a “postbackurl” property that references another page. The page being posted to has to declare the previous page so that the second page can get back to the first one. The mechanics of it load the state of page A and then transfers to page B for the execution. This strikes me as an entry-level feature that ASP 3 developers will love, but having a large number of .aspx files complicates the site when a good amount of logic can be encapsulated in controls.</p>
+<p>In ASP.NET 2, the runtime supports an asynchronous page model. This will allow built-in async calls to web services from a page. The page doesn’t block until OnPreRenderComplete. If there is a lot of logic on the page (or called by the page), this can be a good feature.</p>

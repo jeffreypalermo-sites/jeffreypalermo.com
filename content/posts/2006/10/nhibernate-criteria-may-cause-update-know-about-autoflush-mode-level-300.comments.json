@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1026,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2006-10-23T18:51:13",
+    "type": "comment",
+    "content_html": "<p>The reasoning here is a bit more complex.<br>\nThe issue is that NH doesn’t know if your changes may modify the query results. Trying to find out in memory is extremely difficult, so it defaults to saving everything to the database and letting it sort it out.</p>\n<p>Setting the flush mode to never is not really something you want to do, since it only makes sense when you want to execute your own SQL statement (and commit those) and commit changes in NHibernate’s session in a seperate transaction.</p>\n<p>Usually, setting this to Commit is a good choice.</p>"
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "id": 916,
+    "parent": 0,
+    "author_name": "David",
+    "author_url": "http://exold.com/",
+    "date": "2006-05-23T04:30:32",
+    "type": "comment",
+    "content_html": "<p>Listen to Jeffrey…ReSharper is the biz!</p>"
+  },
+  {
+    "id": 917,
+    "parent": 0,
+    "author_name": "David M. Kean",
+    "author_url": "http://davidkean.net",
+    "date": "2006-05-23T05:06:37",
+    "type": "comment",
+    "content_html": "<p>You’re left with a ‘search and replace’? What about Refactor -&gt; Rename in 2005?</p>"
+  },
+  {
+    "id": 918,
+    "parent": 0,
+    "author_name": "Jens",
+    "author_url": "http://www.jenswinter.com",
+    "date": "2006-05-23T06:05:01",
+    "type": "comment",
+    "content_html": "<p>David,<br>\nYes, in 2005 there is a Rename but not in VS 2003.</p>"
+  },
+  {
+    "id": 919,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-05-23T10:55:07",
+    "type": "comment",
+    "content_html": "<p>In VS 2005, I use Resharper rename.  The refactoring in VS 2005 is very poor.  If I try to rename a local variable inside a private method of a class, a dialog pops up scanning the entire solution, and I have to stop working and wait for it.  I don’t know why anything outside the method needs to be looked at to rename a local variable (since it can’t be accessed out side of that method).  I can’t work with behavior like that, so it’s a non-feature for me.</p>\n<p>Resharper _gets_ refactoring.  There are keyboard shortcuts for everything, so I rarely have to take my hands off the keyboard and go for the mouse.  It’s not just refactoring either.  When writing code and jumping around my solutiong, Resharper speeds me up.</p>"
+  }
+]

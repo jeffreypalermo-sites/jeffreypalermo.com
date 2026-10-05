@@ -1,0 +1,74 @@
+[
+  {
+    "id": 523,
+    "parent": 0,
+    "author_name": "David Neal",
+    "author_url": "http://www.christianasp.net/blog/",
+    "date": "2005-10-12T17:07:08",
+    "type": "comment",
+    "content_html": "<p>Very, very cool.  I can already think of several things I could use this for.  I can also imagine using this scripting capability in some of my own apps.  Here’s my vote for you giving us the source code \uD83D\uDE42</p>"
+  },
+  {
+    "id": 524,
+    "parent": 0,
+    "author_name": "Jon Galloway",
+    "author_url": "http://weblogs.asp.net/jgalloway",
+    "date": "2005-10-12T19:53:11",
+    "type": "comment",
+    "content_html": "<p>Installed! \uD83D\uDE09</p>\n<p>I added the folder to my path and added the following batch file, which I titled ns.bat:<br>\nTITLE NetScripter %1<br>\npushd %~dp0<br>\nnetscripter %1 %2 %3 %4 %5 %6 %7 %8 %9<br>\npopd</p>\n<p>Now I can throw all my scripts in c:utilsNetScripter, and execute any of them from Start / Run by typing: ns jeffery.cs param1 param2</p>"
+  },
+  {
+    "id": 525,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-12T21:28:21",
+    "type": "comment",
+    "content_html": "<p>Very cool indeed.  Less to type.  I’d be interested to know what type of things you are using it for.  I’m using it for information filters.  I have many C# scripts that do a Regex looking for a pattern.  Upon find it, it does a little something.  I’m doing this on a folder structure with 1000s of files.   A real time-saver and a whole lot easier than do this with shell scripting.</p>"
+  },
+  {
+    "id": 526,
+    "parent": 0,
+    "author_name": "Jeff Atwood",
+    "author_url": "http://www.codinghorror.com/blog/",
+    "date": "2005-10-13T00:07:09",
+    "type": "comment",
+    "content_html": "<p>Why do you guys hate Monad so much?</p>\n<p>I’m just saying!</p>"
+  },
+  {
+    "id": 527,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-13T03:02:56",
+    "type": "comment",
+    "content_html": "<p>I listened to a webcast about Monad, and it sounds very promising, and I look forward to using it when it is available, but it’s not right now.</p>\n<p>I’m not sure what you mean by “Why do you guys hate Monad so much?”.  Reading the text above, I don’t see where Monad was every mentioned, and I’m not sure who you are referring to (the hater).</p>\n<p>Please elaborate.</p>"
+  },
+  {
+    "id": 528,
+    "parent": 0,
+    "author_name": "Chris Martin",
+    "author_url": "http://",
+    "date": "2005-10-13T05:04:09",
+    "type": "comment",
+    "content_html": "<p>This is pretty cool. Kudos. But it really begs the question: Why not just use the great Alintex? <a href=\"http://www.alintex.com/\" rel=\"nofollow ugc\">http://www.alintex.com/</a></p>"
+  },
+  {
+    "id": 529,
+    "parent": 0,
+    "author_name": "Andy",
+    "author_url": "http://www.milbertus.com",
+    "date": "2005-10-23T03:26:21",
+    "type": "comment",
+    "content_html": "<p>Well, you can download Monad Beta 2 right now for free (more at <a href=\"http://www.leeholmes.com/blog/PermaLink,guid,8b26fea1-723d-4bd6-93c1-19d681af9276.aspx\" rel=\"nofollow ugc\">http://www.leeholmes.com/blog/PermaLink,guid,8b26fea1-723d-4bd6-93c1-19d681af9276.aspx</a>). I’ve been using it for a while now, and I haven’t had any problems with it or anything.</p>\n<p>From what I’ve done with it, I would say that Monad is more than just a .NET scripting language. Not only does it pass objects through the pipeline instead of text, but you can also extend existing types with new properties, methods, etc. It’s definitely worth it to try it out and play around with it for a while.</p>"
+  },
+  {
+    "id": 530,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-23T03:39:37",
+    "type": "comment",
+    "content_html": "<p>I appreciate the information, Andy, and I look forward to using it when Microsoft releases and supports it.  I’m not able to use any non-supported products except in VPCs right now.  It sounds very promising, however, as the replacement for the current DOS shell.</p>"
+  }
+]

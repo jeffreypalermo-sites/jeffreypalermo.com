@@ -1,0 +1,75 @@
+---
+wp_id: 592
+title: Easily extend post-commit hook in Subversion using NAnt – email anyone?
+slug: easily-extend-post-commit-hook-in-subversion-using-nant-email-anyone
+permalink: /2007/12/easily-extend-post-commit-hook-in-subversion-using-nant-email-anyone/
+date: 2007-12-13T22:23:53
+date_utc: 2007-12-13T22:23:53Z
+modified: 2007-12-13T22:23:53
+format: html
+tags:
+- featured
+excerpt: There are several scripts floating around the Net regarding publishing an email to the development list every time someone commits a revision to Subversion. In other cases, you may want to post the commit log entry directly to your project tracking system, such as trac, Rally, Gemini, Mingle, etc. Anything under the sun can be […]
+comments_open: true
+---
+<p>There are several scripts floating around the Net regarding publishing an email to the development list every time someone commits a revision to Subversion.</p>
+<p>In other cases, you may want to post the commit log entry directly to your project tracking system, such as trac, Rally, Gemini, Mingle, etc.&nbsp; Anything under the sun can be coded into a post-commit action with Subversion.</p>
+<p><strong>Here’s how it works.&nbsp; Here is how to send post commit email from Subversion while running on Windows:</strong></p>
+<p>In your subversion repository, there is a <strong>hooks</strong> folder.&nbsp; This contains some template files for you.&nbsp; On a Windows system, you’ll want a file called <strong>post-commit.bat.&nbsp; </strong>This batch command will be run immediately after Subversion commits a transactional revision to the repository.&nbsp; You can do work on other events, but I’ll focus on post-commit for this post.</p>
+<p><strong>Here is my post-commit.bat file that will call NAnt (which is placed inside the hooks folder for simplicity):</strong></p>
+
+<div>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">pushd .
+cd DRIVELETTER:svnrepositoriesrepositorynamehooks
+nantnant.exe -buildfile:postcommitemail.build -D:path.repository=%1 -D:revision=%2 &gt; lastpostcommitrun.txt
+popd</pre>
+</div>
+
+<p><strong>Notice how we are merely calling nant.exe.</strong>&nbsp; The rest of the interesting work is done by NAnt.&nbsp; Now that we are within NAnt, we can script out any action we might need.&nbsp; In this case, I’m going to use some SVN command line tools to build up a simple email that with send developers what was included in the last commit:</p>
+
+<pre><span class="kwrd">&lt;?</span><span class="html">xml</span> <span class="attr">version</span><span class="kwrd">="1.0"</span> <span class="attr">encoding</span><span class="kwrd">="utf-8"</span>?<span class="kwrd">&gt;</span>
+<span class="kwrd">&lt;</span><span class="html">project</span> <span class="attr">name</span><span class="kwrd">="commit"</span> <span class="attr">default</span><span class="kwrd">="build"</span> <span class="attr">xmlns</span><span class="kwrd">="http://nant.sf.net/release/0.85/nant.xsd"</span><span class="kwrd">&gt;</span>
+    <span class="kwrd">&lt;</span><span class="html">target</span> <span class="attr">name</span><span class="kwrd">="build"</span><span class="kwrd">&gt;</span>
+
+        <span class="kwrd">&lt;</span><span class="html">exec</span> <span class="attr">program</span><span class="kwrd">="svnlook"</span> <span class="attr">commandline</span><span class="kwrd">="author ${path.repository} -r ${revision}"</span> <span class="attr">output</span><span class="kwrd">="author.txt"</span><span class="kwrd">/&gt;</span>        
+        <span class="kwrd">&lt;</span><span class="html">exec</span> <span class="attr">program</span><span class="kwrd">="svnlook"</span> <span class="attr">commandline</span><span class="kwrd">="info ${path.repository} -r ${revision}"</span> <span class="attr">output</span><span class="kwrd">="message.txt"</span><span class="kwrd">/&gt;</span>
+        <span class="kwrd">&lt;</span><span class="html">echo</span> <span class="attr">message</span><span class="kwrd">=" "</span> <span class="attr">file</span><span class="kwrd">="message.txt"</span> <span class="attr">append</span><span class="kwrd">="true"</span><span class="kwrd">/&gt;</span>
+        <span class="kwrd">&lt;</span><span class="html">exec</span> <span class="attr">program</span><span class="kwrd">="svnlook"</span> <span class="attr">commandline</span><span class="kwrd">="changed ${path.repository} -r ${revision}"</span> <span class="attr">output</span><span class="kwrd">="message.txt"</span> <span class="attr">append</span><span class="kwrd">="true"</span> <span class="kwrd">/&gt;</span>
+        <span class="kwrd">&lt;</span><span class="html">exec</span> <span class="attr">program</span><span class="kwrd">="svnlook"</span> <span class="attr">commandline</span><span class="kwrd">="diff ${path.repository} -r ${revision} --no-diff-deleted --no-diff-added"</span> <span class="attr">output</span><span class="kwrd">="message.txt"</span> <span class="attr">append</span><span class="kwrd">="true"</span><span class="kwrd">/&gt;</span>
+        
+        <span class="kwrd">&lt;</span><span class="html">loadfile</span> <span class="attr">file</span><span class="kwrd">="author.txt"</span> <span class="attr">property</span><span class="kwrd">="author"</span><span class="kwrd">/&gt;</span>
+        <span class="kwrd">&lt;</span><span class="html">loadfile</span> <span class="attr">file</span><span class="kwrd">="message.txt"</span> <span class="attr">property</span><span class="kwrd">="message"</span><span class="kwrd">/&gt;</span>
+        <span class="kwrd">&lt;</span><span class="html">mail</span> <span class="attr">tolist</span><span class="kwrd">=jeffrey@mydomain.com</span>
+            <span class="attr">from</span><span class="kwrd">=build@mydomain.com</span> 
+            <span class="attr">subject</span><span class="kwrd">="SVN ${path.repository} - ${author}"</span> 
+            <span class="attr">message</span><span class="kwrd">="${message}"</span> 
+            <span class="attr">mailhost</span><span class="kwrd">="smtp.mydomain.com"</span><span class="kwrd">/&gt;</span>
+    <span class="kwrd">&lt;/</span><span class="html">target</span><span class="kwrd">&gt;</span>
+
+<span class="kwrd">&lt;/</span><span class="html">project</span><span class="kwrd">&gt;</span></pre>
+<p>
+.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+<p>That’s all it takes.&nbsp; I can write anything I need to in order to perform custom actions when things happen with my Subversion repository.&nbsp; In this case, I’m sending email to a list, and the email contains the last commit.</p>

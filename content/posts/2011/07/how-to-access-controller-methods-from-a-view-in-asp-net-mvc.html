@@ -1,0 +1,30 @@
+---
+wp_id: 1177
+title: How to access controller methods from a view in ASP.NET MVC
+slug: how-to-access-controller-methods-from-a-view-in-asp-net-mvc
+permalink: /2011/07/how-to-access-controller-methods-from-a-view-in-asp-net-mvc/
+date: 2011-07-29T22:17:44
+date_utc: 2011-07-29T22:17:44Z
+modified: 2011-07-29T22:17:44
+format: html
+categories:
+- blog
+excerpt: This question has been posed in several places. One of the places is on StackOverflow here. The use case here is that my controller has important state or an important function, and I’d like to leverage it from the view. It’s not appropriate to factor out to an html helper or other view-based utility class. […]
+comments_open: true
+---
+<p>This question has been posed in several places.&nbsp; One of the places is on <a href="http://stackoverflow.com/questions/1417168/asp-net-mvc-access-controller-instance-from-view">StackOverflow here</a>.&nbsp; The use case here is that my controller has important state or an important function, and I’d like to leverage it from the view.&nbsp; It’s not appropriate to factor out to an html helper or other view-based utility class.&nbsp; It is something unique to the controller.&nbsp; It would be very easy to just pass the controller over to the view so that the view could make use of its methods, but there is a lot of discussion why that is “dirty.”&nbsp;</p>
+<p>For the lay-programmer, that solution would function just fine.&nbsp; For the professional, the MVC pattern was chosen to keep the view away from the business of knowing the storyboard flow of an application.&nbsp; That is the responsibility of the controller; therefore, the pattern states that the controller knows the view, but the view does not know the controller.</p>
+<p>In ASP.NET MVC, the controller passes an object called a ViewBag to the view.&nbsp; As an aside, it is really interesting that when ASP.NET MVC 1 was being developed, many .Net developers were using MonoRail, which was another MVC implementation for ASP.NET.&nbsp; It’s passed object from the controller to the view was called PropertyBag, and many lobbied for the use of the word “bag”, but ViewData was the first term used.&nbsp; The new ViewBag object comes to us in ASP.NET MVC 3 as a dynamic object.</p>
+<h1>Desired use case</h1>
+<p>Let’s consider a page that lists out a series of odd numbers.&nbsp; We want to alert the user when there is an odd number that is not prime.&nbsp; Here is the screen.</p>
+<p><a href="/wp-content/uploads/2018/07/howtoaccesscontrollermethodsfroma.netmvc_13812image_4.png"><img loading="lazy" decoding="async" style="border-bottom:0; border-left:0; display:inline; border-top:0; border-right:0" title="image" border="0" alt="image" src="/wp-content/uploads/2018/07/howtoaccesscontrollermethodsfroma.netmvc_13812image_thumb_1.png" width="536" height="578"></a></p>
+<p>The view for this screen looks like this.</p>
+
+<p><a href="/wp-content/uploads/2018/07/howtoaccesscontrollermethodsfroma.netmvc_13812image_8.png"><img loading="lazy" decoding="async" style="border-bottom:0; border-left:0; display:inline; border-top:0; border-right:0" title="image" border="0" alt="image" src="/wp-content/uploads/2018/07/howtoaccesscontrollermethodsfroma.netmvc_13812image_thumb_3.png" width="473" height="334"></a></p>
+<p>Notice that inside my loop, I am actually passing the enumerated value of the view model to a method on the ViewBag.&nbsp; Remember that ViewBag doesn’t come with any methods like this.&nbsp; It is an empty dynamic object until we define something on it.&nbsp;</p>
+<h1>&nbsp;</h1>
+<h1>Solution</h1>
+<p>It appears that we have defined a new method on ViewBag called GetWarning().&nbsp; This new method is the gateway that we longed for to take us back to the controller.&nbsp; Let’s look at the code for the controller, and we will see that the controller provides the logic for deciding what warning message to display next to the number, if any.</p>
+<p><a href="/wp-content/uploads/2018/07/howtoaccesscontrollermethodsfroma.netmvc_13812image_10.png"><img loading="lazy" decoding="async" style="border-bottom:0; border-left:0; display:inline; border-top:0; border-right:0" title="image" border="0" alt="image" src="/wp-content/uploads/2018/07/howtoaccesscontrollermethodsfroma.netmvc_13812image_thumb_4.png" width="646" height="813"></a></p>
+<p>There are several things to look at.&nbsp; First, we define a property, not a method on the ViewBag.&nbsp; It is a Func, so it can be invoked because it is a method being passed as an object thanks to delegates/closures.&nbsp; The definition of the method that is passed takes in a number and makes use of a method that belongs to the controller.&nbsp; Because closures/delegates have access to the scope in which they are defined, our GetContextAwareWarning method can access the IsPrime method even when the method is invoked way over in the view.</p>
+<p>Now, we can give the view everything it needs to function without ever being tempted to pass a reference to the controller itself.&nbsp;</p>

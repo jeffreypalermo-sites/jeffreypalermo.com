@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1552,
+    "parent": 0,
+    "author_name": "jmiller",
+    "author_url": "http://codebetter.com/blogs/jeremy.miller",
+    "date": "2007-04-24T19:30:48",
+    "type": "comment",
+    "content_html": "<p>Where’d you go in Mizzou?</p>"
+  },
+  {
+    "id": 1553,
+    "parent": 0,
+    "author_name": "Eric McVicker",
+    "author_url": "http://",
+    "date": "2007-04-25T00:32:54",
+    "type": "comment",
+    "content_html": "<p>Hey Jeff could you post your podcast RSS list?</p>"
+  },
+  {
+    "id": 1554,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-05-08T12:40:07",
+    "type": "comment",
+    "content_html": "<p>@Jeremy:  I went to Zanoni for a wedding.<br>\n@Eric: I think I will.  It’s a home, so I’ll have to snag it during an evening.</p>"
+  }
+]

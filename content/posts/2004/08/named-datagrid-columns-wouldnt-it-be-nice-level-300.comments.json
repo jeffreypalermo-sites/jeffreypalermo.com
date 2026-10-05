@@ -1,0 +1,29 @@
+[
+  {
+    "id": 140,
+    "parent": 0,
+    "author_name": "Richard Wan",
+    "author_url": "http://",
+    "date": "2004-10-08T14:58:00",
+    "type": "comment",
+    "content_html": "<p>I know this is bad form but: ditto, me too, I agree</p>"
+  },
+  {
+    "id": 141,
+    "parent": 0,
+    "author_name": "m@",
+    "author_url": "http://",
+    "date": "2005-02-28T07:53:00",
+    "type": "comment",
+    "content_html": "<p>I used an enumeration to solve this problem.  Everywhere that I need to reference a datagrid column index, I reference the enum name.  You still have to make sure the enum order matches the order of columns in the datagrid but at least you only have to maintain it in one place.</p>"
+  },
+  {
+    "id": 142,
+    "parent": 0,
+    "author_name": "Jas",
+    "author_url": "http://",
+    "date": "2005-04-18T20:45:00",
+    "type": "comment",
+    "content_html": "<p>You can also do something hacky with the dataset that is bound to the datagrid .. if your columns are straight from the datagrid you can use the index by name feature of the dataset to get the appropriate index (using .Ordinal) and then map that into the index of your datagrid column</p>"
+  }
+]

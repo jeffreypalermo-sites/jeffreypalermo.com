@@ -1,0 +1,235 @@
+---
+wp_id: 352
+title: How to create a jump-to-page feature to enhance the DataGrid pager – level 200
+slug: how-to-create-a-jump-to-page-feature-to-enhance-the-datagrid-pager-level-200
+permalink: /2005/11/how-to-create-a-jump-to-page-feature-to-enhance-the-datagrid-pager-level-200/
+date: 2005-11-18T13:02:00
+date_utc: 2005-11-18T13:02:00Z
+modified: 2005-11-18T13:02:00
+format: html
+excerpt: When displaying information in a grid on an ASP.NET web page, it’s often a good idea to page the information if there is a lot of it. For instance, if you have 10000 rows of information to potentially display, it’s unreasonable to expect the user to wait to download all of it at one time and […]
+comments_open: true
+---
+<div>When displaying information in a grid on an ASP.NET web page, it’s<br>
+often a good idea to&nbsp;page the information if there is a lot of<br>
+it.&nbsp; For instance, if you have 10000 rows of information to<br>
+potentially display, it’s unreasonable to expect the user to wait to<br>
+download all of it at one time and scroll forever.&nbsp; It’s wasteful,<br>
+too.&nbsp; Instead, page it in smaller chunks (10-50).&nbsp; Then let<br>
+the user move to different pages of information.&nbsp; But when there<br>
+is a lot of pages, you don’t want the user to have to click multiple<br>
+times to get to page 15.&nbsp; If information is sorted, a user will<br>
+often know what page to jump to.&nbsp; In this<br>
+post,&nbsp;I’ll&nbsp;cover how to add a “jump-to-page” feature to the<br>
+paging mechanism of an ASP.NET DataGrid.</div>
+<div>&nbsp;</div>
+<div>First, let’s cover how to get paging working on a normal, stock<br>
+DataGrid.&nbsp; I’ve spoofed some data in the form of a string array,<br>
+and I have my basic, numeric pager:</div>
+<div>&nbsp;</div>
+<div>&lt;form id=”Form1″ method=”post” runat=”server”&gt;<br>&nbsp; &lt;asp:DataGrid AllowPaging=”True” PagerStyle-Mode=”NumericPages”&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp; PagerStyle-PageButtonCount=”10″ ID=”grid” Runat=”server” /&gt;<br>&lt;/form&gt;</div>
+<div>&nbsp;</div>
+<div style="border:1pt solid windowtext; padding:0; background:white none repeat scroll 0; color:black">
+<p><span style="color:blue">using</span> System;</p>
+<p><span style="color:blue">using</span> System.Web.UI;</p>
+<p><span style="color:blue">using</span> System.Web.UI.WebControls;</p>
+
+<p><span style="color:blue">public</span> <span style="color:blue">class</span> WebForm1 : Page</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span> DataGrid grid;</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span> <span style="color:blue">override</span> <span style="color:blue">void</span> OnLoad(EventArgs e)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">base</span>.OnLoad(e);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">if</span> (!IsPostBack)</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; grid.DataSource = <span style="color:blue">this</span>.GetSource();</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">this</span>.BindGrid(0);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span> <span style="color:blue">override</span> <span style="color:blue">void</span> OnInit(EventArgs e)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">base</span>.OnInit(e);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; grid.PageIndexChanged += <span style="color:blue">new</span> DataGridPageChangedEventHandler(grid_PageIndexChanged);</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:blue">string</span>[] GetSource()</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:green">//just imagine how you would get/cache your data source.</span></p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">string</span>[] rows = <span style="color:blue">new</span> <span style="color:blue">string</span>[10000];</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">for</span> (<span style="color:blue">int</span> i = 0; i &lt; 10000; i++)</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; rows[i] = i.ToString();</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span> rows;</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:blue">void</span> BindGrid(<span style="color:blue">int</span> currentPageIndex)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; grid.DataSource = <span style="color:blue">this</span>.GetSource();</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; grid.CurrentPageIndex = currentPageIndex;</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; grid.DataBind();</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:blue">void</span> grid_PageIndexChanged(<span style="color:blue">object</span> source, DataGridPageChangedEventArgs e)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">this</span>.BindGrid(e.NewPageIndex);</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+</div>
+<p>This works fine, but I have to click so many times to get to page<br>
+100 (10 clicks).&nbsp; I would like to be able to punch in a number and<br>
+jump to that page quickly.&nbsp; Let’s examine the following code and<br>
+how I created some controls to insert into the DataGrid paging<br>
+mechanism.&nbsp; The DataGrid doesn’t provide a PageTemplate, so we<br>
+have to do a bit of manual control arrangement.&nbsp; First, we’ll set<br>
+up how we would like it to work:</p>
+<p>Let’s add our jump-to section:<!--EndFragment--></p>
+<p>&lt;form id=”Form1″ method=”post” runat=”server”&gt;<br>&nbsp;&lt;asp:DataGrid AllowPaging=”True” PagerStyle-Mode=”NumericPages” <br>&nbsp;&nbsp;PagerStyle-PageButtonCount=”10″ ID=”grid” Runat=”server” /&gt;<br>&nbsp;&lt;asp:Panel ID=”pagerEnhancement” Runat=”server”&gt;<br>&nbsp;&nbsp;Jump to page: <br>&nbsp;&nbsp;&lt;asp:TextBox id=jumpToText Runat=”server” Width=”25″&gt;&lt;/asp:TextBox&gt;<br>&nbsp;&nbsp;&lt;asp:Button id=jumpToButton Runat=”server” Text=”Go”&gt;&lt;/asp:Button&gt;<br>&nbsp;&lt;/asp:Panel&gt;<br>&lt;/form&gt;</p>
+<p>Notice that we just have a textbox and a button.&nbsp; We’ve added code to make this affect the DataGrid page:</p>
+<div style="border:1pt solid windowtext; padding:0; background:white none repeat scroll 0; color:black">
+<p><span style="color:blue">using</span> System;</p>
+<p><span style="color:blue">using</span> System.Web.UI;</p>
+<p><span style="color:blue">using</span> System.Web.UI.WebControls;</p>
+
+<p><span style="color:blue">public</span> <span style="color:blue">class</span> WebForm1 : Page</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span> System.Web.UI.WebControls.TextBox jumpToText;</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span> System.Web.UI.WebControls.Button jumpToButton;</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span> System.Web.UI.WebControls.Panel pagerEnhancement;</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span> DataGrid grid;</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span> <span style="color:blue">override</span> <span style="color:blue">void</span> OnLoad(EventArgs e)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">base</span>.OnLoad(e);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">if</span> (!IsPostBack)</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; grid.DataSource = <span style="color:blue">this</span>.GetSource();</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">this</span>.BindGrid(0);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span> <span style="color:blue">override</span> <span style="color:blue">void</span> OnInit(EventArgs e)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">base</span>.OnInit(e);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; grid.PageIndexChanged += <span style="color:blue">new</span> DataGridPageChangedEventHandler(grid_PageIndexChanged);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; jumpToButton.Click +=<span style="color:blue">new</span> EventHandler(jumpToButton_Click);</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:blue">string</span>[] GetSource()</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:green">//just imagine how you would get/cache your data source.</span></p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">string</span>[] rows = <span style="color:blue">new</span> <span style="color:blue">string</span>[10000];</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">for</span> (<span style="color:blue">int</span> i = 0; i &lt; 10000; i++)</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; rows[i] = i.ToString();</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span> rows;</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:blue">void</span> BindGrid(<span style="color:blue">int</span> currentPageIndex)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; grid.DataSource = <span style="color:blue">this</span>.GetSource();</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; grid.CurrentPageIndex = currentPageIndex;</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; grid.DataBind();</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:blue">void</span> grid_PageIndexChanged(<span style="color:blue">object</span> source, DataGridPageChangedEventArgs e)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">this</span>.BindGrid(e.NewPageIndex);</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:blue">void</span> jumpToButton_Click(<span style="color:blue">object</span> sender, System.EventArgs e)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">int</span> newPage = <span style="color:blue">int</span>.Parse(jumpToText.Text);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">this</span>.BindGrid(newPage – 1); <span style="color:green">//The DataGrid needs a page index, zero-based.</span></p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+</div>
+<p>This works, but when I make my DataGrid pretty, I don’t want this<br>
+paging attachment left out.&nbsp; I need it to be inside the DataGrid,<br>
+so let’s write some code to move it from outside the DataGrid to right<br>
+next to the default pager:</p>
+
+<div style="border:1pt solid windowtext; padding:0; background:white none repeat scroll 0; color:black">
+<p><span style="color:blue">using</span> System;</p>
+<p><span style="color:blue">using</span> System.Web.UI;</p>
+<p><span style="color:blue">using</span> System.Web.UI.WebControls;</p>
+
+<p><span style="color:blue">public</span> <span style="color:blue">class</span> WebForm1 : Page</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span> TextBox jumpToText;</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span> Button jumpToButton;</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span> Panel pagerEnhancement;</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span> DataGrid grid;</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span> <span style="color:blue">override</span> <span style="color:blue">void</span> OnLoad(EventArgs e)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">base</span>.OnLoad(e);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">if</span> (!IsPostBack)</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; grid.DataSource = <span style="color:blue">this</span>.GetSource();</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">this</span>.BindGrid(0);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span> <span style="color:blue">override</span> <span style="color:blue">void</span> OnInit(EventArgs e)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">base</span>.OnInit(e);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; grid.PageIndexChanged += <span style="color:blue">new</span> DataGridPageChangedEventHandler(grid_PageIndexChanged);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; jumpToButton.Click += <span style="color:blue">new</span> EventHandler(jumpToButton_Click);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; grid.ItemCreated +=<span style="color:blue">new</span> DataGridItemEventHandler(grid_ItemCreated);</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:blue">string</span>[] GetSource()</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:green">//just imagine how you would get/cache your data source.</span></p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">string</span>[] rows = <span style="color:blue">new</span> <span style="color:blue">string</span>[10000];</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">for</span> (<span style="color:blue">int</span> i = 0; i &lt; 10000; i++)</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; rows[i] = i.ToString();</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span> rows;</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:blue">void</span> BindGrid(<span style="color:blue">int</span> currentPageIndex)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; grid.DataSource = <span style="color:blue">this</span>.GetSource();</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; grid.CurrentPageIndex = currentPageIndex;</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; grid.DataBind();</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:blue">void</span> grid_PageIndexChanged(<span style="color:blue">object</span> source, DataGridPageChangedEventArgs e)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">this</span>.BindGrid(e.NewPageIndex);</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:blue">void</span> jumpToButton_Click(<span style="color:blue">object</span> sender, EventArgs e)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">int</span> newPage = <span style="color:blue">int</span>.Parse(jumpToText.Text);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">this</span>.BindGrid(newPage – 1); <span style="color:green">//The DataGrid needs a page index, zero-based.</span></p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:blue">void</span> grid_ItemCreated(<span style="color:blue">object</span> sender, DataGridItemEventArgs e)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">if</span>(e.Item.ItemType == ListItemType.Pager)</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; TableCell pagerCell = (TableCell) e.Item.Controls[0];<span style="color:green">// User Trace to view the </span></p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:green">//control tree and found out how to grab the pager.;</span></p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; pagerCell.Controls.Add(pagerEnhancement);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+</div>
+<p>Notice how I am listening to the ItemCreated event of the DataGrid<br>
+and then moving the control when I’m on the Pager.&nbsp; I used the<br>
+Trace feature to observe the DataGrid control to see how the Pager was<br>
+laid out.&nbsp; The DataGrid is rendered as an Html table, so I just<br>
+needed to move my extra paging controls to the appropriate TableCell.</p>
+<p>Obviously, I have simplified this example to demonstrate the basics<br>
+of adding to the default paging mechanism in the DataGrid.&nbsp; When I<br>
+use this technique, I make the appearance a lot more attractive, and I<br>
+also validate that an actual page number was entered into the<br>
+TextBox.&nbsp; After all, I have to gracefully handle whatever the user<br>
+types into that box.&nbsp;<!--EndFragment--> </p>

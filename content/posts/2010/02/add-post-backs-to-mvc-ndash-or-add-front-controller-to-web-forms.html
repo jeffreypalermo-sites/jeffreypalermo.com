@@ -1,0 +1,276 @@
+---
+wp_id: 1139
+title: Add post-backs to MVC –or- add front controller to Web Forms
+slug: add-post-backs-to-mvc-ndash-or-add-front-controller-to-web-forms
+permalink: /2010/02/add-post-backs-to-mvc-ndash-or-add-front-controller-to-web-forms/
+date: 2010-02-18T14:03:49
+date_utc: 2010-02-18T14:03:49Z
+modified: 2010-02-18T14:03:49
+format: html
+categories:
+- blog
+excerpt: 'You can download the code for this post at my CodePlex repository: http://palermo.codeplex.com/ Lots of programmers I talk to are managing software assets written in ASP.NET. These applications have been in production for years, and they work. The problem that is pervasive among all of them is that the Page_Load method is much too large. […]'
+comments_open: true
+---
+<p>You can download the code for this post at my CodePlex repository: <a href="http://palermo.codeplex.com/">http://palermo.codeplex.com/</a></p>
+<p>Lots of programmers I talk to are managing software assets written in ASP.NET.&nbsp; These applications have been in production for years, and they work.&nbsp; The problem that is pervasive among all of them is that the Page_Load method is much too large.&nbsp; Model-View-Presenter is fatally flawed as a pattern because the view obtains control before the presenter does.&nbsp; This wrong ordering is an unrecoverable error in the workability of the pattern.&nbsp; I have spent a number of years attempting to implement the MVP pattern well before I came to this conclusion.</p>
+<p>This post contains a short example that inserts a controller in the request pipeline before the Web Form.&nbsp; This allows large and bloated Page_Load methods to offload a bit of logic to a controller that executes in front of the Web Form.&nbsp; Interestingly enough, this same technique allows an ASP.NET MVC page to leverage post-backs and server side controls.</p>
+<p>Here is the solution view:</p>
+<p><a href="/wp-content/uploads/2018/07/addpostbackstomvcoraddfrontcontrollertow_a496image_2.png"><img loading="lazy" decoding="async" style="display:inline; border-width:0" title="image" border="0" alt="image" src="/wp-content/uploads/2018/07/addpostbackstomvcoraddfrontcontrollertow_a496image_thumb.png" width="302" height="393"></a> </p>
+<p>Default.aspx.controller.cs is the controller that executes ahead of Default.aspx.&nbsp; The Visual Studio tooling doesn’t know to nest this file like I would like it.</p>
+<p>Here is the page run the first time:</p>
+<p><a href="/wp-content/uploads/2018/07/addpostbackstomvcoraddfrontcontrollertow_a496image_4.png"><img loading="lazy" decoding="async" style="display:inline; border-width:0" title="image" border="0" alt="image" src="/wp-content/uploads/2018/07/addpostbackstomvcoraddfrontcontrollertow_a496image_thumb_1.png" width="427" height="344"></a> </p>
+<p>And here is the page after 3 clicks on the button that is an &lt;asp:Button/&gt;</p>
+<p><a href="/wp-content/uploads/2018/07/addpostbackstomvcoraddfrontcontrollertow_a496image_6.png"><img loading="lazy" decoding="async" style="display:inline; border-width:0" title="image" border="0" alt="image" src="/wp-content/uploads/2018/07/addpostbackstomvcoraddfrontcontrollertow_a496image_thumb_2.png" width="427" height="277"></a> </p>
+
+<p>Our page looks like the following:</p>
+<pre class="csharpcode"><span class="asp">&lt;%@ Page Language="C#" AutoEventWireup="true" 
+CodeBehind="Default.aspx.cs" 
+Inherits="MvcApplication1.Controllers.Default" %&gt;</span>
+<span class="asp">&lt;%@ Import Namespace="MvcApplication1"%&gt;</span>
+
+<span class="kwrd">&lt;!</span><span class="html">DOCTYPE</span> <span class="attr">html</span> <span class="attr">PUBLIC</span> <span class="kwrd">"-//W3C//DTD XHTML 1.0 Transitional//EN"</span> 
+<span class="kwrd">"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"</span><span class="kwrd">&gt;</span>
+
+<span class="kwrd">&lt;</span><span class="html">html</span> <span class="attr">xmlns</span><span class="kwrd">="http://www.w3.org/1999/xhtml"</span> <span class="kwrd">&gt;</span>
+<span class="kwrd">&lt;</span><span class="html">head</span> <span class="attr">runat</span><span class="kwrd">="server"</span><span class="kwrd">&gt;</span>
+    <span class="kwrd">&lt;</span><span class="html">title</span><span class="kwrd">&gt;&lt;/</span><span class="html">title</span><span class="kwrd">&gt;</span>
+<span class="kwrd">&lt;/</span><span class="html">head</span><span class="kwrd">&gt;</span>
+<span class="kwrd">&lt;</span><span class="html">body</span><span class="kwrd">&gt;</span>
+    <span class="kwrd">&lt;</span><span class="html">form</span> <span class="attr">id</span><span class="kwrd">="form1"</span> <span class="attr">runat</span><span class="kwrd">="server"</span><span class="kwrd">&gt;</span>
+    <span class="kwrd">&lt;</span><span class="html">div</span><span class="kwrd">&gt;</span>
+        <span class="asp">&lt;%</span>var cust = (Customer) ViewData[<span class="str">"model"</span>]; <span class="asp">%&gt;</span>
+        
+        <span class="kwrd">&lt;</span><span class="html">h1</span><span class="kwrd">&gt;</span>Web Form with front controller<span class="kwrd">&lt;/</span><span class="html">h1</span><span class="kwrd">&gt;</span>
+        Customer #: <span class="asp">&lt;%</span>=cust.Id <span class="asp">%&gt;</span><span class="kwrd">&lt;</span><span class="html">br</span> <span class="kwrd">/&gt;</span>
+        Name: <span class="asp">&lt;%</span>=cust.Name <span class="asp">%&gt;</span><span class="kwrd">&lt;</span><span class="html">br</span> <span class="kwrd">/&gt;</span>
+        Is Preferred: <span class="asp">&lt;%</span>=cust.IsPreferred <span class="asp">%&gt;</span>
+        
+        <span class="kwrd">&lt;</span><span class="html">asp:Button</span> <span class="attr">Text</span><span class="kwrd">="Do a postback"</span> <span class="attr">runat</span><span class="kwrd">="server"</span> <span class="attr">ID</span><span class="kwrd">="btn"</span> 
+        <span class="attr">onclick</span><span class="kwrd">="btn_Click"</span> <span class="kwrd">/&gt;</span>
+    <span class="kwrd">&lt;/</span><span class="html">div</span><span class="kwrd">&gt;</span>
+    <span class="kwrd">&lt;/</span><span class="html">form</span><span class="kwrd">&gt;</span>
+<span class="kwrd">&lt;/</span><span class="html">body</span><span class="kwrd">&gt;</span>
+<span class="kwrd">&lt;/</span><span class="html">html</span><span class="kwrd">&gt;</span></pre>
+<p>Here is the code-behind:</p>
+<div class="csharpcode">
+<pre class="alt"><span class="kwrd">using</span> System;</pre>
+<pre>&nbsp;</pre>
+<pre class="alt"><span class="kwrd">namespace</span> MvcApplication1.Controllers</pre>
+<pre>{</pre>
+<pre class="alt">    <span class="kwrd">public</span> <span class="kwrd">partial</span> <span class="kwrd">class</span> Default : ViewDataPage</pre>
+<pre>    {</pre>
+<pre class="alt">        <span class="kwrd">protected</span> <span class="kwrd">void</span> Page_Load(<span class="kwrd">object</span> sender, EventArgs e)</pre>
+<pre>        {</pre>
+<pre class="alt">        }</pre>
+<pre>&nbsp;</pre>
+<pre class="alt">        <span class="kwrd">protected</span> <span class="kwrd">void</span> btn_Click(<span class="kwrd">object</span> sender, EventArgs e)</pre>
+<pre>        {</pre>
+<pre class="alt">            btn.Text += <span class="str">" - "</span> + DateTime.Now.ToString(<span class="str">"hh:mm:ss"</span>);</pre>
+<pre>        }</pre>
+<pre class="alt">    }</pre>
+<pre>}</pre>
+</div>
+<p>.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+<p>Now, we can see that we are retrieving the Customer from ViewData.&nbsp; But wait, Web Forms don’t have view data.&nbsp; That’s correct.&nbsp; That’s why I’ve made ViewDataPage an IViewDataContainer:</p>
+<div class="csharpcode">
+<pre class="alt"><span class="kwrd">using</span> System.Web.Mvc;</pre>
+<pre><span class="kwrd">using</span> System.Web.UI;</pre>
+<pre class="alt">&nbsp;</pre>
+<pre><span class="kwrd">namespace</span> MvcApplication1</pre>
+<pre class="alt">{</pre>
+<pre>    <span class="kwrd">public</span> <span class="kwrd">class</span> ViewDataPage : Page, IViewDataContainer</pre>
+<pre class="alt">    {</pre>
+<pre>        <span class="kwrd">public</span> ViewDataDictionary ViewData { get; set; }</pre>
+<pre class="alt">    }</pre>
+<pre>}</pre>
+</div>
+<p>.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+<p>.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+<p>Now, here is the route that we are using:</p>
+<div class="csharpcode">
+<pre class="alt"><span class="kwrd">using</span> System.Web;</pre>
+<pre><span class="kwrd">using</span> System.Web.Mvc;</pre>
+<pre class="alt"><span class="kwrd">using</span> System.Web.Routing;</pre>
+<pre>&nbsp;</pre>
+<pre class="alt"><span class="kwrd">namespace</span> MvcApplication1</pre>
+<pre>{</pre>
+<pre class="alt">    <span class="rem">// Note: For instructions on enabling IIS6 or IIS7 classic mode, </span></pre>
+<pre>    <span class="rem">// visit http://go.microsoft.com/?LinkId=9394801</span></pre>
+<pre class="alt">&nbsp;</pre>
+<pre>    <span class="kwrd">public</span> <span class="kwrd">class</span> MvcApplication : HttpApplication</pre>
+<pre class="alt">    {</pre>
+<pre>        <span class="kwrd">public</span> <span class="kwrd">static</span> <span class="kwrd">void</span> RegisterRoutes(RouteCollection routes)</pre>
+<pre class="alt">        {</pre>
+<pre>            routes.IgnoreRoute(<span class="str">"{resource}.axd/{*pathInfo}"</span>);</pre>
+<pre class="alt">&nbsp;</pre>
+<pre>            routes.MapRoute(</pre>
+<pre class="alt">                <span class="str">"Default"</span>, <span class="rem">// Route name</span></pre>
+<pre>                <span class="str">"{controller}"</span>, <span class="rem">// URL with parameters</span></pre>
+<pre class="alt">                <span class="kwrd">new</span> {controller = <span class="str">"Default"</span>}</pre>
+<pre>                <span class="rem">// Parameter defaults</span></pre>
+<pre class="alt">                );</pre>
+<pre>        }</pre>
+<pre class="alt">&nbsp;</pre>
+<pre>        <span class="kwrd">protected</span> <span class="kwrd">void</span> Application_Start()</pre>
+<pre class="alt">        {</pre>
+<pre>            AreaRegistration.RegisterAllAreas();</pre>
+<pre class="alt">&nbsp;</pre>
+<pre>            RegisterRoutes(RouteTable.Routes);</pre>
+<pre class="alt">        }</pre>
+<pre>    }</pre>
+<pre class="alt">}</pre>
+</div>
+<p>.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+<p>Now, what does the front controller look like? </p>
+<div class="csharpcode">
+<pre class="alt"><span class="kwrd">using</span> System.Web.Compilation;</pre>
+<pre><span class="kwrd">using</span> System.Web.Mvc;</pre>
+<pre class="alt"><span class="kwrd">using</span> System.Web.Routing;</pre>
+<pre>&nbsp;</pre>
+<pre class="alt"><span class="kwrd">namespace</span> MvcApplication1.Controllers</pre>
+<pre>{</pre>
+<pre class="alt">    <span class="kwrd">public</span> <span class="kwrd">class</span> DefaultController : Controller</pre>
+<pre>    {</pre>
+<pre class="alt">        <span class="kwrd">protected</span> <span class="kwrd">override</span> <span class="kwrd">void</span> Execute(RequestContext requestContext)</pre>
+<pre>        {</pre>
+<pre class="alt">            var customer = <span class="kwrd">new</span> Customer</pre>
+<pre>                               {</pre>
+<pre class="alt">                                   Id = 2,</pre>
+<pre>                                   Name = <span class="str">"Jeffrey Palermo"</span>,</pre>
+<pre class="alt">                                   IsPreferred = <span class="kwrd">true</span></pre>
+<pre>                               };</pre>
+<pre class="alt">&nbsp;</pre>
+<pre>            ViewData.Add(<span class="str">"model"</span>, customer);</pre>
+<pre class="alt">            <span class="kwrd">string</span> controllerName =</pre>
+<pre>                requestContext.RouteData.GetRequiredString(<span class="str">"controller"</span>);</pre>
+<pre class="alt">            <span class="kwrd">string</span> pagePath = <span class="kwrd">string</span>.Format(<span class="str">"~/Controllers/{0}.aspx"</span>, </pre>
+<pre>                controllerName);</pre>
+<pre class="alt">            var page = (ViewDataPage) BuildManager</pre>
+<pre>                  .CreateInstanceFromVirtualPath(</pre>
+<pre class="alt">                  pagePath , <span class="kwrd">typeof</span> (ViewDataPage));</pre>
+<pre>            page.ViewData = ViewData;</pre>
+<pre class="alt">            page.ProcessRequest(System.Web.HttpContext.Current);</pre>
+<pre>        }</pre>
+<pre class="alt">    }</pre>
+<pre>}</pre>
+</div>
+<p>.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+<p>Notice that I overrode the Execute method.&nbsp; In this case, there is no need for the concept of an action.&nbsp; We merely have an object that executes before the Web Form.&nbsp; Then the controller builds the Web Form and asks it to process the request.</p>
+<p>Half of this method could easily be factored into another class, but it works very simply.&nbsp;&nbsp; I did not have to jump through any hoops.&nbsp; I hammered out this code in about 10 minutes.</p>
+<p>If your Page_Load methods are getting too long, consider putting a front controller in front of the page.</p>

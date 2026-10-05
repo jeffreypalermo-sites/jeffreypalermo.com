@@ -1,0 +1,83 @@
+[
+  {
+    "id": 692,
+    "parent": 0,
+    "author_name": "Eber Irigoyen",
+    "author_url": "http://ebersys.blogspot.com",
+    "date": "2006-03-22T04:46:03",
+    "type": "comment",
+    "content_html": "<p>not bad, I would prefer something like</p>\n<p><a href=\"http://theserver/theService/v1.0/theservice.asmx\" rel=\"nofollow ugc\">http://theserver/theService/v1.0/theservice.asmx</a><br>\n<a href=\"http://theserver/theService/v1.5/theservice.asmx\" rel=\"nofollow ugc\">http://theserver/theService/v1.5/theservice.asmx</a></p>\n<p>4 digits for an official version seems like very *unstable*, probably 4 digits for your internal testing, and if that’s the case, you shouldn’t need side by side versions that often (that’s why you’re still testing)</p>"
+  },
+  {
+    "id": 693,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-03-22T14:18:18",
+    "type": "comment",
+    "content_html": "<p>That’s a good point.  Major and minor version should be enough.</p>"
+  },
+  {
+    "id": 694,
+    "parent": 0,
+    "author_name": "Gary Williams",
+    "author_url": "http://archiveddeveloper.blogspot.com/",
+    "date": "2006-03-22T15:05:15",
+    "type": "comment",
+    "content_html": "<p>Is there a nice way of pointing a web service from one version to the next?  That is can you promote people to the new code base under the covers?  Is there a generic way of accomplishing this?</p>"
+  },
+  {
+    "id": 695,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-03-22T22:01:54",
+    "type": "comment",
+    "content_html": "<p>You can publish a web service url that is considered “always the latest version”.  Then people who use that will always be upgraded.</p>\n<p>If you are in a situation where you want the v1.0 version to redirect to v1.5, then you can easily to a url rewrite, and the web service call can be fulfilled by the v1.5 web service even though the client was pointed at v1.0.</p>"
+  },
+  {
+    "id": 696,
+    "parent": 0,
+    "author_name": "darrell",
+    "author_url": "http://codebetter.com/blogs/darrell.norton/",
+    "date": "2006-03-23T01:46:13",
+    "type": "comment",
+    "content_html": "<p>I’d always gone with the idea that the version number should either be part of the xml passed in, or that you could reverse engineer the version based on the xml schema passed in.  The explicit nature of your scheme has its benefits.</p>"
+  },
+  {
+    "id": 697,
+    "parent": 0,
+    "author_name": "Brendan",
+    "author_url": "http://",
+    "date": "2006-03-23T13:40:29",
+    "type": "comment",
+    "content_html": "<p>Jeff, I’ve always thought that the OBP (one big paramater) approach works well for versioning services. This way you can deprecate add or change your request message schema, without breaking clients.. I avoid primitive type paramaters in services like the plague.</p>"
+  },
+  {
+    "id": 698,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-03-23T16:18:53",
+    "type": "comment",
+    "content_html": "<p>The version of a service is part of the locating information.  Same as GACed .Net objects.  You do a hard reference to the version of the library.</p>\n<p>I stay away from big blob service parameters like the plague. \uD83D\uDE42  I stick with primitive type parameters.  It’s one Xml string going over the wire anyway.  Compatibility is determined by policy, so if I have a need to interoperate with non-.Net systems. we’ll test for that, but I don’t make my services uber-interoperable by default – that just takes time that’s not accounted for in ROI.</p>"
+  },
+  {
+    "id": 699,
+    "parent": 0,
+    "author_name": "Eber Irigoyen",
+    "author_url": "http://ebersys.blogspot.com",
+    "date": "2006-03-23T21:16:42",
+    "type": "comment",
+    "content_html": "<p>now if you are worried about “breaking” current clients using your web service, you only need to worry if you are changing names/signatures of current functions right?</p>\n<p>so if you ONLY add new functions (or modify code inside one of the current, without changing signature) and your clients point to the new version, they will still be ok right?</p>"
+  },
+  {
+    "id": 700,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-03-23T22:03:00",
+    "type": "comment",
+    "content_html": "<p>Breaking current clients is an obvious concern.  Upgrading services while keeping the interface constant was tried with COM+, and it failed miserably.  A service could be proclaimed to be backwards compatible, but without complete testing, we don’t know for sure.</p>\n<p>Any time a service is changed (even internally), all clients must retest to ensure the complete systems still work.</p>\n<p>My team is using a 3rd party web service, and we will not allow them to upgrade the web service without our knowledge because ANY change to that web service MIGHT mean downtime for our system, and that’s not acceptable.  We’ve tested with v1.0, and there is no benefit for us moving to their v1.5.  It’s a benefit for them, but not us, so we prefer not to accept the risk or testing cycle to upgrade.  We’re happy with v1.0, and we’ll stay with it.  The vender can continue with v1.5 while we remain on v1.0.</p>"
+  }
+]

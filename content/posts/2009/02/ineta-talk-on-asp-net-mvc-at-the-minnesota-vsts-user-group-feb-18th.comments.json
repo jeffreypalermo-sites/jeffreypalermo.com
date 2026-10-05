@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2552,
+    "parent": 0,
+    "author_name": "David Allen",
+    "author_url": "http://",
+    "date": "2009-02-19T22:46:35",
+    "type": "comment",
+    "content_html": "<p>I loved your talk. Thanks so much for coming to see us. I now understand when and why one would want to invest in the learning curve for those inversion of control containers or whatever it is that replaces hand-made factories in large systems.<br>\nI’m so busy with SharePoint Designer right now, I don’t have time for these things. But when I get back to Visual Studio and ASP.Net, I hope to try some of the mvccontrib ideas.</p>"
+  }
+]

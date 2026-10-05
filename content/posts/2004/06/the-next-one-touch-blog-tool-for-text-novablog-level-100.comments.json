@@ -1,0 +1,11 @@
+[
+  {
+    "id": 88,
+    "parent": 0,
+    "author_name": "Noah Coad (C# MVP)",
+    "author_url": "http://",
+    "date": "2004-06-10T18:51:00",
+    "type": "comment",
+    "content_html": "<p>Hehe, very kewl dude!  Funny, I just e-mailed you asking if you had read that post.  This is just been a great app and made blogging sooo easy!</p>\n<p>It will probobly get a GUI if just to see the log output as it runs, but maybe not as I am a command line fan.  But it is very easy to adapt as I use custom TraceListeners instead of straight Debug/Trace/Console output.</p>\n<p>Want code?  Well perhaps after it is polished up just a little more.  It is designed to parse my own custom tags so it would require significant non-incode documentation. We’ll see…  \uD83D\uDE42</p>"
+  }
+]

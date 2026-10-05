@@ -1,0 +1,227 @@
+[
+  {
+    "id": 1134,
+    "parent": 0,
+    "author_name": "JH",
+    "author_url": "http://huntjason.spaces.live.com",
+    "date": "2007-02-12T02:31:48",
+    "type": "comment",
+    "content_html": "<p>The only additions we have implemented is nCover to measure code coverage and a custom report that grabs feeds from FogBugz (bug tracking software) and compares logged bugs to code coverage. Implementing the first is a no-brainer. </p>\n<p>The second is intended to provide us with information regarding “optimal” code coverage percentage to the number of defects found in the software as we do our releases. This is intended to decrease the ambiguity regarding what’s feasible (100% code coverage is obviously not necessarily feasible and suffers the effect of diminishing gains) and what we _should_ be shooting for.</p>"
+  },
+  {
+    "id": 1135,
+    "parent": 0,
+    "author_name": "Eric A.",
+    "author_url": "http://",
+    "date": "2007-02-12T03:42:39",
+    "type": "comment",
+    "content_html": "<p>My team is currently doing CI with MS tools.  Because we’re a Gold Partner, we have Team Foundation Server and more than enough seats for Team Developer Edition IDE to go around.  The pain has come with integrating tests into the automated build.<br>\nTeam Test IS available with the Developer SKU.  What’s not available is the ability to edit test lists.  So, for the longest time, only one .DLL containing tests could be linked with a build.  ICK!  Eventually, through the wonders of reflection and an open-source bit of code that we found (thank you, Google), we were able to reverse-engineer the test lists.</p>\n<p>GUI testing has been another issue.  We finally broke down and forked over the (high) cost to get a Tester Edition SKU.  So, we’ll be able to generate Web GUI tests with that.  We just got it however, and I can’t report on the Web GUI testing yet.  As a side effect, we can now edit test lists.</p>\n<p>For CI reporting (build status), we had to write our own tool.  We now have a systray icon that reports build status.  But, I agree, this isn’t something that we should have had to write.</p>\n<p>Overall, I’m not sure that much has been gained by using Team System.  The interface for tracking work items is clunky at best.  The team has found it to be more of a hindrance than an asset.</p>"
+  },
+  {
+    "id": 1136,
+    "parent": 0,
+    "author_name": "Frans Bouma",
+    "author_url": "http://weblogs.asp.net/fbouma",
+    "date": "2007-02-12T08:47:46",
+    "type": "comment",
+    "content_html": "<p>“Story wall of post-it index cards (story cards) for user stories as well as bugs.”<br>\nSo, how are you going to store this vital information WHY your code is structured the way it is structured for the people who will have to MAINTAIN the project over the next couple of years when you all moved on to other projects? </p>\n<p>Is someone typing these all into some system so you know next year that if someone comes with “I have this and this bug”, you already know you have fixed it ? </p>\n<p>Or is that something you don’t care about because ‘the code is the documentation’ ?</p>\n<p>What surprises me a lot is how little agilists seem to think about the post-release phase, when ‘change’ isn’t going to be easy, and every information element used to create the system has to be there to be able to make changes without breaking anything already in the field. Post-it based storyboards aren’t very good in lasting very long and not very good for searching and describing WHY a piece of code inside your system is done the way it is done, so people who have to make changes for example 1 year after you left the project after release can actually MAKE that change properly without wading through mountains of code.<br>\n——–<br>\nAbout the tools: you shouldn’t bend tools to match your way of working. You should bend your way of working to the tools you’re using. If that’s not productive, use different tools. So if TFS can’t handle your style of writing software, use something else. Why is that so hard to grasp? TFS isnt’ a TDD toolset. You can perhaps tweak it a little here and there, but in short, it doesn’t have the tools on board to make it a breeze. So why bother with TFS? Live’s too short to mess with tools who aren’t matching the way you want to work. </p>"
+  },
+  {
+    "id": 1137,
+    "parent": 0,
+    "author_name": "Andy Stopford",
+    "author_url": "http://weblogs.asp.net/astopford",
+    "date": "2007-02-12T11:59:28",
+    "type": "comment",
+    "content_html": "<p>Frans, every agile project should have a set of unit tests that help test every single dark corner of the application. Using TDD would have helped the code shape to the tests, with the tests describing what you are looking for the code to do. Post release these act as a regression suite, so anyone new to the project would make changes BUT then use the tests as a buffer. If the tests need to describe a new feature then you change the tests so it describes this change and your TDD cycle starts again. The CI process exists as well to make sure that the code complies to the suite so a commit does not result in a faulty product.</p>\n<p>Agile is about focused teams that allow its developers to understand the problems and mindset of the others in writing code. Post release a product may stay within a team, moving to a new interation. Any new members of the team will soon get up to speed with the code, backed up by the test suite they can make changes with out the risks you describe.</p>\n<p>I agree that a tool needs to fit your needs. Let me also say that while NUnit may meet your needs it also has limitions of its own. Depending on what, how and where you are testing you may need other tools instead of or additon to.</p>"
+  },
+  {
+    "id": 1138,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-02-12T12:35:20",
+    "type": "comment",
+    "content_html": "<p>Frans,<br>\nGood questions.  Let me address them one by one:<br>\n“So, how are you going to store this vital information WHY your code is structured the way it is. . .”</p>\n<p>I did not talk about much in this post other than tools.  My team has settled on using a wiki to store our living documentation.  Currently, we’re using VeryQuickWiki, a Java JSP wiki with very simple functionality.: <a href=\"http://www.vqwiki.org/\" rel=\"nofollow ugc\">http://www.vqwiki.org/</a></p>\n<p>We have tables of design data, digital pictures of whiteboard design drawings, and even regular documentation outlining important information about the project.  Since as we change the software, documentation becomes wrong or obsolete, we’ve found that a wiki helps keeps the information current.  I agree with Andy that our test suite does provide a sort of documentation about how we expect small pieces of code to work.</p>\n<p>As far as what the software is supposed to do, our product manager maintains a roadmap that turns into a feature list as we progress.  We’re currently piloting XPlanner to maintain this information, but for a small team, an excel spreadsheet might suffice.</p>\n<p>“Or is that something you don’t care about. . .”<br>\nWe do care about it, and we are very disciplined in our process.  In fact, if we see two bugs that are related, we look for places in the app (or in our process) that are broken, and we fix them.</p>\n<p>“Post-it based storyboards aren’t very good in lasting very long. . .”<br>\nAgreed.  The storyboard is strictly an artifact for the current iteration.  After the iteration has passed, there aren’t any cards left except in the done, done, done column.  Maintainance information has to be stored elsewhere.  We have ours on the wiki, although our project is on-going.  When the project ends, we will have to package the documentation more formally and archive it.  </p>"
+  },
+  {
+    "id": 1139,
+    "parent": 0,
+    "author_name": "sergiopereira",
+    "author_url": "http://",
+    "date": "2007-02-12T12:57:43",
+    "type": "comment",
+    "content_html": "<p>Nice post, and very timely for me in particular. Regarding your note to MS, why do we insist in begging/waiting for a MS solution for all our development problems. The .Net development community (I hate that expression BTW) will never move forward fast enough if the majority of developers are implementing their process on top of MS tools.<br>\nWhat is the problem with sticking to NUnit, NAnt, NDoc, N*.*? My note to MS would be: “Do not hurt the community tools by shipping half-baked toys (re: ndoc), instead, participate and nourish these free initiatives.”  That would never hurt MS, it can only help.</p>"
+  },
+  {
+    "id": 1140,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-02-12T13:06:47",
+    "type": "comment",
+    "content_html": "<p>Sergio,<br>\n“. . . why do we insist in begging/waiting for a MS solution for all our development problems. . .”</p>\n<p>To answer your rhetorical question: we can’t.  At least in my shop, we have to solve problems today.  We can’t afford to wait until the next release.  I also think that trying to have a single vendor for development tools is self-limiting.  </p>"
+  },
+  {
+    "id": 1141,
+    "parent": 0,
+    "author_name": "rlewallen",
+    "author_url": "http://www.codebetter.com/blogs/raymond.lewallen",
+    "date": "2007-02-12T13:30:42",
+    "type": "comment",
+    "content_html": "<p>There is a CI server built to work with TFS called Automaton.  You can find it here.  <a href=\"http://www.codeplex.com/automation\" rel=\"nofollow ugc\">http://www.codeplex.com/automation</a>  We are just now starting to look at it, but it looks like our CC.Net replacement for our TFS environment.</p>"
+  },
+  {
+    "id": 1142,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-02-12T13:39:09",
+    "type": "comment",
+    "content_html": "<p>Raymond,<br>\nThanks for that.  Would you mind sharing how to get everything integrated.  It sounds like you are using mostly Team Suite tools.  Have you integrated MSTest?  Did you use other tools before, or did you start CI from scratch with Team Suite?</p>"
+  },
+  {
+    "id": 1143,
+    "parent": 0,
+    "author_name": "jdn",
+    "author_url": "http://www.e-Crescendo.com",
+    "date": "2007-02-12T16:24:14",
+    "type": "comment",
+    "content_html": "<p>I’m using nothing but TFS, using a modified version of the CI code that was originally in MSDN a while back (it needed some tweaking):</p>\n<p><a href=\"http://blogs.vertigosoftware.com/teamsystem/archive/2006/07/03/Setting_up_Continuous_Integration_with_Team_Build.aspx\" rel=\"nofollow ugc\">http://blogs.vertigosoftware.com/teamsystem/archive/2006/07/03/Setting_up_Continuous_Integration_with_Team_Build.aspx</a></p>\n<p>I use the TFS Test Manager to set up my tests (across multiple projects), and do have to manually check out the build file to add any new test lists, but it is pretty easy.</p>\n<p>I also run nightly builds, and built a tool to automatically delete any code drops that are more than 10 days old (I don’t have to do this, it’s just nice to have so I don’t have to manually delete old builds from TFS, as they build up over time….pardon the pun).</p>"
+  },
+  {
+    "id": 1144,
+    "parent": 0,
+    "author_name": "Sidu",
+    "author_url": "http://diningtablecoder.blogspot.com/",
+    "date": "2007-02-12T16:52:28",
+    "type": "comment",
+    "content_html": "<p>Have you tried Jetbrains’ ReSharper? It’s probably the only thing which makes me as productive developing in .Net as I am in Java using IntelliJ or Eclipse – it introduces many, many more refactorings, much tighter integration with NUnit  and dozens more features. Joe White is currently writing about it on his blog: <a href=\"http://excastle.com/blog/archive/2007/01/31/13141.aspx\" rel=\"nofollow ugc\">http://excastle.com/blog/archive/2007/01/31/13141.aspx</a></p>\n<p>I’d also recommend you introduce a second stage to your CI build which runs SharpRobo (for WinForms) or Selenium/Sahi (for Web apps) functional tests once all NUnit tests are done. You can probably dedicate a separate CI box for this, since it takes much longer to run than the unit test suite.</p>\n<p>The way we usually do this on our projects is the QAs have a functional test ready and waiting when a dev pair completes a story. Essentially, besides all the unit tests, we also have one functional test script per story.</p>\n<p>Our builds usually have four stages<br>\n– the pre-checkin local build on the developer box(5-7 mins max, all unit tests + basic smoke tests using a functional testing framework)<br>\n– the stage 1 CI build on a CI server box (5-7 mins max, same as local build but runs in as close to production environment as possible)<br>\n– the stage 2 CI build (30-40 mins max, all unit tests, all happy path functional tests)<br>\n– the stage 3 CI build (3 hours upward, all functional tests, assuming one script per story)</p>\n<p>These stages are structured so that it becomes less and less likely that something might have broken the build as you progress from stage to stage. The durations I’ve mentioned are the average times for each of the stages across all ThoughtWorks’ projects. Of course, you may not start with all four stages – you can add them on as the project progresses and the number of tests pile up.</p>\n<p><a href=\"http://www.jetbrains.com/resharper/\" rel=\"nofollow ugc\">http://www.jetbrains.com/resharper/</a><br>\n<a href=\"http://gforge.public.thoughtworks.org/projects/sharprobo/\" rel=\"nofollow ugc\">http://gforge.public.thoughtworks.org/projects/sharprobo/</a><br>\n<a href=\"http://sahi.co.in/\" rel=\"nofollow ugc\">http://sahi.co.in/</a><br>\n<a href=\"http://www.openqa.org/selenium/\" rel=\"nofollow ugc\">http://www.openqa.org/selenium/</a></p>"
+  },
+  {
+    "id": 1145,
+    "parent": 0,
+    "author_name": "Denis The SQL Menace",
+    "author_url": "http://sqlservercode.blogspot.com/",
+    "date": "2007-02-12T17:14:50",
+    "type": "comment",
+    "content_html": "<p>Jeffrey ,</p>\n<p>What do you use for your Scrum sprints? Do you use a tool like ScrumWorks or do you use paper and sticky notes?</p>\n<p>Denis</p>"
+  },
+  {
+    "id": 1146,
+    "parent": 0,
+    "author_name": "Luke Melia",
+    "author_url": "http://www.lukemelia.com/devblog/",
+    "date": "2007-02-12T17:23:24",
+    "type": "comment",
+    "content_html": "<p>Another agile team using basically the same stack (substitute MbUnit for NUnit) with much success.</p>\n<p>I would only add that I don’t necessarily care if Microsoft “does better” in these categories. I *like* that these tools are free, open source software.</p>"
+  },
+  {
+    "id": 1147,
+    "parent": 0,
+    "author_name": "Kevin Dente",
+    "author_url": "http://weblogs.asp.net/kdente",
+    "date": "2007-02-12T17:24:54",
+    "type": "comment",
+    "content_html": "<p>&gt;I propose that this is the way to do it with .Net.</p>\n<p>Although I understand why you wouldn’t convert a bunch of existing Nant scripts to MSBuild “just because”, people just starting with CI would probably be better off just working with MSBuild directly (that’s what we’ve been doing for the last 2+ years, along with CC.NET and NUnit). There’s not much reason to introduce an additional tool unless you really have to. </p>"
+  },
+  {
+    "id": 1148,
+    "parent": 0,
+    "author_name": "Kurt Christensen",
+    "author_url": "http://",
+    "date": "2007-02-12T17:27:58",
+    "type": "comment",
+    "content_html": "<p>In my opinion, Microsoft continually suffocates their developer community by always feeling the need to come out with their own versions of perfectly good community tools (e.g., NAnt and NUnit). If Visual Studio had chosen to *incorporate* support for NUnit and NAnt instead of *replacing* them, MS would have been giving a pat on the back to their community, encouraging similar efforts. What do they do instead? “Hey community, build whatever you like – we don’t give a crap. In fact, if you try to do something worthwhile, we’ll intentionally squash it, just because we can.” Nice job.</p>"
+  },
+  {
+    "id": 1149,
+    "parent": 0,
+    "author_name": "Jeff Atwood",
+    "author_url": "http://www.codinghorror.com/blog/",
+    "date": "2007-02-12T17:36:16",
+    "type": "comment",
+    "content_html": "<p>You guys should know that the build side of Team System is getting a complete overhaul in Orcas (next version of Visual Studio). It’s the *only* part of Team System with breaking changes in Orcas, in fact.</p>\n<p>So yeah, the build process is a little rough in the current release of Team System. You can do a lot of stuff with it (it is MSBuild, after all), but it takes quite a bit of hand-rolled customization to get it where you need it to be.</p>\n<p>If you’re hoping that microsoft will magically adopt nUnit and nAnt overnight, then, well.. hope springs eternal, I guess. \uD83D\uDE42 In the meantime, I’d say get used to MSBuild and the microsoft flavor of test classes if you want to use the Microsoft “stack”.</p>"
+  },
+  {
+    "id": 1150,
+    "parent": 0,
+    "author_name": "Steven",
+    "author_url": "http://www.stevenrockarts.com",
+    "date": "2007-02-12T18:11:08",
+    "type": "comment",
+    "content_html": "<p>Jeremy,</p>\n<p>My team is using TFS with the modified CI code from Vertigo. We are using MSTest but instead of using the Test Lists (which require too much maintaining) we are using a modified version of TFS Build that can run Tests without using a test list found here:</p>\n<p><a href=\"http://blogs.msdn.com/buckh/archive/2006/11/04/how-to-run-tests-without-test-metadata-files-and-test-lists-vsmdi-files.aspx\" rel=\"nofollow ugc\">http://blogs.msdn.com/buckh/archive/2006/11/04/how-to-run-tests-without-test-metadata-files-and-test-lists-vsmdi-files.aspx</a></p>\n<p>I also added a check-in gate that ensures all tests pass before team members are allowed to check in code.</p>\n<p>If I had to choose I would pick the open source tools as they make CI a lot easier. Most of the MS tools need to be modified, CI isn’t achieved easily out of the box.</p>"
+  },
+  {
+    "id": 1151,
+    "parent": 0,
+    "author_name": "rlewallen",
+    "author_url": "http://www.codebetter.com/blogs/raymond.lewallen",
+    "date": "2007-02-12T18:47:08",
+    "type": "comment",
+    "content_html": "<p>Jeffrey, I’ve been using CC.Net, NAnt, MbUnit, NDepend, FxCop, NDoc, NCover setup for several years now.  I switched to a new client and they are wanting to maximize their investment into TFS, so anything we can get done in TFS they want to do.</p>\n<p>Right now everything is looking “ok”.  We are just now getting into the actual setup process.  I’m going to miss MbUnit and I argued against MsTest but went unheard.  Oh, did I mention this shop has zero experience with unit testing and CI?  I tried and tried to push the open source route, but they wanted nothing to do with it.  As soon as we get our TFS stuff setup, I’ll report on how it all went.</p>\n<p>Yes, starting their CI processes from scratch using TFS.  Luckily, MsBuild seems a good replacement for NAnt, so I should be able to accomplish everything I want from there.  I’m not too sure on reporting and integration from that standpoint, its still a question mark.  Also, because TFS maintains its on proj file for builds, you can’t simulate the build process on a developer machine unless you create your own seperate build file, which is a major pain.</p>\n<p>Again, its certainly more difficult (not to mention loss of functionality from several tools) then setting up using CC.Net and NAnt, but I have no choice but to work with these guys and make it work, so we’ll see how it goes and I’ll let you know.</p>"
+  },
+  {
+    "id": 1152,
+    "parent": 0,
+    "author_name": "tate",
+    "author_url": "http://www.finalbuilder.com/finalbuilder.aspx",
+    "date": "2007-02-12T22:29:12",
+    "type": "comment",
+    "content_html": "<p>Another combination worth exploring is using CruiseControl.Net &amp; FinalBuilder (link: <a href=\"http://confluence.public.thoughtworks.org/display/CCNET/FinalBuilder+Task\" rel=\"nofollow ugc\">http://confluence.public.thoughtworks.org/display/CCNET/FinalBuilder+Task</a>)</p>"
+  },
+  {
+    "id": 1153,
+    "parent": 0,
+    "author_name": "Bil Simser",
+    "author_url": "http://weblogs.aspl.net/bsimser",
+    "date": "2007-02-13T01:49:57",
+    "type": "comment",
+    "content_html": "<p>Jeff,</p>\n<p>Nice post and I like the comments that people are posting. While you can do a complete MS solution using MS tools I think it’s just more pain than pleasure. MSTest doesn’t produce anywhere near the results NUnit does with regards to output (at least I haven’t seen anything), MSBuild is a nigthtmare (just google on how to say copy a file), and TFS is slow and unruly when it comes to building systems. </p>\n<p>I don’t think MSBuild is a good replacement for NAnt, at least until MSBuild stops asking you to jump through hoops to do simple things. I can show someone the NAnt task list and within minutes (without any prior NAnt knowledge) they can create scripts that copy files, publish ClickOnce Smart Clients and Websites, and update the contents of files. The best people can get from MSBuild is to run:</p>\n<p>MSBuild solutionname.sln</p>\n<p>To get the entire solution to build.</p>\n<p>It doesn’t have to be this hard or complex. Kudos to those that got it working and are happy with it. For those that have a setup that works in CC.NET/NAnt/etc, stick with it. For those that are starting out unless you really know MSBuild and how TFS works, don’t go down that path. I can setup a brand new project on Cruise in under an hour, TFS and MSbuild and all that takes half a day. And I’ve been doing this for 5 years now.</p>\n<p>I’m going to follow this up with a blog post of my own as I’ve learned a few new tricks and there’s been some improvement on the deployment/automation front (especially when it comes to deploying ClickOnce apps as I have a 4 hour process down to 5 minutes now).</p>"
+  },
+  {
+    "id": 1154,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://flimflan.com/blog",
+    "date": "2007-02-14T02:53:50",
+    "type": "comment",
+    "content_html": "<p>I agree with Kevin – if you already have NAnt scripts, great, don’t change them. However, if you are just starting a new build script, you might as well use MSBuild. Since it’s effectively part of the OS, your project has one less external dependency. I’m not sure what difficulties Bil was referring to (other than its different from nant – granted), my MSBuild scripts do much more than just compile the solution.</p>\n<p>However, I would agree that the rest of the Team System ecosystem is sorely lacking.  Even though we have access to the entire Team System, my builds still use CC.NET, MSBuild, and NUnit, pulling from TFS source control. All of that works painlessly. My attempts at working with Team Build and MSTest were far too frustrating to bother.</p>"
+  },
+  {
+    "id": 1155,
+    "parent": 0,
+    "author_name": "Rich Denis",
+    "author_url": "http://www.dotnetgeeks.com/blogs/dotnentgeek",
+    "date": "2007-02-22T00:58:59",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>My team is using the entire MS suite and have succesfully migrated from a home grown CC using NAnt to MS Build Server &amp; MSBuild Scripts.  While it was not trivial to set up as we started in beta, we have been able to write the tasks we need to get the job done.  We have hourly builds that integrate 6 teams and all get an email notifying the offending team if their code broke the build.  All in all the process works well.  We even have our MSTests runninig in the build.  Next time I see you I can give you more info if you need.</p>"
+  },
+  {
+    "id": 1156,
+    "parent": 0,
+    "author_name": "Koob",
+    "author_url": "http://",
+    "date": "2007-03-12T14:50:48",
+    "type": "comment",
+    "content_html": "<p>Well, FinalBuilder is surely a product to look into when doing builds. And it integrates with CruiseControl.Net. Best practice is to let FinalBuilder handle all external tools like e.g. NUnit, FxCop. And use CC for polling source control, calling FinalBuilder, and integrating xml logs. This produces powerful builds, that are easy to debug.</p>"
+  },
+  {
+    "id": 1157,
+    "parent": 0,
+    "author_name": "Sami",
+    "author_url": "http://www.artoftest.com",
+    "date": "2007-03-14T03:56:33",
+    "type": "comment",
+    "content_html": "<p>Interesting article. For people doing Web Unit testing check out WebAii at <a href=\"http://www.artoftest.com\" rel=\"nofollow ugc\">http://www.artoftest.com</a>. It comes with VS templates and you can use it with NUnit <a href=\"http://artoftestinc.blogspot.com/2007/02/using-webaii-with-nunit.html\" rel=\"nofollow ugc\">http://artoftestinc.blogspot.com/2007/02/using-webaii-with-nunit.html</a>.</p>\n<p>It is built using .NET and can automate IE/FF using the same API. Will save you lots of time. Thought I share…</p>"
+  },
+  {
+    "id": 1158,
+    "parent": 0,
+    "author_name": "Josh",
+    "author_url": "http://",
+    "date": "2007-03-29T14:18:20",
+    "type": "comment",
+    "content_html": "<p>Sounds like much of what you wish you could do is possible in Accurev. I have even read people using Accurev with Team Foundation Server on cmcrossroads.com. I guess people using TFS still want the best version control system.</p>"
+  }
+]

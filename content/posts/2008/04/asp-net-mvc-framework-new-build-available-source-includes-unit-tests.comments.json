@@ -1,0 +1,20 @@
+[
+  {
+    "id": 2447,
+    "parent": 0,
+    "author_name": "Chris Chandler",
+    "author_url": "http://www.developingchris.com",
+    "date": "2008-04-17T00:20:52",
+    "type": "comment",
+    "content_html": "<p>sweet, can’t wait to really kick the tires on the mvc framework in my day job apps.<br>\nFound this article by your twitter, good to see you are back on it, love the banter from the summit.</p>"
+  },
+  {
+    "id": 2448,
+    "parent": 0,
+    "author_name": "Rob Conery",
+    "author_url": "http://blog.wekeroad.com",
+    "date": "2008-04-17T17:03:41",
+    "type": "comment",
+    "content_html": "<p>This was all Phil and Eilon – I just watched from an envious distance \uD83D\uDE42</p>"
+  }
+]

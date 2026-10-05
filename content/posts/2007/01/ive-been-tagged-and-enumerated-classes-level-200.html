@@ -1,0 +1,190 @@
+---
+wp_id: 481
+title: I’ve been tagged. . . and enumerated classes – level 200
+slug: ive-been-tagged-and-enumerated-classes-level-200
+permalink: /2007/01/ive-been-tagged-and-enumerated-classes-level-200/
+date: 2007-01-15T13:10:00
+date_utc: 2007-01-15T13:10:00Z
+modified: 2007-01-15T13:10:00
+format: html
+tags:
+- tips-tricks
+excerpt: "After being tagged my numerous people, here's my 5. My long-time readers might know some of these if they've been reading closely over the past few years, but here are 5 things about me that aren't widely known: In college, I was a member of the Texas A&M country & western dance team: http://www.aggiewranglers.com – […]"
+comments_open: true
+---
+<p>After being tagged my numerous people, here's my 5.&nbsp; My<br>
+long-time readers might know some of these if they've been reading closely over<br>
+the past few years, but here are 5 things about me that aren't widely known:</p>
+<ul>
+<li>In college, I was a member of the Texas<br>
+A&amp;M country &amp; western dance team:&nbsp; <a href="http://www.aggiewranglers.com/">www.aggiewranglers.com</a> – I got to travel<br>
+the country and world performing c&amp;w dance.&nbsp; I married a girl who was also<br>
+on the team. (all partner dancing, people, no line dancing).&nbsp; Think "girl being<br>
+thrown in the air". </li>
+<li>In 2003 I was<br>
+called up for Army service to Iraq – was there 1 year and 3 days.&nbsp; I'm 1.5 months<br>
+from separation, so I'm hoping the nothing BIG happens between now and March<br>
+3rd. </li>
+<li>I was using Yahoo before it had<br>
+e-mail service, and my account is one of those that is really jacked up because<br>
+my id I originally registered had to be an e-mail address. </li>
+<li>I started writing database web applications<br>
+before the dawn of ASP 1.0 – Anybody remember .idc and .htx files? – My CGI work<br>
+was configuring <a href="http://www.ddatabase.com/">WODA</a> for a few clients. </li>
+<li>When I was a kid, I read every book on<br>
+motorcycles/dirtbikes/ATVs in the public library, and I'd moved on to the adult<br>
+section.&nbsp; I was the only young kid who knew the difference between a two-stroke<br>
+and four-stroke engine.&nbsp; I now have a motorcycle, love to ride dirtbikes, and I'm<br>
+lobbying my wife for a Harley.</li>
+</ul>
+<p>Now, I'm going to tag <a href="/blogs/scott.bellware/">Scott Bellware</a> 5 times.</p>
+<p>So<br>
+that this post is now void of technical content, here is a tip for using<br>
+enumerations in your applications:</p>
+<p>Consider the following class:&nbsp; </p>
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;1</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">class</span> <span style="color:#2b91af">WorkOrder</span></p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;2</span>&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;3</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:#2b91af">Status</span><br>
+_status;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;4</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:blue">string</span> _description;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;5</span>&nbsp;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:#2b91af">Status</span><br>
+Status</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; {</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> { <span style="color:blue">return</span> _status; }</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">set</span> { _status = <span style="color:blue">value</span>; }</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;11</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">string</span><br>
+Description</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;12</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> { <span style="color:blue">return</span><br>
+_description; }</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;14</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">set</span> { _description = <span style="color:blue">value</span>; }</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;15</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;16</span>&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+</div>
+<p>Notice that we are using a<br>
+Status class (enum):<!--StartFragment--> </p>
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">enum</span> <span style="color:#2b91af">Status</span></p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Pending,</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; InProcess,</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+CompleteNApproved,</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+</div>
+<p><!--EndFragment-->My system manages work<br>
+orders.&nbsp; Realize that this is an over-simplified example, but what happens when<br>
+you need to list our many WorkOrder(s) in a grid or for a printable report?&nbsp;<br>
+Easy, right?&nbsp; No.&nbsp; You have this Status property that is very ugly when<br>
+displayed.&nbsp; "InProcess", "CompleteNApproved".&nbsp; Your users don't want to see<br>
+that.&nbsp; In business speak, it needs to be displayed as "In-Process", and<br>
+"Complete &amp; Approved".&nbsp; How do we do this easily in code?&nbsp; On possible way<br>
+is to create a Facade class that is used in reports.&nbsp; This facade class could<br>
+translate the enum to our required Status titles.&nbsp; This is undesirable because<br>
+we then have to wrap each WorkOrder instance in a new class just for display<br>
+purposes.&nbsp; I would prefer that our WorkOrder could be displayed on its own, but<br>
+we have to do something about that enum.&nbsp; Let's turn our enum into an enumerated<br>
+class:</p>
+<p>First, I'll rename the enum like so:<!--StartFragment--> </p>
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">enum</span> <span style="color:#2b91af">StatusValue</span></p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Pending,</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+InProcess,</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; CompleteNApproved,</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+</div>
+<p><!--EndFragment-->Then I'll make Status a<br>
+class with 3 static instances:<!--StartFragment-->&nbsp;<!--StartFragment--> </p>
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">class</span> <span style="color:#2b91af">Status</span></p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:blue">static</span> <span style="color:#2b91af">Status</span><br>
+_pending = <span style="color:blue">new</span> <span style="color:#2b91af">Status</span>(<span style="color:#2b91af">StatusValue</span>.Pending, <span style="color:#a31515">"Pending"</span>);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">private</span> <span style="color:blue">static</span><br>
+<span style="color:#2b91af">Status</span> _inProcess = <span style="color:blue">new</span> <span style="color:#2b91af">Status</span>(<span style="color:#2b91af">StatusValue</span>.InProcess, <span style="color:#a31515">"In-Process"</span>);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">private</span> <span style="color:blue">static</span><br>
+<span style="color:#2b91af">Status</span> _complete = <span style="color:blue">new</span> <span style="color:#2b91af">Status</span>(<span style="color:#2b91af">StatusValue</span>.CompleteNApproved, <span style="color:#a31515">"Complete &amp; Approved"</span>);</p>
+
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:#2b91af">StatusValue</span> _statusValue;</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:blue">string</span> _displayTitle;</p>
+
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> Status(<span style="color:#2b91af">StatusValue</span> statusValue, <span style="color:blue">string</span> displayTitle)</p>
+<p>&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _statusValue = statusValue;</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _displayTitle = displayTitle;</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:#2b91af">StatusValue</span> StatusValue</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> { <span style="color:blue">return</span><br>
+_statusValue; }</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">string</span><br>
+DisplayTitle</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> { <span style="color:blue">return</span> _displayTitle; }</p>
+<p>&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">override</span><br>
+<span style="color:blue">string</span> ToString()</p>
+<p>&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span> _displayTitle;</p>
+<p>&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">static</span> <span style="color:#2b91af">Status</span> Pending</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+{</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> {<br>
+<span style="color:blue">return</span> _pending; }</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">static</span> <span style="color:#2b91af">Status</span><br>
+InProcess</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> { <span style="color:blue">return</span> _inProcess; }</p>
+<p>&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">static</span> <span style="color:#2b91af">Status</span> Complete</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+{</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> {<br>
+<span style="color:blue">return</span> _complete; }</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+</div>
+<p><!--EndFragment-->Notice that I've overridden the ToString() method<br>
+so that my _displayTitle field is returned.&nbsp; Now, when I throw my WorkOrder<br>
+class (or List&lt;T&gt; of instances) into a grid or some other binding<br>
+container, I'll see the proper display title for my Status.&nbsp; Now my users are<br>
+happy, and I can move a WorkOrder class around anywhere in my application.&nbsp; For<br>
+persisting to the database, I use the StatusValue (which can be Int32, Int16, or<br>
+byte) in my database table.&nbsp; It's easy to do that whether I'm using a<br>
+hand-crafted SQL statement or (my favorite) NHibernate for my ORM<br>
+solution.</p>
+<p>Our lack of built-in enumerated classes is something I plan to<br>
+gripe about at the up-coming MVP Summit.&nbsp; Our enum construct is very weak and is<br>
+no more than glorified primitives.&nbsp; Consider what Java has as of version 5<br>
+(taken from <a href="http://java.sun.com/j2se/1.5.0/docs/guide/language/enums.html">http://java.sun.com/j2se/1.5.0/docs/guide/language/enums.html</a>):</p>
+<pre>public enum Planet {<br>    MERCURY (3.303e+23, 2.4397e6),<br>    VENUS   (4.869e+24, 6.0518e6),<br>    EARTH   (5.976e+24, 6.37814e6),<br>    MARS    (6.421e+23, 3.3972e6),<br>    JUPITER (1.9e+27,   7.1492e7),<br>    SATURN  (5.688e+26, 6.0268e7),<br>    URANUS  (8.686e+25, 2.5559e7),<br>    NEPTUNE (1.024e+26, 2.4746e7),<br>    PLUTO   (1.27e+22,  1.137e6);<br><br>    private final double mass;   // in kilograms<br>    private final double radius; // in meters<br>    Planet(double mass, double radius) {<br>        this.mass = mass;<br>        this.radius = radius;<br>    }<br>    public double mass()   { return mass; }<br>    public double radius() { return radius; }<br><br>    // universal gravitational constant  (m<sup>3</sup> kg<sup>-1</sup> s<sup>-2</sup>)<br>    public static final double G = 6.67300E-11;<br><br>    public double surfaceGravity() {<br>        return G * mass / (radius * radius);<br>    }<br>    public double surfaceWeight(double otherMass) {<br>        return otherMass * surfaceGravity();<br>    }<br>}</pre>
+<p>Now we need to play catch-up again.&nbsp; If in C# I was able to declare my<br>
+Status enum like this, I could give it a friendly display title and even some<br>
+methods right there in the enum definition.&nbsp; I would have less code to maintain,<br>
+and I would get the build in enum behavior for free.</p>

@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2553,
+    "parent": 0,
+    "author_name": "LukeB",
+    "author_url": "http://",
+    "date": "2009-02-14T00:20:21",
+    "type": "comment",
+    "content_html": "<p>In terms of Windows development, my philosophy is that if you can’t do this and get a working MSI on a bare-bones system your build is broken:<br>\nsvn co <a href=\"http://svn/Product/trunk\" rel=\"nofollow\">http://svn/Product/trunk</a> Product_trunk<br>\ncd Product_trunk<br>\ntoolsnantnant</p>"
+  }
+]

@@ -1,0 +1,21 @@
+---
+wp_id: 428
+title: StructureMap v1.1 (for .Net 2.0) released on sourceforge – level 000
+slug: structuremapv1-1released
+permalink: /2006/05/structuremapv1-1released/
+date: 2006-05-16T22:32:00
+date_utc: 2006-05-16T22:32:00Z
+modified: 2006-05-16T22:32:00
+format: html
+tags:
+- coding-principles
+- developer-community
+- tips-tricks
+excerpt: Not long ago, Jeremy Miller released version 1.0 his excellent dependency injection tool, StructureMap. I’ve ported it to .Net 2.0, and I’ve added generics to the bread and butter class, ObjectFactory. Download the .Net 2.0 release on sourceforge.net. StructureMap supports creating very loosely coupled applications by service location and dependency injection. Coding to interfaces is fine […]
+comments_open: true
+---
+<p>Not long ago, <a href="/blogs/jeremy.miller/archive/2006/05/08/144325.aspx">Jeremy Miller released version 1.0&nbsp;his excellent dependency injection tool, StructureMap</a>.&nbsp; I’ve ported it to .Net 2.0, and I’ve added generics to the bread and butter class, ObjectFactory.&nbsp; Download the .<a href="https://sourceforge.net/projects/structuremap/">Net 2.0 release on sourceforge.net</a>.&nbsp; StructureMap supports creating very loosely coupled applications by service location and dependency injection.</p>
+<p>Coding to interfaces is fine and dandy, but at some point, you need an instance of&nbsp;the concrete class that implements the interface.&nbsp; Typing “new SomeClass” tightly couples your code, so what do you do?</p>
+<p>Slap an&nbsp;attribute on the interface, the concrete class, and then all you have to type is:</p>
+<p>IMyInterface instance&nbsp;= ObjectFactory.GetInstance&lt;IMyInterface&gt;( );</p>
+<p>That’s all it takes, and you have an instance of the interface you are binding against.&nbsp; Using this pattern, you can harvest reuse in your applications and test any component in isolation.</p>

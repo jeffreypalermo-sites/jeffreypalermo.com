@@ -1,0 +1,39 @@
+---
+wp_id: 411
+title: How to design a single method – level 200
+slug: how-to-design-a-single-method-level-200
+permalink: /2006/04/how-to-design-a-single-method-level-200/
+date: 2006-04-11T00:12:00
+date_utc: 2006-04-11T00:12:00Z
+modified: 2006-04-11T00:12:00
+format: html
+tags:
+- coding-principles
+excerpt: 'What? I know how to design a single method! What can Jeffrey Palerm possibly have to tell me about how to design a single method? Take a look at your product’s code base. Are any of the following true?: * You have a method that you can’t view without scrolling. * You have a […]'
+comments_open: true
+---
+<p>What?&nbsp; I know how to design a single method!&nbsp; What can<br>
+Jeffrey Palerm possibly have to tell me about how to design a single<br>
+method?</p>
+<p>Take a look at your product’s code base.&nbsp; Are any of the following true?:</p>
+<p>&nbsp;&nbsp;&nbsp; * You have a method that you can’t view without scrolling.<br>&nbsp;&nbsp;&nbsp; * You have a method that takes 10 arguments.<br>&nbsp;&nbsp;&nbsp;<br>
+* You have a method that not only returns a result but causes<br>
+disastrous things to happen if called more than once.<br>&nbsp;&nbsp;&nbsp; * You have a method that throws exceptions if you don’t set certain properties first.<br>&nbsp;&nbsp;&nbsp; * You have a method that has 5 nested foreach/if/try-catch code blocks.<br>&nbsp;&nbsp;&nbsp; * You have a method whose name doesn’t give you a clue as to what it does.<br>&nbsp;&nbsp;&nbsp; * You have a method that will not throw an exception because it swallows the exception without handling it.</p>
+<p>I<br>
+could go on and on (ok, actually I’m out of ideas right now), but<br>
+chances are that you can find a method that meets one of the criteria<br>
+above.&nbsp; Find one of those methods, and fix it.&nbsp; Here are<br>
+general rules I try to live by when designing a single method:</p>
+<p>&nbsp;&nbsp;&nbsp; * The name of the method should describe what the method actually does.<br>&nbsp;&nbsp;&nbsp; * A method should do one and only one thing.<br>&nbsp;&nbsp;&nbsp;<br>
+* A method should either DO something or RETURN something.&nbsp; If it<br>
+returns something, you should be able to call the method over and over<br>
+with no negative consequences. <br>&nbsp;&nbsp;&nbsp; * The method<br>
+should be viewable without scrolling.&nbsp; Fewer than 10 lines of code<br>
+is desirable (my pain point).<br>&nbsp;&nbsp;&nbsp; * The method should<br>
+take few arguments.&nbsp; If the method needs more, refactor to require<br>
+and object that contains all the information required (parameter<br>
+object).<br>&nbsp;&nbsp;&nbsp; * The method depends only on method parameters or members passed into the class constructor.<br>&nbsp;&nbsp;&nbsp; * A method should only have one indented code block – don’t nest code blocks.&nbsp; Extract method first.<br>&nbsp;&nbsp;&nbsp;<br>
+* Don’t try/catch in a method unless you can handle the exception or<br>
+add value.&nbsp; Let the exception bubble up to a point where you can<br>
+actually do something about the exception.</p>
+<p>If you have any good points for method development, please feel free to leave a comment.</p>

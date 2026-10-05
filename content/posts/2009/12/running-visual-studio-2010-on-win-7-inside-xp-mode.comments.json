@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2644,
+    "parent": 0,
+    "author_name": "Josh",
+    "author_url": "http://",
+    "date": "2009-12-02T12:19:46",
+    "type": "comment",
+    "content_html": "<p>Yeah, I get that. My only thought was that you might miss out if you want to play with some Win7 specific features – new IIS version, multitouch, taskbar, etc. Hansleman’s got a great post on streamlining the build of a reusable Win 7 VHD.</p>"
+  }
+]

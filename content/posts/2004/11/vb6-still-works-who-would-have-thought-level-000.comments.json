@@ -1,0 +1,11 @@
+[
+  {
+    "id": 201,
+    "parent": 0,
+    "author_name": "Eric Wise",
+    "author_url": "http://",
+    "date": "2004-11-08T17:30:00",
+    "type": "comment",
+    "content_html": "<p>I was actually advised from the VB Team members on the VB Road Show that anything in VB6 com objects should not be rewritten just for the sake of a rewrite.</p>\n<p>If the MS team says to leave it alone, I’ll leave it alone.</p>"
+  }
+]

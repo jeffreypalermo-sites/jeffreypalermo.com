@@ -1,0 +1,29 @@
+[
+  {
+    "id": 583,
+    "parent": 0,
+    "author_name": "Scott Hanselman",
+    "author_url": "http://www.computerzen.com",
+    "date": "2005-11-18T06:52:17",
+    "type": "comment",
+    "content_html": "<p>And you very much made it a better book. Thanks!</p>"
+  },
+  {
+    "id": 584,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-11-18T13:40:42",
+    "type": "comment",
+    "content_html": "<p>Glad I could help.</p>"
+  },
+  {
+    "id": 585,
+    "parent": 0,
+    "author_name": "Keyvan Nayyeri",
+    "author_url": "http://www.nayyeri.net",
+    "date": "2005-12-03T09:13:39",
+    "type": "comment",
+    "content_html": "<p>Thank you for this great book. I’m reading it and now looking at your name \uD83D\uDE09<br>\nKeep up this great job \uD83D\uDE42</p>"
+  }
+]

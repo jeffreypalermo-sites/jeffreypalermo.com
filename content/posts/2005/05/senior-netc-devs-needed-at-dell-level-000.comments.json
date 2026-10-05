@@ -1,0 +1,20 @@
+[
+  {
+    "id": 309,
+    "parent": 0,
+    "author_name": "David Neal",
+    "author_url": "http://",
+    "date": "2005-05-16T11:11:00",
+    "type": "comment",
+    "content_html": "<p>Aw… Too bad I already have such an awesome job.  I bet working for Dell would be pretty cool \uD83D\uDE42</p>\n<p>So, are you saying relocation may be an option?  I don’t know too many senior developers, and not sure any of them would be open to relocation, but I’d be glad to pass along the information.</p>"
+  },
+  {
+    "id": 310,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2005-05-16T11:13:00",
+    "type": "comment",
+    "content_html": "<p>That’s my experience too.  Great developers are already where they want to be, so it’s hard to convince them to move.  Of course, all big corporations pay relocation expenses.</p>"
+  }
+]

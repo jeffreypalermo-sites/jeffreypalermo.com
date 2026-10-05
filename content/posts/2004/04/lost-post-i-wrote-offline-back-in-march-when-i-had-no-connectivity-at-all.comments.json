@@ -1,0 +1,29 @@
+[
+  {
+    "id": 17,
+    "parent": 0,
+    "author_name": "Rob Relyea [msft]",
+    "author_url": "http://",
+    "date": "2004-04-29T11:41:00",
+    "type": "comment",
+    "content_html": "<p>Happy to read about your interest in Avalon/XAML.<br>\nI love to read customer opinion &amp; feedback.  Let us know how you like it once you start building things.<br>\nStay safe in Iraq (or maybe you are back?)<br>\n-Rob</p>"
+  },
+  {
+    "id": 18,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-04-29T12:02:00",
+    "type": "comment",
+    "content_html": "<p>I am very much interested in XAML, but in my situation, I must concentrate on meeting my customers’ needs now, so I am swamped with that work.  Whenever it is released,  I will definitely develop some applications with it.  Thanks for the comment.  I like that WinForms interfaces will now be able to have a flow layout like HTML.  That is very powerful.</p>"
+  },
+  {
+    "id": 19,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-04-29T12:03:00",
+    "type": "comment",
+    "content_html": "<p>Oh, yes I am back in the states.  I’ve been back for a week now.</p>"
+  }
+]

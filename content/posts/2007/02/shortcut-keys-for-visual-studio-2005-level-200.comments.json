@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1125,
+    "parent": 0,
+    "author_name": "nyuser98",
+    "author_url": "http://",
+    "date": "2007-02-02T13:32:40",
+    "type": "comment",
+    "content_html": "<p>Yes it is very nice. I am using this feature since last two years in Java Eclipse IDE.</p>"
+  },
+  {
+    "id": 1126,
+    "parent": 0,
+    "author_name": "asdkljfhas",
+    "author_url": "http://",
+    "date": "2007-02-02T16:13:44",
+    "type": "comment",
+    "content_html": "<p>Isn’t shift+enter the same thing as just enter?</p>"
+  },
+  {
+    "id": 1127,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-02-02T16:22:56",
+    "type": "comment",
+    "content_html": "<p>asdkljfhas,<br>\nYes it is.  Note to self:  Don’t blog so early in the morning.</p>"
+  },
+  {
+    "id": 1128,
+    "parent": 0,
+    "author_name": "stevedonie",
+    "author_url": "http://donie.homeip.net:8080/pebble/Steve/",
+    "date": "2007-02-02T18:43:28",
+    "type": "comment",
+    "content_html": "<p>Thanks for the reference. I started using the keyboard very heavily in my first job, where I developed software for blind people. Blind people have terrible eye-hand coordination \uD83D\uDE42 This necessitates that they do EVERYTHING through the keyboard. In order to teach myself to be more like my customers, I would frequently drop my mouse down behind my desk so I couldn’t reach it. When you start doing that, you start learning other ways of doing things. </p>"
+  },
+  {
+    "id": 1129,
+    "parent": 0,
+    "author_name": "Kamran",
+    "author_url": "http://",
+    "date": "2007-02-03T09:36:55",
+    "type": "comment",
+    "content_html": "<p>asdkljfhas, Palermo,</p>\n<p>&gt;Isn’t shift+enter the same thing as just enter?<br>\nif you are refering to the post above, it says “ctrl+shift+enter” and not “shift+enter”.</p>"
+  },
+  {
+    "id": 1130,
+    "parent": 0,
+    "author_name": "Jesper Hauge",
+    "author_url": "http://",
+    "date": "2007-02-04T12:44:04",
+    "type": "comment",
+    "content_html": "<p>Thanks ! Came in handy \uD83D\uDE42</p>\n<p>On another note – how do you get VS 2005, to highlight the line with the cursor in it, I have been looking for this, but cannot find it in Options?</p>\n<p>Regards<br>\nJesper Hauge</p>"
+  },
+  {
+    "id": 1131,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-02-04T19:22:27",
+    "type": "comment",
+    "content_html": "<p>Jesper,<br>\nThe line-highlighting is not a Visual Studio feature.  It’s a Resharper feature.  You can read more about R# in one of my previous posts:</p>\n<p><a href=\"http://codebetter.com/blogs/jeffrey.palermo/archive/2006/08/02/BreadAndButterResharper.aspx\" rel=\"nofollow ugc\">http://codebetter.com/blogs/jeffrey.palermo/archive/2006/08/02/BreadAndButterResharper.aspx</a></p>"
+  }
+]

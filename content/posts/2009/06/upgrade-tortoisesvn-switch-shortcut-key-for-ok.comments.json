@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2607,
+    "parent": 0,
+    "author_name": "Harry S.",
+    "author_url": "http://",
+    "date": "2009-06-18T16:11:17",
+    "type": "comment",
+    "content_html": "<p>As far as I know, this works on most dialogs. Enter is the typical shortcut key for the default button on a dialog, except when you are in a multiline textbox. In that case Enter will insert a newline while CTRL+Enter will activate the default button. In either event ESC will always perform the Cancel button.</p>"
+  }
+]

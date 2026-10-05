@@ -1,0 +1,209 @@
+[
+  {
+    "id": 814,
+    "parent": 0,
+    "author_name": "sahilmalik",
+    "author_url": "http://codebetter.com/blogs/sahil.malik",
+    "date": "2006-04-27T14:40:31",
+    "type": "comment",
+    "content_html": "<p>Software is also too easy to screw up IMO.</p>"
+  },
+  {
+    "id": 815,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-04-27T14:44:36",
+    "type": "comment",
+    "content_html": "<p>yes it is.  Too easy to screw up, too easy to create crap, too easy to throw something together that’s a nightmare to maintain, etc.</p>"
+  },
+  {
+    "id": 816,
+    "parent": 0,
+    "author_name": "developer",
+    "author_url": "http://",
+    "date": "2006-04-27T15:12:13",
+    "type": "comment",
+    "content_html": "<p>Actually I want to ask you<br>\nI work in a project, and there was decision that the business logic should be in the business tier of the application and not in the database.</p>\n<p>I agree with that, and there is no doubt about it that it is good practice</p>\n<p>But what is considered business logic is the debate that I open sometimes<br>\nthere is no validation on the database side (0 validation)<br>\nno foreign keys (except very few occasions), no valid range values</p>\n<p>I argue that we have to put some validation in the database<br>\nbut the senior architect consider those as business logic</p>\n<p>and my question is where the business logic and where the validation border</p>\n<p>another question, do you think database transactions, should be part of the business logic?</p>"
+  },
+  {
+    "id": 817,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-04-27T15:22:37",
+    "type": "comment",
+    "content_html": "<p>There is no clear answer for every situation, but I think most would agree that referential integrity is good for a database even if only one application ever touches it.  The truth is that few databases have the luxury of only being used by one application, even if it’s just for reporting.</p>\n<p>I’d consider foreign keys and valid range values to be reasonable database constraints.</p>\n<p>If you are dogmatic that any data rules are business logic and need to be stripped from the database, then you couldn’t possibly choose database field sizes.  You’d have to use “ntext” for all the fields because  constraining a field to ONLY 8000 characters is a “business rule”.  </p>"
+  },
+  {
+    "id": 818,
+    "parent": 0,
+    "author_name": "ewise",
+    "author_url": "http://www.codebetter.com/blogs/eric.wise",
+    "date": "2006-04-27T15:27:58",
+    "type": "comment",
+    "content_html": "<p>The problem you are speaking of is one that has already been solved by history, and you pointed it out.  It’s the concept of a “guild”.  Guilds police their own members, and handle their own rankings and promotions.</p>\n<p>Guilds also solve the problem of a business manager “not knowing” about the skills of the developer in front of them by having a credible source to check against.</p>\n<p>Just like in construction, carpentry, and electrician work the underpinnings of software are like the underpinnings of a building.  How much more expensive is it to fix bad wiring once the building is up?  The cheapest and most effective time to do good wiring is before the drywall is up.</p>\n<p>However, that being said, not every application can be architected for excellence from the ground up.  Start-up firms and businesses that simply don’t have the money to pay $200/hr at the time for a fancy master consultant often have to take shortcuts.  Certainly they pay for it later but it would be just as great of a crime to allocate resources towards an enterprise architecture before the business needs it.</p>"
+  },
+  {
+    "id": 819,
+    "parent": 0,
+    "author_name": "Steve",
+    "author_url": "http://www.furrygoat.com",
+    "date": "2006-04-27T15:42:58",
+    "type": "comment",
+    "content_html": "<p>Writing BAD software is easy.</p>"
+  },
+  {
+    "id": 820,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-04-27T15:45:45",
+    "type": "comment",
+    "content_html": "<p>Good points, Eric,<br>\nSteve, yes.  Writing bad software is easy, and writing good software is hard.</p>"
+  },
+  {
+    "id": 821,
+    "parent": 0,
+    "author_name": "picky",
+    "author_url": "http://",
+    "date": "2006-04-27T16:03:41",
+    "type": "comment",
+    "content_html": "<p>Are ‘Scott Bellware’ and ‘Sam Gentile’ supposed to be links? They are missing HREFs.</p>"
+  },
+  {
+    "id": 822,
+    "parent": 0,
+    "author_name": "SamGentile",
+    "author_url": "http://codebetter.com/blogs/sam.gentile",
+    "date": "2006-04-27T16:08:14",
+    "type": "comment",
+    "content_html": "<p>Yes no link love for us dude! -)</p>"
+  },
+  {
+    "id": 823,
+    "parent": 0,
+    "author_name": "Eber Irigoyen",
+    "author_url": "http://ebersys.blogspot.com/",
+    "date": "2006-04-27T16:13:35",
+    "type": "comment",
+    "content_html": "<p>if software is to easy, why are we (or you guys) having all these complicated conversations about how easy or how difficult it is?</p>\n<p>sure is easy to trow something together and make it get the job done, but for anything a little bigger it requires talent, and talent is not something you learn</p>"
+  },
+  {
+    "id": 824,
+    "parent": 0,
+    "author_name": "Bill Pierce (Apprentice)",
+    "author_url": "http://spaces.msn.com/wcpierce/",
+    "date": "2006-04-27T18:19:38",
+    "type": "comment",
+    "content_html": "<p>“A manager should know what a good programmer is.  That is a big problem in a lot of companies.  The management has no way to know if a programmer is good or not.”</p>\n<p>jp:  How is management to know?  What criteria can be used to distinguish an apprentice/journeyman/master?  How will management know that the person writing their custom software is unskilled, and the product will have to be discarded when change is required?</p>\n<p>Teach me Master </p>"
+  },
+  {
+    "id": 825,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-04-27T18:31:41",
+    "type": "comment",
+    "content_html": "<p>Sam,<br>\nSorry about the link.  It’s fixed now.  </p>\n<p>Bill,<br>\nI don’t have THE answer for that.  There are probably many answers to that question.  This isn’t a new problem, though.  In general, it’s a management skill to be able to detect that a person for hire will be good at the responsibilities of the position.  This requires a good manager (which is another topic).</p>\n<p>Thanks for the flattery by calling me “Master”, but I don’t think I’ve made it to that level yet.</p>"
+  },
+  {
+    "id": 826,
+    "parent": 0,
+    "author_name": "Don Schenck",
+    "author_url": "http://DonV2.blogspot.com",
+    "date": "2006-04-27T18:52:03",
+    "type": "comment",
+    "content_html": "<p>Years ago, when I was entrenched as an RPG developer on the AS/400 platform (I’m now a Wintel geek), I read the Professional Programmer series of books by Henry Ledgard. He breaks down the levels of programmers, and sad to say, I’ve worked with too many amateurs.</p>\n<p>Or should I say, have worked AFTER too many amateurs … as in “clean up afterwards”.</p>"
+  },
+  {
+    "id": 827,
+    "parent": 0,
+    "author_name": "Ryan Elisei",
+    "author_url": "http://",
+    "date": "2006-04-27T19:14:11",
+    "type": "comment",
+    "content_html": "<p>The idea is conservation of resources (money, mental, or otherwise) at all times, and less about exactly when to conserve – that is the manager’s call.</p>\n<p>Managers know the tradeoffs of time and money, typically very well. If they put you under impossible constraints they know what can happen. Their judgement call is what they get paid for, and ultimately how you were picked to be on their team.</p>\n<p>OTOH you get paid for your ability, and that includes completing the job, or finding a new one.</p>\n<p>Maybe the real problem is that it’s too easy to get a technical job?</p>"
+  },
+  {
+    "id": 828,
+    "parent": 0,
+    "author_name": "Bernard Dy",
+    "author_url": "http://burningends.blogspot.com/2005/08/anyone-can-become-developer-trick-is.html",
+    "date": "2006-04-27T21:43:16",
+    "type": "comment",
+    "content_html": "<p>Thanks, excellent post. I had similar sentiments in my blog.</p>\n<p>With all the tools we have at our disposal now, software is indeed easier to make, but still difficult to make right.</p>"
+  },
+  {
+    "id": 829,
+    "parent": 0,
+    "author_name": "Alan",
+    "author_url": "http://",
+    "date": "2006-04-27T21:50:28",
+    "type": "comment",
+    "content_html": "<p>I write software with passion and I totally disagree writing software is “too easy”.</p>\n<p>There are virtually hundreds of commercial and open-source tools that have been written to aid software development in managed environment (Java &amp; .NET). Why is that? Because this is very hard and time consuming to develop mid-large applications in managed environment. It will be even harder in the future.</p>\n<p>It was a hard lesson for me to realise soon after .NET was released the Framework wasn’t all about glory and fun. I wouldn’t be able to know about every single class types in the Framework in my life time. Little I know less I can do in my software development projects therefore I have to do a lot of research (work) to do work.</p>\n<p>Picture coding against 100+ SQL tables and writing all the classes by hand. I’ve been developing my own Tool (ORM) that generates over 200 classes for only 14 SQL Tables and still growing. Once you have the ability to make rich Business Objects then they way you look at the system design will be changed.</p>\n<p>So I would agree that developing BAD or Less capable software is too easy.</p>"
+  },
+  {
+    "id": 830,
+    "parent": 0,
+    "author_name": "Tom",
+    "author_url": "http://",
+    "date": "2006-04-27T23:43:07",
+    "type": "comment",
+    "content_html": "<p>You can look an programming like writing a book.  A lot of people know how to write words, sentences and paragraphs and word processors make that even easier but that does not make all the people great authors.  Programmers need to have the ability to create good software and tools that make that easier won’t make a bad programmer better, it will only allow them to create bad software faster.</p>"
+  },
+  {
+    "id": 831,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://flimflan.com/blog",
+    "date": "2006-04-28T04:35:45",
+    "type": "comment",
+    "content_html": "<p>Bob Reselman proposes the software guild idea in his book “Coding Slave” (worth a read – I think its a free download now).<br>\nSoftware has become too “approachable”, so that the barrier to entry has been eliminated. This has made it much more difficult (and more necessary) to be able to differentiate between the levels of craftsmanship.<br>\nBecause every non-programmer that looks at the value of programmers is looking at every one of us as an equal representative. They see the crap they are handed by someone that is “winging” it, and it completely devalues their opinion of developers as a whole.<br>\nMaybe we should be licensed, like pilots and doctors. Reselman’s idea was a sort of certification by your peers (he rails against vendor certifications, which are developed by vendors just to sell more books, classes, and promote their own tools).</p>"
+  },
+  {
+    "id": 832,
+    "parent": 0,
+    "author_name": "ScottBellware",
+    "author_url": "http://www.bellware.net",
+    "date": "2006-04-28T15:38:14",
+    "type": "comment",
+    "content_html": "<p>Solid post, Jeffrey.</p>"
+  },
+  {
+    "id": 833,
+    "parent": 0,
+    "author_name": "Mike",
+    "author_url": "http://",
+    "date": "2006-04-29T06:22:37",
+    "type": "comment",
+    "content_html": "<p>You make no distinction between a product and a solution. That completely turns down this post. If you are building a product, you better think ahead in the design phase so that future changes remain marginal in cost. If you are building a solution however, changes happen often, your boss wants you to hack this thing together as fast as you can, and you end up with crapoware/throwawayware anyway. This crapoware is because of the goal, not the person doing it or the tool.</p>"
+  },
+  {
+    "id": 834,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-05-05T11:39:59",
+    "type": "comment",
+    "content_html": "<p>Mike,<br>\nI have been at a place where the goal was throwaway because the need to get something out was so great.  That was rare, though.  I would not let myself write crap knowingly, so did my best to write good code even in that situation.  The other code thrown together in haste quickly became a burden when it just needed to be modified a little but not completely replaced (4 weeks later).</p>\n<p>I don’t believe it when a manger says: “don’t worry.  We can clean it up/do it right/finish it later”.  Later never comes, and 10 years down the road it’s still being used and is a maintainance nightmare.  </p>\n<p>You are right about me not making a distinction between a product and a solution.  I don’t believe there is a difference regarding how it should be approached on the technical side.  Whether software for external customers or internal, it’s still software that has users.  Sure the business strategists will treat it differently, but it’s still software.</p>"
+  },
+  {
+    "id": 835,
+    "parent": 0,
+    "author_name": "Michael Stein",
+    "author_url": "http://michaelatmo.blogspot.com",
+    "date": "2006-05-11T17:13:59",
+    "type": "comment",
+    "content_html": "<p>nice piece! I quoted you in a posting I just put up about a closely related matter that really bugs me… the idea that SOA, components, etc, mean that “real soon now” enterprise class business apps can be developed by relatively unskilled techs who just snap the legos together. See <a href=\"http://michaelatmo.blogspot.com/2006/05/software-bricklaying.html\" rel=\"nofollow ugc\">http://michaelatmo.blogspot.com/2006/05/software-bricklaying.html</a><br>\n–michael</p>"
+  },
+  {
+    "id": 836,
+    "parent": 0,
+    "author_name": "Cate L",
+    "author_url": "http://",
+    "date": "2006-05-20T19:08:06",
+    "type": "comment",
+    "content_html": "<p>Thanks for the article and all the comments…I’m an entrepreneur learning about software development to build out my trading system. It’s very cool to read all your opinions…all valid…it is a craft…a very cool craft…</p>"
+  }
+]

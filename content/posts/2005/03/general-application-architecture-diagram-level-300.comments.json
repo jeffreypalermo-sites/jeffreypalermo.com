@@ -1,0 +1,29 @@
+[
+  {
+    "id": 267,
+    "parent": 0,
+    "author_name": "Jeff N",
+    "author_url": "http://www.srcginc.com",
+    "date": "2005-10-14T22:51:46",
+    "type": "comment",
+    "content_html": "<p>Hi,</p>\n<p>I like the diagram you’ve done above.  I’m currently working on a .NET SmartClient app – 3 tier – and I’ve got an architecture diagram from Visio that looks pretty poor compared to the one you’ve done above.</p>\n<p>What tool did you use for this diagram?</p>\n<p>Thanks,</p>\n<p>Jeff</p>"
+  },
+  {
+    "id": 268,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-14T23:22:28",
+    "type": "comment",
+    "content_html": "<p>I used Visio to create this.</p>"
+  },
+  {
+    "id": 269,
+    "parent": 0,
+    "author_name": "Manoj",
+    "author_url": "http://",
+    "date": "2007-09-20T08:38:49",
+    "type": "comment",
+    "content_html": "<p>Hi Jeffrey Palermo,</p>\n<p>I like the design and flow you have designed.  but i have some query in this.  being a new developer .net  can you please brief out the Process assembly layer in which you have mentioned process, presenter, and controller class.  I will be greatfull to you if you can give some knowledge on this layer as well.</p>\n<p>thanks<br>\nManoj Kakkar</p>"
+  }
+]

@@ -1,0 +1,64 @@
+---
+wp_id: 442
+title: 'No Fluff Just Stuff: Testing with Selenium with Neal Ford – level 200'
+slug: no-fluff-just-stuff-testing-with-selenium-with-neal-ford-level-200
+permalink: /2006/07/no-fluff-just-stuff-testing-with-selenium-with-neal-ford-level-200/
+date: 2006-07-11T23:51:00
+date_utc: 2006-07-11T23:51:00Z
+modified: 2006-07-11T23:51:00
+format: html
+tags:
+- developer-community
+- tips-tricks
+excerpt: On the 3rd day of NFJS, Neal gave a talk about testing with Selenium. Selenium is a end-to-end testing solution for web applications. This is testing on the customer acceptance level and not the unit-testing level. Selenium was developed by ThoughtWorks to test an application they were working on. It grew out of an […]
+comments_open: true
+---
+<p>On the 3<sup>rd</sup> day of <a href="http://www.nofluffjuststuff.com/">NFJS</a>, <a href="http://www.nealford.com/">Neal </a>gave a talk about<br>
+testing with <a href="http://www.openqa.org/selenium/">Selenium</a>.<span>&nbsp; </span>Selenium is a<br>
+end-to-end testing solution for web applications.<span>&nbsp; </span>This is testing on the customer acceptance<br>
+level and not the unit-testing level.</p>
+
+<p>Selenium was developed by <a href="http://www.thoughtworks.com/select-country.html">ThoughtWorks </a>to test an<br>
+application they were working on.<span>&nbsp; </span>It<br>
+grew out of an actual need.<span>&nbsp; </span>The testing<br>
+framework was good enough to open-source it.<span>&nbsp;<br>
+</span>They named it Selenium because it is the key mineral that protects the<br>
+body from mercury poisoning (if you recall Mercury testing tools).</p>
+
+<p>With Selenium, tests run directly in the browser.<span>&nbsp; </span>It supports most common browsers that are in<br>
+existence today.<span>&nbsp; </span>The test engine itself<br>
+is written in JavaScript and runs directly in the browser.<span>&nbsp; </span>It creates a compatibility layer across<br>
+browsers.<span>&nbsp; </span>Calling an API in Selenium<br>
+will map to the right API in the current browser.</p>
+
+<p>It deploys a browser bot that runs alongside your<br>
+application.<span>&nbsp; </span>This bot can accept<br>
+commands.<span>&nbsp; </span>The bot is embedded in an<br>
+IFrame.<span>&nbsp; </span>Consequently, it will work with<br>
+any javascript-enabled browser.<span>&nbsp; </span>To use<br>
+selenium, you must take the selenium folder and deploy it alongside the<br>
+application.<span>&nbsp; </span>This will be in a<br>
+non-production environment, of course.</p>
+
+<p>There are two modes for Selenium:<span>&nbsp; </span>TestRunner mode and Driven mode.<span>&nbsp; </span>In TestRunner mode, the browser is driven<br>
+inside the process.<span>&nbsp; </span>In Driven mode, the<br>
+Selenium can be driven from another process remotely.</p>
+
+<p>With TestRunner mode, Selenium is alongside the<br>
+application.<span>&nbsp; </span>The user can launch it and<br>
+click the “Run Tests” button to run tests.<span>&nbsp;<br>
+</span></p>
+
+<p>Selenium test case is a simple html table.<span>&nbsp; </span>The first row is a title and can be<br>
+ignored.<span>&nbsp; </span>The next rows are the commands.<span>&nbsp; </span>By default, it looks for<br>
+tests/TestSuite.html.<span>&nbsp; </span></p>
+
+<p>You can run Selenium tests directly in a browser and watch<br>
+it exercise your application at full speed or “walk” speed.<span>&nbsp; </span>You can also step through.<span>&nbsp; </span>If you need to run it from another process, you<br>
+can use Driven mode to run it from Ant, Nant, Maven, CruiseControl or anywhere.<span>&nbsp; </span>Once you have a big suite of tests, you’ll<br>
+want to have it integrated with your normal build process.</p>
+
+<p>There is a Selenium IDE that can be used to record<br>
+tests.<span>&nbsp; </span>The IDE is an extension for<br>
+FireFox at <a href="http://www.openqa.org/selenium/">http://www.openqa.org/selenium/</a>.<span>&nbsp; </span>Selenium can test regular web applications as<br>
+well as AJAX web applications.</p>

@@ -1,0 +1,14 @@
+---
+wp_id: 145
+title: How to comment out an ASP.NET server control –  doesn’t work – level 100
+slug: how-to-comment-out-an-asp-net-server-control-doesnt-work-level-100
+permalink: /2004/11/how-to-comment-out-an-asp-net-server-control-doesnt-work-level-100/
+date: 2004-11-22T11:13:00
+date_utc: 2004-11-22T11:13:00Z
+modified: 2004-11-22T11:13:00
+format: html
+excerpt: I was performing some testing, so I commented out a bit of my ASP.NET markup with <!– –> because, after all, I’ve used that for years, right? Well, it took me just a sec to figure out that the server control was still being executed and that the <!– was just rendered before it on […]
+comments_open: true
+---
+<p>I was performing some testing, so I commented out a bit of my ASP.NET markup with &lt;!– –&gt; because, after all, I’ve used that for years, right?&nbsp; Well, it took me just a sec to figure out that the server control was still being executed and that the &lt;!– was just rendered before it on the client.&nbsp; The important bit:&nbsp; &lt;!– is HTML syntax, not server-side syntax.&nbsp; If you want to comment out a server control, use the following syntax:</p>
+<p>&lt;%–&nbsp;&nbsp; &lt;asp:Button . . . . /&gt;&nbsp; –%&gt;</p>

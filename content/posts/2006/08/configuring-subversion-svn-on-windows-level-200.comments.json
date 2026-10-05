@@ -1,0 +1,47 @@
+[
+  {
+    "id": 977,
+    "parent": 0,
+    "author_name": "Ben Scheirman",
+    "author_url": "http://www.flux88.com",
+    "date": "2006-08-04T13:37:52",
+    "type": "comment",
+    "content_html": "<p>I wrote a small article on svn usage, typical project setups, and such.</p>\n<p><a href=\"http://www.flux88.com/2006/04/03/Iteration+Zero++Part+1++Source+Control+With+Subversion.aspx\" rel=\"nofollow ugc\">http://www.flux88.com/2006/04/03/Iteration+Zero++Part+1++Source+Control+With+Subversion.aspx</a></p>\n<p>I’m a big fan of subversion and use it at home for all of my projects.  At work currently we’re stuck with VSS and I don’t think anyone is willing to swtich to something better.</p>"
+  },
+  {
+    "id": 978,
+    "parent": 0,
+    "author_name": "JH",
+    "author_url": "http://",
+    "date": "2006-08-04T18:06:14",
+    "type": "comment",
+    "content_html": "<p>Have you considered using CCTray (from CruiseControl) to monitor check-in/build status as an alternative to using svnserve.exe to spam each developer’s inbox?</p>"
+  },
+  {
+    "id": 979,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-08-04T18:44:00",
+    "type": "comment",
+    "content_html": "<p>I use that as well, but that doesn’t show what is changed and why (commit message).  The email is not spam, and it is a team convention.  In your situation, it may be viewed as spam, and every team is different.  I view this email as a notification asset and very valuable for collective code ownership.</p>\n<p>I do love CCTray!</p>"
+  },
+  {
+    "id": 980,
+    "parent": 0,
+    "author_name": "Filip",
+    "author_url": "http://",
+    "date": "2006-08-09T05:05:40",
+    "type": "comment",
+    "content_html": "<p>Just to add to your list of useful SVN links:<br>\n<a href=\"http://excastle.com/blog/archive/2005/05/31/1048.aspx\" rel=\"nofollow ugc\">http://excastle.com/blog/archive/2005/05/31/1048.aspx</a></p>"
+  },
+  {
+    "id": 981,
+    "parent": 0,
+    "author_name": "Manuel",
+    "author_url": "http://sharpforge.org/",
+    "date": "2007-01-18T05:33:47",
+    "type": "comment",
+    "content_html": "<p>For those running Windows/Apache/Subversion check out SharpForge at <a href=\"http://sharpforge.org/\" rel=\"nofollow ugc\">http://sharpforge.org/</a></p>\n<p>SharpForge is an open source, .net 2.0, easy to use project management web application. It supports multiple portals, multiple projects, subversion administration, work item tracking, project forums, release management, subversion wiki, subversion browsing &amp; news feed aggregation.</p>"
+  }
+]

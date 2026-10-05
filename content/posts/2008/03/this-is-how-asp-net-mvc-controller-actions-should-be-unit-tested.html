@@ -1,0 +1,125 @@
+---
+wp_id: 618
+title: This is how ASP.NET MVC controller actions should be unit tested
+slug: this-is-how-asp-net-mvc-controller-actions-should-be-unit-tested
+permalink: /2008/03/this-is-how-asp-net-mvc-controller-actions-should-be-unit-tested/
+date: 2008-03-09T20:22:00
+date_utc: 2008-03-09T20:22:00Z
+modified: 2008-03-09T20:22:00
+format: html
+excerpt: 'I’m upgrading my partywithpalermo.com website for the MVP Summit party, and I’m retrofitting my tests to use the March CTP of the MVC Framework. I have the following action that I need to unit test: public class MainController : ControllerBase { private readonly IAttendeesRepository _repository; public MainController(IAttendeesRepository repository, IViewEngine viewEngine) { _repository = repository; ViewEngine […]'
+comments_open: true
+---
+<p>I’m upgrading my <a href="http://www.partywithpalermo.com">partywithpalermo.com</a> website for the <a href="http://mvpsummit2008.partywithpalermo.com">MVP Summit party</a>, and I’m retrofitting my tests to use the <a href="http://codebetter.com/blogs/jeffrey.palermo/archive/2008/03/05/new-drop-of-asp-net-mvc-framework-now-available.aspx">March CTP of the MVC Framework</a>.&nbsp;&nbsp;I have the following action that I need to unit test:</p>
+<div>
+<div>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white"><span>public</span> <span>class</span> MainController : ControllerBase</pre>
+<pre>{</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    <span>private</span> <span>readonly</span> IAttendeesRepository _repository;</pre>
+<pre>&nbsp;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    <span>public</span> MainController(IAttendeesRepository repository, IViewEngine viewEngine)</pre>
+<pre>    {</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        _repository = repository;</pre>
+<pre>        ViewEngine = viewEngine;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    }</pre>
+<pre>&nbsp;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">&nbsp;</pre>
+<pre>    <span>public</span> <span>void</span> Register(<span>string</span> name, <span>string</span> website, <span>string</span> comment)</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    {</pre>
+<pre>        var attendee = <span>new</span> Attendee(name, website, comment);</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        _repository.SaveNewAttendee(attendee);</pre>
+<pre>        RenderView(<span>"confirm"</span>, attendee);</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    }</pre>
+<pre>}</pre>
+</div>
+</div>
+
+<p>Note the explicit dependencies on IAttendeeRepository and IViewEngine.&nbsp; That means that I’ll be interacting with those two dependencies in this controller.&nbsp; Here is my unit test (this passes, by the way):</p>
+
+<div>
+<div>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">[Test]</pre>
+<pre><span>public</span> <span>void</span> ShouldSaveAttendee()</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">{</pre>
+<pre>    var repository = <span>new</span> FakeRepository();</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">&nbsp;</pre>
+<pre>    var mockViewEngine = <span>new</span> MockViewEngine();</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    var controller = <span>new</span> MainController(repository, mockViewEngine);</pre>
+<pre>    controller.ControllerContext = <span>new</span> ControllerContext(<span>new</span> RequestContext(<span>new</span> HttpContextStub(), <span>new</span> RouteData()), controller);</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    controller.Register(<span>"Jeffrey.',"</span>, <span>"http://www.jeffreypalermo.com?=&amp;@%20"</span>, <span>"this comment!?,'."</span>);</pre>
+<pre>&nbsp;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    Attendee attendee = repository.SavedAttendee;</pre>
+<pre>    Assert.That(attendee.Name, Is.EqualTo(<span>"Jeffrey.',"</span>));</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    Assert.That(attendee.Website, Is.EqualTo(<span>"http://www.jeffreypalermo.com?=&amp;@%20"</span>));</pre>
+<pre>    Assert.That(attendee.Comment, Is.EqualTo(<span>"this comment!?,'."</span>));</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">&nbsp;</pre>
+<pre>    Assert.That(mockViewEngine.ActualViewContext.ViewName, Is.EqualTo(<span>"confirm"</span>));</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    Assert.That(mockViewEngine.ActualViewContext.ViewData, Is.EqualTo(attendee));</pre>
+<pre>}</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">&nbsp;</pre>
+<pre><span>private</span> <span>class</span> HttpContextStub : HttpContextBase</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">{</pre>
+<pre>&nbsp;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">}</pre>
+</div>
+</div>
+
+<p>This is a pretty straightforward unit test except for the line before calling the Register() method.&nbsp; I have to use setter-injection to set a stubbed ControllerContext.&nbsp; If I don’t, the Register() method will bomb with an exception when the ViewContext is created, and the code tries to get an HttpContextBase off of the ControllerContext.&nbsp; It’ll throw a NullReferenceException.&nbsp; My code doesn’t really care about the ControllerContext or what is in it, but because of how the code is structured, I must use setter injection to break this dependency.&nbsp; Note that testability is next up on the list of things to do for the MVC Framework team.</p>
+<p>Preview2 (March CTP) was all about getting the routing engine out into its own assembly so that it can be used separate from MVC controllers.&nbsp; Also, the MVC Framework is “binnable”.&nbsp; You can xcopy deploy it.&nbsp; There is plenty of time to fix these things, and the team is working on it.&nbsp; You can also be sure that I’ll keep raising the issue because I’ve been test-driving code for three years, and it’s instinct now to see what is easy and frictionless and separate it from code that is harder to test than it should be.&nbsp; Overall, pretty good for a CTP.</p>
+
+<p>The following is what I would like to write.&nbsp; The following is how I would like my test to look.&nbsp; Notice just the absence of the ControllerContext line.</p>
+<div>
+<div>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">[TestFixture]</pre>
+<pre><span>public</span> <span>class</span> MainControllerTester</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">{</pre>
+<pre>    [Test]</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    <span>public</span> <span>void</span> ShouldSaveAttendee()</pre>
+<pre>    {</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        var repository = <span>new</span> FakeRepository();</pre>
+<pre>&nbsp;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        var mockViewEngine = <span>new</span> MockViewEngine();</pre>
+<pre>        var controller = <span>new</span> MainController(repository, mockViewEngine);</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        controller.Register(<span>"Jeffrey"</span>, <span>"http://www.jeffreypalermo.com"</span>, <span>"this comment"</span>);</pre>
+<pre>&nbsp;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        Attendee attendee = repository.SavedAttendee;</pre>
+<pre>        Assert.That(attendee.Name, Is.EqualTo(<span>"Jeffrey"</span>));</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        Assert.That(attendee.Website, Is.EqualTo(<span>"http://www.jeffreypalermo.com"</span>));</pre>
+<pre>        Assert.That(attendee.Comment, Is.EqualTo(<span>"this comment"</span>));</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">&nbsp;</pre>
+<pre>        Assert.That(mockViewEngine.ActualViewContext.ViewName, Is.EqualTo(<span>"confirm"</span>));</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        Assert.That(mockViewEngine.ActualViewContext.ViewData, Is.EqualTo(attendee));</pre>
+<pre>    }</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">&nbsp;</pre>
+<pre>    <span>private</span> <span>class</span> MockViewEngine : IViewEngine</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    {</pre>
+<pre>        <span>public</span> ViewContext ActualViewContext;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">&nbsp;</pre>
+<pre>        <span>public</span> <span>void</span> RenderView(ViewContext viewContext)</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        {</pre>
+<pre>            ActualViewContext = viewContext;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        }</pre>
+<pre>    }</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">&nbsp;</pre>
+<pre>    <span>private</span> <span>class</span> FakeRepository : IAttendeesRepository</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    {</pre>
+<pre>        <span>public</span> Attendee SavedAttendee;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">&nbsp;</pre>
+<pre>        <span>public</span> IEnumerable&lt;Attendee&gt; GetAttendees()</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        {</pre>
+<pre>            <span>throw</span> <span>new</span> NotImplementedException();</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        }</pre>
+<pre>&nbsp;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        <span>public</span> <span>void</span> SaveNewAttendee(Attendee attendee)</pre>
+<pre>        {</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">            SavedAttendee = attendee;</pre>
+<pre>        }</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    }</pre>
+<pre>}</pre>
+</div>
+</div>
+
+<p>Note that my unit test is concerned with explicit dependencies and doesn’t know or care that I’m making use of a PROTECTED method named “RenderView” inside my action.&nbsp; That detail doesn’t matter because the interaction with the IViewEngine is what is important.&nbsp;</p>
+<p>I also understand that I could use the <a href="http://www.amazon.com/Working-Effectively-Legacy-Robert-Martin/dp/0131177052">Legacy code</a> pattern of “Extract and Override Call” (<a href="http://www.amazon.com/Working-Effectively-Legacy-Robert-Martin/dp/0131177052">Feathers</a>, p348).&nbsp; Microsoft has already provided the extracted method, RenderView.&nbsp; I can override the call to break the dependency, but that pattern is meant to be used as a dependency-breaking technique with legacy code.&nbsp; If you haven’t read Michael Feathers’ book, Working Effectively with Legacy Code, you should order it right now.&nbsp; It talks about all kinds of dependency-breaking techniques in order to write unit tests on existing code.&nbsp; My goal in providing feedback to the MVC Framework team (and I provide feedback, believe me) is to have this framework be something that I would want to use.&nbsp; There is plenty of time to make the necessary changes, and the team is working hard.</p>
+<p>I revised this post a bit after chatting on the phone with Scott Guthrie this evening.&nbsp; We’ll see some testability improvements in the next drop, and the team is aiming to make drops around every 6 weeks or so.</p>
+<p>Note:&nbsp; I’m playing around with using “var” for locals.&nbsp; Not sure if I like it yet.&nbsp; We’ll see.&nbsp; No need to comment on the “vars”.&nbsp; Comment on controllers, actions, and unit tests.</p>

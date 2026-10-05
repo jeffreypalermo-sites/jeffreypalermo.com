@@ -1,0 +1,65 @@
+[
+  {
+    "id": 664,
+    "parent": 0,
+    "author_name": "Jiho Han",
+    "author_url": "http://",
+    "date": "2006-03-02T14:59:28",
+    "type": "comment",
+    "content_html": "<p>Why do you say limit the second style as Oracle syntax?  Does the ANSI syntax not work on Oracle?  I’d think both styles would work on Microsoft SQL and  Oracle.</p>"
+  },
+  {
+    "id": 665,
+    "parent": 0,
+    "author_name": "Jeremy Wiebe",
+    "author_url": "http://",
+    "date": "2006-03-02T15:11:16",
+    "type": "comment",
+    "content_html": "<p>AFAIK Oracle supports the SQL-92 syntax in Oracle 9 and newer.  </p>\n<p>Also, the ANSI SQL-92 join syntax is “more correct”.  In some instances the (especially when using outer joins with filter clauses) the DBMS may return incorrect results.</p>\n<p>See Listing 5 on this page.  <a href=\"http://www.microsoft.com/technet/prodtechnol/sql/70/deploy/migrat.mspx\" rel=\"nofollow ugc\">http://www.microsoft.com/technet/prodtechnol/sql/70/deploy/migrat.mspx</a></p>"
+  },
+  {
+    "id": 666,
+    "parent": 0,
+    "author_name": "Paul Wilson",
+    "author_url": "http://weblogs.asp.net/PWilson",
+    "date": "2006-03-02T16:42:14",
+    "type": "comment",
+    "content_html": "<p>The syntax that you are referring to as “Oracle” style was actually the closest thing to a standard syntax before there was an ANSI standard, and as such it has always worked in MS products also.  I used it many years with Sql Server and Access, as well as Sybase, since it was the only syntax I knew and it was what was in all the books back then too.  So I guess it would be more correct to call it the “Old School” syntax.  \uD83D\uDE42</p>\n<p>On the other hand, there never was anything close to an outer join standard before the ANSI standard, so while Oracle used the cryptic += and =+ syntax, the simple English “left join” and “right join” syntax that was used by Sybase (and later Microsoft) was definitely better.  And when that simple syntax became the ANSI standard, it only made sense to also standardize on the similar simple “inner join” syntax.</p>"
+  },
+  {
+    "id": 667,
+    "parent": 0,
+    "author_name": "Michael Ames",
+    "author_url": "http://",
+    "date": "2006-03-02T17:39:04",
+    "type": "comment",
+    "content_html": "<p>Agreed with the previous commenters that what you’re referring to as Oracle-style is really just pre-JOIN style, and it’s surprising that you haven’t seen it.  My experience with both databases has been that the older style is more common.</p>\n<p>What is most *definitely* Oracle style is using += and =+ to specify left and right outer joins in the WHERE clause.  But even SQL Server once supported something similar, with *= and =*. </p>"
+  },
+  {
+    "id": 668,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-03-02T22:08:42",
+    "type": "comment",
+    "content_html": "<p>Great comments, all.  I editted the post to say “old school” instead of Oracle.  I’ve seen this syntax before, but it was always in bad queries where a cross join actually _was_ happening, so I was alarmed when I saw it in production code until I saw the WHERE clause that actually did the key joins.</p>"
+  },
+  {
+    "id": 669,
+    "parent": 0,
+    "author_name": "Eber Irigoyen",
+    "author_url": "http://ebersys.blogspot.com",
+    "date": "2006-03-04T00:57:43",
+    "type": "comment",
+    "content_html": "<p>I’m not sure if that has changed in SQL 2005 though, your test was on SQL 2000 right?</p>\n<p>I think the syntax is still valid, but there are some restrictions</p>"
+  },
+  {
+    "id": 670,
+    "parent": 0,
+    "author_name": "Stan the Man",
+    "author_url": "http://",
+    "date": "2006-03-13T20:13:35",
+    "type": "comment",
+    "content_html": "<p>You are correct that both styles of joins run the same way.  But I believe that the “old school” of joins has been deprecated on SQL Server 2005.  The only way they are supported is by telling it to be SQL Server 2000 (or older) compatible.  Microsoft has been stating for some time that the “old school” of joins will not be supported in future versions of SQL Server.  Well, it’s here! Everyone should definitely be using the ANSI style joins.  Sorry “old school” guys!</p>"
+  }
+]

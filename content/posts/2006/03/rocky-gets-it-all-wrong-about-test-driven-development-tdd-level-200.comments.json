@@ -1,0 +1,245 @@
+[
+  {
+    "id": 705,
+    "parent": 0,
+    "author_name": "Bjørn Reppen",
+    "author_url": "http://www.mashiharu.com",
+    "date": "2006-03-29T08:42:31",
+    "type": "comment",
+    "content_html": "<p>You have a couple of points.. but I have to say I share Lhotka’s feelings about test-driven development.  So far I have been unsuccessful in getting used to the TDD idea.</p>"
+  },
+  {
+    "id": 706,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-03-29T11:43:05",
+    "type": "comment",
+    "content_html": "<p>\nBjørn, do you do any automated testing?  If the answer is “no”, then it will be hard to just jump into TDD.  TDD requires unit testing.  I’d recommend starting to write some unit tests and integration tests.  Once you are comfortable with that, it may be easier to try TDD.  </p>"
+  },
+  {
+    "id": 707,
+    "parent": 0,
+    "author_name": "karl",
+    "author_url": "http://",
+    "date": "2006-03-29T11:51:20",
+    "type": "comment",
+    "content_html": "<p>I think there’s a lot of education that still needs to go on about the unit testing and TDD development strategies. Whether that’s only true of .NET developers, I don’t know.  I can speak for myself and say that I still have a lot to learn about it, and I’ve seen other “blunders” from the .NET community (ie, that funny msdn article) about the topic.</p>\n<p>It’s clearly either very difficult, or very different and people just aren’t understanding it or accepting it (or atleast a perception that it’s one of those two things).</p>"
+  },
+  {
+    "id": 708,
+    "parent": 0,
+    "author_name": "SamGentile",
+    "author_url": "http://codebetter.com/blogs/sam.gentile",
+    "date": "2006-03-29T12:16:38",
+    "type": "comment",
+    "content_html": "<p>Par the course</p>"
+  },
+  {
+    "id": 709,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-03-29T12:42:41",
+    "type": "comment",
+    "content_html": "<p>Karl,<br>\nIt definitely is a shift in thinking.  I still talk with folks who still think in procedural code.  They have yet to make the shift to object-oriented thinking.</p>"
+  },
+  {
+    "id": 710,
+    "parent": 0,
+    "author_name": "Brendan",
+    "author_url": "http://",
+    "date": "2006-03-29T12:49:57",
+    "type": "comment",
+    "content_html": "<p>Anyone new to TDD ought to watch this video that Scott pointed out a while back.. Forget the fact that they’re really talking about pairing, and look at how they construct their tests, one at a time and in very small steps… That’s how it should be done!</p>\n<p><a href=\"http://codebetter.com/blogs/scott.bellware/archive/2006/01/05/136288.aspx\" rel=\"nofollow ugc\">http://codebetter.com/blogs/scott.bellware/archive/2006/01/05/136288.aspx</a></p>"
+  },
+  {
+    "id": 711,
+    "parent": 0,
+    "author_name": "Tim Murphy",
+    "author_url": "http://geekswithblogs.net/tmurphy",
+    "date": "2006-03-29T13:34:11",
+    "type": "comment",
+    "content_html": "<p>I am somewhat spit on this one.  I am a big fan of Rocky.  I was shocked by his statements in this DNR episode.  I would really like to give Rocky an opportunity to expand on what he said.</p>\n<p>Personally, I haven’t done much in the way of TDD.  I can see many benefits to it, but there is still part of me that feels that if you are always focused on the micro you are going to miss the big picture and can go down a seriously wrong path.</p>\n<p>Now if we say that you lay out the major highways of your design and then use TDD to do local streets perhaps I could buy that.  I guess I’m still trying to figure this out.</p>"
+  },
+  {
+    "id": 712,
+    "parent": 0,
+    "author_name": "Bil Simser",
+    "author_url": "http://weblogs.asp.net/bsimser",
+    "date": "2006-03-29T16:11:26",
+    "type": "comment",
+    "content_html": "<p>It is sad that Rocky has this view of TDD. I missed the episode but will listen to it on the plane tommorow. I respect Rocky and all his work on CLSA and in general, but when a leader comes out with statements like this I have to scratch my head.</p>\n<p>The two main things I see are that having unit tests are your safety net. I can’t stress how important it is to have them, and yet people just blindly go forward building safety or mission critical systems with 0 tests and get frustrated when they tell me it will take longer to add tests.</p>\n<p>As for TDD, yes it’s a mindset an a shift but once you get into the groove, it becomes second nature. Not only do you have a good set of solid tests but a) your business entities actually start getting cleaner as you’re not adding bloat to them to “get stuff done” and b) you get your business partner involved as the requirements become clearer as you’re thinking about testing from get go and how to structure requirements based on testing. </p>\n<p>A good set of requirements are ones that you can look at and see the tests form in your head (or at least that’s what I’ve found). You don’t get these requirements right off the bat, just like your class design isn’t always correct up front but they emerge through communication and collaboration with everyone.</p>\n<p>TDD just works but everyone needs to be on board and the design/development team needs to be thinking a little differently with different goals. It’s not hard, but it’s not recipie driven software design either.</p>"
+  },
+  {
+    "id": 713,
+    "parent": 0,
+    "author_name": "Adam D.",
+    "author_url": "http://",
+    "date": "2006-03-29T18:16:02",
+    "type": "comment",
+    "content_html": "<p>There was a great message on the TDD group the other day. Someone asked why TDD was not allowed to be used in a shop where they were employed. The reply from an architect or some dev lead was said with a knowing smirk: “Is that the NUnit tests? We don’t have time for those.” lol</p>"
+  },
+  {
+    "id": 714,
+    "parent": 0,
+    "author_name": "MB",
+    "author_url": "http://",
+    "date": "2006-03-29T20:53:32",
+    "type": "comment",
+    "content_html": "<p>In general, I’d have to disagree with Rocky – except for the statement about developers not thinking test first, and the statement about refactoring tests.<br>\nIME, I think that what he says there has a grain of truth to it. Others <a href=\"http://butunclebob.com/ArticleS.TimOttinger.ReasonsToStayWrong\" rel=\"nofollow\">agree</a>. Since the tests depend on the code, they create a weight on the code that can hinder large scale changes. Of course, the TDD way is to say that you should only be making small changes that add up to a large change – refactoring tests as you go. Possibly valid, but not a natural inclination to most devs I know.</p>"
+  },
+  {
+    "id": 715,
+    "parent": 0,
+    "author_name": "Rockford Lhotka",
+    "author_url": "http://www.lhotka.net",
+    "date": "2006-03-29T21:09:03",
+    "type": "comment",
+    "content_html": "<p>It may be that I don’t have a full appreciation for TDD – anyone claiming to know everything is a fool \uD83D\uDE42</p>\n<p>But I do want to be clear that I was cut off in the dialog before I could spell out that I _absolutely_ use and favor unit tests (and in particular nunit). I wouldn’t be caught without unit tests, and all those little tests that I used to write are (and have been for years) captured in unit test format.</p>\n<p>What I object to is the idea that I should write tests before I write the code. I guess it is just an old habit that is hard to break – but I write my method first, then write the test(s). It works for me.</p>\n<p>I used to write the tests as little apps, then as nunit tests. Either way, unit testing is critical and I surely wouldn’t mean to suggest anything to the contrary.</p>\n<p>Rocky</p>"
+  },
+  {
+    "id": 716,
+    "parent": 0,
+    "author_name": "Fregas",
+    "author_url": "http://www.dotnettricks.com/",
+    "date": "2006-03-30T13:56:27",
+    "type": "comment",
+    "content_html": "<p>Rocky,</p>\n<p>I think we all appreciate your response and the fact that maybe the “interview” didn’t capture your full appreciation or understanding of TDD.  However, the fact that you are still writing your methods first, then your tests seems to suggest you have missed the biggest part of TDD–at least from the perspective of most of the TDD folks i’ve talked to.  TDD is a DESIGN METHODOLOGY, NOT a testing methodology.  It is meant to help you DESIGN better code, and automated testing is really just a side effect.  </p>\n<p>If you are writing methods first, then you’ve already created a design and are just building a unit test for automated testing.  This is fine, but you miss probably the most crucial aspects of TDD which is writing better code by looking at objects or methods from the perspective of the client using them.  </p>"
+  },
+  {
+    "id": 717,
+    "parent": 0,
+    "author_name": "Rockford Lhotka",
+    "author_url": "http://www.lhotka.net",
+    "date": "2006-03-31T14:09:22",
+    "type": "comment",
+    "content_html": "<p>Yup, I freely admit that I disagree with TDD as a design methodology. I much prefer behavioral OOD using a modified CRC approach, hands down, to anything else I’ve tried.</p>\n<p>But I am glad to hear that no one views TDD as a testing methodology, because as such it would be truly inadequate. The other part of what I was unable to complete in the interview (because this was just the lead-in banter part, not the real interview at all) is that developers are _terrible_ testers (with perhaps a few exceptions).</p>\n<p>This is because developers test to make sure something works. Testers, on the other hand, test to find ways something doesn’t work. Testers focus on the edge cases, the exceptional cases, the scenarios that a developer often (typically?) simply ignores.</p>"
+  },
+  {
+    "id": 718,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-03-31T14:45:16",
+    "type": "comment",
+    "content_html": "<p>If anything, TDD might be a micro-design methodology.  Personally, I can’t create a non-trivial system completely unit-test first.  I have been using TDD for right at a year now, and I’m very pleased with how it has helped the whole process.  </p>\n<p>I love TDD, but I’m not one who says “if you don’t use TDD, you suck”.  That’s not rational.  </p>\n<p>I don’t use formal CRC cards, but I like that approach.  My team uses the whiteboard liberally.  In fact, every wall in our war room is whiteboard space, and most of the time, there is not an empty board.  Before we start something, we will sketch out a crude class diagram and talk about class responsibilities and each class’s collaboraters.  Only after we have a high-level design to we begin to test-drive the creation of one of these classes.  It may be a prerequisite to create the interfaces that it will depend on.  And then the first steps are creating the class, and the test class that will test drive it (not in any strict order).   After we actually have those classes, then the TDD actually begins, and that’s were a test method will drive a single class responsibility (that has been decided ahead of time).  </p>\n<p>Let me be clear.  We don’t design methods ahead of time, only the important classes.  Our TDD process fleshes out what methods we need bases on the responsiblities we have given the class.  If a class starts to get too big, we have to qualms about refactoring out some of it to a separate class.</p>\n<p>TDD with bad design skills will still give you crap software, and you probably will end up with integration tests instead of unit tests.  There are a huge number of ways you can do it wrong.</p>\n<p>I believe that my team is doing it right, and what we’ve ended up with is a VERY loosely-coupled system that is super easy to test.  I believe that because we emphasized testability through TDD, our subsequent integration tests and FIT tests were very easy to create.</p>\n<p>My team doesn’t stop at TDD.  We do the whole gamut of automated testing.  Because of these, we have high confidence that our software works.  </p>\n<p>Thanks for clarifying, Rocky, and I hope to see you again at Tech Ed.  This year more people from the Austin .Net User Group are attending.</p>"
+  },
+  {
+    "id": 719,
+    "parent": 0,
+    "author_name": "jmiller",
+    "author_url": "http://",
+    "date": "2006-03-31T14:47:07",
+    "type": "comment",
+    "content_html": "<p>Rocky,</p>\n<p>There’s absolutely no reason you can’t use any other design methodology *with* TDD.  I’ve found Responsibility Driven Design to work very well in conjunction with TDD.  TDD design is about breaking a design into little pieces and tasks, using a unit test to describe the pieces, and then assembling the pieces into the aggregate.  RDD with CRC cards is a very natural complement to TDD.</p>\n<p>The one thing that TDD does better than any design tool or methodology I’ve ever used or seen is enforce loose coupling and a separation of concerns.  You simply can’t easily unit test tightly coupled code.  Testability very frequently coincides with what we’d generally call a good design.</p>\n<p>I wrote an article on this last year:  <a href=\"http://codebetter.com/blogs/jeremy.miller/articles/131726.aspx\" rel=\"nofollow ugc\">http://codebetter.com/blogs/jeremy.miller/articles/131726.aspx</a></p>"
+  },
+  {
+    "id": 720,
+    "parent": 0,
+    "author_name": "Bil Simser",
+    "author_url": "http://weblogs.asp.net/bsimser",
+    "date": "2006-03-31T15:13:45",
+    "type": "comment",
+    "content_html": "<p>Rocky,</p>\n<p>Good to hear it from you on what the intent was. Sometimes in editing things are missed and even then verbal communications is just one part of expressing yourself and subtleties are sometimes lost.</p>\n<p>I think everyone agrees that TDD as a testing methodolgy misses the point of TDD as it’s a design methodology (or micro-design as Jeffrey said). At least having the unit tests there are the godsend. How you arrive at the end design is a matter of choice and I’ll admit that 100% TDD is a little insane. </p>\n<p>What I do find with TDD is my business classes tend to be leaner and more succint in what they need to do, but YMMV.</p>"
+  },
+  {
+    "id": 721,
+    "parent": 0,
+    "author_name": "John Meyer",
+    "author_url": "http://",
+    "date": "2006-03-31T17:02:29",
+    "type": "comment",
+    "content_html": "<p>I have to agree with Rocky on this one!  Getting a failed test to pass is debugging, not developing.  TDD is testing and debugging, and I’d much rather do developing in the software engineering part of my job, since I already get more than my share of testing and debugging in the maintenance programmer part of my job</p>"
+  },
+  {
+    "id": 722,
+    "parent": 0,
+    "author_name": "Brian Sherwin",
+    "author_url": "http://geekswithblogs.com/bsherwin",
+    "date": "2006-03-31T18:53:57",
+    "type": "comment",
+    "content_html": "<p>The biggest problem here is that there are really three groups that don’t get along real well with each other.<br>\nFirst, there is the group that says “ALL code has to have a test FIRST” (hardcord TDD).<br>\nThe second group says, “We don’t have time to write all of these tests before we write code–too much time is built running the tests just to see red when I know it’s going to fail.  That’s just STUPID.” (TDD is for idiots).<br>\nThe third group says, “Wow, unit testing gives me confidence to refactor.  I should have unit tests to cover all my code.  I should at least be thinking of how to write the test as I’m doing the development, and ideally, I write that test soon after I wrote the code.  TDD is too much, not TDD is too little.”  (Both sides can work.)<br>\nI’ll be honest–I don’t TDD *ALL* of my code.  I do however TDD any refactorings.  Recently I was rewriting a module of a huge application I am working with, and the approach was–write a test that excercised the method I was replacing/rewrite code/verify new method returns the exact same results.<br>\n     Assert.AreEqual(Obj1.TestMethod, Obj2.TestMethod)<br>\nIf my memory serves me, Microsoft took some heat for “trying to redefine TDD” with their “Right Click/Generate Unit Tests.”  Probably the biggest thing is that automated testing is much easier and more visible (at the developers level) today than it was in say…the last release of VB.COM or C++<br>\nIt doesn’t have to be all or nothing to be an effective developer.</p>"
+  },
+  {
+    "id": 723,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-03-31T19:18:17",
+    "type": "comment",
+    "content_html": "<p>Well said Brian!<br>\nIt doesn’t have to be all or nothing.  For instance, I don’t test simple code that Resharper generates, like simple property accessors.</p>\n<p>Everything has to have common sense applied to it.</p>"
+  },
+  {
+    "id": 724,
+    "parent": 0,
+    "author_name": "Brian Sherwin",
+    "author_url": "http://geekswithblogs.net/bsherwin",
+    "date": "2006-03-31T19:51:07",
+    "type": "comment",
+    "content_html": "<p>Actually, if I lumped you into the purist camp, it’s only when things like “all wrong” are thrown out.</p>\n<p>You excused yourself from this camp when you say you don’t hold to the thought of “if you don’t use TDD you suck.”</p>\n<p>More so, the purist thoughts in me comes out when people comment and they haven’t even heard the statements, read his followup, etc. and make naysaying comments.  Your site is not the only one to take this up by the way.</p>"
+  },
+  {
+    "id": 725,
+    "parent": 0,
+    "author_name": "Chris Donnan",
+    "author_url": "http://chrisdonnan.com/blog",
+    "date": "2006-04-03T15:27:01",
+    "type": "comment",
+    "content_html": "<p>I think that all too often people practice TDD without the other supporting practices. If people try to do TDD, but do not practice IoC for example – their tests will be much harder to write – and it will be more frustrating, less useful etc. It is like taking something out of the context it was intended to be used in. I have seen this happen. That being said – I believe that TDD has value without things like IoC, but when used WITH IoC, mocks, etc – the value increases greatly.</p>\n<p>Thanks for always providing an interesting read \uD83D\uDE42</p>\n<p>-Chris</p>\n<p>(<br>\nps – I elaborate here – <a href=\"http://chrisdonnan.com/blog/2006/04/03/rocky-and-jeffrey-battle-on-about-test-driven-development-and-my-2-cents/\" rel=\"nofollow ugc\">http://chrisdonnan.com/blog/2006/04/03/rocky-and-jeffrey-battle-on-about-test-driven-development-and-my-2-cents/</a> )</p>"
+  },
+  {
+    "id": 726,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-04-03T15:35:58",
+    "type": "comment",
+    "content_html": "<p>Chris,<br>\nThanks for the comment and the related post.  I agree that other tools complement TDD and vise-versa.    TDD without other tools and practices (and solid OO design) _would_ be pretty weak. \uD83D\uDE42</p>"
+  },
+  {
+    "id": 727,
+    "parent": 0,
+    "author_name": "Mike S.",
+    "author_url": "http://",
+    "date": "2006-04-04T07:21:00",
+    "type": "comment",
+    "content_html": "<p>TDD is both a testing and a design methodology.  The key word is “a”.  It is never described as “the” methdology and so it isn’t meant to be the only testing methodology used on a project.  But to not validate it as a testing methodology in my opinion misses one of its best benefits which helps keep development solidly on the rails.  I think of it as a controller of sorts and prevents code from getting ugly and unwieldy by never letting it stray too far.</p>"
+  },
+  {
+    "id": 728,
+    "parent": 0,
+    "author_name": "John Williams",
+    "author_url": "http://",
+    "date": "2006-04-05T21:14:13",
+    "type": "comment",
+    "content_html": "<p>Look here… the “reality” of TDD, is that most developers are doing real TDD: <a href=\"http://secretgeek.net/TODO_driv_dev.asp\" rel=\"nofollow ugc\">http://secretgeek.net/TODO_driv_dev.asp</a>.</p>\n<p>All the TDD/XP jihadists need to get a grip. You’re not getting a virgin when you complete your project: <a href=\"http://www.softwarereality.com/ExtremeProgrammingRefactored.jsp\" rel=\"nofollow ugc\">http://www.softwarereality.com/ExtremeProgrammingRefactored.jsp</a></p>\n<p>In the “real” world, NOT the echo-chamber of the blabosphere, managers and developers with real deadlines are going to be a very hard sell for TDD, pair programming and other such “enlightened” practices. Because people don’t agree with TDD/XP practices and may use other “passe” methodologies does NOT make them wrong. There are many ways to skin a cat and combining Unit Testing with other more established practices is how the “real” world is going to use “Agile” methodologies, NOT by following the Agile manifesto to their death. Come to think of it, didn’t the unabomber have a manifesto? Oh ya, right. He was crazy too… \uD83D\uDE09</p>"
+  },
+  {
+    "id": 729,
+    "parent": 0,
+    "author_name": "Developer",
+    "author_url": "http://",
+    "date": "2006-04-25T22:32:49",
+    "type": "comment",
+    "content_html": "<p>I think you are being very arrogant…You speek like if your opinions were the only right thing in the world. There are lot of people out there working without TDD and they are successfull as there are a lot of people out there with TDD that are not (take a glance at the CHAOS reports, from the standish group).</p>\n<p>Saying this, I am not advocating again TDD, which I think is great. What I would like to express is that there are other things that can lead to success or failure. I think communication </p>\n<p>Remember: there is no silver bullet! </p>\n<p>And remember too: you are not the owner of the truth!</p>"
+  },
+  {
+    "id": 730,
+    "parent": 0,
+    "author_name": "james governor",
+    "author_url": "http://www.redmonk.com/jgovernor",
+    "date": "2006-04-27T09:32:56",
+    "type": "comment",
+    "content_html": "<p>We have been thinking about taking this debate into a closely related space- anyone for test-driven SOA?<br>\n<a href=\"http://www.redmonk.com/jgovernor/archives/001504.html\" rel=\"nofollow ugc\">http://www.redmonk.com/jgovernor/archives/001504.html</a></p>\n<p>So Jeffrey – I hope you get a chance to hook up with Cote on agile issues in Austin soon. Agility and .NET and Chuys sounds good! </p>"
+  },
+  {
+    "id": 731,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-04-27T13:02:13",
+    "type": "comment",
+    "content_html": "<p>James,<br>\nI did meet with Cote last week.  Nice guy.  We’re talking about growing the Agile community in the Austin area.</p>"
+  }
+]

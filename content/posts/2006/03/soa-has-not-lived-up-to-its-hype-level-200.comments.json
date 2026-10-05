@@ -1,0 +1,20 @@
+[
+  {
+    "id": 672,
+    "parent": 0,
+    "author_name": "John Wood",
+    "author_url": "http://dotnetjunkies.com/weblog/johnwood",
+    "date": "2006-03-09T15:45:55",
+    "type": "comment",
+    "content_html": "<p>Given my blog shows up in the first couple of results I feel obliged to chime in. I think the only reason it’s seemingly cooled down is because less people are arguing about its merits. Not because it’s not relevant, but simply because a) the arguments have already been hashed out and there’s plenty of material to look up if you’re unsure what SOA is and b) at least in my experience, the people who used to be arguing against it are now using SOA so there’s less people to argue with and less reason to hype it up. \uD83D\uDE42</p>\n<p>I think there is a lot of misinformation about SOA out there. At least, I think the focus is perhaps misplaced. Rockford Lhotka wrote a post last year about ‘service oriented design’ (<a href=\"http://www.lhotka.net/WeBlog/SomeServiceOrientedDesignThought.aspx\" rel=\"nofollow ugc\">http://www.lhotka.net/WeBlog/SomeServiceOrientedDesignThought.aspx</a>), as opposed to SOA. SOD (bit of an unfortunate acronym) looks at SOA from a more theoretical standpoint rather than implementation specifics like XML and SOAP. A lot of people who use transaction scripts as a design pattern, or basically who have been developing exclusively with datasets, are already using many of the concepts in SOD. I think service oriented design is very important because it talks about something that has been somewhat missed – using services internally, rather than simply as a way of integrating disparate systems. In other words developing fine grained, rather than purely coarse grained, services. There are plenty of benefits of using services inside systems, but it deserves a post of its own – hopefully something I’ll touch on in the near future. </p>"
+  },
+  {
+    "id": 673,
+    "parent": 0,
+    "author_name": "Udi Dahan - The Software Simplist",
+    "author_url": "http://www.UdiDahan.com",
+    "date": "2006-03-12T11:48:29",
+    "type": "comment",
+    "content_html": "<p>Nothing ever lives up to its hype – that’s why its called hype.</p>\n<p>Is SOA only about integration? Isn’t all programming some kind of integration, just at different levels of abstraction?</p>\n<p>If you view your system as a System of systems, then I think that SOA has value for you today.</p>"
+  }
+]

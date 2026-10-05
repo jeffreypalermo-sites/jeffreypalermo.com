@@ -1,0 +1,72 @@
+---
+wp_id: 383
+title: How to explicitly fail a FIT test while using the new DoFixture – level 300
+slug: how-to-explicitly-fail-a-fit-test-while-using-the-new-dofixture-level-300
+permalink: /2006/02/how-to-explicitly-fail-a-fit-test-while-using-the-new-dofixture-level-300/
+date: 2006-02-23T21:08:00
+date_utc: 2006-02-23T21:08:00Z
+modified: 2006-02-23T21:08:00
+format: html
+tags:
+- fit
+excerpt: The FitLibrary has been recently ported to .Net, and I love using the DoFixture. One problem is that the normal DoRow and DoCell methods of the Fixture class don’t run in the DoFixture. With other fixtures, I’m used to hooking into to these places in order to spread logic throughout my FIT test. DoFixture uses […]
+comments_open: true
+---
+<p>The FitLibrary has been recently ported to .Net, and I love using the DoFixture.&nbsp; One problem is that the normal DoRow and DoCell methods of the Fixture class don’t run in the DoFixture.&nbsp; With other fixtures, I’m used to hooking into to these places in order to spread logic throughout my FIT test.&nbsp; DoFixture uses two new methods:&nbsp; <br>System.Collections.IEnumerable ParameterCells(CellRange theCells)<br>and<br>System.Collections.IEnumerable MethodCells(CellRange theCells)<br><br>This is how the DoFixture implements it’s special behavior.&nbsp; For example:<br>|MyDoFixture|<br>|Run System|<br>|Make Sure File|taxes.txt|Was Saved|</p>
+<p>This is a simple fixture that makes sure the system saves a file “taxes.txt”.&nbsp; Here, I’m not using the built-in Check method.&nbsp; I’m implementing one myself.&nbsp; Either the file was saved or it wasn’t.</p>
+<p>My underlying fixture will look like this:</p>
+<div style="border:1pt solid windowtext; padding:0; background:white none repeat scroll 0 50%; color:black">
+<p><span style="color:blue">using</span> fit;</p>
+<p><span style="color:blue">using</span> fit.exception;</p>
+
+<p><span style="color:blue">public</span> <span style="color:blue">class</span> MyDoFixture : DoFixture</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> MyDoFixture() </p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">void</span> RunSystem()</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:green">//hook into system</span></p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">void</span> MakeSureFileWasSaved()</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:green">//hook into system to make sure file was save.&nbsp; if it wasn’t. ..</span></p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">throw</span> <span style="color:blue">new</span> fit.exception.FitFailureException(“File should have been saved.”)</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+</div>
+<p>This works, but will throw an exception instead of failing the test.&nbsp; I need to register a FIT failure and not an exception.&nbsp; FIT treats these two differently.&nbsp; In order to fail a FIT test, I have to use the Wrong(Parse theParse) method.&nbsp; I have to have the current Parse object in order to call this method.&nbsp; The Parse object is the current cell/row/table.&nbsp; The FIT table is composed of a Parse hierarchy.&nbsp; I don’t really like the way it’s set up, but that’s not the point of this post.</p>
+<p>In order to call the Wrong(…) method to fail the test correctly with a reason to output to the screen, I must obtain the current Parse object.&nbsp; Because the DoFixture doesn’t fire the virtual DoCell or DoRow method, I can’t use these.&nbsp; Instead, I’ll override a DoFixture method that fires for every row and modify my fixture like this:</p>
+<div style="border:1pt solid windowtext; padding:0; background:white none repeat scroll 0 50%; color:black">
+<p><span style="color:blue">using</span> fit;</p>
+<p><span style="color:blue">using</span> fit.exception;</p>
+
+<p><span style="color:blue">public</span> <span style="color:blue">class</span> MyDoFixture : DoFixture</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> Parse _currentParse;</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> MyDoFixture() </p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">void</span> RunSystem()</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:green">//hook into system</span></p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">void</span> MakeSureFileWasSaved()</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:green">//hook into system to make sure file was save.&nbsp; if it wasn’t. ..</span></p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">this</span>.Wrong(_currentParse, “File wasn’t saved.”);</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span> <span style="color:blue">override</span> System.Collections.IEnumerable MethodCells(CellRange theCells)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _currentParse = theCells.Cells;</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span> <span style="color:blue">base</span>.MethodCells(theCells);</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+</div>
+<p>With this code, I have my fixture maintain the current Parse (I’m tracking the current row) so that when a line fails, I can properly fail the test with an appropriate message.&nbsp; This is a much better solution that throwing an exception.&nbsp; Throwing an exception means that the test environment blew up and needs to be fixed.&nbsp; Test failures mean the code broke.&nbsp; An exceptioin means the FitNesse server broke..</p>

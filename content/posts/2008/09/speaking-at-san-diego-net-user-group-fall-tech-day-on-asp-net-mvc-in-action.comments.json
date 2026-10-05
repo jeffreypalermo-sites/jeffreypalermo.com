@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2526,
+    "parent": 0,
+    "author_name": "Peter",
+    "author_url": "http://",
+    "date": "2008-09-30T13:52:03",
+    "type": "comment",
+    "content_html": "<p>Your presentation to the User Group was excellent and I really enjoyed it. I look forward to seeing the slides and samples.<br>\nAre you going to update your Google Code reference project as well?<br>\nWill your book on MVC also cover the \"Onion Architecture\" that you went over in the first session?</p>"
+  }
+]

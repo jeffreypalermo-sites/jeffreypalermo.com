@@ -1,0 +1,20 @@
+[
+  {
+    "id": 409,
+    "parent": 0,
+    "author_name": "Sam",
+    "author_url": "http://srsmoot.blogspot.com",
+    "date": "2005-08-13T09:12:21",
+    "type": "comment",
+    "content_html": "<p>Maybe it’s just me, but compared to Prototype, Sarissa looks downright painful. \uD83D\uDE09</p>\n<p>If you want to see how simple Ajax can be, hit up <a href=\"http://prototype.conio.net/\" rel=\"nofollow ugc\">http://prototype.conio.net/</a> and check out Rico, Behaviour, and Effects (script.tacul.ous) while you’re at it.</p>\n<p>Note: You can get Prototype 1.4 through the repository, which fixes a content-length bug, but you’ll still need to modify the evalScripts Regex to include r if your editor of choice spits out DOS style newlines.</p>"
+  },
+  {
+    "id": 410,
+    "parent": 0,
+    "author_name": "Jay Kimble",
+    "author_url": "http://www.codebetter.com/blogs/jay.kimble",
+    "date": "2005-08-16T13:35:57",
+    "type": "comment",
+    "content_html": "<p>For both Sarissa and Prototype are part of the solution.  You also need a way to handle things on the server side… I’ll leave it at that.</p>"
+  }
+]

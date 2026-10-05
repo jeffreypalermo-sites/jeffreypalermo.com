@@ -1,0 +1,99 @@
+---
+wp_id: 230
+title: Use parts of the ASP.NET runtime as providers for services the business layer might need – level 300
+slug: use-parts-of-the-asp-net-runtime-as-providers-for-services-the-business-layer-might-need-level-300
+permalink: /2005/05/use-parts-of-the-asp-net-runtime-as-providers-for-services-the-business-layer-might-need-level-300/
+date: 2005-05-12T13:26:00
+date_utc: 2005-05-12T13:26:00Z
+modified: 2005-05-12T13:26:00
+format: html
+excerpt: We all know to use the Strategy pattern to let the domain assembly know where to get and persist data. Our domain assembly has no references to any other custom assembly, but all assemblies reference the domain. We use the Dependency-Inversion Principle to accomplish this for data, but what about other services? For instance, what […]
+comments_open: true
+---
+<p>We all know to use the Strategy pattern to let the domain assembly know where to get and persist data.&nbsp; Our domain assembly has no references to any other custom assembly, but all assemblies reference the domain.&nbsp; We use the Dependency-Inversion Principle to accomplish this for data, but what about other services?</p>
+<p>For instance, what if different domain object would benefit from knowledge of some state that is not AppDomain-specific, and not user-specific, but request-specific?&nbsp; The ASP.NET runtime offers a great statebag for request-specific information.&nbsp; HttpContext.Items.&nbsp; This collection of key/value pairs can be used in an ASP.NET context.&nbsp; Of course, we don’t want our model to depend on the ASP.NET runtime.&nbsp; In fact, our model doesn’t care.&nbsp; It will not reference any of our assemblies and especially not System.Web.&nbsp; How then can we make a domain object interact with this Items collection?&nbsp; </p>
+<p>Simple.&nbsp; Use a Strategy that allows injecting an adapter class into the domain object.&nbsp; The adapter class can live at the ASP.NET runtime layer and server as a proxy for interaction.&nbsp; First, in the domain layer, we must define the appropriate interface required:</p>
+<div><span>&nbsp;&nbsp;&nbsp;&nbsp;5</span>&nbsp;<span>public</span> <span>interface</span> IUserContextCacheable<br><span>&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;{<br><span>&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>void</span> SaveUserState(<span>object</span> key, <span>object</span> state);<br><span>&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>object</span> GetUserState(<span>object</span> key);<br><span>&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;}<br></div>
+<p>Any class implementing this can serve as our state or cache provider.&nbsp; For this example, I have two domain object that will consume this.&nbsp; There are many ways to inject a dependency, so use your imagination.&nbsp; I’m presenting the simplest way.</p>
+<div><span>&nbsp;&nbsp;&nbsp;&nbsp;5</span>&nbsp;<span>public</span> <span>class</span> Customer<br><span>&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;{<br><span>&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>public</span> <span>void</span> DoSomething() {<br><span>&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>// Do something and save the state in cache.</span><br><span>&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; UserContextCache.Instance.SaveUserState(“MyState”, “I went to the store at ” + DateTime.Now.ToString(“hh:mm:ss”) + “.”);<br><span>&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span>&nbsp;&nbsp;&nbsp;11</span>&nbsp;}<br></div><!--EndFragment-->
+<div><span>&nbsp;&nbsp;&nbsp;&nbsp;5</span>&nbsp;<span>public</span> <span>class</span> CustomerTracker<br><span>&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;{<br><span>&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>public</span> <span>string</span> GetWhatWasDone() {<br><span>&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>// Check to see if something was done.</span><br><span>&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>object</span> o = UserContextCache.Instance.GetUserState(“MyState”);<br><span>&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>if</span>(o != <span>null</span>) <span>return</span> o.ToString();<br><span>&nbsp;&nbsp;&nbsp;11</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>else</span> <span>return</span> <span>null</span>;<br><span>&nbsp;&nbsp;&nbsp;12</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span>&nbsp;&nbsp;&nbsp;13</span>&nbsp;}<br></div><!--EndFragment-->
+<p>Customer will save a piece of state, and later, CustomerTracker will benefit from it being there.&nbsp; In our domain layer, we also have a singleton to hold an instance of IUserContextCacheable.&nbsp; This singleton will be set by the ASP.NET layer at startup.</p>
+<div><span>&nbsp;&nbsp;&nbsp;&nbsp;3</span>&nbsp;<span>public</span> <span>class</span> UserContextCache<br><span>&nbsp;&nbsp;&nbsp;&nbsp;4</span>&nbsp;{<br><span>&nbsp;&nbsp;&nbsp;&nbsp;5</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>private</span> <span>static</span> IUserContextCacheable _singleton;<br><span>&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;<br><span>&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>public</span> <span>static</span> IUserContextCacheable Instance {<br><span>&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>get</span> { <span>return</span> _singleton; }<br><span>&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>set</span> { _singleton = <span>value</span>; }<br><span>&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span>&nbsp;&nbsp;&nbsp;11</span>&nbsp;<br><span>&nbsp;&nbsp;&nbsp;12</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>private</span> UserContextCache()<br><span>&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp; {}<br><span>&nbsp;&nbsp;&nbsp;14</span>&nbsp;}<br></div>
+<p><!--EndFragment-->Now, in our ASP.NET layer, we have this class:</p>
+<div><span>&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;<span>public</span> <span>class</span> RequestCache : Model.IUserContextCacheable<br><span>&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;{<br><span>&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>public</span> <span>void</span> SaveUserState(<span>object</span> key, <span>object</span> state) {<br><span>&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; HttpContext.Current.Items.Add(key, state);<br><span>&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span>&nbsp;&nbsp;&nbsp;11</span>&nbsp;<br><span>&nbsp;&nbsp;&nbsp;12</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>public</span> <span>object</span> GetUserState(<span>object</span> key) {<br><span>&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>return</span> HttpContext.Current.Items[key];<br><span>&nbsp;&nbsp;&nbsp;14</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span>&nbsp;&nbsp;&nbsp;15</span>&nbsp;}<br></div>
+<p>It implements the required interface, and our controller will use an instance of this when constructing the domain objects.&nbsp; An instance of this is set to the singleton in the domain layer using our Global.asax (you could use a number of other methods as well).</p>
+<div><span>&nbsp;&nbsp;&nbsp;24</span>&nbsp;<span>protected</span> <span>void</span> Application_Start(Object sender, EventArgs e)<br><span>&nbsp;&nbsp;&nbsp;25</span>&nbsp;{<br><span>&nbsp;&nbsp;&nbsp;26</span>&nbsp;&nbsp;&nbsp;&nbsp; Model.UserContextCache.Instance = <span>new</span> RequestCache();<br><span>&nbsp;&nbsp;&nbsp;27</span>&nbsp;}<br></div>
+<p><!--EndFragment-->Here’s a snippet of code that, for demonstration purposes can be placed in any page or user control (or any control for that matter):<br></p>
+<div><span>&nbsp;&nbsp;&nbsp;22</span>&nbsp;<span>this</span>.TraceEnabled = <span>true</span>;<br><span>&nbsp;&nbsp;&nbsp;23</span>&nbsp;<br><span>&nbsp;&nbsp;&nbsp;24</span>&nbsp;Trace.Warn(“To prove that no previous state exists, I’ll try to get ‘MyState'”);<br><span>&nbsp;&nbsp;&nbsp;25</span>&nbsp;Trace.Warn(“MyState = ” + <span>this</span>.Context.Items[“MyState”]);<br><span>&nbsp;&nbsp;&nbsp;26</span>&nbsp;<br><span>&nbsp;&nbsp;&nbsp;27</span>&nbsp;Trace.Warn(“Invoking business object, Customer, to do something.”);<br><span>&nbsp;&nbsp;&nbsp;28</span>&nbsp;Customer f = <span>new</span> Customer();<br><span>&nbsp;&nbsp;&nbsp;29</span>&nbsp;f.DoSomething();<br><span>&nbsp;&nbsp;&nbsp;30</span>&nbsp;<br><span>&nbsp;&nbsp;&nbsp;31</span>&nbsp;Trace.Warn(“Invoking CustomerTracker, another business object that benefits from this knowledge.”);<br><span>&nbsp;&nbsp;&nbsp;32</span>&nbsp;CustomerTracker b = <span>new</span> CustomerTracker();<br><span>&nbsp;&nbsp;&nbsp;33</span>&nbsp;<span>string</span> state = b.GetWhatWasDone();<br><span>&nbsp;&nbsp;&nbsp;34</span>&nbsp;<br><span>&nbsp;&nbsp;&nbsp;35</span>&nbsp;Trace.Warn(“Bar used the following state: “” + state + “””);<br></div><!--EndFragment-->
+<p><!--EndFragment-->When you run this page, you’ll see Trace enabled and the following outputted to the screen:</p>
+
+<table cellspacing="0" cellpadding="0" border="0">
+<tbody>
+<tr>
+<th class="alt" align="left" colspan="10"><br>
+<h3><b>Trace Information</b></h3></th></tr>
+<tr class="subhead" align="left">
+<th>Category</th>
+<th>Message</th>
+<th>From First(s)</th>
+<th>From Last(s)</th></tr>
+<tr>
+<td></td>
+<td>To prove that no previous state exists, I’ll try to get ‘MyState’</td>
+<td></td>
+<td></td></tr>
+<tr class="alt">
+<td></td>
+<td>MyState = </td>
+<td>0.000013</td>
+<td>0.000013</td></tr>
+<tr>
+<td></td>
+<td>Invoking business object, Customer, to do something.</td>
+<td>0.000032</td>
+<td>0.000019</td></tr>
+<tr class="alt">
+<td></td>
+<td>Invoking CustomerTracker, another business object that benefits from this knowledge.</td>
+<td>0.000734</td>
+<td>0.000701</td></tr>
+<tr>
+<td></td>
+<td>Bar used the following state: “I went to the store at 07:17:18.”</td>
+<td>0.001141</td>
+<td>0.000407</td></tr>
+<tr class="alt">
+<td>aspx.page</td>
+<td>Begin PreRender</td>
+<td>0.001162</td>
+<td>0.000021</td></tr>
+<tr>
+<td>aspx.page</td>
+<td>End PreRender</td>
+<td>0.001181</td>
+<td>0.000019</td></tr>
+<tr class="alt">
+<td>aspx.page</td>
+<td>Begin SaveViewState</td>
+<td>0.001252</td>
+<td>0.000072</td></tr>
+<tr>
+<td>aspx.page</td>
+<td>End SaveViewState</td>
+<td>0.001374</td>
+<td>0.000122</td></tr>
+<tr class="alt">
+<td>aspx.page</td>
+<td>Begin Render</td>
+<td>0.001390</td>
+<td>0.000016</td></tr>
+<tr>
+<td>aspx.page</td>
+<td>End Render</td>
+<td>0.073195</td>
+<td>0.071805</td></tr></tbody></table>
+<hr>
+
+<p>This proves that our ASP.NET runtime adapter class works as intended and allows our domain layer to store things in the ASP.NET runtime.&nbsp; This prevents us from having to implement our own caching mechanism that has the correct scope.</p>
+<p>Using the Strategy pattern, we can hook up pretty much any outside service with an adapter class (adapter is my word).&nbsp; </p>
+<p>I’ve zipped up this sample solution, and it is available on my <a href="http://www.palermo.cc/MyToolDownloads/Default.aspx">downloads page</a>.</p>

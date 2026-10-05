@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2653,
+    "parent": 0,
+    "author_name": "ignaci",
+    "author_url": "http://",
+    "date": "2010-03-07T11:03:35",
+    "type": "comment",
+    "content_html": "<p>I think it’s more about branching patterns than going or not going distributed. Check this guide about DVCS for Visual Studio developers using Plastic <a href=\"http://codicesoftware.blogspot.com/2010/03/distributed-development-for-windows.html\" rel=\"nofollow\">codicesoftware.blogspot.com/…/distributed-dev</a> </p>"
+  }
+]

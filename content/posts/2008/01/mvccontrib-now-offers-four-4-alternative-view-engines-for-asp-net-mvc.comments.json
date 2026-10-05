@@ -1,0 +1,47 @@
+[
+  {
+    "id": 2270,
+    "parent": 0,
+    "author_name": "Atilla Ozgur",
+    "author_url": "http://",
+    "date": "2008-01-29T21:44:38",
+    "type": "comment",
+    "content_html": "<p>It seems that Brail sample does not work. According to this page.<br>\n<a href=\"http://www.codeplex.com/MVCContrib/Wiki/View.aspx?title=Brail&amp;referringTitle=Documentation\" rel=\"nofollow ugc\">http://www.codeplex.com/MVCContrib/Wiki/View.aspx?title=Brail&amp;referringTitle=Documentation</a><br>\nBrail extensions needs this dll.<br>\nBoo.Lang.Extensions.dll</p>\n<p>I could not find this dll in<br>\nMVCContrib.release,Castle 1.0 RC3 ,SharpDevelop or Boo download itself </p>\n<p>Could you tell me where I can find this dll.</p>"
+  },
+  {
+    "id": 2271,
+    "parent": 0,
+    "author_name": "Jeremy Skinner",
+    "author_url": "http://blog.jeremyskinner.me.uk",
+    "date": "2008-01-30T08:11:05",
+    "type": "comment",
+    "content_html": "<p>@Atilla Ozgur:</p>\n<p>The Boo DLLs can be found at <a href=\"http://mvccontrib.googlecode.com/svn/trunk/bin/boo/\" rel=\"nofollow ugc\">http://mvccontrib.googlecode.com/svn/trunk/bin/boo/</a><br>\nThis is a custom, patched version of Boo that contains support for extension methods (built from the latest trunk).</p>\n<p>I’ll update the MvcContrib wiki to make this clear.</p>\n<p>Jeremy</p>"
+  },
+  {
+    "id": 2272,
+    "parent": 0,
+    "author_name": "Kevin",
+    "author_url": "http://www.kevinsouthworth.com",
+    "date": "2008-02-02T03:19:35",
+    "type": "comment",
+    "content_html": "<p>This is great news!  Really happy about this \uD83D\uDE42</p>"
+  },
+  {
+    "id": 2273,
+    "parent": 0,
+    "author_name": "Tuna Toksoz",
+    "author_url": "http://",
+    "date": "2008-02-05T10:07:19",
+    "type": "comment",
+    "content_html": "<p>I wish we had django view engine, too. It is too complex for me to write.</p>"
+  },
+  {
+    "id": 2274,
+    "parent": 0,
+    "author_name": "Eric",
+    "author_url": "http://",
+    "date": "2008-02-07T15:24:53",
+    "type": "comment",
+    "content_html": "<p>It’s nice to have a few  alternatives… </p>"
+  }
+]

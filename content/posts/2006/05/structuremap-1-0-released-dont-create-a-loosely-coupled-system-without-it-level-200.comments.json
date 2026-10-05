@@ -1,0 +1,29 @@
+[
+  {
+    "id": 870,
+    "parent": 0,
+    "author_name": "Melvin Lee",
+    "author_url": "http://",
+    "date": "2006-05-09T18:26:03",
+    "type": "comment",
+    "content_html": "<p>Hi Jeffrey,</p>\n<p>Since I’m about to start a new home project, I like to try your .Net 2.0 port of StructureMap.</p>\n<p>Regards,<br>\nMelvin Lee</p>"
+  },
+  {
+    "id": 871,
+    "parent": 0,
+    "author_name": "jdn",
+    "author_url": "http://",
+    "date": "2006-05-10T03:38:44",
+    "type": "comment",
+    "content_html": "<p>I’m also interested in the 2.0 port.  </p>\n<p>BTW, I tried to send an email through the email web page, and got a delivery failure due to the email address it tried to send it to.</p>"
+  },
+  {
+    "id": 872,
+    "parent": 0,
+    "author_name": "PrideRoCK",
+    "author_url": "http://www.hidotnet.com",
+    "date": "2006-05-21T16:54:03",
+    "type": "comment",
+    "content_html": "<p>I’m interested in the 2.0 port.</p>"
+  }
+]

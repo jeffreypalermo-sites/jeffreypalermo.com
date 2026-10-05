@@ -1,0 +1,16 @@
+---
+wp_id: 97
+title: .Net 2.0 -> /bin being changed to /Application_Assemblies – level 200
+slug: net-2-0-bin-being-changed-to-application_assemblies-level-200
+permalink: /2004/09/net-2-0-bin-being-changed-to-application_assemblies-level-200/
+date: 2004-09-02T22:02:00
+date_utc: 2004-09-02T22:02:00Z
+modified: 2004-09-02T22:02:00
+format: html
+excerpt: Following up with another blog post, here’s my opinion on these “special folders”. We should be able to configure these in the web.config or machine.config. For instance, for small web sites with some classes, they are supposed to go in Application_Code. Why just one folder. I should be able to configure 1 or many dynamically […]
+comments_open: true
+---
+<p>Following up with <a href="http://weblogs.asp.net/sanjeebsarangi/archive/2004/08/31/223182.aspx">another blog post</a>, here’s my opinion on these “special folders”.&nbsp; </p>
+<p>We should be able to configure these in the web.config or machine.config.&nbsp; For instance, for small web sites with some classes, they are supposed to go in Application_Code.&nbsp; Why just one folder.&nbsp; I should be able to configure 1 or many dynamically compiled folders.&nbsp; Setting hard-coded names is going to cause a problem for *someone*.&nbsp; And why just one folder?</p>
+<p>/bin will work for backwards compatibility with /Application_Assemblies, but Application_Themes?&nbsp; I would configure my own site as /aspnet_client/something/Themes and keep all special stuff under /aspnet_client.&nbsp; Because of this I need to able to configure these directories.&nbsp; I have submitted this <a href="http://lab.msdn.microsoft.com/productfeedback/viewfeedback.aspx?feedbackid=15cf029e-93c6-4ee7-ade2-be521a80d489">suggestion on the VS 2005 Feedback Center</a>.</p>
+<p>I encourage everyone to port a web app to VS 2005 and note the issues that come up and log suggestions and bus to the Feedback Center.</p>

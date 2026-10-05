@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2677,
+    "parent": 0,
+    "author_name": "Arthur",
+    "author_url": "http://",
+    "date": "2011-01-17T15:12:34",
+    "type": "comment",
+    "content_html": "<p>As an aside: is JavaScript supported for development with WebMatrix?</p>"
+  }
+]

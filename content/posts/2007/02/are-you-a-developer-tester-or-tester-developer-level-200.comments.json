@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1176,
+    "parent": 0,
+    "author_name": "Jason Gerard",
+    "author_url": "http://www.objectfuture.com",
+    "date": "2007-02-14T16:21:43",
+    "type": "comment",
+    "content_html": "<p>Unfortunately, in many organizations that have dedicated testers, they are just employees plucked from the user pool. They don’t know about concepts such as automated testing or even negative testing for that matter.</p>\n<p>In the eyes of management, it’s cheaper to take someone from claims processing making $19,000 a year and pay them $24,000 a year to be a “tester” of the claims system than to acquire these kinds of testing engineers.</p>\n<p>I’ve worked with several organizations where this was the case.</p>"
+  }
+]

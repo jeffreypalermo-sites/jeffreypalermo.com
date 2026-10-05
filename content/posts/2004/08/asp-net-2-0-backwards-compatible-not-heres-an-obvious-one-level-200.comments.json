@@ -1,0 +1,47 @@
+[
+  {
+    "id": 118,
+    "parent": 0,
+    "author_name": "Kevin Daly",
+    "author_url": "http://",
+    "date": "2004-08-16T17:12:00",
+    "type": "comment",
+    "content_html": "<p>I think MS would argue that they can’t guarantee not breaking an unsupported feature, such as Head exposed to the server.<br>\nI was doing the same thing with Title for a while but it drove me nuts because any change to the UI would wipe the runat=\"server\" attribute.</p>"
+  },
+  {
+    "id": 119,
+    "parent": 0,
+    "author_name": "Anders Norås",
+    "author_url": "http://",
+    "date": "2004-08-17T07:32:00",
+    "type": "comment",
+    "content_html": "<p>The head element in the ASP.NET 2.0 page template is by default declared to run at the server. In addition the System.Web.UI.HtmlControls namespace has a new class called HtmlHead defined. When you set the id attribute of the head element to “Head” this becomes a member of your class (which inherits from System.Web.UI.Page).<br>\nThe reason for you not seeing the code defining this member is that ASP.NET 2.0 uses partial classes to separate user defined code from tool generated code.<br>\nAs a result of this you get a member naming conflict when defining an additional member called “Head” typed System.Web.UI.HtmlControls.HtmlGenericControl.</p>\n<p>To solve your problem using your existing code which I reckon is similar to this:<br>\nASPX snippet:<br>\n&lt;head id=\"Head\" runat=\"server\"&gt;</p>\n<p>Codebehind snippet:<br>\n\t\tprotected HtmlGenericControl Head;<br>\n\t\tprivate void Page_Load(object sender, System.EventArgs e)<br>\n\t\t{<br>\n\t\t\tHtmlGenericControl meta=new HtmlGenericControl(\"meta\");<br>\n\t\t\tmeta.Attributes.Add(\"name\",\"pragma\");<br>\n\t\t\tmeta.Attributes.Add(\"content\",\"no-cache\");<br>\n\t\t\tHead.Controls.Add(meta);<br>\n\t\t}</p>\n<p>Remove the declaration of the “Head” member in the code behind file.</p>\n<p>Another option is to add your metadata using the Page.Header.Metadata collection like this:<br>\nPage.Header.Metadata.Add(\"name\", \"pragma\");<br>\nPage.Header.Metadata.Add(“content”,”no-cache”):</p>"
+  },
+  {
+    "id": 120,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-08-17T09:34:00",
+    "type": "comment",
+    "content_html": "<p>Yeah, that’s exactly what I did to fix it.  I decided to make this post to make this issue public.  The more I dive into Whidbey, the more issues I encounter.  Yes, there are always workarounds, but I wish v2.0 wasn’t touted as 100% compatible.</p>"
+  },
+  {
+    "id": 121,
+    "parent": 0,
+    "author_name": "Sam",
+    "author_url": "http://",
+    "date": "2005-05-04T13:12:00",
+    "type": "comment",
+    "content_html": "<p>Page.Header.Metadata.Add no longer works in the April 2005 beta.  Not sure why they removed it, but its gone… wondering if there is another easier way now, so far I have not found it.</p>\n<p>Sam</p>"
+  },
+  {
+    "id": 122,
+    "parent": 0,
+    "author_name": "TeroTech.Com",
+    "author_url": "http://",
+    "date": "2005-05-18T10:49:00",
+    "type": "comment",
+    "content_html": "<p>Exactly my problem \uD83D\uDE41 …. why remove something that wasn’t broken in the first place !!</p>"
+  }
+]

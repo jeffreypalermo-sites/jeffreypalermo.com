@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2661,
+    "parent": 0,
+    "author_name": "Chris Benard",
+    "author_url": "http://chrisbenard.net",
+    "date": "2010-02-11T14:10:13",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,<br>\nCan you post a docx of the article so we can see higher res images and have one continuous document so we don’t have to deal with code magazine’s pagination?<br>\nAlso, this is a side note: can you take a look at this issue I submitted about codecampserver: <a href=\"http://code.google.com/p/codecampserver/issues/detail?id=64\" rel=\"nofollow\">code.google.com/…/detail</a><br>\nNobody has even acknowledged it, and unless I’m just being very stupid, it breaks the build of CCS if you’ve never pulled the source down before. Feel free to reply in the google issue so I don’t hijack this comment page.</p>"
+  }
+]

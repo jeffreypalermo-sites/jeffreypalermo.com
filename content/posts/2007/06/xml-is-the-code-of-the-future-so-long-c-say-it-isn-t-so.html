@@ -1,0 +1,27 @@
+---
+wp_id: 532
+title: Xml is the code of the future – so long C# – say it isn’t so.
+slug: xml-is-the-code-of-the-future-so-long-c-say-it-isn-t-so
+permalink: /2007/06/xml-is-the-code-of-the-future-so-long-c-say-it-isn-t-so/
+date: 2007-06-22T15:34:32
+date_utc: 2007-06-22T15:34:32Z
+modified: 2007-06-22T15:34:32
+format: html
+tags:
+- featured
+excerpt: Ok, so the title is a bit sarcastic. I remember the debut of Xml. We used it for data. It was a way to improve on comma-delimited strings. We converted from flat files to xml files for data. It wasn’t long before scripting could be expressed in Xml, and now I see teams with large […]
+comments_open: true
+---
+<p>Ok, so the title is a bit sarcastic.&nbsp; I remember the debut of Xml.&nbsp; We used it for data.&nbsp; It was a way to improve on comma-delimited strings.&nbsp; We converted from flat files to xml files for data.</p>
+<p>It wasn’t long before scripting could be expressed in Xml, and now I see teams with large libraries of executable Xml in the form of build scripts with <a href="http://nant.sourceforge.net/">NAnt</a>.</p>
+<p>I think it’s going to far, however.&nbsp; I’m beginning to hear that all software can now be expressed in Xml if you have the right tools.&nbsp; The implications of that is just shifting from C# programming to Xml programming.&nbsp; Whatever the language of execution is – that’s the programming language.</p>
+<p>I share <a href="http://ayende.com/Blog/archive/2007/06/06/Acropolis-Yet-Another-Executable-XML.aspx">Ayende’s concern for Xml programming</a>.&nbsp; Xml is not a 5th generation language.&nbsp; Just because designers can generate Xml instead of C# doesn’t mean code is going away.&nbsp; It just means that the chosen syntax is different for the generated code.</p>
+<p>My stance on code generation has always been:</p>
+<ul>
+<li>Machine generates code, human maintains (bad)</li>
+<li>Machine generates code, machine runs code, human never has to see code (good). i.e. C# to MSIL</li>
+<li>Machine generates code exactly how human would have written it anyway (good – just saves typing).</li>
+<li>Machine generates code, human has to modify code and then maintain (worst)</li>
+</ul>
+<p>Designers fall into the category that WANTS to be the 2nd bullet point, but that never happens.&nbsp; WinForms tried to do this with the .designer file, but that code still needed to be understood and tweaked from time to time.&nbsp; Designers don’t have good track records because they always constrain flexibility.&nbsp; When you hit a wall, you always have to fall back and change the generated code.&nbsp; That’s the problem.&nbsp; Good intentions, but it won’t happen that way.&nbsp; For it to work, the designer has to be the language.&nbsp; </p>
+<p>Designers come and designers go.&nbsp; Languages stay and evolve.</p>

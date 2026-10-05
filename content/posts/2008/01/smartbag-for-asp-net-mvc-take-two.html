@@ -1,0 +1,133 @@
+---
+wp_id: 602
+title: SmartBag for ASP.NET MVC, take two
+slug: smartbag-for-asp-net-mvc-take-two
+permalink: /2008/01/smartbag-for-asp-net-mvc-take-two/
+date: 2008-01-25T05:06:12
+date_utc: 2008-01-25T05:06:12Z
+modified: 2008-01-25T05:06:12
+format: html
+excerpt: Earlier, I announced the advent of the SmartBag for the ASP.NET MVC Framework. Quite a few folks commented on it, and it has been improved as a result of the comments. For more from me, add my feed at http://feeds.feedburner.com/jeffreypalermo. The main problem with the SmartBag prior to today was that they actual type of […]
+comments_open: true
+---
+<p>Earlier, I <a href="http://codebetter.com/blogs/jeffrey.palermo/archive/2008/01/19/introducing-the-smartbag-for-asp-net-mvc-and-soliciting-feedback.aspx">announced the advent of the SmartBag</a> for the ASP.NET MVC Framework.&nbsp; Quite a few folks commented on it, and it has been improved as a result of the comments.&nbsp; For more from me, add my feed at <a href="http://f"></a><a href="http://feeds.feedburner.com/jeffreypalermo">http://feeds.feedburner.com/jeffreypalermo</a>.</p>
+<p>The main problem with the SmartBag prior to today was that they actual type of the object passed was used as the key.&nbsp; This created a problem for polymorphism because proxied objects would be recorded as the actual type, and then when the view asked for them by the intended type, the object would not be found.&nbsp; I fixed this by having the Add method be generic and accept the intended type.&nbsp; This still looks pretty clean, allows multiple initialization, and supports proxied and subclassed objects.&nbsp; The full source code is still only in <a href="http://codecampserver.org">CodeCampServer</a>, so you can swipe it from there.</p>
+<p>Rather than address every capability, I think the tests best illustrate the current capabilities.&nbsp; If you’d like to see real code using the SmartBag, every controller and view in <a href="http://codecampserver.org">CodeCampServer</a> are currently employing it.&nbsp;&nbsp;I’m really close to moving it to MvcContrib and providing a sample there so that it can be used more generically as well as be integrated into ConventionController.&nbsp; I really think this ends up being a nicer experience both on the controller and the view.</p>
+<div>
+<div style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">   1:</span> [Test]</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">   2:</span> <span style="color:#0000ff">public</span> <span style="color:#0000ff">void</span> ShouldRetrieveSingleObjectByType()</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">   3:</span> {</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">   4:</span>     SmartBag bag = <span style="color:#0000ff">new</span> SmartBag();</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">   5:</span>     Url url = <span style="color:#0000ff">new</span> Url(<span style="color:#006080">"/asdf"</span>); <span style="color:#008000">//arbitrary object</span></pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">   6:</span>     bag.Add(url);</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">   7:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">   8:</span>     Assert.That(bag.Get&lt;Url&gt;(), Is.EqualTo(url));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">   9:</span>     Assert.That(bag.Get(<span style="color:#0000ff">typeof</span> (Url)), Is.EqualTo(url));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  10:</span> }</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  11:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  12:</span> [Test, ExpectedException(ExceptionType = <span style="color:#0000ff">typeof</span> (ArgumentException),</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  13:</span>     ExpectedMessage = <span style="color:#006080">"You can only add one default object for type 'System.Security.Policy.Url'."</span>)]</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  14:</span> <span style="color:#0000ff">public</span> <span style="color:#0000ff">void</span> AddingTwoDefaultObjectsOfSameTypeThrows()</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  15:</span> {</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  16:</span>     Url url1 = <span style="color:#0000ff">new</span> Url(<span style="color:#006080">"/1"</span>);</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  17:</span>     Url url2 = <span style="color:#0000ff">new</span> Url(<span style="color:#006080">"/2"</span>);</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  18:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  19:</span>     SmartBag bag = <span style="color:#0000ff">new</span> SmartBag();</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  20:</span>     bag.Add(url1);</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  21:</span>     bag.Add(url2);</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  22:</span> }</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  23:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  24:</span> [Test, ExpectedException(<span style="color:#0000ff">typeof</span> (ArgumentException),</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  25:</span>     ExpectedMessage = <span style="color:#006080">"No object exists with key 'System.Security.Policy.Url'."</span>)]</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  26:</span> <span style="color:#0000ff">public</span> <span style="color:#0000ff">void</span> ShouldGetMeaningfulExceptionIfObjectDoesntExist()</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  27:</span> {</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  28:</span>     SmartBag bag = <span style="color:#0000ff">new</span> SmartBag();</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  29:</span>     Url url = bag.Get&lt;Url&gt;();</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  30:</span> }</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  31:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  32:</span> [Test]</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  33:</span> <span style="color:#0000ff">public</span> <span style="color:#0000ff">void</span> ShouldReportContainsCorrectly()</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  34:</span> {</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  35:</span>     SmartBag bag = <span style="color:#0000ff">new</span> SmartBag();</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  36:</span>     bag.Add(<span style="color:#0000ff">new</span> Url(<span style="color:#006080">"/2"</span>));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  37:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  38:</span>     Assert.That(bag.Contains&lt;Url&gt;());</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  39:</span>     Assert.That(bag.Contains(<span style="color:#0000ff">typeof</span> (Url)));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  40:</span> }</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  41:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  42:</span> [Test]</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  43:</span> <span style="color:#0000ff">public</span> <span style="color:#0000ff">void</span> ShouldManageMoreThanOneObjectPerType()</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  44:</span> {</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  45:</span>     SmartBag bag = <span style="color:#0000ff">new</span> SmartBag();</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  46:</span>     bag.Add(<span style="color:#006080">"key1"</span>, <span style="color:#0000ff">new</span> Url(<span style="color:#006080">"/1"</span>));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  47:</span>     bag.Add(<span style="color:#006080">"key2"</span>, <span style="color:#0000ff">new</span> Url(<span style="color:#006080">"/2"</span>));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  48:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  49:</span>     Assert.That(bag.Get&lt;Url&gt;(<span style="color:#006080">"key1"</span>).Value, Is.EqualTo(<span style="color:#006080">"/1"</span>));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  50:</span>     Assert.That(bag.Get&lt;Url&gt;(<span style="color:#006080">"key2"</span>).Value, Is.EqualTo(<span style="color:#006080">"/2"</span>));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  51:</span> }</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  52:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  53:</span> [Test, ExpectedException(<span style="color:#0000ff">typeof</span> (ArgumentException), </pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  54:</span>     ExpectedMessage = <span style="color:#006080">"No object exists with key 'foobar'."</span>)]</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  55:</span> <span style="color:#0000ff">public</span> <span style="color:#0000ff">void</span> ShouldGetMeaningfulExceptionIfObjectDoesntExistByKey()</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  56:</span> {</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  57:</span>     SmartBag bag = <span style="color:#0000ff">new</span> SmartBag();</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  58:</span>     Url url = bag.Get&lt;Url&gt;(<span style="color:#006080">"foobar"</span>);</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  59:</span> }</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  60:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  61:</span> [Test]</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  62:</span> <span style="color:#0000ff">public</span> <span style="color:#0000ff">void</span> ShouldCountNumberOfObjectsOfGivenType()</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  63:</span> {</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  64:</span>     SmartBag bag = <span style="color:#0000ff">new</span> SmartBag();</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  65:</span>     Assert.That(bag.GetCount(<span style="color:#0000ff">typeof</span> (Url)), Is.EqualTo(0));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  66:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  67:</span>     bag.Add(<span style="color:#006080">"1"</span>, <span style="color:#0000ff">new</span> Url(<span style="color:#006080">"/1"</span>));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  68:</span>     bag.Add(<span style="color:#006080">"2"</span>, <span style="color:#0000ff">new</span> Url(<span style="color:#006080">"/2"</span>));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  69:</span>     bag.Add(<span style="color:#006080">"3"</span>, <span style="color:#0000ff">new</span> Url(<span style="color:#006080">"/3"</span>));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  70:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  71:</span>     Assert.That(bag.GetCount(<span style="color:#0000ff">typeof</span> (Url)), Is.EqualTo(3));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  72:</span> }</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  73:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  74:</span> [Test]</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  75:</span> <span style="color:#0000ff">public</span> <span style="color:#0000ff">void</span> ShouldBeAbleToInitializeBagWithSeveralObjects()</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  76:</span> {</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  77:</span>     Url url = <span style="color:#0000ff">new</span> Url(<span style="color:#006080">"/1"</span>);</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  78:</span>     GenericIdentity identity = <span style="color:#0000ff">new</span> GenericIdentity(<span style="color:#006080">"name"</span>);</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  79:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  80:</span>     SmartBag bag = <span style="color:#0000ff">new</span> SmartBag().Add(identity).Add(url);</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  81:</span>     Assert.That(bag.Get(<span style="color:#0000ff">typeof</span> (GenericIdentity)), Is.EqualTo(identity));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  82:</span>     Assert.That(bag.Get(<span style="color:#0000ff">typeof</span> (Url)), Is.EqualTo(url));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  83:</span> }</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  84:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  85:</span> [Test]</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  86:</span> <span style="color:#0000ff">public</span> <span style="color:#0000ff">void</span> ShouldHandleProxiedObjectsByType()</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  87:</span> {</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  88:</span>     MailMessage stub = MockRepository.GenerateStub&lt;MailMessage&gt;();</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  89:</span>     SmartBag bag = <span style="color:#0000ff">new</span> SmartBag();</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  90:</span>     bag.Add(stub);</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  91:</span>     MailMessage message = bag.Get&lt;MailMessage&gt;();</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  92:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  93:</span>     Assert.That(message, Is.EqualTo(stub));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  94:</span> }</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  95:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  96:</span> [Test]</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  97:</span> <span style="color:#0000ff">public</span> <span style="color:#0000ff">void</span> ShouldInitializeWithProxiesAndResolveCorrectly()</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060">  98:</span> {</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060">  99:</span>     MailMessage messageProxy = MockRepository.GenerateStub&lt;MailMessage&gt;();</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060"> 100:</span>     XmlDocument xmlDocumentProxy = MockRepository.GenerateStub&lt;XmlDocument&gt;();</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060"> 101:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060"> 102:</span>     SmartBag bag = <span style="color:#0000ff">new</span> SmartBag().Add(messageProxy).Add(xmlDocumentProxy);</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060"> 103:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060"> 104:</span>     Assert.That(bag.Get&lt;MailMessage&gt;(), Is.EqualTo(messageProxy));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060"> 105:</span>     Assert.That(bag.Get&lt;XmlDocument&gt;(), Is.EqualTo(xmlDocumentProxy));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060"> 106:</span> }</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060"> 107:</span> &nbsp;</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060"> 108:</span> [Test]</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060"> 109:</span> <span style="color:#0000ff">public</span> <span style="color:#0000ff">void</span> ShouldInitializeWithKeys()</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060"> 110:</span> {</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060"> 111:</span>     SmartBag bag = <span style="color:#0000ff">new</span> SmartBag().Add(<span style="color:#006080">"key1"</span>, 2).Add(<span style="color:#006080">"key2"</span>, 3);</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060"> 112:</span>     Assert.That(bag.ContainsKey(<span style="color:#006080">"key1"</span>));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#606060"> 113:</span>     Assert.That(bag.ContainsKey(<span style="color:#006080">"key2"</span>));</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#606060"> 114:</span> }</pre>
+</div>
+</div>

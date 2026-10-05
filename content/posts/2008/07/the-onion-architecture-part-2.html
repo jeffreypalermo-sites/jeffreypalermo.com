@@ -1,0 +1,35 @@
+---
+wp_id: 946
+title: 'The Onion Architecture : part 2'
+slug: the-onion-architecture-part-2
+permalink: /2008/07/the-onion-architecture-part-2/
+date: 2008-07-30T08:14:37
+date_utc: 2008-07-30T08:14:37Z
+modified: 2018-07-04T15:29:19
+format: html
+categories:
+- blog
+tags:
+- onion-architecture
+excerpt: part 1. This is part 2. part 3. part 4. My feed (rss). In part 1, I introduced an architectural pattern that I have named “Onion Architecture”. The object-oriented design concepts are not new, but I’m pulling together a lot of techniques and conventions into a single pattern and giving it a name. My hope […]
+comments_open: true
+---
+<p><a href="/2008/07/the-onion-architecture-part-1/">part 1</a>. This is <a href="../../../blog/the-onion-architecture-part-2/">part 2</a>. <a href="/2008/08/the-onion-architecture-part-3/">part 3</a>. <a href="/2013/08/onion-architecture-part-4-after-four-years/">part 4</a>.&nbsp; <a href="/feed/">My feed (rss)</a>.</p>
+<p>In <a href="/2008/07/the-onion-architecture-part-1/">part 1</a>, I introduced an architectural pattern that I have named “Onion Architecture”.&nbsp; The object-oriented design concepts are not new, but I’m pulling together a lot of techniques and conventions into a single pattern and giving it a name.&nbsp; My hope is that the industry can use this name to communicate the architectural approach where appropriate.</p>
+<p><strong>Part 2:&nbsp; Practical example:</strong></p>
+<p><a href="http://codecampserver.org">CodeCampServer</a> uses the Onion Architecture.&nbsp; If you are looking for a full, working application as an example, please have a look.&nbsp; The practical example I put before you is taken directly from CodeCampServer.&nbsp; It is a narrow, vertical slice of an example.&nbsp; I’m keeping the scope small as to be digestible.&nbsp; I’ll start with a diagram so you can understand where all the code resides within the layers of the onion.</p>
+<p><img loading="lazy" decoding="async" class=" size-full wp-image-801 aligncenter" src="/wp-content/uploads/2018/07/theonionarchitecturepart3_67c4image05.png" alt="TheOnionArchitecturepart3_67C4image05" width="376" height="263">CodeCampServer uses the ASP.NET MVC Framework, so SpeakerController is part of the user interface.&nbsp; This controller is coupled to the ASP.NET MVC Framework,&nbsp;and there is no getting around that.&nbsp; SpeakerController depends on IConferenceRepository and IUserSession (and IClock, but we’ll omit that).&nbsp; The controller only depends on interfaces, which are defined in the application core.&nbsp; Remember that <strong>all dependencies are toward the center</strong>.</p>
+<p>Turn your attention to the ConferenceRepository and UserSession classes.&nbsp; Notice that they are in layers outside of the application core, and they depend on the interfaces as well, so that they can implement them.&nbsp; These two classes each implement an interface closer to the center than itself.&nbsp; At runtime, our <a href="http://en.wikipedia.org/wiki/Inversion_of_control">Inversion of Control</a> container will look at its registry and construct the proper classes to satisfy the constructor dependencies of SpeakerController, which is the following:</p>
+<div>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:#f4f4f4"><span style="color:#0000ff">public</span> SpeakerController(IConferenceRepository conferenceRepository,
+                         IUserSession userSession, IClock clock)
+    : <span style="color:#0000ff">base</span>(userSession)
+{
+    _conferenceRepository = conferenceRepository;
+    _clock = clock;
+    _userSession = userSession;
+}</pre>
+</div>
+<p>At runtime, the <a href="http://martinfowler.com/articles/injection.html">IoC container</a> will resolve the classes that implement interfaces and pass them into the SpeakerController constructor.&nbsp; At this point in time, the SpeakerController can do its job.</p>
+<p>Based on the rules of the Onion Architecture, the SpeakerController <em>could</em> use UserSession directly since it’s in the same layer, but it cannot use ConferenceRepository directly.&nbsp; It must rely on something external passing in an instance of IConferenceRepository.&nbsp; This pattern is used throughout, and the IoC container makes this process seamless.</p>
+<p>At the end of this series, I plan on publishing a full working system that adheres to the Onion Architecture pattern.&nbsp; The systems we build for clients use this approach, but I’m not at liberty to discuss that code, so I will craft a reference application for those of you who prefer a concrete Visual Studio solution to digest.</p>

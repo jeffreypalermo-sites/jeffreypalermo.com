@@ -1,0 +1,18 @@
+---
+wp_id: 396
+title: Keep Virtual PC from hogging your computer while installing Windows Vista ctp – level 200
+slug: keep-virtual-pc-from-hogging-your-computer-while-installing-windows-vista-ctp-level-200
+permalink: /2006/03/keep-virtual-pc-from-hogging-your-computer-while-installing-windows-vista-ctp-level-200/
+date: 2006-03-24T13:10:00
+date_utc: 2006-03-24T13:10:00Z
+modified: 2006-03-24T13:10:00
+format: html
+tags:
+- tips-tricks
+excerpt: I’m installing the CTP of Vista on a Virtual PC to check it out, but the install is going to take a while, and I don’t want VirtualPC to hog my CPU while I work (no dual core proc for me yet). I have plenty of RAM, so that’s not an issue, so my CPU […]
+comments_open: true
+---
+<p>I’m installing the CTP of Vista on a Virtual PC to check it out, but the install is going to take a while, and I don’t want VirtualPC to hog my CPU while I work (no dual core proc for me yet).&nbsp; I have plenty of RAM, so that’s not an issue, so my CPU is the bottleneck in computer speed.&nbsp; I found a simple solution that allows me to continue to work while a Virtual PC is cranking away.</p>
+<p><img decoding="async" src="/photos/jeffrey.palermo/images/141750/original.aspx" align="right">Set the thread priority of Virtual PC to “low”.&nbsp; Windows will now allow anything else to run more often than Virtual PC (cpu timeslicing).&nbsp; If you’ve never adjusted thread priorities before, you can do this with Task Manager.&nbsp; Notice that my Commit charge is high, but I have 2GB of RAM, so I’m not worried.&nbsp; At the top, notice that I have a NAnt build running.&nbsp; I want NAnt to go fast, so it’s normal priority.&nbsp; The only process I’ve changed is Virtual PC.</p>
+<p>Note:&nbsp; I almost never change thread priorities, and I don’t recommend doing so, but in this case, it serves a specific purpose.</p>
+<p>Windows Vista is slowly installing in the background while I’m able to continue to work without being affected.&nbsp; Virtual PC is effectively only using idle CPU time. </p>

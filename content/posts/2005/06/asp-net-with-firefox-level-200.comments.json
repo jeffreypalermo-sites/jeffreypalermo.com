@@ -1,0 +1,20 @@
+[
+  {
+    "id": 352,
+    "parent": 0,
+    "author_name": "Randy Roach",
+    "author_url": "http://www.astroroach.com",
+    "date": "2007-02-27T13:18:19",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>First I just want to thank you for your service to the nation, both in Scouting and as a vet.</p>\n<p>I work at the Boy Scouts of America National Office here in Irving, TX and we have a similar problem to yours.  In the past, we’ve done all our applications for internal use where we could mandate the use of IE.  Now we’re looking expanding our services to the members, and we need our .NET apps to work on Firefox.</p>\n<p>I’m a network security guy, not a programmer, but for some reason I’ve been asked to write a document for our developers to guide them in creating apps that will render properly on both Firefox and IE. Searching for that information lead me to your site. Do you know of any good reference material in this regard? Is there a site or book that would help?</p>\n<p>Randy Roach<br>\nSr. Network Analyst<br>\nBoy Scouts of America National Office<br>\n972-580-2536<br>\n<a href=\"mailto:rroach@netbsa.org\">rroach@netbsa.org</a></p>"
+  },
+  {
+    "id": 353,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-01T13:20:26",
+    "type": "comment",
+    "content_html": "<p>Randy,<br>\nI’m not sure there is any one good reference.  You’d do well to cobble together information from the blogs of those who’ve done it.  The key to getting sites to work well is all browsers is to create a standard site.  What I mean is:</p>\n<p>    * Always declare a  (I use XHtml 1.0 Transitional)<br>\n    * Validate all pages : use w3c’s validator.<br>\n    * Use standard CSS v1 or v2 – some browsers don’t fully support v2.<br>\n    * Separate content from structure.<br>\n    * Ensure ASP.NET is rendering up-level markup in FireFox – learn about BrowserCaps and making ASP.NET recognize FireFox (and others) as up-level browsers.<br>\n    * Test, test, test.</p>\n<p>—<br>\nBest regards,<br>\nJeffrey Palermo, C# MVP, MCSD.Net<br>\nVP of Engineering, Vital Insight, Inc.</p>"
+  }
+]

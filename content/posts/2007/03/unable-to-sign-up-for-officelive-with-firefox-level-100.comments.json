@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1525,
+    "parent": 0,
+    "author_name": "Chad",
+    "author_url": "http://www.hdri.net",
+    "date": "2007-03-19T12:17:54",
+    "type": "comment",
+    "content_html": "<p>Jeffrey: It looks like you need IE to create the site and manage it, but not to view it. I can view Sam Gentile’s new home site (see his recent blog post ‘Refurbished New Home Site’) in FireFox 2 just fine.  Even if it’s not *quite* as bad as it originally sounds, it’s still bad. C’mon, in this day and age, to say IE-only is just silly. It seems weird though, because JS/AJAX development is so much easier in FireFox and such a pain in IE, I do all my Ajax/JS apps first in FireFox (using FireBug and other dev tools) and then figure out what’s broken in IE. </p>"
+  }
+]

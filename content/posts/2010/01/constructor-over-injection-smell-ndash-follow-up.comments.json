@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2655,
+    "parent": 0,
+    "author_name": "Mark Seemann",
+    "author_url": "http://blog.ploeh.dk/",
+    "date": "2010-02-02T15:00:29",
+    "type": "comment",
+    "content_html": "<p>For thoughts on how this code smell is addressed by a (more or less) formal refactoring, see <a href=\"http://blog.ploeh.dk/2010/02/02/RefactoringToAggregateServices.aspx\" rel=\"nofollow\">blog.ploeh.dk/…/RefactoringToAg</a> </p>"
+  }
+]

@@ -1,0 +1,19 @@
+---
+wp_id: 252
+title: Tech Ed 2005 Day 2 – Dealing with Data in Service-Oriented Architectures
+slug: tech-ed-2005-day-2-dealing-with-data-in-service-oriented-architectures
+permalink: /2005/06/tech-ed-2005-day-2-dealing-with-data-in-service-oriented-architectures/
+date: 2005-06-08T00:19:00
+date_utc: 2005-06-08T00:19:00Z
+modified: 2005-06-08T00:19:00
+format: html
+excerpt: This session was not about SOA but about dealing with data in an SOA. This issue he brings to light is that many systems cannot have a single source of data because of the amount of data. Huge databases that grow 40% per year. The data has to be partitioned in some manner, but after […]
+comments_open: true
+---
+<p>This session was not about SOA but about dealing with data in an SOA. This issue he brings to light is that many systems cannot have a single source of data because of the amount of data. Huge databases that grow 40% per year. The data has to be partitioned in some manner, but after partitioning, how is it queried? That becomes a problem. </p>
+<p>Architects have to camps: “object-siders” and “data-siders”.</p>
+<p>Object-siders start with objects, but Data-siders think of everything in terms of the database. </p>
+<p>John speaks of the beginning of OO, through Components, to SO in terms of evolution. I’m not sure I agree with this because evolution implies that SO is the superset of the beginnings, but I think it’s just another layer above and around OO and components</p>
+<p>In this presentation, data is owned by different services. Data is partitioned among different services that use each other to get a job done. It’s clear which service owns which data. This presentation is very high-level and very abstract, and he doesn’t go into much detail about where actual applications fit into his model. He talks only of services and how they talk to each other. In my experience, services don’t talk to other services. Application talk to services, and services are owned by applications, but service code doesn’t engage in two-way interaction with other service code. The consumption direction is one-way.</p>
+<p>One thing I really liked is that John refuted the idea that SO kills OO. He emphasizes that services are built with OO-components.</p>
+<p>John concludes that architecture is very hard and is a game of trade-offs. He advises us to “be very careful” when trying to factor existing systems into services.</p>

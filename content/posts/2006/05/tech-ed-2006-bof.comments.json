@@ -1,0 +1,20 @@
+[
+  {
+    "id": 882,
+    "parent": 0,
+    "author_name": "TobinTitus",
+    "author_url": "http://www.codemilitia.com/blogs/tobin.titus/",
+    "date": "2006-05-10T22:55:48",
+    "type": "comment",
+    "content_html": "<p>I won’t be attending, but could you ask the group about something for me?  I heard that agiligators are ornry because of their medulla oblongata.  Is that true?</p>"
+  },
+  {
+    "id": 883,
+    "parent": 0,
+    "author_name": "johnpapa",
+    "author_url": "http://codebetter.com/blogs/john.papa",
+    "date": "2006-05-11T01:41:49",
+    "type": "comment",
+    "content_html": "<p>Jeffrey … I won’t be able to attend Tech Ed this year but I’d be interested in seeing a synopsis of your BoF session here in your blog, if you have the time. I am a unit test practioner who would love to hear any good ideas you might have to offer.</p>"
+  }
+]

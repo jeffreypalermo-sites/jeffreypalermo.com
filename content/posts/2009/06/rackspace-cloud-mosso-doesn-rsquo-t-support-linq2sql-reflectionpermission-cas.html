@@ -1,0 +1,21 @@
+---
+wp_id: 1056
+title: Rackspace Cloud (MOSSO) doesn’t support Linq2Sql? (ReflectionPermission CAS)
+slug: rackspace-cloud-mosso-doesn-rsquo-t-support-linq2sql-reflectionpermission-cas
+permalink: /2009/06/rackspace-cloud-mosso-doesn-rsquo-t-support-linq2sql-reflectionpermission-cas/
+date: 2009-06-05T23:14:49
+date_utc: 2009-06-05T23:14:49Z
+modified: 2009-06-05T23:14:49
+format: html
+categories:
+- blog
+excerpt: I tried to set up a website with Mosso, the Rackspace cloud. What was really interesting and much more compelling that Azure is that they claim they support .Net 3.5 SP1 and ASP.NET MVC as well as SQL Server 2008. Oh, and they support scheduled cron jobs. Slam dunk, I thought. I got my account […]
+comments_open: true
+---
+<p>I tried to set up a website with <a href="http://www.mosso.com/">Mosso</a>, the <a href="http://www.rackspace.com/">Rackspace</a> cloud.&nbsp; What was really interesting and much more compelling that Azure is that they claim they support .Net 3.5 SP1 and <a href="http://www.asp.net/mvc/">ASP.NET MVC</a> as well as SQL Server 2008.&nbsp; Oh, and they support scheduled cron jobs.&nbsp; Slam dunk, I thought.&nbsp; </p>
+<p>I got my account all set up and deployed a plain site on IIS7.&nbsp; The ASP.NET MVC site worked right away.&nbsp; I thought I was home free until I actually did something interesting with .Net 3.5 features where so many do a Code Access Security claim for ReflectionPermission.&nbsp; Bomb!</p>
+<p><img loading="lazy" decoding="async" title="image" style="display:inline" height="233" alt="image" src="/wp-content/uploads/2018/07/rackspacecloudmossodoesntsupportlinq2sql_146e6image_534e8687-dad8-4aad-a60f-129d68d61015.png" width="582"> </p>
+<p>The text reads:</p>
+<p>System.Security.SecurityException: Request for the permission of type ‘System.Security.Permissions.ReflectionPermission, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089’ failed.</p>
+<p>It turns out that Mosso uses a modified medium trust level.&nbsp; In reality, so many of the cool new .Net 3.5 SP1 features (including Linq2Sql) require ReflectionPermission.&nbsp; It’s just one of those basics that a hosting provider needs to support.</p>
+<p>I would love to support Rackspace and Mosso.&nbsp; I have other clients at Rackspace, and the product and support are awesome.&nbsp; <strong>I can’t really recommend Mosso</strong> right now because of this severe limitation for the .Net platform.&nbsp; </p>

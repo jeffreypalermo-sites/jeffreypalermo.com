@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1797,
+    "parent": 0,
+    "author_name": "Joe",
+    "author_url": "http://",
+    "date": "2007-07-09T16:52:05",
+    "type": "comment",
+    "content_html": "<p>Id be interested in seeing a post on your default architecture (if you’re ever short of ideas for blog posts).  There is a dearth of information on this topic – what works well?  what works ok?  what are the tradeoffs?</p>\n<p>Most applications I come across are usually awful data access/ business logic/ presentation all mangled together in the same aspx page.  I dont think its that the people that are writing them are incaoable of doing better, but that there is little to no guidance on best practices.</p>"
+  },
+  {
+    "id": 1798,
+    "parent": 0,
+    "author_name": "Evan",
+    "author_url": "http://www.evanhoff.com/",
+    "date": "2007-07-09T22:33:31",
+    "type": "comment",
+    "content_html": "<p>I’d love to get more insight into that “stack o books”..</p>\n<p>Some of the 10 year old books I have are the *very best* i’ve read (or working through)..</p>\n<p>Care to share your favorites?</p>"
+  }
+]

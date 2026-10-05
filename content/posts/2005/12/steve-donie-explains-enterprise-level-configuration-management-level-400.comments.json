@@ -1,0 +1,29 @@
+[
+  {
+    "id": 609,
+    "parent": 0,
+    "author_name": "Colin Neller",
+    "author_url": "http://www.colinneller.com/blog",
+    "date": "2005-12-28T17:59:22",
+    "type": "comment",
+    "content_html": "<p>The link “Taking Continuous Integration to the next level” isn’t working for me…</p>"
+  },
+  {
+    "id": 610,
+    "parent": 0,
+    "author_name": "Jim",
+    "author_url": "http://",
+    "date": "2005-12-28T18:20:14",
+    "type": "comment",
+    "content_html": "<p>Try this<br>\n<a href=\"http://donie.homeip.net:8080/pebble/Steve/2005/12/28/1135786642478.html\" rel=\"nofollow ugc\">http://donie.homeip.net:8080/pebble/Steve/2005/12/28/1135786642478.html</a></p>"
+  },
+  {
+    "id": 611,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-12-29T03:23:48",
+    "type": "comment",
+    "content_html": "<p>Thanks Jim.  I’ve corrected the link.</p>"
+  }
+]

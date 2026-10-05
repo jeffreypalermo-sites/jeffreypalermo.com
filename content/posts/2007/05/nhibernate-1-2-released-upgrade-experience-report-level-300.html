@@ -1,0 +1,18 @@
+---
+wp_id: 520
+title: NHibernate 1.2 released! upgrade experience report – level 300
+slug: nhibernate-1-2-released-upgrade-experience-report-level-300
+permalink: /2007/05/nhibernate-1-2-released-upgrade-experience-report-level-300/
+date: 2007-05-11T19:02:12
+date_utc: 2007-05-11T19:02:12Z
+modified: 2007-05-11T19:02:12
+format: html
+excerpt: First, kudos to the NHibernate team for getting the 1.2 release finalized. Get it here. The first thing you’ll notice when upgrading from 1.0.3 is that class mappings are now lazy by default. If you want to just upgrade your app, you’ll need to go through your mappings and mark each class mapping as lazy=”false”. […]
+comments_open: true
+---
+<p>First, kudos to the NHibernate team for getting the 1.2 release finalized.&nbsp; <a href="http://www.hibernate.org/358.html">Get it here.</a></p>
+<p>The first thing you’ll notice when upgrading from 1.0.3 is that class mappings are now lazy by default.&nbsp; If you want to just upgrade your app, you’ll need to go through&nbsp; your mappings and mark each class mapping as lazy=”false”.&nbsp; Then, everything should work.&nbsp; </p>
+<p>Another semantic change that I noticed in my codebase is that before&nbsp;a new NHibernate ISession is used, the Transaction property was null in v1.0.3.&nbsp; With v1.2, this object is not null (but isn’t active, either).&nbsp; I found this because I had a check for null in my NHibernate management code.&nbsp; No biggie, but something I noticed.</p>
+<p>v1.2 brings a Dialect for SQL 2005, so that’s cool.&nbsp; I had been using the SQL 2000 Dialect for 2005, and it worked just fine because SQL 2005 is pretty much backward compatible.</p>
+<p>Another biggie is the addition of some ICriterion implementations for subqueries.&nbsp; We’re all used to using Expression.Eq() for forming the WHERE clause, but now we also have Subqueries.* for creating a WHERE clause with a subquery.&nbsp; This is useful for checking to make sure a bag or list has at least one object while using an instance of ICriteria.</p>
+<p>The upgrade was pretty painless, and I love it.</p>

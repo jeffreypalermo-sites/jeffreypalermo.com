@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2706,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://jeffreypalermo.com",
+    "date": "2014-01-09T07:53:08",
+    "type": "comment",
+    "content_html": "<p>@Janusz,<br>\nYou are completely right that within a SQL Server transaction, it will be rolled back with no data lost.<br>\nI used the term \"roll back\", but I really meant a \"down\" migration.  Other tools attempt to support down (or reverse) migrations to downgrade a database version to a previous revision.  This is an unworkable process because there are only a subset of database changes that are even feasible given that databases store real data based on the structure of the schema.  And data can be destroyed by certain database schema changes.</p>"
+  }
+]

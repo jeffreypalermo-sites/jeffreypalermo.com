@@ -1,0 +1,164 @@
+[
+  {
+    "id": 2031,
+    "parent": 0,
+    "author_name": "Garry Shutler",
+    "author_url": "http://",
+    "date": "2007-10-02T13:21:32",
+    "type": "comment",
+    "content_html": "<p>Very interesting! I’ll be trying this out soon. I agree that the assertions contained in your expectations can be quite hidden at times and this looks like a good way of dragging those out.</p>\n<p>As an aside, have you seen the generic syntax for MockRepository.CreateMock? I find it makes my mock object creation look much nicer:</p>\n<p>IPersonRepository personRepository = mocks.CreateMock();</p>\n<p>Excuse anything lost in the VB to C# translation.</p>"
+  },
+  {
+    "id": 2032,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-10-02T14:07:45",
+    "type": "comment",
+    "content_html": "<p>@Garry,<br>\nYes, I do use the Generic syntax.  I happened to be working in a VS2003 project when I whipped up this sample code.</p>"
+  },
+  {
+    "id": 2033,
+    "parent": 0,
+    "author_name": "Joe",
+    "author_url": "http://",
+    "date": "2007-10-02T14:53:23",
+    "type": "comment",
+    "content_html": "<p>What test framework uses “Assert.That”?</p>\n<p>ps and I hate to ask and seem nit-picky, but do you think you could turn line numbers off when you post code?   I understand that it has its aesthetic advantages, but to simpletons like myself who have to cut and paste and try everything out in the IDE to see how it really works, they’re a pain.</p>"
+  },
+  {
+    "id": 2034,
+    "parent": 0,
+    "author_name": "Shane Courtrille",
+    "author_url": "http://scourtrille.wordpress.com",
+    "date": "2007-10-02T18:11:43",
+    "type": "comment",
+    "content_html": "<p>Awesome example.  This is much easier then doing a Do() to test the parameters.</p>"
+  },
+  {
+    "id": 2035,
+    "parent": 0,
+    "author_name": "ScottBellware",
+    "author_url": "http://scottic.us",
+    "date": "2007-10-02T18:18:20",
+    "type": "comment",
+    "content_html": "<p>I don’t get the test.  Looks like interesting re-use, and it’s certainly “readable”, but I’m not getting it on first through fifth glance.  If you have time at some point, I’d like to dissect it.</p>"
+  },
+  {
+    "id": 2036,
+    "parent": 0,
+    "author_name": "Joe Ocampo",
+    "author_url": "http://www.lostechies.com/blogs/joe_ocampo",
+    "date": "2007-10-02T20:06:16",
+    "type": "comment",
+    "content_html": "<p>@Joe </p>\n<p>That is the new behavioral constraint assertion model of NUnit 2.4</p>\n<p><a href=\"http://www.lostechies.com/blogs/joe_ocampo/archive/2007/07/22/nunit-s-new-constraint-model.aspx\" rel=\"nofollow ugc\">http://www.lostechies.com/blogs/joe_ocampo/archive/2007/07/22/nunit-s-new-constraint-model.aspx</a></p>"
+  },
+  {
+    "id": 2037,
+    "parent": 0,
+    "author_name": "Garry Shutler",
+    "author_url": "http://",
+    "date": "2007-10-02T21:11:17",
+    "type": "comment",
+    "content_html": "<p>It took me a few reads to get it but (please correct me if I’m wrong):</p>\n<p>A constraint is checked  by passing the parameters fed to the method to the Eval function as an object. Jeff’s object stores this parameter for later use and returns true (as if the constraint was satisfied). This means we have a copy of what was passed to the method and we use the GetParameterObject function to later retrieve the object so we can test its contents against our expectations.</p>\n<p>One question that this has raised for myself is how this works for multi-parameter methods, is the parameter object an array of objects which we need to cast individually? This would make sense to me but I haven’t had chance to try it out.</p>"
+  },
+  {
+    "id": 2038,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-10-02T21:25:20",
+    "type": "comment",
+    "content_html": "<p>@Garry,<br>\nYour description is correct.</p>\n<p>If the dependency required 3 arguments, then you would create 3 instances of GenericConstraint, and each one would receive a method argument.  If the method has 7 arguments, you have to provide 7 GenericConstraint instances, and you can name each one appropriately so it will be easy to retrieve the parameter objects one at a time.</p>"
+  },
+  {
+    "id": 2039,
+    "parent": 0,
+    "author_name": "Martin Jul",
+    "author_url": "http://community.ative.dk/blogs/",
+    "date": "2007-10-03T11:29:45",
+    "type": "comment",
+    "content_html": "<p>I favour implementing Equals on the parameter object over using the constraints.</p>\n<p>This way I get very simple code like</p>\n<p>Person expectedPerson = new Person(firstName, lastName);</p>\n<p>personRepository.SavePerson(expectedPerson);<br>\nLastCall.On(personRepository);</p>\n<p>// …</p>\n<p>mockRepository.VerifyAll();</p>\n<p>The Asserts are that in a way they circumvent the object-orientation by asserting state outside of the object itself – and they make for bulky test-code that needs to change in synch with changes to the Person class.</p>\n<p>Using Equals this reduces to a matter of constructing the expected object (standard constructor) and using its built-in Equality method.</p>"
+  },
+  {
+    "id": 2040,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-10-03T12:32:34",
+    "type": "comment",
+    "content_html": "<p>@Martin,<br>\nI, too, favor overriding the Equals(obj) method, and encourage that whenever possible (and over the technique described here).</p>\n<p>In cases where that won’t work or is insufficient, the above is the best I’m come up with in .Net 1.1</p>\n<p>Note, in .Net 2.0 and the latest release of Rhino Mocks, the “Do( )” method can be used with an anonymous delegate to hold the NUnit asserts.</p>"
+  },
+  {
+    "id": 2041,
+    "parent": 0,
+    "author_name": "Robert Ensor",
+    "author_url": "http://",
+    "date": "2007-10-05T04:38:18",
+    "type": "comment",
+    "content_html": "<p>You stole my idea! \uD83D\uDE09 Now maybe you can steal an idea off me that i haven’t thought of yet:</p>\n<p>What happens when your test expects that SavePerson be called twice, with completely different parameters? Rhino can handle this (ordered or unordered) for cases where the pbject properties are “unrolled” into the method args, but if you want to test data objects, you’re in trouble (or should i say, i’m in trouble)</p>\n<p>What I ended up doing is creating another contstraint that stores EACH argument into a list, and then checking the contents of that list. But that seems very far from the original intent of rhino \uD83D\uDE41</p>\n<p>What do you think?</p>\n<p>@Martin: I prefer that too but in some cases i have a property on my object that is meant to be set to an autonumber or the current date (something out of my control), so i want to ignore that property *for just this test*</p>"
+  },
+  {
+    "id": 2042,
+    "parent": 0,
+    "author_name": "saret",
+    "author_url": "http://justsaret.wordpress.com",
+    "date": "2007-10-06T00:07:07",
+    "type": "comment",
+    "content_html": "<p>Lol, me too, been playing with a similar idea recently<br>\nI also tend to use the Equals(obj) method, however sometimes (such as in my newest project using Boo) I’ve tended to also use a different technique that can be done in c# 2, but really doesn’t look really nearly as clean compared to Boo’s closures (or the new lambda expressions in c# 3).<br>\nThis way also allows you to just optionally test certain values of the expected object passed which handles Robert’s autonumber issue.<br>\n(upgraded to generics – but not the record/playback layout)<br>\n________________________________________________<br>\nusing Rhino.Mocks;<br>\nusing Rhino.Mocks.Constraints;</p>\n<p>string firstName = “Jeffrey”;<br>\nstring lastName = “Palermo”;</p>\n<p>Predicate constraint = new Predicate(delegate(Person p)<br>\n\t{<br>\n\t\treturn p.FirstName == firstName &amp;&amp; p.LastName == lastName ;<br>\n\t});</p>\n<p>MockRepository mocks = new MockRepository();</p>\n<p>IPersonRepository personRepository = mocks.CreateMock();</p>\n<p>personRepository.SavePerson(null);</p>\n<p>GenericConstraint personConstraint = new GenericConstraint();</p>\n<p>LastCall.On(personRepository).Constraints(Is.Matching(constraint));</p>\n<p>mocks.ReplayAll();</p>\n<p>PersonController controller = new PersonController(personRepository);<br>\ncontroller.PersonFirstName = firstName;<br>\ncontroller.PersonLastName = lastName;<br>\ncontroller.Save();</p>\n<p>mocks.VerifyAll();<br>\n_____________________________________</p>\n<p>Haven’t really gotten into blogging yet (not like I’ve tried hard … got like 15 drafts and one published rant), but was wierdly enough already writing a post on this technique a day or two ago before I saw this, which including some ways that I’ve used to handle the multiple calls Robert is mentioning.</p>\n<p>I’m gonna still blog a bit about this technique (this one I’m am actually gonna publish! ) and “extensions” to it I’ve used such as currying ala: </p>\n<p>(note it’s in boo I’ll post c# version as well)<br>\n[Test]<br>\ndef sometest():<br>\n\tinvalidReason = “my reason”<br>\n\tconstraint = def(player as Player) as Predicate[of InvalidMoveEventArgs]:<br>\n\t\treturn {e as InvalidMoveEventArgs | e.Player == player &amp; e.Reason = invalidReason}<br>\n\t/……./ </p>\n<p>This technique is ideally suited to ordered, but the regular straight closure route could be used in unordered (by keeping some state as to which one of the expected values has/hasn’t been passed yet in the enclosing method/data holder…)</p>"
+  },
+  {
+    "id": 2043,
+    "parent": 0,
+    "author_name": "Justin Saret <aka saret>",
+    "author_url": "http://justsaret.wordpress.com",
+    "date": "2007-10-06T00:19:13",
+    "type": "comment",
+    "content_html": "<p>sorry hit post button just before i finished off,<br>\n(if my post can be fixed much appreciated \uD83D\uDE42 )<br>\nthe c# example should read:<br>\nstring firstName = “Jeffrey”;<br>\nstring lastName = “Palermo”;</p>\n<p>Predicate constraint = new Predicate(delegate(Person p)<br>\n {<br>\n   return p.FirstName == firstName &amp;&amp; p.LastName == lastName ;</p>\n<p> });</p>\n<p>MockRepository mocks = new MockRepository();</p>\n<p>IPersonRepository personRepository = mocks.CreateMock();</p>\n<p>personRepository.SavePerson(null);<br>\nLastCall.On(personRepository).Constraints(Is.Matching(constraint));</p>\n<p>mocks.ReplayAll();</p>\n<p>PersonController controller = new PersonController(personRepository);<br>\ncontroller.PersonFirstName = firstName;<br>\ncontroller.PersonLastName = lastName;<br>\ncontroller.Save();</p>\n<p>mocks.VerifyAll();</p>"
+  },
+  {
+    "id": 2044,
+    "parent": 0,
+    "author_name": "saret",
+    "author_url": "http://justsaret.wordpress.com",
+    "date": "2007-10-06T00:35:20",
+    "type": "comment",
+    "content_html": "<p>And that is why commenting about stuff and using a text editor to scrap up code after 2 am is a bad idea (Predicate should be Predicate)</p>\n<p>sorry folks</p>"
+  },
+  {
+    "id": 2045,
+    "parent": 0,
+    "author_name": "Martin Jul",
+    "author_url": "http://community.ative.dk/blogs/",
+    "date": "2007-10-08T08:33:45",
+    "type": "comment",
+    "content_html": "<p>@Robert:</p>\n<p>Regarding Equals or constraints you wrote </p>\n<p>“@Martin: I prefer that too but in some cases i have a property on my object that is meant to be set to an autonumber or the current date (something out of my control), so i want to ignore that property *for just this test*<br>\n”</p>\n<p>In cases like this I would factor out the magic into an “IMagicProvider” – for example, a class that can provide the current time. This way you have control over your environment in the test – just use, say, a mock or a stub that provides a fixed timestamp, and you will be able to use Equals.</p>\n<p>I prefer this static approach to having to deal with dynamic magic in my tests.</p>"
+  },
+  {
+    "id": 2046,
+    "parent": 0,
+    "author_name": "Aaron Feng",
+    "author_url": "http://www.aaronfeng.com",
+    "date": "2007-10-08T11:26:50",
+    "type": "comment",
+    "content_html": "<p>Another reason for Rhino Mocks Generic Constraint…</p>\n<p><a href=\"http://aaronfeng.com/articles/2007/10/08/another-reason-for-rhino-mocks-generic-constraint\" rel=\"nofollow ugc\">http://aaronfeng.com/articles/2007/10/08/another-reason-for-rhino-mocks-generic-constraint</a></p>"
+  },
+  {
+    "id": 2047,
+    "parent": 0,
+    "author_name": "jsmith",
+    "author_url": "http://",
+    "date": "2007-11-21T23:02:29",
+    "type": "comment",
+    "content_html": "<p>Thank you!!</p>"
+  },
+  {
+    "id": 2048,
+    "parent": 0,
+    "author_name": "Steven Harman",
+    "author_url": "http://stevenharman.net",
+    "date": "2008-03-03T16:25:34",
+    "type": "comment",
+    "content_html": "<p>I know the .Do() method will work, but I’ve found that sometimes it’s a bit more verbose and less obvious than the GenericConstraints way of doing it. So I’ve added a genericised version of the class:</p>\n<p>public class Constraint : AbstractConstraint where T : class<br>\n{<br>\n    T _theObject;</p>\n<p>    public override bool Eval(object obj)<br>\n    {</p>\n<p>        _theObject = obj as T;<br>\n        return _theObject != null;<br>\n    }</p>\n<p>    public T GetParameterObject()<br>\n    {<br>\n        return _theObject;<br>\n    }</p>\n<p>    public override string Message<br>\n    {<br>\n        get { return “”; }<br>\n    }<br>\n}</p>\n<p>Which works well and saves that fugly cast. \uD83D\uDE42</p>"
+  }
+]

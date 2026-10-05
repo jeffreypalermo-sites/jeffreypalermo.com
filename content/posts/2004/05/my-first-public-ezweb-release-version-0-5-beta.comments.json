@@ -1,0 +1,29 @@
+[
+  {
+    "id": 45,
+    "parent": 0,
+    "author_name": "Mark",
+    "author_url": "http://",
+    "date": "2004-05-05T23:15:00",
+    "type": "comment",
+    "content_html": "<p>very cool project you got there.</p>\n<p>it took me a while to adjust the IIS settings well enough for it to work…but now it works great.</p>\n<p>one question… Is there a way I can remove the information that is displayed at the bottom of the screen? (Trace Information, Control Tree, etc..)</p>"
+  },
+  {
+    "id": 46,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-05-06T04:25:00",
+    "type": "comment",
+    "content_html": "<p>Of course.  All it is is trace information.  Go to the web.config file and turn trace off.:<br>\n&lt;trace enabled=\"false\". . ./&gt; and it’ll all go away.<br>\nGo to _ezweb/Templates/ folder and create your own customized template.  </p>"
+  },
+  {
+    "id": 47,
+    "parent": 0,
+    "author_name": "mark",
+    "author_url": "http://",
+    "date": "2004-05-06T07:43:00",
+    "type": "comment",
+    "content_html": "<p>thanks a lot.  i figured it was something easy like that but I’m still learning the .NET way of doing things.</p>"
+  }
+]

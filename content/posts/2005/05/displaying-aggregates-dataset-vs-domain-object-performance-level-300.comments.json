@@ -1,0 +1,38 @@
+[
+  {
+    "id": 322,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://",
+    "date": "2005-05-20T15:21:00",
+    "type": "comment",
+    "content_html": "<p>I’ve never heard the performance argument.  I would guess that \"heavy handed\" refers to the amount of code required, as opposed to performance.<br>\nWhat is the lines of code comparison for your 2 test code bases?</p>"
+  },
+  {
+    "id": 323,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2005-05-20T15:35:00",
+    "type": "comment",
+    "content_html": "<p>The only difference is that I have to define a Customer class.  Each example uses a factory class that is in charge of getting the actual data from the database.  The only difference is that the DataSet factory object just fills a dataset, where the other one creates multiple instances of Customer.</p>"
+  },
+  {
+    "id": 324,
+    "parent": 0,
+    "author_name": "Jay Glynn",
+    "author_url": "http://",
+    "date": "2005-05-21T16:43:00",
+    "type": "comment",
+    "content_html": "<p>I had this same discussion the other day with someone. My arguements were almost identical to yours. I absolutely hate using datasets and will gladly code up a doomain class to manage data anyday of the week. I have a standard collection class that we use to go along with them. All we do is override a couple of methods and you have complete binding support to go with it.</p>"
+  },
+  {
+    "id": 325,
+    "parent": 0,
+    "author_name": "JuanBarbatos",
+    "author_url": "http://",
+    "date": "2005-05-22T16:14:00",
+    "type": "comment",
+    "content_html": "<p>I agree with both Jay and yourself. I work with someone who coded a bunch of stuff using a dataset. unfortunatly, due to the complexity of the project we have to scrap all that code. Custom classes will make everything we needed done so much easier and cleaner. </p>\n<p>Jay, what level have you been able to extend your databinding. </p>"
+  }
+]

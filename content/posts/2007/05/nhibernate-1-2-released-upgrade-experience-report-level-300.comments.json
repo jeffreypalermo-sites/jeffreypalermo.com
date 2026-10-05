@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1567,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2007-05-11T21:12:46",
+    "type": "comment",
+    "content_html": "<p>You can also use default-lazy=”false” in the &lt;hibernate-mapping element.<br>\nIn general, I would suggest that everything would be lazy.</p>\n<p>About checking for emptiness, there is the new:<br>\nExpression.IsEmpty()<br>\nExpression.IsNotEmpty()</p>\n<p>That are easier than subqueries for the scenarios that you describe.</p>"
+  },
+  {
+    "id": 1568,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-05-11T21:25:23",
+    "type": "comment",
+    "content_html": "<p>@Ayende,<br>\nWhat is the reasoning behind the recommendation that all classes be marked as lazy? </p>\n<p>Usually, when I query for the aggregate in my domain model (say Order), I want the actual Order and all LineItems in my “set”.  I don’t want another query the first time I call a property on the Order.  I would think I want Order not to be lazy.</p>\n<p>Note that I’m calling session.Load(orderId).</p>"
+  },
+  {
+    "id": 1569,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2007-05-12T10:02:56",
+    "type": "comment",
+    "content_html": "<p>Performance is better this way.<br>\nThat usually depends on the way you setup associations between the entities. But the classic example is user  groups, when you load a user, you may end up loading _all_ the users, and _all_ the groups, if you don’t have lazy loading at the right places.</p>\n<p>If you aggregate is deep, Order -&gt; Order Lines -&gt; Product, you may want to load just part of that.<br>\nEach scenario is unique, of course.</p>"
+  },
+  {
+    "id": 1570,
+    "parent": 0,
+    "author_name": "Cassio",
+    "author_url": "http://www.csharping.com",
+    "date": "2007-10-10T19:38:14",
+    "type": "comment",
+    "content_html": "<p>As a rule of thumb, I mark my collections as lazy (select) and simple many-to-one associations as eager (join).</p>\n<p>But, of course, it depends on the scenario.</p>"
+  }
+]

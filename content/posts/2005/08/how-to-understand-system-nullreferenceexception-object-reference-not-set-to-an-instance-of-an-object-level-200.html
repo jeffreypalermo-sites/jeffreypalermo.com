@@ -1,0 +1,15 @@
+---
+wp_id: 306
+title: How to understand System.NullReferenceException, Object reference not set to an instance of an object – level 200
+slug: how-to-understand-system-nullreferenceexception-object-reference-not-set-to-an-instance-of-an-object-level-200
+permalink: /2005/08/how-to-understand-system-nullreferenceexception-object-reference-not-set-to-an-instance-of-an-object-level-200/
+date: 2005-08-19T03:09:00
+date_utc: 2005-08-19T03:09:00Z
+modified: 2005-08-19T03:09:00
+format: html
+excerpt: You probably get this error message more than others, and the cause is that a variable is used in code, but that variable doesn’t contain a reference to any object in memory. If you try to call .ToString() on an object, and your variable is null, you’ll get this exception. Sometimes it can be hard […]
+comments_open: true
+---
+<p>You probably get this error message more than others, and the cause is that a variable is used in code, but that variable doesn’t contain a reference to any object in memory.&nbsp; If you try to call .ToString() on an object, and your variable is null, you’ll get this exception.&nbsp; Sometimes it can be hard to figure out what’s going on, but if you look at your stack trace, you can find out what method this Exception came from.&nbsp; Then, debug through that method and find the offending variable.&nbsp; </p>
+<p>Likely causes are methods that take arguments but don’t validate them.&nbsp; If you accept an object as an argument, and you need the “Name” property from the object, you’ll get this exception if “null” was passed in instead of a valid object instance.&nbsp; If would be wise to add argument validation to the beginning of every method that may have callers you don’t completely trust.&nbsp; Err on the side of caution.&nbsp; Code defensively.&nbsp; Input is evil.&nbsp; If your arguments pass validation (ensuring they aren’t null is a common validation), you’ll likely minimize the frequency of this nasty exception.</p>
+<p>You likely won’t get much love from Google when searching on this exception because the root cause is different in every scenario.&nbsp; There’s no “magic” code snippet that will make this puppy go away.&nbsp; Understand the code and properly validate, and you’ll sleep better, and your code will be more robust.</p>

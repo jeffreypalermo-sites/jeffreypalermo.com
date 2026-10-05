@@ -1,0 +1,141 @@
+---
+wp_id: 934
+title: Use this NHibernate wrapper to keep your repository classes simple
+slug: use-this-nhibernate-wrapper-to-keep-your-repository-classes-simple
+permalink: /2008/07/use-this-nhibernate-wrapper-to-keep-your-repository-classes-simple/
+date: 2008-07-09T08:53:21
+date_utc: 2008-07-09T08:53:21Z
+modified: 2008-07-09T08:53:21
+format: html
+categories:
+- blog
+excerpt: It’s no secret that we at Headspring Systems use NHibernate for data access in the custom software systems we deploy. I, personally, have been using NHibernate since 2005 when version 0.8 was current. Now, we’re approaching the 2.0 version, which I’m very excited about. With version 2.0, NHibernate will be mostly on par with Hibernate […]
+comments_open: true
+---
+<p>It’s no secret that we at <a href="http://www.headspringsystems.com/">Headspring Systems</a> use <a href="http://www.hibernate.org/343.html">NHibernate</a> for data access in the custom software systems we deploy.&nbsp; I, personally, have been using NHibernate since 2005 when version 0.8 was current.&nbsp; Now, we’re approaching the 2.0 version, which I’m very excited about.&nbsp; With version 2.0, NHibernate will be mostly on par with Hibernate 3.2.</p>
+<p>If you are just getting started with NHibernate, some of the first questions you’ll need to answer are:</p>
+<ul>
+<li>How do I configure NHibernate?</li>
+<li>How do I manage the session factory?</li>
+<li>When do I create and throw away sessions?</li>
+</ul>
+<p>The answers are different based on the context.&nbsp; If you have a smart client application, you’ll need to decide what size you want your units of work (I suggest they be small).&nbsp; You’ll need to create a new instance of ISession for each unit of work and Dispose() of it at the end after commiting the transaction.</p>
+<p>It seems the majority of enterprise applications these days are web applications, and since I run a .Net shop, we use ASP.NET.&nbsp; The unit of work is easy here.&nbsp; We have&nbsp;one web request be one unit of work.&nbsp; We create an instance of ISession at the beginning of the web request and dispose of it at the end.</p>
+<p>I’ve created several wrappers for NHibernate over the years, and I think they have improved as my understanding of NHibernate has increased.&nbsp; Ironically, the wrapper started out much more complex than it is today.&nbsp; I’ve simplified it over time, and now, I think I’ve gotten it down to its simplest essence.</p>
+<p>The following is a class called HybridSessionBuilder.&nbsp; It is appropriate for ASP.NET applications using NHibernate, and you can see it in action in the <a href="http://codecampserver.org">CodeCampServer</a> codebase.&nbsp; There is a version that supports multiple databases within the <a href="http://code.google.com/p/tarantino/">Tarantino project</a> (sometimes you can’t have just one).</p>
+<p>The key to this is the interface:</p>
+<div>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#0000ff">using</span> NHibernate;
+<span style="color:#0000ff">using</span> NHibernate.Cfg;
+
+<span style="color:#0000ff">namespace</span> CodeCampServer.DataAccess
+{
+    <span style="color:#0000ff">public</span> <span style="color:#0000ff">interface</span> ISessionBuilder
+    {
+        ISession GetSession();
+        Configuration GetConfiguration();
+    }
+}</pre>
+</div>
+<p>Repository classes should require an instance of ISessionBuilder passed into their constructors, and for each operation, they should call GetSession().&nbsp; GetConfiguration is there to facilitate SchemaExport, which we use to generate the database schema from the NHibernate mappings.</p>
+<p>Below is the HybridSessionBuilder class.&nbsp; Feel free to use it in your applications.</p>
+<div>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#0000ff">using</span> System.Web;
+<span style="color:#0000ff">using</span> CodeCampServer.Model;
+<span style="color:#0000ff">using</span> NHibernate;
+<span style="color:#0000ff">using</span> NHibernate.Cfg;
+
+<span style="color:#0000ff">namespace</span> CodeCampServer.DataAccess.Impl
+{
+    <span style="color:#0000ff">public</span> <span style="color:#0000ff">class</span> HybridSessionBuilder : ISessionBuilder
+    {
+        <span style="color:#0000ff">private</span> <span style="color:#0000ff">static</span> ISessionFactory _sessionFactory;
+        <span style="color:#0000ff">private</span> <span style="color:#0000ff">static</span> ISession _currentSession;
+
+        <span style="color:#0000ff">public</span> ISession GetSession()
+        {
+            ISessionFactory factory = getSessionFactory();
+            ISession session = getExistingOrNewSession(factory);
+            Log.Debug(<span style="color:#0000ff">this</span>, <span style="color:#006080">"Using ISession "</span> + session.GetHashCode());
+            <span style="color:#0000ff">return</span> session;
+        }
+
+        <span style="color:#0000ff">private</span> ISessionFactory getSessionFactory()
+        {
+            <span style="color:#0000ff">if</span> (_sessionFactory == <span style="color:#0000ff">null</span>)
+            {
+                Configuration configuration = GetConfiguration();
+                _sessionFactory = configuration.BuildSessionFactory();
+            }
+
+            <span style="color:#0000ff">return</span> _sessionFactory;
+        }
+
+        <span style="color:#0000ff">public</span> Configuration GetConfiguration()
+        {
+            var configuration = <span style="color:#0000ff">new</span> Configuration();
+            configuration.Configure();
+            <span style="color:#0000ff">return</span> configuration;
+        }
+
+        <span style="color:#0000ff">private</span> ISession getExistingOrNewSession(ISessionFactory factory)
+        {
+            <span style="color:#0000ff">if</span> (HttpContext.Current != <span style="color:#0000ff">null</span>)
+            {
+                ISession session = GetExistingWebSession();
+                <span style="color:#0000ff">if</span> (session == <span style="color:#0000ff">null</span>)
+                {
+                    session = openSessionAndAddToContext(factory);
+                }
+                <span style="color:#0000ff">else</span> <span style="color:#0000ff">if</span> (!session.IsOpen)
+                {
+                    session = openSessionAndAddToContext(factory);
+                }
+
+                <span style="color:#0000ff">return</span> session;
+            }
+
+            <span style="color:#0000ff">if</span> (_currentSession == <span style="color:#0000ff">null</span>)
+            {
+                _currentSession = factory.OpenSession();
+            }
+            <span style="color:#0000ff">else</span> <span style="color:#0000ff">if</span> (!_currentSession.IsOpen)
+            {
+                _currentSession = factory.OpenSession();
+            }
+
+            <span style="color:#0000ff">return</span> _currentSession;
+        }
+
+        <span style="color:#0000ff">public</span> ISession GetExistingWebSession()
+        {
+            <span style="color:#0000ff">return</span> HttpContext.Current.Items[GetType().FullName] <span style="color:#0000ff">as</span> ISession;
+        }
+
+        <span style="color:#0000ff">private</span> ISession openSessionAndAddToContext(ISessionFactory factory)
+        {
+            ISession session = factory.OpenSession();
+            HttpContext.Current.Items.Remove(GetType().FullName);
+            HttpContext.Current.Items.Add(GetType().FullName, session);
+            <span style="color:#0000ff">return</span> session;
+        }
+    }
+}</pre>
+</div>
+<p>NHibernate will automatically look for a file in the current AppDomain’s base location named “hibernate.cfg.xml”.&nbsp; This file in <a href="http://codecampserver.org">CodeCampServer</a> is the following:</p>
+<div>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">&lt;?xml version=<span style="color:#006080">"1.0"</span> encoding=<span style="color:#006080">"utf-8"</span> ?&gt;
+&lt;hibernate-configuration  xmlns=<span style="color:#006080">"urn:nhibernate-configuration-2.2"</span> &gt;
+    &lt;session-factory&gt;
+        &lt;property name=<span style="color:#006080">"connection.provider"</span>&gt;NHibernate.Connection.DriverConnectionProvider&lt;/property&gt;
+        &lt;property name=<span style="color:#006080">"connection.driver_class"</span>&gt;NHibernate.Driver.SqlClientDriver&lt;/property&gt;
+        &lt;property name=<span style="color:#006080">"connection.connection_string"</span>&gt;Data Source=localhostsqlexpress;Initial Catalog=CodeCampServer;Integrated Security=True&lt;/property&gt;
+        &lt;property name=<span style="color:#006080">"show_sql"</span>&gt;<span style="color:#0000ff">false</span>&lt;/property&gt;
+        &lt;property name=<span style="color:#006080">"dialect"</span>&gt;NHibernate.Dialect.MsSql2005Dialect&lt;/property&gt;
+
+        &lt;property name=<span style="color:#006080">"query.substitutions"</span>&gt;<span style="color:#0000ff">true</span> 1, <span style="color:#0000ff">false</span> 0&lt;/property&gt;    
+        &lt;mapping assembly=<span style="color:#006080">"CodeCampServer.DataAccess"</span> /&gt;
+    &lt;/session-factory&gt;
+&lt;/hibernate-configuration&gt;
+</pre>
+</div>

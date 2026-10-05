@@ -1,0 +1,24 @@
+---
+wp_id: 338
+title: 'How to solve the ever-common “Parser Error Message: Access is denied: ‘mydll’.” – level 200'
+slug: how-to-solve-the-ever-common-parser-error-message-access-is-denied-mydll-level-200
+permalink: /2005/10/how-to-solve-the-ever-common-parser-error-message-access-is-denied-mydll-level-200/
+date: 2005-10-19T16:31:00
+date_utc: 2005-10-19T16:31:00Z
+modified: 2005-10-19T16:31:00
+format: html
+excerpt: 'We’ve all been halted in ASP.NET development when we seemingly do a normal compile, and then our website won’t work. It won’t even start up. Here’s a rough error you may see:———————————————————————— Server Error in ‘/MyWebApp’ Application Configuration Error Description: An error occurred during the processing of a configuration file required to service this request. Please […]'
+comments_open: true
+---
+<p>We’ve all been halted in ASP.NET development when we seemingly do a normal compile, and then our website won’t work.&nbsp; It won’t even start up.&nbsp;&nbsp;Here’s a rough error you may see:<br>————————————————————————</p>
+<h3>Server Error in ‘/MyWebApp’ Application</h3><a id="XSLTH4121121121121120121120120"></a><br>
+<h4>Configuration Error</h4>
+<p><b>Description</b>: An error occurred during the processing of a configuration file required to service this request. Please review the specific error details below and modify your configuration file appropriately.<br><br><b>Parser Error Message</b>: Access is denied: ‘mydll’.<br><strong>Source Error</strong>:<br></p><pre>Line 169:   &lt;add assembly=&lt;System.Drawing, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&gt;/&gt;<br>
+Line 170:    &lt;add assembly=&lt;System.EnterpriseServices, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a&gt;/&gt;<br>
+Line 171:    &lt;add assembly=&lt;*&gt;/&gt;<br>
+Line 172:    &lt;/assemblies&gt;<br>
+Line 173:					</pre>
+<p><b>Source File</b>: c:winntmicrosoft.netframeworkv1.0.3705Configmachine.config <b>Line</b>: 171<br><b>Version Information</b>: Microsoft .NET Framework Version:1.0.3705.0; ASP.NET Version:1.0.3705.0 <br>———————————————————-</p>
+<p>Most of the time, your website worked just fine.&nbsp; It has happened to me when I’ve just made an update to the web.config file.&nbsp; What causes this is that the website AppDomain tries to load, and it can’t.&nbsp; A change to the web.config causes a recycle of the AppDomain and a reload of the website.&nbsp; When the website loads, a copy of every assembly is loaded into the Temporary ASP.NET Files directory.&nbsp; If that directory is locked, or files in the directory are locked, this process can’t complete, and we’ll see this error.</p>
+<p>The most common cause is the Windows Indexing Service.&nbsp; I don’t really need this service, so I’ve disabled it.&nbsp; I don’t get this error anymore.&nbsp; Technically speaking, any process that may lock files in that directory may cause this error, so technically virus scanners, Google Desktop search, etc may lock those files and cause this error, but I’ve only connected this with the Windows Indexing Service.</p>
+<p>Microsoft, in <a href="http://support.microsoft.com/default.aspx?scid=kb;en-us;329065">this Knowledge Base (KB) article</a>, recommends exactly that: disabling the Indexing Service.</p>

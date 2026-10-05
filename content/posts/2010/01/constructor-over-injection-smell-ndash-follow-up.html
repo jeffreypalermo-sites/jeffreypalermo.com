@@ -1,0 +1,143 @@
+---
+wp_id: 1130
+title: Constructor over-injection smell – follow up
+slug: constructor-over-injection-smell-ndash-follow-up
+permalink: /2010/01/constructor-over-injection-smell-ndash-follow-up/
+date: 2010-01-21T12:03:23
+date_utc: 2010-01-21T12:03:23Z
+modified: 2010-01-21T12:03:23
+format: html
+categories:
+- blog
+excerpt: 'This is a follow up to my article: “Constructor over-injection anti-pattern”. I’ve title this a bit differently because as with any heuristic, there are degrees of goodness and smelliness. Constructor over-injection, therefore, is a code smell, I believe. Without concrete do’s and don’ts, I believe it doesn’t deserve the explicit title of “anti-pattern”. I have […]'
+comments_open: true
+---
+<p>This is a follow up to my article: “<a href="/2010/01/constructor-over-injection-anti-pattern/">Constructor over-injection anti-pattern</a>”.&nbsp; I’ve title this a bit differently because as with any heuristic, there are degrees of goodness and smelliness.&nbsp; Constructor over-injection, therefore, is a code smell, I believe.&nbsp; Without concrete do’s and don’ts, I believe it doesn’t deserve the explicit title of “anti-pattern”.</p>
+<p>I have expanded the code sample (and it is available as a <a href="http://github.com/jeffreypalermo/DICodeSmells/archives/master">zip or tar file here</a>).</p>
+<p>I’ve modified the OrderProcessor as shown here.&nbsp; I believe this is more egregious and is more of an obvious example.&nbsp; Small samples get so trivial, that the pain show doesn’t seem like a problem at all, but when injected constructor arguments increase (think 5, 10, 20), the pain is greater.</p>
+<div class="csharpcode">
+<pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">namespace</span> DIAntiPattern</pre>
+<pre><span class="lnum">   2:  </span>{</pre>
+<pre class="alt"><span class="lnum">   3:  </span>    <span class="kwrd">public</span> <span class="kwrd">class</span> OrderProcessor : IOrderProcessor</pre>
+<pre><span class="lnum">   4:  </span>    {</pre>
+<pre class="alt"><span class="lnum">   5:  </span>        <span class="kwrd">private</span> <span class="kwrd">readonly</span> IOrderValidator _validator;</pre>
+<pre><span class="lnum">   6:  </span>        <span class="kwrd">private</span> <span class="kwrd">readonly</span> IAccountsReceivable _receivable;</pre>
+<pre class="alt"><span class="lnum">   7:  </span>        <span class="kwrd">private</span> <span class="kwrd">readonly</span> IRateExchange _exchange;</pre>
+<pre><span class="lnum">   8:  </span>        <span class="kwrd">private</span> <span class="kwrd">readonly</span> IUserContext _userContext;</pre>
+<pre class="alt"><span class="lnum">   9:  </span>&nbsp;</pre>
+<pre><span class="lnum">  10:  </span>        <span class="kwrd">public</span> OrderProcessor(IOrderValidator validator,</pre>
+<pre class="alt"><span class="lnum">  11:  </span>                              IAccountsReceivable receivable,</pre>
+<pre><span class="lnum">  12:  </span>                              IRateExchange exchange, IUserContext userContext)</pre>
+<pre class="alt"><span class="lnum">  13:  </span>        {</pre>
+<pre><span class="lnum">  14:  </span>            _validator = validator;</pre>
+<pre class="alt"><span class="lnum">  15:  </span>            _receivable = receivable;</pre>
+<pre><span class="lnum">  16:  </span>            _exchange = exchange;</pre>
+<pre class="alt"><span class="lnum">  17:  </span>            _userContext = userContext;</pre>
+<pre><span class="lnum">  18:  </span>        }</pre>
+<pre class="alt"><span class="lnum">  19:  </span>&nbsp;</pre>
+<pre><span class="lnum">  20:  </span>        <span class="kwrd">public</span> SuccessResult Process(Order order)</pre>
+<pre class="alt"><span class="lnum">  21:  </span>        {</pre>
+<pre><span class="lnum">  22:  </span>            <span class="kwrd">bool</span> isValid = _validator.Validate(order);</pre>
+<pre class="alt"><span class="lnum">  23:  </span>            <span class="kwrd">if</span> (isValid)</pre>
+<pre><span class="lnum">  24:  </span>            {</pre>
+<pre class="alt"><span class="lnum">  25:  </span>                Collect(order);</pre>
+<pre><span class="lnum">  26:  </span>                IOrderShipper shipper = <span class="kwrd">new</span> OrderShipperFactory().GetDefault();</pre>
+<pre class="alt"><span class="lnum">  27:  </span>                shipper.Ship(order);</pre>
+<pre><span class="lnum">  28:  </span>            }</pre>
+<pre class="alt"><span class="lnum">  29:  </span>&nbsp;</pre>
+<pre><span class="lnum">  30:  </span>            <span class="kwrd">return</span> CreateStatus(isValid);</pre>
+<pre class="alt"><span class="lnum">  31:  </span>        }</pre>
+<pre><span class="lnum">  32:  </span>&nbsp;</pre>
+<pre class="alt"><span class="lnum">  33:  </span>        <span class="kwrd">private</span> <span class="kwrd">void</span> Collect(Order order)</pre>
+<pre><span class="lnum">  34:  </span>        {</pre>
+<pre class="alt"><span class="lnum">  35:  </span>            User user = _userContext.GetCurrentUser();</pre>
+<pre><span class="lnum">  36:  </span>            Price price = order.GetPrice(_exchange, _userContext);</pre>
+<pre class="alt"><span class="lnum">  37:  </span>            _receivable.Collect(user, price);</pre>
+<pre><span class="lnum">  38:  </span>        }</pre>
+<pre class="alt"><span class="lnum">  39:  </span>&nbsp;</pre>
+<pre><span class="lnum">  40:  </span>        <span class="kwrd">private</span> SuccessResult CreateStatus(<span class="kwrd">bool</span> isValid)</pre>
+<pre class="alt"><span class="lnum">  41:  </span>        {</pre>
+<pre><span class="lnum">  42:  </span>            <span class="kwrd">return</span> isValid ? SuccessResult.Success : SuccessResult.Failed;</pre>
+<pre class="alt"><span class="lnum">  43:  </span>        }</pre>
+<pre><span class="lnum">  44:  </span>    }</pre>
+<pre class="alt"><span class="lnum">  45:  </span>}</pre>
+</div>
+<p>.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+<p>Notice specifically that IRateExchange is NOT a dependency of OrderProcessor at all.&nbsp; It is actually needed by an aggregate root, Order, so that it can do the price conversion based on exchange rates and prices.&nbsp; This particular design attempted put put that logic as close to the domain model as possible (inside an aggregate).&nbsp; This code works, but it requires the caller to pass through the dependency.&nbsp; Here is the Order class:</p>
+<div class="csharpcode">
+<pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">using</span> System;</pre>
+<pre><span class="lnum">   2:  </span>&nbsp;</pre>
+<pre class="alt"><span class="lnum">   3:  </span><span class="kwrd">namespace</span> DIAntiPattern</pre>
+<pre><span class="lnum">   4:  </span>{</pre>
+<pre class="alt"><span class="lnum">   5:  </span>    <span class="kwrd">public</span> <span class="kwrd">class</span> Order</pre>
+<pre><span class="lnum">   6:  </span>    {</pre>
+<pre class="alt"><span class="lnum">   7:  </span>        <span class="kwrd">public</span> DateTime Placed { get; set; }</pre>
+<pre><span class="lnum">   8:  </span>        <span class="kwrd">public</span> <span class="kwrd">string</span> OtherInfo { get; set; }</pre>
+<pre class="alt"><span class="lnum">   9:  </span>        <span class="kwrd">public</span> Price GetPrice(IRateExchange exchange, IUserContext userContext)</pre>
+<pre><span class="lnum">  10:  </span>        {</pre>
+<pre class="alt"><span class="lnum">  11:  </span>            User currentUser = userContext.GetCurrentUser();</pre>
+<pre><span class="lnum">  12:  </span>            Currency currency = userContext.GetSelectedCurrency(currentUser);</pre>
+<pre class="alt"><span class="lnum">  13:  </span>            <span class="kwrd">int</span> priceInSelectedCurrency = exchange.Convert(GetPrice(), currency);</pre>
+<pre><span class="lnum">  14:  </span>            var price = <span class="kwrd">new</span> Price{Currency = currency, Value = priceInSelectedCurrency};</pre>
+<pre class="alt"><span class="lnum">  15:  </span>            <span class="kwrd">return</span> price;</pre>
+<pre><span class="lnum">  16:  </span>        }</pre>
+<pre class="alt"><span class="lnum">  17:  </span>&nbsp;</pre>
+<pre><span class="lnum">  18:  </span>        <span class="kwrd">private</span> <span class="kwrd">int</span> GetPrice()</pre>
+<pre class="alt"><span class="lnum">  19:  </span>        {</pre>
+<pre><span class="lnum">  20:  </span>            <span class="rem">//do work to aggregate prices from line items, and total up order.</span></pre>
+<pre class="alt"><span class="lnum">  21:  </span>            <span class="kwrd">return</span> 1000;</pre>
+<pre><span class="lnum">  22:  </span>        }</pre>
+<pre class="alt"><span class="lnum">  23:  </span>    }</pre>
+<pre><span class="lnum">  24:  </span>}</pre>
+</div>
+<p>.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+<p>There are plenty of options to fix this code, and I’m sure you will comment on the one you prefer.&nbsp; The SMELL here is constructor over-injection.&nbsp; The injected dependency isn’t a dependency, and another dependency is sometimes a dependency of a particular supported operation of a class.</p>
+<p>However you fix this example, IRateExchange does not deserve to be constructor-injected into OrderProcessor.&nbsp; Next, LineItem will need a dependency to calculate something, and then the dependency has to flow through from an object that is managed by the IoC container.</p>
+<p>IoC containers are just tools, but we still have to be careful of constructor over-injection.&nbsp; </p>
+<p>I welcome the comments, and don’t forget to <a href="http://github.com/jeffreypalermo/DICodeSmells/archives/master"><strong>download the code</strong></a> (and fork it to post about your own counter example).&nbsp; </p>

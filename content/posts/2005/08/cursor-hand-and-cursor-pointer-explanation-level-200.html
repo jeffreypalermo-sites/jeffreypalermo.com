@@ -1,0 +1,18 @@
+---
+wp_id: 310
+title: 'cursor: hand; and cursor: pointer explanation – level 200'
+slug: cursor-hand-and-cursor-pointer-explanation-level-200
+permalink: /2005/08/cursor-hand-and-cursor-pointer-explanation-level-200/
+date: 2005-08-28T19:21:00
+date_utc: 2005-08-28T19:21:00Z
+modified: 2005-08-28T19:21:00
+format: html
+excerpt: Even though FireFox is now losing ground to Internet Explorer, web developers must still ensure websites and web applications look good and function well in all the browsers potential customers may be using. It is irresponsible to only test a web application in one browser when users may use the application for multiple browsers. There […]
+comments_open: true
+---
+<p>Even though <a href="http://www.pcworld.com/news/article/0,aid,122213,00.asp">FireFox is now losing ground to Internet Explorer</a>, web developers must still ensure websites and web applications look good and function well in all the browsers potential customers may be using.&nbsp; It is irresponsible to only test a web application in one browser when users may use the application for multiple browsers.</p>
+<p>There are many special things one must do to ensure browser compatibility.&nbsp; Using CSS is one of them, but even with a well-defined style sheet, browser differences can cause headaches.</p>
+<p>In order to ensure that the mouse pointer is a hand over any given element, use:</p>
+<p>*.myStyle<br>{<br>&nbsp;&nbsp;&nbsp;cursor: hand;<br>&nbsp;&nbsp;&nbsp;cursor: pointer;<br>}</p>
+<p>This will be effective in all the major browsers.&nbsp; cursor: hand; works in IE, and without testing with another browser, one would not find this visual bug.&nbsp; FireFox, for instance will only recognize cursor: pointer;&nbsp; IE 6 will recognize cursor: pointer, but IE 5 won’t.&nbsp; Using both declarations will ensure the proper look in all the major browsers.</p>
+<p>References:<br><a href="http://msdn.microsoft.com/library/default.asp?url=/workshop/author/dhtml/reference/properties/cursor.asp">http://msdn.microsoft.com/library/default.asp?url=/workshop/author/dhtml/reference/properties/cursor.asp</a><br><a href="http://www.quirksmode.org/css/cursor.html">http://www.quirksmode.org/css/cursor.html</a></p>

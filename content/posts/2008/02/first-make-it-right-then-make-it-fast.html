@@ -1,0 +1,20 @@
+---
+wp_id: 610
+title: First make it right.  Then make it fast.
+slug: first-make-it-right-then-make-it-fast
+permalink: /2008/02/first-make-it-right-then-make-it-fast/
+date: 2008-02-11T19:58:37
+date_utc: 2008-02-11T19:58:37Z
+modified: 2008-02-11T19:58:37
+format: html
+excerpt: 'To subscribe to my feed, add the following Url: http://feeds.feedburner.com/jeffreypalermo. I spent the first part of my career on the side of the fence where I want to make it fast first. In fact, I wanted to keep it fast all the way through. I’m talking about software. Performance optimization. Speed. There was a time […]'
+comments_open: true
+---
+<p>To subscribe to my <a href="http://feeds.feedburner.com/jeffreypalermo">feed</a>, add the following Url:&nbsp; <a href="http://feeds.feedburner.com/jeffreypalermo">http://feeds.feedburner.com/jeffreypalermo</a>.</p>
+<p>I spent the first part of my career on the side of the fence where I want to make it fast first.&nbsp; In fact, I wanted to keep it fast all the way through.</p>
+<p>I’m talking about software.&nbsp; Performance optimization.&nbsp; Speed.&nbsp; </p>
+<p>There was a time when every time I concatenated a string I weighed the theoretical pros and cons of using the plus operator vs StringBuilder vs. string.Format().&nbsp; I even measured differences.&nbsp; I’ve now come to the point where I realize that PDD (pain-driven development) is the real decision-maker.&nbsp; It’s no longer worth my time to think about what concatenation method might be faster.&nbsp; Compared to a single database call, the speed different is irrelevant.</p>
+<p><strong>Point:</strong>&nbsp; A well-designed application can be tuned at any conceivable place after it’s working correctly.&nbsp; An application that has “performance optimizations” coded into it from the start has less flexibility for the inevitable bottleneck that surfaces unexpectedly.</p>
+<p><strong>Point:&nbsp; </strong>I will not guess at what part of my code will be a bottleneck unless I have past experience in the exact same scenario.&nbsp; Rather, I will lead the team to create correct software that _appears_ to be fast enough throughout the project.&nbsp; At an agreed-upon time we’ll profile (with the appropriate tools – yes, I mean _measure_) the application and find any bottlenecks that are not acceptable for production.&nbsp; Then, with real data in hand, we’ll tune exactly the right parts of the application.&nbsp; We will not guess before measuring.&nbsp; After measuring, guessing is not necessary.</p>
+<p><strong>Point:&nbsp; First make it right.&nbsp; Then make it fast.</strong></p>
+<p>In general, out of process calls are performance bottlenecks, not in-process logic.&nbsp; Either way, measuring tells the truth, not guessing.</p>

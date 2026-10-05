@@ -1,0 +1,56 @@
+[
+  {
+    "id": 2455,
+    "parent": 0,
+    "author_name": "Ben Hall",
+    "author_url": "http://Blog.BenHall.me.uk",
+    "date": "2008-04-20T00:39:28",
+    "type": "comment",
+    "content_html": "<p>Cool video!  Love that Scott Guthrie says he just works on the .Net team….</p>"
+  },
+  {
+    "id": 2456,
+    "parent": 0,
+    "author_name": "Rajiv Das",
+    "author_url": "http://thothzone.spaces.live.com/",
+    "date": "2008-04-20T03:32:00",
+    "type": "comment",
+    "content_html": "<p>Very cool. Looks like some solidification aound the philisophy of the crowd</p>"
+  },
+  {
+    "id": 2457,
+    "parent": 0,
+    "author_name": "Chris Bilson",
+    "author_url": "http://factored-software.com/iimplement/",
+    "date": "2008-04-20T13:44:28",
+    "type": "comment",
+    "content_html": "<p>It’s nice to know more people’s names. Thanks!</p>"
+  },
+  {
+    "id": 2458,
+    "parent": 0,
+    "author_name": "James Gregory",
+    "author_url": "http://blog.jagregory.com",
+    "date": "2008-04-21T18:48:45",
+    "type": "comment",
+    "content_html": "<p>Nice. Good to be able to put some faces to names, for those of us who couldn’t attend.</p>"
+  },
+  {
+    "id": 2459,
+    "parent": 0,
+    "author_name": "Rob Kitson",
+    "author_url": "http://robkitson.net",
+    "date": "2008-04-21T21:04:54",
+    "type": "comment",
+    "content_html": "<p>Thanks Jeffrey! Awesome to put faces to all those names!</p>"
+  },
+  {
+    "id": 2460,
+    "parent": 0,
+    "author_name": "Glenn Block",
+    "author_url": "http://www.codebetter.com/glenn.block",
+    "date": "2008-04-22T00:09:55",
+    "type": "comment",
+    "content_html": "<p>Nice video Jeffrey. Next time let me know your dropping it on you-tube, so I can say something that actually has value \uD83D\uDE42</p>"
+  }
+]

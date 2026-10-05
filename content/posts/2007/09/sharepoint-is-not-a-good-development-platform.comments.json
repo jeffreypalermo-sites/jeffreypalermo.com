@@ -1,0 +1,1028 @@
+[
+  {
+    "id": 1862,
+    "parent": 0,
+    "author_name": "jlynch",
+    "author_url": "http://codebetter.com/blogs/jeff.lynch",
+    "date": "2007-09-13T21:38:41",
+    "type": "comment",
+    "content_html": "<p>Man I couldn’t agree more!</p>\n<p>SharePoint (which I’ve used for the past several years) is the largest pain in the neck I’ve ever seen from MSFT. Out of the box it works fine most of the time, but it’s just way too cumbersome to even think of as a development platform.</p>\n<p>Jeff</p>"
+  },
+  {
+    "id": 1863,
+    "parent": 0,
+    "author_name": "Kevin",
+    "author_url": "http://kevindwhite.blogspot.com/",
+    "date": "2007-09-13T21:58:23",
+    "type": "comment",
+    "content_html": "<p>This is why anyone with SharePoint on their resume can command insane amounts of money for consulting. I also hear that every license comes with a bed of hot coals to walk on and a pitcher of shredded glass to quench your thirst.</p>"
+  },
+  {
+    "id": 1864,
+    "parent": 0,
+    "author_name": "Steve",
+    "author_url": "http://",
+    "date": "2007-09-14T00:46:45",
+    "type": "comment",
+    "content_html": "<p>I worked with Sharepoint and share your comments.  </p>\n<p>I had to have a VM setup with server 2003 on it, etc.. to code</p>\n<p>The experience was horrible.  Trying to modify the templates was painful, etc… documentation was horrible.  The server portal part vs. the team sites, it was ugly.</p>\n<p>MS has alot of work todo on building server software for modification.  (CRM as an example).</p>\n<p>It’s another example of a hyped marketing job by MS making everyone think how great it is.</p>"
+  },
+  {
+    "id": 1865,
+    "parent": 0,
+    "author_name": "Andrew Connell",
+    "author_url": "http://www.andrewconnell.com/blog",
+    "date": "2007-09-14T02:20:51",
+    "type": "comment",
+    "content_html": "<p>Because you have to develop in a virtual macine, that’s what classifies it as a bad development platform? Seems like a real myopic view. And always connected? Show me an app that leverages a DB that works disconnected. SharePoint is a web app with a DB background. Would it be nice to have a “Pro” version that runs on Vista? You bet (won’t run on XP because of the lack of application pools).</p>\n<p>The product has come a LONG way since v2/SPS 2003… WSS v3 / MOSS 2007 is a much better platform. Does every app blog in SharePoint? No. But it contains a LOT of stuff you have to normally build from scratch. Navigation already setup, a security model, search OOTB, all the plumbing for the Web Part framework, and plugin model? Oh… and it hosts WF and provides all the services necessary for WF as well as provide a human aspect to it? You can DEFINATELY make a case for it to be a development platform.</p>\n<p>Is there work to do to make it a platform? You bet… how about a real roadmap? What about REAL development tools? How about some real guidance from Redmond on SharePoint dev in true SDL processes. But to write it off this easily… bit short sighted (especially with the cases put forth here).</p>\n<p>Over hyped? Really… so that’s why it’s the highest growth product ever in the history of the company and closing in on $1B in sales for the latest version in just a few months from now? That’s ALL marketing hype with the other portal solutions and other content management applications out there? Um… I think business decision makers are a bit more savy than that.</p>\n<p>-AC</p>"
+  },
+  {
+    "id": 1866,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-09-14T02:52:40",
+    "type": "comment",
+    "content_html": "<p>@Andrew,<br>\nBeing a MOSS MVP, you certainly know what you are talking about when it comes to Sharepoint.  I know of many companies using it, and I’ve heard of folks using it as a development platform.  It does have a lot built in, but I’m offering my opinion of what makes a “good” development platform.  Yes, it’s a development platform, but I don’t think it’s a good one.  </p>\n<p>Regarding “always connected” and the database.  Every enterprise application I’ve worked on has used a relational database.  Because that database can easily be created/run on the developer workstation, a developer can have a laptop on a plane ride and still build and run the app.  I must state that I believe a shared team development database  is a bad idea.  Every developer must have all of the application on the local workstation.  Shared dev databases are a source of friction and slow down the team.  Shared development assets are a source of friction and slow down the team.</p>\n<p>Andrew, you are certainly in a position to help Microsoft make the product better, and I hope you are afforded many opportunities for influence.  </p>"
+  },
+  {
+    "id": 1867,
+    "parent": 0,
+    "author_name": "Sahil Malik",
+    "author_url": "http://blah.winsmarts.com",
+    "date": "2007-09-14T02:53:31",
+    "type": "comment",
+    "content_html": "<p>Jeffrey (and others) – sorry but what you are experiencing are teething pains. I consider myself as hardcore a developer as the rest of you, and I think SharePoint is an awesome development platform.</p>"
+  },
+  {
+    "id": 1868,
+    "parent": 0,
+    "author_name": "aconnell",
+    "author_url": "http://www.andrewconnell.com",
+    "date": "2007-09-14T03:06:33",
+    "type": "comment",
+    "content_html": "<p>Jeffery-<br>\nI totally agree with your point about shared database connections with your developers… I always advocate SharePoint developers run in fully isolated environment in their own VM… 100% self contained. It’s fully possible to do typical isolated development within the same way you do with ASP.NET in SharePoint.</p>\n<p>I do think it is a good development platform. Respectfully, simply discounting it due to the fact you have to run a full SharePoint install in a VM on each developer’s machine is just a really quick judgement.</p>\n<p>BTW, you don’t have to develop IN a SharePoint environment. I commonly develop in Vista, test it using unit testing, package stuff up, and move it to a central build server to do integration testing with other components. A good bit of development done within a major systems (which SharePoint is) is done this way.</p>\n<p>BTW2 – yes, you can be sure I provide my feedback in this area. Don’t get me wrong, there is plenty that could be done, but tossing it out like this… well I’ve said my peace. \uD83D\uDE42 It’s like saying “forget Silverlight… I’ve got to jump back and forth between two apps for dev? Arg… that’s not a good story.” \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1869,
+    "parent": 0,
+    "author_name": "The Mossman",
+    "author_url": "http://www.sharepointblogs.com",
+    "date": "2007-09-14T03:46:27",
+    "type": "comment",
+    "content_html": "<p>Here’s the deal, SharePoint 2007 can be, and is used as a platform for enterprise applications. Where it excels, is in its ability to tie several parts of a Microsoft based enterprise together. That being said, I think the biggest downside to using SharePoint as a dev platform is some of the very reasons you point out.</p>\n<p>SharePoint IS difficult to get ramped up in. And, it does take a bit of an investment into powerful machines that can support robust VM’s. This is in fact the ONLY way to go, and allows for almost everything you complain about. I ONLY run Vista on both my home and work machine. BUT, I am now reliant on having several Win2k3 VM’s that I use for development. In some ways, this is interesting in a good way. My PC operating system is now not filled with dev tools and running processes like sql server.</p>\n<p>P.s. I will often do a portion of my coding in notepad++ though I admit that having SharePoint Designer and VS are pretty much a requirement (put ’em in your vm).</p>"
+  },
+  {
+    "id": 1870,
+    "parent": 0,
+    "author_name": "Cam Soper",
+    "author_url": "http://www.camthegeek.com",
+    "date": "2007-09-14T06:41:38",
+    "type": "comment",
+    "content_html": "<p>Jeffrey brings up some good points regarding what makes a good development platform, but I would argue he missed some of what I consider the most painful parts of the MOSS development story.  </p>\n<p>Ever tried debugging a Sharepoint web part in w3wp.exe?  After a minute or two, the SP object model times out or something, and everything is null.  And the web application hangs until you fire off an IISReset.  What the heck is up with that?</p>\n<p>Combine poor debugging with a poorly documented object model, somewhat unclear deployment practices, and top all that off with the overhead of having to develop in a VM, and you have yourself a great recipe for frustration.</p>\n<p>My advice to any developer lured by the riches of the current demand for MOSS developers is, just don’t do it.  Your sanity just isn’t worth it.</p>"
+  },
+  {
+    "id": 1871,
+    "parent": 0,
+    "author_name": "Martin Jul",
+    "author_url": "http://community.ative.dk/blogs/",
+    "date": "2007-09-14T08:38:24",
+    "type": "comment",
+    "content_html": "<p>I am working on a MOSS 2007 project. </p>\n<p>Here are some of the things we did to make the experience less painful:</p>\n<p>1) Everyone has his/her own Win 2003 server as a development workstation with a private Sharepoint instance.</p>\n<p>2) We created a simple, fast build-target (“QuickPatch”)  to quickly update the code on the local developer machine without going through the complete build/deployment cycle. This deploys the assemblies directly to the ASP.NET application. </p>\n<p>3) We put everything into source control and set up scripted build and deployment. To do this we bundled our app in Features, Site Templates etc wrapped up in a Solution file. This step has very poor tooling and documentation. We used a mixture of msbuild and powershell scripting to do this. </p>\n<p>4) We have created some ordinary ASP.NET test pages that can run a lot of our controls and application outside of Sharepoint. The UI people like this for writing legacy code (code-and-fix development).</p>\n<p>5) The UI/Sharepoint stuff and the main application is decoupled so we can run our unit and integration tests without Sharepoint </p>\n<p>6) Additionally we use Watir/Watin scripts for end-to-end integration testing. </p>\n<p>Overall experience is that there is a lot of friction. Some of it can be reduced by scripting etc.  This makes it tolerable – not good. </p>\n<p>My biggest issues with SP is that it relies heavily on the wretched ASP.NET API for its GUI stuff. It would be much nicer to have something less coupled and more testable.</p>"
+  },
+  {
+    "id": 1872,
+    "parent": 0,
+    "author_name": "Spence",
+    "author_url": "http://www.harbar.net",
+    "date": "2007-09-14T09:11:57",
+    "type": "comment",
+    "content_html": "<p>It’s all old news. SharePoint as a platform rocks, but the tooling is immature (the polite way to put it). MS knows this and are working to improve the situation over time. It will obvioulsy take quite some to come close to the experience for regular .NET/SQL dev.</p>\n<p>Being negative won’t help anyone, being constructive on the other hand…</p>\n<p>Check out the following posts<br>\n<a href=\"http://www.harbar.net/archive/2007/03/28/quotTest-Drivenquot-SharePoint-Development.aspx\" rel=\"nofollow ugc\">http://www.harbar.net/archive/2007/03/28/quotTest-Drivenquot-SharePoint-Development.aspx</a></p>\n<p><a href=\"http://www.harbar.net/archive/2007/02/25/Office-SharePoint-Server-Developer-Edition.aspx\" rel=\"nofollow ugc\">http://www.harbar.net/archive/2007/02/25/Office-SharePoint-Server-Developer-Edition.aspx</a></p>"
+  },
+  {
+    "id": 1873,
+    "parent": 0,
+    "author_name": "Joe Brinkman",
+    "author_url": "http://blog.theaccidentalgeek.com",
+    "date": "2007-09-14T12:02:05",
+    "type": "comment",
+    "content_html": "<p>I am surprised at the comments from Andrew and Sahil.  Sure, people have figured out how to make MOSS sing and use it daily as a development platform.  But then again, people also found a way to write programs using a bunch of paper punch cards, that didn’t make the experience easy or pleasureable.  I think Andrew and Sahil are missing Jeffrey’s point which is not a discussion of power or capability, but rather “approachability”.  Any dev environment that puts up as many barriers to entry as MOSS is unnecessarily limiting its market.  Just think how much better the sales could have been if more of these roadbumps were removed.</p>"
+  },
+  {
+    "id": 1874,
+    "parent": 0,
+    "author_name": "richard clarke",
+    "author_url": "http://",
+    "date": "2007-09-14T12:59:48",
+    "type": "comment",
+    "content_html": "<p>I could not agree more. I spent a couple of weeks trying to get a Sharepoint proof of concept working. Something which would have taken a morning in ASP.NET was still not 100% after two weeks messing about with InfoPath 2007 and SPS. No documentation, no samples (this was Feb 2007), no help, nothing. It blows.</p>"
+  },
+  {
+    "id": 1875,
+    "parent": 0,
+    "author_name": "aconnell",
+    "author_url": "http://www.andrewconnell.com",
+    "date": "2007-09-14T13:58:11",
+    "type": "comment",
+    "content_html": "<p>Joe-<br>\nI do get Jeffery’s point…. but saying something isn’t approachable does not make it a bad development platform. What make sit a bad platform? Bad architecture, no ability to change how things work or provide certain hooks (like 2nd generation SharePoint)… those are the types of things that make something bad platform.</p>\n<p>You can make the same case with WCF, WPF, AJAX… any technology. There is always going to be a bit of a learning curve. MSFT even provides a VHD of a fully configured MOSS install with VS 2005 and all the other stuff included as trial ware. There are TONS of posts on the blogsphere showing how to setup a dev machine… etc. “But why do there even have to be posts showing how to setup a dev machine?”</p>\n<p>SharePoint is a server product with TONS of options for customization, extensibility and value add. No matter the application, when you hook into an app, it takes a bit getting used to.</p>\n<p>So I want to build add-ins for Visual Studio. Is it easy? Nope… because I need this and that and have all this work to do just to get my environment ready to build a plugin.</p>\n<p>To me the issue isn’t with SharePoint, it is jumping into working within and integrating with platform unlike pure ASP2 development where you building from the ground up.</p>"
+  },
+  {
+    "id": 1876,
+    "parent": 0,
+    "author_name": "Brendan Tompkins",
+    "author_url": "http://",
+    "date": "2007-09-14T14:01:14",
+    "type": "comment",
+    "content_html": "<p>I think Martin hits the nail on the head:</p>\n<p>“My biggest issues with SP is that it relies heavily on the wretched ASP.NET API for its GUI stuff. It would be much nicer to have something less coupled and more testable.”</p>\n<p>The more an application depends on System.Web the harder it is to develop, debug, test and sometimes most importantly, re-use the services it provides.  I’ve run into this problem numerous times lately.  </p>\n<p>I also find it interesting that even folks here that are betting their careers on SP aren’t  arguing that it is easy to develop with.  </p>\n<p>That’s the point here, I think.  How easy is it going to be to bring a new developer into the mix? How much setup is there?  How about maintenance down the road?  If something goes wrong and the primary dev team is long gone, does the person tasked with fixing it have to cut new teeth for weeks just to fix bugs?</p>"
+  },
+  {
+    "id": 1877,
+    "parent": 0,
+    "author_name": "Ben Scheirman",
+    "author_url": "http://www.flux88.com",
+    "date": "2007-09-14T14:06:39",
+    "type": "comment",
+    "content_html": "<p>You hit the nail on the head Jeffrey!</p>\n<p>I largely avoid getting involved with SharePoint projects because I have 2 under my belt and I don’t want to make it 3.  I’d rather build something from scratch that does exactly what I need rather than *settle* (and you _are_ settling when you go with sharepoint as an application platform) for a product with a small set of features that solves 70% of the problems, but is vastly difficult to extend and tweak to make it work the way you want.  In the end you might get exactly what you wanted, but you probably spent the same amount of money on the Sharepoint XML Hacking (look, no code!) than you would on a solid team of experienced .NET developers.</p>"
+  },
+  {
+    "id": 1878,
+    "parent": 0,
+    "author_name": "John Holliday",
+    "author_url": "http://www.johnholliday.net",
+    "date": "2007-09-14T14:15:25",
+    "type": "comment",
+    "content_html": "<p>Let’s get our terms straight.  There’s the “development platform”, and then there’s the “developer experience”.  It seems that Jeffrey is (rightfully) frustrated with the current state of the art with regard to the SharePoint developer experience.  But to say that SharePoint is not a development platform is way off the mark.</p>\n<p>Consider IIS as a development plaform for building Web applications.  Whether you build the application using Visual Studio or notepad, IIS as a “platform” simply provides the API and other services needed to get the job done.</p>\n<p>So the first requirement of a development platform is that it provide the essential services and interfaces to build applications.  SharePoint does this very well.  Is it challenging to configure a development environment so that the developer experience is enjoyable?  Yes it is.  But that challenge is arguably a manifestation of the inherent challenge in building collaborative applications in the first place.</p>"
+  },
+  {
+    "id": 1879,
+    "parent": 0,
+    "author_name": "aconnell",
+    "author_url": "http://www.andrewconnell.com",
+    "date": "2007-09-14T14:37:22",
+    "type": "comment",
+    "content_html": "<p>Brenden-<br>\n“If something goes wrong and the primary dev team is long gone, does the person tasked with fixing it have to cut new teeth for weeks just to fix bugs?”<br>\nYou can’t count that as a shot at SharePonit… that’s true with any application. Just yesterday I walked out of a client who wants to hire a contractor to take their ASP intranet -&gt; ASP.NET. So what happens if there’s a bug down the road? They don’t know ASP.NET, so what’s the ramp-up time? Please… this is an industry thing, NOT a SharePoint issue.</p>\n<p>Ben-<br>\nNot every application should be built on SharePoint… no one is advocating that (no reasonable person that is). If they are, it’s the classic “if you have a hammer, everything looks like a nail”. However, take something like a knowledge base, and I can guarentee you can build it faster in SharePoint than in ASP.NET or whatever else you want to build beacuse so much of the infrastructure is there. The navigation is there, a security model, plugin model, customization, CRUD screens for modifying data, locking data down by user / group, personlization engine, notifications, RSS feeds, etc. All OOTB.</p>\n<p>John hits the nail on the head.</p>"
+  },
+  {
+    "id": 1880,
+    "parent": 0,
+    "author_name": "Brendan Tompkins",
+    "author_url": "http://",
+    "date": "2007-09-14T14:47:59",
+    "type": "comment",
+    "content_html": "<p>aconnell:</p>\n<p>Sure, this is not JUST a sharepoint issue, but when the ramp up time is harder with sharepoint, as it certainly is, it’s a BIGGER issue with sharepoint, than it would be with other technologies.</p>"
+  },
+  {
+    "id": 1881,
+    "parent": 0,
+    "author_name": "Rob Foster",
+    "author_url": "http://www.robfoster.net",
+    "date": "2007-09-14T15:19:32",
+    "type": "comment",
+    "content_html": "<p>This may have already been said, but it is important to note that developing SharePoint applications IS ASP.NET development with another few object models.  There aren’t as many tools available (though, we are quite spoiled with the available tools for ASP.NET), and there is a bit of a learning curve, but SharePoint is gaining a lot of momentum as an application platform.</p>"
+  },
+  {
+    "id": 1882,
+    "parent": 0,
+    "author_name": "Andrew Connell",
+    "author_url": "http://www.andrewconnell.com/blog",
+    "date": "2007-09-14T15:23:09",
+    "type": "comment",
+    "content_html": "<p>Brendan-<br>\nRespectfly disagree. Many of the topics people struggle within SharePoint are not SharePoint specific. For example: CAS. Most poeple don’t mess with it in ASP.NET apps (Full works fine, right?), but beause it’s heavily leveraged in SharePoint, people associate it with SharePoint. Same with server control development… is that a SharePoint issue? Nope… not at all.</p>"
+  },
+  {
+    "id": 1883,
+    "parent": 0,
+    "author_name": "Aaron Erickson",
+    "author_url": "http://blog.magenic.com/blogs/aarone",
+    "date": "2007-09-14T16:03:33",
+    "type": "comment",
+    "content_html": "<p>I agree.  Sharepoint as a dev platform is, and I will be kind, oversold a little bit.</p>\n<p>With infopath – it gets even worse though.  Don’t get me wrong – for certain kind of quick hit solutions, it is ok.  But should you need to “leave the box”, so to speak, and optimize something (i.e. say, make the file upload control render differently on the resulting web page) – the abstraction leaks more than the titanic.</p>\n<p>The scary thing about infopath+sharepoint is that it presents this view that writing apps is easy – which at a surface level, it can be.  The minute you need to innovate in the UI though, it can be a real pain.</p>"
+  },
+  {
+    "id": 1884,
+    "parent": 0,
+    "author_name": "Andrew Connell",
+    "author_url": "http://www.andrewconnell.com/blog",
+    "date": "2007-09-14T16:34:26",
+    "type": "comment",
+    "content_html": "<p>(finally changed my name from aconnell &gt; Andrew Connell… didn’t realize it wasn’t doing that originally, my bad)</p>\n<p>Aaron-<br>\nOversold? I don’t see Microsoft really pushing it as a development platform for hosting custom applications at all. In fact, that’s been one of my biggest compliaints to them. There’s minimal guidance on MSDN, TechNet, in the articles and such. Anyone talk about SCM integration or SDL with SharePoint on <a href=\"http://*.microsoft.com\" rel=\"nofollow ugc\">http://*.microsoft.com</a>? Nope… the only official stuff you see comes from the community.</p>\n<p>Suffice to say the whole InfoPath+SharePoint thing is a painpoint that many have hashed out… quick search of the blogs will result in a few posts.</p>"
+  },
+  {
+    "id": 1885,
+    "parent": 0,
+    "author_name": "Ben Robb",
+    "author_url": "http://",
+    "date": "2007-09-14T16:48:57",
+    "type": "comment",
+    "content_html": "<p>While SharePoint is indeed a big, complex product, most of the complexity is a side effect of the fact that it is so feature rich.</p>\n<p>Sure, its not as simple as going to Visual Studio, saying “new web project” and starting hacking out code from scratch. I used to do that 10 years ago. I’ve lost count of the number of times that I’ve repeated pretty much the same code on every application. The nice thing about SharePoint is that I actually don’t *have* to develop that much on it.</p>\n<p>I have some master pages, page layouts, CSS, etc. which I can develop in whatever IDE I choose. They are after all just .NET pages… If I really want to get some tight integration with SharePoint, I can load them into SharePoint Designer.</p>\n<p>Apart from that? Once you start to build SharePoint applications and realise that navigation, content aggregation, data storage / manipulation, workflows, security, profiles, audience targeting, search, forums, wikis, blogs, rss etc etc. are all there already, you start to get some really compelling metrics on the difficulty of building applications.</p>\n<p>I’m not saying it’s the only game in town. There are instances when SharePoint is not appropriate to the project – do you really need SharePoint for a tiny, static website? Almost certainly not.</p>\n<p>Aaron’s comment that you need to be careful when you step “outside” is correct. It can sometimes be challenging to work through modifications to existing functionality like InfoPath Forms. But at the end of the day, its just a .NET application. You can build a User Control in Visual Studio and deploy it in much the same way that you would with any other IIS application. Yes, you have to be more careful with CAS, you have to apply best practice to get things to work, but that’s no bad thing, imo.</p>\n<p>I sold this to my company based on the fact that our time was better spent actually writing cool apps to solve our clients’ business problems, rather than building yet another control to aggregate content or expose something as RSS… it was a learning curve, but it was worth it.</p>"
+  },
+  {
+    "id": 1886,
+    "parent": 0,
+    "author_name": "Peter {faa780ce-0f0a-4c28-81d2-3667b71287fd}",
+    "author_url": "http://",
+    "date": "2007-09-14T16:54:27",
+    "type": "comment",
+    "content_html": "<p>I’m surprised no one has mentioned the license costs yet. As a SharePoint guy, I’m somewhat appalled that every developer must have their own licensed copy of Windows Server, with some flavor of Office also available for testing. All this may or may not be covered by some flavor of MSDN subscription, but compare this to vanilla ASP.NET. Yeah.</p>\n<p>We’re sticking to the development environment in this discussion, yes? Further points:</p>\n<p>* Effective automated testing is difficult.</p>\n<p>* Deployment is difficult.</p>\n<p>* Debugging/examining the logs is painful.</p>\n<p>I think all the MVPs mentioned it above, and they’re in agreement: no one’s defending the current state of SharePoint tooling. It’s a definite pain point.</p>\n<p>BUT, what the MVPs are vigorously defending, is SharePoint’s viability as an application development platform.  THIS, my friends, is a different subject entirely.</p>\n<p>On this OTHER subject, I’ve found this post by Oren Eine interesting–he’s working with Microsoft CRM, and has a lot of complaints that do apply to SharePoint development as well:</p>\n<p><a href=\"http://www.ayende.com/Blog/archive/2007/08/24/Developing-on-Microsoft-CRM.aspx\" rel=\"nofollow ugc\">http://www.ayende.com/Blog/archive/2007/08/24/Developing-on-Microsoft-CRM.aspx</a></p>"
+  },
+  {
+    "id": 1887,
+    "parent": 0,
+    "author_name": "Andrew Connell",
+    "author_url": "http://www.andrewconnell.com/blog",
+    "date": "2007-09-14T17:37:46",
+    "type": "comment",
+    "content_html": "<p>Peter-<br>\nNot to come across to attack your post… but like my others, I’m trying to clarify the view that many non-SP types have looking at the SP world as I think many of your points can be addressed.</p>\n<p>Cost? Sure… it’s a server product. But you can get WSS which is included in the cost Windows 2003 Server… something you need even if you are doing ASP.NET hosting. How to address it for developers? MSDN license. You have to do that for Visual Studio too (except the Express editions). MSFT even offers a 180day eval VHD file completely installed and configured with SharePoint to save you the time of downloading and configuring everything.</p>\n<p>Automated testing is not difficult… it is no different than an other Web app with a DB backend. As Rob said, SharePoint development *NOW* (not in the v2 days, only applies to the v3 days) is just ASP.NET development. All your existing tools work just fine. Personally, I use MbUnit for virtually all my projects.</p>\n<p>Deployment is difficult. Have you seen “WSS Solution Packages?” This blows away anything that ASP.NET has… even in a load balanced farm, I can package everything into one file and have it all deployed to all servers in my farm at a scheduled interval… making changes to the web.config, deploying assemblies (even to the GAC) and EVEN recycling IIS if necessary. Oh… did I mention you can retract it too and undo all that?</p>\n<p>Debugging the logs is painful. They are just text files… just like when we have to debug HTTP issues in the W3SVC logs. But better yet, I can throttle the level of errors that are included in the logs… even on a dev box making the logs “verbose”. Don’t like looking at text files? Check out <a href=\"http://www.codeplex.com/features\" rel=\"nofollow ugc\">http://www.codeplex.com/features</a> and get the free LogViewer.wsp.</p>\n<p>I will definately agree wiht the tooling comment. Today, it sucks… plain and simple. The only thing we have is the VSeWSS which leave a ~lot~ to be desired (v1.0 was a complete embarrassement that promoted horrible coding practices and hid so much from the developer). Rest assured, they know this and the story will get better. Just takes time.</p>\n<p>To Oren’s comment about source control… it’s totally possible to have full integration in a SharePoint project (I use SubVersion for all my SharePoint stuff and it works great)… the problem is lack of guidance on the subject. See this post on my blog about this subject (<a href=\"http://www.andrewconnell.com/blog/archive/2006/12/20/5451.aspx\" rel=\"nofollow ugc\">http://www.andrewconnell.com/blog/archive/2006/12/20/5451.aspx</a>).</p>"
+  },
+  {
+    "id": 1888,
+    "parent": 0,
+    "author_name": "Tony Bierman",
+    "author_url": "http://sharepointsolutions.blogspot.com/",
+    "date": "2007-09-14T17:43:56",
+    "type": "comment",
+    "content_html": "<p>Microsoft “sells” SharePoint as a development platform through the “Office Business Applications Developer Portal” and uses OBA RAPs (Office Business Application Reference Application Packs) as examples of how to implement line-of-business applications on the SharePoint platform.  Here’s the link: <a href=\"http://msdn2.microsoft.com/en-us/office/aa905528.aspx\" rel=\"nofollow ugc\">http://msdn2.microsoft.com/en-us/office/aa905528.aspx</a></p>\n<p>I’ve been kind of chuckling to myself while reading this post and these comments.  I personally bet my own software engineering career on SharePoint back in 2001.  Through the wonders of simple supply-and-demand economics, my salary has never looked back.  In fact, it has increased exponentially.  To all the young developers out there considering whether or not to tackle SharePoint I would say yes, the SharePoint SDK is pretty expansive, and yes the learning is a bit steep.  Like just about any else worth doing, it is a little bit hard to get started and a challenge to keep up with SharePoint.  But, I can tell you that SharePoint as a development platform has come a long, long way since 2001, and MS continues to make investments/improvements.  The number of third party vendors creating products for SharePoint is growing like wildfire.  The SharePoint developer community grows daily.  Developer purists want to complain about how TDD isn’t there yet or how the development toolset is weak, but the fact is that SharePoint does a great job fulfilling many business needs, and it is going to be around for some time to come.  If you are up for the challenge, learning to develop on SharePoint will pay off.  If not, then do something easier but, to paraphrase Achilles from Troy – “no one will remember your name”.</p>"
+  },
+  {
+    "id": 1889,
+    "parent": 0,
+    "author_name": "osc1",
+    "author_url": "http://",
+    "date": "2007-09-14T18:04:41",
+    "type": "comment",
+    "content_html": "<p>Sharepoint is an awesome content management platform that integrates well with Office.  </p>\n<p>It is NOT a viable alternative to custom ASP.Net sites or applications and in its current form is about 10 years behind the current set of web development tools.  The fact that it does not allow changes to the SP portal itself to be checked into Team Foundation Server (or any reasonable source code repository) in order to synchronize web part and custom work flow development with Visual Studio developers should be a red flag that catastrophe is just around the corner.</p>\n<p>If the out of box functionality is useful to you (and it is to many organizations), use it.  Don’t try to turn Sharepoint into something its not.</p>\n<p>The current crop of MOSS 2007 consultants consists largely of Sharepoint admins — folks who are not developers and who do not truly understand the issues behind developing a scalable application.  I see Sharepoint as falling more under the domain of network admin types than application development.</p>\n<p>It has already become evident to many shops over the last six months what SharePoint is and what it is not.  It might evolve to become a viable application development tool, currently it is not even close.  Yet it remains the best choice out there for quickly throwing up an intranet portal.</p>"
+  },
+  {
+    "id": 1890,
+    "parent": 0,
+    "author_name": "aconnell",
+    "author_url": "http://www.andrewconnell.com/blog",
+    "date": "2007-09-14T18:35:34",
+    "type": "comment",
+    "content_html": "<p>osc1-<br>\n“years behind the current set of web development tools”<br>\nThat’s way off base… you just put it back int he Visual InterDev days. Completely not valid.</p>\n<p>“[no source control for custom workflows or web part development”<br>\nAgain, not true. You can save the changes you make to a Web Part in the browser (ala editing the properties), export it to a .webpart file (XML) and save that to source control. The code to develop Web Parts or workflows is done in Visual Studio… that integreates well with TSF as well as other SCM’s.</p>\n<p>“The current crop of MOSS 2007 consultants consists largely of Sharepoint admins”<br>\nAgain… offbase. Try attending a single national conference or look at how successful the SP development publication business is. Last I checked, they have to have customers, and a SIGNIFICANT amount of content is developer focused.</p>\n<p>You have obviously dismissed the product without taking a good view of it. </p>"
+  },
+  {
+    "id": 1891,
+    "parent": 0,
+    "author_name": "David Solomon",
+    "author_url": "http://",
+    "date": "2007-09-14T20:27:38",
+    "type": "comment",
+    "content_html": "<p>The real thrust of the piling-on around SharePoint seems to miss a critical point:<br>\nProduct adoption.  The adoption rate is too big to ignore. Any of the developers going to a client who has purchased/considered purchasing MOSS and telling them this should just be a .NET app because its “too hard for us to program against” isn’t asking the bigger questions around leveraging Windows/MSFT investment that these customers are working to achieve. ROI on the EA dollar is a HUGE reason to find as much value in the platform and focus on business value and opening up access to other applications within the common [highly customizable]  interface of MOSS. The reasons aren’t just great [technical product] Marketing by MSFT and the SharePoint team in particular but one of how many custom application projects (winapp or webapp) actually get abandoned, orphaned or stagnate due to the current trend of outsourcing highly skilled dev oriented projects.  </p>"
+  },
+  {
+    "id": 1892,
+    "parent": 0,
+    "author_name": "Peter {faa780ce-0f0a-4c28-81d2-3667b71287fd}",
+    "author_url": "http://",
+    "date": "2007-09-14T22:17:07",
+    "type": "comment",
+    "content_html": "<p>I think I will like SharePoint once all is said and done, but right now I’m encountering so much pain I’m questioning if it’s worth it. Reading the Technet Forums, I found this thread about “how long did it take for you to figure out SharePoint Workflow”–it’s fascinating because everyone in the thread is lamenting the difficulty of getting up to speed.</p>\n<p><a href=\"http://forums.microsoft.com/TechNet/ShowPost.aspx?PostID=1668527&amp;SiteID=17\" rel=\"nofollow ugc\">http://forums.microsoft.com/TechNet/ShowPost.aspx?PostID=1668527&amp;SiteID=17</a></p>\n<p>While Jeffrey Palermo in the original post didn’t mention it in his “pain list”, this is my #1 problem with SharePoint development–SharePoint is too painful to learn.</p>\n<p>It wouldn’t be such a bad thing if it were “just” missing tools–the problem is that to work around holes in the tools (deployment!), I’m bouncing between the Workflow book, the SDK samples, the three search engines (Google; Technet forums search; Google Groups), and the Workflow whitepaper from the SharePoint team blog. Note I didn’t mention MSDN as a resource.</p>\n<p>So it’s the documentation, too.</p>\n<p>Combine the holes in the toolset with lack of documentation, and you end up with a lot of developer pain.</p>\n<p>And yes, I was thankful for the new articles and content the MSDN team posted in the last SDK update, and I will continue to be grateful for any and all content they post in the future.</p>"
+  },
+  {
+    "id": 1893,
+    "parent": 0,
+    "author_name": "Estyn Edwards",
+    "author_url": "http://",
+    "date": "2007-09-14T22:59:53",
+    "type": "comment",
+    "content_html": "<p>I think that the biggest issue with SharePoint development is that it has a significant learning curve and that right now documentation and best practices are hard to find.  There is a lot of documentation, but as with most new products it isn’t well organized.  </p>\n<p>We’ve found that at first SharePoint doesn’t look like a good platform for development as it takes a large investment in time in order to start seeing returns.  Setting up your first SharePoint Dev project takes almost as long as the project. But once you understand the way that SharePoint works and how to structure your development you begin to be able to take advantage of all the features that SharePoint has to offer.</p>"
+  },
+  {
+    "id": 1894,
+    "parent": 0,
+    "author_name": "osc1",
+    "author_url": "http://",
+    "date": "2007-09-14T23:19:37",
+    "type": "comment",
+    "content_html": "<p>Andrew I think you missed my point about source control.  Yes, a SP developer could take the .xml from a web part and check it into any source code repository he wants to (lets say TFS).  He could also make changes to core.css or default.master and manually go through steps to check that into TFS, if he wanted to.  </p>\n<p>But if another developer is making changes to assemblies in Visual Studio for example for efficient data access (the business data connector is not efficient for large amounts of data), or making changes to a web part in C#, there is nothing to synchronize the changes being made in SP with the changes being made in the primary source code repository.  They inevitably get out of sync.  I recently had to deal with a client who had a very costly (in terms of man hours.. we are talking tens of thousands of dollars) mistake occur because the changes occurring in SharePoint got completely out of sync with the development going on in TFS.  This can be worked around with a mind-boggling amount of hair-pulling manual processes, but software development and version control has come so far, why do we need to revert to stone age techniques that require us all to work seven day weeks?</p>\n<p>Aside from the out of box functionality that SharePoint does well, 99% of the development tasks that you would want to do with SharePoint can be done with a fraction of the manhours in ASP.Net.</p>"
+  },
+  {
+    "id": 1895,
+    "parent": 0,
+    "author_name": "Andrew Connell",
+    "author_url": "http://www.andrewconnell.com/blog",
+    "date": "2007-09-15T00:35:54",
+    "type": "comment",
+    "content_html": "<p>Peter-<br>\nI agree with you on workflow… it’s too damn hard to build and integrate workflows in SharePoint. Have you read Ted Pattison’s Inside WSS by MSPRESS? It’s ~the~ book everyone should start with.</p>\n<p>osc1-<br>\nI don’t understand your source control point. You say there’s no way to update the assemblies in the production box from what you’re doing in the main development line? There most certainly is… it’s called WSS solution packages (WSPs). This is like SharePoint’s own little installer (MSI) framework. It can update assemblies in the site’s BIN directory or even shared assemblies in the GAC. Best part is it is completely automated… nothing manual about it.</p>\n<p>If multple projects are dependent on the same assembly, then you have to manage all of them when you do updates. Nothing special about SharePoint there… that’s just general development.</p>\n<p>“99% of the development tasks that you would want to do with SharePoint can be done with a fraction of the manhours in ASP.Net”<br>\nRespectfully I completely disagree 100%. Assuming it makes sense to build an app in SharePoint (a specific app), you can do it faster than you would in ASP.NET. Case in point, just this week with a customer we built out a site in a few hours that the team had been working on for a week and didn’t make it nearly as far as we did in our workshops.</p>"
+  },
+  {
+    "id": 1896,
+    "parent": 0,
+    "author_name": "Loke Kit Kai",
+    "author_url": "http://community.sgdotnet.org/blogs/kitkai",
+    "date": "2007-09-15T02:09:04",
+    "type": "comment",
+    "content_html": "<p>IF development in SharePoint 2007 is hard, try developing in SharePoint 2003. When I need to create a security trimmed interface for SharePoint 2003, I have to look at thousand and thousand of lines to do that. Now, SharePoint 2007 provides that for you, and allows you to extend security trimmed elements easily.<br>\nWhen I have to create additional custom list, I have to make copies of their files, and modify from there. Deployment, maintenance are nightmare. Not to mention, lack of documentation, and I’m learning and banging my head by myself. Now, I just need to define features, and a few xml files, I’m more or less set to deploy it to entire farm.<br>\nSure, dev experience may not be that great (Hey, I’m not happy with Visual Studio’s web project. I rather start a code project for web application), but give Microsoft time, things will evolve. And to their credit, dev experience is improving!<br>\nThe best part is community is growing like mad, with lots of blog posts giving much better documentation with real world experiences! Sure, I would love to see Microsoft improve their documentation, dev guidance. But source control and automated testing, builds are not impossible… MVPs have mentioned that source control, automated testing is possible… Why don’t you try those out first?<br>\nMy team which has implemented this project, <a href=\"http://community.sgdotnet.org/blogs/kitkai/archive/2007/09/13/SharePoint-as-an-application-platform_2E002E002E00_.aspx\" rel=\"nofollow ugc\">http://community.sgdotnet.org/blogs/kitkai/archive/2007/09/13/SharePoint-as-an-application-platform_2E002E002E00_.aspx</a>, have java background. I don’t even need to guide them in setting up the SharePoint project, and they have source control set up for themselves!<br>\nAll products have learning curve. Its whether you embrase that fact, or you winne about it.. But the truth about SharePoint adoption is<br>\n1. Customers are interested. There are companies set up just to deliver SharePoint, and these companies have resource issues, and are pushing projects away.<br>\n2. SharePoint developers are in demand.<br>\n3. SharePoint can now be a viable app / dev platform when appropriate. And when used correctly, dev time is shorten and less expensive. I’m not going to develop a Cab Dispatch System on SharePoint. But there are factors that is stopping this, but definitely not the above! </p>"
+  },
+  {
+    "id": 1897,
+    "parent": 0,
+    "author_name": "Rob Garrett",
+    "author_url": "http://robgarrett.com",
+    "date": "2007-09-15T04:22:49",
+    "type": "comment",
+    "content_html": "<p>Oh boy, if this debate isn’t up there with “my Mac is better than his PC”… I have to put my 2 cents worth in all the same…</p>\n<p>Coming from an ASP.NET devlopment background and now working as a SharePoint architect I cannot disagree with you more on your statement that SharePoint isn’t a good platform.  </p>\n<p>ASP.NET IMHO isn’t really a mature platform by today’s standards.  Sure you can build any web site you care to mention, but you have to do all the leg work yourself.  It’s the same with every ASP.NET job I’ve had – create an Enterprisy web site with dynamic navigation, crude content management and document storage.  Well blow me down with a feather if SharePoint doesn’t already do all of that, only much better than any home brew I’ve ever encountered.</p>\n<p>In today’s business environment executives want information systems fast, in a matter of weeks, with all the CMS aspects ready to roll. Why? Because next week business has moved on and they need another information system.  Custom developed ASP.NET web sites just cannot stand up to that sort of demand.   SharePoint can, and developers can met the needs of their clients/employers by using SharePoint as a stable platform to build on.</p>\n<p>Think about the blog sphere – a few short years back blogging was for geeks only – most did not use blog engines, and those that did used a system put together by a developer in his/her spare time.  Now, if you want a blog do you install a build software?  No, you pick from one of the many blogging engines out there for free and start typing. Imagine where the blog spere would be today if we said “hold on, we need 6 months to write a new engine” each time someone wanted a newer type of blogging site.</p>\n<p>Disconnected development on Vista/XP – I see your point there, but then again, what’s wrong with virtualization?  When on the road I use a single Virtual PC instance which does fine on my middle of the road laptop. In the office I have a whole set of virtual server instances for writing code against AD, SharePoint, SQL Server, and Exchange – if you’re gonna develop enterprise, then you need the whole suite of servers anyway.  ASP.NET…. well let’s face it,it’s not Enterprise ready OTB.</p>"
+  },
+  {
+    "id": 1898,
+    "parent": 0,
+    "author_name": "osc1",
+    "author_url": "http://",
+    "date": "2007-09-15T04:37:47",
+    "type": "comment",
+    "content_html": "<p>Andrew,</p>\n<p>No, you’re either not reading what I am writing carefully enough, or I’m not making a strong enough effort to communicate it.  Let me try once more.  </p>\n<p>You said:  “You say there’s no way to update the assemblies in the production box from what you’re doing in the main development line?  </p>\n<p>(That’s not what I said at all.  I am not talking about assemblies here, I am talking about source files.  That is one of the biggest problems I see with SharePoint folks, they do not understand source code management.  I am talking strictly about code-behind files here, and the other files that constitute an assembly — not the assemblies themselves).</p>\n<p>But, then you said….</p>\n<p>“There most certainly is… it’s called WSS solution packages (WSPs). This is like SharePoint’s own little installer (MSI) framework. It can update assemblies in the site’s BIN directory or even shared assemblies in the GAC. Best part is it is completely automated… nothing manual about it.”</p>\n<p>This further confirms to me that you are confused between packaging and deployment (MSIs and what not, what assemblies go where, what gets GAC’d and what stays local, and so forth) and source code management (the raw .cs and .aspx files that get checked in and out of TFS).</p>\n<p>Sharepoint offers ABSOLUTELY NO SYNCHRONIZATION.  I will say that word until it sticks…. SYNCHRONIZATION….  between the development that occurs in SharePoint (which goes in the SP database), and the source code for the custom web parts or custom business objects that are required to provide truly scalable data access (which go in TFS).</p>\n<p>I am talking about synchronization here.  I have had so many SharePoint consultants pass by me with the typical evangalism, but when I get them in a room with a group of people who are really paying attention, they break down in a cold sweat over this topic, as it is critical to the development process.  Without proper source code management, you have a ticking timebomb going on with any sort of reasonable development effort.  If you have two completely disparate source code repositories (SP and TFS in my example) which are completely disconnected, and do not have a way to synchronize source trees, it is a development process destined to self distruct.</p>\n<p>Any software engineer that has a true development background knows what I am talking about here.</p>"
+  },
+  {
+    "id": 1899,
+    "parent": 0,
+    "author_name": "Matthew Serler",
+    "author_url": "http://",
+    "date": "2007-09-15T04:53:24",
+    "type": "comment",
+    "content_html": "<p>Rob Garrett,</p>\n<p>Depending on the type of portal applications you need, you’re right.  SharePoint is the right platform for the typical organization who just needs a basic portal with (not so simple) document versioning and content management.  This kind of stuff is a nightmare to write by hand, and although I would argue that I can start with a bare bones ASP.Net application and whip up a secure, role-driven site with dynamic navigation in less than 40 hours work (as could anyone with a few years of C# under their belt), the document repository and content management features are are compelling feature that make SharePoint perfect for this.</p>\n<p>The problem comes along when your client doesn’t either wants their site to do one of the following:</p>\n<p>1. Not look like every other sharepoint site out there<br>\n2. Access large amounts of data, or complex data structures<br>\n3. Exhibit custom behavior<br>\n4. Take on a highly-polished look and feel designed by professional graphic designers, who live in world of Dreamweaver and MacBooks and could care less about the specific .css syntax that Sharepoint requires</p>\n<p>At this point, SharePoint completely falls apart at tasks that could be completed in a couple of days using standard ASP.Net development.</p>"
+  },
+  {
+    "id": 1900,
+    "parent": 0,
+    "author_name": "Brian Gough",
+    "author_url": "http://",
+    "date": "2007-09-15T13:25:45",
+    "type": "comment",
+    "content_html": "<p>I can understand what you are trying to say here, at least I think I can. what I think people overlook is that this is only the third version of this product.  All products take time to mature.  Visula Studio itself has matured greatly, the .Net framework, etc…   I can understand the frustration of many developers since they are now so accustomed to having tools to make everything so easy.  In this world of RAD, Agile, and any other “fast paced” development tools, as soon as they have to make a bit of real effort, they say “forget this, it sucks” and move on.  OK, that is fine.  Come back later as the PG takes peoples feedback and improves things.  Maybe it weill be easy enough for you to use later.<br>\nUntil then, to just uniformly dismiss it as a development platform is your own choice and you are intitled to your opion.  Whether it is “hard” to develop for or not it is still a wondeful product with tremendous potential.  The obviouls improvements from v2 to v3 show just how much SharePoint can grow, and the absorption in the market is a testimony to its power and utility in the real world.<br>\nMost things start out rough and get better. I for one will be quite proud to say “Yeah, I stuck it out through the rough times, but look at what my sweat hath wrought.”</p>"
+  },
+  {
+    "id": 1901,
+    "parent": 0,
+    "author_name": "Loke Kit Kai",
+    "author_url": "http://community.sgdotnet.org/blogs/kitkai",
+    "date": "2007-09-15T13:37:44",
+    "type": "comment",
+    "content_html": "<p>osc1,<br>\nDude, have you seen this?<br>\n<a href=\"http://www.codeplex.com/CKS\" rel=\"nofollow ugc\">http://www.codeplex.com/CKS</a><br>\nDo you know that the source for the various project are checked in? </p>\n<p>Matthew,<br>\nThere are implementation of SharePoint that doesn’t look anything like SharePoint at all… Below are the links…<br>\n<a href=\"http://www.hawaiianair.com/Pages/Index.aspx\" rel=\"nofollow ugc\">http://www.hawaiianair.com/Pages/Index.aspx</a><br>\n<a href=\"http://www.sendtec.com/default.aspx\" rel=\"nofollow ugc\">http://www.sendtec.com/default.aspx</a><br>\n<a href=\"http://www.glu.com/apac/Pages/home.aspx\" rel=\"nofollow ugc\">http://www.glu.com/apac/Pages/home.aspx</a><br>\n<a href=\"http://www.migros.ch/DE/home/Seiten/Home.aspx\" rel=\"nofollow ugc\">http://www.migros.ch/DE/home/Seiten/Home.aspx</a></p>"
+  },
+  {
+    "id": 1902,
+    "parent": 0,
+    "author_name": "osc1",
+    "author_url": "http://",
+    "date": "2007-09-15T15:30:50",
+    "type": "comment",
+    "content_html": "<p>Love Kit Kai,</p>\n<p>I am not talking about checking in.  I am talking about the problem of requiring synchronizing source code between two repositories.  If there is a solution, nobody has come close to addressing it yet.</p>\n<p>Is there a developer in the house?</p>"
+  },
+  {
+    "id": 1903,
+    "parent": 0,
+    "author_name": "Techticles",
+    "author_url": "http://www.techticles.com",
+    "date": "2007-09-15T16:05:54",
+    "type": "comment",
+    "content_html": "<p>I understand your gripe that working on ASP.NET from the ground up is better than using SharePoint as a development platform. </p>\n<p>But that was how I felt during the early days in SharePoint and I would usually argue with our architect that developing modules in ASP from the ground up was so much faster and better than in SharePoint.</p>\n<p>Two years after, I am in the same mindset of my architect mentor and I find it disgusting to develop in pure ASP than in using SharePoint.</p>\n<p>When you gain more experience in SharePoint, it would be interesting to see your view change.</p>"
+  },
+  {
+    "id": 1904,
+    "parent": 0,
+    "author_name": "Peter {faa780ce-0f0a-4c28-81d2-3667b71287fd}",
+    "author_url": "http://",
+    "date": "2007-09-15T20:50:45",
+    "type": "comment",
+    "content_html": "<p>I think osc1, you’re talking about synchronizing what are called “artifacts.” </p>\n<p>I’d be interested to see what others say about this; what I’ve read from a Microsoft whitepaper (don’t remember the name) is that they recommend everyone work on artifacts in a shared development environment. It’s obviously a compromise.</p>\n<p>I’d be interested to hear others’ opinions on this–I’m considering if it’s possible to 1) take a site backup, 2) unpack the site backup’s CAB file, 3) split up the manifest.xml file via XPath, and 4) check portions of the manifest into source control as individual sections. I haven’t found a specific need yet, so I haven’t bothered trying this out, but I wonder–what are others doing about this?</p>"
+  },
+  {
+    "id": 1905,
+    "parent": 0,
+    "author_name": "osc1",
+    "author_url": "http://",
+    "date": "2007-09-15T22:44:50",
+    "type": "comment",
+    "content_html": "<p>Thanks Peter, I am glad someone realized what I’m talking about.  I saw the same whitepaper as you and at least as of a month or so ago, it confirmed to me that SP development is not quite ready for the type of development shop we are running here.  But yes I am talking about how, from the perspective that the source code repository (whether that is SP or TFS) is the keeper of the jewels, and with lots of daily development activity going on, the work items that are checked into TFS must be able to be conveniently and conclusively linked to their corresponding version in SharePoint.  There is not currently a mechanism to do this, and it is simply a recipe for disaster.</p>"
+  },
+  {
+    "id": 1906,
+    "parent": 0,
+    "author_name": "osc1",
+    "author_url": "http://",
+    "date": "2007-09-15T22:47:05",
+    "type": "comment",
+    "content_html": "<p>Also Love Kit Kai,</p>\n<p>Those are the same sites every SP developer uses as examples of sites that don’t look like Sharepoint.  But if you look closely, most of them achieve their custom look using Flash, or standard CSS techniques applied on top of Sharepoint rather than default SP functionality.  I know ITS POSSIBLE to make a SP site look customized, it’s just that it is rediculously difficult compared to trying to achieve the same goal in ASP.Net.</p>"
+  },
+  {
+    "id": 1907,
+    "parent": 0,
+    "author_name": "Ted Brents",
+    "author_url": "http://",
+    "date": "2007-09-15T22:49:17",
+    "type": "comment",
+    "content_html": "<p>Jeffrey should be commended for allowing both sides of this to be explored here.  Sahil Malik, who is always trying to push Sharepoint as the solution to everything, doesn’t even allow blog comments through unless they meet his agenda.  It’s like the Rupert Murdoch syndrome.  Very insecure individual.</p>"
+  },
+  {
+    "id": 1908,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-09-15T23:31:09",
+    "type": "comment",
+    "content_html": "<p>@Ted,<br>\nI don’t delete a comment unless it’s spam or is filled with profanity.  I think all viewpoints have value, and I don’t have to censor comments to convey and opinion.  I wasn’t expecting such a flood of discussion, but I’m glad that’s what is happening.  </p>\n<p>I have expressed my opinion of what makes a “good” development platform, and this has encouraged a very rich discussion on the topic regarding sharepoint. </p>\n<p>Sharepoint has many, many users, and even some of my clients use it, but I see sharepoint used more as an I/T tool more often than not.</p>\n<p>Because of the large community around the product, Microsoft has a lot of information to use to make it better, and it will get better.  I look forward to evaluating the next version.</p>\n<p>Readers, please continue to share your experiences in both using the product and on building functionality on Sharepoint as a platform.  What were the points of joy, and what were the points of pain?</p>"
+  },
+  {
+    "id": 1909,
+    "parent": 0,
+    "author_name": "Brian Gough",
+    "author_url": "http://",
+    "date": "2007-09-16T00:00:10",
+    "type": "comment",
+    "content_html": "<p>Good show Jeffrey!  It is very cool that you are keeping this important exchange open and going.</p>\n<p>Well done!</p>"
+  },
+  {
+    "id": 1910,
+    "parent": 0,
+    "author_name": "Ted Brents",
+    "author_url": "http://",
+    "date": "2007-09-16T00:34:30",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>You’re absolutely right, it is an IT tool in it’s current form that does some things quite well.  I think we can expect future versions to better allow true application developers to extend SharePoint, but in it’s current form there are only a few isolated scenarios where doing so makes sense.</p>"
+  },
+  {
+    "id": 1911,
+    "parent": 0,
+    "author_name": "Sahil Malik",
+    "author_url": "http://blah.winsmarts.com",
+    "date": "2007-09-16T01:18:16",
+    "type": "comment",
+    "content_html": "<p>Ted – now you are just accusing me of something completely untrue. If you ever left me a comment, unless it was highly inappropriate, I have always let it through. </p>\n<p>Oh and BTW, if you noticed, I don’t blog on this site anymore, but even then I rarely login here and publish all non-spam comments.</p>\n<p>Seriously man, you’re just lying here.</p>"
+  },
+  {
+    "id": 1912,
+    "parent": 0,
+    "author_name": "Ted Brents",
+    "author_url": "http://",
+    "date": "2007-09-16T03:08:33",
+    "type": "comment",
+    "content_html": "<p>Salik — as of this writing, you have zero follow up comments to your rebuttal attempt at this thread.  This means 100 percent of the comments you’ve received are being filtered out as “highly inappropriate” according to the definitions of inappropriate laid down by Mister Malik.  I know of at least one other person besides myself who tried to leave a response, and it was never approved.</p>\n<p>Now you’re claiming that you rarely login here, but you logged in frequently enough to post a rebuttal thread to this post, and you logged on frequently enough to read the follow ups a few days later.  Who is the liar here again?</p>"
+  },
+  {
+    "id": 1913,
+    "parent": 0,
+    "author_name": "Ted Brent",
+    "author_url": "http://",
+    "date": "2007-09-16T03:15:13",
+    "type": "comment",
+    "content_html": "<p>By the way I was referring to your Winsmarts blog, not any blogging you may have done at some point here.  </p>"
+  },
+  {
+    "id": 1914,
+    "parent": 0,
+    "author_name": "Sahil Malik",
+    "author_url": "http://blah.winsmarts.com",
+    "date": "2007-09-16T15:52:10",
+    "type": "comment",
+    "content_html": "<p>Ted – I had no comments there, or I would have let them through. I wasn’t even checking this thread, until someone pointed your inane comment out.</p>"
+  },
+  {
+    "id": 1915,
+    "parent": 0,
+    "author_name": "Sahil Malik",
+    "author_url": "http://blah.winsmarts.com",
+    "date": "2007-09-16T16:04:42",
+    "type": "comment",
+    "content_html": "<p>&gt;&gt;   I know of at least one other person besides myself who tried to leave a response, and it was never approved</p>\n<p>I never saw those comments, did you fill out the captcha or was that too much for you too handle?</p>\n<p>Don’t lie, allright! I never got any comments.</p>\n<p>Here is a little trick, if you leave me a comment, and it is awaiting moderation, the comment count actually goes UP. Did it go up? (Yeah it’s a bug, but I have other things to do besides fixing my buggy blog engine, and arguing with guys like you).</p>\n<p>Try leave a proper argumentative comment, and use the mouse and keyboard properly – tell me if the comment count went up, if it didn’t, shoot me an email (from my site). I’ll see what I can do to fix it.</p>"
+  },
+  {
+    "id": 1916,
+    "parent": 0,
+    "author_name": "Sahil Malik",
+    "author_url": "http://blah.winsmarts.com",
+    "date": "2007-09-16T16:11:42",
+    "type": "comment",
+    "content_html": "<p>—————-<br>\nI am surprised at the comments from Andrew and Sahil.  Sure, people have figured out how to make MOSS sing and use it daily as a development platform.  But then again, people also found a way to write programs using a bunch of paper punch cards, that didn’t make the experience easy or pleasureable.  I think Andrew and Sahil are missing Jeffrey’s point which is not a discussion of power or capability, but rather “approachability”.  Any dev environment that puts up as many barriers to entry as MOSS is unnecessarily limiting its market.  Just think how much better the sales could have been if more of these roadbumps were removed.<br>\n———————————–</p>\n<p>Joe – no I am not missing Jeffrey’s point. In fact, that is my biggest complaint about this blogpost, that IT HAS no point. It didn’t mention anything specific enough that you can comment upon. You can’t develop on XP and that makes it a bad development platform? Seriously !! First of all you CAN develop on XP, and does it itch you weird if you develop on 2003?</p>\n<p>I still insist that sharepoint is a pretty darned awesome dev platform, Dev platform choice is not governed by “development experience” alone. You also have to consider time to market, overall cost of development, amount of custom code required, etc (see my blogpost on this). </p>\n<p>Is the dev experience the same as .NET? Heck no! But sharepoint and other such products are built on .NET so their being behind on the adoption curve is understandable. </p>\n<p>Is there room for improvement? Sure there is. But I’d rather see constructive and actual weightage bullets coming from Jeffrey’s blog – than issues that have absolutely no weight.</p>\n<p>So again, my biggest complaint with this blog post is, it has no substance. No points that are either specific enough, or just highly inaccurate.</p>\n<p>SM</p>"
+  },
+  {
+    "id": 1917,
+    "parent": 0,
+    "author_name": "Sahil Malik",
+    "author_url": "http://blah.winsmarts.com",
+    "date": "2007-09-16T16:15:22",
+    "type": "comment",
+    "content_html": "<p>&gt;&gt;<br>\n“My biggest issues with SP is that it relies heavily on the wretched ASP.NET API for its GUI stuff. It would be much nicer to have something less coupled and more testable.”</p>\n<p>&lt;—</p>\n<p>See you just can't win. Sharepoint is built on top of ASP.NET. It uses all principles that any good ASP.NET app would.</p>\n<p>Now is it decoupled? You realize that you can completely rip out the master page, and build something that is entirely decoupled. What's more, even if you choose to take that extreme route, your effort required will probably be a lot lesser than an ASP.NET app.</p>"
+  },
+  {
+    "id": 1918,
+    "parent": 0,
+    "author_name": "Sahil Malik",
+    "author_url": "http://blah.winsmarts.com",
+    "date": "2007-09-16T16:17:31",
+    "type": "comment",
+    "content_html": "<p>&gt;&gt;Sure, this is not JUST a sharepoint issue, but when the ramp up time is harder with sharepoint, as it certainly is, it’s a BIGGER issue with sharepoint, than it would be with other technologies.</p>\n<p>_______________________</p>\n<p>C’mon Brendan – if “I” could learn sharepoint, anyone can :-). Especially you!</p>"
+  },
+  {
+    "id": 1919,
+    "parent": 0,
+    "author_name": "Sahil Malik",
+    "author_url": "http://blah.winsmarts.com",
+    "date": "2007-09-16T16:22:48",
+    "type": "comment",
+    "content_html": "<p>OSC —-</p>\n<p>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<br>\n…. It is NOT a viable alternative to custom ASP.Net sites or applications and in its current form is about 10 years behind the current set of web development tools.  </p>\n<p>10 years into history .. CGI? You know you are horribly wrong there.</p>\n<p>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<br>\nSource control</p>\n<p>Completely incorrect. You can tie sharepoint to source control.</p>\n<p>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<br>\nThe current crop of MOSS 2007 consultants consists largely of Sharepoint admins — folks who are not developers and who do not truly understand the issues behind developing a scalable application.  </p>\n<p>I am a developer, I understand scalability. Also read the case studies surrounding sharepoint before you make a comment on scalability.</p>\n<p>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<br>\nIt has already become evident to many shops over the last six months what SharePoint is and what it is not.  It might evolve to become a viable application development tool, currently it is not even close.  Yet it remains the best choice out there for quickly throwing up an intranet portal.</p>\n<p>Again, see the companies.</p>\n<p>And seriously your organization likes an intranet that is set 10 years into histroy? \uD83D\uDE09 TERRIBLE.</p>"
+  },
+  {
+    "id": 1920,
+    "parent": 0,
+    "author_name": "Sahil Malik",
+    "author_url": "http://blah.winsmarts.com",
+    "date": "2007-09-16T16:26:38",
+    "type": "comment",
+    "content_html": "<p>1. Not look like every other sharepoint site out there</p>\n<p>&gt;&gt; Incorrect. Search my blog for “What is MOSS WCM capable of”.</p>\n<p>2. Access large amounts of data, or complex data structures</p>\n<p>&gt;&gt; Again, incorrect!! If .NET can access complex data, sharepoint can too. What sharepoint gives you the leeway of doing is, for simplistic cases (90% scenarios), you don’t have to write all that repititive code.</p>\n<p>3. Exhibit custom behavior</p>\n<p>&gt;&gt; I totally don’t understand this. Are we sill talking about sharepoint? \uD83D\uDE42</p>\n<p>4. Take on a highly-polished look and feel designed by professional graphic designers, who live in world of Dreamweaver and MacBooks and could care less about the specific .css syntax that Sharepoint requires</p>\n<p>&gt;&gt; Again, complete horses#$% (PROFANITY REMOVED BY COMMENT MODERATION). YESTERDAY I completely customized the look and feel of a sharepoint site after I got the HTML. Total time taken to convert designer friendly HTML to SharePoint – less than 8 hours of work.</p>"
+  },
+  {
+    "id": 1921,
+    "parent": 0,
+    "author_name": "Sahil Malik",
+    "author_url": "http://blah.winsmarts.com",
+    "date": "2007-09-16T16:30:51",
+    "type": "comment",
+    "content_html": "<p>Last comment here —<br>\n(before akismet marks me down as a spammer).</p>\n<p>There are some valid concerns about the sharepoint dev experience. This blogpost alongwith it’s comments doesn’t even begin talking about them. </p>\n<p>I’d like to see some actual recognition of possible improvements, and a suggested plan to make things work. </p>\n<p>Does sharepoint offer a crazy learning curve? Well, there are &gt; 40 books on sharepoint right now, how many have you read cover to cover? So please don’t confuse your teething problems with a platform’s capabilities.</p>\n<p>Remember, you’ve been mucking around with .NET for 7 years now – you can’t expect to have the same level of familiarity with sharepoint in 2 months. Be kind (and realistic) to yourself.</p>\n<p>Whew – gotta run!!</p>"
+  },
+  {
+    "id": 1922,
+    "parent": 0,
+    "author_name": "Zlatan",
+    "author_url": "http://dotnet.org.za/zlatan",
+    "date": "2007-09-16T17:15:24",
+    "type": "comment",
+    "content_html": "<p>I have no idea why is everybody thinking that SharePoint 2007 is here as some part of bespoke development revolution. Second misconception also leads people to believe that MOSS2007 is merely an upgrade to its predecessor SharePoint 2003. SharePoint 2007 is an Enterprise Content Management Platform. It’s a platform for building and developing: Document Management solutions, Records Management Solutions, Business Process Management solutions, Business Intelligence solutions, platform providing integration with various Line of Business systems etc etc. Combination of the things mentioned earlier together with many supporting technologies makes up Microsoft OBAs for relevant industries. It’s again a platform much like other competitive products on the market, such as Livelink  (from OpenText), Documentum (from EMC²), Filenet (now owned by IBM), HummingBird (now also owned by OpenText) etc etc. I could be wrong but I seriously don’t think Microsoft sells SharePoint 2007 as a development platform, because that’s not what it is. In the ECM market Microsoft is newbie so is SharePoint 2007, but it has enormous potential which will alow Microsoft to very shortly surpass its competition<br>\nWith all due respect to all of you people, I have no idea what you’re arguing about, and why.</p>"
+  },
+  {
+    "id": 1923,
+    "parent": 0,
+    "author_name": "Zlatan",
+    "author_url": "http://dotnet.org.za/zlatan",
+    "date": "2007-09-17T12:23:35",
+    "type": "comment",
+    "content_html": "<p>By the way, my point is:<br>\nIn my opinion, Jeffrey you got it wrong from the start. SharePoint is not a platform in a way you thought that it is. SharePoint is an excellent platform and WCM  (what SharePoint 2003 is) constitutes only 2% of what SharePoint 2007 is. I come from an extensive  Enterprise Content Management background and I’ve been implementing ECM solutions my whole career (Livelink, Identitech FYI, Domea, K2.NET and Meridio, Global 360) as well as experience with implementing SharePoint 2003, and I’m basing my opinion on this experience.</p>"
+  },
+  {
+    "id": 1924,
+    "parent": 0,
+    "author_name": "Marcus",
+    "author_url": "http://",
+    "date": "2007-09-17T13:05:49",
+    "type": "comment",
+    "content_html": "<p>Zlatan,</p>\n<p>The reason developers have been looking at it as a potential development platform is because.. well… yes Microsoft has pitched it as such and many organizations have bought into it as being the “the answer” to their portal woes.</p>\n<p>I think your assessment of what it is, and what it is not is spot-on, but I’m not sure you realize how many people right now are investing in SharePoint thinking that it is a “no-code” solution to replacing custom ASP.Net apps, or in some way making managability of those easier.</p>\n<p>It doesn’t do that.  Its a content management system (and a good one at that).</p>"
+  },
+  {
+    "id": 1925,
+    "parent": 0,
+    "author_name": "Jeff Cate",
+    "author_url": "http://www.blogger.com/profile/14018095453381483116",
+    "date": "2007-09-18T14:21:06",
+    "type": "comment",
+    "content_html": "<p>Are there any old-timers lurking out there who are currently doing SharePoint development work that did CICS and IMS DB/DC work 20 years ago?</p>\n<p>Is SharePoint development work significantly more difficult than the enterprise programming environments of old?</p>\n<p>My recollection is that building enterprise-grade business applications has always been hard using the most popular development platform of the day.  That is why cracker-jack developers have always been in demand.</p>"
+  },
+  {
+    "id": 1926,
+    "parent": 0,
+    "author_name": "Jeff Cate",
+    "author_url": "http://www.blogger.com/profile/14018095453381483116",
+    "date": "2007-09-18T20:17:56",
+    "type": "comment",
+    "content_html": "<p>OK, so I have baited myself here.</p>\n<p>In the early 80’s when cutting edge enterprise applications were developed, the premier development platform for multi-user, online database applications was Cobol, CICS and IMS DB/DC.  The only hardware this would run on was IBM mainframes.</p>\n<p>The learning curve for someone who had programming experience in Cobol, but no programming experience in CICS and IMS DB/DC was about 6 months to accomplish something very basic and about 1 year to be marginally effective.  The really good programmers were all people with 5 or more years of full-time experience in this environment.</p>\n<p>Now, while I haven’t personally done a tremendous amount of SharePoint development, I have done some and have watched my developers do a lot over the past four years.  My personal belief is that the learning curve to do SharePoint development is really no more and no less than the learning curve for the IBM mainframe development environment back in its heyday.</p>\n<p>So, is SharePoint a good development platform or not?  That is a very subjective question, IMHO.  However, I say it is at least as good as other major development platforms that have come along in the last 30 years.</p>"
+  },
+  {
+    "id": 1927,
+    "parent": 0,
+    "author_name": "Howard",
+    "author_url": "http://",
+    "date": "2007-09-19T01:19:51",
+    "type": "comment",
+    "content_html": "<p>I’m not sure it’s appropriate to start drawing perpendicular analogies, but since I have some of both CICS and Sharepoint I couldn’t resist.</p>\n<p>Doing general application development with SharePoint is a little like trying to write a video game in CICS.  CICS was designed for a particular type of application, and did that well.  SharePoint is designed for a particular type of application (content management and collaboration) and does that well.</p>\n<p>That’s really where the comparison ends — it would be more accurate to compare CICS to Microsoft Transaction Server or something similar.</p>\n<p>SharePoint is a content management system that, with each version is becoming increasingly extensible.  It is also extremely easy to use as a content management portal, and is designed to do most of the real work by simply making some administrative settings in the browser.  It can take a few weeks or months to get familiar with the tasks you will use most often.  That is, using or administering SharePoint is easy — it is designed for non-programmers.</p>\n<p>The moment you try to create a true business application, or address specific business needs that fall out of the range of the out-of-box functionality that it becomes unreasonably difficult.  Many things can be done via web parts, but the time required to create a truly useful, robust web part in a business context requires a level of effort that is not practical for most organizations, it’s more like the effort required to develop commercial components.  This is what feels like the task of trying to write a video game in CICS.<br>\nOnce you embark on this, it quickly becomes clear that it was never intended to be a true application development platform, it is simply an extensible content management system.</p>\n<p>Do some research around InfoPath and what users are finding out about it in real-world scenarios.  It is one of those technologies that is misleading, because it’s so easy to get started with the OOTB functionality, but when you start to modify things to work the way you really need them to work, the truth begins to unveil.</p>"
+  },
+  {
+    "id": 1928,
+    "parent": 0,
+    "author_name": "Jeremy",
+    "author_url": "http://",
+    "date": "2007-09-21T03:13:21",
+    "type": "comment",
+    "content_html": "<p>The biggest problem I have with SharePoint 2007 development is that you are generally not supposed to work with physical files on disk when doing the front end work (master pages, aspx files, etc… what MS calls “assets”).  You work in SharePoint designer, which connects to a WSS or MOSS site.  Any changes you make are saved in the SharePoint content database.  This means you have no way to put these files into your own source control system.  I find this *very* problematic.</p>\n<p>You end up having to rely purely on the SharePoint “version control” system, which just plain sucks.  The worst part is that to do TEAM development, everyone has to connect to a *central* SharePoint server, and do all the development there.  It reminds me of the old InterDev days where there was this chessy pseudo-source control system that you could use if you didn’t have VSS.</p>\n<p>Now, if we are all connected to the same central server to make changes to our site (and to run it in the browser), how are we supposed to compile and debug web parts locally?  We could create a fully local SP environment just for testing web parts, but how do we get the site definition and content from the central server to our local machine?  By using content management paths?</p>\n<p>Sorry, but I just don’t get how this is all supposed to work.  I’ve been researching it for days, and I’m at my wits end as to how to set up a true team envionment.</p>\n<p>I’m very tempted to start looking at Dot Net Nuke.  Just let me work with *real files* darn it!</p>"
+  },
+  {
+    "id": 1929,
+    "parent": 0,
+    "author_name": "osc1",
+    "author_url": "http://",
+    "date": "2007-09-21T13:27:11",
+    "type": "comment",
+    "content_html": "<p>Jeremy,</p>\n<p>This touches on some of my earlier comments about source code synchronization.  SP stores it’s “pages” in a SQL database.  Web parts / artifact code goes in TFS.</p>\n<p>Let’s say you have a team that consistst of several types of developers:</p>\n<p>1. SP Web part developers and middle-tier business object developers.<br>\n2. Database developers (not for the sharepoint database, but a different DB that servers the data warehouse, etc)<br>\n3. Sharepoint admins (use SPto create new sites, lists, data connections, etc)</p>\n<p>Let’s say in the month-2 of a 4-month long project, you realize that the entire development team headed down the wrong path or some new requirement comes up that requires you to roll the entire state of development back to the point in time that was month 1.5.</p>\n<p>GOOD LUCK WITH THAT! </p>\n<p>The problem is that half of your items are in TFS and the other half are in SP.  I’m afraid those with the notion that SP is the answer to all portal related solutions are going to have to make a few six or seven-figure mistakes and some heads are going to roll before anyone realizes how difficult this type of synchronization is with SP before either MS comes up with a more elegant solution for customizing SP, or folks simply realize that some things are better left with regular ASP development.</p>\n<p>Often times the same management types who see SP as a panacea for their organization are not aware of real-world source code management issues like this (until it’s too late).</p>\n<p>Until MS comes up with a viable solution to fully managing all modifications to SP through TFS, I’m afraid all of the hype that’s being sold regarding SP as a dev platform is setting them up to undermine their own brand.  The problems that the false promises bring are going to make a lot of people lose faith in MS as a platform, and that’s a shame because ASP.Net is the best technology available for developing web applications, and SP is an excellent content management system.</p>"
+  },
+  {
+    "id": 1930,
+    "parent": 0,
+    "author_name": "Gino Kalte",
+    "author_url": "http://",
+    "date": "2007-09-22T07:25:31",
+    "type": "comment",
+    "content_html": "<p>To add to this chaos – sharepoint pulles all pages from database, not for database access but from database itself. Much less scalable than serving the pages directly from the web server and performing data access in the code behind.</p>"
+  },
+  {
+    "id": 1931,
+    "parent": 0,
+    "author_name": "Colin",
+    "author_url": "http://",
+    "date": "2007-09-22T07:36:48",
+    "type": "comment",
+    "content_html": "<p>Anyone claiming SharePoint is a truly viable development platform is deluded or dishonest.</p>\n<p>I work as a full time SharePoint consultant and almost daily run into SharePoint quirks that are development nightmares. </p>\n<p>Deployment sometimes requires hand-editing CAML which feels like a clumsy ASP, a single erroneous character in deployment configuration can literally crash an entire server.</p>\n<p>The Visual Studio SharePoint extensions are buggy and sometimes leave the SharePoint content database in an inconsistent state after multiple deployments. </p>\n<p>The app pools regularly crash mysteriously after deployments requiring manual restarts.</p>\n<p>You can’t directly launch and debug from Visual Studio (you have to redeploy, restart IIS, request a page then attach to the ASP.NET worker process).</p>\n<p>The list data model is primitive, not allowing for complex relationships between list types (the closest you get is a lookup column). </p>\n<p>You can’t customize the SharePoint data controls with the ease of working with a GridView, and you’re limited on the data you can bind to them. </p>\n<p>Much of the API requires cumbersome manual parsing of data (lookup values like: “1;#Value”) and the web services and SPQueries are based on difficult to create and parse XML in “loosey goosey” anti-pattern fashion.</p>\n<p>The error messages are often ambiguous and unhelpful (“An error occurred”) and the log files often aren’t much more useful.</p>\n<p>I could go on (and on and on and on), but suffice it to say that SharePoint is difficult to develop on. Some of it is just a matter of a learning curve, but realistically, much of SharePoint’s awkwardness is attributable to bad design by the product team, not lack of knowledge on the part of developers.</p>\n<p>An elegant well-designed framework (like ASP.NET) is easy to understand, learn, and work with. SharePoint clearly hasn’t reached that level yet.</p>\n<p>In fact, even after learning the ins and outs of SharePoint, tasks that would take an afternoon coding from scratch in an ASP.NET environment could take days to create and deploy to SharePoint. Don’t get me wrong, I’m an advocate of SharePoint development, but I’m honest enough to admit its (many) faults.</p>\n<p>Indeed, if you’re customizing SharePoint, it shouldn’t be because you think SharePoint will make development easier (it won’t), rather you should choose the SharePoint customization route because of all the features it will give you in the end (like versioning, alerts, end-user customizations, document repositories and Office integration, etc.).</p>"
+  },
+  {
+    "id": 1932,
+    "parent": 0,
+    "author_name": "JM",
+    "author_url": "http://",
+    "date": "2007-09-22T18:12:08",
+    "type": "comment",
+    "content_html": "<p>The source control/sync issues that Jeremey and osc1 are bringing up are the most legitimate issues with SharePoint development right now.  You have integrators working with SharePoint Designer and through the SharePoint front end creating content in the forms of lists, calenders etc et etc, and developers work on web parts that have to consume and utilize the content the integrators are created.</p>\n<p>The integrators and developers are working in different environments AND THERE IS NO WAY TO AUTOMATICALLY SYNC THEIR WORK!  Some of your development artifacts are sitting in the SharePoint database, some in TFS.  This is absolutely ridiculous. </p>\n<p>I am on a project now with three integrators working on a common environment, and multiple developers working on local VMs and we have had to develope what I consider a reverse migration from the integrator’s environment to the developer’s local environment.  It’s an absolute mess and is adding hundreds of additional hours to the project I am on.</p>\n<p>The biggest issues I see with SharePoint development right now is the considerable amount of configuration management overhead you will require.  I feel sometimes we need someone working 100% of the time on build and deployment scripts, client development VM configuration and maintaining and ensuring the integrators and developers are all on the same page. </p>"
+  },
+  {
+    "id": 1933,
+    "parent": 0,
+    "author_name": "D.R. Remulak",
+    "author_url": "http://",
+    "date": "2007-09-23T04:33:28",
+    "type": "comment",
+    "content_html": "<p>Where is Sahil when we need some of that salesmanship?  He’s got a lot of background in those evangalist demos, surely he has the answers to all this?  </p>\n<p>Put three SP folks in a room with three real developers in any true architectural meeting and watch them get obliterated.  </p>\n<p>The SP people I have the most respect for are the ones that admit that 99% of the time they use the out of the box features to solve IT collaboration and CM needs.</p>\n<p>It is nothing close to a true development platform.  Any company that tries to build real custom applications using SP is going to be so disappointed that they are going to blame MS, and start believing that other platforms (LAMP) is going to somehow bail them out of the problem they created for themselves.</p>"
+  },
+  {
+    "id": 1934,
+    "parent": 0,
+    "author_name": "Andrew Connell",
+    "author_url": "http://www.andrewconnell.com/blog",
+    "date": "2007-09-25T03:51:29",
+    "type": "comment",
+    "content_html": "<p>This is my last post on this thread because it’s just going around in circles.</p>\n<p>First, to OCS1. I FULLY understand what you said about source code. What I don’t understand is what you say when you say “development in SharePoint”. Look at two instances: ASP.NET vs. SharePoint. In ASP.NET if you are building a component, you do so using ASPX/ASCX and code files (CS/VB). You keep the source files (ASPX/ASCX/CS/VB) in source control, build the solution and deploy the resulting files to your web server. In SharePoint, say you are building a Web Part/master page/content page, etc… you build the ASPX/ASCX/CS/VB, add to souce control and deploy the resulting files to your SharePoint server. So where’s the difference?</p>\n<p>I mention WSS Solution Packages as the deployment of the resulting files… in SharePoint. How do you do it in ASP.NET? You build an MSI or XCOPY the deployment. How do you do it in SharePoint? you build an MSI, a WSP (recommended, but PURELY optional), or XCOPY… just like ASP.NET.</p>\n<p>You either don’t understand how do to do this in SharePoint, or we have a major disconnect.</p>\n<p>Second, to Jeremy. You say “The biggest problem I have with SharePoint 2007 development is that you are generally not supposed to work with physical files on disk when doing the front end work (master pages, aspx files, etc… what MS calls “assets”).  You work in SharePoint designer, which connects to a WSS or MOSS site.  Any changes you make are saved in the SharePoint content database.  This means you have no way to put these files into your own source control system.  I find this *very* problematic.” </p>\n<p>I couldn’t agree more… but who said you aren’t supposed to work with the files on the file system? That’s how the whole product is created and how MSFT creates the OOTB sites… you can do the exact same thing in SharePoint. What you talk about with using SharePoint Designer is called SharePoint CUSTOMIZATION, *not* SharePoint DEVELOPMENT where you work at the file system level.</p>"
+  },
+  {
+    "id": 1935,
+    "parent": 0,
+    "author_name": "Loke Kit Kai",
+    "author_url": "http://community.sgdotnet.org/blogs/kitkai",
+    "date": "2007-09-25T04:03:25",
+    "type": "comment",
+    "content_html": "<p>OCS1,<br>\nI never touch SPD, in my entire life… So how do you expect me to do my development on SharePoint?</p>"
+  },
+  {
+    "id": 1936,
+    "parent": 0,
+    "author_name": "JM",
+    "author_url": "http://",
+    "date": "2007-09-25T13:21:26",
+    "type": "comment",
+    "content_html": "<p>The issue just isn’t source control with SharePoint.  It deals with the fact that you have TWO DEVELOPMENT ENVIRONMENTS, one for developers using VS.NET while running MOSS running in a VM, and a centralized MOSS instance for the integrators using SPD.  </p>\n<p>Both groups of people are out of sync with their work and the developers must consume that work that the integrators are doing!  That means you must develop a migration plan from the centralized SharePoint instance that the integrators are working on to MULTIPLE development VMs.  This is extremely time consuming.</p>"
+  },
+  {
+    "id": 1937,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-09-25T13:38:59",
+    "type": "comment",
+    "content_html": "<p>All,<br>\nOriginally, this post was intended as a short train-of-thought post, not as an objective research paper on Sharepoint.  I have enjoyed the comments, however, and I have learned several things throughout this thread, so thank you!</p>\n<p>Overall, my post hasn’t _added_ anything to the global conversation (it was more of a complaint, anyway), but  your comments have.</p>"
+  },
+  {
+    "id": 1938,
+    "parent": 0,
+    "author_name": "Oskar Austegard",
+    "author_url": "http://austegard.blogspot.com/2007/04/kbler-ross-model-of-sharepoint.html",
+    "date": "2007-09-25T20:39:35",
+    "type": "comment",
+    "content_html": "<p>Jeff, you were obviously at the “Anger” stage of the Kubler-Ross Model of SharePoint development when you wrote this – I’ve been there myself, many, many times…  See <a href=\"http://austegard.blogspot.com/2007/04/kbler-ross-model-of-sharepoint.html\" rel=\"nofollow ugc\">http://austegard.blogspot.com/2007/04/kbler-ross-model-of-sharepoint.html</a></p>\n<p>Next comes bargaining…</p>"
+  },
+  {
+    "id": 1939,
+    "parent": 0,
+    "author_name": "Joel Oleson",
+    "author_url": "http://blogs.msdn.com/joelo",
+    "date": "2007-09-25T23:15:40",
+    "type": "comment",
+    "content_html": "<p>I think your subject line is off.  Rather than explaining what makes a good platform it seems you’re describing the ideal development environment for an application.  A good platform is more about the value to the business and ease of use and reuse.</p>\n<p>I explain it in this post…<br>\n<a href=\"http://blogs.msdn.com/joelo/archive/2007/09/24/sharepoint-is-an-awesome-dev-app-platform.aspx\" rel=\"nofollow ugc\">http://blogs.msdn.com/joelo/archive/2007/09/24/sharepoint-is-an-awesome-dev-app-platform.aspx</a></p>"
+  },
+  {
+    "id": 1940,
+    "parent": 0,
+    "author_name": "Craig",
+    "author_url": "http://",
+    "date": "2007-09-26T17:08:05",
+    "type": "comment",
+    "content_html": "<p>JM – The artifacts (aspx, css, xslt, etc) that the “integrators” are developing should be included in the Feature that gets deployed to the production environment.  Since the Feature is (typically) developed in Visual Studio, the Feature definition files and the artifact source can all be added to source control.  If you’re worried about accidental code loss while developing in SPD, well, that’s what backups are for.</p>\n<p>It sounds like your issue isn’t with SharePoint, but rather the development process you’re using.</p>"
+  },
+  {
+    "id": 1941,
+    "parent": 0,
+    "author_name": "osc1",
+    "author_url": "http://",
+    "date": "2007-09-26T22:54:14",
+    "type": "comment",
+    "content_html": "<p>Andrew,</p>\n<p>I think you are confusing me with someone else regarding the deployment issue.  Reviewing my posts, I can only see that I said:</p>\n<p>“This further confirms to me that you are confused between packaging and deployment (MSIs and what not, what assemblies go where, what gets GAC’d and what stays local, and so forth) and source code management (the raw .cs and .aspx files that get checked in and out of TFS).”</p>\n<p>I was simply trying to differentiate source code management from deployment and packaging (what you’re talking about, whether to create an .msi or what not is actually part of the packaging process.  An application does not necessarily need to be put into a setup program of sorts to be deployed — it might be simply published to a number of web servers internally.  That’s deployment).</p>\n<p>Even on the subject of deployment (remember.. NOT packaging)…  SP still loses the battle… correct me if I am wrong, but just to install SP requires a SQL server database, does it not?  I can’t count how many times I’ve written .Net web applications had no database requirement at all (i.e. got their data strictly through web services), and could service thousands of requests per day on a modest box, using minimal hardware resources.  Try that with SP… even the default of MOSS 2007, on extremely high-end hardware, feels like a sloth compared to most of the web applications I’ve been involved with.</p>"
+  },
+  {
+    "id": 1942,
+    "parent": 0,
+    "author_name": "osc1",
+    "author_url": "http://",
+    "date": "2007-09-26T22:58:08",
+    "type": "comment",
+    "content_html": "<p>Craig,</p>\n<p>This is the kind of comment from SP folks that makes me think they have a very limited development background.  Source code repositories are NOT a backup mechanism.  You back up the source code tree using some other method.  Source code management gives you history of code changes, the ability to branch releases, merge changes and so forth.  I realize some of that functionality is in SP but the problem is that the SP content versioning is not SYNCHRONIZED with the source code repository (for the love of god if I have to explain that one more time I’m going to give up).    </p>"
+  },
+  {
+    "id": 1943,
+    "parent": 0,
+    "author_name": "JM",
+    "author_url": "http://",
+    "date": "2007-09-27T16:26:56",
+    "type": "comment",
+    "content_html": "<p>osc1,</p>\n<p>I think the problem some folks may be having is that they have not had to manage a team of developers and integrators working on a large-scale SharePoint solution. </p>\n<p>Team development using SharePoint requires a brutal reverse migration process from a share SharePoint instance that integrators work on, to local development machines that software engineers work on.</p>"
+  },
+  {
+    "id": 1944,
+    "parent": 0,
+    "author_name": "Paul La Torres",
+    "author_url": "http://",
+    "date": "2007-09-28T13:32:56",
+    "type": "comment",
+    "content_html": "<p>SharePoint  does one thing well….it plays well with it’s own database. Try to add functionality, or God Forbid, try to share data with another SQL database and you have a mess in your hands.</p>\n<p>Sure, you can work around the issues, but not quickly and with plenty of pain involved in the discovery process. The process of adding simple functionality takes way much longer than it should and developers are forced to jump through too many hoops. </p>\n<p>In my oppinion, SharePoint should have had tools to seamlessly connect with external databases and easily retreive and push data between other databases. And never mind the fact that in order to make changes to the look and feel you have to use SharePoint designer and for advanced functionalities Visual Studio.</p>"
+  },
+  {
+    "id": 1945,
+    "parent": 0,
+    "author_name": "stefan demetz",
+    "author_url": "http://www.decatec.it/blogs",
+    "date": "2007-09-29T22:06:05",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>as I’ve a small Sharepoint practice within my company(10 people dedicated to Sharepoint) I agree that Sharepoint is not an easy dev platform for newbies (to Sharepoint).<br>\nIt takes a while to digg the “Sharepoint way” of doing things, so swearing at it for the first few project helps \uD83D\uDE09  OK, as we do lots of work with it, all new staff get helped by the others and we have a sort of standard dev environment with scripts and things already setup for them.<br>\nGoing back to the “Sharepoint way”:<br>\n-forcing things on it doesn’t always help<br>\n-Dev tools: Immature but getting better<br>\n-Deployment: not easy, still very manual </p>\n<p>Alltogether it reminds me a bit of open source programming, where one has to assemble a bit of stuff to get productive for development</p>\n<p>I did a petition a while a go (<a href=\"http://www.decatec.it/blogs/2007/05/11/Sharepoint+2007+On+MS+Connect+Petition.aspx\" rel=\"nofollow ugc\">http://www.decatec.it/blogs/2007/05/11/Sharepoint+2007+On+MS+Connect+Petition.aspx</a>)<br>\nto get SP on connect to be able to let MS know all the painpoints, but nothing happened as yet. </p>\n<p>Still, the product is fantastic !!!!</p>"
+  },
+  {
+    "id": 1946,
+    "parent": 0,
+    "author_name": "Got One",
+    "author_url": "http://",
+    "date": "2007-10-01T23:11:27",
+    "type": "comment",
+    "content_html": "<p>Sharepoint actually works?  I have yet to see an installation of sharepoint that worked in production.</p>\n<p>Generally works for a while and then eventually it dies.  </p>\n<p>I thought everyone knew sharepoint sucked?</p>"
+  },
+  {
+    "id": 1947,
+    "parent": 0,
+    "author_name": "Sahil Malik",
+    "author_url": "http://blah.winsmarts.com",
+    "date": "2007-10-02T15:47:42",
+    "type": "comment",
+    "content_html": "<p>&gt;&gt; Where is Sahil when we need some of that salesmanship?  He’s got a lot of background in those evangalist demos, surely he has the answers to all this?  </p>\n<p>DR Remulak – I’m right here, and unfortunately I have some real work to do so I can’t keep checking the comments on this post.</p>\n<p>Anyway, I totally didn’t understand what you meant by the above. I’ve never worked as an evangelist for MSFT, but now that you suggest, maybe I should!?</p>"
+  },
+  {
+    "id": 1948,
+    "parent": 0,
+    "author_name": "T. Brell",
+    "author_url": "http://",
+    "date": "2007-10-08T23:01:32",
+    "type": "comment",
+    "content_html": "<p>The whole sharepoint hype appears to be a ruse, most likely a short-lived one.  On the plus side for companies with not enough to do, it’s creating a reasonable sized after market for these kits / templates etc. that enable you to do real work with it (as long as the work you want to do does not fall outside the realm of what their single purpose kits are designed to do).<br>\nBut for the average company who needs more than the out of box features, it is not going to be financially feasible to do custom development with it.</p>"
+  },
+  {
+    "id": 1949,
+    "parent": 0,
+    "author_name": "scs",
+    "author_url": "http://listen2chris.blogspot.com",
+    "date": "2007-10-11T10:04:36",
+    "type": "comment",
+    "content_html": "<p>guys!<br>\ni came across your arguments regarding sharepoint, but tell you what, SharePoint is the next big hit in the market that maybe microsoft produced since windows 95. The only difference is that windows 95 contains lots of bugs and other issues, sharepoint on other hand has delivered a product which is robust and portable.<br>\nWorking with sharepoint always gave me surprises, but those surprises were good. I feel like congratulating the Microsoft Sharepoint team for the commendable job they have done.<br>\nAm quite a newbie and i mostly do stuff with Content Management in MOSS, and i find it one of the best platform to do so.<br>\nAbout the development platform thing, i cannot understand why i cant be taken as that? I mean, it tightly integrates with the latest office suite and most of the work that needs to be done is automated. No doubt it requires server OS to run, but doing so it minimizes the amount of risk asscoiated with running a web app.</p>\n<p>Quite surely i am failing to understand the point that you guys are trying to place. I guess Andrew is correct when he says that this comments are little myopic.</p>"
+  },
+  {
+    "id": 1950,
+    "parent": 0,
+    "author_name": "Ron W.",
+    "author_url": "http://",
+    "date": "2007-10-12T00:12:18",
+    "type": "comment",
+    "content_html": "<p>Well you said you’re doing content management with it, and I haven’t seen anyone in this thread doubt it’s capabilities as a content management system.  Most of the bad press is regarding the use of SP as a general application development platform where you’re doing things that are not related to content management and document workflow.</p>"
+  },
+  {
+    "id": 1951,
+    "parent": 0,
+    "author_name": "LOJP",
+    "author_url": "http://",
+    "date": "2007-10-14T08:21:37",
+    "type": "comment",
+    "content_html": "<p>What is perhaps most frightening to me is the fact that folks that are gambling their careers on selling SP as the answer to everything are going out of their way to point out “Sharepoint is built using ASP.Net!!!”.</p>\n<p>This is a little like arguing that MS Word or Excel are built using C++.</p>\n<p>A thinking man will stop and consider the analogy the Sharepoint “gurus” are making here.  Would you write a device driver using Excel?  Would you develop a web service architecture using Word?  If you even consider one of those as a possibility, you might also be dense enough to consider Sharepoint to be the answer for every type of web application out there.  The truth is that pointing out that Sharepoint is built on top of ASP.Net just makes a better case for understanding the raw bones of ASP.Net itself, rather that relying on a browser-based idiots tool to do the work for you.</p>\n<p>I still love Sahil’s famous quote “See, Jeffrey is a fantastic developer. I am probably not so fantastic, but still I’d say I’m one of the better developers out there”…   How can you in one sentence declare yourself a subordinate developer and then proclaim to be one of the best out there?  This kind of contradiction of logic is what pollutes the mind of Sharepoint tweakers (who call themselves developers, but largely rely on the out of box functionality and limitations that were created for them by real ASP.Net developers).</p>"
+  },
+  {
+    "id": 1952,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-10-14T13:54:00",
+    "type": "comment",
+    "content_html": "<p>@LOJP,<br>\nPlease keep the remarks professional and a little less insulting.  A logical argument is best made without emotion.</p>"
+  },
+  {
+    "id": 1953,
+    "parent": 0,
+    "author_name": "Hrushikesh",
+    "author_url": "http://",
+    "date": "2007-10-23T09:41:38",
+    "type": "comment",
+    "content_html": "<p>Hi All. This is my first day I am reading about Sharepoint. I have to choose whether to use Sharepoint or ASP.NET web portal. I gotta gud information here (thanx to all of you) but didn’t get any output for my problem so posting my problem. I have to work on a project which is a CRM website, all there i can do with ASP.NET except Library Management(yes i can , but it w’d be quite difficult comparing to . Sharepoint i think). So my Question is, What should i perfer? or Can i use ASP.NET for other modules and manage documents in Sharepoint using ASP.NET?<br>\nplz plz plz giv your valuable comments. </p>"
+  },
+  {
+    "id": 1954,
+    "parent": 0,
+    "author_name": "Anant G.",
+    "author_url": "http://",
+    "date": "2007-10-26T21:10:12",
+    "type": "comment",
+    "content_html": "<p>If your CRM is based on a relational database (which most are), I think you will be very frustrated working with Sharepoint lists.</p>"
+  },
+  {
+    "id": 1955,
+    "parent": 0,
+    "author_name": "Dennis Bottjer",
+    "author_url": "http://drowningintechnicaldebt.com/blogs/dennisbottjer/",
+    "date": "2007-11-16T03:57:25",
+    "type": "comment",
+    "content_html": "<p>osc1,</p>\n<p>I think the point you are trying to make is that changes can be made to a SharePoint site through the browser.  For example, an admin can create custom lists.  The definitions for these customs lists are stored in the SharePoint database and not within in TFS with your web part code thus creating a synchronization problem as you alluded to earlier.</p>\n<p> To solve the issue of source code synchronization you should do the following.  Setup a development instance of SharePoint (WSS or MOSS).  Think of this environment as a Visual Designer.  For example, define your document libraries, custom lists, and navigation.  When complete export the definitions for all these artifacts you created and build a .WSP.  The WSP will recreate the site structure and install web parts on your test and production environments.</p>\n<p>You could use a tool such as the SharePoint extensions for Visual Studio to create a Solution, Project(s), and templates.  Furthermore, the SharePoint extensions for Visual Studio Add In will automatically create a .WSP.  It also comes with a tool to extract list and site definitions from SharePoint.  All this exported definition code should be checked into a version control system such as TFS.  Following this or a similar development process resolves the synchronization issues and has worked for us on many large SharePoint projects.</p>\n<p>Thanks,<br>\nDennis</p>"
+  },
+  {
+    "id": 1956,
+    "parent": 0,
+    "author_name": "osc1",
+    "author_url": "http://",
+    "date": "2007-11-19T15:20:43",
+    "type": "comment",
+    "content_html": "<p>Dennis,</p>\n<p>Thanks for the workaround suggestion, but once again there is a synchronization problem there when we look at this from the notion of Sharepoint as a dev platform.  If I do my SP development on my own development instance, and I have other developers making modifications on their own instance, how do we resolve the changes they are making and checking in with mine?  With the TFS merging feature simply just work and allow us to merge every aspect of the changes across all development teams the way it does with source code, and deploy the changes to any SP instance we like?  I don’t think it will, but assuming it is possible, there is another problem.</p>\n<p>In an organization where SP is used as a portal, there may be a number of users who have rights to change various aspects of the portal.  One of the whole selling points to Sharepoint is the collaborative aspect, where you can give Bob in Accounting the ability to customize his own stuff.  How do you enforce that Bob in Accounting follows the procedure you’ve mentioned above?</p>\n<p>A good source control mechanism not only allows team development, it enforces it automatically.  Sharepoint just wasnt designed for that.</p>"
+  },
+  {
+    "id": 1957,
+    "parent": 0,
+    "author_name": "Robert",
+    "author_url": "http://",
+    "date": "2007-12-05T23:00:48",
+    "type": "comment",
+    "content_html": "<p>All, </p>\n<p>    I’ve very much enjoyed reading the discussion about Sharepoint as a develeopment platform.  There were a lot of good points made from both sides.  I’ve been developing in Sharepoint for about 3 years now and got started using WSS V2.  I agree completely that WSS V3 is a very good improvement on V2(features being 1 great improvement).  I can’t really speak to anything that osc1 has mentioned, but I agree that synchronization is a problem.  Working on distributed VM to produce a final result can (and has been) an integration nightmare.  I think one of the difficulties with SP development is the LACK of documentation regarding *how* to develop against the OM.  There are obvious (and not so obvious) pitfalls to avoid when developing against the OM, but the SDK doesn’t really give you much(properly disposing objects, CAML queries, Memory metrics, performance metrics to name a few).  Interacting with Lists and Document Libraries in code can be one of the most frustrating pieces to code, especially when you want to move list items across lists or even across sites.  Obviously WF can do a lot of this work for you, but setting up your initial WF environment is a learning curve in itself.  All in all, SP is a great environment for quickly setting up portal sites.  Building applications on top of that environment can be nerve-wracking, however.</p>"
+  },
+  {
+    "id": 1958,
+    "parent": 0,
+    "author_name": "RJ",
+    "author_url": "http://",
+    "date": "2007-12-10T14:59:39",
+    "type": "comment",
+    "content_html": "<p>I am firm believer that until the silly client development model is fixed for SharePoint, it will not become a viable platform for application development.  It’s a *great* portal product with many OOTB web parts and functionality, as well as excellent vendor support.  Coding on it is a lesson in frustration from the management, development and deployment persepctives.</p>"
+  },
+  {
+    "id": 1959,
+    "parent": 0,
+    "author_name": "Emma",
+    "author_url": "http://",
+    "date": "2007-12-18T22:44:38",
+    "type": "comment",
+    "content_html": "<p>If I had some general questions about Sharepoint where on earth would I go?  I have done lots of Drupal development, and now I am faced with a Sharepoint project and while at first I wasn’t afraid I am feeling a little more so after reading this thread.</p>\n<p>I have some general questions on Share point like , how are custom modules created?  I have a specific set of functionality that is required and I am unclear on what I can use for this development.  Can I take an existing web application and integrate it?  Where do developers go for support when they are bashing their heads against the wall.  Is there a community, cause I haven’t found one yet…</p>\n<p>Thanks</p>"
+  },
+  {
+    "id": 1960,
+    "parent": 0,
+    "author_name": "XOR",
+    "author_url": "http://",
+    "date": "2007-12-19T02:36:47",
+    "type": "comment",
+    "content_html": "<p>Sharepoint in Production at the moment I find is a nightmare<br>\n– DBAs hate the sharepoint db user having access to create databases<br>\n– network support teams have no idea how to use the app (ramp up time is huge), so developers have to support it (eww)</p>\n<p>and business types are being sold Sharepoint as if its all out of the box – no coding necessary, but if you want you’re UI to be intuative and specialised even just a little bit you have to break out the custom code. </p>\n<p>And dont even get me started on the lists – they are not db tables, but MS pretends they are; they dont support anything but basic relationships and are an absolute nightmare to report on with a real reporting tool.</p>\n<p>Sharepoint is not for App Dev in my eyes – only for team collaboration and intranets.</p>"
+  },
+  {
+    "id": 1961,
+    "parent": 0,
+    "author_name": "William Torlaoe",
+    "author_url": "http://",
+    "date": "2007-12-31T11:44:25",
+    "type": "comment",
+    "content_html": "<p>I just got finished escaping from a major project which was all SharePoint-Shiny, and the disasterous results cost the client a couple of hundred thousand to realize it wouldn’t work.</p>\n<p>It got right down to it and we started working with support, and it turns out the whole freaking architecture behind SP was offshored to Asscrapistan or India or whatever.</p>\n<p>They don’t have a freaking clue how it works and can’t support it properly either.</p>\n<p>Good luck building your infrastructure on that.</p>"
+  },
+  {
+    "id": 1962,
+    "parent": 0,
+    "author_name": "RJ",
+    "author_url": "http://",
+    "date": "2008-01-02T21:02:52",
+    "type": "comment",
+    "content_html": "<p>XOR:</p>\n<p>Yeah I don’t get how SharePoint “experts” are recommending that data be stored in Lists instead of inside a RDBMS.  I have been wondering how people are going to report on enterprise data locked away in a SharePoint list buried somewhere in a site collection.  I also don’t see how you can model relational data within sharepoint lists and maintain the benefits of foreign key constraints, unique constraints etc etc…</p>\n<p>The practices I have seen on SharePoint lists are horrendus too.  Many to many relationships modeled by adding commas to column data, “swiss cheese” Lists, data repeated all over the place.  Yuck….</p>"
+  },
+  {
+    "id": 1963,
+    "parent": 0,
+    "author_name": "G. Adian",
+    "author_url": "http://",
+    "date": "2008-01-05T16:20:33",
+    "type": "comment",
+    "content_html": "<p>Most of the people who champion Sharepoint are hoping that it is an easy to use, point and click portal that will satisfy every web based need in the organization.  That same category of people (i.e. NOT true developers) couldn’t properly model a database to save their life, and due to lack of experience do not foresee the inevitable problems they will run into (the same types of problems that relational databases were designed to solve to begin with).  They are just creating a huge long-term liability for the organization.</p>"
+  },
+  {
+    "id": 1964,
+    "parent": 0,
+    "author_name": "RJ",
+    "author_url": "http://",
+    "date": "2008-01-07T15:56:44",
+    "type": "comment",
+    "content_html": "<p>One of the “Twelve Predictions for 2008”</p>\n<p>Source, <a href=\"http://www.cmswatch.com/Feature/172-2008-Predictions?source=RSS\" rel=\"nofollow ugc\">http://www.cmswatch.com/Feature/172-2008-Predictions?source=RSS</a></p>\n<p>MOSS enters the valley of disappointment<br>\nSharePoint will continue to grow at viral rates as a low cost, low touch, document collaboration system. But in 2008 we will see the start of a noticeable backlash, particularly among larger enterprises. </p>\n<p>The backlash will be two-fold. First larger enterprises will exhibit major compliance and litigation discovery issues across numerous unmanaged and unaccountable SharePoint locations. You will also see a backlash against sizable development costs and times to build maintainable applications in the MOSS environment. With the more complex SharePoint projects struggling to launch, customers are realizing a disconnect between Redmond’s heavy promotion and the realities of a product that is significantly less out-of-the-box than most expect. </p>"
+  },
+  {
+    "id": 1965,
+    "parent": 0,
+    "author_name": "DS",
+    "author_url": "http://",
+    "date": "2008-01-07T16:25:57",
+    "type": "comment",
+    "content_html": "<p>It seems MOSS might be failing in more than the predictions.  Somewhat sad to see a product with so much potential fail so miserably in some applications.</p>\n<p><a href=\"http://imukai.spaces.live.com/blog/\" rel=\"nofollow ugc\">http://imukai.spaces.live.com/blog/</a></p>"
+  },
+  {
+    "id": 1966,
+    "parent": 0,
+    "author_name": "JOP",
+    "author_url": "http://",
+    "date": "2008-01-08T22:25:53",
+    "type": "comment",
+    "content_html": "<p>I’m coming in here as an ASP.NET developer in a software house that’s been slowly moving to SharePoint over the course of the last year. I realize that my experience is rather junior compared to my peers here, so I don’t want to enter the fray of a discussion I am not qualified to participate in.</p>\n<p>However, I would like to offer this thought – surely, in some respects, the ‘development experience’ is an important part of SharePoint’s worthiness as an application platform?</p>\n<p>I’m sure there will be those that believe, politely, that developers should just suck it up and take it on the chin – we work, after all, in an industry renowned as a pressure-cooker of stress and long hours. Realistically though, is it not important to consider the potential for lost productivity, team stress and burn-out as a result of the frustration of the ‘development experience’? There’s got to be a metric for measuring that loss in monetary terms, right?</p>"
+  },
+  {
+    "id": 1967,
+    "parent": 0,
+    "author_name": "E.N. Stiles",
+    "author_url": "http://",
+    "date": "2008-01-17T01:58:49",
+    "type": "comment",
+    "content_html": "<p>For the sake of the long-term success of Sharepoint, Microsoft needs to position it as a first-rate content management system and document repository and stop selling it as the answer to all web development needs.  The latter is only going to lead to some very expensive disappointments.  It’s funny how SP experts argue that SP is better than plain ASP.Net development because “SP was *WRITTEN* in ASP.Net”…  without realizing that this immediately puts SP lower on the food chain.  It is much better to have a good understanding of C#, .Net and ASP.Net development and be able to quickly develop custom solutions than to be a point-and-clicker that is always making excuses about why it takes so long to customize SP to do something, then to try to sell everyone on changing the way their business works to work within the constraints of SP.</p>\n<p>The link posted earlier from CMS watch is correct — we can expect to see a major collapse of the false SP promises this year.  My brother works a recruiter / client service manager for a consulting agency and he says he is hearing lots of stories of SP projects failing and being redone in C# ASP.Net.  He also says there is a lot of disappointment in the Java community and a lot of rewrites headed for C#.</p>"
+  },
+  {
+    "id": 1968,
+    "parent": 0,
+    "author_name": "XOR",
+    "author_url": "http://",
+    "date": "2008-01-17T02:25:44",
+    "type": "comment",
+    "content_html": "<p>I disagree with your CMS comment. Sharepoint is really a team collaboration tool, configuring sharepoint to be nice and pretty (as a externally facing CMS should be) is far too hard and I dont recommend it. Some developers are doing it for my company’s portal at the moment and it took a long time to properly reskin it (all pages inc layout pages) and because the default controls to add/remove are so clunky they are having to write their own user controls to replace all these… ouch!</p>"
+  },
+  {
+    "id": 1969,
+    "parent": 0,
+    "author_name": "E.N. Stiles",
+    "author_url": "http://",
+    "date": "2008-01-18T23:55:19",
+    "type": "comment",
+    "content_html": "<p>To clarify, I wasn’t implying Sharepoint was suitable for any externally-facing solution.  It’s not.  But most external site I’ve worked on did not involve content management from outside the organization (maybe outside the firewall but that’s different).  In most cases it is internal folks using Sharepoint to add content to an external portal which is written in C#/ASP.Net which faces the public.  How many portal scenarios let external site visitors do content management?</p>"
+  },
+  {
+    "id": 1970,
+    "parent": 0,
+    "author_name": "Bob Van Duiz",
+    "author_url": "http://",
+    "date": "2008-01-22T02:36:14",
+    "type": "comment",
+    "content_html": "<p>Have you noticed how many of the pro-Sharepoint blogs filter their posts and will not allow the ones through that point out flaws in the product they (blog owners) are not able to defend?</p>"
+  },
+  {
+    "id": 1971,
+    "parent": 0,
+    "author_name": "Bob Van Duiz",
+    "author_url": "http://",
+    "date": "2008-01-27T04:28:12",
+    "type": "comment",
+    "content_html": "<p>Yes but who do you trust?  Those who censor or those who let real information flow?</p>"
+  },
+  {
+    "id": 1972,
+    "parent": 0,
+    "author_name": "LeeFAR",
+    "author_url": "http://",
+    "date": "2008-01-29T18:14:39",
+    "type": "comment",
+    "content_html": "<p>This blog post and the comments following has been the best “discussion” I have seen on SharePoint.  Here are my two cents on this topic.  I’ll preface this by saying I’m coming from an VB 6.0, classic ASP, ASP.NET, VB.Net/C#, SQL Server background.  I have written, managed, and deployed dozens of systems (small, medium and large) over the years.  I have always worked in the very structured environment with a quality/configuration management influence.  </p>\n<p>About 4 months ago, my team and I was charged with developing a travel reimbursement solution using SharePoint, InfoPath, and Windows Workflow foundation.  This was actually a salvage project that was done in another technology that implemented InfoPath, SharePoint v2, and BizTalk.  So, my project began behind schedule already.  When I was told about the project, my instincts said to do this as a ASP.NET app with a SQL backend.  The reason is we had no experience with SharePoint, InfoPath, and WWF and the project had already floundered for over a year and the client needed the solution yesterday.  I figured we could have the solution built, tested, and deployed in less than 3 months.  But, the client demanded we build it using SharePoint and therefore, we went that route.</p>\n<p>Four months have passed and we are still in the development phase of this project and really only about ½ way through it.  Why?  There is a steep learning curve, no doubt.  The primary programmer I have working on the project is one of our strongest programmers, so he knows his stuff.  But, given the fact we had to use three new technologies and blend them all together, required a considerable about of ramp up time.  As with any product that hasn’t been in use for many years, the documentation for customizing SharePoint, building workflows, and integrating InfoPath into the mix is not all there.  There are some very excellent resources out there (see list below).  But as usual, they only paint a small fraction of the picture.  So it takes time.</p>\n<p>I think one of the biggest problems with doing SharePoint development is the fact you have to think in SharePoint, InfoPath, WWF terms.  If you are a programmer that has been building ASP.NET apps for years, you know exactly how you are going to tackle something.  I find that we are taking 50 stabs at something in SharePoint, only to learn hard lessons.  Granted, over time experience will ease this pain.</p>\n<p>The only issues that has been brought up several times in the proceeding comments is source code control.  I don’t want to beat a dead horse on this topic, but when you have a complex project that involves custom pieces that are of SharePoint, InfoPath, WWF, and not to mention the numerous web services and SQL databases required for the solution, managing the configuration items is very challenging.  Does this make SharePoint a bad development platform?  I can only answer that by saying it depends on what you are willing to live with.  I think my kind of project is going to require a lot more extra hours in configuration management and future maintenance simply because of the number of pieces and parts that make up the whole solution.  Had we done it in ASP.NET and SQL Server, the road ahead looks a lot more simple to manage.</p>\n<p>Is SharePoint and all of the complementary technologies like InfoPath and Windows Workflow Foundation a good development platform.  My answer is yes, but you had better have had years of experience in doing “SharePoint” projects.  I think only product maturity and experience is going to make it a really good development platform.  Until then, you better think hard about the work that lies ahead of you and make sure people understand the road ahead isn’t as smooth as marketing makes it sound.</p>\n<p><a href=\"http://www.amazon.com/Workflow-2007-Microsoft-Office-System/dp/1590597001/ref=sr_1_1?ie=UTF8&amp;s=books&amp;qid=1201630162&amp;sr=8-1\" rel=\"nofollow ugc\">http://www.amazon.com/Workflow-2007-Microsoft-Office-System/dp/1590597001/ref=sr_1_1?ie=UTF8&amp;s=books&amp;qid=1201630162&amp;sr=8-1</a></p>\n<p><a href=\"http://www.amazon.com/Developers-SharePoint-Services-Platform-Programming/dp/1584505001/ref=sr_1_2?ie=UTF8&amp;s=books&amp;qid=1201630208&amp;sr=1-2\" rel=\"nofollow ugc\">http://www.amazon.com/Developers-SharePoint-Services-Platform-Programming/dp/1584505001/ref=sr_1_2?ie=UTF8&amp;s=books&amp;qid=1201630208&amp;sr=1-2</a></p>\n<p><a href=\"http://www.sheltonblog.com\" rel=\"nofollow ugc\">http://www.sheltonblog.com</a></p>\n<p><a href=\"http://www.andrewconnell.com/blog/\" rel=\"nofollow ugc\">http://www.andrewconnell.com/blog/</a></p>\n<p><a href=\"http://tedpattison.net/\" rel=\"nofollow ugc\">http://tedpattison.net/</a></p>"
+  },
+  {
+    "id": 1973,
+    "parent": 0,
+    "author_name": "Sharepoint Development Sucks",
+    "author_url": "http://",
+    "date": "2008-02-23T02:46:36",
+    "type": "comment",
+    "content_html": "<p>I have to disagree, Sharepoint Development plain outright sucks. Let the Flame wars begins.</p>\n<p>Yeah at the core of sharepoint is asp.net, just like at the core of older Microsoft office products is C++. Or maybe another analogy might better suit you, At the core of bytes is bits, or at the core of bits are just electrical charges.</p>\n<p>Yeah there is a learning curve to Sharepoint development because a lot and I do mean a lot of the development practices are just plain out right stupid.</p>\n<p>1) you have to develop on the server – just stupid, completely ridiculous. What is happening to the new practices of taking the code locally, testing it it locally, then putting into the repository to be tested within the system framework? So yeah you skip the testing locally part but what does that accomplish? Server resets, which over course you really want to do as much as possible [/sarcasm]. iis reset, a very good good thing, especially when you have other websites, sharepoint sties using IIS.  Using remote desktop on your network just so you can develop on sharepoint, you might as well being sitting in the server room working on it there. hell its even better when you have a team of developers working off of one server, wonder why the hell there projects crashed, all because someone had to do an IIS reset. Yeah we are working off of Virtual Servers but they are virtual, and something happens to the main server… yeah u get the idea.</p>\n<p>2) debuging – yeah attach to w3wp.exe, good job so what if u have 5 sharepoint sites running? and yes virtual servers are being done. so what just debug what you wrote, you gotta figure our which w2wp.exe process is yours. then attach to it. Now someone please explain to me why do you want to have your debugger attach to a process that you are developing? attaching to a process should be done when debugging other peoples software, or when you process that running in the background, or to services where you have no control over (so ur developing on sharepoint and having to attach to it because you have no control over it?).  Good Job, now your attached to the right process, hurry up and get the part you want to test, set your breakpoint, and make sure your quick about it because one the breakpoint hits you have limited amount of time until all your variables go null thanks to timeout. Yeah great debugging environment. </p>\n<p>3) CAML Queries – Ok Someone please tell me why the Hell are you sending Data Logic over to query your own Data? Its written in ASP.Net right? so couldnt you use ASP.Net or Code behind aka C# or VB to retrieve your own data? Like maybe Method Calls? A method that ask for a list, what columns, and maybe a filter (aka a Where clause)? Hell Maybe an SQL statement, I know DataTables take partial SQL. Its not like Sharepoint is written in python and your using php to get data from in it. As you said it is ASP.net.</p>\n<p>4) Customizing the Look and Feel (Master pages and CSS) – I have seen numerous sharepoint sites deployed and well they all look exactly the seems with the exception of a few. Maybe a different color scheme but nothing different. The CSS and Master pages are practically impossible to customize and cause vast amounts of problems in trying to change layouts. Why would I want to change the Layout? Because thats what the customer wants, and if layouts dont matter then why the hell are people paying graphic / layout artist designing websites? If you want to customize it, good luck, its a pain in the ass.</p>\n<p>5) Relational Database –  I constantly find myself going back and creating backend relational operations. Why do I have to do backend relational operations? This stuff is usually taken care at the data access layer.</p>\n<p>I will give credit where credit is due.</p>\n<p>I like the idea of integrating a file management system with version control as an intranet.</p>\n<p>But in my experience of working with sharepoint. I absolutely hate it. </p>"
+  },
+  {
+    "id": 1974,
+    "parent": 0,
+    "author_name": "Name Withheld",
+    "author_url": "http://",
+    "date": "2008-03-15T00:44:33",
+    "type": "comment",
+    "content_html": "<p>Until a few months ago I was one of of the senior developers working on the development Sharepoint.  I can tell you from having worked on the product daily for quite some time that It is a fantastic product from an end user’s perspective as long as you understand what it does well and can separate fact from fiction.  It is not, and never will be, a viable developer platform.</p>"
+  },
+  {
+    "id": 1975,
+    "parent": 0,
+    "author_name": "Joseph Baggett",
+    "author_url": "http://",
+    "date": "2008-03-25T21:50:34",
+    "type": "comment",
+    "content_html": "<p>“Over hyped? Really… so that’s why it’s the highest growth product ever in the history of the company and closing in on $1B in sales for the latest version in just a few months from now? That’s ALL marketing hype with the other portal solutions and other content management applications out there? Um… I think business decision makers are a bit more savy than that.” – A Connell</p>\n<p>I totally agree with Jeffrey Palmero and I think this proves a good point.  You don’t need to create the best software, much less platform to make a lot of money.  To say something is good because it makes money is a futile point.  Look at the number of bad development shops that make good money… the reason is because the people that invest in software are not typically the ones who understand it.  Good marketing I will admit!  I think SharePoint offers value, but I definitely wouldn’t pick it as a prime platform unless the limitations of SharePoint don’t hamper it down.</p>\n<p>As far as running VM so you don’t have to run it in a specific OS system?!? Are you kidding me?  You know SharePoint is slow enough as it is, much less using VM to develop in.  I’ve lost a lot of time waiting for VM to load basic pages in SharePoint in VM, the frustration alone made me want to write my own platform.</p>\n<p>Thanks for the post Jeff.  I’m not knocking SharePoint as being useless b/c it is not, it’s good, but I do suggest comparing it what other platforms already exist and really questioning the value of something over another.  The suggestions we make now will only lead to Microsoft enhancing the next version that comes out.</p>\n<p>Joseph</p>"
+  }
+]

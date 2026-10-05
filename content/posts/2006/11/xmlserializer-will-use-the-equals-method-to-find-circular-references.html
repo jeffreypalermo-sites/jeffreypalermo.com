@@ -1,0 +1,17 @@
+---
+wp_id: 473
+title: XmlSerializer will use the Equals() method to find circular references
+slug: xmlserializer-will-use-the-equals-method-to-find-circular-references
+permalink: /2006/11/xmlserializer-will-use-the-equals-method-to-find-circular-references/
+date: 2006-11-09T12:08:00
+date_utc: 2006-11-09T12:08:00Z
+modified: 2006-11-09T12:08:00
+format: html
+tags:
+- tips-tricks
+excerpt: 'This post saved me quite a bit of time: http://sqljunkies.com/WebLog/kmarple/archive/2005/01/11/6180.aspx We were having a problem with serializing a domain object. It was reporting a circular reference problem. We found out that because we had overriden the Equals method to compare our ids, the XmlSerializer thought all the objects were the same if the id had […]'
+comments_open: true
+---
+<p>This post saved me quite a bit of time:</p>
+<p><a href="http://sqljunkies.com/WebLog/kmarple/archive/2005/01/11/6180.aspx">http://sqljunkies.com/WebLog/kmarple/archive/2005/01/11/6180.aspx</a></p>
+<p>&nbsp;We were having a problem with serializing a domain object.&nbsp; It was reporting a circular reference problem.&nbsp; We found out that because we had overriden the Equals method to compare our ids, the XmlSerializer thought all the objects were the same if the id had not been assigned yet.&nbsp; Assigning an id up front solved this serialization issue.<br>&nbsp;</p>

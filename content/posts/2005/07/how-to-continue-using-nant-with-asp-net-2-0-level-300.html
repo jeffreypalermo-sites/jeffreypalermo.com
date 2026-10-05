@@ -1,0 +1,15 @@
+---
+wp_id: 292
+title: How to continue using NAnt with ASP.NET 2.0 – level 300
+slug: how-to-continue-using-nant-with-asp-net-2-0-level-300
+permalink: /2005/07/how-to-continue-using-nant-with-asp-net-2-0-level-300/
+date: 2005-07-29T20:38:00
+date_utc: 2005-07-29T20:38:00Z
+modified: 2005-07-29T20:38:00
+format: html
+excerpt: First, if you aren’t using NAnt for team builds in ASP.NET 1.1, shame on you. Do that first. When converting to Whidbey, you’ll notice that your website no longer compiles to a single assembly and that multiple assemblies are created at JIT time. This poses a small problem to the way we are used to […]
+comments_open: true
+---
+<p>First, if you aren’t using <a href="http://nant.sourceforge.net/">NAnt </a>for team builds in ASP.NET 1.1, shame on you.&nbsp; Do that first.&nbsp; When converting to Whidbey, you’ll notice that your website no longer compiles to a single assembly and that multiple assemblies are created at JIT time.&nbsp; This poses a small problem to the way we are used to scripting web application builds.</p>
+<p>You DO NOT want to copy everything in&nbsp; your website to your production server.&nbsp; There&nbsp;is no need for your code files to be out there.&nbsp; Instead, you will want your <a href="http://nant.sourceforge.net/">NAnt </a>script to build&nbsp;the whole website and deploy the binaries.&nbsp; The solution task won’t work for&nbsp; you with a VS 8 solution.&nbsp; You’ll need to use an &lt;exec /&gt; target and kick of <a href="http://msdn2.microsoft.com/library/ms178614(en-us,vs.80).aspx">aspnet_compiler </a>to precompile your web app to a stage folder and them use a &lt;copy /&gt; target to kick the files out to your server.&nbsp; </p>
+<p>MsBuild does provide an <a href="http://msdn2.microsoft.com/library/ms164291(en-us,vs.80).aspx">AspNetCompiler&nbsp;</a>task to do this, but it just kicks off aspnet_compiler.&nbsp; MsBuild is still just a subset of NAnt, so I think it’ll be a while before it can compete effectively (unless we find some proprietary stuff that we _really_ need).</p>

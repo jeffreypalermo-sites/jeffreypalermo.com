@@ -1,0 +1,18 @@
+---
+wp_id: 1079
+title: 'A network error occurred while attempting to read from the file: ReSharperSetup.4.5.1231.7.msi'
+slug: a-network-error-occurred-while-attempting-to-read-from-the-file-resharpersetup-4-5-1231-7-msi
+permalink: /2009/07/a-network-error-occurred-while-attempting-to-read-from-the-file-resharpersetup-4-5-1231-7-msi/
+date: 2009-07-16T14:16:46
+date_utc: 2009-07-16T14:16:46Z
+modified: 2009-07-16T14:16:46
+format: html
+categories:
+- blog
+excerpt: 'If you tried installing or repairing ReSharper 4.5, you might have received the following error: A network error occurred while attempting to read from the file: C:UsersJeffreyDownloadsReSharperSetup.4.5.1231.7.msi The cause of this was a path mismatch error. Because my first download had failed, I downloaded the file again, and the browser downloaded the file with the […]'
+comments_open: true
+---
+<p>If you tried installing or repairing ReSharper 4.5, you might have received the following error:</p>
+<p><img loading="lazy" decoding="async" style="display:inline" title="image" alt="image" align="left" src="/wp-content/uploads/2018/07/anetworkerroroccurredwhileattempting.msi_c8cfimage_02ee4707-ca57-4183-8775-ab9adba4e929.png" width="448" height="435"> <strong>A network error occurred while attempting to read from the file: C:UsersJeffreyDownloadsReSharperSetup.4.5.1231.7.msi</strong></p>
+
+<p>The cause of this was a path mismatch error.&nbsp; Because my first download had failed, I downloaded the file again, and the browser downloaded the file with the filename of “<strong>ReSharperSetup.4.5.1231.7 (1).msi</strong>”.&nbsp; The setup program somehow has the original filename programmed in, and the setup could not complete if the file was renamed.&nbsp; That’s fine if it’s communicated, but the error message didn’t help me fix the problem.&nbsp; I had to use my programmer intuition to guess why this was happening.&nbsp; I guessed right, renamed the file, and everything was fine.    </p>

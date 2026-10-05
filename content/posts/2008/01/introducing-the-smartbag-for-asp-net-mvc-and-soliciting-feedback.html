@@ -1,0 +1,43 @@
+---
+wp_id: 600
+title: Introducing the SmartBag for ASP.NET MVC. . . and soliciting feedback
+slug: introducing-the-smartbag-for-asp-net-mvc-and-soliciting-feedback
+permalink: /2008/01/introducing-the-smartbag-for-asp-net-mvc-and-soliciting-feedback/
+date: 2008-01-19T17:50:00
+date_utc: 2008-01-19T17:50:00Z
+modified: 2008-01-19T17:50:00
+format: html
+tags:
+- featured
+excerpt: To get objects from an ASP.NET MVC controller to a view, you put the objects in a dictionary of sorts called ViewData. ViewData is sort of a misnomer because it’s not meant to contain data at all. It’s meant to contain objects. By the way, if you like this post, you can subscribe to my […]
+comments_open: true
+---
+<p>To get objects from an ASP.NET MVC controller to a view, you put the objects in a dictionary of sorts called ViewData.&nbsp; ViewData is sort of a misnomer because it’s not meant to contain data at all.&nbsp; It’s meant to contain objects.&nbsp;&nbsp; By the way, if you like this post, you can subscribe to my RSS at <a href="http://feeds.feedburner.com/jeffreypalermo">http://feeds.feedburner.com/jeffreypalermo</a>.</p>
+<p>There are some challenges with ViewData as it stands now:</p>
+<ul>
+<li>A key is required for every object, both in the controller and view.<br>ViewData.Add(“conference”, conference);</li>
+<li>A cast is required to pull out object by key.<br>(ScheduledConference)ViewData[“conference”]</li>
+<li>The ViewPage&lt;T&gt; solution discards the valuable flexibility of the objectbag being passed to the view.<br>&lt;%=ViewData.DaysUntilStart.ToString() %&gt; where ViewData is of type ScheduledConference</li>
+</ul>
+<p>Facts (or my strong opinions):</p>
+<ul>
+<li>Repeated keys from controller and view increase chance for typos and runtime errors.</li>
+<li>Casting every extraction of an object in the view is annoying.</li>
+<li>Strong-typing ViewPage only works for trivial scenarios.<br>– For instance, suppose once logged in, every view will need the currently logged in user.&nbsp; Perhaps the user name is displayed at the top right of the screen in the layout (master page).&nbsp; Since the layout shares the viewdata with the page, we immediately have the need for a flexible container that supports multiple objects.&nbsp; A strongly typed ViewPage&lt;T&gt; won’t work without an elaborate hierarchy of presentation object that are themselves flexible object containers able to support everything needed.&nbsp; Once you get there, you are almost back to the initial dictionary.</li>
+</ul>
+<p>My proposed draft solution, the <b>SmartBag:&nbsp; (and a <a href="/blogs/jeffrey.palermo/archive/2008/01/24/smartbag-for-asp-net-mvc-take-two.aspx">follow-up here</a>)<br></b></p>
+<ul>
+<li>The SmartBag is currently only in CodeCampServer, but when it has proven it’s worth, I’ll move it into MvcContrib.&nbsp; It’s used in the ConferenceController and the ShowSchedule view.&nbsp; You can check out CodeCampServer at <a href="http://codecampserver.org">http://codecampserver.org</a>.</li>
+<li></li>
+<div>
+<pre><span>public</span> <span>class</span> SmartBag : Hashtable<br>{<br>    <span>public</span> T Get&lt;T&gt;()<br>    {<br>        <span>return</span> (T)Get(<span>typeof</span>(T));<br>    }<br><br>    <span>public</span> <span>object</span> Get(Type type)<br>    {<br>        <span>if</span> (!ContainsKey(type))<br>        {<br>            <span>string</span> message = <span>string</span>.Format(<span>"No object exists that is of type '{0}'."</span>, type);<br>            <span>throw</span> <span>new</span> ArgumentException(message);<br>        }<br><br>        <span>return</span> <span>this</span>[type];<br>    }<br><br>    <span>public</span> <span>void</span> Add(<span>object</span> anObject)<br>    {<br>        Type type = anObject.GetType();<br>        <span>if</span> (ContainsKey(type))<br>        {<br>            <span>string</span> message = <span>string</span>.Format(<span>"You can only add one default object for type '{0}'."</span>, type);<br>            <span>throw</span> <span>new</span> ArgumentException(message);<br>        }<br><br>        Add(type, anObject);<br>    }<br><br>    <span>public</span> <span>bool</span> Contains&lt;T&gt;()<br>    {<br>        <span>return</span> ContainsKey(<span>typeof</span> (T));<br>    }</pre>
+</div>
+<li>The smartbag implements IDictionary through HashTable, so it’s flexible, just like ViewData, but it has a powerful convention:&nbsp; If you are passing one object/type to the view, we don’t need a key because the SmartBag can use the type as the key.&nbsp; If you really need a Top conference and a Bottom conference, then you are back to using your keys, but for 80% (statistic I pulled out of my behind) cases, this works.</li>
+<li>If we introduce a layer supertype for our views, then we can just use it:</li>
+<li></li>
+<div>
+<pre><span>public</span> <span>class</span> ViewBase : ViewPage&lt;SmartBag&gt;<br>{<br>    <br>}</pre>
+</div>
+<li>Then, all my views inherit from ViewPage&lt;SmartBag&gt;.</li>
+</ul>
+<p><b>I’d appreciate feedback on this solution.&nbsp; To me, it seems to be a good foundation and convention, but I’m sure it can be improved.&nbsp; If this solution hasn’t been proven to be worthless, I’ll port it to MvcContrib so it can be used by MvcContrib clients.</b></p>

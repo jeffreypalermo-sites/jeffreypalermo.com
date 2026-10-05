@@ -1,0 +1,20 @@
+[
+  {
+    "id": 945,
+    "parent": 0,
+    "author_name": "Dave",
+    "author_url": "http://",
+    "date": "2006-07-14T03:04:48",
+    "type": "comment",
+    "content_html": "<p>Jeff,</p>\n<p>I didn’t understand this:<br>\nIf a constant is not tied to a class, it should be tied to an interface.  Don’t implement a class for the constant.  You should use the constant through the interface name.</p>\n<p>How do you tie a constant to an interface?  The constant has to live somewhere and will that not be in a class?</p>\n<p>Comment:<br>\nYAGNI – You ain’t gonna need it.  If you aren’t absolutely sure you need it right now, defer it until later.</p>\n<p>I like Jimmy Nilsson’s take on it in his new book, Applying Domain-Driven Design and Patterns, in which he argues that YAGNI is dependent upon the amount of pain it would take to implement the feature now versus later.  If the pain is high, you should implement it now or at least design your code so that the pain is low.  If the pain is low, then you can defer it until later.</p>"
+  },
+  {
+    "id": 946,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-07-14T03:31:27",
+    "type": "comment",
+    "content_html": "<p>Dave,<br>\nYou are right about constants in interfaces.  You can’t do that in .Net.  This was a Java conference, and I you can do it in Java.</p>\n<p>For instance, this is valid code in Java:<br>\npublic interface IMyInterface<br>\n{<br>\n\tpublic static String YO = “yo”;<br>\n\tvoid Howdy();<br>\n}</p>\n<p>I wish we could do that in .Net.</p>\n<p>I do like that take on YAGNI as well.</p>"
+  }
+]

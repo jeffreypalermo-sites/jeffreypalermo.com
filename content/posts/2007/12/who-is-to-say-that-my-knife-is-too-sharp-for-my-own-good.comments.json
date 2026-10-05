@@ -1,0 +1,119 @@
+[
+  {
+    "id": 2171,
+    "parent": 0,
+    "author_name": "Sandor Davidhazi",
+    "author_url": "http://",
+    "date": "2007-12-03T00:11:02",
+    "type": "comment",
+    "content_html": "<p>You wouldn’t give your developers the nuclear bomb, would you?</p>"
+  },
+  {
+    "id": 2172,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-12-03T00:17:47",
+    "type": "comment",
+    "content_html": "<p>@Sandor,<br>\nI’m not sure what the nature of your question is, but we’re talking about sharp development tools here.  Can you rephrase?  I did serve in a war with the U.S. Army, but I’m 100% civilian now, so I’ll stick to those terms.</p>"
+  },
+  {
+    "id": 2173,
+    "parent": 0,
+    "author_name": "Avner Kashtan",
+    "author_url": "http://",
+    "date": "2007-12-03T10:22:01",
+    "type": "comment",
+    "content_html": "<p>No, developers aren’t children. But they aren’t infallible, either. We all know that software has, and will always have bugs. There are tools we can use to mitigate them and eliminate much of their risk. Some of these tools are methodological – code reviews, unit testing and so forth. Some are technological – a managed environment frees us of many memory management bugs. I, as a developer, often want to limit my freedom in order to get safer, easier-to-use tools.</p>\n<p>Remember also that tool vendors have a specific goal – to sell more copies of their tool. That’s perfectly reasonable.<br>\nIf you sell a toolkit that is harder for the developer to use, or can result in more bugs if the developer isn’t careful with every step (and I’ve used plenty of 3rd party components that I had to massage delicately to make work) then people won’t blame their bugs on their own carelessness, but on YOUR component. </p>\n<p>When I buy a 3rd-party component, I often want it to function like a home appliance – plug it in, start working. Maybe read the user manual if things are unclear. No more.</p>"
+  },
+  {
+    "id": 2174,
+    "parent": 0,
+    "author_name": "Jimmy Bogard",
+    "author_url": "http://grabbagoft.blogspot.com/",
+    "date": "2007-12-03T17:15:42",
+    "type": "comment",
+    "content_html": "<p>@Avner</p>\n<p>I think you have to distinguish between components and frameworks.  Taking the carpenter analogy, frameworks are like the carpenter’s woodworking tools.  General and multi purpose, they can build wood masterpieces.  Sometimes all you need is a saw.  Sometimes you need a table router, and the carpenter has the knowledge and experience to know when to use what.</p>\n<p>Limiting the carpenter to a hammer and a saw will produce clunky, unusable furniture.  The carpenter will likely quit his job and move into carpent-ecture, where he can wave his hands about saws and sanders.</p>\n<p>Components on the other hand, aren’t meant to be a foundation for building.  They’re more like a carpenter’s final product, like a chair.  You can use a chair to sit on, stand on, but you don’t need instructions to use it.  You can build a table out of chairs, but it’s not something anyone will eat on.</p>"
+  },
+  {
+    "id": 2175,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-12-03T23:49:56",
+    "type": "comment",
+    "content_html": "<p>@Avner,<br>\nI don’t think I claimed that developers are infallible, so I agree with you on that.  I certainly did not advocate throwing away risk management tools that reduce bugs, like automated testing, continuous integration and frequent deployments and integration testing.</p>\n<p>The remainder of your points are a good extension to the conversation, and represent tools that do not limit developers but rather are enablers that increase productivity.</p>"
+  },
+  {
+    "id": 2176,
+    "parent": 0,
+    "author_name": "Joe Brinkman",
+    "author_url": "http://blog.theaccidentalgeek.com",
+    "date": "2007-12-03T23:56:47",
+    "type": "comment",
+    "content_html": "<p>It is amazing how this very argument is used to bash the WebForms framework.  People argue that we need MVC because WebForms leads developers to build crappy, untestable apps.  My counter argument is that it doesn’t matter what framework I give developers, some devs will build software masterpieces and some will build unuseable apps.  The issue is not the framework but the developers.  I don’t believe in limiting developers but I do think that sometimes it is ok to add airbags… just give me a way to turn them off if I need to.</p>"
+  },
+  {
+    "id": 2177,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-12-04T00:08:56",
+    "type": "comment",
+    "content_html": "<p>@Joe,<br>\nI’m not sure about WebForms being equated to a sharp tool.  I’d equate it to a dull saw.  If you push hard enough, you’ll get it to work.</p>\n<p>People have build great application with WebForms despite the code-behind model being untestable and awkward..</p>\n<p>You are correct with you point that some developers will create unmaintainable applications regardless of the framework, but I’d submit that specifically the MVC framework isn’t targeted at those folks.  It’s targeted at the folks who aren’t happy with the blunt tool that is WebForms.  </p>\n<p>Good developers will find a way to sharpen even blunt tools.</p>"
+  },
+  {
+    "id": 2178,
+    "parent": 0,
+    "author_name": "Haacked",
+    "author_url": "http://haacked.com/",
+    "date": "2007-12-04T08:42:44",
+    "type": "comment",
+    "content_html": "<p>The irony is that I’ve heard from many in the TDD community and ostensibly in the ALT.NET community the same arguments about tools being too sharp when describing TypeMock. They say that TypeMock is a nuclear option and that unlike other mock frameworks, it allows you the luxury to be lazy about the design of code since you can mock anything. You don’t need to write testable code.</p>\n<p>The reason I say this is I’ve made that argument myself! But now I need to rethink that. \uD83D\uDE42</p>"
+  },
+  {
+    "id": 2179,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-12-04T13:29:29",
+    "type": "comment",
+    "content_html": "<p>@Haacked,<br>\nI certainly won’t speak for everyone, but I haven’t described TypeMock as “too sharp”, and I won’t.  I’ve spoken to many people who find it very useful.  I don’t use the tool, but that alone is not a condemnation of it.  </p>\n<p>I am struggling to grasp where the irony lies, however.</p>"
+  },
+  {
+    "id": 2180,
+    "parent": 0,
+    "author_name": "Carlton",
+    "author_url": "http://",
+    "date": "2007-12-04T16:56:47",
+    "type": "comment",
+    "content_html": "<p>I tend to eschew sharp tools for inexperienced developers.  I think they need to prove a mastery of the basics – TDD, CI, timeboxing, incremental development, etc., etc. – before allowing them  to play with latest “shiny shit”.  You are not going to stop them, but at least you can slow it down until the technology has had a chance to coalesce.</p>"
+  },
+  {
+    "id": 2181,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-12-04T17:08:56",
+    "type": "comment",
+    "content_html": "<p>@Carlton,<br>\nI think custom woodworking is a great parallel to development for the purposes of this post.  In custom woodworking, you work with sharp tools, but to your point, you wouldn’t give these to a novice without proper training.  You would have them work with an experienced woodworker until they were capable of being effective on their own.</p>\n<p>I see the same dynamic in software.  Let me extend your comment with my opinion that regardless of the tools involved, I wouldn’t turn a novice loose on a client’s codebase alone.  They would have to have the proper training regardless of tools.  Giving a developer dull tools in lieu of proper training is no substitute.  </p>\n<p>I think I would lean more toward having an apprentice developer pair with a master developer using the tools of choice rather than modify the tool set and have the apprentice (attempt to) work alone. </p>\n<p>Carlton, your point about mastering the basics is a very good one.  Without this mastery, tools are irrelevant.</p>"
+  },
+  {
+    "id": 2182,
+    "parent": 0,
+    "author_name": "jsmith",
+    "author_url": "http://",
+    "date": "2007-12-13T07:40:40",
+    "type": "comment",
+    "content_html": "<p>It’s simply not productive to limit all developers at all times simply because some of us make mistakes some of the time. Besides, you can’t learn if you don’t make mistakes. In a testing – fail fast oriented work context, the tools should be sharp. Lhotka’s Csla framework drives me nuts. Everything is bolted down to protect me from myself. You have to stand on your head to do test-first development. That’s actually pretty funny — a “safe” application framework that discourages tdd.</p>"
+  },
+  {
+    "id": 2183,
+    "parent": 0,
+    "author_name": "Fregas",
+    "author_url": "http://www.dotnettricks.com/",
+    "date": "2007-12-20T18:47:09",
+    "type": "comment",
+    "content_html": "<p>I think this arguement over “sharp tools” can be narrowed down to two questions:</p>\n<p>1) Does the tool, framework, component, etc. make me more productive now?</p>\n<p>2) Does it allow me to write maintainable code so that i’m still productive in the future?</p>\n<p>People object to dynamic languages because the fear is that they give you #1, at the expense of #2.  People object to TDD for the opposite reason (at least initially.)    The problem so often is that a given tool gives you one option at the expense of the other.  However, long-term, going with option #2 seems to be better because as we all know, applications change and there is more expense in maintaining them than in building the first version.  </p>\n<p>Some people feel that they can get the extra productivity of Ruby and other dynamic languages by offsetting the risks using TDD to catch errors before runtime.  Others feel that they can avoid the need to use TDD by using a statically typed, compiled language such as java or C# because they get *some* error checking built in.   </p>"
+  }
+]

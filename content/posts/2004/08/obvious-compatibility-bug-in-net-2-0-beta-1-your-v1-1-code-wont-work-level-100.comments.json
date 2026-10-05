@@ -1,0 +1,47 @@
+[
+  {
+    "id": 133,
+    "parent": 0,
+    "author_name": "Chad Smith",
+    "author_url": "http://",
+    "date": "2004-08-21T19:31:00",
+    "type": "comment",
+    "content_html": "<p>Thanks for the heads-up and time taken to blog this. I believe this will be of use to me in the near future.</p>"
+  },
+  {
+    "id": 134,
+    "parent": 0,
+    "author_name": "K.Senthil Kumar (Sensoft2000)",
+    "author_url": "http://",
+    "date": "2004-08-22T18:18:00",
+    "type": "comment",
+    "content_html": "<p>Wow. Very nice article..<br>\nHow microsoft allow this?.</p>"
+  },
+  {
+    "id": 135,
+    "parent": 0,
+    "author_name": "Veerakumar",
+    "author_url": "http://",
+    "date": "2004-08-22T21:29:00",
+    "type": "comment",
+    "content_html": "<p>Hi,</p>\n<p>It is really super. Thank you for ur information. </p>\n<p>Regards,<br>\nmsveera</p>"
+  },
+  {
+    "id": 136,
+    "parent": 0,
+    "author_name": "Maria Tverdostup (Microsoft)",
+    "author_url": "http://",
+    "date": "2004-09-15T10:24:00",
+    "type": "comment",
+    "content_html": "<p>Hi,</p>\n<p>No doubts that this is a confusing topic. The KB article on the latest v1.1 behaviour should be published on MSDN or it will be there soon if not. Anyhow, this is what v1.1 with the latest fixes or v1.1 SP1 will do:</p>\n<p>1) when POSTing to the same page with the 2nd parameter set into FALSE both query string and form data collection WILL NOT be preserved.<br>\n2) when the 2nd parameter is OMITTED query string WILL NOT be preserved, form data collection WILL.<br>\n3) when the 2nd parameter is set into TRUE both form data collection and query string WILL be preserved. Hence expect stack overflow if POSTing to the same page.</p>\n<p>There should be 2 parameters to implement this logic, you are absolutely correct. We should consider more elegant set of Server.Transfer() methods in v2.0.</p>\n<p>Hope this helps to clarify things.<br>\nMaria</p>"
+  },
+  {
+    "id": 137,
+    "parent": 0,
+    "author_name": "sarvjeet ahuja",
+    "author_url": "http://",
+    "date": "2005-01-20T06:25:00",
+    "type": "comment",
+    "content_html": "<p>If you have .Net framework 1.1 (without any service pack), server.transfer to the same page keeps IsPostBack to false. After applying service pack 1 to .Net framework 1.1, same code shows IsPostBack to true. </p>\n<p>This has broken a lot of applications of ours.</p>"
+  }
+]

@@ -1,0 +1,28 @@
+---
+wp_id: 979
+title: Separating configuration from data lowers total cost of ownership
+slug: separating-configuration-from-data-lowers-total-cost-of-ownership
+permalink: /2009/01/separating-configuration-from-data-lowers-total-cost-of-ownership/
+date: 2009-01-09T09:37:50
+date_utc: 2009-01-09T09:37:50Z
+modified: 2009-01-09T09:37:50
+format: html
+categories:
+- blog
+excerpt: All software systems require configuration. Some require much more configuration that others. Configuration can be an overloaded term, but I’m speaking about the information necessary for the software to function correctly. Without this information, the software is unstable and will not work. For most business systems, a common configuration item is the database connection string. […]
+comments_open: true
+---
+<p>All software systems require configuration.&nbsp; Some require much more configuration that others.&nbsp; Configuration can be an overloaded term, but I’m speaking about the information necessary for the software to function correctly.&nbsp; </p>
+<p>Without this information, the software is unstable and will not work.&nbsp; For most business systems, a common configuration item is the database connection string.&nbsp; Without this configuration item, the system cannot function.&nbsp; Other common configurations are the list of valid states or provinces for addresses.&nbsp; Often the local state is defaulted to the top as a shortcut for the users.&nbsp; Another example is a list of statuses, such as Pending, Active, Complete.&nbsp; As usual, requirements should drive the approach taken.</p>
+<p>Let’s talk about the Status list first.&nbsp; Where should this configuration be managed?&nbsp; The simplest approach is to maintain the status list in the software itself.&nbsp; The tests around the software build will verify this configuration, and if the software has logic built around these values, the compiler verifies the important values are present.&nbsp; If the Status list changes less than once per week, this is a fine approach since a system under enhancement might have weekly deployments.&nbsp; (Note:&nbsp; Using agile development, systems are easy to deploy, and our current projects get deployed many times per day to multiple environments.&nbsp; Without an automated deployment, deployments are much more costly).</p>
+<p>Let’s consider a list of states.&nbsp; For a sales system, we might have 5 states if process orders for these 5 regions.&nbsp; Our state list would have those 5 states with the local state defaulted to the top since it is the most common.&nbsp; Again, we start with storing this configuration with the codebase, especially since the system is unstable without the local state.&nbsp; If the list of states changes more frequently than weekly, we might consider wanting to change the list without requiring a deployment.&nbsp; This would lead us to store&nbsp;the configuration separate from the codebase.&nbsp; Options include putting the configuration in a file or the database.&nbsp; The benefit of the configuration residing in a file allows the configuration to change while the system is running.&nbsp; The system will have to be able to detect the change and reload the configuration, however.</p>
+<p>Let’s take the requirements a bit further.&nbsp; Let’s say we want a screen in the system to let authorized users add a state to the state list at any time.&nbsp; They can also remove a state.&nbsp; We have to analyze if there is a gold list (i.e. a list of states that cannot be removed because there are business rules around those specific values).&nbsp; We might be tempted to put the state list in the database, but mixing this configuration with data is risky.&nbsp; First, we need a mechanism to validate the configuration.&nbsp; We need to have the application check the database table and ensure the “required” values are there.&nbsp; Values added in one installation might somehow need to be synced up if a new value is considered to be part of the “gold” list.&nbsp; Putting the list in data confuses data and configuration, and we have shyed away from it since the system is easier to implement and maintain if a new installation starts out with an empty database and functions properly.&nbsp; Then implementation tasks can make the system usable for the target environment.</p>
+<p>Ultimately, the requirements drive the approach to configuration.&nbsp; Depending on the frequency of change, the number of unremoveable items, and other factors, you will decide where to store the configuration in a manner that minimizes total cost of ownership.</p>
+<p>My recommended progressions of configuration locations are as follows.&nbsp; Specific requirements should be the driving factor that cause you to move configuration from one medium to the next costly alternative.</p>
+<ol>
+<li>In the code</li>
+<li>In a file</li>
+<li>In a database</li>
+<li>Some other system-specific external configuration store</li>
+</ol>
+<p>There is no cut-and-dried answer for EVERY project, but the requirements should be what drives the decision.&nbsp; Along those lines, no one location is appropriate for EVERY piece of configuration.&nbsp; Depending on the nature of the configuration, it will be appropriate to choose a different storage medium.</p>

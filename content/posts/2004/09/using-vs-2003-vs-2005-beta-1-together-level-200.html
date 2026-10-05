@@ -1,0 +1,14 @@
+---
+wp_id: 107
+title: Using VS 2003 & VS 2005 Beta 1 together – level 200
+slug: using-vs-2003-vs-2005-beta-1-together-level-200
+permalink: /2004/09/using-vs-2003-vs-2005-beta-1-together-level-200/
+date: 2004-09-08T11:02:00
+date_utc: 2004-09-08T11:02:00Z
+modified: 2004-09-08T11:02:00
+format: html
+excerpt: I’ve been using VS 2003 since I upgraded from 2002, and I’ve been using VS 2005 Beta 1 for about a month, and I’d like to share my experiences. I have them installed side-by-side on my laptop, and they play fine together, but when I installed 2005, the v2.0 ASP took over my IIS apps, […]
+comments_open: true
+---
+<p>I’ve been using VS 2003 since I upgraded from 2002, and I’ve been using VS 2005 Beta 1 for about a month, and I’d like to share my experiences.&nbsp; I have them installed side-by-side on my laptop, and they play fine together, but when I installed 2005, the v2.0 ASP took over my IIS apps, so I had to run aspnet_regiis to set it back to v1.1.&nbsp; This problem is solved with 2005 because it doesn’t need IIS, and I don’t use IIS with it.&nbsp; When you run a web site in 2005, it starts a built-in webserver that runs on a random high port for just as long as you need it too.&nbsp; This is independent of IIS.&nbsp; Because of the dynamic compilation model of code-beside, I don’t have to rebuild every time I modify page code.&nbsp; That’s nice.&nbsp; VS 2005 Beta 1 has some performance bugs in its build process, however.&nbsp; It’s&nbsp;a bit slow compared to 2003, but it’ll get better.&nbsp; I never realized how spoiled I was with 2003 since it builds so fast (of course this should be expected).&nbsp; 2005 will get there, but for now I have to wait for every build.&nbsp; Also with my 2003 web apps, every time I rebuild, I have to wait a while for the web app to recompile and serve up the page again.&nbsp; With v2.0 Beta 1 this restart/recompile process seems to be improved because the wait isn’t as long.</p>
+<p>Bottom line:&nbsp; VS 2003 and VS 2005 work well running side-by-side, and I even reference an assembly build in 2003 with 2005 (proof of version interoperability).&nbsp; I have version 2 classes that inherit from v1.1 classes.&nbsp; Seamless.</p>

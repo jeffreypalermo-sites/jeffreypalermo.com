@@ -1,0 +1,68 @@
+[
+  {
+    "id": 273,
+    "count": 326,
+    "description": "",
+    "link": "https://jeffreypalermo.com/category/blog/",
+    "name": "Blog",
+    "slug": "blog",
+    "taxonomy": "category",
+    "parent": 0,
+    "meta": []
+  },
+  {
+    "id": 643871096,
+    "count": 1,
+    "description": "",
+    "link": "https://jeffreypalermo.com/category/azure-devops-podcast/",
+    "name": "Azure DevOps Podcast",
+    "slug": "azure-devops-podcast",
+    "taxonomy": "category",
+    "parent": 0,
+    "meta": []
+  },
+  {
+    "id": 643871098,
+    "count": 10,
+    "description": "",
+    "link": "https://jeffreypalermo.com/category/devops/",
+    "name": "DevOps",
+    "slug": "devops",
+    "taxonomy": "category",
+    "parent": 0,
+    "meta": []
+  },
+  {
+    "id": 643871099,
+    "count": 1,
+    "description": "",
+    "link": "https://jeffreypalermo.com/category/architecture/",
+    "name": "Architecture",
+    "slug": "architecture",
+    "taxonomy": "category",
+    "parent": 0,
+    "meta": []
+  },
+  {
+    "id": 643871100,
+    "count": 8,
+    "description": "",
+    "link": "https://jeffreypalermo.com/category/podcast/",
+    "name": "Podcast",
+    "slug": "podcast",
+    "taxonomy": "category",
+    "parent": 0,
+    "meta": []
+  },
+  {
+    "id": 643871101,
+    "count": 3,
+    "description": "",
+    "link": "https://jeffreypalermo.com/category/palermo-pamphlet/",
+    "name": "Palermo Pamphlet",
+    "slug": "palermo-pamphlet",
+    "taxonomy": "category",
+    "parent": 0,
+    "meta": []
+  }
+]

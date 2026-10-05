@@ -1,0 +1,110 @@
+[
+  {
+    "id": 1823,
+    "parent": 0,
+    "author_name": "J. Michael Palermo IV",
+    "author_url": "http://weblogs.asp.net/palermo4/",
+    "date": "2007-07-17T14:56:22",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>My response would be that I never suggested a utility class – just utility methods.  Even in your scenarios with interface implementations – they all need a concrete method to do the job.</p>\n<p>I personally do not have a massive “Util” class filled with methods.  I do have a class called “Strings” that deals with common string scenarios I run into.</p>\n<p>That said, I admittedly have not embraced your methodologies as you  have.  Perhaps upon further investigation I could see your viewpoint clearer…</p>"
+  },
+  {
+    "id": 1824,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-07-17T15:10:33",
+    "type": "comment",
+    "content_html": "<p>@Michael,<br>\nYou are exactly right.  I’ve updated the post.  Your post just got me thinking.  You post gave me the INSPIRATION!! \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1825,
+    "parent": 0,
+    "author_name": "Jimmy Bogard",
+    "author_url": "http://grabbagoft.blogspot.com/",
+    "date": "2007-07-17T15:24:47",
+    "type": "comment",
+    "content_html": "<p>Don’t forget Util’s evil twin, the “Manager”.  If you have class “Xyz”, you’ll see the “XyzManager”.</p>\n<p>What does it do?  Manage, of course!  That’s not ambiguous at all!  Need persistence?  Go to the Manager.  Need to attach behavior to “Xyz”?  That’s what the “XyzManager” is for!</p>\n<p>The Manager knows all, sees all, and provides a dumping ground for any behavior that just so happens to touch the related Xyz class.  Personally, the Manager was my intermediate anti-pattern before understanding true separation of concerns.</p>"
+  },
+  {
+    "id": 1826,
+    "parent": 0,
+    "author_name": "Luke Foust",
+    "author_url": "http://blog.spontaneouspublicity.com",
+    "date": "2007-07-17T15:49:02",
+    "type": "comment",
+    "content_html": "<p>I find this topic very interesting and think it would be very helpful if you could do another post (or series of posts) with concrete code examples.</p>\n<p>I usually have some sort of Util classes in most projects I work on. In fact, many open source projects I study have at least some form of the Util classes. For example, what are your thoughts on things like the Subsonic projects “Sugar” utilities?</p>\n<p><a href=\"http://blog.wekeroad.com/archive/2007/06/28/subsonic-sugary-sticky-stuff.aspx\" rel=\"nofollow ugc\">http://blog.wekeroad.com/archive/2007/06/28/subsonic-sugary-sticky-stuff.aspx</a></p>\n<p>I think many developers (including myself) can recognize the code smell that comes from these utility classes but are not sure exactly how to make better abstractions for things like StringHelper.Chop()</p>"
+  },
+  {
+    "id": 1827,
+    "parent": 0,
+    "author_name": "Karthik",
+    "author_url": "http://www.webgambit.com",
+    "date": "2007-07-17T16:15:18",
+    "type": "comment",
+    "content_html": "<p>Great post, Jeff.  I’ve also thought recently as I get more into DDD that Utility classes tend to break the model quite a bit.  Your method of using interfaces to support that Utility functionality sounds intriguing.</p>"
+  },
+  {
+    "id": 1828,
+    "parent": 0,
+    "author_name": "Joe",
+    "author_url": "http://",
+    "date": "2007-07-17T16:31:40",
+    "type": "comment",
+    "content_html": "<p>Are you two related?</p>"
+  },
+  {
+    "id": 1829,
+    "parent": 0,
+    "author_name": "Joe",
+    "author_url": "http://",
+    "date": "2007-07-17T17:04:20",
+    "type": "comment",
+    "content_html": "<p>@Jimmy </p>\n<p>Evans’ book touches on this — those “Managers” end up being Services, and often part of the application or infrastructure layer outside of the problem domain.</p>"
+  },
+  {
+    "id": 1830,
+    "parent": 0,
+    "author_name": "Michael Feathers",
+    "author_url": "http://beautifulcode.oreillynet.com/",
+    "date": "2007-07-17T21:01:57",
+    "type": "comment",
+    "content_html": "<p>I don’t like Util classes much, but people continue to make them.  </p>\n<p>The one thing I wish, though, is that they would stop making methods on Util classes static.  If you ever want to test code that uses static utility methods and those methods do something you wouldn’t like to see happen in a test, you have to work around it, and it’s a pain.</p>"
+  },
+  {
+    "id": 1831,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-07-17T21:07:52",
+    "type": "comment",
+    "content_html": "<p>@Michael,<br>\nYes.  The static part leaves no room for a seam.  Especially if the static utility method expect a certain file to read from the file system.  Now that’s something extra to set up just to run an integration test.  At lest  an instance of Utility leaves room to “inherit and override” to stub out that method.</p>"
+  },
+  {
+    "id": 1832,
+    "parent": 0,
+    "author_name": "Tristian Barrett",
+    "author_url": "http://",
+    "date": "2007-07-18T00:26:27",
+    "type": "comment",
+    "content_html": "<p>Yeah I’ve got quite a few utility or helper classes, but they are all pretty much to cover gaps in provided types. StringUtil, ArrayListUtil, FormUtil, etc. </p>\n<p>One of the things I like about ruby is that if you do find something missing in one of the core classes its simple just to add to it yourself. In c# the only real way around it is a helper class. Inheritance isn’t a viable answer when dealing with basic types.</p>"
+  },
+  {
+    "id": 1833,
+    "parent": 0,
+    "author_name": "Josh",
+    "author_url": "http://www.foreachdev.net",
+    "date": "2007-07-18T12:50:52",
+    "type": "comment",
+    "content_html": "<p>I see it as step one. Eventually your Util class becomes bloated or you have uses for certain represented domains and not others on another project. At this point refactor.<br>\nRecognizing when it is approaching unmaintainability or causing slow down in development is when it becomes evil.</p>"
+  },
+  {
+    "id": 1834,
+    "parent": 0,
+    "author_name": "KBac",
+    "author_url": "http://kbac70.blogspot.com",
+    "date": "2007-07-19T09:17:22",
+    "type": "comment",
+    "content_html": "<p>It is great to get this subject under scrutiny. I have noticed that utilities are the next evil indeed if handled badly.</p>\n<p>Normally you write your code and have a few methods you want to share -&gt; utilities are born. Then you refactor your code and notice that over time you have created even more methods worth sharing -&gt; the questions start appearing. If you keep adding to the utilities you might cause them to bloat (I have seen projects with utilities grown to over 40% of the total project size). If the functionality is not general enough you have potential to create a highly coupled blob… </p>\n<p>It is great to hear the suggestion to couple utilities’ development to principles facilitating proper class design and layering. How about changing the mindset from common utilities developer to a developer of public API? – as this would stress the need for different quality and concerns.</p>"
+  }
+]

@@ -1,0 +1,33 @@
+---
+wp_id: 1039
+title: Testability and TDD are not reasons to use the ASP.NET MVC Framework
+slug: testability-and-tdd-are-not-reasons-to-use-the-asp-net-mvc-framework
+permalink: /2009/04/testability-and-tdd-are-not-reasons-to-use-the-asp-net-mvc-framework/
+date: 2009-04-28T22:24:50
+date_utc: 2009-04-28T22:24:50Z
+modified: 2009-04-28T22:24:50
+format: html
+categories:
+- blog
+excerpt: Even though Microsoft continues to tout testability as a reason to adopt ASP.NET MVC over WebForms, it really isn’t a good reason. It is interesting that this is the first product I’ve seen where there is a first-class tutorial explaining how to test code that is coupled to some part of the framework. Interesting, I’m […]
+comments_open: true
+---
+<p>Even though <a href="http://microsoft.com">Microsoft</a> continues to <a href="http://www.asp.net/learn/mvc/tutorial-07-cs.aspx">tout testability</a> as a reason to adopt <a href="http://www.asp.net/mvc/">ASP.NET MVC</a> over WebForms, it really isn’t a good reason.&nbsp; It is interesting that this is the first product I’ve seen where there is a first-class tutorial explaining how to test code that is coupled to some part of the framework.&nbsp; Interesting, I’m unable to find a Microsoft tutorial or MSDN Library article talking about unit testing with WebForms, WCF, ASMX, Workflow Foundation, BizTalk, WinForms, WPF, etc.&nbsp; Now, I’m sure there is some material, and if there is “official” documentation regarding this, I would love to know so I can help bring visibility to it.</p>
+<p>I am a big proponent of Test-driven development, and I even teach it in the Agile Boot Camp classes from Headspring.&nbsp; If you work for me, you must do TDD.&nbsp; No exceptions.&nbsp; You might find it odd that I say that testability is not a reason to use ASP.NET MVC.</p>
+<p>There is ONE reason I use ASP.NET MVC.&nbsp; There is ONE reason all of my employees use ASP.NET MVC.&nbsp; There is ONE reason it is now part of the standard <a href="http://headspringsystems.com">Headspring</a> Architecture for all client web application.&nbsp; What is this one reason, you ask?</p>
+<p><strong>It works the way I want to work, and it doesn’t get in my way.</strong></p>
+<p>I realize this reason is very subjective.&nbsp; I’m ok with that.&nbsp; My mission is not to convince the whole world to use this framework.&nbsp; In fact, <a href="http://www.headspringsystems.com/community/open-source/">Headspring</a> is <a href="http://mvccontrib.org">responsible</a> <a href="http://codecampserver.org">for</a> a <a href="http://code.google.com/p/tarantino/">handful</a> <a href="http://www.codeplex.com/flywheel/">of</a> <a href="http://code.google.com/p/naak/">open</a>–<a href="http://www.codeplex.com/AutoMapper/">source</a> <a href="http://www.codeplex.com/SolutionFactory/">projects</a>, but it really isn’t important to us that anyone else uses them.&nbsp; They are useful to us.&nbsp; ASP.NET MVC is useful to us.</p>
+<p><strong>It works the way I want to work</strong></p>
+<ul>
+<li>I want work work among .Net interfaces.&nbsp; When I want to extend something, I like being able to create an alternate implementation for the interface.&nbsp; This is the way object-oriented programming works.&nbsp; The simple fundamentals hold fast.&nbsp; </li>
+<li>I want to work with small classes.&nbsp; In WebForms, it was very difficult to keep each WebForm small.&nbsp; With ASP.NET MVC, it is easy to accomplish.&nbsp; Each controller action has 3 or 4 lines of code coordinating work with other dependencies.&nbsp; Route configurations are easily pulled into supporting classes and wired in as an HttpModule.&nbsp; Views are easily partitioned using partials.&nbsp; Cross-cutting functionality is easily segmented as ActionFilters.&nbsp; Rich parameter types are available through custom model binding classes that convert Querystring and Form values into domain objects.&nbsp; The framework is spread out.&nbsp; Simple classes everywhere.&nbsp; Rendering is firmly separated from handling user input.&nbsp; Business rule validation is easily kept out of the controllers and views in lower layers of the application.&nbsp; In short, I never find myself trying to find just the right place to wedge in a couple of lines of code.&nbsp; There are plenty of abstractions.&nbsp; Every bit of code has a place. </li>
+<li>I want to distribute work among several members of a team.&nbsp; It is almost impossible to have more than one person working on a single WebForm.&nbsp; It is rather easy, however, to have several developers working on the same controller, each have one action. </li>
+</ul>
+<p><strong>It doesn’t get in my way</strong></p>
+<ul>
+<li>It doesn’t saddle me with static properties and other object oriented dead ends.&nbsp; Every abstraction can be substituted when the default is unsuitable.&nbsp; </li>
+</ul>
+<p><strong>Back to testability</strong></p>
+<p>Because ASP.NET MVC is designed well, it is testable.&nbsp; It was not designed _to be testable_.&nbsp; It was designed to allow corresponding code to be loosely coupled.&nbsp; It was designed using solid object-oriented concepts.&nbsp; Any code designed in this fashion is testable.&nbsp; Testability is a side effect of good design, not the design itself.</p>
+<p>Although I love TDD, please don’t adopt ASP.NET MVC because someone has told you that it will enable test-driven development.&nbsp; You can do test-driven development without ASP.NET MVC.&nbsp; Adopt ASP.NET MVC based on other factors.&nbsp; Adopt it if it works the way you do.&nbsp; Adopt it if it doesn’t get in your way as much as alternatives.&nbsp; Adopt it if it helps you move faster.&nbsp; Adopt it for reasons you value.&nbsp; </p>
+<p><strong>If you are productive with WebForms; if you don’t have any pain with your current approach, please don’t switch.</strong></p>

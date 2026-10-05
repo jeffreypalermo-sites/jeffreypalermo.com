@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2693,
+    "parent": 0,
+    "author_name": "Filip W",
+    "author_url": "http://www.strathweb.com",
+    "date": "2013-01-26T13:08:31",
+    "type": "comment",
+    "content_html": "<p>HttpContent exposes and HttpContent.LoadIntoBuffer() method which allows you to buffer the body on demand.<br>\nIn fact a few methods that allow you to read the body (i.e. in the handler or filter) – ReadAsStringAsync, ReadAsByteArrayAsync – DO buffer the request content internally (the call LoadIntoBuffer themselves), so after using these methods, you would still be able to access the body of the request again.</p>"
+  }
+]

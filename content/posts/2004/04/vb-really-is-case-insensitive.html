@@ -1,0 +1,15 @@
+---
+wp_id: 544
+title: VB really IS case-insensitive
+slug: vb-really-is-case-insensitive
+permalink: /2004/04/vb-really-is-case-insensitive/
+date: 2004-04-19T00:56:00
+date_utc: 2004-04-19T00:56:00Z
+modified: 2004-04-19T00:56:00
+format: html
+excerpt: Some of you may read the title of this post and think to yoursefl “Duh”!, but this sneaky little feature caught up to me. I have my library developed in C#, and I have 2 layers of base classes for all ASP.NET Pages as well as user controls, so every page and user control in […]
+comments_open: true
+---
+<p>Some of you may read the title of this post and think to yoursefl “Duh”!, but this sneaky little feature caught up to me.&nbsp; I have my library developed in C#, and I have 2 layers of base classes for all ASP.NET Pages as well as user controls, so every page and user control in my app will have certain properties and functionality.&nbsp; I wrap a template around the content of every page.&nbsp; To do this I have a &lt;div /&gt; with id of “pageContent”.&nbsp; I reference this from the base classes.&nbsp; I expose this HtmlGenericControl with a property named “PageContent”.&nbsp; Works great and is self-documenting.&nbsp; Made a page with J# and it works great.&nbsp; Made a page with VB (see <a href="http://dotnetjunkies.com/WebLog/jpalermo/archive/2004/04/18/11677.aspx">my IIS reinstall post</a>), and I get this wierd compilation error.&nbsp; Doh!&nbsp; PageContent is referenced, and VB sees pageContent first, tries to write to that protected member and bombs on compilation.&nbsp; HELLO!! That’s a capital P, not a lowercase p!!&nbsp; So now I have to change the property or the member name.&nbsp; No biggie.&nbsp; Besides, it’s not a good practice to have member names vary only by case, but this one had slipped past me.&nbsp; </p>
+<p>I’ve learned an important lesson.&nbsp; Just by writing .Net code, I can’t ensure that all .Net languages will be able to use it.&nbsp; In this case, only case-sensitive languages would be able to use it, and case-insensitive languages (like VB) would bomb out.&nbsp; I’ll have to do some more testing with VB to ensure that my project can reliably be extended with VB.</p>
+<p>I did learn something rather interesting about the code interoperability feature and IL.&nbsp; The library is C#.&nbsp; The page is VB inheriting from a base class written in C#.&nbsp; Actually the VB page is just inheriting from IL code.&nbsp; Where the PageContent property was referenced was actually in C#, and the property and protected member are declared in C#, but since the VB page was executing, the IL library of mine was compiling according to VB’s rules.&nbsp; Very interesting.</p>

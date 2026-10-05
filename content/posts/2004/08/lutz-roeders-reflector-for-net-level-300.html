@@ -1,0 +1,15 @@
+---
+wp_id: 86
+title: Lutz Roeder’s Reflector for .Net – level 300
+slug: lutz-roeders-reflector-for-net-level-300
+permalink: /2004/08/lutz-roeders-reflector-for-net-level-300/
+date: 2004-08-23T19:07:00
+date_utc: 2004-08-23T19:07:00Z
+modified: 2004-08-23T19:07:00
+format: html
+excerpt: I recently downloaded and used Lutz Roeder’s Reflector program, and it is a pretty sweet tool. VS 2005 Beta 1 has the class browser just like VS 2003, but the disassembler is what make Lutz’s tool so useful. The disassembler takes the compiled MSIL and converts it back into its best guess of C# or […]
+comments_open: true
+---
+<p>I recently downloaded and used <a href="http://www.aisto.com/roeder/dotnet/">Lutz Roeder’s Reflector program</a>, and it is a pretty sweet tool.&nbsp; VS 2005 Beta 1 has the class browser just like VS 2003, but the disassembler is what make Lutz’s tool so useful.&nbsp; </p>
+<p>The disassembler takes the compiled MSIL and converts it back into its best guess of C# or VB or Delphi (you can also view the IL).&nbsp; Using that guessed code (which is VERY accurate), you can find out how a method was implemented.&nbsp; It can be used on .Net Framework types as well.</p>
+<p>It saved me a lot of time just today.&nbsp; I knew I need to use a certain object in&nbsp;a predefined assembly, but I didn’t know how the class was intended to be created.&nbsp; There was a constructor with parameters for all the things that needed to be populated, but I didn’t know all that information.&nbsp; Using the disassembler on another class in that assembly that used the object in question, I was able to see that a completely different object is in charge of instantiating my said object.&nbsp; Now, I can easily creat my mystery object, and Lutz has saved me time.&nbsp; Thanks!</p>

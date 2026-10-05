@@ -1,0 +1,88 @@
+---
+wp_id: 282
+title: How to make an ASP.NET user control behave like a custom WebControl – level 200
+slug: how-to-make-an-asp-net-user-control-behave-like-a-custom-webcontrol-level-200
+permalink: /2005/07/how-to-make-an-asp-net-user-control-behave-like-a-custom-webcontrol-level-200/
+date: 2005-07-18T20:55:00
+date_utc: 2005-07-18T20:55:00Z
+modified: 2005-07-18T20:55:00
+format: html
+excerpt: If you’ve used User Controls for any amount of time, you’ve lamented that there is no containing control for attributes. With any other custom controls, you have WebControl as the base class, and that allows you to use a <span/> by default or change the TagKey to another tag, and when you declaratively set an […]
+comments_open: true
+---
+<p>If you’ve used User Controls for any amount of time, you’ve lamented that there is no containing control for attributes.&nbsp; With any other custom controls, you have WebControl as the base class, and that allows you to use a &lt;span/&gt; by default or change the TagKey to another tag, and when you declaratively set an attribute like [style=”padding:10px;”], the attribute automatically gets added to the tag.</p>
+<p>Not so with User Controls, but they aren’t designed to work that way.&nbsp; They are meant to be pagelets: a portion of a page.&nbsp; A User Control can contain anything and doesn’t have to be encapsulated in any control, so there is no tag to add attributes to.</p>
+<p>I have made a hybrid User-Custom web control.&nbsp; It inherits from UserControl, so I have the nice declarative layout, but I needed functionality of a WebControl as well.&nbsp; I added a WebControl as a member of my user control, and on PreRender, I wrap all my user control contents in this WebControl.&nbsp; Then I bestow all the attributes of the user control on the WebControl and add the WebControl as the only 1st-level child of the user control.&nbsp; The end result is that I have a user control that wraps itself in a &lt;span/&gt; or whatever tag I want, and I can set attributes on the Page, and they will get rendered to the browser.&nbsp; This is especially useful when I need to add a style property or “class”.</p>
+<p>Here’s my code-behind.&nbsp; Feel free to copy/steal my code:</p>
+<div><br>
+<p><span>&nbsp;&nbsp;&nbsp;14</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>public</span> <span>class</span> Magic : System.Web.UI.UserControl</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;15</span>&nbsp;&nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;16</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>private</span> WebControl _frame;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;17</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;18</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>public</span> WebControl Frame </p><br>
+<p><span>&nbsp;&nbsp;&nbsp;19</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;20</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>get</span> {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;21</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>this</span>.EnsureChildControls();</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;22</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>return</span> <span>this</span>._frame; </p><br>
+<p><span>&nbsp;&nbsp;&nbsp;23</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;24</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;25</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;26</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>protected</span> <span>override</span> <span>void</span> CreateChildControls()</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;27</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;28</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>base</span>.CreateChildControls ();</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;29</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;30</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>this</span>._frame = <span>new</span> WebControl(HtmlTextWriterTag.Div);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;31</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;32</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;33</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>protected</span> <span>override</span> <span>void</span> OnPreRender(EventArgs e)</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;34</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;35</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>base</span>.OnPreRender (e);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;36</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;37</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Control[] ctrls = <span>new</span> Control[<span>this</span>.Controls.Count];</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;38</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>this</span>.Controls.CopyTo(ctrls, 0);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;39</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;40</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>foreach</span>(Control ctrl <span>in</span> ctrls)</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;41</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;42</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>this</span>.Frame.Controls.Add(ctrl);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;43</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;44</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;45</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>foreach</span>(<span>string</span> attribute <span>in</span> <span>this</span>.Attributes.Keys)</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;46</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;47</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>this</span>.Frame.Attributes[attribute] = <span>this</span>.Attributes[attribute];</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;48</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;49</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;50</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>this</span>.Controls.Add(<span>this</span>.Frame);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;51</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;52</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;53</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;54</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>private</span> <span>void</span> Page_Load(<span>object</span> sender, System.EventArgs e)</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;55</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;56</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>// Put user code to initialize the page here</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp;57</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;58</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;59</span>&nbsp;<span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; #region</span> Web Form Designer generated code</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;60</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>override</span> <span>protected</span> <span>void</span> OnInit(EventArgs e)</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;61</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;62</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>//</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp;63</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>// CODEGEN: This call is required by the ASP.NET Web Form Designer.</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp;64</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>//</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp;65</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; InitializeComponent();</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;66</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>base</span>.OnInit(e);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;67</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;68</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;69</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;summary&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp;70</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>///</span><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Required method for Designer support – do not modify</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp;71</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>///</span><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; the contents of this method with the code editor.</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp;72</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>///</span><span> </span><span>&lt;/summary&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp;73</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>private</span> <span>void</span> InitializeComponent()</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;74</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;75</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>this</span>.Load += <span>new</span> System.EventHandler(<span>this</span>.Page_Load);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;76</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;77</span>&nbsp;<span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; #endregion</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp;78</span>&nbsp;&nbsp;&nbsp;&nbsp; }</p></div>
+<p>Here is my user control markup:</p>
+
+<p>&lt;%@ Control Language=”c#” AutoEventWireup=”false” Codebehind=”Magic.ascx.cs” Inherits=”MagicUserControl.Magic” TargetSchema=”<a href="http://schemas.microsoft.com/intellisense/ie5&quot;%">http://schemas.microsoft.com/intellisense/ie5″%</a>&gt;<br>This is a tag.<br>&lt;asp:Label Runat=”server”&gt;Yo, buddy&lt;/asp:Label&gt;</p>
+<p>And here is my Page markup (where my User Control is used):</p>
+<p>&lt;uc1:Magic id=”Magic1″ style=”margin: 10px;” myAttrib=”Palermo” Frame-CssClass=”myClass”&nbsp;runat=”server”&gt;&lt;/uc1:Magic&gt;</p>
+<p>See how easy it is now to add any sort of attribute and have it render?&nbsp; I created this control out of necessity because I wanted the simplicity of user controls with the power and flexibility of a WebControl-derived control.</p>

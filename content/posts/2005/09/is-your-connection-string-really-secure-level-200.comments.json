@@ -1,0 +1,20 @@
+[
+  {
+    "id": 489,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://",
+    "date": "2005-09-30T22:24:59",
+    "type": "comment",
+    "content_html": "<p>There are liability/legal reasons to keep information on a need-to-know basis, even within a company where you trust everyone.<br>\nI think there is value in hiding credentials from the casual browser, which some simple encryption can accomplish.  Sure, it won’t stop a determined hacker, but that is not the point. The point is to hide it from a number of people that may see the file during the course of their business (deployment, backups, version control management) that really have no need to know that information.</p>\n<p>Consider this – you don’t necessarily need adminstrator access to see the contents of a file on a web server.  Suppose a server is misconfigured so the HttpForbiddenHandler isn’t associated with .config files.  Or a bug is discovered in the handler that allows someone to bypass it. Is that really so farfetched? Anyone on the net can pull down your web.config and read it. In that case, wouldn’t you be happy to know your private information is not in clear text?</p>"
+  },
+  {
+    "id": 490,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-03T19:03:59",
+    "type": "comment",
+    "content_html": "<p>Like I said, security is not an absolute.  You decide what steps are reasonable for you.  I wouldn’t add the HttpForbiddenHandler misconfiguration to a list of known risks.  If you go down that path, then you put the entire platform as a risk.</p>\n<p>If you take advantage of network security, you can make it safe very quickly. </p>"
+  }
+]

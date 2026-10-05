@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2601,
+    "parent": 0,
+    "author_name": "camaros",
+    "author_url": "http://www.supersportcamaro.com",
+    "date": "2009-07-28T21:23:13",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,  I am wondering how to switch between integrated and classic mode, can you do that within a web.config?</p>"
+  }
+]

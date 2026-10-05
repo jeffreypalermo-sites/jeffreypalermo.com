@@ -1,0 +1,17 @@
+---
+wp_id: 87
+title: Named DataGrid columns – wouldn’t it be nice? – level 300
+slug: named-datagrid-columns-wouldnt-it-be-nice-level-300
+permalink: /2004/08/named-datagrid-columns-wouldnt-it-be-nice-level-300/
+date: 2004-08-24T09:52:00
+date_utc: 2004-08-24T09:52:00Z
+modified: 2004-08-24T09:52:00
+format: html
+excerpt: Earlier, I blogged about using controls that are embedded in unusual places in the control tree of the DataGrid. For instance, putting a LinkButton for adding a new record in the header or footer of the DataGrid. You have to manually manipulate the Controls collection to do this. Another issue is what if you put […]
+comments_open: true
+---
+<p>Earlier, I <a href="http://dotnetjunkies.com/WebLog/jpalermo/archive/2004/07/27/20467.aspx">blogged about using controls that are embedded in unusual places in the control tree of the DataGrid</a>.&nbsp; For instance, putting a LinkButton for adding a new record in the header or footer of the DataGrid.&nbsp; You have to manually manipulate the Controls collection to do this.&nbsp; </p>
+<p>Another issue is what if you put that LinkButton in the same column as the Edit, update, cancel, delete buttons?&nbsp; If you want to restrict editing of the data, a step on the UI would be to hide that entire column.&nbsp; Seems pretty straight-forward, but how do you get a reference to that column?&nbsp; I searched, and the only way I found was to reference it by the index in the Columns collection:</p>
+<p>dgd.Columns[7].Visible = <span class="ColorCSKeyword">false</span>;</p>
+<p>That works well, but it bit me in the butt when I tried to maintain that code.&nbsp; Down the road it became necessary to add two columns to that DataGrid.&nbsp; Then, you guessed it!&nbsp; A nice, little bug in my code.&nbsp; Usually I’m able to avoid the debugger in VS by writing modular code and using the heck out of the ASP.NET Trace feature (great for code maintenance), but this was an issue that actually required a breakpoint.&nbsp; Once inside the code, it was very clear what was happening.&nbsp; I changed the index to the new index of the edit column, and my problem was fixed (until next time), but isn’t there a more maintainable way to do this?&nbsp; What happens when another developer needs to modify my application.&nbsp; Yeah, I document the heck out of it, but why can’t the Columns collection support column name identifiers as well.&nbsp; I know the answer (CollectionBase), but it would be nice.</p>
+<p>For now, I’ll have several lines of comments above that code.&nbsp;</p>

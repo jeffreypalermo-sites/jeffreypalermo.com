@@ -1,0 +1,19 @@
+---
+wp_id: 146
+title: Retain scroll position in ASP.NET without the SmartNavigation non-feature – level 200
+slug: retain-scroll-position-in-asp-net-without-the-smartnavigation-non-feature-level-200
+permalink: /2004/11/retain-scroll-position-in-asp-net-without-the-smartnavigation-non-feature-level-200/
+date: 2004-11-22T13:35:00
+date_utc: 2004-11-22T13:35:00Z
+modified: 2004-11-22T13:35:00
+format: html
+excerpt: Maintaining Scrollback Position Across Postbacks You much check out this post from Scott. I was just about to the verge of rolling my own scroll-retaining javascript when I read this. The credit really goes to Steve Stchur and his article on 4Guys. SmartNavigation only works for the most trivial website. When you do […]
+comments_open: true
+---
+<blockquote><p><a href="http://scottonwriting.net/sowblog/posts/2650.aspx">Maintaining Scrollback Position Across Postbacks</a> </p><br>
+</blockquote>
+<p>You much check out this post from Scott.&nbsp; I was just about to the verge of rolling my own scroll-retaining javascript when I read this.&nbsp; The credit really goes to <a href="http://aspnet.4guysfromrolla.com/articles/111704-1.aspx">Steve Stchur and his article on 4Guys</a>.</p>
+
+<p>SmartNavigation only works for the most trivial website.&nbsp; When you do anything custom (anything besides drag-n-drop development), smartnavigation breaks your page, and it won’t even post back.&nbsp; This scroll problem is an issue for ASP.NET since the postback method is widely used.&nbsp; </p>
+
+<p>I have run across some older user will bad eyesight, and they are at 800×600 resolution, so they do A LOT of scrolling both vertically and horizontally.&nbsp; Retaining scroll position will mean a better user experience for them.</p>

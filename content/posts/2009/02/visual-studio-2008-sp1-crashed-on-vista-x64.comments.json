@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2559,
+    "parent": 0,
+    "author_name": "KB963676 fixes Visual Studio 2008 SP1 crash on Vista x64",
+    "author_url": "http://jeffreypalermo.com/blog/kb963676-fixes-visual-studio-2008-sp1-crash-on-vista-x64/",
+    "date": "2009-03-03T01:02:47",
+    "type": "comment",
+    "content_html": "<p>I blogged earlier about VS 2008 SP1 crashing silently when pulling up a web form or master page designer. KB963676 is what I have been waiting for. It was made public just last Thursday on 2/26/2009, and the hotfix fixes the crash for me. The KB description</p>"
+  }
+]

@@ -1,0 +1,39 @@
+---
+wp_id: 1204
+title: 'Onion Architecture: Part 4 – After Four Years'
+slug: onion-architecture-part-4-after-four-years
+permalink: /2013/08/onion-architecture-part-4-after-four-years/
+date: 2013-08-19T08:19:12
+date_utc: 2013-08-19T08:19:12Z
+modified: 2018-07-04T15:29:19
+format: html
+categories:
+- blog
+tags:
+- onion-architecture
+excerpt: 'In 2008, I coined a new pattern name called Onion Architecture. You can read the previous parts here: part 1, part 2, part 3. Over these four years, I’ve spoken about this pattern at user groups, conferences, and it’s even published in one of the chapters of ASP.NET MVC in Action from Manning. I’ve been overwhelmed by the traction this pattern […]'
+comments_open: true
+---
+<p>&nbsp;<span style="color:rgb(102,102,102); text-align:justify">In 2008, I coined a new pattern name called Onion Architecture.&nbsp; You can read the previous parts here:</span><span style="color:rgb(102,102,102); text-align:justify">&nbsp;</span><a href="/2008/07/the-onion-architecture-part-1/" style="text-align:justify; padding:0; text-decoration:none; outline-width:0; color:rgb(0,121,194)">part 1</a><span style="color:rgb(102,102,102); text-align:justify">,</span><span style="color:rgb(102,102,102); text-align:justify">&nbsp;</span><a href="/2008/07/the-onion-architecture-part-2/" style="text-align:justify; padding:0; text-decoration:none; outline-width:0; color:rgb(0,121,194)">part 2</a><span style="color:rgb(102,102,102); text-align:justify">,</span><span style="color:rgb(102,102,102); text-align:justify">&nbsp;</span><a href="/2008/08/the-onion-architecture-part-3/" style="text-align:justify; padding:0; text-decoration:none; outline-width:0; color:rgb(0,121,194)">part 3</a><span style="color:rgb(102,102,102); text-align:justify">.&nbsp; Over these four years, I’ve spoken about this pattern at user groups, conferences, and it’s even published in one of the chapters of</span><span style="color:rgb(102,102,102); text-align:justify">&nbsp;</span><a href="http://manning.com/palermo3" style="text-align:justify; padding:0; text-decoration:none; outline-width:0; color:rgb(0,121,194)">ASP.NET MVC in Action</a><span style="color:rgb(102,102,102); text-align:justify">&nbsp;</span><span style="color:rgb(102,102,102); text-align:justify">from</span><span style="color:rgb(102,102,102); text-align:justify">&nbsp;</span><a href="http://manning.com/palermo3" style="text-align:justify; padding:0; text-decoration:none; outline-width:0; color:rgb(0,121,194)">Manning</a><span style="color:rgb(102,102,102); text-align:justify">.</span></p>
+<p style="padding:0; color:rgb(102,102,102); text-align:justify">I’ve been overwhelmed by the traction this pattern name has enjoyed.&nbsp; Folks from all over the country have written about and have talked about the pattern.&nbsp; Some of the ones I’ve noticed are here (please comment with more – I welcome it).</p>
+<ul style="padding:0; color:rgb(102,102,102); text-align:justify">
+<li style="padding:0"><a href="http://ayende.com/blog/3464/onion-architecture" style="padding:0; text-decoration:none; outline-width:0; color:rgb(0,121,194)">Ayende Rahien’s opinion on Onion Architecture</a></li>
+<li style="padding:0"><a href="http://www.cunningclinton.com/post/2011/07/19/Onion-Architecture.aspx" style="padding:0; text-decoration:none; outline-width:0; color:rgb(0,121,194)">“Cunning” Clinton’s view</a></li>
+<li style="padding:0"><a href="http://blog.tonysneed.com/2011/10/08/peeling-back-the-onion-architecture/" style="padding:0; text-decoration:none; outline-width:0; color:rgb(0,121,194)">Tony Sneed’s view and code sample</a></li>
+<li style="padding:0"><a href="http://stackoverflow.com/questions/tagged/onion-architecture" style="padding:0; text-decoration:none; outline-width:0; color:rgb(0,121,194)">StackOverflow questions on Onion Architecture</a></li>
+<li style="padding:0"><a href="http://chicagoalt.net/event/july-2011-meeting-onion-architecture-with-asp-net-mvc" style="padding:0; text-decoration:none; outline-width:0; color:rgb(0,121,194)">Matt Hidinger’s Chicago .Net User Group video presentation on OA</a></li>
+<li style="padding:0"><a href="http://stackoverflow.com/questions/9732747/what-type-of-architecture-is-this-called/9933371#9933371" style="padding:0; text-decoration:none; outline-width:0; color:rgb(0,121,194)">One interesting StackOverflow question.</a></li>
+</ul>
+
+<p style="padding:0; color:rgb(102,102,102); text-align:justify">Back in 2008, I defined four tenets of Onion Architecture:</p>
+<ul style="padding:0; color:rgb(102,102,102); text-align:justify">
+<li style="padding:0"><em style="padding:0">The application is built around an independent object model</em></li>
+<li style="padding:0"><em style="padding:0">Inner layers define interfaces.&nbsp; Outer layers implement interfaces</em></li>
+<li style="padding:0"><em style="padding:0">Direction of coupling is toward the center</em></li>
+<li style="padding:0"><em style="padding:0">All application core code can be compiled and run separate from infrastructure</em></li>
+</ul>
+
+<p style="padding:0; color:rgb(102,102,102); text-align:justify">Although there has been significant adoption of this pattern, I have received countless questions about how to implement it in various environments.&nbsp; I mostly get asked about how it relates to domain-driven design.&nbsp; First, onion architecture works well with and without DDD patterns.&nbsp; It works well with CQRS, forms over data, and DDD.&nbsp; It is merely an architectural pattern where the core object model is represented in a way that does not accept dependencies on less stable code.</p>
+<p style="padding:0; color:rgb(102,102,102); text-align:justify"><a href="http://codecampserver.codeplex.com/" style="padding:0; text-decoration:none; outline-width:0; color:rgb(0,121,194)">CodeCampServer</a>&nbsp;was an original sample of onion architecture, but it also grew as a sample of how to do ASP.NET MVC in various ways, how to use Portable Areas, and how to use&nbsp;<a href="http://mvccontrib.org/" style="padding:0; text-decoration:none; outline-width:0; color:rgb(0,121,194)">MvcContrib</a>&nbsp;features like input builders.&nbsp; If you are just looking for onion architecture, it has too much going on.&nbsp;&nbsp;<a href="https://bitbucket.org/jeffreypalermo/onion-architecture" style="padding:0; text-decoration:none; outline-width:0; color:rgb(0,121,194)">I have pushed a much simpler solution</a>&nbsp;that represents onion architecture concepts.&nbsp; I have intentionally not included a UI input form or an IoC container, which most people associate with onion architecture.&nbsp; Onion architecture works just fine without the likes of StructureMap or Castle Windsor.&nbsp; Please check out the code here and let me know if this presents a simple approach – that is the goal.</p>
+<p style="padding:0; color:rgb(102,102,102); text-align:justify">When there is enough interest, I will continue this series with more parts.&nbsp; CQRS definitely deserves some addressing within this architecture, and so do object models that support task-based UIs.</p>
+<p style="padding:0; color:rgb(102,102,102); text-align:justify">Get the code&nbsp;<a href="https://bitbucket.org/jeffreypalermo/onion-architecture" style="padding:0; text-decoration:none; outline-width:0; color:rgb(0,121,194)">here at my BitBucket repository</a>.</p>

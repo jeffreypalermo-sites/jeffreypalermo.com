@@ -1,0 +1,15 @@
+---
+wp_id: 470
+title: We’ll see Microsoft’s OR Mapper soon – level 100
+slug: well-see-microsofts-or-mapper-soon-level-100
+permalink: /2006/11/well-see-microsofts-or-mapper-soon-level-100/
+date: 2006-11-03T14:08:00
+date_utc: 2006-11-03T14:08:00Z
+modified: 2006-11-03T14:08:00
+format: html
+excerpt: Many long-time Microsoft developer hold fast to the "all data access must be stored procedures" thought, and that was, at one time, the guidance from Microsoft. Soon we'll see the Object-relational mapper from Microsoft in the form of Linq for Entities. I drove up to the North Dallas .Net User Group yesterday and visited with […]
+comments_open: true
+---
+<p>Many long-time Microsoft developer hold fast to the "all data access must be stored procedures" thought, and that was, at one time, the guidance from Microsoft.&nbsp; Soon we'll see the Object-relational mapper from Microsoft in the form of <a href="http://www.microsoft.com/downloads/details.aspx?familyid=b68f6f53-ec87-4122-b1c8-ee24a043bf72&amp;displaylang=en#Overview">Linq for Entities.</a>&nbsp; I drove up to the <a href="http://www.nddnug.net/">North Dallas .Net User Group</a> yesterday and visited with <a href="http://weblogs.asp.net/scottgu/">Scott Guthrie</a> on the topic.&nbsp; Microsoft has tried a few times before at creating an OR mapper, but they've learned from past attempts and are releasing v1.0 of Linq as their entry into the ORM space.</p>
+<p>I'm very much entrenched in the ORM space with NHibernate, but I'm interested in how Linq for Entities pans out.&nbsp; From a cursory look, the mapping information is specified with attributes that are placed on the entity class.&nbsp; I'm not sure if that's the only method for this, but I'm very much looking forward to the release.</p>
+<p>An interesting tidbit demonstrated was the server-side paging of a Linq query.&nbsp; For instance, the C# query: from customers select customer, you can specify to skip 10 and then return 10 (or any number) if you need to page through the resultset 10 at a time.&nbsp; Linq will formulate the SQL query to get you exactly what you want.&nbsp; Very nice.&nbsp; <a href="http://www.ayende.com/Blog/">Ayende</a>, in the comments below gives an example of that with NHibernate.</p>

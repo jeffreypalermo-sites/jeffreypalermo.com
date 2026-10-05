@@ -1,0 +1,55 @@
+---
+wp_id: 453
+title: Build and publish .Net 2.0 projects with NAnt and the MSBuild task – level 200
+slug: build-and-publish-net-2-0-projects-with-nant-and-the-msbuild-task-level-200
+permalink: /2006/08/build-and-publish-net-2-0-projects-with-nant-and-the-msbuild-task-level-200/
+date: 2006-08-12T17:38:00
+date_utc: 2006-08-12T17:38:00Z
+modified: 2006-08-12T17:38:00
+format: html
+tags:
+- tips-tricks
+- tools
+excerpt: When .Net 2.0 first came out, I was left using the <exec /> task to call msbuild.exe to build my solution. The NAnt <solution /> task is specific to .Net 1.1 because Microsoft change the structure of project files to be MSBuild scripts. I may be a little behind on this, but NAntContrib now contains […]
+comments_open: true
+---
+<p>When<br>
+.Net 2.0 first came out, I was left using the <a href="http://nant.sourceforge.net/release/latest/help/tasks/exec.html">&lt;exec<br>
+/&gt;</a> task to call msbuild.exe to build my solution.&nbsp; The NAnt <a href="http://nant.sourceforge.net/release/latest/help/tasks/solution.html">&lt;solution<br>
+/&gt;</a> task is specific to .Net 1.1 because Microsoft change the structure<br>
+of project files to be MSBuild scripts.</p>
+<p>I may be a little behind on this, but <a href="http://nantcontrib.sourceforge.net/">NAntContrib</a> now contains a<br>
+&lt;msbuild /&gt; task that can either just build your solution or execute an<br>
+entire msbuild script.&nbsp; Here is an excerpt from my NAnt build script:</p>
+<p><span style="color:blue">&lt;</span><span style="color:maroon">target</span><span style="color:blue"> </span><span style="color:red">name</span><span style="color:blue">=</span><span>“<span style="color:blue">compile</span>“<span style="color:blue">&gt;</span></span></p>
+<p><span style="color:blue"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>&lt;</span><span style="color:maroon">echo</span><span style="color:blue"> </span><span style="color:red">message</span><span style="color:blue">=</span><span>“<span style="color:blue">Build Directory is ${build.dir}</span>“<span style="color:blue"> /&gt;</span></span></p>
+<p><span style="color:blue"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>&lt;</span><span style="color:maroon">msbuild</span><span style="color:blue"> </span><span style="color:red">project</span><span style="color:blue">=</span><span>“<span style="color:blue">src/xxx.sln</span>“<span style="color:blue">&gt;</span></span></p>
+<p><span style="color:blue"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>&lt;</span><span style="color:maroon">arg</span><span style="color:blue"> </span><span style="color:red">value</span><span style="color:blue">=</span><span>“<span style="color:blue">/property:Configuration=release</span>“<span style="color:blue"> /&gt;<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span></p>
+<p><span style="color:blue"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>&lt;</span><span style="color:maroon">arg</span><span style="color:blue"> </span><span style="color:red">value</span><span style="color:blue">=</span><span>“<span style="color:blue">/t:Rebuild</span>“<span style="color:blue"> /&gt;</span></span></p>
+<p><span style="color:blue"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>&lt;/</span><span style="color:maroon">msbuild</span><span style="color:blue">&gt;</span></p>
+<p><span style="color:blue">&lt;/</span><span style="color:maroon">target</span><span style="color:blue">&gt;</span></p>
+
+<p>The task brings the full power of MSBuild to NAnt.<span>&nbsp; </span>At first, I thought about converting the<br>
+entire build to MSBuild, but I have so much invested in NAnt that I can’t<br>
+justify the effort of conversion yet since we won’t gain anything.<span>&nbsp; </span>For now, we’ll have a mixed build process.<span>&nbsp; </span></p>
+
+<p>Later when we need to package with ClickOnce, we can use the<br>
+&lt;msbuild /&gt; task with the publish target:</p>
+
+<p><span style="color:blue">&lt;</span><span style="color:maroon">msbuild</span><span style="color:blue"> </span><span style="color:red">project</span><span style="color:blue">=</span><span>“<span style="color:blue">src/xxx.sln</span>“<span style="color:blue">&gt;</span></span></p>
+<p style="text-indent:.5in"><span style="color:blue">&lt;</span><span style="color:maroon">arg</span><span style="color:blue"> </span><span style="color:red">value</span><span style="color:blue">=</span><span>“<span style="color:blue">/p:Configuration=${project.config};ApplicationVersion=${project.version}.${CCNetLabel};MinimumRequiredVersion=${project.version}.${CCNetLabel};UpdateRequired=true</span>“<span style="color:blue"> /&gt;</span></span></p>
+<p><span style="color:blue"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>&lt;</span><span style="color:maroon">arg</span><span style="color:blue"> </span><span style="color:red">value</span><span style="color:blue">=</span><span>“<span style="color:blue">/t:publish</span>“<span style="color:blue"> /&gt;</span></span></p>
+<p><span style="color:blue">&lt;/</span><span style="color:maroon">msbuild</span><span style="color:blue">&gt;</span></p>
+
+<p>This node builds the ClickOnce deployment package for our<br>
+application.<span>&nbsp; </span><a href="http://ccnet.thoughtworks.com/">CruiseControl.Net</a> executes this NAnt<br>
+script, so every time we commit code to <a href="http://subversion.tigris.org/files/documents/15/32856/svn-1.3.2-setup.exe">Subversion</a>,<br>
+we build out the ClickOnce install package and commit it back to SVN and tag<br>
+it.<span>&nbsp; </span>No matter what version we need, it’s<br>
+right at our fingertips.</p>
+
+<p>By the way, I now always edit my build scripts in VS 2005<br>
+since <a href="http://www.jetbrains.com/resharper/">Resharper 2.0</a> helps<br>
+with NAnt scripts.<span>&nbsp; </span>I can rename targets,<br>
+find usages, jump from target to target just as I can in code.<span>&nbsp; </span>In short, it has refactoring and navigation<br>
+support for the build scripts.</p>

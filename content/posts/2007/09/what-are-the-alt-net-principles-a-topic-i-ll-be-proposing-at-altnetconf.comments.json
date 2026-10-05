@@ -1,0 +1,191 @@
+[
+  {
+    "id": 1994,
+    "parent": 0,
+    "author_name": "Haacked",
+    "author_url": "http://haacked.com/",
+    "date": "2007-09-23T19:02:30",
+    "type": "comment",
+    "content_html": "<p>So am I “Alt.Alt.NET” if I push for MbUnit over NUnit? I thought we were picking the best tool for the job! \uD83D\uDE09</p>"
+  },
+  {
+    "id": 1995,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-09-23T19:17:09",
+    "type": "comment",
+    "content_html": "<p>@Phil,<br>\nI intentionally didn’t want to say “use this tool” because the best tool for the job is entirely contextual, but thanks for the clarification.</p>\n<p>Perhaps you can help Microsoft make Alt.Net Mainstream.Net</p>"
+  },
+  {
+    "id": 1996,
+    "parent": 0,
+    "author_name": "Lorenzo Barbieri",
+    "author_url": "http://www.geniodelmale.info",
+    "date": "2007-09-23T22:14:11",
+    "type": "comment",
+    "content_html": "<p>“Subversion vs TFS” is like “Apple vs Orange”.<br>\nPerhaps you could say “Subversion vs TFVC”, but TFS is much much more than just Version Control.<br>\nIt’s like saying “TFS vs Subversion+bug tracking system+CruiseControl.NET+NANT+NUnit+NCover+NCoverExplorer+a lot of other things…”</p>"
+  },
+  {
+    "id": 1997,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-09-24T00:13:30",
+    "type": "comment",
+    "content_html": "<p>@Lorenzo,<br>\nYou are correct.  What I meant was TFS SCC.</p>"
+  },
+  {
+    "id": 1998,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://flimflan.com/blog",
+    "date": "2007-09-24T06:01:17",
+    "type": "comment",
+    "content_html": "<p>ALT.NET is freedom<br>\n<a href=\"http://flimflan.com/blog/ALTNETIsFreedom.aspx\" rel=\"nofollow ugc\">http://flimflan.com/blog/ALTNETIsFreedom.aspx</a></p>"
+  },
+  {
+    "id": 1999,
+    "parent": 0,
+    "author_name": "ScottBellware",
+    "author_url": "http://scottic.us",
+    "date": "2007-09-24T07:33:17",
+    "type": "comment",
+    "content_html": "<p>How does an accepted definition enable us?  What actions could we take with that definition in-hand?</p>"
+  },
+  {
+    "id": 2000,
+    "parent": 0,
+    "author_name": "FransBouma",
+    "author_url": "http://weblogs.asp.net/fbouma",
+    "date": "2007-09-24T08:22:09",
+    "type": "comment",
+    "content_html": "<p>“ALT.NET is freedom”<br>\nWhat a bunch of BS. You’re working WITH vs.net on a MS platform. There’s no ‘freedom’, you are bound to the boundaries MS draws upon you. If you want freedom, use a language, platform and IDE that are created by a community who don’t care if they make money out of it or not. Hint: it’s not .NET</p>\n<p>That said, about ‘alt’ in ‘alt.net’ :<br>\nI think the core reason this ‘movement’ started is because MS thinks in one direction and the platform + tools they provide are aligned with that and some developers think in another direction and this gives friction. However, what I find odd is that the communication towards the outside world about what this movement is all about is focussed on solely applications and ‘agile’. </p>\n<p>What if I’m not an agilist and hate resharper? Am I then not ‘alternative’ ? Perhaps I use more alternative tools and resources than most of the ‘alt.net’ wonderboys do. You see, the alternative in alt.net shouldn’t be about agile and shouldn’t be about use resharper or use nunit or use nhibernate. It should be about ‘Open your eyes: there’s more out there than the window MS provides will show you”. </p>\n<p>Just focussing on a bunch of tools starting with an ‘n’ + resharper and ‘agile’ doesn’t make you ‘alternative’. It just makes you a user group of a bunch of tools. </p>"
+  },
+  {
+    "id": 2001,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-09-24T11:32:27",
+    "type": "comment",
+    "content_html": "<p>@Frans,<br>\nThere is nothing isolating about “being an agilist”.  Agile is a set of values, that’s it, so I propose that Alt.Net includes the four values.  Also see above that “Alt.Net does not _mean_ Resharper.”</p>\n<p>It is difficult talking about principles and then giving examples because you could have a completely different set of tools that allow you to create excellent and high quality software with joy.  No problem with that.  Alt.Net is definitely not about tools.  </p>\n<p>&gt;’Open your eyes: there’s more out there than the window MS provides will show you”.</p>\n<p>That’s a very good point.  Perhaps the principles could be distilled down to that one-liner.  Wow.  You actually might have something there.  I’m going to think on that long and hard.  You may have just summed up the value system.</p>\n<p>I knew if I posted, someone could do better.</p>"
+  },
+  {
+    "id": 2002,
+    "parent": 0,
+    "author_name": "Damon Carr",
+    "author_url": "http://damon.agilefactor.com",
+    "date": "2007-09-24T14:22:55",
+    "type": "comment",
+    "content_html": "<p>I propose that for a professional consultant working in the Microsoft.NET world YOU ARE FUNDAMENTALLY AND ETHICALLY FAILING if you are not working in these areas where appropriate.</p>\n<p>To me this is an imperative, not simply an ‘alternative’.<br>\nI cannot tell you how nice it is to find a group that so exactly embodies the set of principles and practices that have consumed my work life now for many years as the CTO of a global software product company and now as a consultant (100% Agile focus, ORM with NHibernate, ReSharper, Continuous Integration focus,  etc.). I am actually the individual quoted on the ReSharper product page.</p>\n<p>The pushback from the general Microsoft developer community and their all to frequent acceptance of mediocrity is astounding. Often it is a ‘we don’t know what we don’t know’ situation so you really cannot argue these principles as they are near dogma in the minds of the masses.</p>\n<p>This is not something our Java compatriots suffer, who are far more likely to question their ‘Sun’ god (grin). </p>\n<p>Of course (!) there will be nimble vendors offering best practices in Software Engineering that we can leverage before Microsoft (who now seems to be improving I must say) can possibly release something to their far more rigorous ‘superset’ of people.</p>\n<p>To wait for one vendor to provide all your tools is not only damaging, it is ethically not serving your customers and reflected poorly on anyone who plants their head in the sand to wait for marching orders from Redmond.</p>\n<p>Every point you have made here I have been making, and typically have to fight for. It is often not even the well-meaning consultants, but indeed the CUSTOMERS who make ill-fated pronouncements like ‘no open source allowed’. I now turn down more work then presented to me and I am only interested in working with organizations who will ALLOW me to help them be as excellent as they can. That means the use of non-Microsoft produced code, full stop, in addition to the core Microsoft platform.</p>\n<p>Thanks!<br>\nDamon Wilder Carr<br>\n<a href=\"http://damon.agilefactor.com\" rel=\"nofollow ugc\">http://damon.agilefactor.com</a></p>"
+  },
+  {
+    "id": 2003,
+    "parent": 0,
+    "author_name": "Greg Hughes",
+    "author_url": "http://",
+    "date": "2007-09-24T14:47:34",
+    "type": "comment",
+    "content_html": "<p>Warning: The next statement can be contrived as flame-bait. Please look away if of a sensitive disposition. It’s kinda true though – sorry.</p>\n<p>The purpose of most ALT.NET types is to get a blue badge at Microsoft. There is a huge list of people that ‘did their dues’ of sucking to the Redmond teat before taking the blue pill. There are a bunch of ‘big ALT names’ that now have settled for the safe harbor of ‘helping influence millions of developers’ from the inside, despite all that unsavory business practices / StevieB stuff that they manage to wipe from their ethics-o-meter.</p>\n<p>Microsoft doesn’t have a ‘community’ – it has people on the waiting list to a full-time job that it can pick and choose when it needs – usually when the H1B quota for that year is ran out.</p>\n<p>Greg</p>"
+  },
+  {
+    "id": 2004,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-09-24T16:12:14",
+    "type": "comment",
+    "content_html": "<p>@Greg,<br>\n&gt;&gt;The purpose of most ALT.NET types is to get a blue badge at Microsoft</p>\n<p>Please name names because I have spoken (with voice) to many folks who share these values, and I don’t think you are correct.</p>\n<p>Please back up this claim because it seems way out in left field.  You did say “most”, so you have to back it up with more than just a few names.  Most is a pretty bold claim.</p>"
+  },
+  {
+    "id": 2005,
+    "parent": 0,
+    "author_name": "Jeremy D. Miller",
+    "author_url": "http://codebetter.com/blogs/jeremy.miller",
+    "date": "2007-09-24T16:13:39",
+    "type": "comment",
+    "content_html": "<p>Greg,</p>\n<p>I don’t want to be in your vicinity when Bellware finds out you called him a Rednoser.</p>"
+  },
+  {
+    "id": 2006,
+    "parent": 0,
+    "author_name": "Scott Hanselman",
+    "author_url": "http://www.hanselman.com/blog",
+    "date": "2007-09-24T16:54:50",
+    "type": "comment",
+    "content_html": "<p>I’m still left wondering why this is “Alternative.” </p>\n<p>When I was in high school some folks started the “Don’t Be Normal Club.” (Hey, it was high school.) It was fun until everyone joined it. Then it was just Normal.</p>"
+  },
+  {
+    "id": 2007,
+    "parent": 0,
+    "author_name": "Jeremy D. Miller",
+    "author_url": "http://codebetter.com/blogs/jeremy.miller",
+    "date": "2007-09-24T17:14:47",
+    "type": "comment",
+    "content_html": "<p>“It was fun until everyone joined it. Then it was just Normal.”</p>\n<p>That basically the criteria of success for our little club.  I don’t want to be the cool guy.  I wanna be the guy who has a pool of candidates that can work the way my shop wants to work.</p>"
+  },
+  {
+    "id": 2008,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-09-24T17:49:54",
+    "type": "comment",
+    "content_html": "<p>@Scott,<br>\nI shake my head in disappointment that this stuff is alternative.  This _should_ be normal, but it’s not, and that’s the problem.  I don’t really care for the name, Alt.Net, but when the message is widespread, the term will die, that’s for sure.  It will have served its purpose.</p>\n<p>I want disciplined development to BE normal.</p>"
+  },
+  {
+    "id": 2009,
+    "parent": 0,
+    "author_name": "Dave Laribee",
+    "author_url": "http://codebetter.com/blogs/david_laribee/",
+    "date": "2007-09-24T18:53:29",
+    "type": "comment",
+    "content_html": "<p>@frans – why are you always so contrarian? why?</p>\n<p>@scott – it’s alternative because it’s not mainstream. it might be mainstream in your sample which isn’t a representative one. the .net community lags behind the java community, the rails community, the agile community. if that’s going to be the case, i’m out. make things change, eh?</p>\n<p>@jeffery – the alt part isn’t what i reject it’s the .net part more like it. agile is just one dimension. why the frack do we have ws-deathstar (for example) being shoved down our throats every 10 seconds? why is microsoft’s rest story tied up in live? i know it’s hard to imagine but there will be something after agile, and something after that, and something after that. i for one am interested in riding the edge and not limiting myself. ugh.</p>"
+  },
+  {
+    "id": 2010,
+    "parent": 0,
+    "author_name": "GuyIncognito",
+    "author_url": "http://",
+    "date": "2007-09-24T19:42:25",
+    "type": "comment",
+    "content_html": "<p>Shouldn’t it be ALT.MSFT.NET, cause isn’t ALT.NET = Java, ROR, PHP, etc?</p>"
+  },
+  {
+    "id": 2011,
+    "parent": 0,
+    "author_name": "Peter {faa780ce-0f0a-4c28-81d2-3667b71287fd}",
+    "author_url": "http://www.pseale.com/blog/",
+    "date": "2007-09-24T21:47:21",
+    "type": "comment",
+    "content_html": "<p>Jeremy, I have a few things to point out:</p>\n<p>FIRST</p>\n<p>ALT.NET shouldn’t have anything to do with Agile. if they intersect somewhere (and they do), fine, but I wouldn’t make “ALT.NET : Agile”.<br>\nI will admit: there’s a lot of intersection between Agile and ALT.NET, but they’re not the same. Basically, I’m saying you should CTRL+H replace your sentence about XP, replacing “XP” with “Agile”. It’s a small change from what you’re already saying.</p>\n<p>Maybe you’re saying that the “agile principles” (lowercase a) are by definition, an integral part of ALT.NET. Fine. But acknowledge that Agile (capital A) is a political movement, and should remain separate from ALT.NET.</p>\n<p>SECOND</p>\n<p>Your bottom set of “abstract-&gt;concrete” bullet points should be further broken down. I don’t know how exactly, but put a set of…let’s say, “concrete goals” that go in between  your “abstract principles” and “concrete tasks”. This way people don’t get so mad when you say “use Resharper”–because hopefully you explain it a bit by saying:</p>\n<p>-JOY<br>\n.+-Eliminate Visual Studio frustrations<br>\n…+-Use Resharper (just one example!)<br>\n…+-or CodeRush + Refactor!</p>\n<p>I don’t have much else to say about ALT.NET itself. -Peter</p>"
+  },
+  {
+    "id": 2012,
+    "parent": 0,
+    "author_name": "ScottBellware",
+    "author_url": "http://scottic.us",
+    "date": "2007-09-25T08:56:00",
+    "type": "comment",
+    "content_html": "<p>I know of only an insignificant number of folks who are down with the alternatives who have also washed out and ended up on the shores of Lake Sammamish.</p>"
+  },
+  {
+    "id": 2013,
+    "parent": 0,
+    "author_name": "dru",
+    "author_url": "http://",
+    "date": "2007-09-25T17:40:27",
+    "type": "comment",
+    "content_html": "<p>Man, I don’t understand what the angst is all about and Frans what is up. Maybe I need to go read your blog. -d</p>"
+  },
+  {
+    "id": 2014,
+    "parent": 0,
+    "author_name": "Mike Moore",
+    "author_url": "http://blowmage.com/",
+    "date": "2007-09-25T22:21:49",
+    "type": "comment",
+    "content_html": "<p>To me, ALT.NET is “alternate” because it is designed to challenge the mainstream. I kinda like the name and I think it fits the here and now. It may not fit once the movement has “won”, but worrying about that now seems a tad premature.</p>"
+  }
+]

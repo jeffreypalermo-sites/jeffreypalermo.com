@@ -1,0 +1,56 @@
+[
+  {
+    "id": 971,
+    "parent": 0,
+    "author_name": "Ben Scheirman",
+    "author_url": "http://www.flux88.com",
+    "date": "2006-08-02T18:30:04",
+    "type": "comment",
+    "content_html": "<p>I’m so glad you posted this!  I’ve been using resharper for a few weeks now and I couldn’t sit and open the docs to learn all of this stuff.</p>"
+  },
+  {
+    "id": 972,
+    "parent": 0,
+    "author_name": "Gill Cleeren",
+    "author_url": "http://www.snowball.be",
+    "date": "2006-08-04T12:23:13",
+    "type": "comment",
+    "content_html": "<p>A very comprehensive listing you’ve got here.</p>\n<p>I posted a link on my blog too since this is very interesting reading material!</p>"
+  },
+  {
+    "id": 973,
+    "parent": 0,
+    "author_name": "Fowlbot",
+    "author_url": "http://",
+    "date": "2006-08-05T22:44:24",
+    "type": "comment",
+    "content_html": "<p>Great overview of ReSharper. I took umbrage at this statement, though:</p>\n<p>&gt;&gt;You have a new domain class with 8 fields. &nbsp;Do you really want to type those 8 boring properties and a constructor?</p>\n<p>Why automate a violation of encapsulation? No one should instantly generate accessor / mutator methods until there is no alternative, as this leads quickly to Law of Demeter violations and the Dark Side.</p>"
+  },
+  {
+    "id": 974,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-08-06T14:44:23",
+    "type": "comment",
+    "content_html": "<p>Fowlbot,<br>\nYour caution is warranted, and you would certainly take good design into account when using R# to generate chosen accessors.</p>"
+  },
+  {
+    "id": 975,
+    "parent": 0,
+    "author_name": "Ole",
+    "author_url": "http://www.sitecore.net",
+    "date": "2006-08-28T06:21:33",
+    "type": "comment",
+    "content_html": "<p>Excellent list!</p>\n<p>However, you forgot one: Smart complete.</p>\n<p>Say you have the following:</p>\n<p>XmlDocument doc = new |</p>\n<p>Press SHIFT+CTRL+SPACE to get:</p>\n<p>XmlDocument doc = new XmlDocument();</p>\n<p>It works in all sorts of places (method call parameters, assignments, enum expansions, etc.). </p>\n<p>It even understands and suggests static factory methods:</p>\n<p>int n = |</p>\n<p>Press SHIFT+CTRL+SPACE to get:</p>\n<p>int n = Int32.Parse(|);</p>\n<p>Cool stuff…</p>"
+  },
+  {
+    "id": 976,
+    "parent": 0,
+    "author_name": "Greg Smith",
+    "author_url": "http://www.utahhvacdirectory.com/",
+    "date": "2008-02-25T03:47:53",
+    "type": "comment",
+    "content_html": "<p>Interesting article!<br>\nThanks..</p>"
+  }
+]

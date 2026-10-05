@@ -1,0 +1,74 @@
+[
+  {
+    "id": 414,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://",
+    "date": "2005-08-10T23:14:43",
+    "type": "comment",
+    "content_html": "<p>Interesting. Do you know of a .NET 1.1 (pre-PreRenderComplete) equivalent?</p>\n<p>Just curious, why do you implement IRequiresSessionState?  Is that just leftover code or is that needed when the target page uses Session?</p>"
+  },
+  {
+    "id": 415,
+    "parent": 0,
+    "author_name": "Don Good",
+    "author_url": "http://",
+    "date": "2005-08-10T23:28:24",
+    "type": "comment",
+    "content_html": "<p>Another implimentation uses a HTTPHandler that inherits from IHttpHandlerFactory.</p>\n<p>public class PageFactory : IHttpHandlerFactory<br>\n{<br>\npublic IHttpHandler GetHandler(HttpContext context, string requestType, string url, string pathTranslated)<br>\n{<br>\nreturn PageParser.GetCompiledPageInstance(url, context.Server.MapPath(“~/actualPage.aspx”), context);<br>\n}<br>\n}</p>\n<p>URL ReWriting occurs before any template parsing, and also avoids “side effects”.</p>\n<p>Is there a difference in performance between the two, are there advantages of one over the other?</p>"
+  },
+  {
+    "id": 416,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-08-11T14:16:00",
+    "type": "comment",
+    "content_html": "<p>You can also use the PreRender event.  The idea is that you trim off any querystrings you used for the request before the Page is rendered, so you don’t want to tank the querystrings before Page or control code is finished with them.</p>"
+  },
+  {
+    "id": 417,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-08-11T14:17:40",
+    "type": "comment",
+    "content_html": "<p>Don,<br>\nIf you put your derived information in the Context.Items cache, then that would work just fine, but if you add those items to the querstring, which is very common, then you need a step to remove them from the querystring before rendering.</p>"
+  },
+  {
+    "id": 418,
+    "parent": 0,
+    "author_name": "Daniel F",
+    "author_url": "http://www.redgum.com.au",
+    "date": "2005-08-12T02:30:51",
+    "type": "comment",
+    "content_html": "<p>I like it, I like it a lot. Seems sneaky, but cool nonetheless.</p>"
+  },
+  {
+    "id": 419,
+    "parent": 0,
+    "author_name": "snickers",
+    "author_url": "http://",
+    "date": "2007-02-06T21:37:06",
+    "type": "comment",
+    "content_html": "<p>Wonderful!</p>"
+  },
+  {
+    "id": 420,
+    "parent": 0,
+    "author_name": "kbird",
+    "author_url": "http://",
+    "date": "2007-06-20T08:22:21",
+    "type": "comment",
+    "content_html": "<p>Great! i was searching for this solution . stumpled on your sample , which solved my problem like sweet!</p>\n<p>i was really scratching my head why context.RewritePath does not work for me , it litterelly returned blank pages for me.</p>\n<p>would like to know what’s wrong with context.RewritePath alone returns blank responses and why url rewrite needed before the page renders</p>\n<p>thanks</p>"
+  },
+  {
+    "id": 421,
+    "parent": 0,
+    "author_name": "sucharitha",
+    "author_url": "http://",
+    "date": "2007-09-27T13:34:48",
+    "type": "comment",
+    "content_html": "<p>i got a doubt regarding adding a http handler. In web.config where should i write<br>\n.</p>\n<p>and one more question regarding default handler </p>\n<p>does it saves a file which is sent by client as http request into the specified folder?</p>"
+  }
+]

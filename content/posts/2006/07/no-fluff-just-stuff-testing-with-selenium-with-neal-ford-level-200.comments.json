@@ -1,0 +1,20 @@
+[
+  {
+    "id": 947,
+    "parent": 0,
+    "author_name": "Vikas Kerni",
+    "author_url": "http://vikasnetdev.blogspot.com/",
+    "date": "2006-07-12T01:27:53",
+    "type": "comment",
+    "content_html": "<p>Hi Jeffrey,<br>\nIs Selenium’s use  different from Fit/Fitnesse  ?<br>\nAs I understand that one can use Fit/Fitnesse for integration testing and I saw you have couple of posts on Fit/Fitnesse.<br>\nThanks in advance</p>\n<p><a href=\"http://vikasnetdev.blogspot.com/2006/07/faq-fit.html\" rel=\"nofollow ugc\">http://vikasnetdev.blogspot.com/2006/07/faq-fit.html</a></p>"
+  },
+  {
+    "id": 948,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-07-12T03:18:14",
+    "type": "comment",
+    "content_html": "<p>Vikas,<br>\nYes, Selenium is different from FitNesse.  FitNesse is a generic fixture layout that can be used to run any code.</p>\n<p>Selenium is a javascript framework that runs against a browser to interact with a web application.</p>"
+  }
+]

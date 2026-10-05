@@ -1,0 +1,18 @@
+---
+wp_id: 303
+title: How to get FitNesse to switch to .Net mode – level 300
+slug: how-to-get-fitnesse-to-switch-to-net-mode-level-300
+permalink: /2005/08/how-to-get-fitnesse-to-switch-to-net-mode-level-300/
+date: 2005-08-12T17:01:00
+date_utc: 2005-08-12T17:01:00Z
+modified: 2005-08-12T17:01:00
+format: html
+tags:
+- fit
+excerpt: FitNesse is an acceptance test framework that supports Java and .Net. When you download it, it will be in Java mode, and all the sample test pages will run Java tests. It may not be completely clear how to run a new test page against a .Net assembly instead of a Java package. When you […]
+comments_open: true
+---
+<p><a href="http://fitnesse.org">FitNesse </a>is an acceptance test framework that supports Java and .Net.&nbsp; When you download it, it will be in Java mode, and all the sample test pages will run Java tests.&nbsp; It may not be completely clear how to run a new test page against a .Net assembly instead of a Java package.&nbsp; When you create a new page, add the following:</p>
+<p>!define COMMAND_PATTERN {%m %p}<br>!define TEST_RUNNER {dotnetFitServer.exe}<br>!define PATH_SEPARATOR {;}<br>!path dotnetfit.dll<br>!path dotnet*.dll</p>
+<p>|eg.Calculator|<br>|points?|<br>|false&nbsp; |</p>
+<p>This will run the included Calculator fixture in eg.dll that is included with the download, so you don’t have to write any code yourself.&nbsp; Note that the FitNesse web server is a Java wiki, so you’ll need the <a href="http://java.sun.com/j2se/1.5.0/download.jsp">JRE from sun</a>.&nbsp;</p>

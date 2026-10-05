@@ -1,0 +1,110 @@
+[
+  {
+    "id": 2421,
+    "parent": 0,
+    "author_name": "Marlun",
+    "author_url": "http://",
+    "date": "2008-03-28T15:27:00",
+    "type": "comment",
+    "content_html": "<p>Interesting post. I’ve just become project leader in a school project (9 members). We are having daily meetings where we sit around a table and everyone answers those three questions. Our meetings takes about 30min often because someone is wondering about something that he is going to work on. If someone has something he wants to discuss but only a part of the group is concerned I try to end the meeting keeping only the ones concerned and then discuss it.</p>\n<p>Looking forward to the next posts \uD83D\uDE42</p>"
+  },
+  {
+    "id": 2422,
+    "parent": 0,
+    "author_name": "Neil",
+    "author_url": "http://",
+    "date": "2008-03-28T19:26:17",
+    "type": "comment",
+    "content_html": "<p>We have daily meetings and I always think why do I care what everyone did yesterday and are going to do today?  It always goes over ten minutes no matter how hard we try.<br>\nIf someone is spending a week on an issue then the team leader should pick that up and get help from other members of the team.</p>"
+  },
+  {
+    "id": 2423,
+    "parent": 0,
+    "author_name": "James",
+    "author_url": "http://jameslikesbeer.blogspot.com",
+    "date": "2008-03-28T20:34:56",
+    "type": "comment",
+    "content_html": "<p>My wife, an accountant and manager of a small group, just told me yesterday that she instituted stand-ups in her new job. I was blown away!  first, that she had actually been listening to me when I talk about work, but also to here her rave about how useful they were in a non-software situation [I only ever hear them talked about in development circles].<br>\nShe loved how it was quick, didn’t require booking a meeting room, didn’t take people too far away from their desks (phones ring and *need* to be answered in her team) and let her easily and effectively broadcast what needed communicating. I think she use some perfecting of how she implemented it, as they aren’t daily, and the entire team is not yet fully buying in. But it takes a while for teams to norm and buy into the concept, and see the value. But it’s started.<br>\nImagine that!</p>"
+  },
+  {
+    "id": 2424,
+    "parent": 0,
+    "author_name": "Troy Gould",
+    "author_url": "http://tgould.blogspot.com",
+    "date": "2008-03-28T20:45:56",
+    "type": "comment",
+    "content_html": "<p>Daily Standup anti-pattern:  “Having a piece of a boring status meeting every day instead of once a week.”</p>\n<p>Make sure that everyone is getting something useful from the daily stand-up.  Don’t let it become so routine that people are going through the motions.</p>\n<p>More useful is that the information gathered in the meeting is followed up by someone.  I’ve seen the following happen over and over in stand-ups.  Someone reports: “I was working on x yesterday.  I should be done with it today.  No issues or roadblocks to report.”  Next day, they say the same exact thing.  There is a stand-up anti-pattern.  Obviously there is an issue, but the person either doesn’t know it, is afraid to say that their original estimate is wrong, or something else is going on.  Leaders of the project must recognize this type of behavior, or the stand-up becomes a useless meeting.  </p>"
+  },
+  {
+    "id": 2425,
+    "parent": 0,
+    "author_name": "Tommy Gunn",
+    "author_url": "http://",
+    "date": "2008-03-28T21:11:17",
+    "type": "comment",
+    "content_html": "<p>The 10 minute stand  up meetings sound good in ‘theory’  but as another poster said, THEY RARELY LAST 10 MINUTES.   Usually someone brings up a point, which in turns leads to another point, which in turn leads to another point and so on and so forth.  By the time it is all said and done the ’10 minute’ meeting ends up being 45 minutes (if we are lucky!).  </p>\n<p>Also, why should everyone know what everyone else is doing every single day?  What is the value in that exactly?  If we are working on a car and I am working on the transmission  and you are working on the engine, how is it going to help me finish my transmission work faster by you telling me that today you are going to install the pistons and that tomorrow you are going to install the cam shaft and then the next day you are going to work on the timing etc, etc?  In my humble opinion, these communist type excercises designed to get everyone involved on EVERY SINGLE decision and problem aren’t going to work.  Software development by committee is a waste of time.</p>"
+  },
+  {
+    "id": 2426,
+    "parent": 0,
+    "author_name": "Chris Tavares",
+    "author_url": "http://www.tavaresstudios.com",
+    "date": "2008-03-30T02:47:30",
+    "type": "comment",
+    "content_html": "<p>This is what the coach is for. There needs to be a coach/scrum master/somebody in the standup that’s watching for the digressions, and kills them. Or, more specificially, to say “That’s interesting and important. Let’s get the standup finished and we’ll talk about it afterwards.”</p>\n<p>We’re very aggressive (that’s probably the wrong word, but it’s the best I can come up with right now) about this. It keeps the global part of the meeting, where everyone should be there, short. We always have a segment after the stand-up with “discussion items”, and anyone not interested or involved in the discussion can go back to work.</p>\n<p>Our standups on Entlib run 10 or fewer minutes with a 10 person team. Discussions will run longer if needed, but the whole team isn’t involved in them.</p>\n<p>As for “The three questions are communism” the reason is not to get everyone involved in every decision. It’s so everyone has a general feeling for the status of the project. I don’t care that you’re putting in the pistons, but I darn sure do care that you’re connecting to the clutch today, and I’m not ready for anything to be connected to the clutch.</p>"
+  },
+  {
+    "id": 2427,
+    "parent": 0,
+    "author_name": "Shaneo",
+    "author_url": "http://www.shaneo.ca",
+    "date": "2008-03-30T12:47:21",
+    "type": "comment",
+    "content_html": "<p>I echo what Chris says. A coach/stand-up leader/master whatever you want to call it needs to be present and keep the stand-up lean and on track. Defer those digressions to a follow up meeting between those two individuals if it is warranted, and avoid idle chit-chat altogether as it has no place in the stand up. </p>\n<p>The purpose of a stand-up is to get everyone focused to the task at hand at the beginning of the day and make sure all team members are aware of whats going on in the project.</p>"
+  },
+  {
+    "id": 2428,
+    "parent": 0,
+    "author_name": "Donn Felker",
+    "author_url": "http://blog.donnfelker.com",
+    "date": "2008-03-31T18:07:31",
+    "type": "comment",
+    "content_html": "<p>100% agree with Troy’s statement above. Nothing will kill the spirit of the scrum if the daily stand up turns into a daily status meeting. </p>"
+  },
+  {
+    "id": 2429,
+    "parent": 0,
+    "author_name": "Ilja Preuss",
+    "author_url": "http://radio.javaranch.com/ilja",
+    "date": "2008-04-01T16:44:19",
+    "type": "comment",
+    "content_html": "<p>“Software development by committee is a waste of time.” </p>\n<p>It’s not called committee, it’s called team. It sounds like you are not on what I would call a team – which is fine, but also explains why you don’t get value from daily stand ups.</p>\n<p>As an aside, you might want to take a look at how Toyota builds cars.</p>"
+  },
+  {
+    "id": 2430,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-04-01T19:26:52",
+    "type": "comment",
+    "content_html": "<p>The daily stand-up meeting is short.  That’s why we stand.  Once the 3 agenda items are through, the meeting is finished.  The whole team is responsible for keeping the meeting on track.  I’ve seen it yield returns immediately upon adoption.</p>"
+  },
+  {
+    "id": 2431,
+    "parent": 0,
+    "author_name": "Fervent Coder",
+    "author_url": "http://ferventcoder.com",
+    "date": "2008-04-06T20:47:02",
+    "type": "comment",
+    "content_html": "<p>Weighing in with a good here.  With practice (and a rotating stand up cop) you can get your meetings under 15 minutes.  We have about 11 people who attend our standup (at least 7 talk) and we can finish our standup in 5 minutes or less.</p>"
+  },
+  {
+    "id": 2432,
+    "parent": 0,
+    "author_name": "Prasanna Prabhu",
+    "author_url": "http://",
+    "date": "2008-04-20T16:23:28",
+    "type": "comment",
+    "content_html": "<p>Preferably bring an outsider (member outside of the Project/Product team, who is Smart + Mature + Team Player) as a Scrum Master to your team, who has no skin in the game, but can help the team in maturing &amp; explaining them what value they bring insted of quoting “What they should not do”. GOOD Education will eliminate lots of un-wanted things &amp; boost the morale. I have done this so many times &amp; proved the success of the team in multiple projects. </p>\n<p>Most important thing, watch out for those impediments raised by team (ir-respective of its size &amp; importance), if possible GET THEM SOLVED ASAP, that boosts morale of the team &amp; builds confidence + trust.</p>\n<p>10-15 minutes is defenitely worth the investment. </p>\n<p>Thanks<br>\nPrasanna<br>\n<a href=\"mailto:pprabhu@SolutionsIQ.com\">pprabhu@SolutionsIQ.com</a></p>"
+  }
+]

@@ -1,0 +1,29 @@
+[
+  {
+    "id": 347,
+    "parent": 0,
+    "author_name": "Steve Lamb's Blog<br><br><br>&lt",
+    "author_url": "http://",
+    "date": "2005-06-10T10:34:00",
+    "type": "comment",
+    "content_html": "<p>Jeffery Palermo has posted a nice summary of the myths Steve and Jesper dispelled @ TechEd USA. Like…</p>"
+  },
+  {
+    "id": 348,
+    "parent": 0,
+    "author_name": "Patrick Hynds",
+    "author_url": "http://www.patrickhynds.com",
+    "date": "2005-08-12T14:41:10",
+    "type": "comment",
+    "content_html": "<p>While I understand that Steve and Jesper are trying to get people to address real security issues, I think to dismiss obscurity as a measure is not the best tenet.  When I served in the Infantry in Iraq we did not depend on secrecy (obscurity) to protect us, but we also did our best to deny information to the enemy to force mistakes on their part.  There is a place in a layered defense for measures such as administrator rename, but you have to know what it will and won’t get you.</p>\n<p>I have a copy of Steve and Jesper’s book, “Protect your Windows Network” on my desk and it is a must read!  Just don’t abandon denying information to the bad guys once you implement real security.</p>"
+  },
+  {
+    "id": 349,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-08-12T19:09:58",
+    "type": "comment",
+    "content_html": "<p>Patrick, I have to agree with you.  I also spent a year in Iraq in 2003-04.  From my hearing, they didn’t say “make everything obvious”, but they criticized people who depended on it for everything.</p>"
+  }
+]

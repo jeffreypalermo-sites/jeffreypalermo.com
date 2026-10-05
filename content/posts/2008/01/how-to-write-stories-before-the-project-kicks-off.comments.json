@@ -1,0 +1,47 @@
+[
+  {
+    "id": 2258,
+    "parent": 0,
+    "author_name": "Eleasar",
+    "author_url": "http://",
+    "date": "2008-01-24T16:06:40",
+    "type": "comment",
+    "content_html": "<p>Hi,<br>\nwhat I always wonder is: how do you charge the customer for the project? I also love the approach to do iterative development, show the customer many releases, let the customer decide in which direction the project should go at every iteration. </p>\n<p>But the biggest problem is, that you can’t tell what the project will cost the customer. Do you simply charge by hours/person days? Then it is no probleme to often change to whatever the customer wants, do many iterations. But the customer has no clue what the project will cost him. </p>\n<p>Or do you have some nice way to convience the customer to accept the iterative approach (which i believe is the best for the customer) but he will not know what it will cost him – and many companies want fixed priced contracts which i think is not possible to do in an iterative approach because the customer can always change his minds (which is good) but will cause costs. So have always change requests for every iteration is not making a customer happy (nor the developer/dev leads/project mangers).</p>"
+  },
+  {
+    "id": 2259,
+    "parent": 0,
+    "author_name": "ScottBellware",
+    "author_url": "http://scottic.us",
+    "date": "2008-01-24T22:09:59",
+    "type": "comment",
+    "content_html": "<p>Jeff,</p>\n<p>The essential goal isn’t to “have a place to enter maps and driving directions”, it’s, “to enter maps and driving directions”.  The later is a more direct reflection of the behavior.  All user stories can be written with some variation of “to have a…”  For a great number of user stories in an analysis, you could use a dumb piece of software to clip that happy talk and end up with a story that’s truer to the user’s primary intentions.  The “want to have…” stuff is a secondary intention and is implied by the fact that you’re writing software or creating some tool to address the primary intention.  Peel the onion until you get down to the essence of the user’s wants.  There are inevitably layers of happy talk that could surround the core of a story, and the sum of happy talk in an analysis inevitably leads to a degree of blur in the focus of the project and reduces the likelihood of satisfying the needs with the precision and accuracy that facilitates the next round of efforts.</p>"
+  },
+  {
+    "id": 2260,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-27T18:44:24",
+    "type": "comment",
+    "content_html": "<p>@Eleaser,<br>\nYou are correct in that you can’t tell the customer what it will cost.  You can only estimate the cost.  The customer also can’t tell you what the software needs to do.  The customer can only share the business driver for wanting to create the software.  Software consulting is as much a business partnership as anything else.  We must embrace the client’s vision and together determine the scope, timeline, and budget to get there.</p>\n<p>History has shown us that up-front attempts to define scope are not effective.</p>"
+  },
+  {
+    "id": 2261,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-27T18:44:53",
+    "type": "comment",
+    "content_html": "<p>@Scott,<br>\nThanks for the better wording of the story.  </p>"
+  },
+  {
+    "id": 2262,
+    "parent": 0,
+    "author_name": "Olaf Teichmann",
+    "author_url": "http://olafteichmann.blogspot.com/",
+    "date": "2008-01-28T11:39:42",
+    "type": "comment",
+    "content_html": "<p>@Eleasar and Jeffrey,</p>\n<p>Jeff is right, most customers won’t be able to imagine results prior to the end of the project. What I don’t completely agree with is that “they can’t tell you what the software needs to do”. In my experience, customers even rush forward too much in the first meetings describing where buttons had to go and which attribute fields they needed. This leads to a risk in agile development: going with the customer flow, defining stories and buttons together whithout understanding the underlying problem. A lack of sufficient conception has always been one of the leading factors of flawed IT projects, and the agile way might seduce you to take the shortcut where you should have stayed on the road.</p>\n<p>Eleasar addressed another essential problem that I still have with agile development. While I disagree that “you can’t tell the customer what the project will cost”, because scope is moving not budget :-), I absolutely agree that customers are not happy to accept that the contractor may not beld held accountable for a defined result, especially when customer regulations command a fixed price contract. This might get less important with growing trust, but it surely is an issue with new customer relationships.</p>"
+  }
+]

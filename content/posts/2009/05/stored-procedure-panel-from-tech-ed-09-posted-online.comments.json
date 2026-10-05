@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2589,
+    "parent": 0,
+    "author_name": "Karthik Hariharan",
+    "author_url": "http://webgambit.com",
+    "date": "2009-05-17T20:57:59",
+    "type": "comment",
+    "content_html": "<p>Nearly everyone on the panel with the exception of Eric and Jeff seemed to be focused on one particular area of expertise – SQL Server. So their bias is expected.  Jeff and Eric did as well as they could to inject their opinion without starting too many useless arguments.  None of the people in the panel could be convinced that stored procedures are not maintainable. They all seem to accept the maintenance headache as a necessary evil to maintain the 5% performance benefit they provide.</p>"
+  }
+]

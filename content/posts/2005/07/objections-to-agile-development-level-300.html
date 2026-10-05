@@ -1,0 +1,24 @@
+---
+wp_id: 288
+title: Objections to Agile development – level 300
+slug: objections-to-agile-development-level-300
+permalink: /2005/07/objections-to-agile-development-level-300/
+date: 2005-07-26T10:46:00
+date_utc: 2005-07-26T10:46:00Z
+modified: 2005-07-26T10:46:00
+format: html
+excerpt: 'Whether you love or hate Agile development methodologies, you need to read a whitepaper by Jim Highsmith entitled “Objections to Agile Development”. Jim addresses objections that stakeholders make to Agile development. The categories are: Buyer reality Bad or no design Doesn’t work with our business partners No documentation For each of the objections above, Jim […]'
+comments_open: true
+---
+<p>Whether you love or hate <a href="http://agilemanifesto.org/">Agile development methodologies</a>, you need to read a <a href="http://www.cutter.com/research/freestuff/AgileObjections.pdf">whitepaper by Jim Highsmith entitled “Objections to Agile Development”.&nbsp; </a></p>
+<p>Jim addresses objections that stakeholders make to Agile development.&nbsp; The categories are:</p>
+<ul><br>
+<li>Buyer reality</li><br>
+<li>Bad or no design</li><br>
+<li>Doesn’t work with our business partners</li><br>
+<li>No documentation</li></ul>
+<p>For each of the objections above, Jim does a fine job of explaining why these objections are unfounded.&nbsp; I’ll address the “no documentation” bullet from my own experience, but please read the whitepaper as well.&nbsp; I’ve battled <a href="/blogs/jeffrey.palermo/archive/2005/04/26/71442.aspx">many objections to Agile at a previous job.</a></p>
+<p>If you’ve ever created design documentation (UML diagram, etc), you know that it is out of date as soon as it’s printed.&nbsp; Developers make design decisions throughout the coding process (<a href="/blogs/jeffrey.palermo/archive/2005/04/05/128605.aspx">Coding is design</a>, and <a href="http://www.bleading-edge.com/Publications/C++Journal/Cpjour2.htm">Jack Reeves take</a>).&nbsp; It takes a lot of time to keep a design document current, and it just never happens.&nbsp; Design documents get created; they are shown to management; they look pretty, and they are plain wrong.&nbsp; They never describe the actual structure of the system.&nbsp; A manager may like them, but they are looking at a picture, not the actual system.&nbsp; The actual system ends up structured in a different way, but the manager doesn’t know.&nbsp; The manager isn’t reading the code.&nbsp; The manager goes on in ignorant bliss with a picture of something that doesn’t exist.&nbsp; Arguements can be made about how the process is “supposed” to work, but there’s also reality.</p>
+<p>The time for documentation is when the project is finished, and it’s time for it to be mothballed.&nbsp; This is when documentation should be created for maintainers who may come later.&nbsp; The system has stopped changing and is actually in a state where it can be documented.&nbsp; This is maintenance documentation.</p>
+<p>Throughout the project, the code and tests should be the documentation for the code.&nbsp; This is the only thing that is guaranteed to remain current.&nbsp; Developers should be able to look at the structure of the system in the IDE and understand it.&nbsp; The whole solution layout also has documentation qualities.</p>
+<p>I’d be interested in finding out if anyone has created a design document before the system was created where the document actually stayed current and meaningful.</p>

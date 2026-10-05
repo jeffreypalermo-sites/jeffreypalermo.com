@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1429,
+    "parent": 0,
+    "author_name": "johnpapa",
+    "author_url": "http://codebetter.com/blogs/john.papa",
+    "date": "2007-03-03T04:44:02",
+    "type": "comment",
+    "content_html": "<p>How sweet it is!</p>"
+  },
+  {
+    "id": 1430,
+    "parent": 0,
+    "author_name": "Scott Dukes",
+    "author_url": "http://dotnet.org.za/scott",
+    "date": "2007-03-05T05:02:06",
+    "type": "comment",
+    "content_html": "<p>Steps 2 &amp; 3 can be replaced with a single ALT-F (ReSharper conveniently fills in the file name based on the class – awesome isn’t it!).</p>"
+  },
+  {
+    "id": 1431,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-05T12:20:49",
+    "type": "comment",
+    "content_html": "<p>Scott,<br>\nGreat! I learn a new shortcut every day!!</p>"
+  },
+  {
+    "id": 1432,
+    "parent": 0,
+    "author_name": "jmiller",
+    "author_url": "http://codebetter.com/blogs/jeremy.miller",
+    "date": "2007-03-05T12:41:38",
+    "type": "comment",
+    "content_html": "<p>What would I do without an automated refactoring tool?</p>\n<p>— The correct answer is “have to do much more upfront design because change would be more expensive”</p>"
+  }
+]

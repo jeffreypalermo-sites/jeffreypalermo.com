@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2554,
+    "parent": 0,
+    "author_name": "Richard",
+    "author_url": "http://",
+    "date": "2009-08-11T01:03:14",
+    "type": "comment",
+    "content_html": "<p>Joel doesn’t sound like he really gets it. He’s always been on the pragmatic side of pragmatic vs. idealistic but that causes him to discount a lot of great stuff because he’s too busy shooting from the hip. Sometimes that causes him to change his mind.<br>\nI’ve used SOLID on tiny programs, but in a way that made them fantastic to extend. I don’t think Joel gets it.<br>\nThere are differences between principles and rules. Even the SOLID principles themselves have to be chosen between. There’s a difference between not getting them, and not using them for a given problem. See 3.2: <a href=\"http://www.canonical.org/~kragen/tao-of-programming.html#book3\" rel=\"nofollow\">http://www.canonical.org/…/tao-of-programm</a> </p>"
+  }
+]

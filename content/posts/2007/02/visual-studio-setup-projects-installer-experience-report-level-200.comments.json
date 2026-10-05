@@ -1,0 +1,155 @@
+[
+  {
+    "id": 1159,
+    "parent": 0,
+    "author_name": "Tomas Restrepo",
+    "author_url": "http://www.winterdom.com/weblog/",
+    "date": "2007-02-13T14:34:35",
+    "type": "comment",
+    "content_html": "<p>You might also want to keep an eye out for Wix. I used it in one of my last projects, and while the learning curve is a bit steep, it’s definitely worth it. It’s of course fully scriptable and you do get access to most of what MSI offers in the first place. The only stuff I ran into a bit of trouble was running .net custom actions, though it’s perfectly possible but documentation wasn’t as clear on how to do it.</p>\n<p>One issue I definitely have with the VS deployment projects is that they’re very slow to build (incredibly so, in fact) and keeping them in source control is an exercise in frustration, as just opening the solution will cause changes in your deployment project file, making trying to track meaningful changes to it very annoying.</p>"
+  },
+  {
+    "id": 1160,
+    "parent": 0,
+    "author_name": "ben reichelt",
+    "author_url": "http://benreichelt.net/",
+    "date": "2007-02-13T15:15:18",
+    "type": "comment",
+    "content_html": "<p>I have to agree with Tomas about Wix. Its an xml file similar to nant, so you can add it as part of your CI build process. Along with building your code you also get an installer to nicely package the build, if need be. It also becomes part of your tests as well, because you can test the installer with each build.</p>\n<p>The added benefit is that you don’t have another VS project in your solution to bog down VS, instead you can just add the build file as a solution item, which is much easier to manage.</p>"
+  },
+  {
+    "id": 1161,
+    "parent": 0,
+    "author_name": "Nick Parker",
+    "author_url": "http://www.developernotes.com",
+    "date": "2007-02-13T15:27:45",
+    "type": "comment",
+    "content_html": "<p>Not to sound like a broken record, but WiX is definiately the way to go, you can even decompile your .msi using dark.exe to generate the WiX source files.  That will help get you going if you have an initial .msi setup.</p>"
+  },
+  {
+    "id": 1162,
+    "parent": 0,
+    "author_name": "Carlton",
+    "author_url": "http://",
+    "date": "2007-02-13T15:40:28",
+    "type": "comment",
+    "content_html": "<p>Why not InnoSetup?</p>"
+  },
+  {
+    "id": 1163,
+    "parent": 0,
+    "author_name": "Frans Bouma",
+    "author_url": "http://weblogs.asp.net/fbouma",
+    "date": "2007-02-13T15:48:13",
+    "type": "comment",
+    "content_html": "<p>Actually, we’ll be moving from vs.net installer project to NSIS soon. The VS.NET installer project is a big pain. Especially when your installer is pretty big and has a lot of dlls which have dependencies for example, the installer takes AGES when you remove or add an element. Not at first, but after a couple of load/saves, it’s hell. </p>\n<p>Build is also INCREDIBLY slow, so we’ll move away from it. NSIS is easy to understand, and extensible so we’ll go with that. </p>\n<p>You can also go with WiX. Though how to get started? -&gt;<br>\nFirst create an installer project with the vs.net installer crappy, then DEcompile it with the decompile tool of WiX into a wix project. Viola \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1164,
+    "parent": 0,
+    "author_name": "Anonymous",
+    "author_url": "http://",
+    "date": "2007-02-13T19:40:41",
+    "type": "comment",
+    "content_html": "<p>+1 for WiX, and I actually worked on the Visual Studio Installer project at Microsoft!</p>\n<p>(Ok, it’s not THAT bad a codebase – it’s actually pretty good, but it _is_ an integral part of Visual Studio and thus for the purposes of a build server, it doesn’t really fit.  It *does* have a COM API, however, so it can indeed be scripted/automated.)</p>"
+  },
+  {
+    "id": 1165,
+    "parent": 0,
+    "author_name": "paul.laudeman",
+    "author_url": "http://",
+    "date": "2007-02-13T21:42:48",
+    "type": "comment",
+    "content_html": "<p>WiX has worked out really well for our team in our automated build environment. I’d definitely recommend checking it out to see if will meet your needs. </p>"
+  },
+  {
+    "id": 1166,
+    "parent": 0,
+    "author_name": "Joey Beninghove",
+    "author_url": "http://joeydotnet.com/blog",
+    "date": "2007-02-14T00:12:27",
+    "type": "comment",
+    "content_html": "<p>Yep, my fellow co-worker Paul, is right.  We’ve been able to nicely integrated Wix installers into our automated build environments (using CCNet for continuous as well as daily and weekly builds).  </p>\n<p>Wix does however have a learning curve.  But you can get something simple up and running pretty quickly.  Also, SharpDevelop has some great support for creating Wix installers, including a forms designer!</p>"
+  },
+  {
+    "id": 1167,
+    "parent": 0,
+    "author_name": "Ardie",
+    "author_url": "http://",
+    "date": "2007-02-14T00:56:58",
+    "type": "comment",
+    "content_html": "<p>My company experimented with wix and we’re slowly moving away from it. Its overly complex, requires many moving parts and lacks documentation. I’m actually testing NSIS right now and i’m very happy with it so far. </p>\n<p>Its not perfect and there’s some features i wish they included (such as built in rollbacks, easier custom functions) but it has a ton of other features that make it worth while. That and they have great documentation, an active community behind it and its straight forward scripting so the learning curve is not bad.</p>"
+  },
+  {
+    "id": 1168,
+    "parent": 0,
+    "author_name": "Joey Beninghove",
+    "author_url": "http://joeydotnet.com/blog",
+    "date": "2007-02-14T02:39:15",
+    "type": "comment",
+    "content_html": "<p>There is quite a bit of WiX documentation here: <a href=\"http://www.tramontana.co.hu/wix/index.php\" rel=\"nofollow ugc\">http://www.tramontana.co.hu/wix/index.php</a></p>\n<p>That, along with SharpDevelop, is what helped me get ramped up on WiX.  I was pretty easily able to write some templated WiX scripts (for Dev/Test/QA environments) which includes installers for windows clients and windows services.</p>\n<p>Although now I’m using ClickOnce for all of our windows client deployments for its ease of updates.  I was able to completely automate the generation of the manifests and integrate those into our build process as well.</p>\n<p>Also, I have my eye on the ClickThrough project for WiX, which will use RSS feeds to push out application updates, which I think is pretty ingenious.<br>\n<a href=\"http://wix.sourceforge.net/clickthrough.html\" rel=\"nofollow ugc\">http://wix.sourceforge.net/clickthrough.html</a></p>"
+  },
+  {
+    "id": 1169,
+    "parent": 0,
+    "author_name": "John Rayner",
+    "author_url": "http://blogs.conchango.com/johnrayner",
+    "date": "2007-02-14T12:18:56",
+    "type": "comment",
+    "content_html": "<p>Another vote for WiX.  The version 3 file format is fully MSBuild-compatible, which is means it’s easy to include in any automated build process.</p>"
+  },
+  {
+    "id": 1170,
+    "parent": 0,
+    "author_name": "Jacob",
+    "author_url": "http://",
+    "date": "2007-03-20T17:44:53",
+    "type": "comment",
+    "content_html": "<p>Another vote against WIX and in favor of NSIS. WIX sounded like a great idea at first, but we found that it’s like a lot of things from Microsoft: easy to do the 80% that most people need, but you better pray you’re not in the camp that needs the other 20% because extending it adds mind-numbing complexity to your WIX and build scripts. NSIS on the other hand takes a little more work to get started because it uses its own scripting language, but it really isn’t that complicated, and it’s easier to extend than WIX will ever be.</p>\n<p>It took 2 developers and several months of full-time development to create (what should have been) some relatively simple custom UI pages and logic for our WIX installers. Bringing new team members up to speed on the whole WIX structure and build process for the installers was an enormous hassle. By contrast, 1 developer developed the same custom logic and UIs (plus some additional) in about 2-3 weeks, and the resulting installer scripts are so much simpler that it just makes you want to cry.</p>\n<p>Chalk one up for creating a real scripting language instead of trying to beat XML into some kind of sick, pseudo-declarative scripting language. (XML should not be for human consumption!)</p>\n<p>Some additional points:<br>\n* NSIS is a very mature installer platform that has been around for years.<br>\n* It’s used by countless projects, including some very big names, and has a massive community around it.<br>\n* The installer UI is easily customized (much more so than WIX), and there is even a UI designer plugin for Eclipse.</p>"
+  },
+  {
+    "id": 1171,
+    "parent": 0,
+    "author_name": "Nitin",
+    "author_url": "http://",
+    "date": "2007-03-22T08:49:32",
+    "type": "comment",
+    "content_html": "<p>I too have swtiched from VS setup to Wix, I am trying to package an excel addin.<br>\nVS is easily able to package all the requirements and invoke C# custom actions, but it is not flexible in terms of the UI it shows.</p>\n<p>Wix is gr8, I have customized the UI as I need, however I has been pain in my a$$ trying to get my C# custom actions running – I used the same C# dll i used for VS setup and I am able to run the Install custom action but not the uninstall custom action.<br>\nIt seems uninstall is invoked during installation itself. I am invoking uninstall Custom action after MsiUnpublishAssemblies.</p>\n<p>I am trying to reverse enginner the VS setup MSI using dark.exe from wix.</p>\n<p>Any help with my problem will be appreciated.</p>"
+  },
+  {
+    "id": 1172,
+    "parent": 0,
+    "author_name": "beep",
+    "author_url": "http://",
+    "date": "2007-04-24T02:56:00",
+    "type": "comment",
+    "content_html": "<p>Wow, most of the NSI people here have I think, missed the point.</p>\n<p>WIX allows you to create an MSI that IS INSTALLABLE AND UPGRADEABLE BY GROUP POLICY.</p>\n<p>I manage lots and lots of machines. I don’t do manual installs</p>"
+  },
+  {
+    "id": 1173,
+    "parent": 0,
+    "author_name": "Christopher Painter",
+    "author_url": "http://blog.deploymentengineering.com",
+    "date": "2007-05-05T02:48:18",
+    "type": "comment",
+    "content_html": "<p>Jefffrey- </p>\n<p> I was checking out your blog since I’ll be seeing you at ADNUG Code Camp 2007 tommorrow.  My vote is 100% in the InstallShield camp and if we get a chance to talk about it, I can tell you why in great detail. </p>"
+  },
+  {
+    "id": 1174,
+    "parent": 0,
+    "author_name": "Rubberduck",
+    "author_url": "http://",
+    "date": "2007-09-06T23:47:04",
+    "type": "comment",
+    "content_html": "<p>to Beep: NSIS is capable of silent installation. Just as with WIX/installshield, you can go the extra mile with NSIS to create an installer that will support silent install by pull parameters off the command line, or reading them from a config file.</p>\n<p>Products as varied as the ATI Display Driver, OpenOffice, Firefox, Google Picasa, VLC Media Player, Flash Player, Yahoo Toolbar, etc use NSIS. nsis.sourceforge.net/Users goes into more detail.</p>"
+  },
+  {
+    "id": 1175,
+    "parent": 0,
+    "author_name": "JDee",
+    "author_url": "http://",
+    "date": "2007-09-25T23:11:09",
+    "type": "comment",
+    "content_html": "<p>I like to have my installer project inside my solution in VS IDE. It’s easier to manage my code in one place and keep it controlled with version control system.</p>\n<p>I have used Setup Projects and have tried also Votive which is WiX toolset integration for Visual Studio. But I had some troubles with installing my apps on Vista with MSI installers. So I’m looking for good alternative now.</p>\n<p>I’m currently participating in beta-testing program for Lexpa – <a href=\"http://www.lexpa.com\" rel=\"nofollow ugc\">http://www.lexpa.com</a>. That is Visual Studio add-in for Inno Setup. Looks very promising. </p>\n<p>Is there something similar for NSIS, other non-MSI installers?</p>"
+  }
+]

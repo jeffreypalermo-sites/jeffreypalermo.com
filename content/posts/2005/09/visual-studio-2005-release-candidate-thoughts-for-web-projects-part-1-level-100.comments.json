@@ -1,0 +1,29 @@
+[
+  {
+    "id": 486,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://flimflan.com/blog",
+    "date": "2005-09-23T00:17:23",
+    "type": "comment",
+    "content_html": "<p>The renaming thing is kinda weird.</p>\n<p>According to ScottGu, you can exclude a folder (or files) by setting the Hidden attribute. Not perfect, but much more bearable than the rename.</p>\n<p>There is also the trick with the IgnoreFileHandler for excluding files by extension, which can be helpful in some situations.</p>"
+  },
+  {
+    "id": 487,
+    "parent": 0,
+    "author_name": "Paul Welter",
+    "author_url": "http://www.loresoft.com",
+    "date": "2005-10-02T14:42:31",
+    "type": "comment",
+    "content_html": "<p>You can also exclude files by changing there attribute to hidden.  You can exclude folders in this way as well.  The ide should do this instead of rename in my opinion.  </p>\n<p>~ Paul</p>"
+  },
+  {
+    "id": 488,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-05T15:25:24",
+    "type": "comment",
+    "content_html": "<p>Renaming a bunch of files just to exclude them isn’t an option in the real world.  I’ll have to try out that hidden attribute.  But then, it affects the file system.   Why does it have to be this hard?</p>"
+  }
+]

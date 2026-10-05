@@ -1,0 +1,11 @@
+[
+  {
+    "id": 126,
+    "parent": 0,
+    "author_name": "vank",
+    "author_url": "http://",
+    "date": "2004-08-17T14:21:00",
+    "type": "comment",
+    "content_html": "<p>We’ve been investigating this and the prognosis looks good. It looks like we’re doing about twice as much work as we should be doing.<br>\nDo you mean that it waits 10 seconds before announcing that it’s begun, or it waits ten seconds until there’s any disk or CPU activity? There are two different, real problems. First, the Output window seems to only be updated during idle time, so even though we post the starting announcement right away, since we get busy building there isn’t any idle time for a while.  This is fixable.  Secondly, we wait for any pending Build Manager AppDomain resets before starting; this could potentially be waiting for ten seconds and we plan to eliminate this.<br>\nWe don’t have our perf goals set for this one test case yet, but we’ve got sample timings of 48 seconds while the command line build on the same machine takes 14 seconds, and our objective is to approach the command line time. We just don’t know how close we can approach it yet.</p>"
+  }
+]

@@ -1,0 +1,20 @@
+---
+wp_id: 130
+title: Abstracting from ASP.NET pages – level 300
+slug: abstracting-from-asp-net-pages-level-300
+permalink: /2004/11/abstracting-from-asp-net-pages-level-300/
+date: 2004-11-03T17:05:00
+date_utc: 2004-11-03T17:05:00Z
+modified: 2004-11-03T17:05:00
+format: html
+excerpt: Some of the common things we do in ASP.NET v1.1 is set configuration information explicitly to our aspx’s. We set the title, the template we are using, the theme (maybe css), the navigation (links), the roles that are allowed access to our page, maybe some custom information for that page, and then think of some […]
+comments_open: true
+---
+<p>Some of the common things we do in ASP.NET v1.1 is set configuration information explicitly to our aspx’s.&nbsp; We set the title, the template we are using, the theme (maybe css), the navigation (links), the roles that are allowed access to our page, maybe some custom information for that page, and then think of some other information you “hard-code” in your page.&nbsp; To abstract this away and make my pages more configurable without changing code, I’ve developed an interface that my base page class implements.&nbsp; The definition of the interface is as follows:</p>
+<p>&nbsp;public interface IPageConfig<br>&nbsp;{<br>&nbsp;&nbsp;string this[string sKey]{get;set;}<br>&nbsp;&nbsp;string Title{get;set;}<br>&nbsp;&nbsp;string VirtualPath{get;set;}<br>&nbsp;&nbsp;string Template{get;set;}<br>&nbsp;&nbsp;string Theme{get;set;}<br>&nbsp;&nbsp;string[] Roles{get;set;}</p>
+<p>&nbsp;&nbsp;bool IsRoot{get;}<br>&nbsp;&nbsp;IPageConfig Parent{get;}<br>&nbsp;&nbsp;IPageConfig[] Siblings{get;}<br>&nbsp;&nbsp;IPageConfig[] Children{get;}<br>&nbsp;&nbsp;string[] ChildrenNames{get;set;}</p>
+<p>&nbsp;&nbsp;NameValueCollection Attributes{get;}<br>&nbsp;&nbsp;NavigationUrlCollection Navigation{get;}<br>&nbsp;}</p>
+
+<p>Then I implemented a custom object to read information from my web.config file.&nbsp; In my properties that implement this interface, I can access this helper object to retrieve the configuration items from my web.config: title, template, theme, etc.&nbsp; It is really powerful and allows me more control over my site through my configuration file instead of a lot of repetitive code changes. </p>
+<p>You don’t have to use the web.config right off to implement this interface, just implement this interface in your base page and make the properties return the value you want to use for that page.&nbsp; This allows for abstraction later on when you find you need it.&nbsp; If you find you don’t need it, you have some standardized locations to set setting for that page.</p>
+<p>I’ve learned something the hard way with .Net:&nbsp; “Always code to interfaces.”</p>

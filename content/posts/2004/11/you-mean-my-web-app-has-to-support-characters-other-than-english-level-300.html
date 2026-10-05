@@ -1,0 +1,19 @@
+---
+wp_id: 128
+title: You mean my web app has to support characters other than English?!? – level 300
+slug: you-mean-my-web-app-has-to-support-characters-other-than-english-level-300
+permalink: /2004/11/you-mean-my-web-app-has-to-support-characters-other-than-english-level-300/
+date: 2004-11-03T16:36:00
+date_utc: 2004-11-03T16:36:00Z
+modified: 2004-11-03T16:36:00
+format: html
+excerpt: 'The time will come when some text or some data will need to contain foreign characters. For me, this means Japanese Kanji text for a global application under development. I need to use the following text: ??????????????. You are seeing question marks because .Text doesn’t support these characters in all places. ASP.NET is unicode-based, so a […]'
+comments_open: true
+---
+<p>The time will come when some text or some data will need to contain foreign characters.&nbsp; For me, this means Japanese Kanji text for a global application under development.&nbsp; I need to use the following text: ??????????????. You are seeing question marks because .Text doesn’t support these characters in all places.</p>
+<p>ASP.NET is unicode-based, so&nbsp;a lot of the work is done for me, but in order to work with this text, I have to make some changes to my development workstation and database (potentially).&nbsp; First, I looked at the database, and the database was developed with a forward-thinking method, and all character fields are nchar or nvarchar, so SQL Server 2000 will be able to store all unicode characters without anything special.&nbsp; I also had to check to make sure my stored procedures all used nvarchar and that no strings were ever converted to another codepage.&nbsp; I was please to find the database in order, and I could store and retrieve this text.&nbsp; With .Net, I was able to whip up a web app, and it just worked, but when looking at our existing application written with ASP &amp; VB6 COM+, I found that it didn’t “just work”.&nbsp; I separated the parts and discovered that I could call the COM+ pieces to store and retrieve this data, so the large part was taken care of.&nbsp; Thank God VB6 supports unicode.&nbsp; Of course, all that is happening is the transport of character codes.</p>
+<p>The problem came with ASP making the call to COM+, getting information, but it was written to the page garbled.&nbsp; After a lot of research, the fix was to set the CodePage that ASP uses to stream the response to the client.&nbsp; This can be done in the header line with CodePage=”65001” – which is the unicode codepage, or I can use Response.CodePage = 65001 at the top of the ASP.&nbsp; But header information also needed to be in the HTML page to display properly on the client, so I use Response.CharSet = “utf-8” to tell the browser to use this character set.&nbsp; Doing this is every page did the trick, but I have a LOT of pages, so I set about looking for a global setting for the CodePage.&nbsp; After a lot of searching, I found the AspCodePage IIS Metabase setting.&nbsp; This is an obscure setting because we don’t normally have to change the IIS Metabase.&nbsp; It’s kind of like a registry for IIS.&nbsp; IIS Manager have GUI for some common settings, but this isn’t one of them.&nbsp; I downloaded the IIS Metabase Explorer with the IIS 6.0 kit from Microsoft, and I was able to set this setting to 65001 for my application, and this affected all the pages in my app.</p>
+<p>For good measure, I went ahead and added </p>
+<p>&lt;meta http-equiv=”Content-Type” content=”text/html; charset=UTF-8″&gt;</p>
+<p>to all my pages.&nbsp; </p>
+<p>It took me quite a while to educate myself on character sets because up to this point, I’d only had to deal with English.&nbsp; It’s good education though.&nbsp; I think all developers should know that text doesn’t always translate to normal ASCII codes.</p>

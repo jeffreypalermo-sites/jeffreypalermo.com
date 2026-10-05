@@ -1,0 +1,35 @@
+---
+wp_id: 1058
+title: ASP.NET MVC HttpModule Registration Under IIS Integrated Mode vs. Classic Mode
+slug: asp-net-mvc-httpmodule-registration-under-iis-integrated-mode-vs-classic-mode
+permalink: /2009/06/asp-net-mvc-httpmodule-registration-under-iis-integrated-mode-vs-classic-mode/
+date: 2009-06-08T19:48:03
+date_utc: 2009-06-08T19:48:03Z
+modified: 2009-06-08T19:48:03
+format: html
+categories:
+- blog
+excerpt: 'Subscribe to my feed here: http://feeds.jeffreypalermo.com/jeffreypalermo Context In many applications, I find the development team needs to have some bit of configuration code run at the very beginning, before any other code. In a web site on ASP.NET, we have the Global.asax file that has an Application_Start method. In an ASP.NET MVC app, we register […]'
+comments_open: true
+---
+<pre class="prettyprint">Subscribe to my feed here:  <a href="/feed/">http://feeds.jeffreypalermo.com/jeffreypalermo</a></pre>
+
+<p><strong>Context</strong></p>
+<p>In many applications, I find the development team needs to have some bit of configuration code run at the very beginning, before any other code.&nbsp; In a web site on ASP.NET, we have the Global.asax file that has an Application_Start method.&nbsp; In an <a href="http://www.asp.net/mvc/">ASP.NET MVC</a> app, we register routes and do other things before the first request is served by the application.&nbsp; One of the common start-up tasks my teams need to do is configuration <a href="https://www.hibernate.org/343.html">NHibernate</a>:&nbsp; setting up the configuration, creating the SessionFactory, etc.&nbsp; Because NHibernate is an infrastructure concern, one of our standards is that only the Infrastructure project has a reference to NHibernate.dll.&nbsp; This presents a special need on the UI project because the UI project is not allowed to reference the start-up code explicitly.&nbsp; </p>
+<p><strong>Solution</strong></p>
+<p>To get around this, we use an IHttpModule implementation to do start-up configuration.&nbsp; This module lives in the Infrastructure project off to the side, and we add it to the web.config file so that the ASP.NET runtime will call it.&nbsp; Here is a sample start-up module for NHibernate.&nbsp; Note that the only purpose is to catch a time before the first request, and you can slide in any start-up code:</p>
+<div id="codeSnippetWrapper">
+<pre id="codeSnippet" style="overflow:visible; width:100%; color:black; direction:ltr; text-align:left; border-style:none; padding:0"><span style="color:#0000ff">public</span> <span style="color:#0000ff">class</span> NHibernateModule : IHttpModule<br>{<br>    <span style="color:#0000ff">private</span> <span style="color:#0000ff">static</span> <span style="color:#0000ff">bool</span> _startupComplete = <span style="color:#0000ff">false</span>;<br>    <span style="color:#0000ff">private</span> <span style="color:#0000ff">static</span> <span style="color:#0000ff">readonly</span> <span style="color:#0000ff">object</span> _locker = <span style="color:#0000ff">new</span> <span style="color:#0000ff">object</span>();<br><br>    <span style="color:#0000ff">public</span> <span style="color:#0000ff">void</span> Init(HttpApplication context)<br>    {<br>        context.BeginRequest += context_BeginRequest;<br>        context.EndRequest += context_EndRequest;<br>    }<br><br>    <span style="color:#0000ff">private</span> <span style="color:#0000ff">void</span> context_BeginRequest(<span style="color:#0000ff">object</span> sender, EventArgs e)<br>    {<br>        EnsureStartup();<br>        <span style="color:#0000ff">new</span> DataConfig().StartSession();<br>    }<br><br>    <span style="color:#0000ff">private</span> <span style="color:#0000ff">void</span> context_EndRequest(<span style="color:#0000ff">object</span> sender, EventArgs e)<br>    {<br>        <span style="color:#0000ff">new</span> DataConfig().EndSession();<br>    }<br><br>    <span style="color:#0000ff">private</span> <span style="color:#0000ff">void</span> EnsureStartup()<br>    {<br>        <span style="color:#0000ff">if</span> (!_startupComplete)<br>        {<br>            <span style="color:#0000ff">lock</span> (_locker)<br>            {<br>                <span style="color:#0000ff">if</span> (!_startupComplete)<br>                {<br>                    <span style="color:#0000ff">new</span> DataConfig().PerformStartup();<br>                    _startupComplete = <span style="color:#0000ff">true</span>;<br>                }<br>            }<br>        }<br>    }<br><br>    <span style="color:#0000ff">public</span> <span style="color:#0000ff">void</span> Dispose()<br>    {<br>    }<br>}<br></pre>
+</div>
+
+<p><strong>Explanation</strong></p>
+<p>We are using double-checked locking to ensure we only perform the start-up code once.&nbsp; This module is registered in the web.config here:</p>
+<div id="codeSnippetWrapper">
+<pre id="codeSnippet" style="overflow:visible; width:100%; color:black; direction:ltr; text-align:left; border-style:none; padding:0">&lt;configuration&gt;<br>    &lt;system.web&gt;<br>        &lt;httpModules&gt;<br>            &lt;add name=<span style="color:#006080">"StartupModule"</span> type=<span style="color:#006080">"Infrastructure.NHibernateModule, Infrastructure, Version=1.0.0.0, Culture=neutral"</span>/&gt;<br>        &lt;/httpModules&gt;<br>    &lt;/system.web&gt;<br>&lt;/configuration</pre>
+</div>
+<p>This works fine if IIS7 is set to Classic mode.&nbsp; As soon we go to Integrated Mode, which is recommended on IIS7 for ASP.NET MVC, this module registration doesn’t work.&nbsp; Instead, we use the system.webServer node as shown below:</p>
+<div id="codeSnippetWrapper">
+<pre id="codeSnippet" style="overflow:visible; width:100%; color:black; direction:ltr; text-align:left; border-style:none; padding:0">&lt;configuration&gt;<br>    &lt;system.webServer&gt;<br>        &lt;modules runAllManagedModulesForAllRequests=<span style="color:#006080">"true"</span>&gt;<br>            &lt;add name=<span style="color:#006080">"StartupModule"</span> type=<span style="color:#006080">"Infrastructure.NHibernateModule, Infrastructure, Version=1.0.0.0, Culture=neutral"</span>/&gt;<br>        &lt;/modules&gt;<br>    &lt;/system.webServer&gt;<br>&lt;/configuration<br>      </pre>
+</div>
+
+<p>There you have it.&nbsp; Works like a charm on IIS7 in Integrated Mode. </p>

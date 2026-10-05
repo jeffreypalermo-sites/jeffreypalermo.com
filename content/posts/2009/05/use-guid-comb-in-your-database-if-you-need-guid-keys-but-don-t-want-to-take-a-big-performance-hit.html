@@ -1,0 +1,24 @@
+---
+wp_id: 1047
+title: Use guid.comb in your database if you need guid keys but don’t want to take a big performance hit
+slug: use-guid-comb-in-your-database-if-you-need-guid-keys-but-don-t-want-to-take-a-big-performance-hit
+permalink: /2009/05/use-guid-comb-in-your-database-if-you-need-guid-keys-but-don-t-want-to-take-a-big-performance-hit/
+date: 2009-05-22T21:37:01
+date_utc: 2009-05-22T21:37:01Z
+modified: 2009-05-22T21:37:01
+format: html
+categories:
+- blog
+excerpt: COMB Guids have been around since 2002. In short, WinNT used to use the MAC address of a network card to help generate GUIDs, and they were pseudo-sorted. Since then, Guid have become more random and not dependent on anything. Because of this, SQL Server 2000+ incurs a significant performance degradation when you use Guids […]
+comments_open: true
+---
+<p>COMB Guids have been around since 2002.&nbsp; In short, WinNT used to use the MAC address of a network card to help generate GUIDs, and they were pseudo-sorted.&nbsp; Since then, Guid have become more random and not dependent on anything.&nbsp; Because of this, SQL Server 2000+ incurs a significant performance degradation when you use Guids as primary keys.&nbsp; The degradation can be up to a factor of 10.&nbsp; The reason is the random nature of the Guid and the clustered index on the primary key (which seeks to keep them in sequence).</p>
+<p>We must remember that a Guid is not a string even thought that’s how we see them.&nbsp; A Guid is a 16-byte data structure.&nbsp; An int is a 4-byte data structure, so we can simply think of it as 4 times as large.&nbsp; The kicker is that integer keys are sorted and incremental.&nbsp; Guids are random.&nbsp; A clustered index can keep them in order for you, but every insert incurs the job of finding where in the list to insert the new value.&nbsp; Integer keys just go at the end of the list.</p>
+<p>If you are using Guids (and NHibernate), check out the guid.comb key generator.&nbsp; Read <a href="http://www.informit.com/articles/article.asp?p=25862&amp;rl=1">Jimmy Nilsson’s article on COMB Guids</a> to understand just why they perform better than normal Guids, and then go through the <a href="https://www.hibernate.org/hib_docs/nhibernate/1.2/reference/en/html/mapping.html#mapping-declaration-id-generator">NHibernate documentation</a> to see how you can use them in your mappings.&nbsp; Ok, I’ll just give you a sample:</p>
+<blockquote>
+<p>&lt;class name="MyClass" table="MyTable" dynamic-update="true"&gt;      <br>&lt;id column="Id" type="Guid" name="Id"&gt;       <br>&lt;generator class="guid.comb" /&gt;       <br>&lt;/id&gt;</p>
+</blockquote>
+<blockquote>
+<p>&lt;property name="Something" type="Int16" not-null="true" /&gt;      <br>&lt;property name="SomethingElse" type="Byte" not-null="true" /&gt;</p>
+<p>&lt;/class&gt;</p>
+</blockquote>

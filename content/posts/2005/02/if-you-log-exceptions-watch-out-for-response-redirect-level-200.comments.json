@@ -1,0 +1,38 @@
+[
+  {
+    "id": 243,
+    "parent": 0,
+    "author_name": "David Neal",
+    "author_url": "http://",
+    "date": "2005-02-14T06:58:00",
+    "type": "comment",
+    "content_html": "<p>I recently discovered this same issue in a few situations in my own code.  After identifying the try..catch blocks where the ThreadAbortException was being logged, I just added a catch for ThreadAbortException that did nothing.</p>\n<p>This was also happening in my RSS feed, where when after rendering the XML I was calling Response.End().  Talk about your event log filling up…</p>"
+  },
+  {
+    "id": 244,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2005-02-14T07:17:00",
+    "type": "comment",
+    "content_html": "<p>That’s interesting.  Another way I like to identify exception is to test the type and do different things with them.  In my high-level try/catch, I could do if(ex is ThreadAbortException) //do whatever;<br>\nelse //do whatever.</p>"
+  },
+  {
+    "id": 245,
+    "parent": 0,
+    "author_name": "Dustin DeFoe",
+    "author_url": "http://",
+    "date": "2005-02-14T07:33:00",
+    "type": "comment",
+    "content_html": "<p>You can also use:</p>\n<p>Response.Redirect(\"mypage.aspx\", False)</p>\n<p>The second paramater is an optional EndResponse that is True by default.  Setting this value to false will not raise an exception and thus allow you to continue through your code and then will redirect later after the rest of the code has been processed. </p>"
+  },
+  {
+    "id": 246,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2005-02-14T07:45:00",
+    "type": "comment",
+    "content_html": "<p>Yes, and I would use that overload with \"false\" if I was already at the end of my page logic, and there was no performance penalty for allowing it to finish, but if my redirect is early in the page cycle, and I have some fairly expensive logic later on, I would want to prevent that logic from running for nothing and use Response.End( ).</p>\n<p>Great tip!</p>"
+  }
+]

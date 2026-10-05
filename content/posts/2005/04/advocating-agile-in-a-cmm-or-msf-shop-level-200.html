@@ -1,0 +1,21 @@
+---
+wp_id: 222
+title: Advocating Agile in a CMM or MSF shop – level 200
+slug: advocating-agile-in-a-cmm-or-msf-shop-level-200
+permalink: /2005/04/advocating-agile-in-a-cmm-or-msf-shop-level-200/
+date: 2005-04-26T12:37:00
+date_utc: 2005-04-26T12:37:00Z
+modified: 2005-04-26T12:37:00
+format: html
+excerpt: That’s exactly what I’m doing right now. My development shop used to be MSF waterfall and is now pushing for CMM. This is a push from management. It is very difficult to write good, maintainable software in this fashion. Sure, we can crank out version 1 and maybe 2 without a hitch, but as soon […]
+comments_open: true
+---
+<p>That’s exactly what I’m doing right now.&nbsp; My development shop used to be MSF waterfall and is now pushing for CMM.&nbsp; This is a push from management.&nbsp; It is very difficult to write good, maintainable software in this fashion.&nbsp; Sure, we can crank out version 1 and maybe 2 without a hitch, but as soon as the developers who intimately know the software leave, or forget, you immediately have legacy code.&nbsp; You don’t know what you can change without breaking other things.</p>
+<p>I don’t recall from whom I heard the quote, but I’ve heard it said that:</p>
+<p>Legacy code is code for which there are insufficient unit tests.</p>
+<p>I could not agree with that more.&nbsp; I’m the pusher for TDD in my work group, so it’s difficult getting there, but there is a significant difference in the code that is written using TDD and the other code that exists (and is being added) without unit tests.&nbsp; The design is different too (TDD is design).&nbsp; It is incredibly obvious that 1) the TDDed code has fewer bugs and can be changed with confidence, and 2) The other code is a ball of mystery (legacy) that you don’t want to touch for fear of unforeseen consequences.</p>
+<p>Another Agile practice I’m pushing is automated builds.&nbsp; Our build is scheduled to run twice a day.&nbsp; It does everything to get the new source built an on a development server.&nbsp; It runs the unit tests and reports.&nbsp; I use NAnt for that, and it works very well.&nbsp; I intend to hook up FxCop and CruiseControl.Net to our build process soon.</p>
+<p>One thing I’m not sure will change is the manner in which we plan projects.&nbsp; Our project managers _must_ use CMM in their planning, so it’s probably a losing battle right there.&nbsp; The schedule will be set, the features will be planned, the headcount will be assigned, and then it’s expected that the team deliver 100% of the scope on the due date.&nbsp; No incremental releases with requirements verification and reprioritization, but pure waterfall.&nbsp; Plan phase, dev phase, stabilization phase, and deploy.&nbsp; Then 5 years down the road, replace the app because it’s become hard to maintain, but create the new app in the exact same manner.&nbsp; It’s quite confusing.</p>
+<p>I also have some more general observations about much of the industry as a whole.&nbsp; I’ve heard when replacing an application that “we’re going to do it right this time”.&nbsp; I firmly believe that the first go-round was not preceded with the thought “let’s do it wrong this time”, yet when we identify that an app has turned out to be unmaintainable, and it needs to be replaced, why don’t we identify the reasons it became unmaintainable?&nbsp; Why don’t we fundamentally change the way the new app is written because just rewriting an app using the same process as the first is going to get the same result as the first.</p>
+<p>If an application needs to be replaced, we should analyze why it failed.&nbsp; If it didn’t fail, and we just want to move to a new technology, then pieces of it should be wrapped and leveraged in the new app.&nbsp; If that can’t be done, then I would say the old app failed.&nbsp; It can’t be reused.&nbsp; It’s life is over.&nbsp; Going a step further, if you absolutely want all the code to be in the new technology, then just port the code.&nbsp; If _that_ can’t be done, then the app is a failure.&nbsp; The app is dead.</p>
+<p>Agile methods, coupled with able developers, &nbsp;promise (and deliver) maintainable, well-designed software that will never become a rigid legacy application.&nbsp; As the word implies, the application will remain agile.</p>

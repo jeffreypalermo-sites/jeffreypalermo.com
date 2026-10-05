@@ -1,0 +1,20 @@
+[
+  {
+    "id": 264,
+    "parent": 0,
+    "author_name": "Nick",
+    "author_url": "http://",
+    "date": "2006-01-11T01:20:48",
+    "type": "comment",
+    "content_html": "<p>I’m curious to see what this would look like if you were using an O/R mapper like NHibernate. Would you still use a CategoryData object? Or would you say use Find, Get, Save, etc. methods in your BO? Or would you access the O/R mapper directly from your code behind to get the objects you needed?</p>"
+  },
+  {
+    "id": 265,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-01-11T15:06:27",
+    "type": "comment",
+    "content_html": "<p>NHibernate would then by my data access goo, so I’d decide then.  I might just make a Repository object ask NHibernate for the object.  I would not want the Find, Get, Save methods on my business object itself.  I’d want to give that responsibility to a Repository object.  I would never hit a data access technology directly from code-behind.  Code-behind is part of the view, and that would even violate MVC.  I’d call my repository from my controller and push data to my view.</p>"
+  }
+]

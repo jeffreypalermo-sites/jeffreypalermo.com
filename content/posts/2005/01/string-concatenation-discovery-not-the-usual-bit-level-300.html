@@ -1,0 +1,126 @@
+---
+wp_id: 164
+title: String concatenation discovery – not the usual += bit – level 300
+slug: string-concatenation-discovery-not-the-usual-bit-level-300
+permalink: /2005/01/string-concatenation-discovery-not-the-usual-bit-level-300/
+date: 2005-01-31T14:07:00
+date_utc: 2005-01-31T14:07:00Z
+modified: 2005-01-31T14:07:00
+format: html
+excerpt: We’ve all seen the demo where Stringbuilder blows away appending strings in a loop where you just do a += or string = string + something. I’m not going to cover that scenario, but I did compare 4 different “fast” ways to concatenate strings, and one of them blows away stringbuilder by a big […]
+comments_open: true
+---
+<p>We’ve all seen the demo where Stringbuilder blows away appending strings in a<br>
+loop where you just do a += or string = string + something.</p>
+
+<p>I’m not going to cover that scenario, but I did compare 4 different “fast”<br>
+ways to concatenate strings, and one of them blows away stringbuilder by a big<br>
+margin&nbsp; Here’s the test code:</p>
+<div>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>int</span><span> numIterations = 10000000;</span></p>
+
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; DateTime startDate, endDate;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>string</span><span> result = </span><span>string</span><span>.Empty;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>string</span><span> h;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; h = “h”;</span></p>
+
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; startDate = DateTime.Now;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>for</span><span>(</span><span>int</span><span> i = 0; i &lt; numIterations; i++)<br>
+{</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; result = “h”</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + “a”</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + “b”</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + “c”</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + “d”</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + “e”</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + “f”</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + “g”</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + “h”</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + “i”</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + “j”</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + “k”;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; endDate = DateTime.Now;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Console.WriteLine(“All literal concat<br>
+12: ” + endDate.Subtract(startDate));</span></p>
+
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; startDate = DateTime.Now;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>for</span><span>(</span><span>int</span><span> i = 0; i &lt; numIterations; i++)<br>
+{</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; result = “h”</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + “h”</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + h</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + “h”</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + h</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + “h”</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + h</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + “h”</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + h</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + “h”</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + h</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + “h”;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; endDate = DateTime.Now;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Console.WriteLine(“+ 12: ” +<br>
+endDate.Subtract(startDate));</span></p>
+
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; startDate = DateTime.Now;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>for</span><span>(</span><span>int</span><span> i = 0; i &lt; numIterations; i++)<br>
+{</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>string</span><span>.Concat(“h”, “h”, “h”, “h”, “h”, “h”,<br>
+“h”, “h”, “h”, “h”, “h”, “h”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; endDate = DateTime.Now;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Console.WriteLine(“String.Concat 12: ”<br>
++ endDate.Subtract(startDate));</span></p>
+
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; startDate = DateTime.Now;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>for</span><span>(</span><span>int</span><span> i = 0; i &lt; numIterations; i++)<br>
+{</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; StringBuilder x = </span><span>new</span><span> StringBuilder();</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; x.Append(“h”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; x.Append(“h”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; x.Append(“h”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; x.Append(“h”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; x.Append(“h”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; x.Append(“h”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; x.Append(“h”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; x.Append(“h”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; x.Append(“h”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; x.Append(“h”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; x.Append(“h”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; x.Append(“h”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; x.ToString();</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; endDate = DateTime.Now;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Console.WriteLine(“StringBuilder 12: ”<br>
++ endDate.Subtract(startDate));</span></p>
+
+
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Console.ReadLine();</span></p>
+</div>
+
+<p>Here we have 4 scenarios, and here is the console results:</p>
+<p>All literal concat 12: 00:00:00.0400648<br>+ 12:<br>
+00:00:06.0497848<br>String.Concat 12: 00:00:06.4804814<br>StringBuilder 12:<br>
+00:00:06.2100440</p>
+
+<p>I have other programs running, so my results aren’t laboratory-clean, BUT,<br>
+notice the first result.&nbsp; The first method took only 4/100th of a second where<br>
+the other three were pretty close at 6 seconds.&nbsp; These results are x 10 million<br>
+to get measurable results.&nbsp; So I can only conclude that the C# or MSIL compiler<br>
+has some special optimization for situations where the strings I’m concatenating<br>
+are all literals and not a mixture of literals and string variables.</p>
+<p>Very interesting, indeed.&nbsp; What I understand from this test is that if I have<br>
+all my strings ready to go, using the good ol’ +…+….+….+…. works the<br>
+fastest and should NOT be replaced with StringBuilder.&nbsp; Wow.&nbsp; I learn something<br>
+new every day.</p>
+<p>Update:&nbsp; Wesner had some great feedback:</p>
+<p>When you are concatenating just literals, then the compiler performs the<br>
+concatenation at compile-time instead of run-time. </p>
+<p>result = “h” + “a” +<br>
+“b” + “c” + “d” + “e” + “f” + “g” + “h” + “i” + “j” + “k”; </p>
+<p>is optimized<br>
+to </p>
+<p>result = “habcdefghijk”; </p>
+<p>This explains why the first case was the fastest.</p>

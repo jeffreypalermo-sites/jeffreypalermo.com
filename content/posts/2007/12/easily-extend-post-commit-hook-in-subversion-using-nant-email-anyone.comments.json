@@ -1,0 +1,74 @@
+[
+  {
+    "id": 2195,
+    "parent": 0,
+    "author_name": "Jeremy D. Miller",
+    "author_url": "http://codebetter.com/blogs/jeremy.miller",
+    "date": "2007-12-13T22:39:32",
+    "type": "comment",
+    "content_html": "<p>You could just let CC.Net do this as well.  It might be easier.</p>"
+  },
+  {
+    "id": 2196,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-12-14T00:11:11",
+    "type": "comment",
+    "content_html": "<p>@Jeremy,<br>\nYou absolutely can, but it’s a bit more work with CCNet.  CCNet offers the build notification email very nicely, and we definitely use that, but the nice diff of what the commit contains requires a bit more work.  I’m giving email as an example because there are lots of folks searching for a way to send post-commit emails from Subversion on Windows, and I’m sure only a fraction of them are using CCNet.  </p>\n<p>Once you get into NAnt, the possibilities are endless.</p>"
+  },
+  {
+    "id": 2197,
+    "parent": 0,
+    "author_name": "Gary Brunton",
+    "author_url": "http://",
+    "date": "2007-12-14T16:47:57",
+    "type": "comment",
+    "content_html": "<p>You may want to take a look at a product called Scmbug.</p>\n<p>From the website:<br>\nscmbug integrates software configuration management (SCM) with bug-tracking. It aims to solve the integration problem once and for all. It will glue any source code version control system (such as CVS/CVSNT, Subversion, Git) with any bug-tracking system (such as Bugzilla, Mantis, Request Tracker, Test Director).</p>\n<p>I use it and it works great.  It is completely configurable and also handles post-commit emails (as well as many other things such as pre-commit requirements).</p>\n<p><a href=\"http://www.mkgnu.net/?q=scmbug\" rel=\"nofollow ugc\">http://www.mkgnu.net/?q=scmbug</a></p>"
+  },
+  {
+    "id": 2198,
+    "parent": 0,
+    "author_name": "Rob Kitson",
+    "author_url": "http://www.rmkitson.net",
+    "date": "2007-12-14T22:56:23",
+    "type": "comment",
+    "content_html": "<p>Great timing!  Setting up the commit emails was first on my todo list today.</p>\n<p>Tweaked your .bat file a little so that I could pass in a project name which gets placed in subject instead of the repo folder name.</p>\n<p>I added<br>\n-D:ProjectName=”ProjectName”<br>\nto the call to nant.exe before the<br>\n&gt; lastpostcommitrun.txt</p>\n<p>Then I changed the subject in the email that the build file sends to<br>\nsubject=”SVN – ${ProjectName} – ${revision} – ${author}”</p>\n<p>Works nicely!  Thanks!</p>\n<p>PS – I noticed you didn’t put quotes around either of the email addresses in your  task.  I got an unexpected token error when I tried to run that build file.</p>"
+  },
+  {
+    "id": 2199,
+    "parent": 0,
+    "author_name": "Dominic Cronin",
+    "author_url": "http://www.dominic.cronin.nl",
+    "date": "2007-12-16T13:59:44",
+    "type": "comment",
+    "content_html": "<p>Looks pretty useful. Did you realise that PUSHD will take care of the CD for you, so you could just write: </p>\n<p>pushd DRIVELETTER:svnrepositoriesrepositorynamehooks<br>\nnantnant.exe -buildfile:postcommitemail.build -D:path.repository=%1 -D:revision=%2 &gt; lastpostcommitrun.txt<br>\npopd</p>"
+  },
+  {
+    "id": 2200,
+    "parent": 0,
+    "author_name": "Dominic Cronin",
+    "author_url": "http://www.dominic.cronin.nl",
+    "date": "2007-12-16T14:01:22",
+    "type": "comment",
+    "content_html": "<p>BTW – your comments form doesn’t work with Javascript disabled. </p>"
+  },
+  {
+    "id": 2201,
+    "parent": 0,
+    "author_name": "Mike",
+    "author_url": "http://www.mckechney.com",
+    "date": "2008-01-04T13:57:42",
+    "type": "comment",
+    "content_html": "<p>I have created a Subversion hook tool that allows you to configure both pre- and post-commit e-mail messages on a per-repository folder level. For the pre-commit, you can enforce commit message regular expressions to make sure that you have “good” commit messages. If will also tie into a Bugzilla instance to ensure that the bug you’re committing against is open and valid. It can also lock down specific repro paths and file types. The post commit allows you to send nicely formatted e-mails out to whomever you choose.<br>\nYou can check out the details at <a href=\"http://mckechney.com/SubversionNotifyForWindows\" rel=\"nofollow ugc\">http://mckechney.com/SubversionNotifyForWindows</a> and then download it from SourceForge.net</p>"
+  },
+  {
+    "id": 2202,
+    "parent": 0,
+    "author_name": "Scott Dukes",
+    "author_url": "http://dotnet.org.za/scott",
+    "date": "2008-01-08T13:25:39",
+    "type": "comment",
+    "content_html": "<p>Have you had a look at Captain Hook [https://sourceforge.net/projects/captainhook/] which is a simple plugin framework for writing Subversion hooks using .NET written by Phil Haack.</p>"
+  }
+]

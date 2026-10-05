@@ -1,0 +1,42 @@
+---
+wp_id: 1010
+title: Mvc Contrib – Version 1.0 preparation / project restructuring
+slug: mvc-contrib-ndash-version-1-0-preparation-project-restructuring
+permalink: /2009/02/mvc-contrib-ndash-version-1-0-preparation-project-restructuring/
+date: 2009-02-20T14:26:29
+date_utc: 2009-02-20T14:26:29Z
+modified: 2009-02-20T14:26:29
+format: html
+categories:
+- blog
+excerpt: The following message has been posted to the MvcContrib discuss list. Please join the thread with feedback. As we get close to the release of the Asp.Net mvc framework it is time to take a look at what the contrib project has grown into organically and match that up with what we want to get […]
+comments_open: true
+---
+<p>The following <a href="http://groups.google.com/group/mvccontrib-discuss/browse_thread/thread/f0f43b4436908411">message has been posted to the MvcContrib discuss list</a>.&nbsp; Please join the thread with feedback.</p>
+<p>As we get close to the release of the Asp.Net mvc framework it is time to <br>take a look at what the contrib project has grown into organically and match <br>that up with what we want to get out of the project to make sure everything <br>is aligning. </p>
+<p>The goals of the project:  </p>
+<p>*Ease of use/adoption:* We want to position the MvcContrib project so that <br>it is easy for someone new to the ASP.Net MVC framework to include and use <br>the MvcContrib functionality. &nbsp; &nbsp;The goal here is for frictionless and <br>painless adoption.  </p>
+<p>*Drive to conventions:* We want to provide some opinions on how we think the <br>framework should be used. &nbsp; This means making the conventions easy to <br>discover and use.  </p>
+<p>*Provide nice to have functionality: *We are also willing to allow for some <br>features that are infrequently used to still be easy to access, but this <br>must be balanced with the first two goals.  </p>
+<p>So, that leads us to the question of why are we bringing this up and what <br>does that mean?  </p>
+<p>We do see the MvcContrib project site being a central place to look for <br>alternative implementations. &nbsp;We may not host all of these in our project, <br>but we could at least list all of them, view engines and IoC, than have <br>links to their project homepages. &nbsp;I see a lot of value in maintaining a <br>complete list of known extensions.  </p>
+<p>Here is a list of actions we want to take on the code base to support the <br>goal.  </p>
+<p>1. &nbsp; &nbsp; &nbsp; Consolidate the existing mvc projects/assemblies down to four (4) <br>projects.  </p>
+<p>· &nbsp; &nbsp; &nbsp; &nbsp; MvcContrib  </p>
+<p>· &nbsp; &nbsp; &nbsp; &nbsp; MvcContrib.Extras  </p>
+<p>· &nbsp; &nbsp; &nbsp; &nbsp; MvcContrib.TestHelpers  </p>
+<p>· &nbsp; &nbsp; &nbsp; &nbsp; MvcContrib.UnitTests  </p>
+<p>2. &nbsp; &nbsp; &nbsp; Add a dependency on the CommonServiceLocator to replace all of the <br>IoC containers in the MvcContrib project.  </p>
+<p>3. &nbsp; &nbsp; &nbsp; Remove old dependencies that are available in their home projects:  </p>
+<p>· &nbsp; &nbsp; &nbsp; &nbsp; Ninject  </p>
+<p>· &nbsp; &nbsp; &nbsp; &nbsp; StructureMap – provide links to the CSL implementation  </p>
+<p>· &nbsp; &nbsp; &nbsp; &nbsp; Unity – provide links to the CSL implementation  </p>
+<p>· &nbsp; &nbsp; &nbsp; &nbsp; Castle / Windsor – the Controller register could be pulled into <br>documentation on the contrib project website.  </p>
+<p>· &nbsp; &nbsp; &nbsp; &nbsp; Spark – It is being maintained as a separate project, we should be <br>pushing developers to it home page to get the most recent version of the <br>project.  </p>
+<p>4. &nbsp; &nbsp; &nbsp; Deprecate and remove the following projects:  </p>
+<p>· &nbsp; &nbsp; &nbsp; &nbsp; Xslt View Engine  </p>
+<p>· &nbsp; &nbsp; &nbsp; &nbsp; Nvelocity  </p>
+<p>· &nbsp; &nbsp; &nbsp; &nbsp; Brail  </p>
+<p>· &nbsp; &nbsp; &nbsp; &nbsp; Spring  </p>
+<p>At this point I would like to open up the discussion. Please make it know if <br>you are relying on any of the functionality that is planned for removal.  </p>
+<p>Thanks, <br>Eric Hexter – &nbsp;MvcContrib Co-founder <br>Jeffrey Palermo – MvcContrib Co-founder  </p>

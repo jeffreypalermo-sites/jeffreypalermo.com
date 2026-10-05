@@ -1,0 +1,38 @@
+---
+wp_id: 80
+title: Obvious compatibility bug in .Net 2.0 Beta 1 – your v1.1 code won’t work – level 100
+slug: obvious-compatibility-bug-in-net-2-0-beta-1-your-v1-1-code-wont-work-level-100
+permalink: /2004/08/obvious-compatibility-bug-in-net-2-0-beta-1-your-v1-1-code-wont-work-level-100/
+date: 2004-08-20T17:14:00
+date_utc: 2004-08-20T17:14:00Z
+modified: 2004-08-20T17:14:00
+format: html
+excerpt: This post is to share a backwards compatibility bug in v2.0 Beta 1. I ran into this bug when porting a project of mine. This wasn’t the only issue, but here it is. Run this page under v1.1 and click the button to your heart’s content:<%@ Page%> <HTML> <HEAD> <title>WebForm1</title> </HEAD> <body> <form id=”Form1″ method=”post” […]
+comments_open: true
+---
+<p>This post is to share a backwards compatibility bug in v2.0 Beta 1.&nbsp; I ran into this bug when porting a project of mine.&nbsp; This wasn’t the only issue, but here it is.&nbsp; Run this page under v1.1 and click the button to your heart’s content:</p><span class="ColorServerSideTag"><span class="ColorStartHtmlTag"><pre><span class="ColorServerSideTag"><b><span class="ColorStartHtmlTag">&lt;%</span>@ Page<span class="ColorEndHtmlTag">%&gt;</span></b></span><br>
+<br><span class="ColorStartHtmlTag">&lt;</span><span class="ColorControlTag">HTML</span><span class="ColorEndHtmlTag">&gt;</span><br>
+<br>   <span class="ColorStartHtmlTag">&lt;</span><span class="ColorControlTag">HEAD</span><span class="ColorEndHtmlTag">&gt;</span><br>
+<br>      <span class="ColorStartHtmlTag">&lt;</span><span class="ColorControlTag">title</span><span class="ColorEndHtmlTag">&gt;</span>WebForm1<span class="ColorStartHtmlTag">&lt;/</span><span class="ColorControlTag">title</span><span class="ColorEndHtmlTag">&gt;</span><br>
+<br>   <span class="ColorStartHtmlTag">&lt;/</span><span class="ColorControlTag">HEAD</span><span class="ColorEndHtmlTag">&gt;</span><br>
+<br>   <span class="ColorStartHtmlTag">&lt;</span><span class="ColorControlTag">body</span><span class="ColorEndHtmlTag">&gt;</span><br>
+<br>      <span class="ColorStartHtmlTag">&lt;</span><span class="ColorControlTag">form</span> id=”Form1″ method=”post” runat=”server”<span class="ColorEndHtmlTag">&gt;</span><br>
+<br>          <span class="ColorStartHtmlTag">&lt;</span><span class="ColorAspTemplateTag"><b>asp:Button id=”Button1″ runat=”server” Text=”Button” OnClick=”Button1_Click”<span class="ColorEndHtmlTag">&gt;</span><span class="ColorStartHtmlTag">&lt;/</span>asp:Button<span class="ColorEndHtmlTag">&gt;</span><br>
+</b></span><br>      <span class="ColorStartHtmlTag">&lt;/</span><span class="ColorControlTag">form</span><span class="ColorEndHtmlTag">&gt;</span><br>
+<br>   <span class="ColorStartHtmlTag">&lt;/</span><span class="ColorControlTag">body</span><span class="ColorEndHtmlTag">&gt;</span><br>
+<br><span class="ColorStartHtmlTag">&lt;/</span><span class="ColorControlTag">HTML</span><span class="ColorEndHtmlTag">&gt;</span><br>
+<br><span class="ColorStartHtmlTag">&lt;</span><span class="ColorControlTag">script</span> runat=”server”<span class="ColorEndHtmlTag">&gt;</span><br>
+<br>   private void Button1_Click(object sender, System.EventArgs e)<br>
+<br>   {<br>
+<br>      Server.Transfer(Request.Path, true);<br>
+<br>   }<br>
+<br><span class="ColorStartHtmlTag">&lt;/</span><span class="ColorControlTag">script</span><span class="ColorEndHtmlTag">&gt;</span><br></pre><br>
+<p>Now, run this page under v2.0.&nbsp; You will click the button, and your computer will never return the page.&nbsp; It will lock up.&nbsp; But really it’s not.&nbsp; Your computer is in an infinite loop.&nbsp; This is because the second parameter of Server.Transfer has been changed.&nbsp; </p><br>
+<ul><br>
+<li>When set to true, in v1.1, the querystring would be preserved.<br>
+</li><li>In v2.0, the form values are preserved as well.<br>
+</li><li>Because the button element is a form element, the button submit is transfered also, so the page thinks that every run is a postback, so the page keeps Server.Transfer()ing back to itself until you kill it.</li></ul><br>
+<p>It’s nice that Microsoft added functionality, but we really just need another overload.&nbsp; Leave the method like v1.1 because this broke my project, so I’m sure it will break some other projects.&nbsp; Add an overload to accept a third parameter as a boolean which dictates whether to preserve the form values:</p><br>
+<p>Server.Transfer(Request.Path, true, false);</p><br>
+<p>I would use the above so that my querystring would be preserved but the form values would not.<span class="ColorAspTemplateTag"></span></p><pre><br></pre></span>
+</span>

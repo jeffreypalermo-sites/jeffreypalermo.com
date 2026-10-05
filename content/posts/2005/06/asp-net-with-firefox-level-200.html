@@ -1,0 +1,16 @@
+---
+wp_id: 271
+title: ASP.NET with FireFox – level 200
+slug: asp-net-with-firefox-level-200
+permalink: /2005/06/asp-net-with-firefox-level-200/
+date: 2005-06-22T13:56:00
+date_utc: 2005-06-22T13:56:00Z
+modified: 2005-06-22T13:56:00
+format: html
+excerpt: I’m a little slow on testing my ASP.NET apps with non-IE browsers, and it’s because I used to be in an environment where I was writing internal web applications, and IE 5+ was mandated. That took away headaches, but now I need to have ASP.NET apps that look good and function well in all the […]
+comments_open: true
+---
+<p>I’m a little slow on testing my ASP.NET apps with non-IE browsers, and it’s because I used to be in an environment where I was writing internal web applications, and IE 5+ was mandated.&nbsp; That took away headaches, but now I need to have ASP.NET apps that look good and function well in all the major browsers, so right now, that includes FireFox.&nbsp; Although IE still has an overwhelming market share, in my opinion, the Internet savvy are split more evenly in browser usage.&nbsp; There are tons of computers that don’t get on the Net very often, and those all have IE, so I think it skews the numbers.</p>
+<p>When testing my apps with FireFox, I noticed that ASP.NET was rendering for a down-level browser.&nbsp; This is most likely because when .Net shipped, FireFox wasn’t a major player, but now it is, and it supports all the high-level features, so it’s necessary to add an entry to the &lt;browserCaps/&gt; section of the web.config.&nbsp; <a href="http://slingfive.com/pages/code/browserCaps/">Here</a>&nbsp;is a page that can provide an applicable entry to make .Net render up-level to FireFox.</p>
+<p>Some of the issues you will run into is that &lt;div/&gt; tags will be rendered as tables, and style percents will not be rendered at all.&nbsp; It will dumb down the page to HTML 2.0.&nbsp; Adding the &lt;browserCaps/&gt; section will cause the HTML rendered to be the same as that rendered to IE.&nbsp; In IE, I use the style: TEXT-ALIGN:cetner to center contents of a div, but in FireFox, that doesn’t work (it may be a standard thing, I’m not too sure), but doing &lt;div align=“center“/&gt; fixed the problem in both browsers.</p>
+<p>I’m also using the XHTML doctype.&nbsp; If you search newgroups, you’ll find a lot of people poo-pooing xhtml as just a worthless fad, but if there is one and only one benefit (I’m sure there are more), it’s that my CSS is truly cascading.&nbsp; In HTML 4.0, I have to redeclare classes because the settings don’t flow from the parent container to all children.&nbsp; &lt;td/&gt; tags are notorious for this.<br></p>

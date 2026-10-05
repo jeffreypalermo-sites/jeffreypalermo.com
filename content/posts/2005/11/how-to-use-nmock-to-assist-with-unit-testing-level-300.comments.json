@@ -1,0 +1,38 @@
+[
+  {
+    "id": 575,
+    "parent": 0,
+    "author_name": "Adam Saxton",
+    "author_url": "http://",
+    "date": "2005-11-04T14:26:40",
+    "type": "comment",
+    "content_html": "<p>Maybe I’m missing something, but at that point aren’t you just testing an interface?</p>"
+  },
+  {
+    "id": 576,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-11-04T15:41:07",
+    "type": "comment",
+    "content_html": "<p>The above are not real tests.  It is just a demonstration of NMock.  If real tests, you would be testing a class that depends on an interface.  You want to construct your class under test with an instance of the class you are mocking.  To create this instance, use NMock.</p>\n<p>It’s difficult using code examples because they can never be in complete context or the post would be a book!</p>"
+  },
+  {
+    "id": 577,
+    "parent": 0,
+    "author_name": "Joey",
+    "author_url": "http://devauthority.com/blogs/joeydotnet",
+    "date": "2005-11-04T19:26:45",
+    "type": "comment",
+    "content_html": "<p>NMock Rocks!  I posted another example a while back here…</p>\n<p><a href=\"http://devauthority.com/blogs/joeydotnet/archive/2005/09/23/569.aspx\" rel=\"nofollow ugc\">http://devauthority.com/blogs/joeydotnet/archive/2005/09/23/569.aspx</a></p>"
+  },
+  {
+    "id": 578,
+    "parent": 0,
+    "author_name": "irfan",
+    "author_url": "http://",
+    "date": "2007-06-21T16:34:39",
+    "type": "comment",
+    "content_html": "<p>What if return type is void..<br>\nhow can u use SETupResult..<br>\nmail me if u have solution<br>\n@   <a href=\"mailto:irfan.mushtaq@kpitcummins.com\">irfan.mushtaq@kpitcummins.com</a></p>"
+  }
+]

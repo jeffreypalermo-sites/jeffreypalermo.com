@@ -1,0 +1,15 @@
+---
+wp_id: 557
+title: Explanation of dynamic ASPX compilation and recompilation – level 300
+slug: explanation-of-dynamic-aspx-compilation-and-recompilation-level-300
+permalink: /2004/06/explanation-of-dynamic-aspx-compilation-and-recompilation-level-300/
+date: 2004-06-02T11:30:00
+date_utc: 2004-06-02T11:30:00Z
+modified: 2004-06-02T11:30:00
+format: html
+excerpt: To expand on the topic started in my previous post, here is an overview on how ASP.NET compiles and recompiles assemblies. You all know that when you initially make an .aspx page and run it, the application is started and your stuff is compiled into cached assemblies stored by default in C:WINNTMicrosoft.NETFrameworkv1.1.4322Temporary ASP.NET Files#AppName#. If […]
+comments_open: true
+---
+<p>To expand on the topic started in my previous <a href="http://dotnetjunkies.com/WebLog/jpalermo/archive/2004/06/01/14942.aspx">post</a>, here is an overview on how ASP.NET compiles and recompiles assemblies.&nbsp; </p>
+<p>You all know that when you initially make an .aspx page and run it, the application is started and your stuff is compiled into cached assemblies stored by default in C:WINNTMicrosoft.NETFrameworkv1.1.4322Temporary ASP.NET Files#AppName#.&nbsp; If you keep Win Explorer open to that directory while you restart your app, you’ll see the new temporary files appear as the app is compiled for the first time.&nbsp; Then for every subsequent request, those files don’t change.&nbsp; Then change ANYTHING in an .aspx file (even just one character in the markup).&nbsp; Actually, you don’t have to change anything, just save it again.&nbsp; As soon as you save it, the cached assembly for that page will be invalidated, and when you hit the page with the browser again, it will be recompiled, and you will see new files pop up, and the old ones will have “.delete” appended.&nbsp; On the next app restart, the .delete files will be purged.&nbsp; So to clarify my previous post, ASP.NET does NOT check for changes on every page hit.&nbsp; It checks for a cached assembly and uses it if it exists.&nbsp; When a file is saved, the cached assembly is invalidated, so when the page is requested, it doesn’t find a valid assembly, so it must compile it.&nbsp; </p>
+<p>So regarding the previous post, whether you use inline code, code-behind, code-beside, base page inheritence, or a mixture of all of them, the page compilation will have the same behavior, and the request lifecycle will also be the same.&nbsp; There is no performance difference based on the method in which you code.</p>

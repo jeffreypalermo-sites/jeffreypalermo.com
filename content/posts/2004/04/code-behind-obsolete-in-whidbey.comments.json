@@ -1,0 +1,11 @@
+[
+  {
+    "id": 4,
+    "parent": 0,
+    "author_name": "Kevin Daly",
+    "author_url": "http://",
+    "date": "2004-04-17T12:20:00",
+    "type": "comment",
+    "content_html": "<p>Don’t forget that while the default in the PDC bits is inline code, in the release version the default will be CodeBeside (or however they write that), which is similar to CodeBehind but uses partial classes.</p>\n<p>It’s true that having markup hidden while you edit inline code (a feature borrowed from Web Matrix I think) largely avoids one of the problems of having code and markup in the same file (that is, that it’s really, really hard to follow), there are other advantages in separating the two, especially where you have more than one person working on the project. For instance, it enables me to write all the application code that talks to the middle tier and so on, and then hand the .aspx file to our web designer and say \"make it pretty\" \uD83D\uDE42 </p>\n<p>But then again, for the situation you describe inline code probably does make sense, so I think that it’s good that Microsoft have catered for that.</p>"
+  }
+]

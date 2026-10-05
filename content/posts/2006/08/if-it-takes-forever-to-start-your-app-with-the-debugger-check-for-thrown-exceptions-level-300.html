@@ -1,0 +1,25 @@
+---
+wp_id: 454
+title: If it takes forever to start your app with the debugger, check for thrown exceptions – level 300
+slug: if-it-takes-forever-to-start-your-app-with-the-debugger-check-for-thrown-exceptions-level-300
+permalink: /2006/08/if-it-takes-forever-to-start-your-app-with-the-debugger-check-for-thrown-exceptions-level-300/
+date: 2006-08-17T14:03:00
+date_utc: 2006-08-17T14:03:00Z
+modified: 2006-08-17T14:03:00
+format: html
+tags:
+- coding-principles
+- tips-tricks
+- tools
+excerpt: Overview of ExceptionsThere are quite of a few things that are just laws of Object-Oriented development, and one of those is that exceptions should be avoided. If you can prevent an exception from being thrown, do it. In the world of managed runtimes, particularly Java’s JRE and .Net’s CLR, objects are “thrown” to communicate errors. In […]
+comments_open: true
+---
+<p><strong>Overview of Exceptions</strong><br>There are quite of a few things that are just laws of Object-Oriented development, and one of those is that exceptions should be avoided.&nbsp; If you can prevent an exception&nbsp;from being thrown, do it.&nbsp; In the world of managed runtimes, particularly Java’s JRE and .Net’s CLR, objects are “thrown” to communicate errors.&nbsp; In a try/catch block, the language limits objects that can be thrown to ones that derives from System.Exception, or java.lang.Throwable in Java.&nbsp; When an object is “thrown”, the runtime stops and assembles the callstack and some other information and gives code at all levels of the callstack an opportunity to catch the thrown object (exception) and do something with it.&nbsp; If the exception is never caught, the runtime with catch it and terminate the program.</p>
+<p>Clearly, exceptions being thrown in code is a bad thing, and it signals and unstable state in the program.&nbsp; It may be a huge bug, or the network may have gone down.&nbsp; Either way, and exception is thrown.&nbsp; Proper error handling with catch the exception at a point high enough in the callstack where the program can actually make a decision to do something about it.</p>
+<p>Swallowing exceptions (wrapping code in a try/catch where the catch block is empty) leads to less feedback.&nbsp; An exception will happen, but it will be swallowed, and you won’t know about it.&nbsp; As soon as you start swallowing exceptions, they will start happening without being noticed.&nbsp; Debuggers pay special attention to exceptions, so swallowed exceptions (thrown, immediately caught, and ignored) will slow down the debugger with each occurrance.</p>
+<p><strong>Solution<br></strong>Go to the Debug menu in Visual Studio and select Exceptions.&nbsp; CTRL+ALT+E is the shortcut.&nbsp; Check the checkbox for “Common Language Runtime Exceptions”.&nbsp; Now when you start your debugger, it will break when a managed exception is thrown.&nbsp; It will break on the line from which the exception originates.&nbsp; You can use this technique to find all the exceptions that are happing in your software right under your nose.&nbsp; If you refactor to keep those exceptions from happening, you’ll&nbsp;see a marked improvement on debugger load time (provided there were a large number of exceptions happening previously).</p>
+<p><strong>Alternatives<br></strong>The alternative to debugging often is automated tests.&nbsp; When each small piece of code is verified independently, you don’t have much occassion for running the full application in debug mode.&nbsp; If you have unit tests as part of your automated test suite, a failure will point to the exact place where you have the problem.</p>
+<p><strong>Rule to live by<br></strong>Fail fast.&nbsp; <strong>Fail fast.</strong>&nbsp; If your software is going to fail, make it fail quickly so that&nbsp;you can get the feedback earlier and fix it earlier.&nbsp; Don’t hide the problem by ignoring it or burying it in a log file that’s already verbose.&nbsp; If you are unfamiliar with this concept, read <a href="http://www.martinfowler.com/ieeeSoftware/failFast.pdf">this article by James Shore.</a>&nbsp; </p>
+<p>Don’t use an exception as a return value.&nbsp; In an ideal situation, your application should run with 0 exceptions.&nbsp; You may have a library that swallows an exception, and that would be unfortunate, but keep your application code&nbsp;clean.&nbsp; If you can anticipate an exception happening, perform some checks to avoid it being thrown.</p>
+<p><strong>How to keep an eye on exceptions</strong><br>Use Perfmon.&nbsp; Watch the counter “.Net CLR Exceptions# of Exceps Thrown”.&nbsp; The number should be zero in an ideal situation.&nbsp; If you have an app that can’t avoid some exceptions, you can watch “# of Exceps Thrown / sec”.&nbsp; This number should be close to zero.&nbsp; If your application is constantly throwing exceptions under ideal circumstances, you have some work to do.</p>
+<p>[tags: exceptions, programming, c#, java, failfast, objectoriented, development, .net, clr]</p>

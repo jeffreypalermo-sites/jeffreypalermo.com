@@ -1,0 +1,20 @@
+---
+wp_id: 510
+title: 'Debugging tip:  But that can’t happen!!  Ah, but it did.  Ensure you are looking at the right object – level 300'
+slug: debugging-tip-but-that-cant-happen-ah-but-it-did-ensure-you-are-looking-at-the-right-object-level-300
+permalink: /2007/04/debugging-tip-but-that-cant-happen-ah-but-it-did-ensure-you-are-looking-at-the-right-object-level-300/
+date: 2007-04-10T17:04:38
+date_utc: 2007-04-10T17:04:38Z
+modified: 2007-04-10T17:04:38
+format: html
+excerpt: Debugging can be easy or hard. It’s easy if you have an easily reproducible error. This morning I wrestled a bug where a screen just stopped showing data. Nothing. Zilch. When I debugged through, I watched every piece of data get properly set to labels in my Winforms view that were visible, but the screen […]
+comments_open: true
+---
+<p>Debugging can be easy or hard.&nbsp; It’s easy if you have an easily reproducible error.&nbsp; This morning I wrestled a bug where a screen just stopped showing data.&nbsp; Nothing.&nbsp; Zilch.</p>
+<p>When I debugged through, I watched every piece of data get properly set to labels in my Winforms view that were visible, but the screen shows up without the data!! What gives?</p>
+<p>Ultimately, I was looking at the wrong instance of my screen/view.&nbsp; </p>
+<p>Here’s a debugging tip to use if you watch the code executing properly but it still doesn’t work&nbsp;in the end:</p>
+<p><strong>Make sure you are looking at the right object.</strong></p>
+<p>In the debugger, set a breakpoint in the constructor and ensure you are watching the right instance.&nbsp; In the immediate window, use the hashcode to track the instance:</p>
+<p>this.GetHashCode()<br>34169857<br>this.GetHashCode()<br>61248560</p>
+<p>This way, you can clearly identify the object.</p>

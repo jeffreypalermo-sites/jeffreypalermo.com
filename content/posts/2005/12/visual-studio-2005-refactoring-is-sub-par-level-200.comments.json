@@ -1,0 +1,92 @@
+[
+  {
+    "id": 612,
+    "parent": 0,
+    "author_name": "Thomas Williams",
+    "author_url": "http://dotnetjunkies.com/WebLog/thomasswilliams/",
+    "date": "2005-12-29T23:06:53",
+    "type": "comment",
+    "content_html": "<p>G’day Jeffrey, </p>\n<p>I use VB and haven’t quite got the hang of refactoring but am impressed with the Refactor tool. </p>\n<p>On the topic of your post though: in C# is it possible to call a method and name the parameter? In VB you can do “SomeMethod aParam:=1, anotherParam:=2” with the condition being that if you specify the name of a parameter you have to specify the name of all of them. Could this be a reason that renaming a method parameter starts a solution-wide search?</p>\n<p>Cheers,</p>\n<p>Thomas (who doesn’t know anything about C#, but is intrigued by your findings)</p>"
+  },
+  {
+    "id": 613,
+    "parent": 0,
+    "author_name": "ScottBellware",
+    "author_url": "http://www.bellware.net",
+    "date": "2005-12-30T08:50:08",
+    "type": "comment",
+    "content_html": "<p>&gt; …envy VB developers who have access to DevExpress’ Refactor<br>\n&gt; tool which is far better than the meager refactoring support<br>\n&gt; available for C#</p>\n<p>That’s true on the surface… Rafactor! focuses on method refactorings and offers little in terms of class refactorings.</p>\n<p>It came as a surprise to Mark Miller when I told him that Rename Class is the most common refactoring that I use.  His assumption was that method-level refactorings like Extract Method, Introduce Explaining Variable, Reorder Parameters, etc, were the most common and most important.</p>\n<p>This is probably a safe bet for VB developers who have more procedural programming predispositions and for whom a “unit” is often a function rather than a class.  Refactoring at the method-level makes more sense for folks that focus on function libary design to the exclusion of class library design.</p>\n<p>There’s no doubt that Developer Express hit the ball out of the park when it comes to in-IDE experience, but the broad applicability of Refactor! to OO programming is questionable.  Refactor! is better than VC# when it comes to the refactorings that the two have in common, but it doesn’t provide the class refactorings that allow it to compete practicably with either VC# or ReSharper – regardless of the pretty pictures or the animations.</p>\n<p>By the way, Refactor is available for C# as well:<br>\n<a href=\"http://www.devexpress.com/Products/NET/Refactor/\" rel=\"nofollow ugc\">http://www.devexpress.com/Products/NET/Refactor/</a></p>\n<p>There’s a new kid on the refactoring block trying to steal some thunder while JetBrains is still dark on ReSharper 2.0.  If you’re fed up with VC#’s first crack at refactoring, check out JustCode from Omnicore:<br>\n<a href=\"http://www.omnicore.com/justcode.htm\" rel=\"nofollow ugc\">http://www.omnicore.com/justcode.htm</a></p>\n<p>The 30-day trial might just be long enough to carry us into the ReSharper 2.0 release \uD83D\uDE42</p>"
+  },
+  {
+    "id": 614,
+    "parent": 0,
+    "author_name": "ScottBellware",
+    "author_url": "http://www.bellware.net",
+    "date": "2005-12-30T09:08:22",
+    "type": "comment",
+    "content_html": "<p>Thomas,</p>\n<p>A parameter name is only visible to the method that it is declared on… there’s no need to search the entire solution since the scope of the name is limited to a single method.  Regardless of why the tool works the way it does, it really misses the mark for refactoring functionality compared to the tools that set the precedent for refactoring in Visual Studio.</p>\n<p>VC#’s refactoring is sub-par compared to its competition, but it’s definitely better than nothing if you can’t afford the $150 for a much more productive tool.</p>\n<p>The example you provided is pretty interesting.  I wonder if Refactor! knows how to re-write a method invocation based on that syntax.</p>\n<p>I don’t think the same thing could be done in C#.  I would tend to think of something like this as a design anti-pattern, and I would hope that C# doesn’t support it.</p>"
+  },
+  {
+    "id": 615,
+    "parent": 0,
+    "author_name": "Frans Bouma",
+    "author_url": "http://weblogs.asp.net/fbouma",
+    "date": "2005-12-30T09:42:12",
+    "type": "comment",
+    "content_html": "<p>“Renaming a method parameter is one of the simplest refactorings.  It can’t affect code other than in that method, so why is there the need to search every file in the solution?  Only code inside that method could _possibly_ be affected.”<br>\nThere are rules set in FxCop which force you to use the same parameter names in overrides, or methods with ‘new’ as in the original. That’s why I think it traverses the whole solution.</p>\n<p>And make no mistake: it’s slow because:<br>\n1) it does parsing of related files in the whole solution at that moment<br>\n2) it tries to be 100% correct, and they sacrificed performance over correctness.</p>\n<p>All add-ins use background compilation/code sniffing. They can be faster when you start a refactoring feature, but slow down your vs.net experience because of the background compilation. I don’t use refactoring features a lot, I’m that kind of person who thinks more up front and tries to limit messing with existing code afterwards. I find the refactorings for C# limited, and yes they’re slow, but I don’t see the slowness as a problem, even though my codebase is 100,000+ lines of code. (and it doesn’t take more than 5 seconds to do things)</p>\n<p>What I find annoying is that the limitations of the offerings is sometimes so severe that the whole feature is useless. Like ‘extract method’. Try to specify a generic method name there (like Foo) No can do. </p>"
+  },
+  {
+    "id": 616,
+    "parent": 0,
+    "author_name": "Colin Neller",
+    "author_url": "http://www.colinneller.com/blog",
+    "date": "2005-12-30T13:33:11",
+    "type": "comment",
+    "content_html": "<p>Refactor! Pro (<a href=\"http://www.devexpress.com/Products/NET/Refactor/\" rel=\"nofollow ugc\">http://www.devexpress.com/Products/NET/Refactor/</a>) supports both VB.NET and C#.  For the next step up, get CodeRush (<a href=\"http://www.devexpress.com/Products/NET/CodeRush/\" rel=\"nofollow ugc\">http://www.devexpress.com/Products/NET/CodeRush/</a>)  It includes all functionality in Refactor! Pro and more.</p>"
+  },
+  {
+    "id": 617,
+    "parent": 0,
+    "author_name": "Brendan Tompkins",
+    "author_url": "http://",
+    "date": "2005-12-30T14:40:08",
+    "type": "comment",
+    "content_html": "<p>I agree… My VS 2005 experience so far has been painful. The refactoring stuff is useless, IMO. Extract method hardly works at all, and everything else is sloooow..  </p>\n<p>I had to launch VS 2003 for a minute the other day, and loved the momentary ease of development.  This is a first for me as a developer, I’ve never wished I could use an old version of software…   </p>\n<p>Hopefully ReSharper will save the IDE when it comes out.  </p>"
+  },
+  {
+    "id": 618,
+    "parent": 0,
+    "author_name": "John Wood",
+    "author_url": "http://dotnetjunkies.com/weblog/johnwood",
+    "date": "2006-01-01T03:50:16",
+    "type": "comment",
+    "content_html": "<p>I find it a bit surprising that it does have to scan all files — from my limited understanding of how visual studio works, I thought it did background compilation anyway in order to give you the realtime compilation errors (ie. squiggly underlines). Surely it can use that information?</p>"
+  },
+  {
+    "id": 619,
+    "parent": 0,
+    "author_name": "John Wood",
+    "author_url": "http://dotnetjunkies.com/weblog/johnwood",
+    "date": "2006-01-01T03:52:28",
+    "type": "comment",
+    "content_html": "<p>&gt;&gt; I had to launch VS 2003 for a minute the other day, and loved the momentary ease of development. This is a first for me as a developer, I’ve never wished I could use an old version of software…&lt;&lt;</p>\n<p>Funny, I felt the same way but was too ashamed to say it. Time to upgrade RAM or something I guess. Microsoft are good at obsoleting whatever PC hardware I have.</p>"
+  },
+  {
+    "id": 620,
+    "parent": 0,
+    "author_name": "David Stennett",
+    "author_url": "http://www.jetbrains.com/resharper",
+    "date": "2006-01-05T10:23:38",
+    "type": "comment",
+    "content_html": "<p>You know you guys can use the pre-Beta of ReSharper 2.0 on VS .NET 2005 for free, right?  If you’re brave enough, give it a go — if the pre-beta is too buggy for you then you can uninstall it (don’t use it on some large production system yet!) … but, check it out here:</p>\n<p><a href=\"http://www.jetbrains.net/confluence/display/ReSharper/Download\" rel=\"nofollow ugc\">http://www.jetbrains.net/confluence/display/ReSharper/Download</a></p>\n<p>You can also see its complete feature list (and what the pre-betas have implemented so far):</p>\n<p><a href=\"http://www.jetbrains.net/confluence/display/ReSharper/ReSharper+2.0+Plan\" rel=\"nofollow ugc\">http://www.jetbrains.net/confluence/display/ReSharper/ReSharper+2.0+Plan</a></p>\n<p>Best!</p>\n<p>David Stennett<br>\nJetBrains, Inc.</p>"
+  },
+  {
+    "id": 621,
+    "parent": 0,
+    "author_name": "Eber Irigoyen",
+    "author_url": "http://ebersys.blogspot.com",
+    "date": "2006-01-05T21:58:37",
+    "type": "comment",
+    "content_html": "<p>I haven’t used ReSharper, and I’ve heard too many good things, but we just don’t use it<br>\nbut I’ve seen Delphi, you should see how Delphi 2005-2006 does it, is sweet!<br>\nyou right click on a variable, click rename and it hightlights all the places where that variable is, you start typing and it changes the names of all of them at the same time (and they are all highlightes) until you are done</p>"
+  }
+]

@@ -1,0 +1,52 @@
+---
+wp_id: 337
+title: ASP.NET Rendered Controls vs. Composite Controls – I prefer to avoid rendered controls – level 200
+slug: asp-net-rendered-controls-vs-composite-controls-i-prefer-to-avoid-rendered-controls-level-200
+permalink: /2005/10/asp-net-rendered-controls-vs-composite-controls-i-prefer-to-avoid-rendered-controls-level-200/
+date: 2005-10-18T22:21:00
+date_utc: 2005-10-18T22:21:00Z
+modified: 2005-10-18T22:21:00
+format: html
+excerpt: Here, I’ll present a simple example of the same control using the rendered method and the composite method. For those new to custom web controls, a rendered control is a class inherited from “Control” or “WebControl” that overrides the “Render” method in order to sned custom markup to the browser. A composite control uses other […]
+comments_open: true
+---
+<p>Here, I’ll present a simple example of the same control using the rendered method and the composite method.&nbsp; For those new to custom web controls, a rendered control is a class inherited from “Control” or “WebControl” that overrides the “Render” method in order to sned custom markup to the browser.&nbsp; A composite control uses other controls in a hierarchy and leaves the rendering to each control.&nbsp; </p>
+<p>Here is a simple rendered control:</p>
+<div><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>public</span> <span>class</span> RenderedControl : Control</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;&nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>protected</span> <span>override</span> <span>void</span> Render(HtmlTextWriter writer)</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; writer.AddAttribute(HtmlTextWriterAttribute.Id, “myID”);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;11</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; writer.RenderBeginTag(HtmlTextWriterTag.Div);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;12</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; writer.AddAttribute(HtmlTextWriterAttribute.Id, “innerID”);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; writer.RenderBeginTag(HtmlTextWriterTag.Span);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;14</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; writer.Write(“This text is the meat of this control.”);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;15</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; writer.RenderEndTag();</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;16</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; writer.RenderEndTag();</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;17</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;18</span>&nbsp;&nbsp;&nbsp;&nbsp; }</p></div>
+<p>It’s pretty straight-forward, and the output will always be this:&nbsp; </p>
+<div><br>
+<p><span>&nbsp;&nbsp;&nbsp;18</span>&nbsp;<span>&lt;</span><span>div</span><span> </span><span>id</span><span>=”myID”&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp;19</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>&lt;</span><span>span</span><span> </span><span>id</span><span>=”innerID”&gt;</span>This text is the meat of this control.<span>&lt;/</span><span>span</span><span>&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp;20</span>&nbsp;<span>&lt;/</span><span>div</span><span>&gt;</span></p></div>
+<p>Here is the same thing using the composite method:</p>
+<div><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>public</span> <span>class</span> CompositeControl : Panel</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;&nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>protected</span> <span>override</span> <span>void</span> CreateChildControls()</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>base</span>.CreateChildControls ();</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;11</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;12</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>this</span>.ID = “myID”;</p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Label lbl = <span>new</span> Label();</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;14</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; lbl.ID = “innerID”;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;15</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; lbl.Text = “This text is the meat of this control.”;</p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp;16</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>this</span>.Controls.Add(lbl);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;17</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;18</span>&nbsp;&nbsp;&nbsp;&nbsp; }</p></div>
+<p>With the composite method, the developer doesn’t have to worry about the low level markup being rendered, and he can depend on the richer object-oriented contract of each child control.&nbsp; With this method, the developer overrides the CreateChildControls() method and adds child controls.&nbsp; All these child controls will render themselves.&nbsp; The exact same markup renders.</p>
+<p>In my opinion, using the composite control method optimizes development time, and that is the most expensive more often than not.&nbsp; I don’t give weight to the performance argument because the difference in performance is on the millisecond scale.&nbsp; The moment you call out-of-process to a database or the file system, you accept a performance hit of much more magnitude; therefore, the performance difference of these two methods is negligible.&nbsp; The composite control method is more maintainable, and maintenance of an application always costs more.<!--EndFragment--><!--EndFragment--><!--EndFragment--></p>

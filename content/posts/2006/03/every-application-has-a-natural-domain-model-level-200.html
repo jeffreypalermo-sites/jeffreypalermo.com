@@ -1,0 +1,71 @@
+---
+wp_id: 390
+title: EVERY application has a natural domain model – level 200
+slug: every-application-has-a-natural-domain-model-level-200
+permalink: /2006/03/every-application-has-a-natural-domain-model-level-200/
+date: 2006-03-11T08:35:00
+date_utc: 2006-03-11T08:35:00Z
+modified: 2006-03-11T08:35:00
+format: html
+tags:
+- coding-principles
+excerpt: I’m in the camp that loves OO. I want smart objects for everything. I don’t like data-centric programming. I don’t like thowing raw data around in DataSets. I create custom objects for everything in my applications. I was reflecting on a very simple application, and I realized that every application has a natural domain model. […]
+comments_open: true
+---
+<p>I’m in the camp that loves OO.&nbsp; I want smart objects for<br>
+everything.&nbsp; I don’t like data-centric programming.&nbsp; I don’t<br>
+like thowing raw data around in DataSets.&nbsp; I create custom objects<br>
+for everything in my applications.&nbsp; I was reflecting on a very<br>
+simple application, and I realized that every application has a natural<br>
+domain model.&nbsp; I’ve had conversations where a developer has said,<br>
+“Our application is different.&nbsp; It’s not an enterprise<br>
+application.&nbsp; Domain-driven design doesn’t apply.”&nbsp; I’ve come<br>
+up with a really simple example to illustrate my point.</p>
+<p>Suppose you have an application that only maintains social security<br>
+numbers.&nbsp; That’s it. It doesn’t store person information, just<br>
+social security numbers.&nbsp; In fact, your entire database is one<br>
+table with one char(9) field.&nbsp; One might just go ahead and<br>
+keep the social security numbers in a string.&nbsp; Would that<br>
+work?&nbsp; Yes, but consider the natural domain object for this:</p>
+<p>&nbsp;&nbsp;&nbsp; public class SocialSecurityNumber<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; private string _rawNumber;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; public SocialSecurityNumber(string number)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _rawNumber = number;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; public string GetWithoutDashes()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return; //the ssn without dashes.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; public override string ToString()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //format ssn nicely and output.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return; //the nice output.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; public override bool Equals(object obj)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return true; //or false if they don’t match.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //Use some intelligence to compare for sameness.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; }</p>
+<p>You could store the information in a string, but then that is a magic<br>
+string floating around your application, and every class _just_ has to<br>
+know that it must be a social security number.&nbsp; There is no strong<br>
+typing to enforce that there are exactly 9 numerals in the<br>
+string.&nbsp; What about dashes?&nbsp; with this SocialSecurityNumber<br>
+class, you have your domain model, and now you can enforce all the<br>
+rules about the number easily.&nbsp; Maybe you want to always store it<br>
+in the database without dashes but want to display it on the UI with<br>
+dashes.&nbsp; Instead of string manipulation elsewhere, encapsulate<br>
+that logic directly inside the domain object.&nbsp; If you use this<br>
+object throughout your system, it’s clear that constraints will always<br>
+be enforced, and you never have double check that a social security<br>
+number is really there – the compiler picks up that burden for you as<br>
+well as runtime strong type checking.</p>
+<p>Consider your current applications.&nbsp; Do you have a prominent<br>
+string, bool, or int?&nbsp; Would it be helpful if that piece of<br>
+information could carry around describing and validating<br>
+information?&nbsp; Consider creating a domain object to house that<br>
+single piece of information and enforce rules about it.&nbsp; I think<br>
+it’ll make the application a lot simpler.</p>

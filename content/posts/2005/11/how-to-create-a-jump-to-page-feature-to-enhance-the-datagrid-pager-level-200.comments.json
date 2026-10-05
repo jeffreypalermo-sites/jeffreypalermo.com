@@ -1,0 +1,20 @@
+[
+  {
+    "id": 591,
+    "parent": 0,
+    "author_name": "Chris",
+    "author_url": "http://www.onlinescorekeeper.com",
+    "date": "2005-12-02T00:55:30",
+    "type": "comment",
+    "content_html": "<p>I love this tip, but it doesn’t appear to work in ASP.NET 2.0, at least with my code.  I am getting this error msg trying to move the panel control from the page into the gridview pager cell:</p>\n<p>System.Web.HttpException: The control collection cannot be modified during DataBind, Init, Load, PreRender or Unload phases.</p>\n<p>It doesn’t appear to be a gridview control problem, more of a page problem.</p>\n<p>This works:<br>\nPrivate Sub RowCreated(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvPageHits.RowCreated<br>\n            If e.Row.RowType = DataControlRowType.Pager Then<br>\n                e.Row.Cells(0).Controls.Add(New TextBox)<br>\n            End If<br>\nEnd Sub</p>\n<p>But this doesn’t<br>\nPrivate Sub RowCreated(ByVal sender As Object, ByVal e As GridViewRowEventArgs) Handles gvPageHits.RowCreated<br>\n            If e.Row.RowType = DataControlRowType.Pager Then<br>\n                e.Row.Cells(0).Controls.Add(pnlJump)<br>\n            End If<br>\nEnd Sub</p>\n<p>I haven’t figured out another way to do this.  Any ideas?</p>"
+  },
+  {
+    "id": 592,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-12-02T03:10:17",
+    "type": "comment",
+    "content_html": "<p>I haven’t tried this with 2.0 yet.  Please post again if you get it working.</p>"
+  }
+]

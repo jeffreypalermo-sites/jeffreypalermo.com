@@ -1,0 +1,74 @@
+[
+  {
+    "id": 2218,
+    "parent": 0,
+    "author_name": "Jimmy Bogard",
+    "author_url": "http://grabbagoft.blogspot.com/",
+    "date": "2008-01-04T15:40:57",
+    "type": "comment",
+    "content_html": "<p>Just wanted to correct the “ASP.NET Podcast” link:</p>\n<p><a href=\"http://aspnetpodcast.com/CS11/blogs/asp.net_podcast/archive/2007/11/20/asp-net-podcast-show-104-asp-net-mvc-with-jeff-palermo-audio.aspx\" rel=\"nofollow ugc\">http://aspnetpodcast.com/CS11/blogs/asp.net_podcast/archive/2007/11/20/asp-net-podcast-show-104-asp-net-mvc-with-jeff-palermo-audio.aspx</a></p>"
+  },
+  {
+    "id": 2219,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-04T16:09:22",
+    "type": "comment",
+    "content_html": "<p>@Jimmy,<br>\nThanks.</p>"
+  },
+  {
+    "id": 2220,
+    "parent": 0,
+    "author_name": "Catto",
+    "author_url": "http://www.ChrisCatto.com",
+    "date": "2008-01-04T18:21:47",
+    "type": "comment",
+    "content_html": "<p>Hey Now Joe,<br>\nSuch a great topic, This was very informative. As always DNR is really well done, &amp; I thought you did really well.<br>\nThx 4 the info,<br>\nCatto</p>"
+  },
+  {
+    "id": 2221,
+    "parent": 0,
+    "author_name": "Brendan Tompkins",
+    "author_url": "http://",
+    "date": "2008-01-04T18:58:19",
+    "type": "comment",
+    "content_html": "<p>Extremely helpful Jeff.  Thanks for this!</p>"
+  },
+  {
+    "id": 2222,
+    "parent": 0,
+    "author_name": "Jose",
+    "author_url": "http://",
+    "date": "2008-01-10T11:48:37",
+    "type": "comment",
+    "content_html": "<p>Absolutely brilliant. Cannot wait for the next installment (please do not leave it too long).<br>\nHaving a limited amount of experience with web apps, this felt like the right way to do things.<br>\nI am trying to download the example code but there does not appear to be a zip file for it. There are however links for each file which will take me ages (unless I am missing something).</p>\n<p>Thanks once again.</p>"
+  },
+  {
+    "id": 2223,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-10T13:13:14",
+    "type": "comment",
+    "content_html": "<p>@Jose,<br>\nUse TortoiseSVN to checkout the code:<br>\n<a href=\"http://tortoisesvn.tigris.org/\" rel=\"nofollow ugc\">http://tortoisesvn.tigris.org/</a>  </p>\n<p>They are SVN urls.</p>"
+  },
+  {
+    "id": 2224,
+    "parent": 0,
+    "author_name": "Jason",
+    "author_url": "http://",
+    "date": "2008-01-10T13:27:00",
+    "type": "comment",
+    "content_html": "<p>Cool video. Second Jose and please get the next one out.</p>\n<p>Would it be possible to change the asp rendering engine for Silverlight (1.1 when it finally gets released)? If so how much work would that be? I was told that siliverlight does not have to be page based, if that is correct would MVC still work?</p>\n<p>Keep up the good work.</p>\n<p>Pete</p>"
+  },
+  {
+    "id": 2225,
+    "parent": 0,
+    "author_name": "Jose",
+    "author_url": "http://",
+    "date": "2008-01-11T12:26:39",
+    "type": "comment",
+    "content_html": "<p>Sorry, but a bit new to this.</p>\n<p>Just got TortoiseSVN but keeps asking for username and password. Tried google username/pass but no success. What do I do?</p>"
+  }
+]

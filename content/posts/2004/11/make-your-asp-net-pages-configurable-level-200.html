@@ -1,0 +1,22 @@
+---
+wp_id: 148
+title: Make your ASP.NET pages configurable – level 200
+slug: make-your-asp-net-pages-configurable-level-200
+permalink: /2004/11/make-your-asp-net-pages-configurable-level-200/
+date: 2004-11-23T00:27:00
+date_utc: 2004-11-23T00:27:00Z
+modified: 2004-11-23T00:27:00
+format: html
+excerpt: There are some basic things in a large web application that change from page to page, and it might benefit you to make that information come from a file or database. All my base pages implement an interface of mine that contains basic information that my whole site needs. Standardizing on this interface makes my […]
+comments_open: true
+---
+<p>There are some basic things in a large web application that change from page to page, and it might benefit you to make that information come from a file or database.&nbsp; All my base pages implement an interface of mine that contains basic information that my whole site needs.&nbsp; Standardizing on this interface makes my site more maintainable, and I can implement the properties any way I need to.&nbsp; Here is my interface:</p>
+<div><br>
+<p><span>public</span> <span>interface</span> IPageConfig</p><br>
+<p>{</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>string</span> Title{<span>get</span>;}</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>string</span> Template{<span>get</span>;}</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>string</span> Theme{<span>get</span>;}</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>string</span> Plugin{<span>get</span>;}</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>string</span> Parameter{<span>get</span>;}</p><br>
+<p>}</p></div><!--EndFragment-->

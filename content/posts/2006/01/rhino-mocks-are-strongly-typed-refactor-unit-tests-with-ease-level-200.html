@@ -1,0 +1,94 @@
+---
+wp_id: 366
+title: Rhino Mocks are strongly typed.  Refactor unit tests with ease – level 200
+slug: rhino-mocks-are-strongly-typed-refactor-unit-tests-with-ease-level-200
+permalink: /2006/01/rhino-mocks-are-strongly-typed-refactor-unit-tests-with-ease-level-200/
+date: 2006-01-02T15:31:00
+date_utc: 2006-01-02T15:31:00Z
+modified: 2006-01-02T15:31:00
+format: html
+excerpt: I completed my first unit test with Rhino Mocks today. With well-designed code, one can pick apart a section, mock the interfaces it needs and run/debug/test it in isolation. This is a huge advantage of a loosely-coupled design. The alternative is a tightly-coupled design where every class knows about the API of every other class, […]
+comments_open: true
+---
+<p>I completed my first unit test with <a href="http://www.ayende.com/projects/rhino-mocks.aspx">Rhino Mocks </a>today.&nbsp;<br>
+With well-designed code, one can pick apart a section, mock the<br>
+interfaces it needs and run/debug/test it in isolation.&nbsp; This is a<br>
+huge advantage of a loosely-coupled design.&nbsp; The alternative is a<br>
+tightly-coupled design where every class knows about the API of every<br>
+other class, and nothing can be run unless _everything_ is<br>
+operational.&nbsp; The worst of this is if you have a development<br>
+resource like a database or message queue that isn’t operational at the<br>
+moment.&nbsp; You can’t run any of your code because&nbsp;three classes<br>
+away something depends on it.</p>
+<p>The biggest win, in my opinion, for a loosely-coupled design is<br>
+testability.&nbsp; If every dependency is hidden behind a custom<br>
+interface, those interfaces can be mocked at will, and your code that<br>
+uses these interfaces can be run/debugged/tested at will.&nbsp; This is<br>
+where mocking frameworks come in.</p>
+<p>I currently use <a href="http://www.nmock.org/">NMock </a>in my automated tests.&nbsp; I’ve also used the mocking framework in nunit.mocks.dll that is available with <a href="http://www.nunit.org/">NUnit </a>(by<br>
+the way, version 2.2.5 is out).&nbsp; NMock uses expectations as<br>
+strings to define how it will simulate an object that you need.&nbsp;<br>
+You can read up on NMock here:</p>
+<ul>
+<li><a id="_ctl0__ctl0__ctl0__ctl0_BlogSearcher__ctl0_SearchPostList__ctl0_EntryItems__ctl1_PostTitle" href="/blogs/jeffrey.palermo/archive/2005/11/04/134288.aspx">How to use NMock to assist with unit testing – level 300</a>
+</li>
+<li><a id="_ctl0__ctl0__ctl0__ctl0_BlogSearcher__ctl0_SearchPostList__ctl0_EntryItems__ctl3_PostTitle" href="/blogs/jeffrey.palermo/archive/2005/11/01/134095.aspx">Simple dependency injection to get you started with unit testing – level 200</a> </li>
+</ul>
+<p><a href="http://www.ayende.com/projects/rhino-mocks.aspx">Rhino Mocks </a>serve<br>
+the same purpose, but instead of strings to represent the method that<br>
+should be called, it uses the actual method.&nbsp; If follows a record<br>
+and play pattern, and you don’t use a string while setting up any of<br>
+it.&nbsp; This is a huge time-savor.&nbsp; When you want to rename a<br>
+method, you don’t have to search for strings that contain that method<br>
+name.&nbsp; The compiler will now catch any errors resulting from the<br>
+rename, and your refactoring tool will rename all calls to that method<br>
+for you.&nbsp; Here’s a sample test for a custom <a href="http://msdn2.microsoft.com/en-us/library/system.web.security.membershipprovider.aspx">MembershipProvider </a>I was playing with:</p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>[<span style="color:teal">Test</span>, <span style="color:teal">Explicit</span>]</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">void</span> ShouldUpdateUserInformationInProviderWithRhinoMocks()</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Rhino.Mocks.<span style="color:teal">MockRepository</span> mocks = <span style="color:blue">new</span> Rhino.Mocks.<span style="color:teal">MockRepository</span>();</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">MembershipDataSet</span> dataSet = <span style="color:blue">new</span> <span style="color:teal">MembershipDataSet</span>();</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>dataSet.Users.AddUsersRow(<span style="color:blue">new</span> <span style="color:teal">Guid</span>(), <span style="color:maroon">“lerma”</span>, <span style="color:maroon">“lerma”</span>, <span style="color:maroon">“lksd”</span>, <span style="color:maroon">“”</span>,</span></p>
+<p><span><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">DateTime</span>.Now.ToShortDateString());</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">IDataSetStore</span> store = (<span style="color:teal">IDataSetStore</span>)mocks.CreateMock(<span style="color:blue">typeof</span>(<span style="color:teal">IDataSetStore</span>));</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Rhino.Mocks.<span style="color:teal">Expect</span>.Call(store.GetDataSet()).Return(dataSet);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>store.SaveDataSet(dataSet);</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>mocks.ReplayAll();</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>StructureMap.<span style="color:teal">ObjectFactory</span>.InjectStub(<span style="color:blue">typeof</span>(<span style="color:teal">IDataSetStore</span>), store);</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">IMembershipProvider</span> provider = (<span style="color:teal">IMembershipProvider</span>)StructureMap.<span style="color:teal">ObjectFactory</span>.GetInstance(</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">typeof</span>(<span style="color:teal">IMembershipProvider</span>));</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">Assert</span>.AreEqual(1, dataSet.Users.Count);</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">MembershipUser</span> user = provider.GetUser(<span style="color:maroon">“lerma”</span>);<span style="color:green">//call should trigger the GetDataSet() call;</span></span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>user.Email = <span style="color:maroon">“lerma@address.com”</span>;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>provider.UpdateUser(user);<span style="color:green">//Should call SaveDataSet(…);</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>user = provider.GetUser(<span style="color:maroon">“lerma”</span>);<span style="color:green">//DataSet should be cached, so no call.</span></span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">Assert</span>.AreEqual(<span style="color:maroon">“</span></span><span><span style="color:maroon">lerma@address.com</span></span><span><span style="color:maroon">“</span>, user.Email);</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>mocks.VerifyAll();<span style="color:green">//make sure the interaction with IDataSetStore was correct.</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p>Note one very big difference between Rhino and NMock.&nbsp; When you<br>
+first create the mock, you are in record mode, and for void methods, to<br>
+set up the expectation, you actually _call_ the method.&nbsp; Rhino<br>
+sees that and adds the expectation.&nbsp; For non-void methods, you use<br>
+Expect.Call to set up&nbsp;the return value.&nbsp; When you are ready<br>
+to run the code under test, you have to switch to play mode using the<br>
+ReplayAll() method.&nbsp; And then at the end there is the obvious<br>
+VerifyAll() method.&nbsp; Rhino supports Replay and Verify for all<br>
+mocked objects at once or one by one.</p>
+<p>In this code sample. I’m using StructureMap in my production code to<br>
+link dependencies.&nbsp; Here, I tell StructureMap to use the mocked<br>
+object instead.&nbsp; Read up on <a href="http://structuremap.sourceforge.net/Default.htm">StructureMap here</a>.</p>
+<p>So far, <strong>I’ve found Rhino Mocks to have every feature that I currently use with NMock plus the strongly-typed expectations</strong>.&nbsp;<br>
+I’m considering making a switch.&nbsp; For the time being, I’ll<br>
+continue to use Rhino for new tests as a longer evaluation.&nbsp; To<br>
+get more information on how Rhino Mocks work, read the <a href="http://www.ayende.com/projects/rhino-mocks/documentation.aspx">documentation</a>, which is very good.</p>

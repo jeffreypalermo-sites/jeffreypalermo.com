@@ -1,0 +1,58 @@
+---
+wp_id: 413
+title: TDD speeds up unit testing – level 300
+slug: tdd-speeds-up-unit-testing-level-300
+permalink: /2006/04/tdd-speeds-up-unit-testing-level-300/
+date: 2006-04-13T02:58:00
+date_utc: 2006-04-13T02:58:00Z
+modified: 2006-04-13T02:58:00
+format: html
+tags:
+- agile
+- coding-principles
+excerpt: Before reading this post, I recommend reading a previous post of mine along with the comments and trackbacks to related posts. First, you may wonder why I’m contending that TDD speeds up unit testing if TDD itself stresses unit testing so much. One can unit test without employing TDD. I can write some code and […]
+comments_open: true
+---
+<p>Before reading this post, I recommend reading <a href="/blogs/jeffrey.palermo/archive/2006/03/28/141920.aspx">a previous post of mine along with the comments and trackbacks</a> to related posts.</p>
+<p>First, you may wonder why I’m contending that TDD speeds up unit<br>
+testing if TDD itself stresses unit testing so much.&nbsp; One can unit<br>
+test without employing TDD.&nbsp; I can write some code and write a<br>
+unit test for it.&nbsp; If I use this method, I’m likely to have a hard<br>
+time unit testing the code because it may call out to a database or the<br>
+file system or a web service or some other object that is difficult to<br>
+create in isolation.&nbsp; If I think about how I’m going to test the<br>
+code as I’m writing it, I’ll end up with code that’s easier to test<br>
+because I’ll depend on interfaces and employ other techniques to ensure<br>
+my code is <a href="http://en.wikipedia.org/wiki/Loosely_coupled">loosely coupled</a>.&nbsp;<br>
+Because my goal was a piece of code for which it was easy to write a<br>
+unit test, I’ll end up with code designed for that.&nbsp; At this<br>
+point, I’m blurring the lines between just unit testing and TDD.&nbsp;<br>
+I didn’t write my unit test first, but I _thought_ about how I would<br>
+write my unit test first.&nbsp; I imagined the method of testing before<br>
+writing the code.&nbsp; From this point, it’s a snap to then actually<br>
+write the test that’s floating around in my head before coding the<br>
+production code. </p>
+<p>From a pragmatic sense, it probably doesn’t matter which code is<br>
+actually typed first if you’ve already decided on the unit test in your<br>
+head.&nbsp; You’ve written the unit test in your head before the<br>
+production code.&nbsp; The typing is then just semantics.&nbsp; </p>
+<p>If you aren’t thinking about unit testing at all (if you don’t<br>
+currently do unit testing), then this whole topic is worthless for you,<br>
+but if you are attempting to write unit tests after you design your<br>
+code, I’m sure you can relate that it’s often difficult because you<br>
+have to pull in other classes just to test a single class.&nbsp; If<br>
+this happens, then it’s not a unit test at all.&nbsp; It’s an<br>
+integration test because it tests multiple things.&nbsp; The difference<br>
+in unit testing and integration testing is a topic for another post,<br>
+but the difference is very important, and if the difference is not<br>
+understood, then arguments for/against TDD don’t make much sense at all.</p>
+<p>The above is how TDD speeds up writing unit tests (if you have already been doing unit testing).</p>
+<p>If the goal is code with unit tests, then the code will be designed for<br>
+easy unit testing.&nbsp; To design for easy unit testing, a developer<br>
+has to think about the test first.&nbsp; This leads to mental TDD, and<br>
+after the code is designed, the unit test can be written quickly.&nbsp;<br>
+The next step would naturally be to just go ahead and type the test<br>
+first instead of keeping it in your brain.&nbsp; If at this point you<br>
+prefer to continue to type the test after the production code, go<br>
+ahead.&nbsp; You will have benefited some by focusing more on how to<br>
+test the code.</p>

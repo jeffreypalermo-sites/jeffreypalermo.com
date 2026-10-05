@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1749,
+    "parent": 0,
+    "author_name": "Jon Rowett",
+    "author_url": "http://workblog.jonrowett.com",
+    "date": "2007-06-06T16:19:24",
+    "type": "comment",
+    "content_html": "<p>let me get this straight: in a week when everyone has been slating Microsoft for doing poor reimplementations of existing open source tools (ie MSTest vs NUnit), we’re now celebrating because Microsoft have been bullied into cloning NHibernate?</p>"
+  },
+  {
+    "id": 1750,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-06-06T17:19:50",
+    "type": "comment",
+    "content_html": "<p>@Jon,<br>\nI’m not who is celebrating, but this is at least one way in which the MVP program has helped with a framework that our customers will ask us about at some point.  I was not happy with the direction of the EF, and I was very vocal about it.  In fact, I spent a great deal of time face to face with Daniel Simmons talking about it.  I still don’t think it’s necessary (much like MSTest, etc), but _IF_ they are going to release something that is done well already, I don’t want it to lead customers in the wrong direction.  </p>"
+  }
+]

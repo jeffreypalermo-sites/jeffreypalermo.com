@@ -1,0 +1,19 @@
+---
+wp_id: 560
+title: 'Re: Explanation of dynamic ASPX compilation and recompilation – level 300'
+slug: re-explanation-of-dynamic-aspx-compilation-and-recompilation-level-300
+permalink: /2004/06/re-explanation-of-dynamic-aspx-compilation-and-recompilation-level-300/
+date: 2004-06-07T11:58:00
+date_utc: 2004-06-07T11:58:00Z
+modified: 2004-06-07T11:58:00
+format: html
+excerpt: 'To expand on my previous post, here is a reply I received from Dino Esposito about what goes on behind the scenes on a page request: Hi Jeffrey 1) The runtime figures out the name of the class to serve that page request. If the class can’t be found in any of the loaded assemblies, […]'
+comments_open: true
+---
+<p>To expand on my previous <a href="http://dotnetjunkies.com/WebLog/jpalermo/archive/2004/06/02/15124.aspx">post</a>, here is a reply I received from <a href="http://weblogs.asp.net/despos/">Dino Esposito </a>about what goes on behind the scenes on a page request:</p>
+<blockquote><br>
+<p><em>Hi Jeffrey</em></p><br>
+<p><em>1) The runtime figures out the name of the class to serve that page request.&nbsp; </em><em>If the class can’t be found in any of the loaded assemblies, the source is compiled. If the class is found (means the page’s been compiled already), it checks the timestamp of the class against a value stored in an internal store. If they differ, it assumes the page has been compiled. This happens with ASPX files</em></p><br>
+<p><em>2) If you change the CS/VB nothing happens and an explicit compile step is required</em></p><br>
+<p><em>3) Changes in inline code trigger the recompile</em></p><br>
+<p><em>–Dino</em></p></blockquote>

@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1030,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2006-11-03T16:07:58",
+    "type": "comment",
+    "content_html": "<p>Paging with NHibernate:</p>\n<p>session.CreateQuery(“from Post”)<br>\n  .SetFirstResult(10)<br>\n  .SetMaxResults(10)<br>\n  .List();</p>"
+  },
+  {
+    "id": 1031,
+    "parent": 0,
+    "author_name": "Udi Dahan - The Software Simplist",
+    "author_url": "http://udidahan.weblogs.us",
+    "date": "2006-11-03T16:24:44",
+    "type": "comment",
+    "content_html": "<p>O/R mapping is a poor fit for reporting like operations, in my opinion. It just wasn’t really designed for it. On the other hand, I don’t think that LINQ was designed to give me the polymorphic “get” that NHibernate does. The whole issue of mapping a class hierarchy, and getting back the appropriate object which special cases the behavior enables us to write true OO persistent objects.</p>\n<p>Paging, like reporting, is not something O/R mappers were designed to do well. Use LINQ for it.</p>"
+  },
+  {
+    "id": 1032,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-11-03T17:54:15",
+    "type": "comment",
+    "content_html": "<p>Ayende,<br>\nthanks a bunch!  I love my blog.  It’s better than a forum post!  These are the kinds of things I love finding out.</p>"
+  },
+  {
+    "id": 1033,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-11-03T17:58:15",
+    "type": "comment",
+    "content_html": "<p>Udi,<br>\nYes, I can see how those are different paradigms.  Up to this point, my team has been very happy with NHibernate (and I personally started using it about a year ago) including the little bit of reporting we do.</p>\n<p>The few times I have gotten into hairy querying situations, I’ve been able to hand-craft the query and return only the IDs of the objects I need to return.  Then I ask NHibernate to get me those objects where the ID is “IN (. . .list. . .)”</p>"
+  },
+  {
+    "id": 1034,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2006-11-04T01:53:51",
+    "type": "comment",
+    "content_html": "<p>@Jeremy,<br>\nYou can get entities from a custom SQL query, using CreateSqlQuery()<br>\nThis saves a DB query.</p>\n<p>Although, when you need to do wierd stuff with the report, specifically, presenting this as something that is very different than the data / object model</p>"
+  },
+  {
+    "id": 1035,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2006-11-04T02:03:57",
+    "type": "comment",
+    "content_html": "<p>@Udi,<br>\nI really disagree about thinks that O/R isn’t supposed to do paging / reporting.<br>\nSpeaking specifically about NHibernate, it has a great support for both of those.</p>\n<p>These features are not usually covered in details in most tutorial, since they focused on getting stuff working in small measures, not the complex problems you find yourself facing 50% into a project.</p>"
+  },
+  {
+    "id": 1036,
+    "parent": 0,
+    "author_name": "Tom Dean",
+    "author_url": "http://",
+    "date": "2006-11-05T23:50:17",
+    "type": "comment",
+    "content_html": "<p>In web development, at least, paging is imperative to performance. Lack of decent paging with an OR/M wrapper is liking giving a mechanic all the tools he needs except a screwdriver.</p>"
+  }
+]

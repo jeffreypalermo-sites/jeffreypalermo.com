@@ -1,0 +1,81 @@
+---
+wp_id: 397
+title: Rocky gets it all wrong about Test-Driven Development (TDD) – level 200
+slug: rocky-gets-it-all-wrong-about-test-driven-development-tdd-level-200
+permalink: /2006/03/rocky-gets-it-all-wrong-about-test-driven-development-tdd-level-200/
+date: 2006-03-29T02:30:00
+date_utc: 2006-03-29T02:30:00Z
+modified: 2006-03-29T02:30:00
+format: html
+tags:
+- agile
+- developer-community
+excerpt: I’m listening to the latest .Net Rocks show with Rocky Lhotka, and I’m saddened that he gets it so wrong about TDD. DNR’s last episode ROCKED with Jean Paul Boodhoo, who talked about TDD and other Agile concepts. Jean Paul is a practitioner of TDD, as am I, and he explained the process and its […]
+comments_open: true
+---
+<p>I’m listening to the latest <a href="http://www.dotnetrocks.com/default.aspx?showID=172">.Net Rocks show with Rocky Lhotka</a>, and I’m saddened that he gets it so wrong about TDD.&nbsp; DNR’s <a href="http://www.dotnetrocks.com/default.aspx?showID=171">last episode ROCKED with Jean Paul Boodhoo</a>,<br>
+who talked about TDD and other Agile concepts.&nbsp; Jean Paul is a<br>
+practitioner of TDD, as am I, and he explained the process and its<br>
+benefits very well.&nbsp; Congrats, Jean Paul on a job well done.</p>
+<p><a href="http://www.lhotka.net/weblog/">Rocky</a>, on the other hand, gets it all wrong.&nbsp; I respect Rocky and<br>
+his contributions to the developer community, but he’s wrong on this<br>
+issue.&nbsp; Let me recap:</p>
+<p>At the beginning of the dnr show, he comments on TDD.&nbsp; He makes<br>
+some invalid points.&nbsp; His points are bulleted, and my responses<br>
+are in green:</p>
+<ul>
+<li>It comes from the premise that you don’t have intellisense in the IDE.</li>
+<ul>
+<li>I’m really not sure how he came up with this since most other good IDEs have intellisense.&nbsp; 
+    </li>
+</ul>
+<li>In the Microsoft space, you lose so much by going down the road to TDD.</li>
+<ul>
+<li>This is a very vague statement, but I’ve<br>
+gained so much by doing TDD.&nbsp; My rate of development has sped up<br>
+because my debugging time has gone almost down to zero!</li>
+</ul>
+<li>Rocky misunderstands the process because he states that it involves writing a <b>bunch </b>of tests first before coding.</li>
+<ul>
+<li>TDD involves writing a single test first and writing code to fulfill it.</li>
+</ul>
+<li>He states that on large systems, you can’t do it one test method at a time.</li>
+<ul>
+<li>Can’t?&nbsp; Any large system is made up<br>
+of smaller parts, down to actual classes and methods as the building<br>
+blocks.&nbsp; TDD helps define the classes and methods.&nbsp; TDD<br>
+forces you to start small, but helps build a solid foundation.</li>
+</ul>
+<li>He says that developers don’t think the way of “test-first”.</li>
+<ul>
+<li>This is actually a true statement but in<br>
+no way is a weakness of TDD.&nbsp; Test-first is a learned method just<br>
+like programming as a whole.&nbsp; Learning to think first is very<br>
+similar to understanding the purpose of the code first.&nbsp; If you<br>
+can understand the purpose of the code before writing the code, you end<br>
+up with less code churn and a clean class design.</li>
+</ul>
+<li>Rocky relates that he has always made small test projects or console apps to be test harnesses to test code.</li>
+<ul>
+<li>I used to do that also, until I graduated to NUnit.</li>
+<li>These test harnesses are valuable, but as<br>
+you accumulate them, they are hard to manage, and since they are<br>
+valuable, you don’t want to throw them away.&nbsp; NUnit allows these<br>
+test harnesses to be managed effectively.&nbsp; Each test method is a<br>
+test harness.</li>
+</ul>
+</ul>
+<p>Another false point made in conversation is that once these test<br>
+fixtures are created, developers will be hesitant to refactor code<br>
+because it would cause them to have to refactor all the tests that use<br>
+the code.&nbsp; Let me say from experience that unit test coverage<br>
+makes me want to refactore MORE!&nbsp; I am so comfortable refactoring<br>
+because I have unit test coverage that assures me that I haven’t broken<br>
+anything.&nbsp; In fact, when I am in parts of the code that is older<br>
+and doesn’t have good test coverage, I am scared of refactoring because<br>
+I have no way of being sure that I didn’t break anything.&nbsp; Note,<br>
+that I also use Resharper, and I would not want to code at all without<br>
+it or the DevExpress tools.</p>
+<p>I love .Net Rocks, and I’ve listened to it from the very first show (<a href="http://www.dotnetrocks.com/default.aspx?showID=126">and I’ve been a guest</a>),<br>
+and I’m glad all viewpoints are represented, but the above bullet<br>
+points are incorrect, and I hope some of you will comment on them as well.</p>

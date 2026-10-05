@@ -1,0 +1,20 @@
+---
+wp_id: 384
+title: Ron Jacobs discusses NHibernate on the MS Patterns and Practices Arcast – level 200
+slug: ron-jacobs-discusses-nhibernate-on-the-ms-patterns-and-practices-arcast-level-200
+permalink: /2006/02/ron-jacobs-discusses-nhibernate-on-the-ms-patterns-and-practices-arcast-level-200/
+date: 2006-02-24T22:42:00
+date_utc: 2006-02-24T22:42:00Z
+modified: 2006-02-24T22:42:00
+format: html
+tags:
+- data-access
+excerpt: The lates Arcast from Ron Jacobs is about NHibernate, and open-source Object-Relational mapping tool. This podcast was particularly interesting to me because my team is using NHibernate for a project, and we are likely to use it for most data access going forward. The data access tier is the target of many debates. My team […]
+comments_open: true
+---
+<p>The <a href="http://channel9.msdn.com/ShowPost.aspx?PostID=165139#165139">lates Arcast from Ron Jacobs is about NHibernate</a>, and open-source Object-Relational mapping tool.&nbsp; This podcast was particularly interesting to me because my team is using NHibernate for a project, and we are likely to use it for most data access going forward.&nbsp; The data access tier is the target of many debates.&nbsp; My team has weighed the pros and cons, assessed our security and performance requirements, and we have decided that using NHibernate to automate the persistence and loading of our business objects is the direction we want to go.&nbsp; In has saved so many developer hours of writing boring CRUD sprocs and sql statements.&nbsp; We use an xml file to map the properties of our business object to the database table, and we’re done.&nbsp; We have a test-bed of integration tests to ensure that the mapping is correct.</p>
+<p>Ron brought up an argument that some inside Microsoft have on OR mappers.&nbsp; I’m paraphrasing, but this is the idea:&nbsp; Developers may shoot themselves in the foot if Microsoft provides an OR mapper and endorses it.&nbsp; </p>
+<p>I’ll let that sink in.&nbsp; I can’t remember a development tool that someone hasn’t managed to abuse.&nbsp; Hmm.&nbsp; That doesn’t seem to be a very strong argument.&nbsp; You obviously don’t give an M1 Abrams tank to a novice, but in the hands of a trained professional soldier, it can be very effective.</p>
+<p>Another point discussed was that you no longer have complete control over performance with NHibernate.&nbsp; That’s true because you would be trusting the component to generate and run the sql for you.&nbsp; You obviously don’t use the exact same tool for every job, and it was mentioned that the Amazon.com(s) of the world would need more control over data access than most enterprise applications.&nbsp; Most internal enterprise applications only have a few hundred users (if that).&nbsp; What performance do they really need?&nbsp; Now, NHibernate is NOT slow, but&nbsp; if you need to go 400 MPH instead of a measley 397MPH, then you have some pretty heavy traffic and strict performance requirements.&nbsp; For the rest of applications, NHibernate probably offers more speed than required.</p>
+<p>Another topic of great interest to me:&nbsp; The cancelled Ojbect Spaces project.&nbsp; It was mentioned that it was cancelled because of the DLinq project that was developing, and Microsoft didn’t want to have two models for OR mapping.&nbsp; I’m not sure about the details of this, but it was mentioned on the show.</p>
+<p>All in all, I like podcasts from Ron Jacobs.&nbsp; He’s a great personality for a radio show, and he pulls in some interesting topics.</p>

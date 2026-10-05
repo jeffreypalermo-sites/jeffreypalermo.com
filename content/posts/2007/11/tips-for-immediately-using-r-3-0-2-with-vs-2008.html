@@ -1,0 +1,25 @@
+---
+wp_id: 579
+title: Tips for immediately using R# 3.0.2 with VS 2008
+slug: tips-for-immediately-using-r-3-0-2-with-vs-2008
+permalink: /2007/11/tips-for-immediately-using-r-3-0-2-with-vs-2008/
+date: 2007-11-21T17:18:16
+date_utc: 2007-11-21T17:18:16Z
+modified: 2007-11-21T17:18:16
+format: html
+tags:
+- featured
+excerpt: There is a bit of confusion out there because R# 3.0.2 doesn’t immediately support code analysis and intellisense for the new C# 3.0 features like LINQ queries, etc. What I’ve heard is that in Q12008, we’ll have a R# that will support all the new stuff. While it’s a shame that it’s not ready to […]
+comments_open: true
+---
+<p>There is a bit of <a href="http://www.lostechies.com/blogs/jimmy_bogard/archive/2007/11/20/resharper-in-vs-2008.aspx">confusion out there</a> because R# 3.0.2 doesn’t immediately support code analysis and intellisense for the new C# 3.0 features like LINQ queries, etc.&nbsp; What I’ve heard is that in Q12008, we’ll have a R# that will support all the new stuff.&nbsp; While it’s a shame that it’s not ready to go immediately (because VS 2008 RTM is available as of this week), we can still us R# 3.0.2 with VS 2008 to get most of the value and ease of use we’ve come to expect from a productivity add-in.&nbsp; Here are the steps:</p>
+<p>First, the big problem is that when we start using new features in VS 2008, R# doesn’t cooperate because it doesn’t know about the new syntax that’s now available.&nbsp; The on-the-fly code analysis goes haywire as depicted in the screenshot below:</p>
+<p><img decoding="async" src="https://i0.wp.com/farm3.static.flickr.com/2086/2053160780_a502a5c6bf_o.jpg?w=776"> </p>
+<p>Not only does the code analysis not work properly, but the R# intellisense we get doesn’t show the proper options with extension methods.&nbsp; We’ll go to Resharper&gt;Options and change two settings.&nbsp; First, let’s turn off R# code analysis:</p>
+<p><img decoding="async" src="https://i0.wp.com/farm3.static.flickr.com/2302/2053160796_e1ac2d4142_o.jpg?w=776"> </p>
+<p>Next, we’ll tell R# to let VS give us intellisense since VS knows about the full options:</p>
+<p><img decoding="async" src="https://i0.wp.com/farm3.static.flickr.com/2336/2053160788_a1e7982c52_o.jpg?w=776"> </p>
+<p>Now, if we look back at the code, all the red goes away, and our intellisense window has full support, like the “where” keyword in the LINQ query below:</p>
+<p><img decoding="async" src="https://i0.wp.com/farm3.static.flickr.com/2120/2053160786_f9145ab239_o.jpg?w=776"></p>
+<p>With these two changes, we get rid of the immediate annoyances, but we can continue to leverage all the other great features R# gives us like file/type navigation, NANT/NUNIT support, etc.</p>
+<p>If you have any more tips that would be helpful during the interim for using R# 3.0.2 with VS 2008 until R#4 comes out, please post a comment.&nbsp;</p>

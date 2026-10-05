@@ -1,0 +1,11 @@
+[
+  {
+    "id": 139,
+    "parent": 0,
+    "author_name": "Noah Coad (MS)",
+    "author_url": "http://",
+    "date": "2004-08-23T16:29:00",
+    "type": "comment",
+    "content_html": "<p>That is great info Jeff!  Did not know about being able to step outside the box like that.  I’ve always used my own \"Config\" class with \"Save\" and \"Load\" methods that serialize/deserializes the class’ properties.  My big deal with the Configuration namespace’s ability is the lack of even notification.  Frequently I’ll have settings that several modules of code need to track.  I use the property/event design pattern so they can subscribe to change notifications.  But!  This is to change in v2, now one can subscribe to config setting changes (though its not easy).</p>\n<p>Cheers!</p>"
+  }
+]

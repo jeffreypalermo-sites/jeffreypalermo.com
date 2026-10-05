@@ -1,0 +1,65 @@
+[
+  {
+    "id": 547,
+    "parent": 0,
+    "author_name": "Jeremy D. Miller",
+    "author_url": "http://",
+    "date": "2005-10-28T18:53:40",
+    "type": "comment",
+    "content_html": "<p>Aren’t you supposed to be on vacation?  Does your wife know that you’re playing with VS2005?</p>"
+  },
+  {
+    "id": 548,
+    "parent": 0,
+    "author_name": "Scott",
+    "author_url": "http://www.lazycoder.com",
+    "date": "2005-10-28T18:57:33",
+    "type": "comment",
+    "content_html": "<p>The install annoyed me. I had to reboot after installing something called the “Microsoft Document analyzer” or some crap like that. Then when I rebooted, the installer didn’t pick up where it left off and I had to go through, click “custom” and remove all the crap I didn’t want to install again. boooo.</p>"
+  },
+  {
+    "id": 549,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-28T19:34:58",
+    "type": "comment",
+    "content_html": "<p>Jeremy,<br>\nYes, I was in San Francisco, but I had my home server download the bits.  I’m back and getting ready for the .Net Rocks roadshow.</p>"
+  },
+  {
+    "id": 550,
+    "parent": 0,
+    "author_name": "johnpapa",
+    "author_url": "http://codebetter.com/blogs/john.papa",
+    "date": "2005-10-28T21:07:48",
+    "type": "comment",
+    "content_html": "<p>30 minutes for SQL Server 2005 Dev and 25 for VS.NET 2005 Pro. Not too shabby!</p>"
+  },
+  {
+    "id": 551,
+    "parent": 0,
+    "author_name": "BC",
+    "author_url": "http://",
+    "date": "2005-10-30T03:59:02",
+    "type": "comment",
+    "content_html": "<p>Here’s a link to a ‘Visual Studio 2005 Beta 2 Auto-uninstall Tool’ in case anyone needs it.</p>\n<p><a href=\"http://spaces.msn.com/members/brianjo/Blog/cns!1ph41gaeDxp9TA2G5t8Gj1DA!263.entry\" rel=\"nofollow ugc\">http://spaces.msn.com/members/brianjo/Blog/cns!1ph41gaeDxp9TA2G5t8Gj1DA!263.entry</a></p>"
+  },
+  {
+    "id": 552,
+    "parent": 0,
+    "author_name": "Balabdosm",
+    "author_url": "http://",
+    "date": "2005-10-30T22:23:55",
+    "type": "comment",
+    "content_html": "<p>Well, I agree that the install for the release version is a great improvement, even on Longhorn, oops, Vista beta.</p>\n<p>I was rather late in trying out the beta version so perhaps can be forgiven for not mentioning to MS the problems with the registers window, which they have not fixed.</p>\n<p>Anyone who sticks close to the machine, and views registers during a debug session, can’t help noticing the bizarre display, if they work with a non-white background or a bold font. The first char of all values/flags etc. come out in a different font/color – very disturbing.</p>\n<p>Hope someone has found a workaround for this, I know I haven’t, except work with everything black on white.</p>"
+  },
+  {
+    "id": 553,
+    "parent": 0,
+    "author_name": "Sean Plaice",
+    "author_url": "http://www.discountasp.net",
+    "date": "2005-12-11T00:12:07",
+    "type": "comment",
+    "content_html": "<p>Our developers at DiscountASP.NET were also very supprised with the ease of installation of VS.NET 2005. We are also glad to hear you will be giving our services a try! I am a DiscountASP employee and love to see when we get mentioned in the blog’o’sphere.</p>\n<p>We hope enjoy your services, and love to hear your comments on it, especially with regards to using it with the latest tools like VS.NET 2005, and ASP.NET 2.0.</p>"
+  }
+]

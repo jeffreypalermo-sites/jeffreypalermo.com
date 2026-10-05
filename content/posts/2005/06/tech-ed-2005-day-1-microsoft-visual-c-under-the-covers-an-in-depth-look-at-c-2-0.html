@@ -1,0 +1,34 @@
+---
+wp_id: 247
+title: 'Tech Ed 2005 Day 1 – Microsoft Visual C# Under the Covers: An In-Depth Look at C# 2.0'
+slug: tech-ed-2005-day-1-microsoft-visual-c-under-the-covers-an-in-depth-look-at-c-2-0
+permalink: /2005/06/tech-ed-2005-day-1-microsoft-visual-c-under-the-covers-an-in-depth-look-at-c-2-0/
+date: 2005-06-06T19:44:00
+date_utc: 2005-06-06T19:44:00Z
+modified: 2005-06-06T19:44:00
+format: html
+excerpt: 'I attended Anders Hejlsberg’s session on Microsoft Visual C# Under the Covers: An In-Depth Look at C# 2.0. He started with an overview of the new language features. They include generics, anonymous methods, nullable types, iterators, partial types and more, yet the language is 100% backwards compatible. Generics required a change to the runtime, but […]'
+comments_open: true
+---
+<p>I attended Anders Hejlsberg’s session on Microsoft Visual C# Under the Covers: An In-Depth Look at C# 2.0. He started with an overview of the new language features. They include generics, anonymous methods, nullable types, iterators, partial types and more, yet the language is 100% backwards compatible. Generics required a change to the runtime, but the others did not.</p>
+<p>Sometimes with aggregates or groups of objects, we have to use a IList class or implement a custom aggregate class (custom collection). Using ArrayList as it is works, but you lose the strong-typing to your custom object. To get a strongly-typed list, the developer has to create a brand new class just for this purpose. Generics solves this problem with type parameters. With a generic type parameter, you get type checking, no boxing, and no downcasts. Another benefit is increased sharing of the generic collection because the type can be substituted. C# generics are different from C++ templates because the code is instantiated at run-time instead of compile time. C# generics are checked at declaration, not instantiation, they work for both reference types and value type. With the type parameter, you can choose to accept any object or put constraints on the type parameter to accept only a subset of types. Type parameters aren’t limited to classes, structs, interfaces, or degates. You can also put a type parameter on a method. The example he gave was as follows:</p>
+<p>Class Utils{</p>
+<p>public static T[] CreateArray&lt;T&gt;(T value, int size){</p>
+<p>T[] result = new T[size];</p>
+<p>// something;</p>
+<p>return result;</p>
+<p>}</p>
+<p>} </p>
+<p>This also supports type inference. If you leave out the type parameter, it will detect what you are assigning the result to and make a guess. Very interesting! Definitly, the most popular use of generics will be consuming the built-in generic collections such as: List&lt;T&gt;, Dictionary&lt;K,V&gt;, SortedDictionary&lt;K,V&gt;, Stack&lt;T&gt;, and Queue&lt;T&gt;. Instead of using an ArrayList, I’d use List&lt;T&gt;. If you still need a custom collection for smarter aggregates, you can inherit from Collection&lt;T&gt; and just implement the difference in needed functionality.</p>
+<p>With anonymous methods, we can substitute a body of code for the delegate name. If I want a body of code run as a parameter to another method or anywhere else, I just use the following:</p>
+<p>Delegate() { return something; }</p>
+<p>With anonymous methods, the delegate is automatically inferred, and the code block may omit the parameter list. The most useful scenario is event handlers for events. Instead of creating an event handler method, I can just add a code block to the click event like so:</p>
+<p>Button.Click += delegate { MessageBox.Show(“Howdy”); };</p>
+<p>The compiler does the method creation for you. </p>
+<p>Anders did a speed test using anonymous methods with generics. For the Arraylist of an int, it took longer than the Arraylist of strings. Using the generic List&lt;string&gt; was faster than both Arraylist uses, but List&lt;int&gt; was significantly faster because there was no boxing and not even an object. Anders explained that the x86 code that executes is dealing with ints natively. Very cool.</p>
+<p>After the generics demo, he went to nullable types. He addressed the disparity between the .Net type system and relational database type systems. C# 2.0 support nullable types. That means that value types can now be null as well as their default value. The native types are not changed, but new types exist. There is an int and an int?. With an int, one memory slot is the value, but with the int?, it also stores a boolean flag denoting whether is null or not. System.Nullable&lt;T&gt; is the enabler for these nullable types. C# 2.0 has language features that uses this class with the “?” marker after a value type such as int? and double?, both of which can now be assigned to null.</p>
+<p>Iterators are also an addition to the language and introduces the “yield” keyword. An iterator method must return Ienumerator or Ienumerable. It incrementally computes and returns a sequence of values. It will “yield return” or “yield break”. Using these keywords actually causes the compiler to generate IL based on the use.</p>
+<p>Partial types brings the ability to split a class among many physical files. This is similar to include files, but is handled by the compiler by merging into one class and building IL. If decompiled, you can’t tell it was written as separate partial classes. The “partial” keyword is placed before “class” in the class definition to invoke this feature. The second purpose of partial classes is to solve a code generation problem. If you change a generated class and regen, you’re in trouble because your changes are gone. If a partial classes are generated, then you can own another partial class that the compiler merges in, but since your code is separate, regens don’t mess you up. The compiler understands the sum of the partial classes.</p>
+<p>C# 2.0 also supports static classes. Many developers create classes with only static methods, and 2.0 supports the “static” keyword as a class modifier to denote that no instance of that class can be created.</p>
+<p>The change to accessors will probably be quite useful. When you find yourself with a public property, but you want the setter to be internal to the assembly, now you can set the accessibility level.</p>
+<p>I enjoyed this talk tremendously. It always good to learn about a language from one of the main engineers of that language. Great session!</p>

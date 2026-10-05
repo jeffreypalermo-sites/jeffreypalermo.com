@@ -1,0 +1,155 @@
+---
+wp_id: 317
+title: How to integrate FitNesse acceptance tests into your CC.Net build – level 300
+slug: how-to-integrate-fitnesse-acceptance-tests-into-your-cc-net-build-level-300
+permalink: /2005/09/how-to-integrate-fitnesse-acceptance-tests-into-your-cc-net-build-level-300/
+date: 2005-09-13T16:30:00
+date_utc: 2005-09-13T16:30:00Z
+modified: 2005-09-13T16:30:00
+format: html
+tags:
+- fit
+excerpt: I’m doing a lot with FitNesse lately, and it’s going quite well. Unit testing ensures that each component is doing what it is supposed to, and integration testing ensures that the components work well together. Acceptance tests are a bit different. They actually test that the software does what the customers think it’s doing. They […]
+comments_open: true
+---
+<p>I’m doing a lot with <a href="http://fitnesse.org/">FitNesse </a>lately, and it’s going quite well.&nbsp; Unit testing ensures that each component is doing what it is supposed to, and integration testing ensures that the components work well together.&nbsp; Acceptance tests are a bit different.&nbsp; They actually test that the software does what the customers think it’s doing.&nbsp; They test that the developer understood the business need.&nbsp; They give the customer (or product manager) assurance that the system actually works.</p>
+<p>With FitNesse, our product manager (and crew) can&nbsp; use a simple wiki to exercise the system.&nbsp; The developers create test Fixtures that speak in the domain language but actually exercise the system under test.&nbsp; A user may type:</p>
+<p>!|fit.ActionFixture|<br>|start|Emailer|<br>|press|SendDefaultEmail|<br>|check|NumEmailsSent|</p>
+<p>This simple table is enough to actually exercise the system under test and get it to do something.&nbsp; If all is well, the Emailer will send a default email.&nbsp; If this test fails, it saves the company from a black eye when a user encounters the problem.</p>
+<p>It was a little tricky to get the FitNesse test integrated with our CC.Net build.&nbsp; We wanted the acceptance test to be a current status report of where we are.&nbsp; When all the acceptance tests are passing, we are done.&nbsp; Consequently, we didn’t want failing acceptance tests to break the build.&nbsp; Only NUnit tests break the build because they should _always_ be passing.&nbsp; No problem.&nbsp; We create a new target with some exec tasks:</p>
+<p>&lt;exec program=”&lt;path to TestRunner.exe&gt;” commandline=”-results &lt;some directory&gt;FitNesse-Results.html&nbsp;&lt;FitNesse server&gt;&nbsp;&lt;port&gt;&nbsp;&lt;TestSuite&gt;” failonerror=”false”/&gt;</p>
+<p>This will actually call the FitNesse server (with the wiki on it) and execute all the acceptance tests.&nbsp; This will produce a file in the raw FitNesse format.&nbsp; We’d like it in xml so we can incorporate it in the CC.Net build report.&nbsp; Xml transforming isn’t a part of the .Net port, but it is in the Java version,&nbsp;so we’ll just use it.</p>
+<p>&lt;exec program=”java.exe” commandline=”-cp binfitfitnesse.jar fitnesse.runner.FormattingOption &lt;some directory&gt;FitNesse-Results.html xml &lt;some directory&gt;Fit-Results.xml &lt;FitNesse server&gt;&nbsp;&lt;port&gt;&nbsp;&lt;TestSuite&gt;” failonerror=”false”/&gt;</p>
+<p>This hooks into the transform&nbsp;logic on the FitNesse server to change our&nbsp;raw output file to a nice Xml format.&nbsp; Now we have something that CruiseControl.Net can use for a build report and email.&nbsp; We will have to make an Xsl, though.&nbsp; Here’s a simple Xsl that will&nbsp;pull out the FitNesse summary information and&nbsp;through it out to your CC.Net build summary:</p>
+
+<p>&lt;?xml version=”1.0″?&gt;</p>
+<p>&lt;xsl:stylesheet</p>
+
+<p>xmlns:xsl=”<a href="http://www.w3.org/1999/XSL/Transform&amp;#8221" rel="nofollow">http://www.w3.org/1999/XSL/Transform&amp;#8221</a>; version=”1.0″&gt;</p>
+
+<p>&lt;xsl:output method=”html”/&gt;</p>
+
+<p>&lt;xsl:variable name=”fit.result.list” select=”//testResults/result”/&gt;</p>
+
+<p>&lt;xsl:variable name=”fit.wrongpagecount” select=”countU$fit.result.list/counts/wrong[text() &gt; 0])” /&gt;</p>
+
+<p>&lt;xsl:variable name=”fit.ignorespagecount” select=”countU$fit.result.list/counts/ignores[text() &gt; 0])” /&gt;</p>
+
+<p>&lt;xsl:variable name=”fit.exceptionspagecount” select=”countU$fit.result.list/counts/exceptions[text() &gt; 0])” /&gt;</p>
+
+<p>&lt;xsl:variable name=”fit.correctpagecount” select=”countU$fit.result.list/counts)” /&gt;</p>
+
+<p>&lt;xsl:variable name=”fit.correctcount” select=”//testResults/finalCounts/right”/&gt;</p>
+
+<p>&lt;xsl:variable name=”fit.failures” select=”//testResults/finalCounts/wrong”/&gt;</p>
+
+<p>&lt;xsl:variable name=”fit.notrun” select=”//testResults/finalCounts/ignores”/&gt;</p>
+
+<p>&lt;xsl:variable name=”fit.exceptions” select=”//testResults/finalCounts/exceptions”/&gt;</p>
+
+<p>&lt;xsl:variable name=”fit.case.list” select=”$fit.result.list//test-case”/&gt;</p>
+
+<p>&lt;xsl:variable name=”fit.suite.list” select=”$fit.result.list//test-suite”/&gt;</p>
+
+<p>&lt;xsl:variable name=”fit.failure.list” select=”$fit.case.list//failure”/&gt;</p>
+
+<p>&lt;xsl:variable name=”fit.notrun.list” select=”$fit.case.list//reason”/&gt;</p>
+
+<p>&lt;xsl:variable name=”colorClass”&gt;</p>
+
+<p>&lt;xsl:choose&gt;</p>
+
+<p>&lt;xsl:when test=”$fit.exceptionspagecount &gt; 0″&gt;fiterror&lt;/xsl:when&gt;</p>
+
+<p>&lt;xsl:when test=”$fit.ignorespagecount &gt; 0″&gt;fitignore&lt;/xsl:when&gt;</p>
+
+<p>&lt;xsl:when test=”$fit.wrongpagecount &gt; 0″ &gt;fitfail&lt;/xsl:when&gt;</p>
+
+<p>&lt;xsl:otherwise&gt;fitpass&lt;/xsl:otherwise&gt;</p>
+
+<p>&lt;/xsl:choose&gt;</p>
+
+<p>&lt;/xsl:variable&gt;</p>
+
+<p>&lt;xsl:variable name=”fit.tests.present” select=”countU//testResults/result) &gt; 0 or count(/cruisecontrol/build/buildresults//testsuite) &gt; 0″ /&gt;</p>
+
+<p>&lt;xsl:template match=”/”&gt;</p>
+
+<p>&lt;xsl:choose&gt;</p>
+
+<p>&lt;xsl:when test=”$fit.tests.present”&gt;</p>
+
+<p>&lt;style&gt;</p>
+
+<p>*.fitpass{</p>
+<p>background-color: #AAFFAA;</p>
+<p>}</p>
+<p>*.fitfail{</p>
+<p>background-color: #FFAAAA;</p>
+<p>}</p>
+<p>*.fiterror</p>
+<p>{</p>
+<p>background-color: #FFFFAA;</p>
+<p>}</p>
+<p>*.fitignore</p>
+<p>{</p>
+<p>background-color: #CCCCCC;</p>
+<p>}</p>
+<p>*.fitheader{</p>
+<p>border: solid 1px black;</p>
+<p>margin: 1px;</p>
+<p>padding: 2px;</p>
+<p>}</p>
+<p>*.line{</p>
+<p>margin: 5px;</p>
+<p>}</p>
+<p>&lt;/style&gt;</p>
+
+<p>&lt;div&gt;</p>
+
+<p>&lt;div class=”{$colorClass} fitheader”&gt;</p>
+
+<p>&lt;strong&gt;FitNesse Summary — Test Pages:&lt;/strong&gt; &lt;xsl:value-of select=”$fit.correctpagecount”/&gt; right, &lt;xsl:value-of select=”$fit.wrongpagecount”/&gt; wrong,</p>
+<p>&lt;xsl:value-of select=”$fit.ignorespagecount”/&gt; ignored, &lt;xsl:value-of select=”$fit.exceptionspagecount”/&gt; exceptions</p>
+<p>&lt;strong&gt;Assertions:&lt;/strong&gt; &lt;xsl:value-of select=”$fit.correctcount”/&gt; right, &lt;xsl:value-of select=”$fit.failures”/&gt; wrong,</p>
+<p>&lt;xsl:value-of select=”$fit.notrun”/&gt; ignored, &lt;xsl:value-of select=”$fit.exceptions”/&gt; exceptions</p>
+<p>&lt;/div&gt;</p>
+
+<p>&lt;xsl:for-each select=”$fit.result.list”&gt;</p>
+
+<p>&lt;xsl:variable name=”colorClass”&gt;</p>
+
+<p>&lt;xsl:choose&gt;</p>
+
+<p>&lt;xsl:when test=”counts/exceptions &gt; 0″&gt;fiterror&lt;/xsl:when&gt;</p>
+
+<p>&lt;xsl:when test=”counts/ignores &gt; 0″&gt;fitignore&lt;/xsl:when&gt;</p>
+
+<p>&lt;xsl:when test=”counts/wrong &gt; 0″ &gt;fitfail&lt;/xsl:when&gt;</p>
+
+<p>&lt;xsl:otherwise&gt;fitpass&lt;/xsl:otherwise&gt;</p>
+
+<p>&lt;/xsl:choose&gt;</p>
+
+<p>&lt;/xsl:variable&gt;</p>
+
+<p>&lt;div class=”line”&gt;</p>
+
+<p>&lt;span class=”{$colorClass}” style=”padding:2px;” &gt;&lt;xsl:value-of select=”counts/right”/&gt; right, &lt;xsl:value-of select=”counts/wrong”/&gt; wrong,</p>
+<p>&lt;xsl:value-of select=”counts/ignores”/&gt; ignored, &lt;xsl:value-of select=”counts/exceptions”/&gt; exceptions &lt;/span&gt;</p>
+
+<p>&lt;span style=”padding:2px;”&gt;&lt;xsl:value-of select=”relativePageName”/&gt;&lt;/span&gt;</p>
+
+<p>&lt;/div&gt;</p>
+
+<p>&lt;/xsl:for-each&gt;</p>
+
+<p>&lt;/div&gt;</p>
+
+<p>&lt;/xsl:when&gt;</p>
+
+<p>&lt;/xsl:choose&gt; </p>
+<p>&lt;/xsl:template&gt;</p>
+<p>&lt;/xsl:stylesheet&gt;</p>
+
+<p>Hook this Xsl into your CC.Net configuration, and that’s as hard as it is!&nbsp; FitNesse results “magically” show up in the build summary.&nbsp; It’s really a big win for visibility into the state of the software.&nbsp; The build summary is now the actual status report of the software, and it’s not subjective.&nbsp; What does 83% actually mean?&nbsp; With a list of acceptance tests to fulfill, we know exactly when we are done.</p>

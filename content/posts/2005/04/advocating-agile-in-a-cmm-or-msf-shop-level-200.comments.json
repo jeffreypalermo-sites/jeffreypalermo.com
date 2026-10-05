@@ -1,0 +1,56 @@
+[
+  {
+    "id": 291,
+    "parent": 0,
+    "author_name": "Tim Haughton",
+    "author_url": "http://",
+    "date": "2005-04-26T06:16:00",
+    "type": "comment",
+    "content_html": "<p>It seems to be quite a common situation. In particular, managers who’ve heard that being ‘Agile’ is the way to go, but who feel secure behind their phasist waterfall process.</p>\n<p>There’s a nice anecdote in Uncle Bob’s Agile Software Development book (could be wrong – memory is a sieve); he asks a friend what he was working on these days, his friend replied \"We’re writing legacy code\". Of course the self contradiction disappears when you understand what he’s saying.</p>\n<p>I’ve learned through experience that pushing too hard and too fast for Agile development can be counterproductive. It’s best treated as a case of \"Softly, softly, catchee monkey.\" (<a href=\"http://c2.com/cgi/wiki?SoftlySoftlyCatcheeMonkey\" rel=\"nofollow\">http://c2.com/cgi/wiki?SoftlySoftlyCatcheeMonkey</a>). </p>\n<p>When there’s a great deal of process inertia, the method that I find works well, is treating the process as being under iterative development. For example, every month, try to identify what the biggest problem facing the team is. Then, from your \"Agile practice bag\", pull out the appropriate agile practice that addresses the problem you’ve got. Because some agile practices involve changes to the way some non-developers work, tiny steps is the key.</p>\n<p>Good luck \uD83D\uDE42</p>"
+  },
+  {
+    "id": 292,
+    "parent": 0,
+    "author_name": "Jeremy Miller",
+    "author_url": "http://",
+    "date": "2005-04-26T11:23:00",
+    "type": "comment",
+    "content_html": "<p>Better you than me.  I flopped in the exact same situation at your employer a couple years ago.</p>\n<p>Technically, XP or agile can be used within a CMM framework.  Agile is all about the optimization of the execution and delivery of working software.  CMM is really a means of certifying the management of a software organization rather than a true prescriptive process.  \"It’s a framework, not a process.\"</p>\n<p>You could try selling Agile by preempting the \"Yeah, but is it CMM\" by showing how agile development practices map to the CMM KPA’s.  Try this:  <a href=\"http://www.sei.cmu.edu/publications/articles/paulk/xp-from-a-cmm-perspective.html\" rel=\"nofollow\">http://www.sei.cmu.edu/publications/articles/paulk/xp-from-a-cmm-perspective.html</a></p>\n<p>There is an effort to create an \"Agile Maturity Model\" to be a direct alternative to CMM certification, but who knows if it will ever be adopted or accepted.</p>"
+  },
+  {
+    "id": 293,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://",
+    "date": "2005-04-27T08:44:00",
+    "type": "comment",
+    "content_html": "<p>I think you would be better off to show how Agile is compatible with CMM (thanks for the link Jeremy), rather than trying to sell an alternative like \"AMM\".  Management is already convinced that CMM is good, and there really isn’t a need to convince them otherwise.  CMM isn’t the enemy, the waterfall process is.<br>\nI don’t know enough (yet) about agile development methodologies to wage a proper battle, but I know enough about waterfall to know it is broken.</p>"
+  },
+  {
+    "id": 294,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2005-04-27T10:49:00",
+    "type": "comment",
+    "content_html": "<p>Jeremy, you make a great point, and that article was really good.  Agile _can_ coexist with CMM.</p>\n<p>Josh,<br>\nYes, management just cares about CMM, and the project managers care about CMM.  We, as a development team can embrace Agile methods while still running the project within the CMM framework.  Our schedules would be shorter, and we’d call the iterations.  And, of course, the actual coding methods can be used anywhere.</p>"
+  },
+  {
+    "id": 295,
+    "parent": 0,
+    "author_name": "Jeremy Miller",
+    "author_url": "http://",
+    "date": "2005-05-04T06:23:00",
+    "type": "comment",
+    "content_html": "<p>Josh, some sort of guidance does need to happen for Agile within CMM, because the CMM auditors are very uneven in their handling of XP and other agile methods.</p>\n<p>Be careful though about running Agile inside CMM.  Iterative development works far better when the project management, analysts, and testers are working in the same incremental mode.  Doing iterative development unofficially inside of a CMM waterfall process is risky.</p>\n<p>I do know of teams that have satisfied some CMM requirements while doing XP by auto-generating UML diagrams and unit test reports within the CI build.  Satisfying CMM weanies doesn’t have to mean fancy Rational Rose drawings.</p>"
+  },
+  {
+    "id": 296,
+    "parent": 0,
+    "author_name": "jmiller",
+    "author_url": "http://",
+    "date": "2005-07-26T12:40:42",
+    "type": "comment",
+    "content_html": "<p>“Legacy code is code for which there are insufficient unit tests.” is from Michael Feathers in his book on Legacy Code – Jeremy</p>"
+  }
+]

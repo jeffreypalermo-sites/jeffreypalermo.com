@@ -1,0 +1,23 @@
+---
+wp_id: 550
+title: Using inheritance with ASP.NET pages
+slug: using-inheritance-with-asp-net-pages
+permalink: /2004/05/using-inheritance-with-asp-net-pages/
+date: 2004-05-13T16:46:00
+date_utc: 2004-05-13T16:46:00Z
+modified: 2004-05-13T16:46:00
+format: html
+excerpt: "I go back to work full time next Tuesday. My terminal leave is almost up, I’m a civilian, and my new office furniture will be arriving today. \U0001F642 Yesterday I was visiting with two colleagues of mine, and I was struck with a surprising reality: They were programming with ASP.NET but had no idea that […]"
+comments_open: true
+---
+<div><br>
+<p>I go back to work full time next Tuesday.&nbsp; My terminal leave is almost up, I’m a civilian, and my new office furniture will be arriving today. 🙂&nbsp; </p><br>
+<p>Yesterday I was visiting with two colleagues of mine, and I was struck with a surprising reality:&nbsp; They were programming with ASP.NET but had no idea that they were using inheritance.&nbsp; One of the two was a former college professor of mine from whom I learned a great deal of database knowledge.&nbsp; I pondered on it for a while, and I think that there are probably many out there that don’t yet know how to use the power of inheritance to improve their .Net web applications.&nbsp; I will now attempt to simply explain an easy way one can easily improve a page using inheritance.</p><br>
+<p>First, when you write code in an ASP.NET page, you are writing code in a class that is inheriting from another class.&nbsp; Whether it’s specified in the machine.config, web.config or in the &lt;@Page&gt; directive at the top of the page, your page has to inherit from a class that ultimately will inherit from System.Web.UI.Page.&nbsp; When you use the code-behind or code-beside technique, your page inherits from your code-behind class, which inherits from System.Web.UI.Page.&nbsp; Look at the class.&nbsp; Why else do you see “System.Web.UI.Page” in every code-behind page?&nbsp; It makes your page contain the functionality of the Page class in the .Net framework.&nbsp; It makes your page a System.Web.UI.Page object.&nbsp; The Page object contains the properties for accessing Request, Response, Server, Cache, etc.&nbsp; </p><br>
+<p>Suppose you want to implement tracking for some of your pages?&nbsp; You could put relevant code in every page, or make a static method in a shared class to track the current request.&nbsp; But why not put this functionality in a class by itself, say “TrackedPage”.&nbsp; When you declare TrackedPage, inherit from System.Web.UI.Page:</p><br>
+<p>public class TrackedPage : System.Web.UI.Page{ }</p><br>
+<p>and in your code-behind page, replace the reference to System.Web.UI.Page with “TrackedPage”.&nbsp; This will make your page a “TrackedPage” object and will benefit from any logic you put in TrackedPage.&nbsp; For instance, </p><br>
+<p>public class TrackedPage :&nbsp; System.Web.UI.Page{<br>protected override void OnInit(EventArgs e)<br>&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;base.OnInit(e);<br>&nbsp;&nbsp;&nbsp;//logic to track this request<br>&nbsp;&nbsp; Trace.Write(“Tracking“, “This request has been tracked.“);<br>&nbsp;&nbsp;}<br>}</p><br>
+<p>will perform your tracking logic and write&nbsp;a line to the trace log for every page that inherits this custom class of yours.&nbsp; You can imagine all the functionality you can include.&nbsp; What if you have a custom user object that you need to be available for every request?&nbsp; Make it a property of your class here, and make it the base page for all your pages?&nbsp; </p><br>
+<p>I find that&nbsp;a lot of people make user controls to encapsulate common functionality.&nbsp; This is not a good technique.&nbsp; Instead, put it in base pages and inherit from them.</p><br>
+<p>My project on <a href="http://workspaces.gotdotnet.com/ezweb">GotDotNet</a>&nbsp;makes heavy use of this technique, and it’s easy to extend EZWeb because all you have to do is inherit from Palermo.EZWeb.UIPage, and you have all the functionality available.</p></div>

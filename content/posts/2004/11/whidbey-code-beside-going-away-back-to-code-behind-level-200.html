@@ -1,0 +1,16 @@
+---
+wp_id: 143
+title: 'Whidbey:  Code-beside going away – back to code-behind – level 200'
+slug: whidbey-code-beside-going-away-back-to-code-behind-level-200
+permalink: /2004/11/whidbey-code-beside-going-away-back-to-code-behind-level-200/
+date: 2004-11-18T15:08:00
+date_utc: 2004-11-18T15:08:00Z
+modified: 2004-11-18T15:08:00
+format: html
+excerpt: "Whidbey Beta2 change in code behind. Fritz, explains it much better than I could. \U0001F642 I have developed several web applications with Whidbey Beta 1 including a complete port of a software package of mine from v1.1 to see what changes would be necessary. There were some significant design differences, but the port wasn’t […]"
+comments_open: true
+---
+<blockquote><p><a href="http://dotnetjunkies.com/WebLog/andyb/archive/2004/11/18/32565.aspx">Whidbey Beta2 change in code behind.</a><br>
+</p><p><a href="http://pluralsight.com/blogs/fritz/">Fritz</a>, <a href="http://pluralsight.com/blogs/fritz/archive/2004/11/17/3544.aspx">explains it</a> much better than I could. 🙂</p></blockquote>
+
+<p>I have developed several web applications with Whidbey Beta 1 including a complete port of a software package of mine from v1.1 to see what changes would be necessary.&nbsp; There were some significant design differences, but the port wasn’t that painful.&nbsp; The big change was that the code-behind wasn’t its own class.&nbsp; It was a partial class that merges with the ASPX at runtime compile.&nbsp; This model&nbsp; is changing for Beta 2.&nbsp; Now, the code-behind will stay a class that the ASPX will inherit FROM, not merge with.&nbsp; Check out Fritz’s post.&nbsp; I think this is a change for the better.&nbsp; There were some issues that arose from the partial-class code file.</p>

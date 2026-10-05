@@ -1,0 +1,76 @@
+---
+wp_id: 205
+title: Architecture prototype revised and tested – level 400
+slug: architecture-prototype-revised-and-tested-level-400
+permalink: /2005/04/architecture-prototype-revised-and-tested-level-400/
+date: 2005-04-03T12:51:00
+date_utc: 2005-04-03T12:51:00Z
+modified: 2005-04-03T12:51:00
+format: html
+excerpt: Here, I’m following up on my previous post about making a prototype of the architecture diagram presented. Please download my revised VS.Net solution here. I’ve decided not to repost much of the code because of the amount, but I made some pretty significant changes. In line with Scott Bellware’s suggestions, I’ve added more granularity to […]
+comments_open: true
+---
+<p>Here, I’m following up on my <a href="http://dotnetjunkies.com/WebLog/jpalermo/archive/2005/04/02/62076.aspx">previous<br>
+post </a>about making a prototype of the architecture diagram presented.&nbsp;<br>
+<strong>Please download my revised VS.Net solution<br>
+</strong><a href="http://palermo.cc/MyToolDownloads/Files/MVPWithRepository2.zip"><strong>here.</strong></a></p>
+<p>I’ve decided not to repost much of the code because of the amount, but I made<br>
+some pretty significant changes.&nbsp; In line with <a href="http://geekswithblogs.net/sbellware">Scott Bellware’s </a>suggestions,<br>
+I’ve added more granularity to the View interface so that the view never<br>
+actually holds a reference to the business object.&nbsp; The control’s to display<br>
+information are exposed as properties (actually, the textbox.Text property is<br>
+exposed as a property of the interface), so the presenter can actually change UI<br>
+elements through the inderection these properties provide.&nbsp; I defined two events<br>
+on the interface as well to denote when the LookUp event first and Persist.&nbsp; My<br>
+Presenter doesn’t care about a button click, so when the View experiences a<br>
+button click that actually means “LookUp”, it fires the LookUp event, which the<br>
+Presenter is listening for.</p>
+<p>I will include one bit of code, and that is the IView interface<br>
+implementation in my WinForms code-behind class:</p>
+<div style="border:1pt solid windowtext; padding:0; background:white none repeat scroll 0; color:black"><span style="color:teal">&nbsp;&nbsp;&nbsp;72</span>&nbsp;<span style="color:blue">private</span> <span style="color:blue">void</span> button2_Click(<span style="color:blue">object</span> sender, System.EventArgs e) {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;73</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">if</span>(LookUp<br>
+!= <span style="color:blue">null</span>) LookUp(sender, e);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;74</span>&nbsp;}<br><span style="color:teal">&nbsp;&nbsp;&nbsp;75</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;76</span>&nbsp;<span style="color:blue">private</span> <span style="color:blue">void</span> button1_Click(<span style="color:blue">object</span> sender, System.EventArgs e) {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;77</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">if</span>(Persist<br>
+!= <span style="color:blue">null</span>) Persist(sender, e);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;78</span>&nbsp;}<br><span style="color:teal">&nbsp;&nbsp;&nbsp;79</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;80</span>&nbsp;<span style="color:green">// Below are<br>
+interface members</span><br><span style="color:teal">&nbsp;&nbsp;&nbsp;81</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">event</span><br>
+System.EventHandler LookUp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;82</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;83</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">event</span> System.EventHandler Persist;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;84</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;85</span>&nbsp;<span style="color:blue">public</span><br>
+Presenter.ContactPresenter Presenter {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;86</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> {<br>
+<span style="color:blue">return</span> _presenter; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;87</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">set</span> {<br>
+_presenter = <span style="color:blue">value</span>; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;88</span>&nbsp;}<br><span style="color:teal">&nbsp;&nbsp;&nbsp;89</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;90</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">string</span> ContactPhoneNumber {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;91</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> {<br>
+<span style="color:blue">return</span> txtPhoneNumber.Text; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;92</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">set</span> {<br>
+txtPhoneNumber.Text = <span style="color:blue">value</span>; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;93</span>&nbsp;}<br><span style="color:teal">&nbsp;&nbsp;&nbsp;94</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;95</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">string</span> ContactName {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;96</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> {<br>
+<span style="color:blue">return</span> txtName.Text; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;97</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">set</span> {<br>
+txtName.Text = <span style="color:blue">value</span>; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;98</span>&nbsp;}<br><span style="color:teal">&nbsp;&nbsp;&nbsp;99</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;100</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">int</span> ContactAge {<br><span style="color:teal">&nbsp;&nbsp;101</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> {<br>
+<span style="color:blue">return</span> <span style="color:blue">int</span>.Parse(txtAge.Text); }<br><span style="color:teal">&nbsp;&nbsp;102</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">set</span> {<br>
+txtAge.Text = <span style="color:blue">value</span>.ToString(); }<br><span style="color:teal">&nbsp;&nbsp;103</span>&nbsp;}<br><span style="color:teal">&nbsp;&nbsp;104</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;105</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">string</span> ContactUserName {<br><span style="color:teal">&nbsp;&nbsp;106</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> {<br>
+<span style="color:blue">return</span> txtUserName.Text; }<br><span style="color:teal">&nbsp;&nbsp;107</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">set</span> {<br>
+txtUserName.Text = <span style="color:blue">value</span>; }<br><span style="color:teal">&nbsp;&nbsp;108</span>&nbsp;}<br><span style="color:teal">&nbsp;&nbsp;109</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;110</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">string</span> UserNameToLookUp {<br><span style="color:teal">&nbsp;&nbsp;111</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> {<br>
+<span style="color:blue">return</span> ddlUserName.SelectedItem.ToString();<br>
+}<br><span style="color:teal">&nbsp;&nbsp;112</span>&nbsp;}<br><span style="color:teal">&nbsp;&nbsp;113</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;114</span>&nbsp;<span style="color:blue">private</span> <span style="color:blue">void</span> Form1_Load(<span style="color:blue">object</span> sender, EventArgs e) {<br><span style="color:teal">&nbsp;&nbsp;115</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">if</span>(_presenter == <span style="color:blue">null</span>) _presenter = <span style="color:blue">new</span> Presenter.ContactPresenter(<span style="color:blue">this</span>); <br><span style="color:teal">&nbsp;&nbsp;116</span>&nbsp;}</div>
+<p>The above is a snippet from the form code.&nbsp; Notice how the interface<br>
+properties are mapped to the appropriate text box, and the button click handlers<br>
+just invoke the events defined by the interface.&nbsp; Now it would be very trivial<br>
+to snap a different UI on to the same Presenter.</p>
+<p>I used NUnit to hook up unit tests to the entire thing to prove that this<br>
+layout was fully testable.&nbsp; Each component at every layer has been tested in<br>
+isolation.&nbsp; The interfaces make it easy to make stubs, but interfaces were<br>
+mainly used for loose-coupling.&nbsp; I’m tightly coupled where concrete classes are<br>
+referenced, but that’s fine.&nbsp; I think that loose-coupling should server a<br>
+purpose, so it may not be appropriate everywhere.&nbsp; For instance, my Presenter is<br>
+tightly coupled with the Repository object.&nbsp; I can still test my Presenter is<br>
+isolation because I have a property in my Presenter to hold a reference to the<br>
+Repository.&nbsp; In my test, I inherit from the Repository, override the members,<br>
+and set the Presenter’s property to my stub object.&nbsp; This isolates Presenter.&nbsp;
+</p>
+<p>I was a bit surprised at how simple my tests ended up being because each<br>
+class served a specific purpose, so it was easy to test for that purpose.&nbsp;&nbsp;As<br>
+long as my Presenter could call the Repository, it was working.&nbsp; As long as the<br>
+Repository could get a Contact back from the ContactData object, it was<br>
+working.&nbsp; Only my unit test for MyContactData actually tested that the data was<br>
+correct because the object was being created at this point.</p>
+<p>Another point of interest is the amount of private methods in my solution.&nbsp;<br>
+My two event handlers in the Presenter are private, and that is it.&nbsp; Everything<br>
+else is a publicly exposed piece of a concrete class that serves a distinct<br>
+purpose.</p>
+<p>Download my code and give it a look.&nbsp; I’m open for criticism.&nbsp; Maybe with a<br>
+little collaboration, we can, as a community, make architecture recommendations<br>
+and provide a community-supported prototype of&nbsp;a single feature demonstrates the<br>
+use of good practices.&nbsp; The more feedback the better.</p>

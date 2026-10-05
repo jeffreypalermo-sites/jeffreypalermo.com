@@ -1,0 +1,11 @@
+[
+  {
+    "id": 368,
+    "parent": 0,
+    "author_name": "Fregas",
+    "author_url": "http://www.dotnettricks.com/",
+    "date": "2005-07-08T16:05:58",
+    "type": "comment",
+    "content_html": "<p>Actually, you can declaritively set properties in user controls.  if you have a user control called “DisplayUser”, you can set the firstname property with something like this:</p>"
+  }
+]

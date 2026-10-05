@@ -1,0 +1,22 @@
+---
+wp_id: 181
+title: Use XHTML for your web applications, please! – level 100
+slug: use-xhtml-for-your-web-applications-please-level-100
+permalink: /2005/02/use-xhtml-for-your-web-applications-please-level-100/
+date: 2005-02-20T08:21:00
+date_utc: 2005-02-20T08:21:00Z
+modified: 2005-02-20T08:21:00
+format: html
+excerpt: I realize that a lot of web applications are targeted for IE, and it may be an intranet application. Even so, it pays to put the line:<!DOCTYPE html PUBLIC “-//W3C//DTD XHTML 1.0 Strict//EN” “http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd”&gt; Adding this will save you so much grief later on. First, your CSS will actually cascade down to child elements, so […]
+comments_open: true
+---
+<p>I realize that a lot of web applications are targeted for IE, and it may be an intranet application.&nbsp; Even so, it pays to put the line:</p><pre>&lt;!DOCTYPE html<br>
+PUBLIC “-//W3C//DTD XHTML 1.0 Strict//EN”<br>
+“http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd”&gt;<br>
+</pre>
+<p>Adding this will save you <strong>so</strong> much grief later on.&nbsp;&nbsp; First, your CSS will actually cascade down to child elements, so you can have a very clean stylesheet.&nbsp; Second, you know that your site will render properly in all browsers.&nbsp; No need to <strong>test</strong> all the browsers.&nbsp; By making your pages XHTML, you are adhering to the standard, so that’s all you need to worry about.&nbsp; </p>
+<p>The alternative is to muck up your stylesheet with duplicate declarations and the same css class on nested elements.&nbsp; Then, when the site looks good, just open it in another standards-based browser and cry.</p>
+<p>Many people don’t know that if you fail to put a doctype at the top of a page, IE will interpret it as HTML4.0.&nbsp; If you want HTML4.0, then at least put the doctype there:</p>
+<p>&lt;!DOCTYPE HTML PUBLIC “-//W3C//DTD HTML 4.01//EN”<br>&nbsp;&nbsp; “<a href="http://www.w3.org/TR/html4/strict.dtd”&amp;gt" rel="nofollow">http://www.w3.org/TR/html4/strict.dtd”&amp;gt</a>;<br>Even then, the other browsers (that default to XHTML) will see the doctype and interpret it as HTML4.</p>
+
+<p>I wonder how many web application developers out there have never read the standards docs for xhtml or css. . . </p>

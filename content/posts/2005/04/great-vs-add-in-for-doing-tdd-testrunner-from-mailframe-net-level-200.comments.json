@@ -1,0 +1,38 @@
+[
+  {
+    "id": 298,
+    "parent": 0,
+    "author_name": "Raymond Lewallen",
+    "author_url": "http://",
+    "date": "2005-04-29T05:59:00",
+    "type": "comment",
+    "content_html": "<p>Does it have a config file that might let you specify which testing framework to target, like TestDriven.Net?</p>"
+  },
+  {
+    "id": 299,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2005-04-29T06:05:00",
+    "type": "comment",
+    "content_html": "<p>I’m not sure, but the website has docs, and the owner responds to support emails.  I’ve just started evaluating it.</p>"
+  },
+  {
+    "id": 300,
+    "parent": 0,
+    "author_name": "Jeremy Miller",
+    "author_url": "http://",
+    "date": "2005-04-30T04:27:00",
+    "type": "comment",
+    "content_html": "<p>How stable is it?  Every NUnit addin I’ve ever used has had some problems with dropping connectivity to its background process or second AppDomain.</p>"
+  },
+  {
+    "id": 301,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2005-04-30T05:14:00",
+    "type": "comment",
+    "content_html": "<p>I’ve evaluated it for a day now, and it works well for a single test project.  I have a solution with three test projects in it, and I couldn’t get it to load all three test projects and run everything together.  For that, I had to open NUnit and run the full test suite.</p>\n<p>This is from only 1 day of evaluation.  I told my team members, who have downloaded it, and they are also evaluating it.  If we end up deciding to use it full time, we’re going to buy licenses for everyone.  It’s too early to tell yet.</p>"
+  }
+]

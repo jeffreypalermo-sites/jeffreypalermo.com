@@ -1,0 +1,65 @@
+---
+wp_id: 1149
+title: Automating ASP.NET MVC deployments using Web Deploy
+slug: automating-asp-net-mvc-deployments-using-web-deploy
+permalink: /2010/04/automating-asp-net-mvc-deployments-using-web-deploy/
+date: 2010-04-11T22:13:33
+date_utc: 2010-04-11T22:13:33Z
+modified: 2010-04-11T22:13:33
+format: html
+categories:
+- blog
+excerpt: The following is an excerpt from ASP.NET MVC 2 in Action, a book from Manning to be in bookstores in May. The early access (MEAP) edition is available now on http://manning.com/palermo2.&#160; Authors include Jeffrey Palermo, Ben Scheirman, Jimmy Bogard, Matt Hinze. Technically edited by Jeremy Skinner. 17.4 Enabling remote server deployments with Web Deploy After […]
+comments_open: true
+---
+<p>The following is an excerpt from <a href="http://manning.com/palermo2">ASP.NET MVC 2 in Action</a>, a book from Manning to be in bookstores in May.&nbsp; The early access (MEAP) edition is available now on <a href="http://manning.com/palermo2">http://manning.com/palermo2</a>.&nbsp; Authors include <a href="/">Jeffrey Palermo</a>, <a href="http://flux88.com/">Ben Scheirman</a>, <a href="http://www.lostechies.com/blogs/jimmy_bogard/default.aspx">Jimmy Bogard</a>, <a href="http://mhinze.com/">Matt Hinze</a>.&nbsp; Technically edited by <a href="http://www.jeremyskinner.co.uk/">Jeremy Skinner</a>.</p>
+<h2>17.4 Enabling remote server deployments with Web Deploy </h2>
+<p>After getting a deployment script that can set up your application and database, the next step is to take on the challenge of pushing deployments to multiple servers. The key takeaway is that by automating the task of deployment, you can eliminate all the manual steps that are prone to errors. </p>
+<p>In order to eliminate the need to log on to servers one by one, an additional technology is needed. This is where the <a href="http://www.iis.net/download/WebDeploy">Web Deployment Tool</a> (formerly named MSDeploy) comes into play. You can download it from <a href="http://www.iis.net/expand/webdeploy" rel="nofollow">http://www.iis.net/expand/webdeploy</a>. This tool provides a host of features and functions, , but the features most important for our deployment approach are</p>
+<ul>
+<li>The ability to sync files over HTTP</li>
+<li>The ability to execute a remote command</li>
+</ul>
+<p>These features support both enterprise and hosted environments, and the scripts can be used for both preproduction environments and production environments.<a name="a"></a></p>
+<p>Typically, for web applications, there will be a development server that hosts the web application and database on the same machine. The quality assurance (QA) environment may be set up the same way. Then, in the staging and production environments, more servers come into play. There may be a separate database server, multiple web servers, and even an application server. Automating a deployment to multiple machines can become complex very quickly. <a></a><a>In order to reduce the complexity, Web Deploy</a> can be used to sync files to multiple machines and execute the deployment script on each server. It can also run remotely so that deployments execute the same way that they would in the development environment.</p>
+<p>Listing 17.4 shows the command-line arguments used to copy deployment files from a build server to a web server and then run the deployment. </p>
+<h3>Listing 17.4 Using Web Deploy to remotely execute a deployment</h3>
+<pre class="csharpcode">msdeploy.exe  -verb:sync -source:dirPath=deploymentFiles               |<span class="rem">#1</span>
+-dest:dirPath=<span class="str">'c:installs'</span>,computername=192.168.1.34                  |<span class="rem">#1</span>
+
+msdeploy.exe  -verb:sync                                               |<span class="rem">#2</span>
+  -source:runCommand=<span class="str">'c:installsdev.bat'</span>                             |<span class="rem">#2 </span>
+  -dest:auto,computername=192.168.1.34                                 |<span class="rem">#2</span>
+<span class="rem">#1 Copy files to remote server</span>
+<span class="rem">#2 Execute command on remote server</span></pre>
+<p>.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+
+<p>First, msdeploy.exe is called with the sync verb specifying a source directory on the local machine (#1). This command copies all the files inside the deploymentFiles directory (C:installs) to the remote server (in this case, the computer with the IP address 192.168.1.34). </p>
+<p>Next, msdeploy.exe is called with the sync verb, but this time the runCommand argument is specified (#2). This means that Web Deploy will execute the batch file at c:installsdev.bat on the remote server in the same way you would run it if you logged in via remote desktop. </p>
+<p>Using a technology like Web Deploy can greatly simplify a complex deployment. By running each command locally on each server in the deployment, scripts will run consistently from the development environment through the production environment. The real advantage is that the calls to msdeploy.exe can be scripted, which means that a multiserver deployment can be totally automated and repeatable. Scripting this type of deployment also means that from a single machine you can monitor a deployment and see the results of each script consolidated on your desktop.</p>
+<h2>17.5 Summary</h2>
+<p>When we configure our environment, we must devise a reliable deployment strategy to ensure that the right application is deployed with the correct configuration. At the heart of a solid deployment strategy is continuous integration, which includes practices such as automated deployments and self-testing builds. </p>
+<p>With free, widely used open source tools such as CruiseControl.NET, NAnt, NUnit, and others, we can create an automated build and deployment server. By packaging NAnt, a build script, and a bootstrap batch file, we can harness the flexibility and power of NAnt to deploy and configure our application to multiple environments, up to and including production. By layering on the Web Deploy tool to reduce the friction of copying and executing the build scripts across multiple servers, we can have a totally automated solution that’s repeatable and reliable.</p>

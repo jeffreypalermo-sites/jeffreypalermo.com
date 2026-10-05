@@ -1,0 +1,211 @@
+---
+wp_id: 471
+title: Sorting in .Net (don’t sort manually, let .Net do it for you) – level 100
+slug: sorting-in-net-dont-sort-manually-let-net-do-it-for-you-level-100
+permalink: /2006/11/sorting-in-net-dont-sort-manually-let-net-do-it-for-you-level-100/
+date: 2006-11-08T13:00:00
+date_utc: 2006-11-08T13:00:00Z
+modified: 2006-11-08T13:00:00
+format: html
+tags:
+- learning
+- tips-tricks
+excerpt: I've labeled this as a level 100 topic because I feel that every .Net developer should know the basics of sorting. With the base class library that we have to work with, we don't have to worry about sorting algorithms or speeding up our sorts. Folks smarter than I have implemented the fast sorting that […]
+comments_open: true
+---
+<p>I've labeled this as a level 100 topic because I feel that every .Net developer<br>
+should know the basics of sorting.&nbsp; With the base class library that we have to<br>
+work with, we don't have to worry about sorting algorithms or speeding up our<br>
+sorts.&nbsp; Folks smarter than I have implemented the fast sorting that we have in<br>
+.Net.</p>
+<p>Here, I'll cover the basics of how<br>
+to sort your own domain object as well as how to sort any other object (even<br>
+ones you didn't create).</p>
+<p>Let's consider<br>
+the following domain object, Person:</p>
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p><span style="color:#2b91af">&nbsp; &nbsp;11</span> <span style="color:blue">public</span> <span style="color:blue">class</span> <span style="color:teal">Person</span></p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;12</span> {</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;13</span> &nbsp; &nbsp; <span style="color:blue">private</span> <span style="color:blue">string</span> _firstName;</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;14</span> &nbsp; &nbsp; <span style="color:blue">private</span> <span style="color:blue">string</span><br>
+_lastName;</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;15</span>&nbsp;</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;16</span> &nbsp; &nbsp; <span style="color:blue">public</span> Person(<span style="color:blue">string</span> firstName,<br>
+<span style="color:blue">string</span><br>
+lastName)</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;17</span> &nbsp; &nbsp;<br>
+{</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;18</span> &nbsp; &nbsp; &nbsp; &nbsp;<br>
+_firstName = firstName;</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;19</span> &nbsp; &nbsp; &nbsp; &nbsp; _lastName =<br>
+lastName;</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;20</span> &nbsp; &nbsp;<br>
+}</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;21</span>&nbsp;</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;22</span> &nbsp; &nbsp; <span style="color:blue">public</span> <span style="color:blue">string</span><br>
+FirstName</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;23</span> &nbsp; &nbsp;<br>
+{</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;24</span> &nbsp; &nbsp; &nbsp; &nbsp;<br>
+<span style="color:blue">get</span> { <span style="color:blue">return</span> _firstName;<br>
+}</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;25</span> &nbsp; &nbsp;<br>
+}</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;26</span>&nbsp;</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;27</span> &nbsp; &nbsp; <span style="color:blue">public</span> <span style="color:blue">string</span><br>
+LastName</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;28</span> &nbsp; &nbsp;<br>
+{</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;29</span> &nbsp; &nbsp; &nbsp; &nbsp;<br>
+<span style="color:blue">get</span> { <span style="color:blue">return</span> _lastName;<br>
+}</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;30</span> &nbsp; &nbsp;<br>
+}</p>
+<p><span style="color:#2b91af">&nbsp; &nbsp;31</span> }</p>
+</div>
+<p>In our application, we may want to display<br>
+FirstName LastName or LastName, FirstName.&nbsp; Also, we may want ascending or<br>
+descending sorts.&nbsp; If you are using a database, you may be tempted to let the<br>
+database order the records for you, and that's fine if you never need to change<br>
+the sort inside the application.&nbsp; In object-oriented systems, however, a lot of<br>
+code never talks to the database, so we need to be able to sort.&nbsp; Now, suppose I<br>
+wanted the following code to work:</p>
+<div style="background:white none repeat scroll 0 50%; color:black">
+<div style="background:white none repeat scroll 0 50%; color:black">
+<div style="background:white none repeat scroll 0 50%; color:black">
+
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p>[<span style="color:teal">Test</span>]</p>
+<p><span style="color:blue">public</span> <span style="color:blue">void</span> ShouldSortPersonsAscending()</p>
+<p>{</p>
+<p>&nbsp; &nbsp; <span style="color:teal">Person</span>[] persons =<br>
+<span style="color:blue">new</span> <span style="color:teal">Person</span>[]{<span style="color:blue">new</span> <span style="color:teal">Person</span>(<span style="color:maroon">"Homer"</span>, <span style="color:maroon">"Simpson"</span>), <span style="color:blue">new</span> <span style="color:teal">Person</span>(<span style="color:maroon">"Bart"</span>, <span style="color:maroon">"Simpson"</span>), <span style="color:blue">new</span> <span style="color:teal">Person</span>(<span style="color:maroon">"Jerry"</span>, <span style="color:maroon">"Seinfeld"</span>)};</p>
+<p>&nbsp; &nbsp; <span style="color:teal">Array</span>.Sort(persons);</p>
+<p>&nbsp; &nbsp; <span style="color:blue">foreach</span>(<span style="color:teal">Person</span> person <span style="color:blue">in</span> persons)</p>
+<p>&nbsp; &nbsp; {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:teal">Console</span>.WriteLine(person.FullName);</p>
+<p>&nbsp; &nbsp; }</p>
+<p>}</p>
+</div>
+</div>
+</div>
+</div>
+<p><!--EndFragment--><br>This code won't work right now because<br>
+Array.Sort( ) counts on the elements in the array implementing the IComparable<br>
+interface.&nbsp; This is a key interface in .net for sorting.&nbsp; By adding an<br>
+implementation of that method to my Person class, I get sorting for free.&nbsp; What<br>
+I am going for here is a sort by last name and then first name:</p>
+
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p><span style="color:blue">public</span> <span style="color:blue">class</span> <span style="color:teal">Person</span> : <span style="color:teal">IComparable</span></p>
+<p>{</p>
+<p>&nbsp; &nbsp; <span style="color:blue">private</span> <span style="color:blue">string</span> _firstName;</p>
+<p>&nbsp; &nbsp; <span style="color:blue">private</span> <span style="color:blue">string</span><br>
+_lastName;</p>
+
+<p>&nbsp; &nbsp; <span style="color:blue">public</span> Person(<span style="color:blue">string</span> firstName,<br>
+<span style="color:blue">string</span><br>
+lastName)</p>
+<p>&nbsp; &nbsp;<br>
+{</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; _firstName<br>
+= firstName;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;<br>
+_lastName = lastName;</p>
+<p>&nbsp; &nbsp; }</p>
+
+<p>&nbsp; &nbsp; <span style="color:blue">public</span> <span style="color:blue">string</span> FirstName</p>
+<p>&nbsp; &nbsp; {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:blue">get</span> { <span style="color:blue">return</span> _firstName;<br>
+}</p>
+<p>&nbsp; &nbsp; }</p>
+
+<p>&nbsp; &nbsp; <span style="color:blue">public</span> <span style="color:blue">string</span><br>
+LastName</p>
+<p>&nbsp; &nbsp; {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:blue">get</span> { <span style="color:blue">return</span> _lastName;<br>
+}</p>
+<p>&nbsp; &nbsp; }</p>
+
+<p>&nbsp; &nbsp; <span style="color:blue">public</span> <span style="color:blue">string</span><br>
+FullName</p>
+<p>&nbsp; &nbsp; {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:blue">get</span> { <span style="color:blue">return</span> <span style="color:blue">string</span>.Format(<span style="color:maroon">"{0} {1}"</span>,<br>
+FirstName, LastName); }</p>
+<p>&nbsp; &nbsp; }</p>
+
+<p>&nbsp; &nbsp; <span style="color:blue">public</span> <span style="color:blue">int</span> CompareTo(<span style="color:blue">object</span> obj)</p>
+<p>&nbsp; &nbsp; {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:teal">Person</span> person = (<span style="color:teal">Person</span>)obj;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:blue">int</span> compareResult =<br>
+LastName.CompareTo(person.LastName);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:blue">if</span>(compareResult == 0)</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; compareResult<br>
+= FirstName.CompareTo(person.FirstName);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; }</p>
+
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:blue">return</span> compareResult;</p>
+<p>&nbsp; &nbsp; }</p>
+</div>
+<p><!--EndFragment--><br>Notice how<br>
+I just had to implement a single method comparing first on last name and then on<br>
+first name.&nbsp; Here is my output:</p>
+<pre>------ Test started: Assembly: BlogScratchPad.dll ------<br><br>Jerry Seinfeld<br>Bart Simpson<br>Homer Simpson<br><br>1 passed, 0 failed, 0 skipped, took 0.41 seconds.</pre>
+<p>That's the bread and butter sorting case,<br>
+and that gives my Person object a default sort order.&nbsp; Anyone working with<br>
+Person(s) can now sort by last name, first name in ascending order.&nbsp; But what if<br>
+I wanted to sort in descending order?&nbsp; There is another key interface in .Net<br>
+called IComparer.&nbsp; This interface enables you to create a class that defines the<br>
+sort order for any class.&nbsp; Consider the following tests.&nbsp; I would like my<br>
+Person(s) to be listed in descending alphabetical order (reverse of above).&nbsp;<br>
+Here, I choose to implement the generic form to avoid some casting:<br>
+IComparer&lt;T&gt;.</p>
+
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p>[<span style="color:teal">Test</span>]</p>
+<p><span style="color:blue">public</span> <span style="color:blue">void</span><br>
+ShouldSortPersonsDescending()</p>
+<p>{</p>
+<p>&nbsp; &nbsp; <span style="color:teal">Person</span>[] persons = <span style="color:blue">new</span> <span style="color:teal">Person</span>[] { <span style="color:blue">new</span> <span style="color:teal">Person</span>(<span style="color:maroon">"Homer"</span>, <span style="color:maroon">"Simpson"</span>), <span style="color:blue">new</span> <span style="color:teal">Person</span>(<span style="color:maroon">"Bart"</span>, <span style="color:maroon">"Simpson"</span>), <span style="color:blue">new</span> <span style="color:teal">Person</span>(<span style="color:maroon">"Jerry"</span>, <span style="color:maroon">"Seinfeld"</span>)<br>
+};</p>
+<p>&nbsp; &nbsp; <span style="color:teal">Array</span>.Sort(persons,<br>
+<span style="color:blue">new</span> <span style="color:teal">ByLastNameFirstNameDescendingComparer</span>());</p>
+<p>&nbsp; &nbsp; <span style="color:blue">foreach</span> (<span style="color:teal">Person</span> person <span style="color:blue">in</span> persons)</p>
+<p>&nbsp; &nbsp; {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:teal">Console</span>.WriteLine(person.FullName);</p>
+<p>&nbsp; &nbsp; }</p>
+<p>}</p>
+</div>
+<p><!--EndFragment--><br>Notice how this test looks very similar to<br>
+the previous one; however, I've added my new comparer class to instruct<br>
+Array.Sort( ) how to sort the array.</p>
+
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p><span style="color:blue">public</span> <span style="color:blue">class</span> <span style="color:teal">ByLastNameFirstNameDescendingComparer</span> :<br>
+<span style="color:teal">IComparer</span>&lt;<span style="color:teal">Person</span>&gt;</p>
+<p>{</p>
+<p>&nbsp; &nbsp; <span style="color:blue">public</span> <span style="color:blue">int</span> Compare(<span style="color:teal">Person</span> x, <span style="color:teal">Person</span> y)</p>
+<p>&nbsp; &nbsp; {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:blue">int</span> compareResult =<br>
+y.LastName.CompareTo(x.LastName);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:blue">if</span> (compareResult == 0)</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; compareResult<br>
+= y.FirstName.CompareTo(x.FirstName);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; }</p>
+
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:blue">return</span> compareResult;</p>
+<p>&nbsp; &nbsp; }</p>
+<p>}</p>
+</div>
+<p><!--EndFragment--><br>Notice how I just compared y to x instead of<br>
+x to y.&nbsp; This gets me the descending order that I want.&nbsp; Here is the result of<br>
+running the test:</p>
+<pre>------ Test started: Assembly: BlogScratchPad.dll ------<br><br>Homer Simpson<br>Bart Simpson<br>Jerry Seinfeld<br><br>1 passed, 0 failed, 0 skipped, took 0.41 seconds.<br></pre>
+<p>Notice how it is exactly the<br>
+reverse of the previous result – just what I wanted.&nbsp; </p>
+<p>Array.Sort(Array, IComparer) works to sort an array of any object under the<br>
+sun.&nbsp; My team's Visual Studio solution has accumulated&nbsp; a healthy number of<br>
+IComparer classes.&nbsp; This allows our application to sort objects however needed,<br>
+whenever needed.&nbsp; </p>

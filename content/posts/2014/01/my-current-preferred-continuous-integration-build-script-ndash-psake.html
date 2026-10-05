@@ -1,0 +1,236 @@
+---
+wp_id: 1208
+title: My current preferred continuous integration build script–psake
+slug: my-current-preferred-continuous-integration-build-script-ndash-psake
+permalink: /2014/01/my-current-preferred-continuous-integration-build-script-ndash-psake/
+date: 2014-01-13T11:16:51
+date_utc: 2014-01-13T11:16:51Z
+modified: 2014-01-13T11:16:51
+format: html
+categories:
+- blog
+excerpt: I first learned continuous integration and build script principles from Steve Donie back in the last decade. I’m eternally grateful. To this day, the basic outline of the build scripts I deploy today have the same general flow that he taught me and implemented using NAnt and CruiseControl.net. Today, we look back at the practice […]
+comments_open: true
+---
+<p>I first learned continuous integration and build script principles from <a href="https://twitter.com/stevedonie">Steve Donie</a> back in the last decade.&nbsp; I’m eternally grateful.&nbsp; To this day, the basic outline of the build scripts I deploy today have the same general flow that he taught me and implemented using NAnt and CruiseControl.net.</p>
+<p>Today, we look back at the practice of forcing XML into a procedural programming language and chuckle at how naïve we were as an industry.&nbsp; Now, we use Powershell on the Windows platform for modern scripting.&nbsp; It was a brilliant move for <a href="https://twitter.com/JamesKovacs">James Kovacs</a> to essentially port the build script concepts to powershell with the <a href="https://www.nuget.org/packages/psake/">psake</a> library.</p>
+<p>I’ve been speaking on setting up basic software configuration management (SCM) at conferences and user groups for years, and I try to maintain an “<a href="https://bitbucket.org/jeffreypalermo/iteration-zero">Iteration Zero</a>” Visual Studio solution template that includes scripting and the structure necessary for continuous integration right out of the gate.&nbsp; This build script is the one from that project, and it’s the template I use for every new software system.&nbsp; It’s been modified a bit over the years.&nbsp; It came from the one I had used for <a href="http://codecampserver.codeplex.com/">CodeCampServer</a> back in the day, and it, of course, is used in every project we do at our software engineering practice at <a href="http://clear-measure.com">Clear Measure</a>.&nbsp; </p>
+<p>The full file can be found <a href="https://bitbucket.org/jeffreypalermo/iteration-zero/src/45b6d2d67a02d7977ddb8be404dca30364241138/default.ps1?at=default">here</a>.</p>
+<pre># required parameters :
+<a name="cl-2"></a># 	$databaseName
+<a name="cl-3"></a>
+<a name="cl-4"></a>Framework "4.0"
+<a name="cl-5"></a>
+<a name="cl-6"></a>properties {
+    $projectName = "IterationZero"
+<a name="cl-8"></a>    $unitTestAssembly = "UnitTests.dll"
+<a name="cl-9"></a>    $integrationTestAssembly = "IntegrationTests.dll"
+<a name="cl-10"></a>    $fullSystemTestAssembly = "FullSystemTests.dll"</pre>
+<pre>    $projectConfig = "Release"
+    $base_dir = resolve-path .
+    $source_dir = "$base_dirsrc"
+<a name="cl-14"></a>    $nunitPath = "$source_dirpackagesNUnit.2.5.9.10348Tools"
+<a name="cl-15"></a>	
+    $build_dir = "$base_dirbuild"
+    $test_dir = "$build_dirtest"
+    $testCopyIgnorePath = "_ReSharper"
+    $package_dir = "$build_dirpackage"	
+    $package_file = "$build_dirlatestVersion" + $projectName +"_Package.zip"
+<a name="cl-21"></a>	
+<a name="cl-22"></a>    $databaseName = $projectName
+    $databaseServer = "localhostsqlexpress"
+    $databaseScripts = "$source_dirCoreDatabase"
+    $hibernateConfig = "$source_dirhibernate.cfg.xml"
+    $schemaDatabaseName = $databaseName + "_schema"
+<a name="cl-27"></a>	
+    $connection_string = "server=$databaseserver;database=$databasename;Integrated Security=true;"
+<a name="cl-29"></a>	
+    $cassini_app = 'C:Program Files (x86)Common FilesMicrosoft SharedDevServer10.0WebDev.WebServer40.EXE'
+    $port = 1234
+    $webapp_dir = "$source_dirUI" 
+<a name="cl-33"></a>}
+<a name="cl-34"></a>
+<a name="cl-35"></a>task default -depends Init, CommonAssemblyInfo, Compile, RebuildDatabase, Test, LoadData
+<a name="cl-36"></a>task ci -depends Init, CommonAssemblyInfo, Compile, RebuildDatabase, Test, LoadData, Package
+<a name="cl-37"></a>
+<a name="cl-38"></a>task Init {
+<a name="cl-39"></a>    delete_file $package_file
+<a name="cl-40"></a>    delete_directory $build_dir
+<a name="cl-41"></a>    create_directory $test_dir
+    create_directory $build_dir
+<a name="cl-43"></a>}
+<a name="cl-44"></a>
+<a name="cl-45"></a>task ConnectionString {
+<a name="cl-46"></a>	$connection_string = "server=$databaseserver;database=$databasename;Integrated Security=true;"
+<a name="cl-47"></a>	write-host "Using connection string: $connection_string"
+<a name="cl-48"></a>	poke-xml $hibernateConfig "//e:property[@name = 'connection.connection_string']" $connection_string @{"e" = "urn:nhibernate-configuration-2.2"}
+<a name="cl-49"></a>}
+<a name="cl-50"></a>
+<a name="cl-51"></a>task Compile -depends Init {
+<a name="cl-52"></a>    msbuild /t:clean /v:q /nologo /p:Configuration=$projectConfig $source_dir$projectName.sln
+<a name="cl-53"></a>    delete_file $error_dir
+<a name="cl-54"></a>    msbuild /t:build /v:q /nologo /p:Configuration=$projectConfig $source_dir$projectName.sln
+<a name="cl-55"></a>}
+<a name="cl-56"></a>
+<a name="cl-57"></a>task Test {
+<a name="cl-58"></a>	copy_all_assemblies_for_test $test_dir
+<a name="cl-59"></a>	exec {
+<a name="cl-60"></a>		&amp; $nunitPathnunit-console.exe $test_dir$unitTestAssembly $test_dir$integrationTestAssembly /nologo /nodots /xml=$build_dirTestResult.xml    
+<a name="cl-61"></a>	}
+<a name="cl-62"></a>}
+<a name="cl-63"></a>
+<a name="cl-64"></a>task RebuildDatabase -depends ConnectionString {
+<a name="cl-65"></a>    exec { 
+<a name="cl-66"></a>		&amp; $base_diraliasqlaliasql.exe Rebuild $databaseServer $databaseName $databaseScripts 
+<a name="cl-67"></a>	}
+<a name="cl-68"></a>}
+<a name="cl-69"></a>
+<a name="cl-70"></a>task LoadData -depends ConnectionString, Compile, RebuildDatabase {
+<a name="cl-71"></a>    exec { 
+<a name="cl-72"></a>		&amp; $nunitPathnunit-console.exe $test_dir$integrationTestAssembly /include=DataLoader /nologo /nodots /xml=$build_dirDataLoadResult.xml
+<a name="cl-73"></a>    } "Build failed - data load failure"  
+<a name="cl-74"></a>}
+<a name="cl-75"></a>
+<a name="cl-76"></a>task CreateCompareSchema -depends SchemaConnectionString {
+<a name="cl-77"></a>    exec { 
+<a name="cl-78"></a>		&amp; $base_diraliasqlaliasql.exe Rebuild $databaseServer $schemaDatabaseName $databaseScripts 
+<a name="cl-79"></a>	}
+<a name="cl-80"></a>}
+<a name="cl-81"></a>
+<a name="cl-82"></a>task SchemaConnectionString {
+<a name="cl-83"></a>	$connection_string = "server=$databaseserver;database=$schemaDatabaseName;Integrated Security=true;"
+<a name="cl-84"></a>	write-host "Using connection string: $connection_string"
+<a name="cl-85"></a>	poke-xml $hibernateConfig "//e:property[@name = 'connection.connection_string']" $connection_string @{"e" = "urn:nhibernate-configuration-2.2"}
+<a name="cl-86"></a>}
+<a name="cl-87"></a>
+<a name="cl-88"></a>task CommonAssemblyInfo {
+<a name="cl-89"></a>    $version = "1.0.0.0"   
+<a name="cl-90"></a>    create-commonAssemblyInfo "$version" $projectName "$source_dirCommonAssemblyInfo.cs"
+<a name="cl-91"></a>}
+<a name="cl-92"></a>
+<a name="cl-93"></a>task Package -depends Compile {
+<a name="cl-94"></a>    delete_directory $package_dir
+<a name="cl-95"></a>	#web app
+<a name="cl-96"></a>    copy_website_files "$webapp_dir" "$package_dirweb" 
+<a name="cl-97"></a>    copy_files "$databaseScripts" "$package_dirdatabase"
+<a name="cl-98"></a>	
+<a name="cl-99"></a>	zip_directory $package_dir $package_file 
+<a name="cl-100"></a>}
+<a name="cl-101"></a>
+<a name="cl-102"></a>task FullSystemTests -depends Compile, RebuildDatabase {
+<a name="cl-103"></a>    copy_all_assemblies_for_test $test_dir
+<a name="cl-104"></a>    &amp;$cassini_app "/port:$port" "/path:$webapp_dir"
+<a name="cl-105"></a>    &amp; $nunitPathnunit-console-x86.exe $test_dir$fullSystemTestAssembly /framework=net-4.0 /nologo /nodots /xml=$build_dirFullSystemTestResult.xml
+<a name="cl-106"></a>    exec { taskkill  /F /IM WebDev.WebServer40.EXE }
+<a name="cl-107"></a>}
+<a name="cl-108"></a> 
+<a name="cl-109"></a>function global:zip_directory($directory,$file) {
+<a name="cl-110"></a>    write-host "Zipping folder: " $test_assembly
+<a name="cl-111"></a>    delete_file $file
+<a name="cl-112"></a>    cd $directory
+<a name="cl-113"></a>    &amp; "$base_dir7zip7za.exe" a -mx=9 -r $file
+<a name="cl-114"></a>    cd $base_dir
+<a name="cl-115"></a>}
+<a name="cl-116"></a>
+<a name="cl-117"></a>
+<a name="cl-118"></a>
+<a name="cl-119"></a>
+<a name="cl-120"></a>
+<a name="cl-121"></a>
+<a name="cl-122"></a>
+<a name="cl-123"></a>
+<a name="cl-124"></a>
+<a name="cl-125"></a>
+<a name="cl-126"></a>
+<a name="cl-127"></a>function global:copy_website_files($source,$destination){
+<a name="cl-128"></a>    $exclude = @('*.user','*.dtd','*.tt','*.cs','*.csproj','*.orig', '*.log') 
+<a name="cl-129"></a>    copy_files $source $destination $exclude
+<a name="cl-130"></a>	delete_directory "$destinationobj"
+<a name="cl-131"></a>}
+<a name="cl-132"></a>
+<a name="cl-133"></a>function global:copy_files($source,$destination,$exclude=@()){    
+<a name="cl-134"></a>    create_directory $destination
+<a name="cl-135"></a>    Get-ChildItem $source -Recurse -Exclude $exclude | Copy-Item -Destination {Join-Path $destination $_.FullName.Substring($source.length)} 
+<a name="cl-136"></a>}
+<a name="cl-137"></a>
+<a name="cl-138"></a>function global:Copy_and_flatten ($source,$filter,$dest) {
+<a name="cl-139"></a>  ls $source -filter $filter  -r | Where-Object{!$_.FullName.Contains("$testCopyIgnorePath") -and !$_.FullName.Contains("packages") }| cp -dest $dest -force
+<a name="cl-140"></a>}
+<a name="cl-141"></a>
+<a name="cl-142"></a>function global:copy_all_assemblies_for_test($destination){
+<a name="cl-143"></a>  create_directory $destination
+<a name="cl-144"></a>  Copy_and_flatten $source_dir *.exe $destination
+<a name="cl-145"></a>  Copy_and_flatten $source_dir *.dll $destination
+<a name="cl-146"></a>  Copy_and_flatten $source_dir *.config $destination
+<a name="cl-147"></a>  Copy_and_flatten $source_dir *.xml $destination
+<a name="cl-148"></a>  Copy_and_flatten $source_dir *.pdb $destination
+<a name="cl-149"></a>  Copy_and_flatten $source_dir *.sql $destination
+<a name="cl-150"></a>  Copy_and_flatten $source_dir *.xlsx $destination
+<a name="cl-151"></a>}
+<a name="cl-152"></a>
+<a name="cl-153"></a>function global:delete_file($file) {
+<a name="cl-154"></a>    if($file) { remove-item $file -force -ErrorAction SilentlyContinue | out-null } 
+<a name="cl-155"></a>}
+<a name="cl-156"></a>
+<a name="cl-157"></a>function global:delete_directory($directory_name)
+<a name="cl-158"></a>{
+<a name="cl-159"></a>  rd $directory_name -recurse -force  -ErrorAction SilentlyContinue | out-null
+<a name="cl-160"></a>}
+<a name="cl-161"></a>
+<a name="cl-162"></a>function global:delete_files_in_dir($dir)
+<a name="cl-163"></a>{
+<a name="cl-164"></a>	get-childitem $dir -recurse | foreach ($_) {remove-item $_.fullname}
+<a name="cl-165"></a>}
+<a name="cl-166"></a>
+<a name="cl-167"></a>function global:create_directory($directory_name)
+<a name="cl-168"></a>{
+<a name="cl-169"></a>  mkdir $directory_name  -ErrorAction SilentlyContinue  | out-null
+<a name="cl-170"></a>}
+<a name="cl-171"></a>
+<a name="cl-172"></a>function global:create-commonAssemblyInfo($version,$applicationName,$filename)
+<a name="cl-173"></a>{
+<a name="cl-174"></a>"using System;
+<a name="cl-175"></a>using System.Reflection;
+<a name="cl-176"></a>using System.Runtime.InteropServices;
+<a name="cl-177"></a>
+<a name="cl-178"></a>//------------------------------------------------------------------------------
+<a name="cl-179"></a>// &lt;auto-generated&gt;
+<a name="cl-180"></a>//     This code was generated by a tool.
+<a name="cl-181"></a>//     Runtime Version:2.0.50727.4927
+<a name="cl-182"></a>//
+<a name="cl-183"></a>//     Changes to this file may cause incorrect behavior and will be lost if
+<a name="cl-184"></a>//     the code is regenerated.
+<a name="cl-185"></a>// &lt;/auto-generated&gt;
+<a name="cl-186"></a>//------------------------------------------------------------------------------
+<a name="cl-187"></a>
+<a name="cl-188"></a>[assembly: ComVisibleAttribute(false)]
+<a name="cl-189"></a>[assembly: AssemblyVersionAttribute(""$version"")]
+<a name="cl-190"></a>[assembly: AssemblyFileVersionAttribute(""$version"")]
+<a name="cl-191"></a>[assembly: AssemblyCopyrightAttribute(""Copyright 2010"")]
+<a name="cl-192"></a>[assembly: AssemblyProductAttribute(""$applicationName"")]
+<a name="cl-193"></a>[assembly: AssemblyCompanyAttribute(""Headspring"")]
+<a name="cl-194"></a>[assembly: AssemblyConfigurationAttribute(""release"")]
+<a name="cl-195"></a>[assembly: AssemblyInformationalVersionAttribute(""$version"")]"  | out-file $filename -encoding "ASCII"    
+<a name="cl-196"></a>}
+<a name="cl-197"></a>
+<a name="cl-198"></a>function script:poke-xml($filePath, $xpath, $value, $namespaces = @{}) {
+<a name="cl-199"></a>    [xml] $fileXml = Get-Content $filePath
+<a name="cl-200"></a>    
+<a name="cl-201"></a>    if($namespaces -ne $null -and $namespaces.Count -gt 0) {
+<a name="cl-202"></a>        $ns = New-Object Xml.XmlNamespaceManager $fileXml.NameTable
+<a name="cl-203"></a>        $namespaces.GetEnumerator() | %{ $ns.AddNamespace($_.Key,$_.Value) }
+<a name="cl-204"></a>        $node = $fileXml.SelectSingleNode($xpath,$ns)
+<a name="cl-205"></a>    } else {
+<a name="cl-206"></a>        $node = $fileXml.SelectSingleNode($xpath)
+<a name="cl-207"></a>    }
+<a name="cl-208"></a>    
+<a name="cl-209"></a>    Assert ($node -ne $null) "could not find node @ $xpath"
+<a name="cl-210"></a>        
+<a name="cl-211"></a>    if($node.NodeType -eq "Element") {
+<a name="cl-212"></a>        $node.InnerText = $value
+<a name="cl-213"></a>    } else {
+<a name="cl-214"></a>        $node.Value = $value
+<a name="cl-215"></a>    }
+<a name="cl-216"></a>
+<a name="cl-217"></a>    $fileXml.Save($filePath) 
+<a name="cl-218"></a>}</pre>

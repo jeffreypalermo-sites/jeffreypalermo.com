@@ -1,0 +1,56 @@
+[
+  {
+    "id": 423,
+    "parent": 0,
+    "author_name": "dhayden",
+    "author_url": "http://davidhayden.com/blog/dave/",
+    "date": "2005-08-12T20:25:56",
+    "type": "comment",
+    "content_html": "<p>I understand your point, but not sure this example brings it to fruition.</p>\n<p>First, naming a test CallAnOperation(), is really bad as it gives me absolutely no idea as to what you are testing and the expected result.  Step #1 is to pick a descriptive test name that is more self-documenting.</p>\n<p>Second, is it not obvious as to why you are initializing variables before the call to the GetFile method.  Maybe you are doing this to avoid an ArgumentNullException?  Since you are not doing argument validation and the code in the routine is sparse, I have no clue why the variables are being initialized and what best practice is being violated here.</p>\n<p>Third, tests are not the same as client code.  Often we are testing an interface contract and hence are using the intimate knowldege of this contract to verify it is not being broken.  Therefore, there is an expected level of coupling here that is above and beyond what would be done in client code.</p>\n<p>For example, if you are testing code that calulates the area of a rectangle:</p>\n<p>public int Area (Rectangle r)<br>\n{<br>\n    return r.length * r.width;<br>\n}</p>\n<p>a test of</p>\n<p>[Test]<br>\npublic CalculateAreaOfRectangle()<br>\n{<br>\n    Rectangle r = new Rectangle(5,4);<br>\n    Assert.Equals(20, Area(r));<br>\n    Assert.Equals(r.length, 5);<br>\n    Assert.Equals(r.width, 4);<br>\n}</p>\n<p>has intimate knowledge of this subroutine.  We know how to calculate the area of a rectangle and are verifying that the expected contract of this subroutine is not being broken.  We not only verify the calculation is correct, but we are also verifying that the length and width of the rectangle are not being changed per the contract.  Hence, intimate knowledge is being used accordingly and accurately in my opinion.</p>\n<p>Great post as it got me thinking.</p>"
+  },
+  {
+    "id": 424,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-08-12T20:37:06",
+    "type": "comment",
+    "content_html": "<p>David,<br>\nGood input.  You are completely right.  I’ve change the code to show user code (controller code), and not test code.</p>"
+  },
+  {
+    "id": 425,
+    "parent": 0,
+    "author_name": "Anonymous",
+    "author_url": "http://",
+    "date": "2005-08-13T00:55:47",
+    "type": "comment",
+    "content_html": "<p>It looks like the coder is someone who comes from the C (maybe C++) world as has no idea about OO programming.  I’ve seen similar examples from programmers who know C/C++ very well but have not made the proper transition to C#.  Lots of function calls thrown into classes just so it can seem like OO.</p>"
+  },
+  {
+    "id": 426,
+    "parent": 0,
+    "author_name": "Kevin Barnes",
+    "author_url": "http://www.journalhome.com/codecraft",
+    "date": "2005-08-15T11:33:29",
+    "type": "comment",
+    "content_html": "<p>I like articles like this because they are specific and offer a concrete example.  dhayden’s comment about naming is a good one.  People seem to understand examples best when they have concrete (even if artifical) names and context.</p>\n<p>In addition to the objections you have made to the example cod, here are a few more:</p>\n<p>1) Neither Getter nor Doer nor Cleint class appears to have a meaningful job.  All the methods are not instance associated (their behavior appears to be unrelated to any obvious class function).  Their existence as classes (or the presence of these methods in the class) is perhaps suspect (more context is needed to say for sure).</p>\n<p>2) Doer uses file information that (in some sense) appears to be owned by Getter.  If we do make the return of doer an object, then we also need to make doer take that object since the returned object is really an aggregate data type that multiple systems appear to want to use.   This may also indicate that Getter itself should BE that aggregate data type and doer should simply be passed an instantiated Getter (assuming that we could distinguish one getter from another which at this point we cant)</p>\n<p>3) Your suggestion about throwing an exception is valid in many cases, but a boolean return is probably better if failure is a reasonably common and expected result (IMO).  Also consider other systemic solutions to error handeling (if this is a large service class).  For example, allowing an error manager to be registered.  This would only make sense in larger scale services where encapsulating error processing makes sense.</p>"
+  },
+  {
+    "id": 427,
+    "parent": 0,
+    "author_name": "Anonymous Coward",
+    "author_url": "http://",
+    "date": "2005-08-15T15:01:22",
+    "type": "comment",
+    "content_html": "<p>Who cares what the names are in this case?  It’s a friggen example, and a specific one at that.  He had issues with coupling and return codes.  He blogged about them.  And off we go griping about names he chose in haste because they had nothing to do with the specific issues he wanted to address.  Can’t people just note that he made an interesting point and either accept it or comment on it (specifically)?  What’s the need for “Great post, but you mis-spelled 7 words, you have 4 grammatical errors, and I think you completely missed the ball on a related issue that you clearly didn’t give a crap about.”  To everyone’s credit, the bitching was accompanied by interesting comments, so I’m only half peeved.</p>"
+  },
+  {
+    "id": 428,
+    "parent": 0,
+    "author_name": "Hasani",
+    "author_url": "http://",
+    "date": "2005-08-17T20:01:09",
+    "type": "comment",
+    "content_html": "<p>I hate it when people unintentionally make properties in the following matter:</p>\n<p>public class SomeClass<br>\n{<br>\n\tprivate ArrayList _values;</p>\n<p>\tpublic ArrayList Values<br>\n\t{<br>\n\t\tget<br>\n\t\t{<br>\n\t\t\treturn _values;<br>\n\t\t}<br>\n\t\tset<br>\n\t\t{<br>\n\t\t\t_values = value;<br>\n\t\t}<br>\n\t}<br>\n}</p>\n<p>instead of.</p>\n<p>public class SomeOtherClass<br>\n{<br>\n\tprivate readonly ArrayList _values;</p>\n<p>\tSomeOtherClass()<br>\n\t{<br>\n\t\t_values = new ArrayList();<br>\n\t}</p>\n<p>\tpublic ArrayList Values<br>\n\t{<br>\n\t\tget<br>\n\t\t{<br>\n\t\t\treturn _values;<br>\n\t\t}<br>\n\t}<br>\n}</p>\n<p>And in the cases where I’ve seen this, it’s because people don’t take into account that in the 1st class, invoing set_Values() with a different instance of an ArrayList will not automatically invalidate code that was referencing the previous collection \uD83D\uDE41</p>\n<p>I have a couple more ‘WTF where they thinking’ samples but I would need a good hour or two to go in to detail w/ those. The return code instead of throwing exceptions really makes me want to bitch slap those coders sometimes. SO F****ING AGGRAVATING. At least using a F***ING ENUM if you’re gonna go down that path!!!!!!!</p>\n<p>Looks like I said too much already… l8rz =]</p>"
+  }
+]

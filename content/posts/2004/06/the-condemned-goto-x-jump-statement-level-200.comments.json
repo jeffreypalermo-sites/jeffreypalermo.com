@@ -1,0 +1,137 @@
+[
+  {
+    "id": 73,
+    "parent": 0,
+    "author_name": "James Curran",
+    "author_url": "http://",
+    "date": "2004-06-07T12:22:00",
+    "type": "comment",
+    "content_html": "<p>\"and it does not create spaghetti code.\"</p>\n<p>Define what you mean by \"spaghetti code\".</p>\n<p>Unlike \"break\" &amp; \"continue\", \"goto\" giving you no indication where the execution is going to continue.  It could be up or down or anywhere.  </p>\n<p>Doing that also confusing (for the programmer) object lifetimes, and undermines the compilers ability to optimize the code.</p>"
+  },
+  {
+    "id": 74,
+    "parent": 0,
+    "author_name": "Mark Bonafe",
+    "author_url": "http://",
+    "date": "2004-06-07T12:29:00",
+    "type": "comment",
+    "content_html": "<p>You are most definitely creating spaghetti.  I cannot understand why anyone would do this.  Simply put the \"statement-that-should not happen if condition 2 is not met;\" inside the first if condition above the second if condition.</p>\n<p>If that is not good enough, then you should consider creating more than just one method so you don’t have to \"jump\" all over the place in your code.  You obviously have more than just one purpose for the code.  So creating extra methods, one for each purpose, should solve the problem.</p>"
+  },
+  {
+    "id": 75,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-06-07T12:30:00",
+    "type": "comment",
+    "content_html": "<p>Spaghetti code is code that is hard to follow.  It does jump around up and down and all over the place.  My example of the goto statement is very straight-forward and is used to jump out of a specific IF statement.  What method would you prefer to jump out of nested IF statements?</p>"
+  },
+  {
+    "id": 76,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-06-07T12:37:00",
+    "type": "comment",
+    "content_html": "<p>I’m using the goto to simply jump out of the if statement.  By my label location, I just down a few lines, that’s it.  One jump.  Straight-forward.<br>\nI cannot move the statement-that-should not happen if condition 2 is not met; inside the first IF condition because it has nothing to do with the first IF.  It’s independent.  If both condition1 and condition2 are true, this statement should be skipped.  I obviously could avoid the goto with another if checking for them both, but I prefer this simple goto usage.  I think this is an appropriate use of goto, and I will defend it.  The writers of the C# language thought the goto statement worthy of inclusion, so what argument is there for comdemning the goto statement to a life of nonusage?  It goes without saying that just because it’s there does not mean it has to be used.  Same with xml.  It doesn’t need to be used with everything, just where appropriate.  Same here.  Use goto where appropriate.</p>"
+  },
+  {
+    "id": 77,
+    "parent": 0,
+    "author_name": "Mark Bonafe",
+    "author_url": "http://",
+    "date": "2004-06-08T05:36:00",
+    "type": "comment",
+    "content_html": "<p>I cannot explain it any better than James.  His comments should be all you need to understand why it should be avoided.</p>"
+  },
+  {
+    "id": 78,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-06-08T06:18:00",
+    "type": "comment",
+    "content_html": "<p>In regards to James’s comment, I’d be interested to know what compiler optimization is precluded by the usage of goto.  Mark, it sounds like you will never use the goto statement for anything.  I’ll use it where appropriate and where it makes sense.</p>"
+  },
+  {
+    "id": 79,
+    "parent": 0,
+    "author_name": "Brian Orrell",
+    "author_url": "http://",
+    "date": "2004-06-09T08:37:00",
+    "type": "comment",
+    "content_html": "<p>It’s just bad.  Can you not accept that there is NOT a use that is considered acceptable by your peers?</p>\n<p>It’s not good practice. Period.  And the C# team included the goto statement (my guess) so that VB programs could be migrated more easily.</p>\n<p>If you want to get the same label that poor VB programmers have had for a long time (writing crap code) have fun.</p>\n<p>Show me one, ONE MS guy who says that he can see a valid use for you using it in production code.</p>\n<p>It’s not a best practice.</p>"
+  },
+  {
+    "id": 80,
+    "parent": 0,
+    "author_name": "Noah Coad (C# MVP)",
+    "author_url": "http://",
+    "date": "2004-06-10T18:24:00",
+    "type": "comment",
+    "content_html": "<p>I would tend to agree with Brian.  I try to avoid using the statement, if only because it is so controversial.  I have tried using goto in programs before, but have found with a little more thought and perhaps an extra line of code, it is worth trying to avoid.</p>\n<p>The statement breaks down the natural flow of logic.  For the same reason, I try to avoid \"break\" and \"continue\" (I never use \"continue\").  I try to layer my logic to avoid such circumstances.</p>\n<p>When I get to the Visual Studio team at Microsoft in July, I can ask around.  I will also ask someone from the C# team to take a look at this post right now.</p>\n<p>Here is an article on how GOTO is harmful.  <a href=\"http://www.acm.org/classics/oct95/\" rel=\"nofollow\">http://www.acm.org/classics/oct95/</a></p>"
+  },
+  {
+    "id": 81,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-06-11T06:29:00",
+    "type": "comment",
+    "content_html": "<p>I read the above article, and I agree with it 100%.  The author’s position is to use extreme caution with goto because it an lead to bad code.  I agree with this.  This comment thread has been very interesting for me because of the viewpoints expressed.  I’m certainly not one to say that I know best – period!  I encourage feedback and learning.  What I have gathered from the comments is that goto is just bad – period.  While I agree with the arguments against common use of goto, I’m struggling to believe that an included feature in C# is really taboo.  I made this post because for the first time in my development career I’d thought I’d found a legitimate use for the goto statement.  I’ve gathered that most people avoid goto at all costs.  In several years I aspire to be a .Net trainer, so from that perspective, I have to be able to answer the question:  Why shouldn’t I use goto?  I can’t just give the answer: It tempts you to overuse.  It makes the program confusing if overused.  It promotes bad code.  It’s hard to follow.  I can see the students reactions to those answers, so what I’m looking for is a real answer.  What is the REAL reason not to use goto?  Why is it in C#?  Noah Coad has contacted Eric Gunnerson to solicit his opinion on the matter.  We’ll get to the bottom of this eventually.</p>"
+  },
+  {
+    "id": 82,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-06-30T10:51:00",
+    "type": "comment",
+    "content_html": "<p>The goto statement revisited – level 200</p>"
+  },
+  {
+    "id": 83,
+    "parent": 0,
+    "author_name": "Michael Fitzpatrick",
+    "author_url": "http://",
+    "date": "2004-06-30T12:33:00",
+    "type": "comment",
+    "content_html": "<p>I use GOTO all the time in C code. I had to to implement exception handling using error code return values. I will occasionally use GOTO for breaking out of nested loops in C. I use GOTO in VB in place of break and continue, which aren’t supported in VB. </p>\n<p>In C++ there is SEH, but it is expensive. I have a lot of C code that I ported to C++ that still uses GOTO for exception handling.</p>\n<p>I think that if a programmer has done assembly coding that they loose religion about the use of GOTO real fast. The point is that any coding construct can be abused. GOTO has gotten a really bad rap because it was overly abused, and college professors don’t allow it at all. </p>"
+  },
+  {
+    "id": 84,
+    "parent": 0,
+    "author_name": "Jonny",
+    "author_url": "http://",
+    "date": "2004-08-28T08:21:00",
+    "type": "comment",
+    "content_html": "<p>int c = 0;<br>\nif(conidtion1){<br>\n   statement;<br>\n   stetement;<br>\n    if(condition2){<br>\n       c = 1;<br>\n       statement;<br>\n     }<br>\n}<br>\nif(c==1) statement; // again wont happen if condition2 is not met</p>\n<p>Surely using a flag such as above would be far cleaner then using the goto statement. Really it would be more sensible to use seperate functions here but you get the idea. There is always an alternative to using goto and generally it is a good idea to use it unless you are being lazy.</p>"
+  },
+  {
+    "id": 85,
+    "parent": 0,
+    "author_name": "James H.",
+    "author_url": "http://",
+    "date": "2005-04-13T09:28:00",
+    "type": "comment",
+    "content_html": "<p>&lt;i&gt;Show me one, ONE MS guy who says that he can see a valid use for you using it in production code.<br>\n&lt;/i&gt;<br>\nI found, ironically enough, in a Microsoft example (VS.NET 2003)<br>\n&lt;program files&gt;Microsoft Visual Studio .NET 2003SDKv1.1SamplesTechnologiesInteropApplicationsCDOInboxViewerCDO.cs</p>\n<p>Line 157:<br>\ncatch (Exception e) {<br>\nMessageBox.Show(\"Fatal Error: \" + e.ToString());<br>\ngoto done;<br>\n}</p>"
+  },
+  {
+    "id": 86,
+    "parent": 0,
+    "author_name": "Brian Lowry",
+    "author_url": "http://",
+    "date": "2007-10-12T17:14:44",
+    "type": "comment",
+    "content_html": "<p>Goto statements are the devil. I used them in 4th grade when I started learning BASIC. Haven’t we evolved?</p>"
+  },
+  {
+    "id": 87,
+    "parent": 0,
+    "author_name": "Steve",
+    "author_url": "http://",
+    "date": "2007-10-16T15:18:53",
+    "type": "comment",
+    "content_html": "<p>GOTO is great feature. I use it every time I can.<br>\nIt makes your code very fast and there are other advantages like “code\tmonopoly”.<br>\nSo you are the only one who can develop the code further.<br>\nI realy like it.</p>"
+  }
+]

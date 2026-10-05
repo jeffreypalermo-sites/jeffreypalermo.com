@@ -1,0 +1,119 @@
+[
+  {
+    "id": 2338,
+    "parent": 0,
+    "author_name": "Ben Scheirman",
+    "author_url": "http://www.flux88.com",
+    "date": "2008-03-05T20:20:20",
+    "type": "comment",
+    "content_html": "<p>I’m surprised at all of the stuff we’re seeing in MVCContrib &amp; what MonoRail has that isn’t even mentioned here!</p>\n<p>Any change in TempData?  It had no setter before and depended deeply on HttpContext.  Would be nice to have it just implement IDictionary (with a setter) so that we could better test it.</p>"
+  },
+  {
+    "id": 2339,
+    "parent": 0,
+    "author_name": "Brian Sullivan",
+    "author_url": "http://www.sullivansoftdev.com/blog",
+    "date": "2008-03-05T23:14:20",
+    "type": "comment",
+    "content_html": "<p>Somehow I’m not surprised that the ALT.NET community is disappointed in the new release.  I’m not trying to be uncivil, but will the ALT.NET community ever be satisfied with anything Microsoft does?  It continues to confuse me why a group of people who seem so unhappy with the Microsoft platform on continue to use it.  If there is something else out there that better meets your needs, why don’t you use that?  Is it just that your employer requires you to use this platform?  It just seems counterproductive to me to maintain such a negative tone all the time.  Sure, encourage people to use good techniques and hone their craft, but I don’t think continually bashing Microsoft for not providing everything you want accomplishes this.  Again, I don’t want to make anybody mad, I would just like to understand your motivation and the reasoning behind your methods.</p>"
+  },
+  {
+    "id": 2340,
+    "parent": 0,
+    "author_name": "Dmitriy Nagirnyak",
+    "author_url": "http://dnagir.blogspot.com/",
+    "date": "2008-03-05T23:56:56",
+    "type": "comment",
+    "content_html": "<p>Brian,</p>\n<p>I always agree it is not a good thing when people blame somebody/something for nothing.<br>\nBut it *seems for me* that Jeffrey is right in many of his points. There are no radical changes.</p>\n<p>I have just read the Release details of Preview 2 and see the things like “changed constructor parameters”, or “added abstract class” etc etc.</p>\n<p>This is not what I really expect from ASP.NET MVC.<br>\nI would expect to see changes like these: “Added Silverlight support to MVC”, “Added nested SubViews support”, “Added set of MVC Controls (grid, tree etc)”.</p>\n<p>I still can see that MonoRail is going to be much more mature and useful for at least a year or two.</p>\n<p>Regards,<br>\nDmitriy.</p>"
+  },
+  {
+    "id": 2341,
+    "parent": 0,
+    "author_name": "Sebastien Lambla",
+    "author_url": "http://serialseb.blogspot.com",
+    "date": "2008-03-06T01:28:37",
+    "type": "comment",
+    "content_html": "<p>I still believe going the route of mapping routes to controllers is the wrong approach. Mapping routes to resource types, and mapping resource access to multiple controllers, and finally basing the rendering of resources to content-type specific views is the right way to go.</p>\n<p>On the bright side, asp.net mvc not answering rest, conneg and resource-first design, it leaves plenty of space to do better with another framework. Maybe like one that runs on .net 2 \uD83D\uDE42</p>"
+  },
+  {
+    "id": 2342,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-03-06T13:41:46",
+    "type": "comment",
+    "content_html": "<p>@Brian,<br>\nI’m not sure how you infer that the _whole_ ALT.NET community is displeased with this framework.  I speak for myself and myself only.  Another point to note is that I am speaking at DevTeach and TechEd about the ASP.NET MVC Framework, and I’m writing “ASP.NET MVC in Action” with Manning.  If I hated the thing I wouldn’t have anything to do with it.</p>\n<p>The reason I bring these issues to light is because they are important, and I have a vested interested in seeing these issues resolved.  In the end, I would like to see this framework be very usable and not another albatross like MSTest. </p>"
+  },
+  {
+    "id": 2343,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-03-06T13:43:32",
+    "type": "comment",
+    "content_html": "<p>@Sebastian,<br>\nEven though the extensibility mechanism isn’t ideal, you could provide what you are talking about.  I admit I don’t fully understand your approach, but why not submit a patch to MvcContrib with that routing capability.  If it’s better, folks will use it, and maybe Microsoft will include it.</p>"
+  },
+  {
+    "id": 2344,
+    "parent": 0,
+    "author_name": "Adam Tybor",
+    "author_url": "http://abombss.com",
+    "date": "2008-03-06T17:37:14",
+    "type": "comment",
+    "content_html": "<p>@Brian,</p>\n<p>I am disappointed.  A release like this, 3 months after preview 1 from an “agile” team with great talent.  Yes, I am very disappointed.  My excitement that MS could build a solid extensible framework is completely gone.  </p>\n<p>&gt; If there is something else out there that better meets your needs, why don’t you use that?</p>\n<p>Umm, yeah, hence the alt.net group, “alternative”. We use things like Windsor, Structure Map, Monorail, NHibernate, log4net, lucene, boo, and custom DSL.  We get tired of fighting the MS frameworks, NOT the platform.  I love the CLR and C# 3.5.</p>"
+  },
+  {
+    "id": 2345,
+    "parent": 0,
+    "author_name": "Scott Bellware",
+    "author_url": "http://scottic.us",
+    "date": "2008-03-08T05:10:04",
+    "type": "comment",
+    "content_html": "<p>Brian,</p>\n<p>The ALT.NET community isn’t required to be satisfied with shoddy work, just as you don’t have to be satisfied with criticisms of shoddy work.  I think that the issue here ia that you haven’t gained insight into the engineering practices in play outside of the Microsoft sphere of influence and you likely don’t have a frame of reference that helps you see why the work is lacking in software design know-how.</p>\n<p>To understand the motivation and reasoning behind the methods, you gotta invest the time and effort to learn the principles and practices, otherwise there’ll be little shared understanding to enable any kind of meaningful dialog.</p>"
+  },
+  {
+    "id": 2346,
+    "parent": 0,
+    "author_name": "Tuna Toksoz",
+    "author_url": "http://",
+    "date": "2008-03-09T14:08:46",
+    "type": "comment",
+    "content_html": "<p>Another “STILL A PROBLEM” to me is Component Controllers cannot be set to come from a container. It still needs a parameterless constructor. I looked for somethnig like ControllerBuilder.Current.SetControllerFactory() for ComponentController but i had no luck,<br>\nAny Ideas on this?</p>"
+  },
+  {
+    "id": 2347,
+    "parent": 0,
+    "author_name": "Tuna Toksoz",
+    "author_url": "http://",
+    "date": "2008-03-09T22:32:07",
+    "type": "comment",
+    "content_html": "<p>Solved the issue by implementing classes like ComponentControllerBuilder and adding one more extension method to HtmlHelper making the componentcontroller created y componentcontrollerbuilder.</p>"
+  },
+  {
+    "id": 2348,
+    "parent": 0,
+    "author_name": "Eric Marthinsen",
+    "author_url": "http://www.agilecommerce.com",
+    "date": "2008-03-10T21:22:11",
+    "type": "comment",
+    "content_html": "<p>In fairness, I think the MS team is doing a good job with the MVC framework. Sure, it’s not as far along as MonoRails or RoR, but it’s still in its infancy, so that’s to be expected.</p>\n<p>Doing frequent releases (even if they are 3 months apart) and operating in relative transparency is something that must not have been easy. It goes against much of the established corporate culture. I can’t think of another corporation that is doing this better.</p>\n<p>I think the changes that were made in the most recent CTP probably represent more work than most people would imagine. In my experience, getting the framework right is what takes time. Getting the naming, inheritance heirarchies, and member visibility right takes a very long time. Once it is finalized and the ASP.NET team is comfortable with it, I think we’ll see things like MVC controls, Silverlight support, etc. come pretty rapidly.</p>"
+  },
+  {
+    "id": 2349,
+    "parent": 0,
+    "author_name": "Scott Hanselman",
+    "author_url": "http://www.hanselman.com",
+    "date": "2008-03-11T23:45:00",
+    "type": "comment",
+    "content_html": "<p>It’s early. I think the releases will come faster (maybe monthly) and you’ll see progress. </p>"
+  },
+  {
+    "id": 2350,
+    "parent": 0,
+    "author_name": "SteveG",
+    "author_url": "http://",
+    "date": "2008-03-15T00:27:02",
+    "type": "comment",
+    "content_html": "<p>All the typical naysayers will come out, bash this, then go back to RoR’s, etc…</p>\n<p>This is all so much better than webforms, I would take it right now over webforms as is  \uD83D\uDE42</p>"
+  }
+]

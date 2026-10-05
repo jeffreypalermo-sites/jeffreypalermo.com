@@ -1,0 +1,92 @@
+[
+  {
+    "id": 2087,
+    "parent": 0,
+    "author_name": "J. M. Aguilar",
+    "author_url": "http://www.variablenotfound.com",
+    "date": "2007-10-13T19:27:51",
+    "type": "comment",
+    "content_html": "<p>Good post, Jeffrey. It illustrates very well how Linq can help us in the near future.</p>"
+  },
+  {
+    "id": 2088,
+    "parent": 0,
+    "author_name": "DonXML",
+    "author_url": "http://www.donxml.com",
+    "date": "2007-10-13T23:26:39",
+    "type": "comment",
+    "content_html": "<p>Add the VB version is even easier to read and write, with no perf difference from C#!</p>\n<p>Dim items = From item In rssFeed.. _<br>\n                    Select New PostAbstract With {.Title = item..Value, _<br>\n                            .Abstract = item..Value.Substring(100)}</p>\n<p>and handling namespaces is even easier.  You declare namespaces as import statements:</p>\n<p>Imports </p>\n<p>And then refeerence them:</p>\n<p>Dim items = From item In rssFeed.. _<br>\n            Where item..Value = “Jeffrey Palermo” _<br>\n             Select item</p>\n<p>Works the same way when writing XML</p>\n<p>It you don’t want to write your whole app in VB, you can use Hanselman’s ILMerge technique: <a href=\"http://www.hanselman.com/blog/MixingLanguagesInASingleAssemblyInVisualStudioSeamlesslyWithILMergeAndMSBuild.aspx\" rel=\"nofollow ugc\">http://www.hanselman.com/blog/MixingLanguagesInASingleAssemblyInVisualStudioSeamlesslyWithILMergeAndMSBuild.aspx</a></p>"
+  },
+  {
+    "id": 2089,
+    "parent": 0,
+    "author_name": "Jeremy D. Miller",
+    "author_url": "http://codebetter.com/blogs/jeremy.miller",
+    "date": "2007-10-14T00:00:13",
+    "type": "comment",
+    "content_html": "<p>Isn’t there something in the CodeBetter bylaws about VB.NET?</p>"
+  },
+  {
+    "id": 2090,
+    "parent": 0,
+    "author_name": "Marc Fairorth",
+    "author_url": "http://www.hdri.net",
+    "date": "2007-10-14T04:37:10",
+    "type": "comment",
+    "content_html": "<p>VB.Net, its the ultimate Alt.Net experience!</p>"
+  },
+  {
+    "id": 2091,
+    "parent": 0,
+    "author_name": "Joe Ocampo",
+    "author_url": "http://www.lostechies.com/blogs/joe_ocampo",
+    "date": "2007-10-14T08:12:27",
+    "type": "comment",
+    "content_html": "<p>Looks like your post are suffering from the same “&nbsp;” Live Writer Beta 3 bug that I have.  Gotta love a double space after an end of sentence. \uD83D\uDE09</p>"
+  },
+  {
+    "id": 2092,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-10-15T03:42:44",
+    "type": "comment",
+    "content_html": "<p>@Joe,<br>\nYeah, I had to manually fix the &nbsp;</p>"
+  },
+  {
+    "id": 2093,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-10-15T03:43:51",
+    "type": "comment",
+    "content_html": "<p>@DonXML,<br>\nYep, I demoed the VB xml schema intellisense at the Austin DevCares event last Friday.  It is cool how by importing the schema one could access the Xml with better syntax.</p>"
+  },
+  {
+    "id": 2094,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-10-15T03:45:01",
+    "type": "comment",
+    "content_html": "<p>@Jeremy,<br>\nNope, but I wonder if there is Linq support in J#. . . oh that’s right, Microsoft silently deprecated that language.</p>"
+  },
+  {
+    "id": 2095,
+    "parent": 0,
+    "author_name": "DonXML",
+    "author_url": "http://www.donxml.com",
+    "date": "2007-10-15T19:33:11",
+    "type": "comment",
+    "content_html": "<p>@Jeffrey</p>\n<p>You don’t need a schema to use XML Properties (that’s what they are called), but it does help with the intellisense.</p>"
+  },
+  {
+    "id": 2096,
+    "parent": 0,
+    "author_name": "Jim Wooley",
+    "author_url": "http://devauthority.com/blogs/jwooley/archive/2007/10/12/85717.aspx",
+    "date": "2007-10-18T14:23:43",
+    "type": "comment",
+    "content_html": "<p>In addition to querying the raw XML, you can use the new SyndicationFeed in the 3.5  System.ServiceModel.Web library to load feeds in either RSS or ATOM and have strongly typed results which you can then query through LINQ to Objects. See <a href=\"http://devauthority.com/blogs/jwooley/archive/2007/10/12/85717.aspx\" rel=\"nofollow ugc\">http://devauthority.com/blogs/jwooley/archive/2007/10/12/85717.aspx</a> for a sample implementation.</p>"
+  }
+]

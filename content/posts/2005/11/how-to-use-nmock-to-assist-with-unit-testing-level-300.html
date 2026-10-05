@@ -1,0 +1,83 @@
+---
+wp_id: 347
+title: How to use NMock to assist with unit testing – level 300
+slug: how-to-use-nmock-to-assist-with-unit-testing-level-300
+permalink: /2005/11/how-to-use-nmock-to-assist-with-unit-testing-level-300/
+date: 2005-11-04T14:06:00
+date_utc: 2005-11-04T14:06:00Z
+modified: 2005-11-04T14:06:00
+format: html
+excerpt: When you unit test, it is important to mock dependencies. You can use static mocks (which are really just dummy classes that implement your interface) or dynamic mocks which can save code some of the time. NMock is one of the frameworks for dynamic mocks. They work by creating a class instance at runtime to […]
+comments_open: true
+---
+<p>When you unit test, it is important to mock dependencies.&nbsp; You can use static mocks (which are really just dummy classes that implement your interface) or dynamic mocks which can save code some of the time.&nbsp; NMock is one of the frameworks for dynamic mocks.&nbsp; They work by creating a class instance at runtime to match your specifications.&nbsp; You take the instance of this class and use it like any other object.&nbsp; Below are several scenarios for using NMock to create runtime instances of an interface.&nbsp; This also works for abstract classes and concrete classes with virtual members.</p>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;1</span><span>&nbsp;</span><span>using</span><span> System;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;2</span><span>&nbsp;</span><span>using</span><span> System.Security.Principal;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;3</span><span>&nbsp;</span><span>using</span><span> NUnit.Framework;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;4</span><span>&nbsp;</span><span>using</span><span> NMock;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;5</span><span>&nbsp;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;6</span><span>&nbsp;[TestFixture]</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;7</span><span>&nbsp;</span><span>public</span><span> </span><span>class</span><span> NMockDemo</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;8</span><span>&nbsp;{</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;9</span><span>&nbsp;&nbsp;&nbsp;&nbsp; [Test, ExpectedException(</span><span>typeof</span><span>(VerifyException))]</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;10</span><span>&nbsp;&nbsp;&nbsp;&nbsp; </span><span>public</span><span> </span><span>void</span><span> FailsBecauseWrongThingWasPassedIn()</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;11</span><span>&nbsp;&nbsp;&nbsp;&nbsp; {</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;12</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; IMock mock = </span><span>new</span><span> DynamicMock(</span><span>typeof</span><span>(IPrincipal));</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;13</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; mock.ExpectAndReturn(“IsInRole”, </span><span>true</span><span>, “AdminRole”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;14</span><span>&nbsp;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;15</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; IPrincipal principal = (IPrincipal) mock.MockInstance;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;16</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>bool</span><span> result = principal.IsInRole(“TechRole”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;17</span><span>&nbsp;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;18</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; mock.Verify();</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;19</span><span>&nbsp;&nbsp;&nbsp;&nbsp; }</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;20</span><span>&nbsp;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;21</span><span>&nbsp;&nbsp;&nbsp;&nbsp; [Test, ExpectedException(</span><span>typeof</span><span>(VerifyException))]</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;22</span><span>&nbsp;&nbsp;&nbsp;&nbsp; </span><span>public</span><span> </span><span>void</span><span> FailsBecauseMethodWasntCalled()</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;23</span><span>&nbsp;&nbsp;&nbsp;&nbsp; {</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;24</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; IMock mock = </span><span>new</span><span> DynamicMock(</span><span>typeof</span><span>(IPrincipal));</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;25</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; mock.ExpectAndReturn(“IsInRole”, </span><span>true</span><span>, “AdminRole”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;26</span><span>&nbsp;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;27</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; IPrincipal principal = (IPrincipal) mock.MockInstance;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;28</span><span>&nbsp;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;29</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; mock.Verify();</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;30</span><span>&nbsp;&nbsp;&nbsp;&nbsp; }</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;31</span><span>&nbsp;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;32</span><span>&nbsp;&nbsp;&nbsp;&nbsp; [Test]</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;33</span><span>&nbsp;&nbsp;&nbsp;&nbsp; </span><span>public</span><span> </span><span>void</span><span> Suceeds()</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;34</span><span>&nbsp;&nbsp;&nbsp;&nbsp; {</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;35</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; IMock mock = </span><span>new</span><span> DynamicMock(</span><span>typeof</span><span>(IPrincipal));</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;36</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; mock.ExpectAndReturn(“IsInRole”, </span><span>true</span><span>, “AdminRole”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;37</span><span>&nbsp;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;38</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; IPrincipal principal = (IPrincipal) mock.MockInstance;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;39</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>bool</span><span> result = principal.IsInRole(“AdminRole”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;40</span><span>&nbsp;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;41</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; mock.Verify();</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;42</span><span>&nbsp;&nbsp;&nbsp;&nbsp; }</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;43</span><span>&nbsp;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;44</span><span>&nbsp;&nbsp;&nbsp;&nbsp; [Test]</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;45</span><span>&nbsp;&nbsp;&nbsp;&nbsp; </span><span>public</span><span> </span><span>void</span><span> SetupResultThatCanBeCalledManyTimes()</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;46</span><span>&nbsp;&nbsp;&nbsp;&nbsp; {</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;47</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; IMock mock = </span><span>new</span><span> DynamicMock(</span><span>typeof</span><span>(IPrincipal));</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;48</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; mock.SetupResult(“IsInRole”, </span><span>true</span><span>, </span><span>typeof</span><span>(</span><span>string</span><span>));</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;49</span><span>&nbsp;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;50</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; IPrincipal principal = (IPrincipal) mock.MockInstance;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;51</span><span>&nbsp;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;52</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; mock.Verify();</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;53</span><span>&nbsp;&nbsp;&nbsp;&nbsp; }</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;54</span><span>&nbsp;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;55</span><span>&nbsp;&nbsp;&nbsp;&nbsp; [Test]</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;56</span><span>&nbsp;&nbsp;&nbsp;&nbsp; </span><span>public</span><span> </span><span>void</span><span> HowToSetupMockPropertyWithNestedMock()</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;57</span><span>&nbsp;&nbsp;&nbsp;&nbsp; {</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;58</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; IMock mock = </span><span>new</span><span> DynamicMock(</span><span>typeof</span><span>(IPrincipal));</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;59</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; mock.SetupResult(“IsInRole”, </span><span>true</span><span>, </span><span>typeof</span><span>(</span><span>string</span><span>));</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;60</span><span>&nbsp;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;61</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; DynamicMock identityMock = </span><span>new</span><span> DynamicMock(</span><span>typeof</span><span>(IIdentity));</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;62</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; identityMock.SetupResult(“Name”, “someUserName”);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;63</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; mock.SetupResult(“Identity”, identityMock.MockInstance);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;64</span><span>&nbsp;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;65</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; IPrincipal principal = (IPrincipal) mock.MockInstance;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;66</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Console.WriteLine(principal.Identity.Name);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;67</span><span>&nbsp;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;68</span><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; mock.Verify();</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;69</span><span>&nbsp;&nbsp;&nbsp;&nbsp; }</span></p>
+<p><span>&nbsp;&nbsp;&nbsp;70</span><span>&nbsp;}</span></p>

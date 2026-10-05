@@ -1,0 +1,220 @@
+---
+wp_id: 553
+title: Share ASP.NET Context with ASP 2 & 3 – level 400
+slug: share-asp-net-context-with-asp-2-3-level-400
+permalink: /2004/06/share-asp-net-context-with-asp-2-3-level-400/
+date: 2004-06-01T16:53:00
+date_utc: 2004-06-01T16:53:00Z
+modified: 2004-06-01T16:53:00
+format: html
+excerpt: We all have ASP applications that we need to extend with ASP.NET. Unless our functionality is wrapped in COM, we may have to rewrite some in .Net. Wouldn’t it be nice if we could rewrite common app functionality in .Net and then reuse it in the ASP? I’ve worked up a sample that does just […]
+comments_open: true
+---
+<p>We all have ASP applications that we need to extend with ASP.NET.&nbsp; Unless our functionality is wrapped in COM, we may have to rewrite some in .Net.&nbsp; Wouldn’t it be nice if we could rewrite common app functionality in .Net and then reuse it in the ASP?&nbsp; I’ve worked up a sample that does just that.&nbsp; I have a web service that exposes the Session object, so now ASP can query the ASP.NET’s Session object (this method could also be used for the Cache object, Application, etc.).&nbsp; For this to work, ASP has to be in the same ASP.NET session.&nbsp; That means that the cookie “ASP.NET_SessionId” must exist on the ASP and ASP.NET side, and it must contain the same session id.&nbsp; Using the Soap Toolkit v.3, I make the web service calls.&nbsp; One of the web service methods returns the ASP.NET SessionID.&nbsp; I use this to manually make a Set-Cookie header in ASP because ASP natively HTML Encodes cookie names (would result in %20, or whatever for the . and the _).&nbsp; Then in subsequent web service calls, I add a soap header to include the cookie with the ASP.NET session id, and this allows every web service call to participate in the same session, so all the data remains coherant.&nbsp; </p>
+<p>Here is my ASP code:</p>
+<p><span>&lt;%@ Language=VBScript%&gt;<br>
+</span></p>
+
+<p><span>&lt;</span><span>html</span><span>&gt;<br>
+</span></p>
+
+<p><span>&lt;</span><span>body</span><span>&gt;<br>
+</span></p>
+
+<p><span>&lt;%<br>
+</span></p>
+
+<p><span>set</span><span> soapclient = CreateObject(“MSSOAP.SoapClient30”)<br>
+</span></p>
+
+<p><span>On</span><span> <span>Error</span> <span>Resume</span> <span>Next<br>
+</span></span></p>
+
+<p><span>Call</span><span> soapclient.mssoapinit(Server.MapPath(“Math.wsdl”))<br>
+</span></p>
+
+<p><span>if</span><span> err &lt;&gt; 0 <span>then<br>
+</span></span></p>
+
+<p><span><span>&nbsp; </span>Response.Write “initialization failed” + err.description<br>
+</span></p>
+
+<p><span>end</span><span> <span>if<br>
+</span></span></p>
+
+<p><span>Dim</span><span> strASPNETSession<br>
+</span></p>
+
+<p><span>if</span><span>(Request.Cookies(“ASP.NET_SessionID”) &lt;&gt; “”) <span>Then<br>
+</span></span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>soapclient.ConnectorProperty(“RequestHTTPHeader”) = “COOKIE:” &amp; Request.ServerVariables(“HTTP_COOKIE”)<br>
+</span></p>
+
+<p><span>Else<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>strASPNETSession = soapclient.GetASPNET_SessionID()<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>soapclient.ConnectorProperty(“RequestHTTPHeader”) = “COOKIE:ASP.NET_SessionID=” &amp; strASPNETSession<br>
+</span></p>
+
+<p><span>End</span><span> <span>If<br>
+</span></span></p>
+
+
+<p><span>Dim</span><span> a<br>
+</span></p>
+
+<p><span>a = soapclient.GetCookies()<br>
+</span></p>
+
+<p><span>Call</span><span> Response.AddHeader(“Set-Cookie”, a)<br>
+</span></p>
+
+<p><span>Response.Write(“HTTP_COOKIE Server Variables: “)<br>
+</span></p>
+
+<p><span>Response.Write(Request.ServerVariables(“HTTP_COOKIE”) &amp; “&lt;br&gt;&lt;br&gt;”)<br>
+</span></p>
+
+
+<p><span>Response.Write(“Session Hit Counter = ” &amp; soapclient.SessionHitCounter())<br>
+</span></p>
+
+
+<p><span>if</span><span> err &lt;&gt; 0 <span>then<br>
+</span></span></p>
+
+<p><span><span>&nbsp; </span>Response.Write err.description &amp; “&lt;BR/&gt;”<br>
+</span></p>
+
+<p><span><span>&nbsp; </span>Response.Write “faultcode=” + soapclient.faultcode &amp; “&lt;BR/&gt;”<br>
+</span></p>
+
+<p><span><span>&nbsp; </span>Response.Write “faultstring=” + soapclient.faultstring &amp; “&lt;BR/&gt;”<br>
+</span></p>
+
+<p><span><span>&nbsp; </span>Response.Write “FaultActor=” + soapclient.FaultActor &amp; “&lt;BR/&gt;”<br>
+</span></p>
+
+<p><span><span>&nbsp; </span>Response.Write “Detail=” + soapclient.Detail &amp; “&lt;BR/&gt;”<br>
+</span></p>
+
+<p><span>end</span><span> <span>if<br>
+</span></span></p>
+
+<p><span>%&gt;<br>
+</span></p>
+
+<p><span>&lt;/</span><span>body</span><span>&gt;<br>
+</span></p>
+
+<p><span>&lt;/</span><span>html</span><span>&gt;<br>
+</span></p>
+
+<p>And my web service code:</p>
+<p><span>[WebMethod(<span>true</span>)]<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>public</span> <span>string</span> GetSession(<span>string</span> key)<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>return</span> (<span>string</span>)Session[key];<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>[WebMethod(<span>true</span>)]<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>public</span> <span>void</span> SetSession(<span>string</span> key, <span>string</span> myValue)<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>HttpContext.Current.Session[key] = myValue;<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>[WebMethod(<span>true</span>)]<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>public</span> <span>int</span> SessionHitCounter()<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{<br>
+</span></p>
+
+
+
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>if</span> (Session[“HitCounter”] == <span>null</span>)<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Session[“HitCounter”] = 1;<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>else</span><br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Session[“HitCounter”] = ((<span>int</span>) Session[“HitCounter”]) + 1;<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>return</span> ((<span>int</span>) Session[“HitCounter”]);<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>[WebMethod(<span>true</span>)]<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>public</span> <span>string</span> GetASPNET_SessionID()<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>return</span> Context.Request.Cookies[“ASP.NET_SessionId”].Value;<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>[WebMethod(<span>true</span>)]<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>public</span> <span>string</span> GetCookies()<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>return</span> Context.Request.ServerVariables[“HTTP_COOKIE”];<br>
+</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}<br>
+</span></p>
+
+<p>I was so excited when I got this to work, I had to share.&nbsp; If you search for this topic on Google, there are thousands of people who have this problem.</p>

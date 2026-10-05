@@ -1,0 +1,29 @@
+[
+  {
+    "id": 2440,
+    "parent": 0,
+    "author_name": "Jake Good",
+    "author_url": "http://www.thoughtstoblog.com",
+    "date": "2008-04-09T15:12:34",
+    "type": "comment",
+    "content_html": "<p>Tried to register as a speaker… gives me standard ASP.Net Error page…</p>\n<p>Looking forward to speaking though, for sure…</p>"
+  },
+  {
+    "id": 2441,
+    "parent": 0,
+    "author_name": "John Teague",
+    "author_url": "http://",
+    "date": "2008-04-09T15:52:52",
+    "type": "comment",
+    "content_html": "<p>If you have problems with the site, contact me directly. jcteague at gmail dot com</p>"
+  },
+  {
+    "id": 2442,
+    "parent": 0,
+    "author_name": "Christopher Painter",
+    "author_url": "http://blog.deploymentengineering.com",
+    "date": "2008-04-10T16:25:46",
+    "type": "comment",
+    "content_html": "<p>I was looking at the Call for Speakers and I’d be interested in giving a presentation on build / release techniques using TFS and Windows Installer technologies but I’m not sure there is much of an audience for it.  </p>"
+  }
+]

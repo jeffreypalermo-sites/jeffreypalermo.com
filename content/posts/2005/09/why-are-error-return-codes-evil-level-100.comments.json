@@ -1,0 +1,119 @@
+[
+  {
+    "id": 491,
+    "parent": 0,
+    "author_name": "Steve Hebert",
+    "author_url": "http://codebetter.com/blogs/steve.hebert",
+    "date": "2005-09-30T22:07:34",
+    "type": "comment",
+    "content_html": "<p>In my Fox Pro days, it was:</p>\n<p>ON ERROR DO ME</p>"
+  },
+  {
+    "id": 492,
+    "parent": 0,
+    "author_name": "Fregas",
+    "author_url": "http://www.dotnettricks.com/",
+    "date": "2005-09-30T22:10:38",
+    "type": "comment",
+    "content_html": "<p>I completely 100% agree.  They did something similar to this kind of crap at True.com (which is VB.NET) ALL THE TIME.  They were all VB6/FoxPro developers and would catch all exceptions. log it, then keep running.  So if a method that returned a string had an error, it just returned an empty string and kept on trucking.  If it was supposed to return an int, it returned 0 or -1 or something.</p>\n<p>it was so painful to actually debug and fix any given error.</p>"
+  },
+  {
+    "id": 493,
+    "parent": 0,
+    "author_name": "Jeremy D. Miller",
+    "author_url": "http://",
+    "date": "2005-09-30T22:12:50",
+    "type": "comment",
+    "content_html": "<p>Yeah, but I miss how “ON ERROR RESUME NEXT” was a magic elixir you sprinkled over your ASP code to make things work.</p>"
+  },
+  {
+    "id": 494,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://",
+    "date": "2005-09-30T22:33:00",
+    "type": "comment",
+    "content_html": "<p>Oh man, that is one of my biggest pet peeves.  Anytime someone asks me to debug a “really weird problem” with a VBS or ASP, I immediately tell them to comment out any occurrence of ON ERROR RESUME NEXT and get back to me if they still can’t figure out what the root problem is.  I don’t think they ever come back.</p>"
+  },
+  {
+    "id": 495,
+    "parent": 0,
+    "author_name": "BlackTigerX",
+    "author_url": "http://ebersys.blogspot.com",
+    "date": "2005-09-30T23:17:01",
+    "type": "comment",
+    "content_html": "<p>is that simple.</p>\n<p>but there is this thing with programmers and exceptions, I don’t know what it is, a lot of the people I know don’t like to use them, and when they use them they use them wrong</p>"
+  },
+  {
+    "id": 496,
+    "parent": 0,
+    "author_name": "Brendan Tompkins",
+    "author_url": "http://codebetter.com/blogs/brendan.tompkins",
+    "date": "2005-10-01T00:23:31",
+    "type": "comment",
+    "content_html": "<p>I’d also add the following mantra:</p>\n<p>“Throw Low, Catch High”</p>\n<p>Often you’ll see code that both throws and catches errors.  While this may be okay in some circumstances, catching errors in business or data layers is almost always not a good idea, IMO…</p>"
+  },
+  {
+    "id": 497,
+    "parent": 0,
+    "author_name": "Brendan Tompkins",
+    "author_url": "http://codebetter.com/blogs/brendan.tompkins",
+    "date": "2005-10-01T00:26:37",
+    "type": "comment",
+    "content_html": "<p>Steve- On Error DO ME is hysterical.  Man, I love finding stuff like that in code!</p>\n<p>B</p>"
+  },
+  {
+    "id": 498,
+    "parent": 0,
+    "author_name": "VinceB",
+    "author_url": "http://weblogs.asp.net/vblasberg",
+    "date": "2005-10-01T13:50:38",
+    "type": "comment",
+    "content_html": "<p>I’ve been through all of it since DOS box C and Batch development.  The other side of your good point is to make exceptions exceptional.  </p>\n<p>To me that means return something useful like a string for user interaction or a number / enumerator.  You shouldn’t throw an exception every time you want to return status to the caller.  There isn’t always a user to respond of course.  Then even if you did throw and exception, what if you had 100 possible options.  Are you going to write 100 different exception classes or put a result type in an exception.  Then you’re back to square one.  It may be a batch process that needs to send the string to a log or act according to the error number to retry the operation or send it to  MSMQ or email someone about the issue.  </p>\n<p>Also, returning void when you could have returned a status for the user or for extra processing seems like a waste of good stack space.  No status and no string mean all went well.</p>\n<p>Now exceptional means if the process is really bad and not just status, then you gladly take the big CLR hit to throw an exception.  That gives all power to the developer.  In reality, a good application will catch normal and exceptional errors and act accordingly.  </p>\n<p>These say it best:<br>\n<a href=\"http://blogs.msdn.com/ricom/archive/2003/12/19/44697.aspx\" rel=\"nofollow ugc\">http://blogs.msdn.com/ricom/archive/2003/12/19/44697.aspx</a><br>\n<a href=\"http://blogs.msdn.com/ricom/archive/2005/03/01/382756.aspx\" rel=\"nofollow ugc\">http://blogs.msdn.com/ricom/archive/2005/03/01/382756.aspx</a></p>\n<p>Then Brad Abram’s the July 11th posting at:<br>\n<a href=\"http://blogs.msdn.com/brada/archive/2005/07.aspx\" rel=\"nofollow ugc\">http://blogs.msdn.com/brada/archive/2005/07.aspx</a></p>\n<p>Some of the presentations with Brad and Rico touched on the fact that exception handling should be exceptional.  Perform normal handling otherwise.</p>"
+  },
+  {
+    "id": 499,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://",
+    "date": "2005-10-01T14:45:33",
+    "type": "comment",
+    "content_html": "<p>I agree with VinceB that exceptions aren’t appropriate in ALL cases. I also realize that figuring out whether something is an “excpetional” case isn’t always straightforward. But things don’t have to be as bad as using a “magic number”, we do have a real boolean data type, after all.<br>\nI think the TryParse methods are perfect examples of times when something will fail an awful lot, and its really unnecessary (and costly) to throw an exception.<br>\nJeffrey Richter does a good job of covering this subject in his book.</p>"
+  },
+  {
+    "id": 500,
+    "parent": 0,
+    "author_name": "Rick Scott",
+    "author_url": "http://",
+    "date": "2005-10-03T14:38:50",
+    "type": "comment",
+    "content_html": "<p>I really have to take EXCEPTION to this blog entry. If a decently-trafficked website had to throw and catch an exception every time a user didn’t fill in something just right or some mis-match happened in the database, the site would be slow or down most of the time.</p>\n<p>Simple scenario:</p>\n<p>User wants to login to a popular website<br>\nUser enters username, but fat-fingers it<br>\nDatabase takes username and finds no user record<br>\nSo the Data Access Layer should throw an Exception?</p>\n<p>No. That’s bad. Just return 0 instead of the user’s ID…or -1, maybe using -2 if their password didn’t match or -3 if the retry-limit has been exceeded. No need to throw exceptions all over the place.</p>\n<p>The point is this: Just because a function is “not successful” does not mean it is exceptional. If you handle all possible cases of “not completely successful” with exceptions, you are just using exceptions as flow control. And THAT is the real evil.</p>"
+  },
+  {
+    "id": 501,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-03T18:59:11",
+    "type": "comment",
+    "content_html": "<p>Rick,<br>\nYou make a very good point, and I think most people reading this blog understand not to abuse exceptions.  Checking a method Exists() on a user object that returns bool is a great way in your example, but that not an “error code”.  That’s a valid method with a concrete result.</p>\n<p>It would be bad to have a LogIn() method that returned  “-1” if the user didn’t exist, a 1 if the login was successful, and a 0 if the password was bad. </p>"
+  },
+  {
+    "id": 502,
+    "parent": 0,
+    "author_name": "Gary Willliams",
+    "author_url": "http://",
+    "date": "2005-10-04T20:38:22",
+    "type": "comment",
+    "content_html": "<p>Yes, error codes are evil.  Anything that is a purely numeric representation of something is a *bad* thing.  Might have been necessary back in the days when we counted bits, but these days it’s a waste.  Exceptions for exceptional processing and return codes for processing results.  I don’t see any reason to do anything else in any language that supports exceptions.</p>"
+  },
+  {
+    "id": 503,
+    "parent": 0,
+    "author_name": "Alexandru Matei",
+    "author_url": "http://",
+    "date": "2007-10-22T12:35:29",
+    "type": "comment",
+    "content_html": "<p>Hello,</p>\n<p>Answering VinceB comment:</p>\n<p>“Then even if you did throw and exception, what if you had 100 possible options. Are you going to write 100 different exception classes?”</p>\n<p>My answer is this: </p>\n<p>– if those 100 possible error options are each handled in different ways, then yes,  we should create 100 exception classes and throw them when the function<br>\ncannot complete its task</p>\n<p>– if some of those 100 possible error options are handled in the same way, group the error details under the same Exception class derived type.</p>\n<p>Jeffrey Richter in his book “CLR via C#” says in Chapter 19 – Exception</p>\n<p>The exception-handling mechanism offers several advantages over a 32-bit number. </p>\n<p>– An exception includes a string description of the problem;<br>\nIf an invalid argument exception occurs, you will know exactly which argument is causing the problem. The string might also include additional information giving you guidance as to how to improve the code.</p>\n<p>– Exceptions also include a stack trace that tells you which path the application took when the exception occurred.</p>\n<p>– Exceptions is that they don’t have to be caught or detected at the place<br>\nthey occur; any code in the thread’s call stack can handle a thrown exception. </p>\n<p>This simplifies coding substantially because you don’t have to associate error detection and correction code with every statement or method call that might fail.</p>\n<p>– perhaps the biggest benefit of all: an exception can’t be easily ignored.</p>\n<p>If a Win32 function is called and returns a failure code, it’s all too easy<br>\nfor the caller to ignore the return code, assume that the function worked as expected, and<br>\nallow the application to continue running as if all is fine.</p>\n<p>All of the methods defined by types in the Microsoft .NET Framework throw exceptions to<br>\nindicate that the method couldn’t complete; no 32-bit status values are returned. All programmers must therefore have a full understanding of exceptions and how to handle them in their code. </p>\n<p>Microsoft made a great decision here! Using exception handling in your code is straightforward and allows you to write code that’s easy to implement, easy to read, and easy to maintain. </p>\n<p>In addition, exception handling allows you to write robust code that’s capable of<br>\nrecovering from any application situation. Used correctly, exception handling can prevent<br>\napplication crashes and keep your users happy.</p>"
+  }
+]

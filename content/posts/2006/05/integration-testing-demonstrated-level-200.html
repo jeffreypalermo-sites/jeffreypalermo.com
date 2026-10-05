@@ -1,0 +1,266 @@
+---
+wp_id: 424
+title: Integration testing demonstrated – level 200
+slug: integration-testing-demonstrated-level-200
+permalink: /2006/05/integration-testing-demonstrated-level-200/
+date: 2006-05-09T22:00:00
+date_utc: 2006-05-09T22:00:00Z
+modified: 2006-05-09T22:00:00
+format: html
+tags:
+- agile
+- coding-principles
+- tips-tricks
+excerpt: In this post, I’ll talk about and demonstrate integration testing. If you are just starting out with integration testing, you want to test small before you test big. Full-system tests are good, but if they fail, they don’t give much of a hint as to where the failure is. Smaller integration tests will help narrow […]
+comments_open: true
+---
+<p><span>In this<br>
+post, I’ll talk about and demonstrate integration testing.<span>&nbsp; </span>If you are just starting out with integration<br>
+testing, you want to test small before you test big.<span>&nbsp; </span><span></span>Full-system tests are good, but if they fail,<br>
+they don’t give much of a hint as to where the failure is.<span>&nbsp; </span>Smaller integration tests will help narrow<br>
+the area where the failure lies.</span></p>
+
+<p><b><span>A few<br>
+rules to live by</span></b></p>
+<p style="text-indent:-.5in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]--><span>An<br>
+integration test must be isolated in setup and teardown.<span>&nbsp; </span>If it requires some data to be in a database,<br>
+it must put it there.<span>&nbsp; </span>Environmental<br>
+variables should not cause the test to fail randomly.<span>&nbsp; </span></span></p>
+<p style="text-indent:-.5in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]--><span>It<br>
+must also run fast.<span>&nbsp; </span>If it is slow, build<br>
+time will suffer, and you will run fewer builds – leading to other<br>
+problems.<span>&nbsp; </span></span></p>
+<p style="text-indent:-.5in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]--><span>Integration<br>
+tests should be order-independent.<span>&nbsp; </span>It<br>
+should not matter the order you run them.<span>&nbsp;<br>
+</span>They should all pass.</span></p>
+<p style="text-indent:-.5in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]--><span>Feel<br>
+free to make up rules that objectively result in fewer bugs.</span></p>
+
+<p><b><span>Testing<br>
+a custom SiteMapProvider</span></b></p>
+<p><span>In my<br>
+example, I have a custom SiteMapProvider (PageInfoSiteMapProvider).<span>&nbsp; </span>This site map provider gets it’s data from<br>
+inside my EZWeb application, specifically, the IPageConfigProvider interface.<span>&nbsp; </span>I use StructureMap for service location, so<br>
+one of the things that an integration test will validate is that my interface<br>
+implementations can be resolved correctly.<span>&nbsp;<br>
+</span>I’m going to focus on an integration test for one method on the site map<br>
+provider, FindSiteMapNode(url).<span>&nbsp; </span></span></p>
+
+<p><b><span>Here<br>
+is the constructor and method on my custom site map provider:</span></b><span></span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span><br>
+PageInfoSiteMapProvider()</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>_provider = (<span style="color:teal">IPageConfigProvider</span>) <span style="color:teal">ObjectFactory</span>.GetInstance(<span style="color:blue">typeof</span> (<span style="color:teal">IPageConfigProvider</span>));</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">ICurrentContext</span><br>
+context = (<span style="color:teal">ICurrentContext</span>)<span style="color:teal">ObjectFactory</span>.GetInstance(<span style="color:blue">typeof</span>(<span style="color:teal">ICurrentContext</span>));</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">IConfigurationSource</span><br>
+config = (<span style="color:teal">IConfigurationSource</span>)<span style="color:teal">ObjectFactory</span>.GetInstance(<span style="color:blue">typeof</span>(<span style="color:teal">IConfigurationSource</span>));</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>_applicationPath =<br>
+context.ApplicationPath;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>_defaultPage = config.DefaultPage;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">override</span> <span style="color:teal">SiteMapNode</span><br>
+FindSiteMapNode(<span style="color:blue">string</span> rawUrl)</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">VirtualPath</span><br>
+path = <span style="color:blue">new</span> <span style="color:teal">VirtualPath</span>(rawUrl,<br>
+_applicationPath, _defaultPage);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">PageInfo</span><br>
+config = _provider.GetPageConfig(path);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">SiteMapNode</span><br>
+node = MakeNodeFromPageInfo(config);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">return</span><br>
+node;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p><span>This is<br>
+simple enough.<span>&nbsp; </span>The site map provider is<br>
+just a wrapper around the interface call.<span>&nbsp;<br>
+</span>Notice in the constructor, that I’m using a call to StructureMap’s<br>
+ObjectFactory class to resolve the interfaces that I need.<span>&nbsp; </span>I need the current HttpContext and some stuff<br>
+in the web.config file.<span>&nbsp; </span>Obvious in my<br>
+integration test I don’t have the ASP.NET runtime, and I don’t have the<br>
+web.config file, so I’ll need to simulate thing (mock, stub, fake, whatever you<br>
+want to call it).<span>&nbsp; </span>In my integration<br>
+test, I’m going to have to use fake implementations of these interfaces.</span></p>
+
+<p><b><span>Here<br>
+is the integration test fixture that tests this provider all the way down to<br>
+the point where it reads the data from the xml file on the disk.<span>&nbsp; </span></span></b><span>I’ve chosen this scope because it’s not too large, and it’s<br>
+not too small.</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>[<span style="color:teal">TestFixture</span>]</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">class</span> <span style="color:teal">PageInfoSiteMapProviderTester</span></span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>[<span style="color:teal">SetUp</span>]</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">void</span> Setup()</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">IConfigurationSource</span><br>
+source = <span style="color:blue">new</span> <span style="color:teal">TestingConfigurationSource</span>();</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">ICurrentContext</span><br>
+context = <span style="color:blue">new</span> <span style="color:teal">TestingCurrentContext</span>(source);</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">ObjectFactory</span>.InjectStub(<span style="color:blue">typeof</span>(<span style="color:teal">IConfigurationSource</span>),<br>
+source);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">ObjectFactory</span>.InjectStub(<span style="color:blue">typeof</span>(<span style="color:teal">ICurrentContext</span>),<br>
+context);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>[<span style="color:teal">Test</span>]</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">void</span> ShouldGetRootSiteMapNode()</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">string</span><br>
+xmlFileContext = <span style="color:maroon">@”&lt;?xml<br>
+version=””1.0″”<br>
+encoding=””utf-16″”?&gt;</span></span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>&lt;PageInfo<br>
+xmlns:xsi=””<a href="http://www.w3.org/2001/XMLSchema-instance”&amp;#8221" rel="nofollow">http://www.w3.org/2001/XMLSchema-instance”&amp;#8221</a>;<br>
+xmlns:xsd=””<a href="http://www.w3.org/2001/XMLSchema””&amp;gt" rel="nofollow">http://www.w3.org/2001/XMLSchema””&amp;gt</a>;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span>&lt;VirtualPath&gt;/&lt;/VirtualPath&gt;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>&lt;Title&gt;My home<br>
+page&lt;/Title&gt;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>&lt;Template /&gt;</span></p>
+<p><span><span>&nbsp; </span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&lt;Theme /&gt;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>&lt;Plugin /&gt;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span>&lt;HasParent&gt;false&lt;/HasParent&gt;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>&lt;Children /&gt;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>&lt;Links /&gt;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>&lt;Editors /&gt;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>&lt;/PageInfo&gt;”</span><span>;</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">string</span><br>
+fileName = <span style="color:teal">FilePageConfigProvider</span>._fileName;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">string</span><br>
+fileSubDir = <span style="color:teal">FilePageConfigProvider</span>._filesDir;</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">string</span><br>
+fileDirectory = <span style="color:teal">Environment</span>.CurrentDirectory + <span style="color:maroon">“\”</span> + fileSubDir;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">string</span><br>
+path = fileDirectory + <span style="color:maroon">“\”</span> +<br>
+fileName;</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">FileHelper</span><br>
+helper = <span style="color:blue">new</span> <span style="color:teal">FileHelper</span>();</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>helper.SaveFileContents(path,<br>
+xmlFileContext);</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">PageInfoSiteMapProvider</span><br>
+provider = <span style="color:blue">new</span> <span style="color:teal">PageInfoSiteMapProvider</span>();</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">SiteMapNode</span><br>
+node = provider.FindSiteMapNode(<span style="color:maroon">“/mywebapplication/default.aspx”</span>);</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">Assert</span>.AreEqual(<span style="color:maroon">“My home page”</span>, node.Title);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">Assert</span>.AreEqual(<span style="color:maroon">“/myWebApplication/Default.aspx”</span>,<br>
+node.Url);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">Assert</span>.AreEqual(<span style="color:maroon">“/”</span>, node.Key);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p><span>This is<br>
+my entire integration test to make sure that the SiteMapNode object is put<br>
+together correctly. Notice that I have data setup with the xml file.<span>&nbsp; </span>Then I call the provider and assert on the<br>
+results.</span></p>
+
+<p><b><span>Faking<br>
+the “cruise missile” with StructureMap</span></b><span></span></p>
+<p><span>If my<br>
+code was in charge of launching a cruise missile correctly, then I would have<br>
+to fake out the cruise missile when testing my code.<span>&nbsp; </span>In fact, my code might not ever run in its<br>
+true environment until the world plunged into war again.<span>&nbsp; </span>On a small scale, I have to fake the two<br>
+interfaces that are not reproduceable in my test context.<span>&nbsp; </span>Direct your attention to the Setup<br>
+method.<span>&nbsp; </span>You’ll notice that I’m creating<br>
+two fake instances and instructing StructureMap to “InjectStub”.<span>&nbsp; </span>Because of this, when my code asks for an<br>
+instance of one of those interfaces, the class I created in Setup will be<br>
+returned.</span></p>
+
+<p><b><span>Here<br>
+are the stub classes</span></b></p>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">class</span> <span style="color:teal">TestingCurrentContext</span><br>
+: <span style="color:teal">CurrentContext</span></span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span><br>
+TestingCurrentContext(<span style="color:teal">IConfigurationSource</span><br>
+source) : <span style="color:blue">base</span>(source) { }</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">override</span> <span style="color:blue">string</span><br>
+MapPath(<span style="color:blue">string</span> path)</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">string</span><br>
+executingDir = <span style="color:teal">Environment</span>.CurrentDirectory;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">string</span><br>
+combinedPath = executingDir + <span style="color:maroon">“\”</span><br>
++ path;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">return</span><br>
+combinedPath;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">override</span> <span style="color:blue">string</span><br>
+ApplicationPath</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">get</span></span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">return</span><br>
+<span style="color:maroon">“/myWebApplication”</span>;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">class</span> <span style="color:teal">TestingConfigurationSource</span><br>
+: <span style="color:teal">ConfigurationSource</span></span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">override</span> <span style="color:blue">string</span><br>
+ClientFilesPath</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">get</span></span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">return</span><br>
+<span style="color:maroon">@””</span>;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">override</span> <span style="color:blue">string</span><br>
+DefaultPage</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">get</span></span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">return</span><br>
+<span style="color:maroon">“Default.aspx”</span>;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p><span>These<br>
+classes are simple enough.<span>&nbsp; </span>They merely<br>
+return expected environmental settings so that I can test my code.</span></p>
+
+<p><b><span>Integration<br>
+testing is hard at first</span></b><span></span></p>
+<p><span>If your<br>
+style of coding isn’t loosely coupled, then it will be difficult to do<br>
+automated integration testing.<span>&nbsp; </span>Seams<br>
+must exist in the code where fake implementation can be inserted.<span>&nbsp; </span>In my case, I had a web.config file and the<br>
+HttpContext of the web application that get in the way.<span>&nbsp; </span>I stub these out for my test.<span>&nbsp; </span>My tools list for integration testing is:</span></p>
+<p style="text-indent:-.5in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]--><span>NUnit<br>
+for organizing and running the tests.</span></p>
+<p style="text-indent:-.5in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]--><span>StructureMap<br>
+for resolving interfaces and for stubbing interfaces at hard boundaries.</span></p>
+
+<p><b><span>My way<br>
+or the highway</span></b><span><br>
+Just kidding.<span>&nbsp; </span>I’m not saying that this<br>
+is the “golden” way of doing integration testing.<span>&nbsp; </span>There are many ways, and that’s why software<br>
+engineering is engineering and not assembly-line work.<span>&nbsp; </span>The above approach has worked well for me,<br>
+and I put interfaces where they make sense (everywhere) in my code to maintain<br>
+flexibility.<span>&nbsp; </span>I’m open for critique or<br>
+questions.</span></p>

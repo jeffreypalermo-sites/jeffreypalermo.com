@@ -1,0 +1,65 @@
+[
+  {
+    "id": 535,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-17T18:41:08",
+    "type": "comment",
+    "content_html": "<p>Obie Fernandez has some interesting comments about TDD on his blog here: <a href=\"http://jroller.com/page/obie?entry=design_trumps_tdd\" rel=\"nofollow ugc\">http://jroller.com/page/obie?entry=design_trumps_tdd</a></p>"
+  },
+  {
+    "id": 536,
+    "parent": 0,
+    "author_name": "Brian R",
+    "author_url": "http://",
+    "date": "2005-10-18T15:21:34",
+    "type": "comment",
+    "content_html": "<p>I understand what you are trying to spell out to your readers, but test driven development can still be performed with VSTS.  The truth is, MS built in the functionality to stub out unit tests, which is a nice feature if you have something that doesn’t already have unit tests against it.  Nothing says this is how you should develop though.  You can write a unit test first, and then write the production code to make the unit test pass.  Sure, Resharper has a feature that Team System does not, but that doesn’t make TS un-usable, or even hard to use, with test driven development.</p>"
+  },
+  {
+    "id": 537,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-18T15:49:50",
+    "type": "comment",
+    "content_html": "<p>Brian,<br>\nYou are absolutely right, and I will surely be using it to do TDD.  You don’t need a specific IDE to do TDD.  Specifically, their process guidence recommends creating production code and then generate tests for that, and that’s backwards.  TDD recommends creating a test and then production code that satisfies the test.</p>"
+  },
+  {
+    "id": 538,
+    "parent": 0,
+    "author_name": "Mike Gale",
+    "author_url": "http://www.decisionz.com",
+    "date": "2005-10-18T18:57:12",
+    "type": "comment",
+    "content_html": "<p>I think flexibility of thought is very important here.</p>\n<p>People are going to have different approaches at different times.</p>\n<p>I regularly need to catch myself to drop the “unit test” phrase and replace it with “test”.  Reason: I don’t limit myself to pure unit testing, I do what is needed for the task at hand.  That’s often “integration testing”, invariably mixed with “unit testing”.  For me it’s just testing, the right testing.</p>\n<p>Aspx testing is very important.  Those who have tried to do it in the past know how much of a barrier that “web/app server” layer addds.  (Sometimes make you wonder whether the who code drive web site idea has gone horribly wrong!)  A lot will rejoice at this capability.</p>"
+  },
+  {
+    "id": 539,
+    "parent": 0,
+    "author_name": "Dennis van der Stelt",
+    "author_url": "http://bloggingabout.net/blogs/dennis/archive/2005/10/18/9856.aspx",
+    "date": "2005-10-19T06:06:28",
+    "type": "comment",
+    "content_html": "<p>I think VS2005 works great for TDD.</p>\n<p>You can use the Class Designer for UML as Sketch (Fowler), where you draw UML in VS2005 and the raw classes are just transformed into clean classes. Create a test project, a reference to the implementation, create a test, and create a implementation stub. It _IS_ possible to create an empty method from a test.</p>\n<p>More can be found on my blog, where I specify what I’ve done myself to come to the conclusion.</p>"
+  },
+  {
+    "id": 540,
+    "parent": 0,
+    "author_name": "Dennis van der Stelt",
+    "author_url": "http://www.bloggingabout.net/blogs/dennis/",
+    "date": "2005-10-19T08:09:24",
+    "type": "comment",
+    "content_html": "<p>Whoops, moderating comments without getting noticed by Community Server isn’t the most pleasant way to work.</p>\n<p>I’ve noticed now Jeffrey replied.</p>\n<p>I think we’re both on the same track. Jeffrey was especially commeting about generating your tests from (empty?) classes. What I did was create empty classes, a test project and a test. Then created an implementation method from my test-method. This implementation method was the first method in my class, so it’d be impossible to generate ANY test any sooner.</p>\n<p>I like the way it works, hope they fix the bug that VS2005 doesn’t notice all called methods don’t exist.</p>"
+  },
+  {
+    "id": 541,
+    "parent": 0,
+    "author_name": "DawlinLi",
+    "author_url": "http://",
+    "date": "2005-10-28T01:54:49",
+    "type": "comment",
+    "content_html": "<p>Hi,</p>\n<p>How do I unit test for event triggering? How can I check whether an event has been fired?</p>"
+  }
+]

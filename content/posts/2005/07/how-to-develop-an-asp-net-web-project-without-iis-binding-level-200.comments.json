@@ -1,0 +1,56 @@
+[
+  {
+    "id": 378,
+    "parent": 0,
+    "author_name": "Sam",
+    "author_url": "http://srsmoot.blogspot.com",
+    "date": "2005-07-26T01:40:13",
+    "type": "comment",
+    "content_html": "<p>As a followup, you can also use the Cassini WebServer with the ClassLibrary tactic to avoid IIS completely. You can develop on XP-Home if you need to; you can check-in the Cassini executable and have everything you need to edit &amp; run the project (as long as you install the cassini.dll to the GAC, or write a batch file to do it for you); you can just forget about IIS configuration issues and get to work faster. I personally wouldn’t go back to IIS. \uD83D\uDE42</p>"
+  },
+  {
+    "id": 379,
+    "parent": 0,
+    "author_name": ".Net Adventures",
+    "author_url": "http://devintelligence.com",
+    "date": "2005-07-26T03:57:19",
+    "type": "comment",
+    "content_html": "<p>On this url (<a href=\"http://pluralsight.com/wiki/default.aspx/Fritz.AspNetWithoutWebProjects\" rel=\"nofollow ugc\">http://pluralsight.com/wiki/default.aspx/Fritz.AspNetWithoutWebProjects</a>) you can find better way how to setup ASP.NET web project without IIS binding.</p>"
+  },
+  {
+    "id": 380,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-07-26T09:40:45",
+    "type": "comment",
+    "content_html": "<p>Sam,<br>\nI have used Cassini to develop on XP Home edition, but I prefer IIS.  For many.Net applications, Cassini works, but for more advanced apps, you need the configurability of IIS.</p>"
+  },
+  {
+    "id": 381,
+    "parent": 0,
+    "author_name": "jmiller",
+    "author_url": "http://codebetter.com/blogs/jeremy.miller",
+    "date": "2005-07-26T11:06:38",
+    "type": "comment",
+    "content_html": "<p>Cool.  You should probably still go to the headache to get the virtual directory setup in the NAnt build though.  Did this make it any easier to run NUnit on the code?  I’ve bumped into all sort of weirdness in the past trying to create classes in NUnit that are part of a web project.</p>"
+  },
+  {
+    "id": 382,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-07-26T11:54:29",
+    "type": "comment",
+    "content_html": "<p>The build doesn’t require a virtual directory.  It’s just a class library build and a copy of the aspx files to the IIS directory.  NUnit stuff is easier because NUnit can reference the class library.</p>"
+  },
+  {
+    "id": 383,
+    "parent": 0,
+    "author_name": "John",
+    "author_url": "http://",
+    "date": "2005-07-26T15:19:22",
+    "type": "comment",
+    "content_html": "<p>If you ever need to move the solution somewhere else (I have to move from local to development for code review), you can change the sln file.</p>\n<p>There’s a line like Project(“”) = “”, “”,…<br>\nchange the url to the new server address and it will change the project file for you.  If you just change the project, VS will complain about them not be in synch</p>"
+  }
+]

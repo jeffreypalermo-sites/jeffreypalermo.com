@@ -1,0 +1,92 @@
+[
+  {
+    "id": 2297,
+    "parent": 0,
+    "author_name": "Peter Ritchie",
+    "author_url": "http://www.peterritchie.com/blog",
+    "date": "2008-02-11T20:12:18",
+    "type": "comment",
+    "content_html": "<p>Picking the a known faster algorithm is not premature optimization.</p>"
+  },
+  {
+    "id": 2298,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-02-11T20:19:39",
+    "type": "comment",
+    "content_html": "<p>@Peter,<br>\nYou are correct.  Picking a known faster algorithm is not premature optimization.</p>"
+  },
+  {
+    "id": 2299,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2008-02-11T21:58:52",
+    "type": "comment",
+    "content_html": "<p>About the only time that I think performance when I am writing code is for out of process calls (that include DB queries).<br>\nI tend to try to minimize those up front, usually by designing the interfaces between the two appropriately.<br>\nOther than that, whatever works, and optimize later. </p>"
+  },
+  {
+    "id": 2300,
+    "parent": 0,
+    "author_name": "Kevin Radcliffe",
+    "author_url": "http://",
+    "date": "2008-02-11T21:59:06",
+    "type": "comment",
+    "content_html": "<p>My own experience with this has been very similar.<br>\nI’ve seen many situations where the profiler ended up making a fool of me (THAT was the bottleneck!?).<br>\nMy own optimizations usually made negligible performance difference and often caused some loss of readability.<br>\nI’m still working out what is “right”, but at least the readability and maintainability of my code has improved.</p>"
+  },
+  {
+    "id": 2301,
+    "parent": 0,
+    "author_name": "vikram",
+    "author_url": "http://www.vikramlakhotia.com",
+    "date": "2008-02-12T06:59:26",
+    "type": "comment",
+    "content_html": "<p>Yes important to build a correct system first and look at performance later, But performance should not be negelected later on……</p>"
+  },
+  {
+    "id": 2302,
+    "parent": 0,
+    "author_name": "Unknown",
+    "author_url": "http://",
+    "date": "2008-02-12T11:45:25",
+    "type": "comment",
+    "content_html": "<p>Make it correct, make it clear, make it concise, make it fast.  In that order.</p>"
+  },
+  {
+    "id": 2303,
+    "parent": 0,
+    "author_name": "Jeff Handley",
+    "author_url": "http://www.JeffHandley.com",
+    "date": "2008-02-12T12:42:39",
+    "type": "comment",
+    "content_html": "<p>I agree completely.  The PM on my current project has a good philosophy:</p>\n<p>1. Make it work<br>\n2. Make it stable<br>\n3. Make it fast<br>\n4. Make it pretty</p>"
+  },
+  {
+    "id": 2304,
+    "parent": 0,
+    "author_name": "Eric",
+    "author_url": "http://Mann",
+    "date": "2008-02-14T13:41:23",
+    "type": "comment",
+    "content_html": "<p>Post like this make me wonder about the talent in the market place. First off, there is no one rule for doing any one thing first. Of course you want to do it right first, if you didn’t why bother in the first place. We are the only industry that the workers analyze ever single thing they do and try to come up with one answer. Good thing the guys working on my house didn’t spend the time analyzing what they should or should not do first.</p>"
+  },
+  {
+    "id": 2305,
+    "parent": 0,
+    "author_name": "Sanjay",
+    "author_url": "http://geekswithblogs.net/SanjayU/",
+    "date": "2008-02-14T14:54:42",
+    "type": "comment",
+    "content_html": "<p>Totally agree, and specifically with the overall opinion and especially with Jeff’s order of priorities.  I actually posted a similar thought on my blog quite some time ago (<a href=\"http://geekswithblogs.net/SanjayU/archive/2006/07/12/84903.aspx\" rel=\"nofollow ugc\">http://geekswithblogs.net/SanjayU/archive/2006/07/12/84903.aspx</a>)  and met with some resistance.</p>"
+  },
+  {
+    "id": 2306,
+    "parent": 0,
+    "author_name": "Kris Brixon",
+    "author_url": "http://brixon.blogspot.com/",
+    "date": "2008-02-14T19:44:48",
+    "type": "comment",
+    "content_html": "<p>@Eric<br>\nThe guys working on your house DID analyze what should be done first. They just did it on previous houses and learned from previous contractors. I am sure they did not put up the drywall before the wiring or install the roof before the foundation.</p>\n<p>I have heard in the past:<br>\n1. Make it Work<br>\n2. Make it work Right<br>\n3. Make it work Fast</p>"
+  }
+]

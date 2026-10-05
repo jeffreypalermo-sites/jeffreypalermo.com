@@ -1,0 +1,56 @@
+[
+  {
+    "id": 463,
+    "parent": 0,
+    "author_name": "Chris Gardner",
+    "author_url": "http://",
+    "date": "2005-09-16T22:13:31",
+    "type": "comment",
+    "content_html": "<p>Thanks for putting this script together.  I had to tweak, though, to get it to work with CruiseControl (did not try it with CC.Net).  Here are my changes.  Hopefully they won’t get corrupted in this post.</p>\n<p> 0])” /&gt;</p>\n<p> 0])” /&gt;</p>\n<p> 0])” /&gt;</p>\n<p>     0″&gt;fiterror<br>\n     0″&gt;fitignore<br>\n     0″ &gt;fitfail<br>\n    fitpass</p>\n<p> 0 or count(//cruisecontrol/build/buildresults//testsuite) &gt; 0″ /&gt;</p>\n<p>*.fitpass{</p>\n<p>background-color: #AAFFAA;</p>\n<p>}</p>\n<p>*.fitfail{</p>\n<p>background-color: #FFAAAA;</p>\n<p>}</p>\n<p>*.fiterror</p>\n<p>{</p>\n<p>background-color: #FFFFAA;</p>\n<p>}</p>\n<p>*.fitignore</p>\n<p>{</p>\n<p>background-color: #CCCCCC;</p>\n<p>}</p>\n<p>*.fitheader{</p>\n<p>border: solid 1px black;</p>\n<p>margin: 1px;</p>\n<p>padding: 2px;</p>\n<p>}</p>\n<p>*.line{</p>\n<p>margin: 5px;</p>\n<p>}</p>\n<p><strong>FitNesse Summary — Test Pages:</strong>  right,  wrong,</p>\n<p> ignored,  exceptions</p>\n<p><strong>Assertions:</strong>  right,  wrong,</p>\n<p> ignored,  exceptions</p>\n<p> 0″&gt;fiterror</p>\n<p> 0″&gt;fitignore</p>\n<p> 0″ &gt;fitfail</p>\n<p>fitpass</p>\n<p> right,  wrong,</p>\n<p> ignored,  exceptions </p>"
+  },
+  {
+    "id": 464,
+    "parent": 0,
+    "author_name": "Bernard Vander Beken",
+    "author_url": "http://jawn.Net",
+    "date": "2005-09-20T14:32:15",
+    "type": "comment",
+    "content_html": "<p>Thanks for this info.</p>\n<p>What is the approach you use to keep the Fitnesse server running?  Do you run it in its default mode, or do you run it as a service?</p>"
+  },
+  {
+    "id": 465,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-09-20T17:51:24",
+    "type": "comment",
+    "content_html": "<p>We started out running it manually, but now we’ve integrated it with ServiceAny that allows any command to be run as a service.  Another option we considered was using the Windows scheduler to ensure that it is always running.</p>"
+  },
+  {
+    "id": 466,
+    "parent": 0,
+    "author_name": "TestingGeek",
+    "author_url": "http://www.TestingGeek.Com",
+    "date": "2007-08-09T14:14:47",
+    "type": "comment",
+    "content_html": "<p>That’s quite nice.. looks like I have got all the material that I needed to integrate FitNesse test suite with Version Control and Cruise Control.. Thanks a bunch.</p>"
+  },
+  {
+    "id": 467,
+    "parent": 0,
+    "author_name": "Power Boots",
+    "author_url": "http://power.boots@gmail.com",
+    "date": "2007-10-30T21:18:42",
+    "type": "comment",
+    "content_html": "<p>Hi Jeffrey, as always, thinks are not crystal clear.<br>\nWhat do you mean by “Hook this Xsl into your CC.Net configuration”?<br>\nCC.net 1.3 already comes with fitnesse.xsl and fit.xsl.<br>\nAnd I still cannot see the Fitnesse summary into CruiseControl dashboard…<br>\nAnyhow, you did a great job!</p>"
+  },
+  {
+    "id": 468,
+    "parent": 0,
+    "author_name": "Chandu",
+    "author_url": "http://",
+    "date": "2008-03-17T15:54:48",
+    "type": "comment",
+    "content_html": "<p>Hi All,</p>\n<p>Can anyone please tell me how to convert the Fitnesse output to HTML format??</p>\n<p>Thanks in Advance.</p>\n<p>Chandu.</p>"
+  }
+]

@@ -1,0 +1,56 @@
+[
+  {
+    "id": 176,
+    "parent": 0,
+    "author_name": "Rich",
+    "author_url": "http://",
+    "date": "2004-09-09T13:20:00",
+    "type": "comment",
+    "content_html": "<p>This would be a nice way to do it:</p>\n<p>Creating Expression Columns</p>\n<p>workTable.Columns.Add(\"SalesTax\", typeof(Double), \"Total * 0.086\");</p>"
+  },
+  {
+    "id": 177,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-09-09T13:46:00",
+    "type": "comment",
+    "content_html": "<p>If you needed an extra column, then yes, but my example demonstrates how to add an extra row to a DataGrid.</p>"
+  },
+  {
+    "id": 178,
+    "parent": 0,
+    "author_name": "Paul",
+    "author_url": "http://",
+    "date": "2004-11-03T09:11:00",
+    "type": "comment",
+    "content_html": "<p>Good Method.<br>\nOff the top of my head another way to do it would be to capture ItemDataBind on each row and do the calculation.</p>\n<p>Then add the row at the end, after databinding.</p>"
+  },
+  {
+    "id": 179,
+    "parent": 0,
+    "author_name": "Terje",
+    "author_url": "http://",
+    "date": "2004-11-25T06:05:00",
+    "type": "comment",
+    "content_html": "<p>Hi,<br>\nThis method does not seem to work if the datagrid contains any hidden columns, in that case the manually added row renders as a empty table row (&lt;tr&gt;&lt;/tr&gt;)… any experience?</p>"
+  },
+  {
+    "id": 180,
+    "parent": 0,
+    "author_name": "Garth Hendricks",
+    "author_url": "http://",
+    "date": "2007-01-31T11:36:47",
+    "type": "comment",
+    "content_html": "<p>Hi </p>\n<p>You have to use the ItemDataBind this allows you to access the Grid onload</p>"
+  },
+  {
+    "id": 181,
+    "parent": 0,
+    "author_name": "Mark Jones",
+    "author_url": "http://travelcrumbs.com",
+    "date": "2007-05-22T18:56:58",
+    "type": "comment",
+    "content_html": "<p>Excellent post, very useful and worked without any tweaking.</p>"
+  }
+]

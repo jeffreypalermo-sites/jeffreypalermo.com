@@ -1,0 +1,38 @@
+[
+  {
+    "id": 796,
+    "parent": 0,
+    "author_name": "Kai",
+    "author_url": "http://",
+    "date": "2006-04-15T00:48:42",
+    "type": "comment",
+    "content_html": "<p>Here is a post.<br>\n<a href=\"http://www.lhotka.net/WeBlog/CommentView,guid,8b4ed349-f885-4640-9221-1c29a3746499.aspx\" rel=\"nofollow ugc\">http://www.lhotka.net/WeBlog/CommentView,guid,8b4ed349-f885-4640-9221-1c29a3746499.aspx</a></p>\n<p>In short, please take a look of the show, and give some comments on the show: <a href=\"http://perseus.franklins.net/dnrtv/0013/fnet.html\" rel=\"nofollow ugc\">http://perseus.franklins.net/dnrtv/0013/fnet.html</a> </p>"
+  },
+  {
+    "id": 797,
+    "parent": 0,
+    "author_name": "Kai",
+    "author_url": "http://",
+    "date": "2006-04-15T00:50:53",
+    "type": "comment",
+    "content_html": "<p><a href=\"http://www.lhotka.net/WeBlog/CommentView,guid,8b4ed349-f885-4640-9221-1c29a3746499.aspx\" rel=\"nofollow ugc\">http://www.lhotka.net/WeBlog/CommentView,guid,8b4ed349-f885-4640-9221-1c29a3746499.aspx</a></p>"
+  },
+  {
+    "id": 798,
+    "parent": 0,
+    "author_name": "Kai",
+    "author_url": "http://",
+    "date": "2006-04-15T01:07:59",
+    "type": "comment",
+    "content_html": "<p>sorry, a friend of mine told me the TDD show link is somehow messed up, this is the link: </p>\n<p><a href=\"http://dnrtv.com/default.aspx?showID=10\" rel=\"nofollow ugc\">http://dnrtv.com/default.aspx?showID=10</a> </p>\n<p>or, </p>\n<p><a href=\"http://weblogs.asp.net/cfranklin/archive/2006/03/16/440359.aspx\" rel=\"nofollow ugc\">http://weblogs.asp.net/cfranklin/archive/2006/03/16/440359.aspx</a> </p>"
+  },
+  {
+    "id": 799,
+    "parent": 0,
+    "author_name": "Vikas Kerni",
+    "author_url": "http://vikasnetdev.blogspot.com/",
+    "date": "2006-04-22T22:02:32",
+    "type": "comment",
+    "content_html": "<p>Rocky made one more controversial statement on TDD on Apr 19th, CNUG, IL </p>\n<p><a href=\"http://www.lhotka.net/WeBlog/CommentView,guid,8b4ed349-f885-4640-9221-1c29a3746499.aspx\" rel=\"nofollow ugc\">http://www.lhotka.net/WeBlog/CommentView,guid,8b4ed349-f885-4640-9221-1c29a3746499.aspx</a></p>"
+  }
+]

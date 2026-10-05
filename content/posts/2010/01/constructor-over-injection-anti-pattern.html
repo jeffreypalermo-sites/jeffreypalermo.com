@@ -1,0 +1,378 @@
+---
+wp_id: 1129
+title: Constructor over-injection anti-pattern
+slug: constructor-over-injection-anti-pattern
+permalink: /2010/01/constructor-over-injection-anti-pattern/
+date: 2010-01-19T16:28:47
+date_utc: 2010-01-19T16:28:47Z
+modified: 2010-01-19T16:28:47
+format: html
+categories:
+- blog
+excerpt: Check out http://jeffreypalermo.com/blog/constructor-over-injection-smell-ndash-follow-up/ for a follow-up I’m interested in structure. We hear lots of talk about convention over configuration. I’m all for structure over convention (over configuration). This post is about laying out some code that is an anti-pattern. It uses 100% constructor injection. This code makes it easy for a container to bootstrap the construction of […]
+comments_open: true
+---
+<p>Check out&nbsp;<span class="Apple-style-span" style="background-color:rgb(255,255,255)"><a href="/2010/01/constructor-over-injection-smell-ndash-follow-up/">http://jeffreypalermo.com/blog/constructor-over-injection-smell-ndash-follow-up/</a>&nbsp;for a follow-up</span></p>
+<p>I’m interested in structure.&nbsp; We hear lots of talk about convention over configuration.&nbsp; I’m all for structure over convention (over configuration).&nbsp; This post is about laying out some code that is an anti-pattern.&nbsp; It uses 100% constructor injection.&nbsp; This code makes it easy for a container to bootstrap the construction of the objects, but let’s take a look at why this specific scenario is an anti-pattern and what design would be better.</p>
+<h2>Example</h2>
+<p>I have an order processing application that gets 10 orders at a time and tries to process them to shipping.&nbsp; There are some validation steps, and then there is some work to ship the order.&nbsp; Here is our Main() method:</p>
+<div class="csharpcode">
+<pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">public</span> <span class="kwrd">static</span> <span class="kwrd">void</span> Main()</pre>
+<pre><span class="lnum">   2:  </span>{</pre>
+<pre class="alt"><span class="lnum">   3:  </span>    DateTime startTime = DateTime.Now;</pre>
+<pre><span class="lnum">   4:  </span>    Console.WriteLine(<span class="str">"Begin: "</span> + startTime.TimeOfDay);</pre>
+<pre class="alt"><span class="lnum">   5:  </span>    IEnumerable&lt;Order&gt; orders = GetNextTenOrders();</pre>
+<pre><span class="lnum">   6:  </span>&nbsp;</pre>
+<pre class="alt"><span class="lnum">   7:  </span>    <span class="kwrd">foreach</span> (var order <span class="kwrd">in</span> orders)</pre>
+<pre><span class="lnum">   8:  </span>    {</pre>
+<pre class="alt"><span class="lnum">   9:  </span>        IOrderProcessor processor =</pre>
+<pre><span class="lnum">  10:  </span>            ObjectFactory.GetInstance&lt;IOrderProcessor&gt;();</pre>
+<pre class="alt"><span class="lnum">  11:  </span>        SuccessResult successResult = processor.Process(order);</pre>
+<pre><span class="lnum">  12:  </span>        <span class="kwrd">if</span> (successResult == SuccessResult.Success)</pre>
+<pre class="alt"><span class="lnum">  13:  </span>        {</pre>
+<pre><span class="lnum">  14:  </span>            RecordSuccess(order);</pre>
+<pre class="alt"><span class="lnum">  15:  </span>            <span class="kwrd">continue</span>;</pre>
+<pre><span class="lnum">  16:  </span>        }</pre>
+<pre class="alt"><span class="lnum">  17:  </span>&nbsp;</pre>
+<pre><span class="lnum">  18:  </span>        ReportFailure(order);</pre>
+<pre class="alt"><span class="lnum">  19:  </span>    }</pre>
+<pre><span class="lnum">  20:  </span>    DateTime endTime = DateTime.Now;</pre>
+<pre class="alt"><span class="lnum">  21:  </span>    Console.WriteLine(<span class="str">"End:   "</span> + endTime.TimeOfDay);</pre>
+<pre><span class="lnum">  22:  </span>    Console.WriteLine(<span class="str">"Total time: "</span> + endTime.Subtract(startTime));</pre>
+<pre class="alt"><span class="lnum">  23:  </span>}</pre>
+</div>
+<p>
+.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+<p>
+.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+<p>Let’s just run it:</p>
+<p><a href="/wp-content/uploads/2018/07/constructorinjectionantipatterndiexample_e70fimage_2.png"><img loading="lazy" decoding="async" style="border-bottom:0; border-left:0; display:inline; border-top:0; border-right:0" title="image" border="0" alt="image" width="468" height="203" src="/wp-content/uploads/2018/07/constructorinjectionantipatterndiexample_e70fimage_thumb.png"></a></p>
+<p>Hmm.&nbsp; This little example code took over 7 seconds to run.&nbsp; Given that I’ve stubbed out all implementations, it should just breeze through.&nbsp; Here is the code of OrderProcessor, which is the class that is wired up to IOrderProcessor.</p>
+
+<div class="csharpcode">
+<pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">public</span> <span class="kwrd">class</span> OrderProcessor : IOrderProcessor</pre>
+<pre><span class="lnum">   2:  </span>{</pre>
+<pre class="alt"><span class="lnum">   3:  </span>    <span class="kwrd">private</span> <span class="kwrd">readonly</span> IOrderValidator _validator;</pre>
+<pre><span class="lnum">   4:  </span>    <span class="kwrd">private</span> <span class="kwrd">readonly</span> IOrderShipper _shipper;</pre>
+<pre class="alt"><span class="lnum">   5:  </span>&nbsp;</pre>
+<pre><span class="lnum">   6:  </span>    <span class="kwrd">public</span> OrderProcessor(IOrderValidator validator, IOrderShipper shipper)</pre>
+<pre class="alt"><span class="lnum">   7:  </span>    {</pre>
+<pre><span class="lnum">   8:  </span>        _validator = validator;</pre>
+<pre class="alt"><span class="lnum">   9:  </span>        _shipper = shipper;</pre>
+<pre><span class="lnum">  10:  </span>    }</pre>
+<pre class="alt"><span class="lnum">  11:  </span>&nbsp;</pre>
+<pre><span class="lnum">  12:  </span>    <span class="kwrd">public</span> SuccessResult Process(Order order)</pre>
+<pre class="alt"><span class="lnum">  13:  </span>    {</pre>
+<pre><span class="lnum">  14:  </span>        <span class="kwrd">bool</span> isValid = _validator.Validate(order);</pre>
+<pre class="alt"><span class="lnum">  15:  </span>        <span class="kwrd">if</span> (isValid)</pre>
+<pre><span class="lnum">  16:  </span>        {</pre>
+<pre class="alt"><span class="lnum">  17:  </span>            _shipper.Ship(order);</pre>
+<pre><span class="lnum">  18:  </span>        }</pre>
+<pre class="alt"><span class="lnum">  19:  </span>&nbsp;</pre>
+<pre><span class="lnum">  20:  </span>        <span class="kwrd">return</span> CreateStatus(isValid);</pre>
+<pre class="alt"><span class="lnum">  21:  </span>    }</pre>
+<pre><span class="lnum">  22:  </span>&nbsp;</pre>
+<pre class="alt"><span class="lnum">  23:  </span>    <span class="kwrd">private</span> SuccessResult CreateStatus(<span class="kwrd">bool</span> isValid)</pre>
+<pre><span class="lnum">  24:  </span>    {</pre>
+<pre class="alt"><span class="lnum">  25:  </span>        <span class="kwrd">return</span> isValid ? SuccessResult.Success : SuccessResult.Failed;</pre>
+<pre><span class="lnum">  26:  </span>    }</pre>
+<pre class="alt"><span class="lnum">  27:  </span>}</pre>
+</div>
+<p>
+.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+
+
+<p>Ok.&nbsp; Standard constructor injection.&nbsp; The anti-pattern is that one of these constructor arguments is really not a class dependency.&nbsp; The problem is that the constructor of OrderProcessor is too greedy.&nbsp; It doesn’t need IOrderShipper all the time, but it requires it ALL THE TIME.&nbsp; In fact, this company finds that 30% of orders are not valid the first time around.&nbsp; This particular implementation if IOrderShipper is a little bit expensive to create (like ISessionFactory of NHibernate is expensive to create).&nbsp; Forcing the creating when the false branch of the IF statement would render it useless is the smell.</p>
+<p>Just for transparency, here is OrderShipper:</p>
+<div class="csharpcode">
+<pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">public</span> <span class="kwrd">class</span> OrderShipper : IOrderShipper</pre>
+<pre><span class="lnum">   2:  </span>{</pre>
+<pre class="alt"><span class="lnum">   3:  </span>    <span class="kwrd">public</span> OrderShipper()</pre>
+<pre><span class="lnum">   4:  </span>    {</pre>
+<pre class="alt"><span class="lnum">   5:  </span>        Thread.Sleep(TimeSpan.FromMilliseconds(777));</pre>
+<pre><span class="lnum">   6:  </span>    }</pre>
+<pre class="alt"><span class="lnum">   7:  </span>&nbsp;</pre>
+<pre><span class="lnum">   8:  </span>    <span class="kwrd">public</span> <span class="kwrd">void</span> Ship(Order order)</pre>
+<pre class="alt"><span class="lnum">   9:  </span>    {</pre>
+<pre><span class="lnum">  10:  </span>        <span class="rem">//ship the order</span></pre>
+<pre class="alt"><span class="lnum">  11:  </span>    }</pre>
+<pre><span class="lnum">  12:  </span>}</pre>
+</div>
+<p>
+.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+<p>If you are truly coupling yourself to an abstraction (the interface), you should now care how the abstraction is implemented.</p>
+<p>You might say:&nbsp; “What?&nbsp; Just move that long-running work to the Ship()</p>
+<p>method!”</p>
+<p>I would agree with that if you were designing the OrderShipper class.&nbsp; That only puts very elusive semantic coupling on all your classes.&nbsp; What you are really assuming is:&nbsp; I will code to interfaces. . . AND. . . as long as all of the implementations have constructors that don’t do much work, my whole application should work.&nbsp;</p>
+<p>I am not decrying constructor injection as a useful method.&nbsp; In fact, we at <a href="http://www.headspring.com/">Headspring</a> do more constructor injection that abstract factory resolution.&nbsp; However, constructor arguments are API artifacts that shout loudly: “I can do NOTHING unless you pass these things in.”&nbsp; If that isn’t true, then don’t make the constructor announce a lie.</p>
+<h2>Cleaning up the smell</h2>
+<p>We can modify OrderProcessor to use an abstract factory and only require an IOrderShipper if the order is valid.&nbsp; Here is the new run:</p>
+<p><a href="/wp-content/uploads/2018/07/constructorinjectionantipatterndiexample_e70fimage_4.png"><img loading="lazy" decoding="async" style="border-bottom:0; border-left:0; display:inline; border-top:0; border-right:0" title="image" border="0" alt="image" width="434" height="201" src="/wp-content/uploads/2018/07/constructorinjectionantipatterndiexample_e70fimage_thumb_1.png"></a></p>
+<p>Down from 7 seconds to less than 1.&nbsp; Why?&nbsp; Because the invalid order did not need to be shipped.&nbsp;</p>
+<p>Here is the new OrderProcessor:</p>
+<div class="csharpcode">
+<pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">public</span> <span class="kwrd">class</span> OrderProcessor : IOrderProcessor</pre>
+<pre><span class="lnum">   2:  </span>{</pre>
+<pre class="alt"><span class="lnum">   3:  </span>    <span class="kwrd">private</span> <span class="kwrd">readonly</span> IOrderValidator _validator;</pre>
+<pre><span class="lnum">   4:  </span>&nbsp;</pre>
+<pre class="alt"><span class="lnum">   5:  </span>    <span class="kwrd">public</span> OrderProcessor(IOrderValidator validator)</pre>
+<pre><span class="lnum">   6:  </span>    {</pre>
+<pre class="alt"><span class="lnum">   7:  </span>        _validator = validator;</pre>
+<pre><span class="lnum">   8:  </span>    }</pre>
+<pre class="alt"><span class="lnum">   9:  </span>&nbsp;</pre>
+<pre><span class="lnum">  10:  </span>    <span class="kwrd">public</span> SuccessResult Process(Order order)</pre>
+<pre class="alt"><span class="lnum">  11:  </span>    {</pre>
+<pre><span class="lnum">  12:  </span>        <span class="kwrd">bool</span> isValid = _validator.Validate(order);</pre>
+<pre class="alt"><span class="lnum">  13:  </span>        <span class="kwrd">if</span> (isValid)</pre>
+<pre><span class="lnum">  14:  </span>        {</pre>
+<pre class="alt"><span class="lnum">  15:  </span>            IOrderShipper shipper = <span class="kwrd">new</span> OrderShipperFactory().GetDefault();</pre>
+<pre><span class="lnum">  16:  </span>            shipper.Ship(order);</pre>
+<pre class="alt"><span class="lnum">  17:  </span>        }</pre>
+<pre><span class="lnum">  18:  </span>&nbsp;</pre>
+<pre class="alt"><span class="lnum">  19:  </span>        <span class="kwrd">return</span> CreateStatus(isValid);</pre>
+<pre><span class="lnum">  20:  </span>    }</pre>
+<pre class="alt"><span class="lnum">  21:  </span>&nbsp;</pre>
+<pre><span class="lnum">  22:  </span>    <span class="kwrd">private</span> SuccessResult CreateStatus(<span class="kwrd">bool</span> isValid)</pre>
+<pre class="alt"><span class="lnum">  23:  </span>    {</pre>
+<pre><span class="lnum">  24:  </span>        <span class="kwrd">return</span> isValid ? SuccessResult.Success : SuccessResult.Failed;</pre>
+<pre class="alt"><span class="lnum">  25:  </span>    }</pre>
+<pre><span class="lnum">  26:  </span>}</pre>
+</div>
+<p>
+.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+
+
+<p>Because we don’t require any implementation of IOrderShipper (line 15) unless the order is valid, our code is simpler.&nbsp; The class itself has 1 fewer class-level dependency, and only one method has the extra dependency.&nbsp; We employ a new type, OrderShipperFactory&nbsp; to keep the Inverted Control where OrderProcessor still doesn’t know the concrete implementation.&nbsp; There is one more step because factories need start-up configuration.&nbsp; If you are currently using an IoC container, you are familiar with start-up configuration because you configure the container’s global factory at start-up time.&nbsp; Here is the code for the factory:</p>
+
+<div class="csharpcode">
+<pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">public</span> <span class="kwrd">class</span> OrderShipperFactory</pre>
+<pre><span class="lnum">   2:  </span>{</pre>
+<pre class="alt"><span class="lnum">   3:  </span>    <span class="kwrd">public</span> <span class="kwrd">static</span> Func&lt;IOrderShipper&gt; CreationClosure;</pre>
+<pre><span class="lnum">   4:  </span>    <span class="kwrd">public</span> IOrderShipper GetDefault()</pre>
+<pre class="alt"><span class="lnum">   5:  </span>    {</pre>
+<pre><span class="lnum">   6:  </span>        <span class="kwrd">return</span> CreationClosure();<span class="rem">//executes closure</span></pre>
+<pre class="alt"><span class="lnum">   7:  </span>    }</pre>
+<pre><span class="lnum">   8:  </span>}</pre>
+</div>
+<p>
+.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+
+<p>And here is the method that configures this factory at start-up time:</p>
+<div class="csharpcode">
+<pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">private</span> <span class="kwrd">static</span> <span class="kwrd">void</span> ConfigureFactories()</pre>
+<pre><span class="lnum">   2:  </span>{</pre>
+<pre class="alt"><span class="lnum">   3:  </span>    OrderShipperFactory.CreationClosure =</pre>
+<pre><span class="lnum">   4:  </span>        () =&gt; ObjectFactory.GetInstance&lt;IOrderShipper&gt;();</pre>
+<pre class="alt"><span class="lnum">   5:  </span>}</pre>
+</div>
+<p>
+.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+
+<p>Notice that the IoC container is still in control over creating the concrete implementations, but the abstract factories keep the production code dependencies inverted without being greedy toward optional dependencies.</p>
+<h2>Counter Argument</h2>
+<p>Ok, well, then I’ll just create ONE factory like this and use it everywhere:</p>
+<div class="csharpcode">
+<pre class="alt"><span class="lnum">   1:  </span><span class="kwrd">public</span> <span class="kwrd">class</span> GenericFactory</pre>
+<pre><span class="lnum">   2:  </span>{</pre>
+<pre class="alt"><span class="lnum">   3:  </span>    <span class="kwrd">public</span> <span class="kwrd">static</span> Func&lt;<span class="kwrd">object</span>&gt; CreationClosure;</pre>
+<pre><span class="lnum">   4:  </span>    <span class="kwrd">public</span> T GetDefault&lt;T&gt;()</pre>
+<pre class="alt"><span class="lnum">   5:  </span>    {</pre>
+<pre><span class="lnum">   6:  </span>        <span class="kwrd">return</span> (T) CreationClosure();<span class="rem">//executes closure</span></pre>
+<pre class="alt"><span class="lnum">   7:  </span>    }</pre>
+<pre><span class="lnum">   8:  </span>}</pre>
+</div>
+<p>
+.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+
+<p>This factory will ONLY work with an IoC container that has the same semantics as the one you are currently using.&nbsp; For instance, you still need to unit test the code that uses the factory, so you will have to implement a stub for the factory (and unit tests don’t have expensive dependencies like IoC containers).&nbsp; Bottom line:&nbsp; this API is hard to implement by coding by hand.&nbsp; Any API that is hard to implement is a bad API.&nbsp; You want factories to be explicitly, and a method or class that can create anything????</p>
+<p>Hmm.&nbsp; Isn’t that Activator.CreateInstance()?&nbsp; But even that is limited because it doesn’t do constructor argument chaining.&nbsp;</p>
+<h2>Bottom Line</h2>
+<p>Architecture and structure are agnostic of tools.&nbsp; IoC containers are just tools.&nbsp; Your design should be robust with or WITHOUT them.&nbsp; Taking away the IoC container should not make the structure of the application crumble.</p>
+<p>Why do we use an IoC container, then?&nbsp; Because of the DRY Principle.&nbsp; It keeps us from having to write lots of abstract factory implementations that are essentially the same except for one line.&nbsp; It keeps each class from having a factory call from the no-arg constructor passing in the dependency to the greedy constructor.&nbsp; IoC containers have limited the need for hand-coded factories, but they have not eliminated the need.</p>
+<p>The inspiration for this article came while I was sitting in a workshop where <a href="http://mhinze.com/">Matt Hinze</a> was teaching a class about Inversion of Control (one of the public workshops that <a href="http://www.headspring.com/">Headspring</a> puts on each month).&nbsp; I thought about the response to <a href="http://blog.objectmentor.com">Robert Martin</a>’s <a href="http://blog.objectmentor.com/articles/2010/01/17/dependency-injection-inversion">recent blog post</a> (which I quite like).&nbsp; Then a student in the class recalled a project where constructor injection was used everywhere.&nbsp; They felt the pain that is sure to come from this constructor over-injection anti-pattern.</p>
+<p>One final word:&nbsp; Don’t be in a hurry to agree or disagree with me.&nbsp; Take the time to ponder.</p>
+<p><strong>UPDATE: </strong>Good discussion below. &nbsp;I’ve expanded the code sample in an attempt to make this code smell more obvious (because in reality, we don’t fret over 2 constructor arguments. &nbsp;We fret about 5, 10, 20). &nbsp;New post here:&nbsp;<span class="Apple-style-span" style="background-color:rgb(255,255,255)"><a href="/2010/01/constructor-over-injection-smell-ndash-follow-up/">http://jeffreypalermo.com/blog/constructor-over-injection-smell-ndash-follow-up/</a></span></p>

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 311,
+    "parent": 0,
+    "author_name": "Eric Wise",
+    "author_url": "http://",
+    "date": "2005-05-17T10:20:00",
+    "type": "comment",
+    "content_html": "<p>That’s all well and good, as I posted about my mixed use of datasets.  My question for you is the same as my question for Scott.  How do you pass around aggregate/summary data?</p>\n<p>Are you passing a datareader to the UI?  If you did you just broke the barrier as datareaders are connected objects while datasets are disconnected.</p>\n<p>Are you creating a new business object for every aggregate report?  That would seem to me to be the coding equivalent of killing a mosquito with a bazooka.</p>"
+  },
+  {
+    "id": 312,
+    "parent": 0,
+    "author_name": "Jeremy Miller",
+    "author_url": "http://",
+    "date": "2005-05-17T12:09:00",
+    "type": "comment",
+    "content_html": "<p>Good posts on both.</p>\n<p>Fowler has a good discussion of this in Patterns of Enterprise Application Architecture.  He has a full chapter on the plusses and minuses of a domain model vs a table module approach for structuring your middle tier.  Read it in the bookstore like everyone else;)</p>\n<p>If your app is primarily a reporting application with minimal business logic, of course you use the built in capabilities of the DataSet.  Even Fowler (Mr. Domain Model) says .NET has a compelling case for this.  In this case your \"Domain Model\" can be a set of classes that perform aggregations, transformations, and mapping to and from a DataSet.</p>\n<p>Of course you never pass a DataReader to the UI layer.  Not to put words into Jeffrey’s mouth, but I know he’s thinking about using NHibernate or some other external mapping OR solution for persistence with his domain classes.</p>\n<p>As goofy as it sounds, I’ve gone the unusual way of creating a DataSet from an array of business objects for the purposes of data binding.  Not defending that approach, but it let us have the best of both worlds.  Domain classes in the business and service layers, DataSet’s in the controller and view layers.</p>"
+  },
+  {
+    "id": 313,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2005-05-17T12:24:00",
+    "type": "comment",
+    "content_html": "<p>Jeremy,<br>\nThat’s a very interesting case.  You are protecting your data and then using the DataSet to spit out a read-only report.  Probably the biggest mistake people make is using the DataSet to make updates.  </p>"
+  },
+  {
+    "id": 314,
+    "parent": 0,
+    "author_name": "Vadim Kreynin",
+    "author_url": "http://",
+    "date": "2005-05-17T12:47:00",
+    "type": "comment",
+    "content_html": "<p>I love discussions about DataSet vs. Business Objects.  It’s the subject that people form both sides can have valid points.  I believe that there’s no silver bullet.</p>\n<p>I agree with Jeffrey that if you’re developing an enterprise application that’s going to be enhanced and maintained for a long period of a time, domain model is a winner.  However, if you’re working on a small application that you’re probably never going to touch again, DataSet should be considered.</p>"
+  },
+  {
+    "id": 315,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2005-05-17T12:48:00",
+    "type": "comment",
+    "content_html": "<p>Eric,<br>\nI read your post on the subject, <a href=\"http://www.codebetter.com/blogs/eric.wise/archive/2005/05/02/62743.aspx\" rel=\"nofollow\">http://www.codebetter.com/blogs/eric.wise/archive/2005/05/02/62743.aspx</a>, and all you said was well and good.  There is no danger there of data changing and breaking domain rules since you are using it for read-only purposes.  If it can help databinding, then it becomes a UI technique.  What I wanted to hit on was the importance of a solid OO design, and too often I find those wanting to using the DataSet as a bridge from the database to the UI.</p>"
+  },
+  {
+    "id": 316,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2005-05-17T12:52:00",
+    "type": "comment",
+    "content_html": "<p>No assembly should have a reference to ADO.NET except the data layer, so that would preclude any ADO.NET class from crossing that boundary. </p>\n<p>If I need an aggregate object, I’ll create an aggregate object, or maybe just a smart collection of by domain objects. My domain objects are nothing more than holders of their members with methods to protect them. Some people assume that business objects are \"heavy\" and that a DataSet is \"light\". If you look at the class structure of the DataSet, you’ll find layers and layers of objects. The footprint of a collection of domain objects would be less than the same information in a DataSet. If a requirement of the app is aggregates, then make an object that knows how to handle aggregates. </p>\n<p>As Jeremy pointed out, the DataSet can be useful but only to augment a strong domain model.</p>\n<p>Eric, your usage of them is also good because you use the databinding features for better UI manipulationg, but you _don’t_ use them as the owner of the information to be changed and sent back to the database.</p>"
+  },
+  {
+    "id": 317,
+    "parent": 0,
+    "author_name": "AdamD",
+    "author_url": "http://",
+    "date": "2005-05-17T13:05:00",
+    "type": "comment",
+    "content_html": "<p>Well said. Another reason is that it is not possible to mock up a ST DS with NMock. Takes the app further away from automated testing.</p>\n<p>My $0.02</p>"
+  },
+  {
+    "id": 318,
+    "parent": 0,
+    "author_name": "Pazu",
+    "author_url": "http://",
+    "date": "2005-05-17T13:42:00",
+    "type": "comment",
+    "content_html": "<p>I think these opinions arise from considering DataSet to be some bussiness logic object, whilest it is just data-holding or data-carrying object. So if you consider it as \"smarter\" array, you won’t get into traps of OO design. You still have to organize your business logic and objects well – and if you like arrays or structs – use them, but impedance between DataSet and databases is pretty low in .NET. I am not speaking about performance: usually it’s a trade-off between dev-performace and run-performance.</p>"
+  },
+  {
+    "id": 319,
+    "parent": 0,
+    "author_name": "Mike Bouck",
+    "author_url": "http://",
+    "date": "2005-05-20T16:20:00",
+    "type": "comment",
+    "content_html": "<p>OK, I’ll step-up and be the sacrifical whipping boy! \uD83D\uDE42 I happen to be one of the depised that use (strongly-typed) DataSets in certain (note that I’m not saying all!) enterprise solutions.  Domain model vs. table module/recordset is a foolish argument in the first place, because, like so many other things, there is no \"one true way\".  If the choice was so black/white I doubt this blog entry would exist!  Many roads lead to the promised land — choose the one that makes sense for your particular journey.  But, nonetheless, I’ll take the bait:</p>\n<p>\"What about OO design.  What about an object owning state and all behavior that goes with that state?  A DataSet cannot substitute for a domain object.\"</p>\n<p>We’re talking apples-oranges here — if you’re puruing a table module pattern then the DataSet is acting strictly as a data transfer object and is not an enity!  Any business logic lives in a seperate layer and operates on your DTOs.  If you must have your behavior attached to your data than you’ll probably never be able to take off your OO shades in the first place.</p>\n<p>\"I’m coming from a stand-point where I care about OO and the maintainability and testability gains associated with it, so DataSets don’t hold much weight with me.\"</p>\n<p>So am I.  Lets just examine for a moment the  code I have to write/maintain with a domain model solution:</p>\n<p>– Binding (IListSource, IList, IBindingList and IEditableObject)<br>\n– O/R mapping layer<br>\n– Sorting/filtering (i.e. are you going to do an OPath-like solution or use some predicate buckets)<br>\n– State change tracking (oh yeah, if I have a collection of entity objects I need someway to track updates/deletes/inserts…)</p>\n<p>That sure sounds like a lot of code for me to maintain (I know it is because I’ve done it).  O/R mappers help with codegen but which to choose or do I roll my own?  There’s no standards here and the complexity incurred by the object-relational impedence mismatch necessarily dictates I’m going to have a very complicated solution with many moving parts(which I translate to \"hard to maintain\" for the less than Jedi average staff programmers!)</p>\n<p>\"If you have a dumb data container (DataSet) floating around, then you have to jerry-rig some validating logic before you “Update” the changes back to the database.\"</p>\n<p>I don’t see this as an inherent liability and hooking the DataSet events to run data validation logic is hardly \"jerry-rigging\" — that’s a primary reason Micrsoft put them in there!</p>\n<p>\"If you have a well-factored OO design, you will always be able to extend the system with new functionality as well as change existing functionality with minimal impact.\"</p>\n<p>This is a red-herring.  If your DBA extends the schema, presumably it is to add new functionality which you would have to project into either your domain model or table module design — there is no free lunch!</p>"
+  },
+  {
+    "id": 320,
+    "parent": 0,
+    "author_name": "Chris",
+    "author_url": "http://",
+    "date": "2005-05-23T09:28:00",
+    "type": "comment",
+    "content_html": "<p>My problem with DataSets is simple.  They are conceived and designed around an XML view of data, not a fully relational view.  They handle one to many relationships well, but fail horribly  with one to one relationships.  Basically, if all you ever normalize to is 3rd Normal Form, you will not have problems with DataSets.  But if you normalize beyond 3NF (and yes, I need to.  It’s called entity super-type/sub-type) then you will have problems with DataSets (and most other data access solutions).</p>\n<p>DataSets are too XML oriented.  They primarily support hierarchies, not relationships (especially when you get into databinding against a DataGrid).</p>"
+  },
+  {
+    "id": 321,
+    "parent": 0,
+    "author_name": "Shubhabrata DE",
+    "author_url": "http://",
+    "date": "2007-11-21T04:08:17",
+    "type": "comment",
+    "content_html": "<p>Wonderfully said. Those who do not agree really need to be in rehab. there would always be people who would take the short and easy way out. The point that I really like in this article is “No matter what you do, your application must perform well enough to meet the customer’s expectations.  The customer doesn’t care about the internal workings.  So what other motivations do we have? ”</p>"
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1027,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2006-10-23T18:51:39",
+    "type": "comment",
+    "content_html": "<p>You can just drop the type name completely, NHibernate will do the Right Thing here.<br>\nActually, this is the first time I hear about this issue, because I always leave the type name when it is obvious from the classes.</p>"
+  },
+  {
+    "id": 1028,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-10-23T19:23:02",
+    "type": "comment",
+    "content_html": "<p>I’ve tried it both ways, and when going from “byte” to my C# enum, my object is dirty right away.  Specifying the enum in the mapping gives me the correct behavior.  I’ll admin I didn’t try it with a normal Enum that defaults to the “Int32” data type.</p>"
+  }
+]

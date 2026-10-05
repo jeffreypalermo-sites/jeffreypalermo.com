@@ -1,0 +1,55 @@
+---
+wp_id: 184
+title: Run features in a separate AppDomain – level 300
+slug: run-features-in-a-separate-appdomain-level-300
+permalink: /2005/02/run-features-in-a-separate-appdomain-level-300/
+date: 2005-02-22T21:58:00
+date_utc: 2005-02-22T21:58:00Z
+modified: 2005-02-22T21:58:00
+format: html
+excerpt: Along with putting feature dlls in a separate directory with the shared assemblies they need, I like to run these features in an isolated AppDomain to contain memory usage as well as state. When using Trace for logging, this is a great benefit because application state is local to the AppDomain, so my Trace.Listeners collection […]
+comments_open: true
+---
+<p>Along with putting feature dlls in a separate directory with the shared assemblies they need, I like to run these features in an isolated AppDomain to contain memory usage as well as state.&nbsp; When using Trace for logging, this is a great benefit because application state is local to the AppDomain, so my Trace.Listeners collection is dedicated to the AppDomain.&nbsp; Here’s an easy sample showing how to do this:</p>
+<div><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Trace.Listeners.Add(</span><span>new</span><span> TextWriterTraceListener(Console.Out));</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Trace.WriteLine(“Starting MainClass”);</span></p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; AppDomainSetup setup = </span><span>new</span><span> AppDomainSetup();</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; setup.ApplicationBase = AppDomain.CurrentDomain.BaseDirectory; </span><span>// or another directory.</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; setup.ApplicationName = “My Domain”;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; AppDomain ad = AppDomain.CreateDomain(“CreateDomain”, </span><span>null</span><span>, setup);</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>object</span><span> o = ad.CreateInstanceAndUnwrap(“BusinessLogic”, “BusinessLogic.BusinessLogic”);</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Trace.WriteLine(o.ToString());</span></p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Trace.WriteLine(“DONE testing appdomain.&nbsp; Now testing process”);</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Console.ReadLine();</span></p></div>
+<p>And here is my BusinessLogic class I contrived for this test:</p>
+<div><br>
+<p><span>namespace</span><span> BusinessLogic</span></p><br>
+<p><span>{</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; </span><span>///</span><span> &lt;summary&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; </span><span>///</span><span> Summary description for Class1.</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; </span><span>///</span><span> &lt;/summary&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; [Serializable()]</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; </span><span>public</span><span> class</span><span> BusinessLogic : MarshalByRefObject</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; {</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span> override</span><span> string</span><span> ToString(){</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.Diagnostics.Trace.WriteLine(“From Business Logic”);</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>string</span><span> retValue = “Information about current runtime:n”;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; retValue += “Current AppDomain location: ” + AppDomain.CurrentDomain.BaseDirectory + “n”;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; retValue += “Executing Assembly FullName: ” + Assembly.GetExecutingAssembly().ToString() + “n”;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; retValue += “BusinessLogic location: ” + Assembly.GetExecutingAssembly().Location + “n”;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; retValue += “Framework Assembly FullName: ” + </span><span>typeof</span><span>(Audit).Assembly.ToString() + “n”;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; retValue += “Framework location” + </span><span>typeof</span><span>(Audit).Assembly.Location + “n”;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>return</span><span> retValue;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span> override</span><span> bool</span><span> Equals(</span><span>object</span><span> obj) {</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>throw</span><span> new</span><span> Exception(“BOMB”);</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>return</span><span> base</span><span>.Equals (obj);</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>}</span></p></div>
+
+<p>Notice how I marked the class as Serializable.&nbsp; And don’t forget to mark other classes that&nbsp; you may need to pass back and forth (not many, I hope).&nbsp; I also have to inherit my object from MarshalByRefObject because my initial call is directly to this object.&nbsp; Any exceptions that may be raised up back to the parent AppDomain must also be Serialiable and implemet a Serialization constructor.&nbsp; </p>
+<p>I love this model for code and state isolation, and it has made my life so much easier!<!--EndFragment--><!--EndFragment--></p>

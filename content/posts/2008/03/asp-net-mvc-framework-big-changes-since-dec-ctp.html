@@ -1,0 +1,21 @@
+---
+wp_id: 620
+title: ASP.NET MVC Framework big changes since Dec CTP
+slug: asp-net-mvc-framework-big-changes-since-dec-ctp
+permalink: /2008/03/asp-net-mvc-framework-big-changes-since-dec-ctp/
+date: 2008-03-11T02:38:00
+date_utc: 2008-03-11T02:38:00Z
+modified: 2008-03-11T02:38:00
+format: html
+tags:
+- aspnetmvc
+excerpt: 'For more stuff on ASP.NET MVC, subscribe to my feed: http://feeds.feedburner.com/jeffreypalermo If you installed the December CTP of the ASP.NET MVC Framework, you had to install it. The assembly was registered with the GAC, and you didn’t have to deploy the assembly. The original plan was to release the MVC Framework with a service pack […]'
+comments_open: true
+---
+<p>&nbsp;For more stuff on ASP.NET MVC, subscribe to my feed:&nbsp; <a href="http://feeds.feedburner.com/jeffreypalermo">http://feeds.feedburner.com/jeffreypalermo</a></p>
+<p>If you installed the December CTP of the ASP.NET MVC Framework, you had to install it.&nbsp; The assembly was registered with the GAC, and you didn’t have to deploy the assembly.&nbsp; The original plan was to release the MVC Framework with a service pack of .Net 3.5.&nbsp; That is no longer the plan.</p>
+<p><b>In the March CTP</b>, System.Web.Mvc.dl, System.Web.Routing.dll, and System.Web.Abstractions.dll can all be deployed to the bin folder.&nbsp; They don’t require the GAC.&nbsp; I like that a lot.&nbsp; I recently deployed <a href="http://www.partywithpalermo.com" rel="nofollow">http://www.partywithpalermo.com</a> using the March CTP drop of the MVC Framework.&nbsp; I have .Net 3.5 on the web server, and it was super simple.&nbsp;</p>
+<p><b>Routing is a bit different</b>. &nbsp; Make sure to change [controller]/[route] to {controller}/{route}.&nbsp; Minor change.&nbsp; Overall, I’m actually using to using {} for tokens because of all the NAnt build work I’ve done (NAnt uses ${prperty}).</p>
+<p><b>Routing can be used with existing apps</b>.&nbsp;&nbsp; If you have every done url rewriting (I have), you know how painful it can be.&nbsp; Now that routing is in a separate assembly, you can use it with any ASP.NET app you wish.&nbsp; I really like that concept because routing doesn’t care if you are using the mvc handler or page hander.&nbsp; It works for parsing urls either way.</p>
+<p>Overall, I’m pretty impressed with this CTP (and it is a CTP).&nbsp; It is not done yet, and Microsoft makes no claims that it is complete.&nbsp; It’s the second public drop of a new, fledgling framework.&nbsp; The core, in my opinion, is the routes, controllers, and handoff to the views.&nbsp;&nbsp; All the other stuff is ancillary.&nbsp; Once the core is there, libraries like <a href="http://MvcContrib.org">MvcContrib </a>can start adding on extra features.&nbsp; For instance, I’m looking at leveraging the presentation object validators from the Castle project along with the [DataBind] attribute.&nbsp; It shouldn’t be to hard to leverage the <a href="http://www.castleproject.org/">Castle project</a> here, even while using a different controller base class.&nbsp; I think they are quite complimentary, and Monorail has so many great features, I don’t think I’ll use the MVC Framework bare.&nbsp; </p>
+<p>Let me know in a comment if you are interested in me releasing the source for <a href="http://www.partywithpalermo.com">www.partywithpalermo.com</a>.&nbsp;</p>

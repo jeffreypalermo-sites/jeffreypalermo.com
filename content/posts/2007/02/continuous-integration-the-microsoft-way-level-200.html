@@ -1,0 +1,41 @@
+---
+wp_id: 489
+title: Continuous Integration the Microsoft way!!! – level 200
+slug: continuous-integration-the-microsoft-way-level-200
+permalink: /2007/02/continuous-integration-the-microsoft-way-level-200/
+date: 2007-02-11T23:21:45
+date_utc: 2007-02-11T23:21:45Z
+modified: 2007-02-11T23:21:45
+format: html
+excerpt: 'Years of developer experience has produced a lesson the entire industry is paying attention to: leaving integration to the end of a project is a bad idea! It’s been proven a bad idea time and time again. Integrating often keeps errors small and manageable. In fact, many teams (mine included) integrate after every code check-in. […]'
+comments_open: true
+---
+<p>Years of developer experience has produced a lesson the entire industry is paying attention to:&nbsp; leaving integration to the end of a project is a bad idea!&nbsp; It’s been proven a bad idea time and time again.&nbsp; Integrating often keeps errors small and manageable.&nbsp; In fact, many teams (mine included) integrate after every code check-in.&nbsp; The idea of continuous integration is to make integration a normal part of your software construction process.&nbsp; The core of continuous integration (abbreviated “[ci]”), is to feel the pain enough to make it go away.&nbsp; The first pain is that it takes a LOT of time.&nbsp; Solution:&nbsp; automate the process.&nbsp; We find that there are a lot of steps to integrate all the parts of a software system, so we automate all of them.&nbsp; This yields a living artifact called a “build script”.&nbsp; This build script is executable and runs every time someone commits a change to the codebase.&nbsp; If a change to the codebase produces an integration defect, the build will fail, and the team will become aware of a new integration defect immediately (not weeks from now).&nbsp; The build script helps refine the software process by identifying pain points and pushing the team to solve them.</p>
+<p>A very popular&nbsp;[ci] combination of tools is [ccnet] for the build server (build reports, stats, and notifications), [nant] (an xml notation for the build script itself), [nunit] (for automated tests that run as part of the build), and the code compiler.&nbsp; (Note, in Java, the parents of all these tools make up the popular combination: [cruisecontrol], [ant], [junit], and the java compiler).</p>
+<p>With .Net 2.0, Microsoft has changed the way Visual Studio projects are structured so that they actually form an [msbuild] build file.&nbsp; [msbuild] is Microsoft’s answer to [ant] and [nant].&nbsp; The basic capabilities are the same (xml declarative build tasks, runnable from the command line).&nbsp; [mstest] is Microsoft’s answer to [nunit].&nbsp; Unfortunately, [mstest] isn’t available unless you purchase Microsoft’s Team Test IDE.&nbsp; Microsoft doesn’t have an answer for [ccnet].</p>
+<p>Before I go on, please take a look at <a href="http://weblogs.asp.net/bsimser/archive/2006/12/08/msbuild-nant-nunit-mstest-and-frustration.aspx">Bil Simser’s experience report setting up CCNet with MSBuild and MSTest.</a></p>
+<p>From reading Bil’s experience report, I am very glad that I saved my team A LOT of wasted time.&nbsp; My team did not dabble with converting from [nant] to [msbuild] or from [nunit] to [mstest].&nbsp; Here is my thought process:</p>
+<ul>
+<li>Our process works ([ccnet], [nant], [nunit], compiler).</li>
+<li>[ccnet] stays.&nbsp; I don’t see an alternative that is compelling, and [ccnet] is not causing me pain.</li>
+<li>[nant] stays.&nbsp; I see [msbuild] as a comparable alternative but with no compelling advantage over [nant] to force a conversion.&nbsp; [nant] is not causing me pain.</li>
+<li>[nunit] stays.&nbsp; I see [mstest] as a subset of NUnit’s functionality; therefore, there is no compelling reason to switch.&nbsp; [nunit] is not causing me pain.</li>
+<li>compiler:&nbsp; Switched to [msbuild] from the [nant] &lt;solution/&gt; task out of necessity.&nbsp; The [nant] 2005 msbuild task is limited, and it caused me pain.&nbsp; Moving to an &lt;exec /&gt; task calling msbuild.exe gave me exactly what I needed.&nbsp; It’s been working for 6 months without further attention.&nbsp; </li>
+</ul>
+<p>To put my decisions in context, let me give you an overview of my department’s software process:</p>
+<ul>
+<li>Mix of [extremeprogramming], [scrum], and [crystal].</li>
+<li>1-week iterations.</li>
+<li>Story wall of post-it index cards (story cards) for user stories as well as bugs.</li>
+<li>[ddd].</li>
+<li>OR mapping with [nhibernate]</li>
+<li>Model-view-controller Winforms UI</li>
+<li>Extensive automated test coverage.</li>
+<li>Automated configuration management.</li>
+<li>Automated database change and upgrades.</li>
+</ul>
+<p>In this environment, we don’t have any time to waste.&nbsp; We have to solve problems and move on.&nbsp; We estimate in ideal hours, not days.&nbsp; Anything that causes pain is either fixed or kicked out.&nbsp; </p>
+<p>———————————————</p>
+<p>After all this, what does it have to do with Continuous Integration the Microsoft way?&nbsp; I propose that this is the way to do it with .Net.&nbsp; It works well, and teams all across the country do it in a very similar way.&nbsp; From reading Bil’s experience report on attempting a mix of tools in the Team Suite stack, all he experienced was pain.&nbsp; This isn’t the way to make tools.</p>
+<p>To Microsoft:&nbsp; you have to do better ( I know you can).&nbsp; If by some odd change, these tools integrate well, and we just don’t know how to do it, please advertise the documentation that shows how to do it seamlessly in an automated, command line environment on a clean build server.&nbsp; We all learn by example, so if teams within Microsoft are doing interesting things with [ci], please let us know because right now, we don’t know how to get it to work.</p>
+<p>To the rest of the industry:&nbsp; Do what works and evangelize it.&nbsp; I’ve spelled out what is working well for my team, but there are plenty of other solutions to the [ci] problem.&nbsp; <strong>If your team is doing CI with another mix of tools, please tell us about it!</strong></p>

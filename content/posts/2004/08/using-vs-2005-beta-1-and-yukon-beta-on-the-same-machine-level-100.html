@@ -1,0 +1,18 @@
+---
+wp_id: 79
+title: using VS 2005 Beta 1 and Yukon Beta on the same machine – level 100
+slug: using-vs-2005-beta-1-and-yukon-beta-on-the-same-machine-level-100
+permalink: /2004/08/using-vs-2005-beta-1-and-yukon-beta-on-the-same-machine-level-100/
+date: 2004-08-20T10:50:00
+date_utc: 2004-08-20T10:50:00Z
+modified: 2004-08-20T10:50:00
+format: html
+excerpt: 'Tim Sneath posted a great piece of information today. I ran into this issue exactly: I installed Whidbey and then Yukon. Yukon setup kept complaining that there was already a conflicting version of Yukon on the box (I had MSDE Express), but that wasn’t it. Tim points out that Yukon has a slightly new version of the […]'
+comments_open: true
+---
+<p><a href="http://weblogs.asp.net/tims/">Tim Sneath </a>posted&nbsp;a <a href="http://weblogs.asp.net/tims/archive/2004/08/20/217633.aspx">great piece of information </a>today.&nbsp; I ran into this issue exactly:</p>
+<p>I installed Whidbey and then Yukon.&nbsp; Yukon setup kept complaining that there was already a conflicting version of Yukon on the box (I had MSDE Express), but that wasn’t it.&nbsp; Tim points out that Yukon has&nbsp;a slightly new version of the .Net framework, so what I need to do is uninstall v2.0 (not VS), and then Yukon will install fine.&nbsp; Great job Tim.&nbsp; I was stumped.</p>
+<p>By the way, I saw a demo of stored procedures in .Net languages, and I’d like to clear up something:</p>
+<p>In Yukon, there is no way to get or modify data without using TSQL.&nbsp; Yes, stored procedures can be written in any .Net language, but stored procedures are just executable bits of logic.&nbsp; Manipulating rowsets in the database still requires TSQL calls, but any calculations, validation, etc can be coded in the .Net language.&nbsp; That being said, is there a reason to code stored procedures in .Net?&nbsp; Not for me (yet).&nbsp; I make it a habit NOT to write logic in my Sprocs.&nbsp; I manipulate data rowsets, and that’s it, so if I have to use TSQL to manipulate rowsets, then I’m right where I am now.</p>
+<p>Also, what about the issue of database migration, or switching databases.&nbsp; If you write database sprocs in .Net, you can never switch databases.&nbsp; What if you develop a product with Yukon.&nbsp; You’ll never be able to implement it with SQL Server 2000, and 2000 will be around for a long, long time because it suits the needs of so many businesses.</p>
+<p>I’m probably coming across as a pessimist, but that’s not my intent.&nbsp; I just know it’s inevitable that somebody will devleop an entire application on Yukon’s CLR and then wonder why their database box is so damn slow.&nbsp; At least, it’ll be good material for <a href="http://thedailywtf.com/">The Daily WTF</a>.</p>

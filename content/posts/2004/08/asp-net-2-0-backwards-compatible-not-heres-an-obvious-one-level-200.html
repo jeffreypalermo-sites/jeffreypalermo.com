@@ -1,0 +1,24 @@
+---
+wp_id: 60
+title: ASP.NET 2.0 backwards compatible? NOT.  Here’s an obvious one – level 200
+slug: asp-net-2-0-backwards-compatible-not-heres-an-obvious-one-level-200
+permalink: /2004/08/asp-net-2-0-backwards-compatible-not-heres-an-obvious-one-level-200/
+date: 2004-08-16T17:01:00
+date_utc: 2004-08-16T17:01:00Z
+modified: 2004-08-16T17:01:00
+format: html
+excerpt: 'Most RAD developers will probably not encounter this breaking change, but for me, this doesn’t seem like something obscure: In my pages, I make my <HEAD/> element accessible from code: <head id=“Head” ruant=“server”></head> Then, in my code-behind, I use: protected HtmlGenericControl Head; Then in code, I can add my title element as I need to, […]'
+comments_open: true
+---
+<p>Most RAD developers will probably not encounter this breaking change, but for me, this doesn’t seem like something obscure:</p>
+<p>In my pages, I make my &lt;HEAD/&gt; element accessible from code:</p>
+<p>&lt;head id=“Head” ruant=“server”&gt;<br><br>&lt;/head&gt;</p>
+<p>Then, in my code-behind, I use:</p>
+<p>protected HtmlGenericControl Head;</p>
+<p>Then in code, I can add my title element as I need to, and I can add &lt;meta/&gt; elements programmatically.&nbsp; Well, I try to run this page under ASP.NET 2.0, and&nbsp;my VERY FIRST experience with ASP.NET 2.0 comes back with a big, fat ERROR screen.&nbsp; </p>
+<p>Because the Page class in v2.0 has a Head property of type HtmlHead, my code will throw an error because I am accessing the HtmlHead Head; property through my HtmlGenericControl variable.&nbsp; It worked great in v1.1, but it’s definitely a breaking change in v2.0.</p>
+<p>I don’t really have <em>beef</em> with this change because a quick modification to my code solves the issue.&nbsp; I do have <em>beef</em>, however, with the PR given to the “supposed“ backwards compatibility of v2.0.&nbsp; Almost every article and book you read about v2.0 will say, “Never fear, your v1.1 apps will run just fine on v2.0 because it’s 100% backwards compatible.“: </p>
+<p><a href="http://msdn.microsoft.com/asp.net/whidbey/default.aspx?pull=/library/en-us/dnvs05/html/internals.asp"><em>ASP.NET 2.0 Internals</em></a>&nbsp;claims this in the first line, and a direct quote from <em><a href="http://msdn.microsoft.com/asp.net/whidbey/default.aspx?pull=/library/en-us/dnvs05/html/migratefromaspnetto2.asp">Migrating from ASP.NET 1.x to ASP.NET 2.0</a></em>:&nbsp; ”If you have ASP.NET 1.x applications in production, you will be relieved to know that ASP.NET 2.0 is fully backwards compatible. That is, your ASP.NET 1.x applications will run as normal on ASP.NET 2.0 without any changes.”&nbsp; Well, my ASP.NET 1.1 application would not run on ASP.NET 2.0 without any changes.</p>
+<p>I wish they would just be truthful.&nbsp; I think statements like that are plain lies.&nbsp; I have no problem with new versions have some published compatibility issues.&nbsp; I know there will always be issues.&nbsp; I just want to know about them.</p>
+<p>Microsoft, I love you, but if you say something, I would like to believe it.&nbsp; In this case, I wonder what other&nbsp;incompatibilities exist.</p>
+<p>-now I await the inevitable comment that will prove me ignorant and misinformed. . . 🙂</p>

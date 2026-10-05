@@ -1,0 +1,24 @@
+---
+wp_id: 1004
+title: Visual Studio 2008 SP1 crashed on Vista x64
+slug: visual-studio-2008-sp1-crashed-on-vista-x64
+permalink: /2009/02/visual-studio-2008-sp1-crashed-on-vista-x64/
+date: 2009-02-17T18:46:11
+date_utc: 2009-02-17T18:46:11Z
+modified: 2009-02-17T18:46:11
+format: html
+categories:
+- blog
+excerpt: 'For the folks looking for an answer: I had something happen today that normally doesn’t happen. I loaded a solution, and Visual Studio just closed. No error message, no dump. It just stopped. Gone. I tried many, many times, and it crashes silently when opening one particular solution. It works fine on every other solution. […]'
+comments_open: true
+---
+<p>For the folks looking for an answer:</p>
+<p>I had something happen today that normally doesn’t happen.&nbsp; I loaded a solution, and Visual Studio just closed.&nbsp; No error message, no dump.&nbsp; It just stopped.&nbsp; Gone.&nbsp; I tried many, many times, and it crashes silently when opening one particular solution.&nbsp; It works fine on every other solution.&nbsp; At first, I thought I’d disable my add-ins, so I disabled:</p>
+<ul>
+<li>ReSharper</li>
+<li>Gallio</li>
+<li>TestDriven.Net</li>
+</ul>
+<p>I even reinstalled PowerCommands because I found someone who had a problem with that.&nbsp; Nothing worked.&nbsp; I finally started thinking about the variables.</p>
+<p>The one variable I missed was that this solution had last been worked with before I upgraded to Visual Studio 2008 SP1.</p>
+<p><strong>Solution</strong>:&nbsp; I deleted the *.suo and *.cache files next to my solution file.&nbsp; I reopened the solution, and everything is fine.</p>

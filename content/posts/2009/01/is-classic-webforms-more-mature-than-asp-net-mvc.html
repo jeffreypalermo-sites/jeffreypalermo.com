@@ -1,0 +1,20 @@
+---
+wp_id: 992
+title: Is Classic WebForms More Mature Than ASP.NET MVC?
+slug: is-classic-webforms-more-mature-than-asp-net-mvc
+permalink: /2009/01/is-classic-webforms-more-mature-than-asp-net-mvc/
+date: 2009-01-29T14:04:24
+date_utc: 2009-01-29T14:04:24Z
+modified: 2009-01-29T14:04:24
+format: html
+categories:
+- blog
+excerpt: In my last post about ASP.NET MVC, Jeff Gonzalez referred to WebForms as “Classic ASP.NET”. I had to take notice since when ASP.NET can out, we spoke about “Classic ASP”. This mere reference is interesting. His comment goes on to talk about how ASP.NET MVC isn’t mature and not as “rich” as WebForms, but it […]
+comments_open: true
+---
+<p>In my <a href="/2009/01/asp-net-mvc-rc-released/">last post about ASP.NET MVC</a>, Jeff Gonzalez referred to WebForms as “Classic ASP.NET”.&nbsp; I had to take notice since when ASP.NET can out, we spoke about “Classic ASP”.&nbsp; This mere reference is interesting.</p>
+<p>His comment goes on to talk about how ASP.NET MVC isn’t mature and not as “rich” as WebForms, but it also mentions the risks around using beta software for enterprise software.</p>
+<p>My comments around this relate to the risks of using new, unproven, software.&nbsp; SQL Server 2008 is still not widely adopted even though it is fully supported by Microsoft because folks are very leery about upgrading something as critical as a database server.&nbsp; The same with server operating systems.&nbsp; I hoster I like very much, <a href="http://www.rackspace.com">Rackspace</a>, still promotes and sells many, many Windows Server 2003 licenses (including some for my clients).&nbsp; </p>
+<p>Software tools, libraries and frameworks are a bit different, however.&nbsp; First, when you have a new project, it is wise to consider what version of libraries will be supported when the new project goes into production.&nbsp; To some extent it pays to attempt to avoid being a version behind even before the software launches.&nbsp; This is the case with ASP.NET for me.&nbsp; I know where this framework is going, and I trust the reliability of the proven ASP.NET pipeline of handlers and modules.&nbsp; I also trust the stability of IIS, on which it runs.&nbsp; The new paradigm is when ASP.NET needs&nbsp;a handler to handle a particular request.&nbsp; This is where the change in development is.&nbsp; For me, this mitigates risk around scalability and robustness because the foundation is already proven by 8 years of production use.</p>
+<p>The other risk is around bugs.&nbsp; When your enterprise application goes into production, you want to be able to depend on your chosen libraries.&nbsp; If your test feedback cycle is long and expensive, there is not easy way to accomplish this.&nbsp; If, however, you have test automation, you can have high confidence that the software works as intended every step of the way.&nbsp; Regardless if the libraries in question are from a huge software vender like Microsoft or a single open-source developer, I consider it a must to have high test automation coverage to mitigate not only the risks of local software defects but also those within libraries on which your software depends.</p>
+<p>Another consideration about maturity is documentation, and this is nothing to sneeze at.&nbsp; With <a href="http://manning.com/palermo">6 books on ASP.NET MVC</a> slated to come out this year, the information will be there, but it is not there now, and many teams will need training on how to make pages with the new version of ASP.NET.&nbsp; This is definitely something to consider.&nbsp; Also consider that many projects successfully use <a href="http://logging.apache.org/log4net/">log4net</a>, <a href="http://www.hibernate.org/343.html">NHibernate</a>, <a href="http://structuremap.sourceforge.net/Default.htm">StructureMap</a>, and other open source libraries without full books written on the topic.&nbsp; In these cases, local documentation is sufficient.&nbsp; As always, you have to decide for yourself given immediate constraints.</p>

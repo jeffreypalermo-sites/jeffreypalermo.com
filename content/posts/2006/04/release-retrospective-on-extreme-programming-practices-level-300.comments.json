@@ -1,0 +1,74 @@
+[
+  {
+    "id": 800,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://flimflan.com/blog",
+    "date": "2006-04-13T13:37:53",
+    "type": "comment",
+    "content_html": "<p>Great post. I especially appreciated the part in the “The Bad” about your wife calling, and how difficult the environment is. That is something that I have often thought to myself, but nobody seemed to be saying it out loud. There are downsides to xp, and they are very real – not to be discounted. BUT, as your post clearly summarizes, the pros for your team outweighed the cons. Great information.</p>\n<p>The one point that struck me as out of place was the statement about “very few bugs”. Since you aren’t even releasing the software to real world use until tomorrow, I think that statement is a little premature. Sure, there are very few bugs in the code that you’ve designed tests for, which cover all of the situations that you anticipate.<br>\nWhat are you counting – the number of bugs discovered during the development process, or the number of existing known bugs in the code you are releasing? Maybe you can expand on the point you were trying to make around bug count?</p>"
+  },
+  {
+    "id": 801,
+    "parent": 0,
+    "author_name": "Brian",
+    "author_url": "http://",
+    "date": "2006-04-14T02:54:42",
+    "type": "comment",
+    "content_html": "<p>Quick question… If you don’t allow checkins while the build is broken how do you get it fixed? Or do you mean that its agreed upon that no one will check in new code while the build is broken? I guess my question is really, where is this enforced at the source control level, or at the peer level…</p>"
+  },
+  {
+    "id": 802,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-04-14T02:57:53",
+    "type": "comment",
+    "content_html": "<p>I’m sorry, Brian.  I should have clarified.  Checkins are allowed only by the pair that broke the build (until the build is fixed).</p>\n<p>This is a team-level rule.  Since we all work in the same room, it’s very obvious when the build breaks (folks have creative sounds for their CCTray).</p>"
+  },
+  {
+    "id": 803,
+    "parent": 0,
+    "author_name": "Joey",
+    "author_url": "http://devauthority.com/blogs/joeydotnet/default.aspx",
+    "date": "2006-04-17T14:52:43",
+    "type": "comment",
+    "content_html": "<p>What are you guys using to manage overall project tasks, iteration tasks, etc?  The true XP story cards?  wiki?  some other management system?</p>\n<p>Thanks,<br>\nJoey</p>"
+  },
+  {
+    "id": 804,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-04-17T15:14:37",
+    "type": "comment",
+    "content_html": "<p>Joey,<br>\nWe use our whiteboard.  Our boss sticks stuff into Excel so he can communicate with management.  We’ve talked about putting up swim lanes and using index cards.  We use a wiki to publish the state of our requirements with bullet points and to share information with people not in the war room.</p>\n<p>I like using “the simplest thing that will work”.</p>"
+  },
+  {
+    "id": 805,
+    "parent": 0,
+    "author_name": "Joey",
+    "author_url": "http://devauthority.com/blogs/joeydotnet/default.aspx",
+    "date": "2006-04-17T17:37:34",
+    "type": "comment",
+    "content_html": "<p>Yep.  I’m also big on simplicity.  CB’s own Paul Laudeman and I work together, and we’re both agile developers at a small non-agile company and we’ve been trying to steer the company towards many of the practices you talked about in this post.  And I know one of the many areas that need to be transformed is how we manage requirements and tasks.</p>\n<p>I really like the idea of using a wiki for stating the requirements for the team.  In fact, I’m doing this now on my own for the projects I’m currently working on and I really like how simple it is to maintain.</p>\n<p>Any tips on “persuading” team members to “embrace change”?  \uD83D\uDE42</p>\n<p>Thanks for the info and keep up the great posts!</p>"
+  },
+  {
+    "id": 806,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-04-17T17:42:30",
+    "type": "comment",
+    "content_html": "<p>As James Shore puts it, don’t push change.  Have the dialog, but don’t call it change.  Once you help the others convince themselves that there is a better way, the change will happen on its own.  Some people are scared of the unknown, but a good way to present it is steps to improve efficiency.</p>"
+  },
+  {
+    "id": 807,
+    "parent": 0,
+    "author_name": "Joey",
+    "author_url": "http://devauthority.com/blogs/joeydotnet/default.aspx",
+    "date": "2006-04-17T17:52:24",
+    "type": "comment",
+    "content_html": "<p>Agreed.  Small steps are good.  I started off by just getting our build and deployment process automated and its benefits have clearly been seen.  I’ve been practicing TDD for a couple years now so I’m hoping to first start showing the benefits of “automated tests”, even if they are not necessarily written before the code, then start introducing the benefits of true TDD-style development.  (Since TDD can be a bit hard for some to “get” if they dive in too fast…)</p>\n<p>Thanks for the tips!</p>"
+  }
+]

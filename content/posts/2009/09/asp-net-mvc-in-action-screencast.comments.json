@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2631,
+    "parent": 0,
+    "author_name": "Chris Benard",
+    "author_url": "http://chrisbenard.net",
+    "date": "2010-01-26T15:51:04",
+    "type": "comment",
+    "content_html": "<p>That was a great presentation. I really appreciate you coming to visit us when I was in Shreveport (and signing my book). It’s weird to hear my voice in that recording.<br>\nI’m still trying to completely wrap my head around your Onion Architecture in a concrete way. I understand it in theory, but then when I started looking at CodeCampServer, it’s a bit much to take in all at once when you’re used to looking at an n-tier design.<br>\nI may be tossing some questions your way in the near future regarding the topic.<br>\nThanks again for these screencasts!</p>"
+  }
+]

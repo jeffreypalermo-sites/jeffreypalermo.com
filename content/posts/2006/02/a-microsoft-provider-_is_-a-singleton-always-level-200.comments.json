@@ -1,0 +1,20 @@
+[
+  {
+    "id": 642,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://flimflan.com/blog",
+    "date": "2006-02-17T15:24:13",
+    "type": "comment",
+    "content_html": "<p>I understand that you need to worry about threading when *creating* your own provider. But I don’t get what you mean by:<br>\n“now even the hobbyist has to be aware of threads when using any of the built-in providers”</p>\n<p>Why do you need to know about threads when using the existing providers? The author of the built-in provider already handled the threading issues for you.</p>"
+  },
+  {
+    "id": 643,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-02-17T16:03:01",
+    "type": "comment",
+    "content_html": "<p>Josh,<br>\nYou are correct.  I meant creating, not using.  I’ll update the post. </p>"
+  }
+]

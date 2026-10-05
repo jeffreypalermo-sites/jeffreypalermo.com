@@ -1,0 +1,74 @@
+---
+wp_id: 157
+title: Changes from ASP.NET 2.0 Beta 1 to Beta 2 – level 100
+slug: changes-from-asp-net-2-0-beta-1-to-beta-2-level-100
+permalink: /2004/12/changes-from-asp-net-2-0-beta-1-to-beta-2-level-100/
+date: 2004-12-16T09:00:00
+date_utc: 2004-12-16T09:00:00Z
+modified: 2004-12-16T09:00:00
+format: html
+excerpt: 'Check out the ASP.NET Developer center for some changes from ASP.NET Beta 1 to Beta 2. I welcome some of these changes because I was in the croud that logged bugs against Beta 1, and these actions resolve the bugs. The special directory names are changing. Here are the changes: /Bin (formerly Application_Assemblies) stays the same […]'
+comments_open: true
+---
+<p>Check out the ASP.NET Developer center&nbsp;for some changes from ASP.NET Beta 1 to Beta 2.&nbsp; I welcome some of these changes because I was in the croud that logged bugs against Beta 1, and these actions resolve the bugs.&nbsp; The special directory names are changing.&nbsp;&nbsp; Here are the changes:</p>
+<table cellspacing="0" cellpadding="0" border="0">
+<tbody>
+<tr>
+<td valign="top" width="239"><br>
+<p><b>/Bin</b> <br>(formerly Application_Assemblies)</p></td>
+<td valign="top" width="154"><br>
+<p>stays the same</p></td>
+<td valign="top" width="197"><br>
+<p><b>/Bin</b></p></td></tr>
+<tr>
+<td valign="top" width="239"><br>
+<p><b>/Code</b> <br>(formerly Application_Code)</p></td>
+<td valign="top" width="154"><br>
+<p>Becomes</p></td>
+<td valign="top" width="197"><br>
+<p><b>/app_code</b></p></td></tr>
+<tr>
+<td valign="top" width="239"><br>
+<p><b>/Resources</b> <br>(formerly Application_GlobalResources)</p></td>
+<td valign="top" width="154"><br>
+<p>Becomes</p></td>
+<td valign="top" width="197"><br>
+<p><b>/app_globalresources</b></p></td></tr>
+<tr>
+<td valign="top" width="239"><br>
+<p><b>/LocalResources </b><br>(formerly Application_LocalResources)</p></td>
+<td valign="top" width="154"><br>
+<p>Becomes</p></td>
+<td valign="top" width="197"><br>
+<p><b>/app_localresources</b></p></td></tr>
+<tr>
+<td valign="top" width="239"><br>
+<p><b>/WebReferences</b> <br>(formerly Application_WebReferences)</p></td>
+<td valign="top" width="154"><br>
+<p>becomes</p></td>
+<td valign="top" width="197"><br>
+<p><b>/app_webreferences</b></p></td></tr>
+<tr>
+<td valign="top" width="239"><br>
+<p><b>/Data</b> <br>(formerly Application_Data)</p></td>
+<td valign="top" width="154"><br>
+<p>becomes</p></td>
+<td valign="top" width="197"><br>
+<p><b>/app_data</b></p></td></tr>
+<tr>
+<td valign="top" width="239"><br>
+<p><b>/Browsers</b> <br>(formerly Application_Browsers)</p></td>
+<td valign="top" width="154"><br>
+<p>becomes</p></td>
+<td valign="top" width="197"><br>
+<p><b>/app_browsers</b></p></td></tr>
+<tr>
+<td valign="top" width="239"><br>
+<p><b>/Themes</b> <br>(formerly Application_Themes)</p></td>
+<td valign="top" width="154"><br>
+<p>becomes</p></td>
+<td valign="top" width="197"><br>
+<p><b>/app_themes</b></p></td></tr></tbody></table>
+<p>Generated event handlers will be marked as protected instead of private going forward.</p>
+<p>The .aspx will no longer be a partial class with the code file and a system file.&nbsp; Instead, the .aspx will inherit from the code file, which will be a partial class with a system file.&nbsp; This solves the problem of not being able to reference UserControl types at design time.&nbsp; </p>
+<p>Another great thing, though, is that VWD2005 supports intellisense in the .aspx, so for whipping up code samples for newsgroups or my blog, I can just use a single file.&nbsp; Yeah, I know, I’ve grown lazy and depend on intellisense, but when is the last time you actually got up to change the channel on your TV???&nbsp; Addicted to the remote control???</p>

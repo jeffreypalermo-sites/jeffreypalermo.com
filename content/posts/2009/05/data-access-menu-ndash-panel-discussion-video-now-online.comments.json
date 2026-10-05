@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2592,
+    "parent": 0,
+    "author_name": "Nick",
+    "author_url": "http://",
+    "date": "2009-05-15T15:51:16",
+    "type": "comment",
+    "content_html": "<p>Much of the conversation was based on the false premise that RAD and good architecture and mutually exclusive. Django/RoR and now Fluent NHibernate demonstrate that you can have your cake and eat it too. </p>"
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "id": 920,
+    "parent": 0,
+    "author_name": "Tomas Restrepo",
+    "author_url": "http://www.winterdom.com/weblog",
+    "date": "2006-05-29T02:19:50",
+    "type": "comment",
+    "content_html": "<p>Were the two log4net versions so different that you couldn’t do a binding redirect and have a single version of it?</p>"
+  },
+  {
+    "id": 921,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-05-30T02:01:06",
+    "type": "comment",
+    "content_html": "<p>Tomas,<br>\nTo be honest, I didn’t try a binding redirect.  I will give that a shot.</p>"
+  },
+  {
+    "id": 922,
+    "parent": 0,
+    "author_name": "Harris",
+    "author_url": "http://hrboyceiii.blogspot.com",
+    "date": "2006-06-06T12:22:08",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>I experienced a similar problem with a third-party web control.  All things aside, we resorted to adding a binding redirect so that the application would load the new version of the component without having to recompile the application.  Worked like a champ.</p>\n<p>H</p>"
+  },
+  {
+    "id": 923,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-06-06T12:35:35",
+    "type": "comment",
+    "content_html": "<p>Harris,<br>\nThat’s great to hear.</p>"
+  }
+]

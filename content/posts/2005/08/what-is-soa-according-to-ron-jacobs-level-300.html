@@ -1,0 +1,32 @@
+---
+wp_id: 307
+title: What is SOA according to Ron Jacobs – level 300
+slug: what-is-soa-according-to-ron-jacobs-level-300
+permalink: /2005/08/what-is-soa-according-to-ron-jacobs-level-300/
+date: 2005-08-25T19:34:00
+date_utc: 2005-08-25T19:34:00Z
+modified: 2005-08-25T19:34:00
+format: html
+excerpt: 'A few weeks ago, Ron Jacobs stopped by the Austin Microsoft Technology Center to talk about the CAB and SOA. Ron gave the best explaination of SOA that I’ve heard so far, and none of it was at any extreme. He covered the four “requirements” of SOA: Boundaries are explicit Services are autonomous. Schema and […]'
+comments_open: true
+---
+<p>A few weeks ago, Ron Jacobs stopped by the Austin Microsoft Technology Center to talk about the CAB and SOA.&nbsp; Ron gave the best explaination of SOA that I’ve heard so far, and none of it was at any extreme.&nbsp; He covered the four “requirements” of SOA:</p>
+<ul><br>
+<li>Boundaries are explicit</li><br>
+<li>Services are autonomous.</li><br>
+<li>Schema and contract are shared, not class</li><br>
+<li>Compatibility is determined by policy.</li></ul>
+<p>My favorite line from the talk was that SOA simply seeks to make integration a forethought when building an application instead of an afterthought like it is today (many companies have existing applications that they are now trying to integrate or share).</p>
+<p><strong>Boundaries:<br></strong>Some boundaries are like International boundaries.&nbsp; You have to go slow.&nbsp; You may be stopped and searched.&nbsp; When you need to cross this boundary, you plan for it.&nbsp; Other boundaries are like interstate boundaries.&nbsp; You control both sides, and you can typically fly across the border at 70 mph.&nbsp; The relationship to SOA is that service boundaries are explicit like International boundaries.&nbsp; You need to slow down and plan for crossing.&nbsp; Component boundaries are like interstate boundaries, and you can fly across those using any fast communication mean you want because you control both sides.</p>
+<p><strong>Autonomous:<br></strong>A service is sovereign over its space.&nbsp; Service can be composed of other services.&nbsp; Autonomy is not black and white.&nbsp; There is a specrum, and you want services to be more toward the autonomous side.&nbsp; If a service delegates to a dependency, the failure of that dependency should not automatically halt the service.</p>
+<p><strong>Schema and Contract:<br></strong>The schema is the format of the message that will be passed.&nbsp; The contract is the action that the service can be trusted to commit with the message.&nbsp; This is tightly coupled with policy.</p>
+<p><strong>Policy determines compatibility:<br></strong>Many services today use MSMQ, or MQ Series products.&nbsp; This is not to say that services have to be asyncronous, but to say that SOA isn’t just about web services.&nbsp; If the policy states that the schema must be compatible with a bunch of systems, then the schema will have to be a text schema, and Xml is great for that.&nbsp; If the policy states that only a few clients are supported, then a faster, more efficient schema can be used, perhaps binary, as long as the few clients can understand the message.&nbsp; Services can use any communication mechanism, not just SOAP, to communicate, but this decision is set by the <strong>Policy</strong> in place.</p>
+<p>Ron also went over an anti pattern, the CRUDy interface.&nbsp; This is a service interface that behaves much like an OO component.&nbsp; This makes for a chatty interface of creates, reads, updates and deletes.&nbsp; This puts the clients in the wrong frame of mind, and it encourages an RPC style of development.&nbsp; This requires clients to know too much about the internal implementation of the OO system behind the service interface.</p>
+<p>Examples of this are</p>
+<ul><br>
+<li>Enumerated interfaces (a MoveNext endpoing).</li><br>
+<li>Abstract types (xs:any).&nbsp; This weakens the interface.&nbsp; Keep to explicit types.</li><br>
+<li>Leaving data in an inconsistent state (if the client failed to make another call, would the service be in a “dirty” state).</li><br>
+<li>Operations that require multiple messages are dangerous because the service sacrifices some autonomy to the client.</li></ul>
+<p>Another anti pattern: loosey-goosey (or exteeennnsible).<br>This happens when a contract may need to be used for a long time.&nbsp; If a contract is extensible, then it is vague.&nbsp; Services that have a “QueryDatabase” command are a good example.&nbsp; A client should be able to ask “What can I send”, and the contract should explicitly answer the question.&nbsp; The client developer shouldn’t have to experiment with the service to find acceptable input.&nbsp; </p>
+<p>Each endpoint should do distinct things.&nbsp; A loosey-goosey service has to be learned by experimentation.&nbsp; People then tend to depend on implicity behavior instead of the explicit contract.</p>

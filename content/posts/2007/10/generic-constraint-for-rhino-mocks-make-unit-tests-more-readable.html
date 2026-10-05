@@ -1,0 +1,120 @@
+---
+wp_id: 692
+title: Generic constraint for Rhino Mocks – make unit tests more readable
+slug: generic-constraint-for-rhino-mocks-make-unit-tests-more-readable
+permalink: /2007/10/generic-constraint-for-rhino-mocks-make-unit-tests-more-readable/
+date: 2007-10-02T12:56:23
+date_utc: 2007-10-02T12:56:23Z
+modified: 2007-10-02T12:56:23
+format: html
+excerpt: 'I use Rhino Mocks, and I encourage you to do the same. When unit testing, sometimes its necessary to interrogate an object that was passed to a dependency. Consider the following test code: .csharpcode, .csharpcode pre { font-size: small; color: black; font-family: consolas, “Courier New”, courier, monospace; background-color: #ffffff; /*white-space: pre;*/ } .csharpcode pre { […]'
+comments_open: true
+---
+<p>I use Rhino Mocks, and I encourage you to do the same.&nbsp; When unit testing, sometimes its necessary to interrogate an object that was passed to a dependency.</p>
+<p>Consider the following test code:</p>
+<p><!-- code formatted by http://manoli.net/csharpformat/ --><br>
+.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}</p>
+<p>.csharpcode pre { margin: 0em; }</p>
+<p>.csharpcode .rem { color: #008000; }</p>
+<p>.csharpcode .kwrd { color: #0000ff; }</p>
+<p>.csharpcode .str { color: #006080; }</p>
+<p>.csharpcode .op { color: #0000c0; }</p>
+<p>.csharpcode .preproc { color: #cc6633; }</p>
+<p>.csharpcode .asp { background-color: #ffff00; }</p>
+<p>.csharpcode .html { color: #800000; }</p>
+<p>.csharpcode .attr { color: #ff0000; }</p>
+<p>.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}</p>
+<p>.csharpcode .lnum { color: #606060; }</p>
+<div class="csharpcode">
+<pre><span class="lnum">   1:  </span>[Test]</pre>
+<pre><span class="lnum">   2:  </span><span class="kwrd">public</span> <span class="kwrd">void</span> ShouldSaveObjectWithAllInformation()</pre>
+<pre><span class="lnum">   3:  </span>{</pre>
+<pre><span class="lnum">   4:  </span>    <span class="kwrd">string</span> firstName = <span class="str">"Jeffrey"</span>;</pre>
+<pre><span class="lnum">   5:  </span>    <span class="kwrd">string</span> lastName = <span class="str">"Palermo"</span>;</pre>
+<pre><span class="lnum">   6:  </span>&nbsp;</pre>
+<pre><span class="lnum">   7:  </span>    MockRepository mocks = <span class="kwrd">new</span> MockRepository();</pre>
+<pre><span class="lnum">   8:  </span>    IPersonRepository personRepository = (IPersonRepository) mocks.CreateMock(<span class="kwrd">typeof</span> (IPersonRepository));</pre>
+<pre><span class="lnum">   9:  </span>&nbsp;</pre>
+<pre><span class="lnum">  10:  </span>    personRepository.SavePerson(<span class="kwrd">null</span>);</pre>
+<pre><span class="lnum">  11:  </span>    GenericConstraint personConstraint = <span class="kwrd">new</span> GenericConstraint();</pre>
+<pre><span class="lnum">  12:  </span>    LastCall.On(personRepository).Constraints(personConstraint);</pre>
+<pre><span class="lnum">  13:  </span>&nbsp;</pre>
+<pre><span class="lnum">  14:  </span>    mocks.ReplayAll();</pre>
+<pre><span class="lnum">  15:  </span>&nbsp;</pre>
+<pre><span class="lnum">  16:  </span>    PersonController controller = <span class="kwrd">new</span> PersonController(personRepository);</pre>
+<pre><span class="lnum">  17:  </span>    controller.PersonFirstName = <span class="str">"Jeffrey"</span>;</pre>
+<pre><span class="lnum">  18:  </span>    controller.PersonLastName = <span class="str">"Palermo"</span>;</pre>
+<pre><span class="lnum">  19:  </span>    controller.Save();</pre>
+<pre><span class="lnum">  20:  </span>&nbsp;</pre>
+<pre><span class="lnum">  21:  </span>    mocks.VerifyAll();</pre>
+<pre><span class="lnum">  22:  </span>&nbsp;</pre>
+<pre><span class="lnum">  23:  </span>    Person person = (Person) personConstraint.GetParameterObject();</pre>
+<pre><span class="lnum">  24:  </span>    Assert.That(person.FirstName, Is.EqualTo(firstName));</pre>
+<pre><span class="lnum">  25:  </span>    Assert.That(person.LastName, Is.EqualTo(lastName));</pre>
+<pre><span class="lnum">  26:  </span>}</pre>
+<pre>&nbsp;</pre>
+<pre></pre>
+</div>
+<p>This is a case where we have a class that takes information, creates an object and sends it to a dependency. The dependency doesn’t need to return what was just passed to it, but in our unit test, we need to be able to assert that the object was created correctly before being passed to the dependency.&nbsp; This is not an edge case.&nbsp; I run into this scenario quite often.</p>
+<p><strong>What did I do to keep my test readable?&nbsp; </strong>I created a Rhino Mocks constraint class that captures the argument passed to a dependency.&nbsp; Later, I can write plain old asserts that verify the state of the object.&nbsp;&nbsp; Here is the class:</p>
+
+<p>.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}</p>
+<p>.csharpcode pre { margin: 0em; }</p>
+<p>.csharpcode .rem { color: #008000; }</p>
+<p>.csharpcode .kwrd { color: #0000ff; }</p>
+<p>.csharpcode .str { color: #006080; }</p>
+<p>.csharpcode .op { color: #0000c0; }</p>
+<p>.csharpcode .preproc { color: #cc6633; }</p>
+<p>.csharpcode .asp { background-color: #ffff00; }</p>
+<p>.csharpcode .html { color: #800000; }</p>
+<p>.csharpcode .attr { color: #ff0000; }</p>
+<p>.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}</p>
+<p>.csharpcode .lnum { color: #606060; }</p>
+<div class="csharpcode">
+<pre><span class="lnum">   1:  </span><span class="kwrd">public</span> <span class="kwrd">class</span> GenericConstraint : AbstractConstraint</pre>
+<pre><span class="lnum">   2:  </span>{</pre>
+<pre><span class="lnum">   3:  </span>    <span class="kwrd">object</span> _theObject;</pre>
+<pre><span class="lnum">   4:  </span>&nbsp;</pre>
+<pre><span class="lnum">   5:  </span>    <span class="kwrd">public</span> <span class="kwrd">override</span> <span class="kwrd">bool</span> Eval(<span class="kwrd">object</span> obj)</pre>
+<pre><span class="lnum">   6:  </span>    {</pre>
+<pre><span class="lnum">   7:  </span>        _theObject = obj;</pre>
+<pre><span class="lnum">   8:  </span>        <span class="kwrd">return</span> <span class="kwrd">true</span>;</pre>
+<pre><span class="lnum">   9:  </span>    }</pre>
+<pre><span class="lnum">  10:  </span>&nbsp;</pre>
+<pre><span class="lnum">  11:  </span>    <span class="kwrd">public</span> <span class="kwrd">object</span> GetParameterObject()</pre>
+<pre><span class="lnum">  12:  </span>    {</pre>
+<pre><span class="lnum">  13:  </span>        <span class="kwrd">return</span> _theObject;</pre>
+<pre><span class="lnum">  14:  </span>    }</pre>
+<pre><span class="lnum">  15:  </span>&nbsp;</pre>
+<pre><span class="lnum">  16:  </span>    <span class="kwrd">public</span> <span class="kwrd">override</span> <span class="kwrd">string</span> Message</pre>
+<pre><span class="lnum">  17:  </span>    {</pre>
+<pre><span class="lnum">  18:  </span>        get { <span class="kwrd">return</span> <span class="str">""</span>; }</pre>
+<pre><span class="lnum">  19:  </span>    }</pre>
+<pre><span class="lnum">  20:  </span>}</pre>
+</div>
+<p>I prefer this over even the built-in constraints Rhino Mocks provides because I find the Assert syntax to be more familiar with more programmers than the in-line constraint syntax.&nbsp; Notice on line 12 of the test listing that I’m assigning this constraint to the mocked call to IPersonRepository.&nbsp; This allows me to come back later on line 23 and pull the object for interrogation.&nbsp; Once I have a reference to the object that was passed to my dependency, I can write the appropriate asserts.</p>
+<p>Feel free to use this constraint class or comment with how you’ve handled this situation.</p>

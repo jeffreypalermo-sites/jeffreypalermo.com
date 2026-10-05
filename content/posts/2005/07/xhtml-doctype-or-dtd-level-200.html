@@ -1,0 +1,32 @@
+---
+wp_id: 291
+title: XHtml DocType or DTD – level 200
+slug: xhtml-doctype-or-dtd-level-200
+permalink: /2005/07/xhtml-doctype-or-dtd-level-200/
+date: 2005-07-29T15:45:00
+date_utc: 2005-07-29T15:45:00Z
+modified: 2005-07-29T15:45:00
+format: html
+excerpt: 'Especially as we move to ASP.NET 2.0, it’s important to use an XHtml DocType or DTD. ASP.NET 2.0 server controls will render valid XHtml transitional markup, so that’s the most compelling Doctype, and that’s the one I prefer, but pick one of the following: XHtml 1.0 Transitional <!DOCTYPE html PUBLIC “-//W3C//DTD XHTML 1.0 Transitional//EN” “http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd”&gt; […]'
+comments_open: true
+---
+<p>Especially as we move to ASP.NET 2.0, it’s important to use an XHtml DocType or DTD.&nbsp; ASP.NET 2.0 server controls will render valid XHtml transitional markup, so that’s the most compelling Doctype, and that’s the one I prefer, but pick one of the following:</p>
+<ul><br>
+<li>XHtml 1.0 Transitional</li><br>
+<ul><br>
+<li><pre>&lt;!DOCTYPE html<br>
+PUBLIC “-//W3C//DTD XHTML 1.0 Transitional//EN”<br>
+“http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd”&gt;</pre></li></ul><br>
+<li>XHtml 1.0 Frameset (if you need to use &lt;iframe /&gt;</li><br>
+<ul><br>
+<li><pre>&lt;!DOCTYPE html<br>
+PUBLIC “-//W3C//DTD XHTML 1.0 Frameset//EN”<br>
+“http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd”&gt;</pre></li></ul><br>
+<li>XHtml 1.0 Strict </li><br>
+<ul><br>
+<li><pre>&lt;!DOCTYPE html<br>
+PUBLIC “-//W3C//DTD XHTML 1.0 Strict//EN”<br>
+“http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd”&gt;</pre></li></ul></ul>
+<p>The DocType needs to be the first line in the page; however, since XHtml is valid Xml, you can optionally add an Xml declaration at the top:</p>
+<p>&lt;?xml version=”1.0″?&gt;</p>
+<p>And if you do this, the Xml declaration has to first, and then the DocType would come directly after.</p>

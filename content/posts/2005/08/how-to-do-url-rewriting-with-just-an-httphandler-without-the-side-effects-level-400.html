@@ -1,0 +1,50 @@
+---
+wp_id: 302
+title: How to do Url Rewriting with just an HttpHandler (without the side-effects) – level 400
+slug: how-to-do-url-rewriting-with-just-an-httphandler-without-the-side-effects-level-400
+permalink: /2005/08/how-to-do-url-rewriting-with-just-an-httphandler-without-the-side-effects-level-400/
+date: 2005-08-10T21:21:00
+date_utc: 2005-08-10T21:21:00Z
+modified: 2005-08-10T21:21:00
+format: html
+excerpt: If you are interested in doing Url Rewriting with an HttpHandler instead of an HttpModule, then this is the example for you. Suppose you are deriving a piece of information from Url, like a product code. To process it, you have a page that accepts the product code as a querystring variable. Look at the code below […]
+comments_open: true
+---
+<div>If you are interested in doing Url Rewriting with an HttpHandler instead of an HttpModule, then this is the example for you.&nbsp; Suppose you are deriving a piece of information from&nbsp;Url, like a product code.&nbsp; To&nbsp;process it, you have a page that accepts the product code as a querystring variable.&nbsp; Look at the code below for how you can present a friendly&nbsp;Url while abstracting that away from how you actually process the request.&nbsp; You can do postbacks and everything, and the Url will never revert back to the “ugly” Url.</div>
+<div>&nbsp;</div>
+<div><br>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span><span>public</span> <span>class</span> <span>ProductHandler</span>: <span>IHttpHandler</span>, <span>IRequiresSessionState</span></span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>{</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>public</span> <span>bool</span> IsReusable</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>get</span> { <span>return</span> <span>true</span>; }</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p><br>
+<br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>public</span> <span>void</span> ProcessRequest(<span>HttpContext</span> context)</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;context.Items[“originalQuerystring”] = context.Request.QueryString.ToString();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;context.Items[“originalPathInfo”] = context.Request.PathInfo;</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span><span><span>string</span> productCode = {some code to derive your product code};</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>string</span> page = <span>“~/product.aspx”</span>;</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>string</span> queryString = <span>“productCode=”</span> + productCode;</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>foreach</span>(<span>string</span> key <span>in</span> context.Request.QueryString.Keys)</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>if</span>(key != <span>“productCode“</span>)</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>queryString += <span>string</span>.Format(<span>“&amp;{0}={1}”</span>, key, context.Request.QueryString[key]);</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p><br>
+<br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>context.RewritePath(context.Request.Path, <span>string</span>.Empty, queryString);</span></p><br>
+<br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>Page</span> hand = (<span>Page</span>)<span>PageParser</span>.GetCompiledPageInstance(page, context.Server.MapPath(page), context);</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>// Listen for event to rewrite url back before the page renders.</span></span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>hand.PreRenderComplete += <span>new</span> <span>EventHandler</span>(hand_PreRenderComplete);</span></p><br>
+<br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>hand.ProcessRequest(context);<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p><br>
+<br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>void</span> hand_PreRenderComplete(<span>object</span> sender, <span>EventArgs</span> e)</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>HttpContext.Current.RewritePath(HttpContext.Current.Request.Path,&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HttpContext.Current.Items[“originalPathInfo”].ToString(),&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HttpContext.Current.Items[“originalQuerystring”].ToString());</span></span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>}</span><span></span></p></div>

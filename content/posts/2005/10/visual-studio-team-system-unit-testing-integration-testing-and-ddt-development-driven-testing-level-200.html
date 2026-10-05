@@ -1,0 +1,21 @@
+---
+wp_id: 335
+title: Visual Studio Team System “unit?” testing, integration testing and DDT – Development-Driven Testing – level 200
+slug: visual-studio-team-system-unit-testing-integration-testing-and-ddt-development-driven-testing-level-200
+permalink: /2005/10/visual-studio-team-system-unit-testing-integration-testing-and-ddt-development-driven-testing-level-200/
+date: 2005-10-17T13:56:00
+date_utc: 2005-10-17T13:56:00Z
+modified: 2005-10-17T13:56:00
+format: html
+excerpt: Dr. Neil calls Microsoft out for their attempt to redefine Test-Driven Development to suite the product they have developed (Team System). I personally thing VSTS will help a great number of teams define a process for their group. Many development team I talk to don’t have an actual process. It’s more of the wild west. […]
+comments_open: true
+---
+<p><a href="http://drneil.blogspot.com/2005/10/tdd-microsoft-is-close-but-no.html">Dr. Neil calls Microsoft out </a>for their attempt to redefine Test-Driven Development to suite the product they have developed (Team System).&nbsp; I personally thing VSTS will help a great number of teams define a process for their group.&nbsp; Many development team I talk to don’t have an actual process.&nbsp; It’s more of the wild west.&nbsp; I use a mixture of XP an Scrum, and our Agile practices are very structured and disciplined.&nbsp; Waterfall falls somewhere in the middle on a discipline scale (and far out there on a reality scale).&nbsp; For cowboy teams or teams whose process isn’t reliably producing working software, I think VSTS will help to inforce a more disciplined and accountable software shop.&nbsp; Along with any product, it will be both abused and used for good.&nbsp; Kudos to Microsoft for putting this product together.</p>
+<p>With all the good that it will bring with it’s increased focus on automated builds, static code analysis and automated testing, it has missed the boat on a few items regarding it’s automated testing support or what it claims to be.&nbsp; VSTS does come with testing support, and it can generate test stubs from production code, but it does not inherently support test-drivent development.&nbsp; TDD is simple:</p>
+<ul><br>
+<li>RED (make a test, and make it fail)</li><br>
+<li>GREEN (write production code to make the test pass)</li><br>
+<li>REFACTOR (eliminate duplication)</li></ul>
+<p>It’s a cycle of 1 test to 1 production scenario, and TDD is test-first unit testing that helps shape the design of the production code as it emerges.&nbsp; Development is “test-driven”.&nbsp; That means that if you are developing and then generating tests, you are doing testing, but your development wasn’t “test-driven”, it was “test-trailored”, or whatever term you want to use.</p>
+<p>VSTS testing tools will generate test stubs from production code, but they won’t generate a production method stub from a test (which is a well-used feature of <a href="http://www.jetbrains.com/resharper/">Resharper</a>).&nbsp; If you look at the <a href="http://msdn2.microsoft.com/en-us/library/ms182521">process guidence on TDD </a>from Microsoft, you’ll notice the attempt to redefine the process to fit the tool.&nbsp; They should modify to the tool to fit the already-proven process.</p>
+<p>Another falacy exists in the guidance on creating <a href="http://msdn2.microsoft.com/en-us/library/ms182520(en-US,VS.80).aspx">“ASP.NET unit tests”</a>.&nbsp; Microsoft seems to only focus on unit testing as a term, but they describe integration tests.&nbsp; Refer to <a href="/blogs/jeremy.miller/archive/2005/07/27/129907.aspx">Jeremy Miller’s post </a>about the different types of tests.&nbsp; Unit tests test code&nbsp;in isolation.&nbsp; In other words, they test code while isolating dependencies from the code.&nbsp; Unit tests should always pass.&nbsp; Unit test only run custom code.&nbsp; If 3rd-party libaries or frameworks are required for&nbsp;a test to pass, then it is, by definition, not a unit test.&nbsp; It then becomes an integration test.&nbsp; The term “ASP.NET unit test” is a falacy.&nbsp; These tests, as Microsoft describes them, include the development webserver in the testing stack.&nbsp; This is a pretty significant dependency, and these are integration tests.&nbsp; Integration tests are important too, but they should be defined correctly.</p>

@@ -1,0 +1,94 @@
+---
+wp_id: 1207
+title: AliaSQL – the new name in automated database change management
+slug: aliasql-the-new-name-in-automated-database-change-management
+permalink: /2014/01/aliasql-the-new-name-in-automated-database-change-management/
+date: 2014-01-07T23:54:57
+date_utc: 2014-01-07T23:54:57Z
+modified: 2018-07-03T18:46:25
+format: html
+categories:
+- blog
+excerpt: Along with this post, please make sure to read Eric Coffman’s very thorough post introducing all of his work on AliaSQL. Way back in 2006, Kevin Hurwitz and I both worked at a start-up company focused on Sarbanes-Oxley compliance software. While the business model didn’t quite pan out, we had a killer team, and we […]
+comments_open: true
+---
+<p>Along with this post, please make sure to read <a href="http://sharpcoders.org/">Eric Coffman</a>’s very thorough <a href="http://sharpcoders.org/post/Introducing-AliaSQL">post introducing all of his work on AliaSQL</a>.</p>
+<p>Way back in 2006, <a href="http://khurwitz.blogspot.com/">Kevin Hurwitz</a> and I both worked at a start-up company focused on Sarbanes-Oxley compliance software.&nbsp; While the business model didn’t quite pan out, we had a killer team, and we created some innovations that have gained widespread adoption even to this day.&nbsp; Among them are:</p>
+<ul>
+<li><a href="https://www.nuget.org/packages/Enumeration/">Rich C# Enumerations</a> – Nuget package to simulate Java’s rich enumeration classes</li>
+<li><a href="/2008/07/the-onion-architecture-part-1/">Onion Architecture</a> – a method for structuring a Visual Studio solution for DDD-based applications</li>
+<li><a href="https://github.com/HeadspringLabs/Tarantino/wiki/Database-Change-Management">Tarantino Database Change Management</a> – a build tool for automating database migrations</li>
+</ul>
+<p>While any artifacts from 2006 are long-gone, these tools and patterns live on to this day, and many folks have adopted these around the world.&nbsp; I do have to give credit where credit is due.&nbsp; In 2007, both Kevin and I were working with <a href="http://lostechies.com/erichexter/">Eric Hexter</a> on projects at Callaway Golf Interactive, and Eric material contributed to a large rewrite of the automated database migrations, AND, he was very involved in labeling it as “Tarantino”, honoring the famous movie producer.&nbsp; And to this day, Tarantino has been widely adopted as a simple and targeted way to perform automated database migrations in continuous integration environments.</p>
+<h2>Reviewing the problem</h2>
+<p><img decoding="async" style="float:left; display:inline" src="https://i0.wp.com/kevinhokoana.com/wp-content/uploads/2011/05/frustration.cartoon1.jpg?w=776" alt="frustration.cartoon" align="left">In many teams, source control is normal, but databases are left out in the cold.&nbsp; Perhaps a massive SQL file is exported from time to time as the DDL definition of the database, but deploying database changes across test, staging and production environments is still an issue and is error-prone.</p>
+<p>Several common mistakes exist when managing the database change management process.&nbsp; The first is developers sharing a development database.&nbsp; The second is developers maintaining local databases that are synced manually.</p>
+<p>When sharing a development database, changes to this database have to be a blocking issue.&nbsp; Working on branches becomes an issue because when a database change happens, at least one developer ends up working with a version of the code that has a problem with the new database change.&nbsp; The external environmental change ends up wasting the time of at least one team member.</p>
+<p>When each developer maintains isolated databases that are synced manually, the team invariably has to have a meeting in order to figure out what the needed database changes <em>are</em> for a given build that needs to be deployed to production.&nbsp; Having a repeatable QA process is difficult here.</p>
+<p>The problem manifests itself when production deployments happen and some database change is left out or performed differently than intended.&nbsp; This can result in deployment-time troubleshooting and adhoc code-changes or database changes in a heroic effort to salvage the deployment.</p>
+<h2>The solution</h2>
+<p>The premise to automated database migrations is to have a process that executes in the exact same fashion in every successive environment so that by the time the production deployment happens, there is no chance of it not working properly.&nbsp; In addition, the process should not vary based on what feature branch or hot-fix branch in source control is being worked.&nbsp; And the process should scale to an unlimited number of pre-production and production environments.</p>
+<p>One school of thought with database migrations uses a process of examining the target database and then generates appropriate scripts to be run based on the state of the target database.&nbsp; In fact, Microsoft’s DACPAC in the database project works like this.&nbsp; From a philosophical level, I don’t like this approach because it doesn’t allow the QA process to vet the scripts that will actually execute from environment to environment, and there is no opportunity to mix in data transforms in between multi-step table transformations, like the merging or splitting of columns.</p>
+<p>In addition, I reject migration philosophies that believe roll backs are possible.&nbsp; Perhaps roll-backs could be performed for completely reversible operations, but as soon as a migration includes a DROP COLUMN operation, a roll-back scenario is broken because there is no way to roll back and reverse the deletion of the data in the column.&nbsp; In addition, once an install package has failed to properly install, how can one trust it to then faithfully do the right thing in a roll back attempt?</p>
+<h2>Introducing AliaSQL, the new simple standard in SQL-based database migrations</h2>
+<p>Right now, you can download <a href="https://github.com/ericdc1/AliaSQL">AliaSQL</a> (pronounced “ey-lee-us-Q-L”) from <a href="http://www.nuget.org/packages/AliaSQL/">Nuget</a>.&nbsp; <a href="http://www.linkedin.com/profile/view?id=6933548">Eric Coffman</a> was a Tarantino user for several years and then started encountering issues because Tarantino hadn’t been maintained in a few years.&nbsp; So he forked the project.&nbsp; Tarantino was great, and I, and others, poured many hours into it.&nbsp; It does include much more than just database migrations, and that’s one of the reasons that a new project is warranted – to provide focus.</p>
+<p>Tarantino still has a dependency on SQL Server 2008.&nbsp; SQL Server 2012 isn’t supported, and SQL Azure has some issues.&nbsp; The SQL SMO dependency was a great idea in its time, but AliaSQL does away with this dependency and achieves broad compatibility as a result.</p>
+<h2></h2>
+<h2>How to upgrade from Tarantino to AliaSQL</h2>
+<p>the good news is that AliaSQL is 100% backward compatible with Tarantino database migrations.&nbsp; This is absolutely intentional.&nbsp; The process and philosophy of the original Tarantino (which was actually NAnt-script-based) from 2006 is preserved while taking advantage of a significant rewrite to provide more detailed logging, transaction support, and database compatibility.</p>
+<p>If you have an application and a build script that currently uses Tarantino, I encourage you to make the simple and trivial upgrade.&nbsp; You can check out my Iteration Zero sample project to see how easy it is to make the upgrade.&nbsp; <a href="https://bitbucket.org/jeffreypalermo/iteration-zero/commits/45b6d2d67a02d7977ddb8be404dca30364241138">https://bitbucket.org/jeffreypalermo/iteration-zero/commits/45b6d2d67a02d7977ddb8be404dca30364241138</a>&nbsp; The recommended way to get AliaSQL.exe is from a Nuget search, but you can also directly download just the EXE <a href="https://github.com/ericdc1/AliaSQL/blob/master/lib/AliaSQL/AliaSQL.exe?raw=true">here</a>.</p>
+<p>Then, just updated your build script (a psake build script is shown here).</p>
+<div class="csharpcode">
+<pre class="alt"> task RebuildDatabase -depends ConnectionString {</pre>
+<ol>
+<li>exec {</li>
+</ol>
+<pre class="alt">-        &amp; $base_dirtarantinoDatabaseDeployer.exe Rebuild $databaseServer $databaseName $databaseScripts</pre>
+<pre>+        &amp; $base_diraliasqlaliasql.exe Rebuild $databaseServer $databaseName $databaseScripts</pre>
+<pre class="alt">     }</pre>
+<pre> }</pre>
+</div>
+<p>.csharpcode, .csharpcode pre<br>
+{<br>
+font-size: small;<br>
+color: black;<br>
+font-family: consolas, “Courier New”, courier, monospace;<br>
+background-color: #ffffff;<br>
+/<em>white-space: pre;</em>/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+background-color: #f4f4f4;<br>
+width: 100%;<br>
+margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+<p>Notice that for an application already using Tarantino, the only change is the path to aliasql.exe.&nbsp; All other major behavior is exactly the same as well.</p>
+<h2>AliaSQL differences from Tarantino</h2>
+<p>Although backward compatibility is excellent, you will immediately notice some key differences:</p>
+<ul>
+<li>Immediate compatibility with SQL Server 2012 as well as automatic compatibility with future versions.&nbsp; This was accomplished by breaking the SQL SMO dependency.</li>
+<li>Transactions are added:&nbsp; With Tarantino, when a script failed, the database was in an inconsistent state because transactions were not used.&nbsp; AliaSQL implements transactions for each SQL file, split by GO lines.&nbsp; This enables transactional rollback if something goes wrong when executing scripts.</li>
+<li>New TestData command that executes scripts in a TestData folder for the purpose of SQL statements that include test data for non-production environments.</li>
+<li>New Baseline command that initializes an existing database for future management by AliaSQL</li>
+<li>AliaSQL Kickstarter Nuget package that creates a database-specific Visual Studio project to contain SQL scripts and provide a quick console project for the execution of AliaSQL from within Visual Studio</li>
+</ul>
+<h2>An upgrade illustrated</h2>
+<p>Before AliaSQL, still running Tarantino.</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-827" src="/wp-content/uploads/2018/07/aliasql-the-new-name-in-automated-data_13f59tarantino-build.png" alt="AliaSQL---the-new-name-in-automated-data_13F59Tarantino build" width="640" height="768"></p>
+<p>The automated build after upgrading to AliaSQL:</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-825" src="/wp-content/uploads/2018/07/aliasql-the-new-name-in-automated-data_13f59aliasql-build.png" alt="AliaSQL---the-new-name-in-automated-data_13F59AliaSQL build" width="618" height="768"></p>
+<p>Notice the augmented logging the specified that a transaction was used.</p>
+<h2>Conclusion</h2>
+<p>In closing, go out an download AliaSQL now and upgrade your old Tarantino applications.&nbsp; It’s a quick, drop-in upgrade, and you’ll be immediately ready to go for SQL Server 2012, SQL Azure, and future versions.</p>
+<p>And finally, check out the <a href="https://github.com/ericdc1/AliaSQL/wiki">project documentation</a> and get involved on Github!</p>
+<p>Thanks so much Eric Coffman, for grabbing the reins and creating this new tool that continues the heritage of this popular approach to automated database change management/database migrations.</p>

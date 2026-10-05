@@ -1,0 +1,48 @@
+---
+wp_id: 1162
+title: Running the company on cloud services
+slug: running-the-company-on-cloud-services
+permalink: /2010/11/running-the-company-on-cloud-services/
+date: 2010-11-24T08:47:40
+date_utc: 2010-11-24T08:47:40Z
+modified: 2010-11-24T08:47:40
+format: html
+categories:
+- blog
+excerpt: This is a brief post about the core cloud services we use. Along with developing systems that run on cloud platforms, we make heavy use of them ourselves in the basic infrastructure of our company. Here is a quick list of the ones we depend on every day. Email, Calendar Phone system Development/Test server infrastructure […]
+comments_open: true
+---
+<p>This is a brief post about the core cloud services we use.&nbsp; Along with developing systems that run on cloud platforms, we make heavy use of them ourselves in the basic infrastructure of our company.&nbsp; Here is a quick list of the ones we depend on every day.</p>
+<ul>
+<li>Email, Calendar</li>
+<li>Phone system</li>
+<li>Development/Test server infrastructure</li>
+<li>Salesforce</li>
+</ul>
+<h3>Background</h3>
+<p>I will start by describing our current solutions to each of these needs.&nbsp; We are a professional services company.&nbsp; We help small &amp; mid-sized companies compete by building custom software and automation solutions.&nbsp; By understanding the business model of our clients, we are able to help them executive their business strategy better.&nbsp; We are 100% owned and operated in Austin, TX, but we do have some clients in other parts of Texas.&nbsp; By working in the industry, we have developed expertise in many areas, and that knowledge and experience flows into our training program.&nbsp; Our consultants have laptops (Dell Precision dual-8x cores, 8GB RAM), and we are set up so that any of them can work for anywhere.&nbsp; We still perform all of our work from our custom offices at 4807 Spicewood Springs Rd in Austin, TX where the open environment fosters collaboration across projects and event across clients.&nbsp;</p>
+<p>Since all but a handful in our company have computer &amp; technical backgrounds, we have little need for a helpdesk.&nbsp; Our office network infrastructure consists of fast connectivity to the Internet and solid wireless access points.&nbsp; While we do have one server in the office for historical reasons, it is soon to move to the cloud.&nbsp; Because of this, we do not employ the use of Active Directory, Novell or any other domain/groupware.&nbsp; Each computer is a stand-alone computer. You could call it “workgroup mode”, but it is no different than just plugging in a computer and using it.&nbsp; This has kept our workstation overhead extremely low.&nbsp; All our important infrastructure is in the cloud.</p>
+<p>The first cloud service I’ll cover is for email and calendaring.</p>
+<h3>Email/Calendar</h3>
+<p><a href="/wp-content/uploads/2018/07/runningheadspringsystemsoncloudservices_7779image_2.png"><img loading="lazy" decoding="async" style="border-bottom:0; border-left:0; display:inline; border-top:0; border-right:0" title="image" border="0" alt="image" align="right" src="/wp-content/uploads/2018/07/runningheadspringsystemsoncloudservices_7779image_thumb.png" width="243" height="158"></a> We use Google Apps Premier Edition.&nbsp; It provides us the following services:</p>
+<ul>
+<li>Email</li>
+<li>Calendar</li>
+<li>Chat/voice soft phone</li>
+<li>Mobile access</li>
+<li>Email groups</li>
+</ul>
+<p>The email interface is Gmail, but a few elect to connect via Microsoft Outlook.&nbsp; Calendar is integrated, and we can schedule times and conference rooms according to everyone’s schedule.&nbsp; As of this week, we also have integrated Google Voice into the mix so that everyone has a public phone number instead of just and extension.&nbsp; For instance, you can call me directly through Google Voice just by using this little app.</p>
+<p><a href="https://clients4.google.com/voice/embed/webCallButton">https://clients4.google.com/voice/embed/webCallButton</a></p>
+<h3>Phone System</h3>
+<p>We use a hosted SIP phone system through a local provider, <a href="http://www.prismnet.com/">PrismNet</a>.&nbsp; These folks do the hard work of connecting the phone system to AT&amp;T’s backbone here and getting the actual phone lines.&nbsp; They also maintain the phone system’s software upgrades, patches and operation.&nbsp; The only artifact in our offices are GrandStream GXP2000 desktop handsets.&nbsp; We can install and use any SIP soft phone we like, and we are also able to run SIP clients on iPhone and Android phones.&nbsp; Because it’s a phone system in the cloud, the mere act of taking a phone to another location and plugging it in makes the phone number/extension active.&nbsp; Our office network uses a Cisco Power of Ethernet switch, so the desk phones are powered through the CAT5 network cable, as are our wireless access points in the dropped ceiling.</p>
+<h3>&nbsp;</h3>
+<h3>Development/Test Servers</h3>
+<p>All of our dev/test servers are at <a href="http://www.rackspacecloud.com/">Rackspace Cloud</a>.&nbsp; We run <a href="http://www.jetbrains.com/teamcity/">JetBrains TeamCity</a> as our main build server software.&nbsp; It has flexible build agents, so the dashboard and main server is accessible from any location, but the build agents can be anywhere.&nbsp; We have a build agent at Rackspace Cloud as well, but we also power up any spare developer workstations we have, install the TeamCity build agent software, and instantly, we have more computing capacity to run builds for client projects.&nbsp; TeamCity also has Amazon EC2 integration, but we have not hooked that up yet.</p>
+<p>Through Rackspace Cloud’s management dashboard, we can provision a server, and that server is up and running in under 10 minutes.&nbsp; Through daily backups, we always have a full image of that server for the last day.&nbsp; Each server is really VMware, and to create a new server, we can choose to create it from a backup image of another, so cloning servers is a breeze, and we only have to install server software once.&nbsp; Even starting from scratch, the operating system comes pre-installed, of course.</p>
+<h3>&nbsp;</h3>
+<h3>Salesforce</h3>
+<p>We, like many people, use salesforce.com.&nbsp; It allows us to keep track of our sales pipeline and opportunity workflow.&nbsp; It helps with contact information for prospects and a host of other things.&nbsp; We like it, and we are in the process of integrating it with Google Apps for shared contacts and automatic sales email logging.</p>
+<h3>Conclusion</h3>
+<p>My company writes software for the cloud, but it also runs on the cloud.&nbsp; With all the hype about cloud computing, it’s easy to discount the whole notion because of how it has been glamorized.&nbsp; For us, it’s not glamorous.&nbsp; It’s just how we do business.&nbsp; It makes our infrastructure reliable.&nbsp; It lowers our operating costs.&nbsp; It allows an employee to be productive if working from home because of a mild illness (we are extra sensitive to colds being passed around in the office because then it makes it home to children).&nbsp; Finally, it makes us portable.&nbsp; We moved office spaces at the end of July, 2010.&nbsp; We moved on a Friday afternoon, set up furniture on Sunday.&nbsp; Monday at 10am, all of our infrastructure was up and running because the only necessary thing was the Internet connection and monitor/keyboard setup.&nbsp; Phones worked automatically just by giving them an internet connection.&nbsp; It was a very low-cost move because of it.&nbsp; That is not a small consideration given that we will have to move again given the rate at which we are growing.&nbsp; Any infrastructure that must be physically installed will be costly to move in an office relocation.</p>
+<p>To end, my goal was to merely share what we are doing so that others may benefit.&nbsp; I’d by happy to answer your questions through the comments.&nbsp; If anyone else has some commentary on cloud services you are employing, please chime in.</p>

@@ -1,0 +1,83 @@
+[
+  {
+    "id": 1838,
+    "parent": 0,
+    "author_name": "Karthik Hariharan",
+    "author_url": "http://webgambit.com",
+    "date": "2007-08-10T19:18:00",
+    "type": "comment",
+    "content_html": "<p>Do ScrumMasters still code?  I’ve asked this discussion with a few ScrumMasters and typically get different answers…depending on whether the person asked was a former PM or former lead developer.</p>\n<p>Whats the method that has worked for you? Can you still knock out items off the Backlog while still playing the traditional scrum master role?</p>"
+  },
+  {
+    "id": 1839,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-08-10T20:02:31",
+    "type": "comment",
+    "content_html": "<p>Karthik,<br>\nThere is no answer to that.  The answer is the same as:<br>\nDo they do analysis?<br>\nDo they test?<br>\nDo they manage?<br>\nDo they train?</p>\n<p>Depends on the team.  Scrum doesn’t pretend to make rules that are supposed to work for every organization.  Instead it, and every other Agile process, encourages tailoring the process to match the environment.  If this means the ScrumMaster does a little of everything, so be it.  If it means the ScrumMaster does none of the above, so be it.  It depends on the organization.</p>\n<p>The only thing that is typically consistent from agile team to agile team are the principles.  Practices are customized to the situation.</p>\n<p>I personally coach product managers, managers, developers _and_ testers, so I do everything depending on who I’m coaching.  With I’m coaching an architect, yes, I’m helping with the architecture.  When I’m coaching a product manager, yes, I’m helping with analysis.</p>"
+  },
+  {
+    "id": 1840,
+    "parent": 0,
+    "author_name": "Karthik",
+    "author_url": "http://www.webgambit.com",
+    "date": "2007-08-11T00:44:33",
+    "type": "comment",
+    "content_html": "<p>Thanks for expanding on that.  I really think Scrum sounds like a great methodology to follow, but I’m still trying to understand how best to utilize it in my environment.</p>\n<p>Where do you draw the line between coaching and contributing?  </p>\n<p>From what I understand, a Scrum Master is to remain a neutral party between the Team and the Product Owner.  Is there potential for a conflict of interest if the Scrum Master is also responsible for the team’s items on the backlog?  Should a Scrum Master even be assigned tasks from the backlog?  </p>"
+  },
+  {
+    "id": 1841,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-08-11T12:39:25",
+    "type": "comment",
+    "content_html": "<p>@Karthik,<br>\nI don’t try to draw a line between coaching and contributing.  </p>\n<p>Regarding conflict of interest:  This is only a concern on a dysfunctional team.  If you have an “us” versus “them” environment, you are dealing with unnecessary friction.  Your customer/product owner needs to be part of the overall team.  You should all be working together to produce software.  You shouldn’t be working against the product owner, but with.</p>\n<p>A conflict of interest occurs when there are two parties with separate priorities.  In this case, there should be one goal, one set of priorities.  Everyone should be concerned with producing software that benefits the business.  That’s it.</p>\n<p>&gt;”tasks from the backlong?”<br>\nThat’s a process question, and there is no answer that works for every organization.  First, tasks should not be on the backlog, only stories.  Difference:  stories make sense and are verifiable by the product owner.  Tasks can be anything and can’t be verified.  For instance:  “Drop an ununsed table in the database” is a task and has no business on the backlog.  The Product Owner can’t use the app and verify this.  It doesn’t bring direct value to the business.  It’s not user-centric.  It needs to be done, but it’s not  backlog item the Product Owner should have to worry about tracking.</p>\n<p>For my current client, I have both helped with analysis/wire frame diagrams, development, and testing.  I coach and contribute to every part of it.  </p>"
+  },
+  {
+    "id": 1842,
+    "parent": 0,
+    "author_name": "cmyers",
+    "author_url": "http://community.hdri.net/blogs/chads_blog",
+    "date": "2007-08-11T18:38:56",
+    "type": "comment",
+    "content_html": "<p>FYI: I know the guy giving the training. He’s really a great guy and sharp and knows a lot about the subject. You’ll be in good hands!</p>"
+  },
+  {
+    "id": 1843,
+    "parent": 0,
+    "author_name": "Carlton",
+    "author_url": "http://",
+    "date": "2007-08-13T19:54:36",
+    "type": "comment",
+    "content_html": "<p>My experience with being a ScrumMaster is it tends to be a full time job.  If you are a contributor as a ScrumMaster, then you are more of helper than someone working on a critical path items.</p>"
+  },
+  {
+    "id": 1844,
+    "parent": 0,
+    "author_name": "Robbie",
+    "author_url": "http://blog.iclutton.com",
+    "date": "2007-08-14T12:01:15",
+    "type": "comment",
+    "content_html": "<p>I’m a certified scrum master and developer and from my experience it’s about 70% code, 30% facilitation.  </p>"
+  },
+  {
+    "id": 1845,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-08-14T13:00:16",
+    "type": "comment",
+    "content_html": "<p>@Carlton &amp; Robbie<br>\nPlease elaborate on your environments so readers can apply the context for your roles.  For instance, team size, team experience, co-location/distributed, greenfield/legacy, etc.</p>"
+  },
+  {
+    "id": 1846,
+    "parent": 0,
+    "author_name": "Carlton",
+    "author_url": "http://",
+    "date": "2007-08-20T15:33:21",
+    "type": "comment",
+    "content_html": "<p>The team size ranges from 4 to 8.  Most people do not have experience with Scrum and their experience with the language is mixed; lots of C++, but little c# (unfortunately, that is the direction all the code is migrating).  All the systems are legacy systems.  The whole organization is transitioning from waterfall to “something” more agile.</p>"
+  }
+]

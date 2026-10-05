@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1007,
+    "parent": 0,
+    "author_name": "Eric",
+    "author_url": "http://",
+    "date": "2006-08-23T16:35:44",
+    "type": "comment",
+    "content_html": "<p>We’ve taken our database creation one step further.  We create two databases as part of our nightly build.  One is clean for automated testing (we call it “Test”).  The second contains example data (we call this one “Development.”).  We also have a third database called “Production” that is not cleaned as part of the build process.  This can easily be recreated from the scripts used for the “Development” database.</p>"
+  },
+  {
+    "id": 1008,
+    "parent": 0,
+    "author_name": "Duncan",
+    "author_url": "http://www.myspace.com/ThatGuyDuncan",
+    "date": "2006-08-24T04:56:49",
+    "type": "comment",
+    "content_html": "<p>I completely agree with you on automating as much as possible.  For me, it’s a matter of not only saving my own precious time, it’s also about fixing a bug in ONE place and never having to think about it again.  So that one place has to be reused, so a CASE or generating tool is my choice.  I get annoyed adding certain columns to my tables (rowVersionTimestamp, isActive, dateInsert, dateUpdate &amp;tc.) so I script that too.  So many examples….</p>\n<p>If only I could get C# to wash my dishes, I’d be a happy man.</p>"
+  },
+  {
+    "id": 1009,
+    "parent": 0,
+    "author_name": "arvinddgr8",
+    "author_url": "http://techieindia.blogspot.com",
+    "date": "2006-09-18T05:53:10",
+    "type": "comment",
+    "content_html": "<p>Great post. I have a learnt a lot from this. I will put these things in practice soon.</p>"
+  }
+]

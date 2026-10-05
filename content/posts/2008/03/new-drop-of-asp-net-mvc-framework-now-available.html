@@ -1,0 +1,36 @@
+---
+wp_id: 617
+title: New drop of ASP.NET MVC Framework now available
+slug: new-drop-of-asp-net-mvc-framework-now-available
+permalink: /2008/03/new-drop-of-asp-net-mvc-framework-now-available/
+date: 2008-03-05T19:12:00
+date_utc: 2008-03-05T19:12:00Z
+modified: 2008-03-05T19:12:00
+format: html
+tags:
+- aspnetmvc
+- featured
+excerpt: 'My RSS feed: http://feeds.feedburner.com/jeffreypalermo You can download it here. It’s public and announced at the MIX conference. A new release of the ASP.NET MVC Framework. The license allows you go “go live” and use it in production. You’ll have to uninstall the December CTP first. The new install will only drop the assemblies in C:Program […]'
+comments_open: true
+---
+<p>My RSS feed:&nbsp; <a href="http://feeds.feedburner.com/jeffreypalermo">http://feeds.feedburner.com/jeffreypalermo</a></p>
+<p><b>You can download </b><a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=38cc4cf1-773a-47e1-8125-ba3369bf54a3&amp;displaylang=en"><b>it here</b></a>.&nbsp; It’s public and announced at the MIX conference.&nbsp; A new release of the ASP.NET MVC Framework.&nbsp; The license allows&nbsp; you go “go live” and use it in production.&nbsp; You’ll have to uninstall the December CTP first.&nbsp; The new install will only drop the assemblies in C:Program FilesMicrosoft ASP.NET MVC Preview 2Assemblies, and then you’ll have to copy them over to your application and drop them in the “bin” folder.</p>
+<p>We’ll be upgrading <a href="http://mvccontrib.org">MvcContrib</a> and <a href="http://codecampserver.org">CodeCampServer</a> to work with the new bits soon.</p>
+<p>From looking at&nbsp;the bits, here are some notable changes:</p>
+<ul>
+<li>Constructor of Route now takes more information (GOOD)</li>
+<li>There are IDictionary arguments for many things, and that is a GOOD thing.&nbsp; Before anonymous types were required. <br>I like the way Monorail handles this by allowing querystring syntax like: RedirectToAction(“foo”, new string[] {“orderid=” + theOrder.Id});</li>
+<li>[ControllerAction] is gone.&nbsp; Public methods are actions by default. (GOOD)</li>
+<li>RenderView() methods are still protected and only 1 of them is virtual (would like IViewEngine to be used more explicitly)</li>
+<li>6 (SIX) members of the Controller class are still marked internal (I’d like to be able to extend them)</li>
+<li>RouteValueDictionary is just a wrapper for the anonymous type.&nbsp; (I think we can work towards a better API)</li>
+<li>Seven properties don’t have setters, such as IPrincipal User {get;} (I’d like to see setters)</li>
+<li>I still see SEALED classes.&nbsp; In an extensible framework, sealed is your enemy (I’ll be making not of the sealed classes I’d like to extend)</li>
+<li>ViewContext is not usable in unit test scenario because of its dependency on HttpContextBase. (It can be refactored to help testability)<br>Still can’t mock out the IViewEngine’s RenderView method and have it work in a unit test.&nbsp; I’m told the team is tackling this next.</li>
+<li>ComponentController is a welcome addition to enable nested controllers, but, sadly, non of the members are virtual.</li>
+<li>Lots of view helpers (GOOD)</li>
+<li>Routing is a separate assembly (GOOD)</li>
+<li>System.Web.Mvc.dll can be deployed in the bin instead of the GAC (GOOD)</li>
+<li>We can go live with this drop (and it appears to me to be stable enough for small applications)</li>
+<li>The team is committed to roughtly 6 weeks in between drops (GOOD).&nbsp; Release early.&nbsp; Release often.</li>
+</ul>

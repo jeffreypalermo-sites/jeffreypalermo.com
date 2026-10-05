@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1017,
+    "parent": 0,
+    "author_name": "Vikas Kerni",
+    "author_url": "http://vikasnetdev.blogspot.com/",
+    "date": "2006-08-30T02:43:32",
+    "type": "comment",
+    "content_html": "<p>Hi Jeff<br>\nFirst I came to Know MVP from your architecture post and wrote the<br>\nfollowing post</p>\n<p><a href=\"http://vikasnetdev.blogspot.com/2006/07/soa-friendly-architecture-version-of.html\" rel=\"nofollow ugc\">http://vikasnetdev.blogspot.com/2006/07/soa-friendly-architecture-version-of.html</a><br>\n<a href=\"http://vikasnetdev.blogspot.com/2006/07/soa-friendly-architecture-version-of_25.html\" rel=\"nofollow ugc\">http://vikasnetdev.blogspot.com/2006/07/soa-friendly-architecture-version-of_25.html</a></p>\n<p>Feel free to criticize it.  \uD83D\uDE42</p>\n<p>Recently we had discussion on asp.net why MVC is so confusing.<br>\n<a href=\"http://vikasnetdev.blogspot.com/2006/08/is-3-layered-architecture-mvc.html\" rel=\"nofollow ugc\">http://vikasnetdev.blogspot.com/2006/08/is-3-layered-architecture-mvc.html</a></p>"
+  },
+  {
+    "id": 1018,
+    "parent": 0,
+    "author_name": "Marco",
+    "author_url": "http://",
+    "date": "2006-08-30T17:32:35",
+    "type": "comment",
+    "content_html": "<p>Can you give a (or spend a blog post on it) small sample about how you use the Supervisoing COntroler in asp.net?</p>\n<p>Thanks<br>\nMarco</p>"
+  }
+]

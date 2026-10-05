@@ -1,0 +1,38 @@
+---
+wp_id: 73
+title: Find the index of a particular object when foreaching on a custom collection derived from CollectionBase – level 200
+slug: find-the-index-of-a-particular-object-when-foreaching-on-a-custom-collection-derived-from-collectionbase-level-200
+permalink: /2004/08/find-the-index-of-a-particular-object-when-foreaching-on-a-custom-collection-derived-from-collectionbase-level-200/
+date: 2004-08-18T17:44:00
+date_utc: 2004-08-18T17:44:00Z
+modified: 2004-08-18T17:44:00
+format: html
+excerpt: I labeled this post as 200 instead of 100 because I imagine that beginners in .Net won’t be creating their own custom collection classes. I think once someone can create their own custom collections, they should be considered at least intermediate. Today a colleague approached me with a problem. He was foreaching through a custom […]
+comments_open: true
+---
+<p>I labeled this post as 200 instead of 100 because I imagine that beginners in .Net won’t be creating their own custom collection classes.&nbsp; I think once someone can create their own custom collections, they should be considered at least intermediate. </p>
+<p>Today a colleague approached me with a problem.&nbsp; He was foreaching through a custom collection in C#, and when he evaluated the object he wanted, he need the index of that object for the collection.&nbsp; He was approaching the problem with calls to GetEnumerator(), etc, and I shared with him what I do for this situation:</p>
+<ul><br>
+<li>When you inherit from CollectionBase, your collection data structure is an ArrayList.&nbsp; if you look at the InnerList protected member, it is of type ArrayList.&nbsp; The ArrayList type has a method IndexOf(object) that returns int, the index of the object within the ArrayList.</li><br>
+<li>To make the index available to callers of your custom collection, define a method like so:</li></ul>
+<blockquote><pre>        <span class="ColorCSKeyword">public</span> <span class="ColorCSKeyword">int</span> IndexOf(object value)<br>
+<br>        {<br>
+<br>            <span class="ColorCSKeyword">return</span> <span class="ColorCSKeyword">base</span>.InnerList.IndexOf(value);<br>
+<br>        }<br>
+</pre></blockquote>
+<ul><br>
+<li>So now, when you have an object you can pass it to this method to get the index of that object within the instance of your collection.</li></ul>
+<p>When I create my own collection types, I normally expose all the helper methods of the InnerList so that my collection is as functional as possible.&nbsp; Inheriting from CollectionBase just strongly types the ArrayList object for you.&nbsp; With generics in v2.0, if you don’t need any extra functionality from your collections, then you’ll just want to go with ArrayList&lt;T&gt; or you can use the new Collection&lt;T&gt; class:</p><pre>    <span class="ColorCSKeyword">public</span> <span class="ColorCSKeyword">class</span> Junk&lt;T&gt; : Collection&lt;T&gt;<br>
+<br>    {<br>
+<br>        <span class="ColorCSKeyword">private</span> <span class="ColorCSKeyword">int</span> m_myExtraMember;<br>
+<br>        <span class="ColorCSKeyword">public</span> Junk(<span class="ColorCSKeyword">int</span> myExtraMember)<br>
+<br>        {<br>
+<br>            m_myExtraMember = myExtraMember;<br>
+<br>        }<br>
+<br>        <span class="ColorCSKeyword">public</span> <span class="ColorCSKeyword">new</span> <span class="ColorCSKeyword">int</span> IndexOf(T value)<br>
+<br>        {<br>
+<br>            <span class="ColorCSKeyword">return</span> <span class="ColorCSKeyword">base</span>.IndexOf(value);<br>
+<br>        }<br>
+<br>    }<br></pre>
+<p>With v2.0 and generics, you may still want to implement your own custom collections if you need to track a member that isn’t included, but still, this method is simplified.&nbsp; I have overriden the IndexOf() method unnecessarily just to show some syntax.&nbsp; With 2.0, all you would need is the m_myExtraMember field.&nbsp; IndexOf is inherited.</p>
+<p>Another tip about collections:&nbsp; Know what data structure the collection uses internally.&nbsp; Collection&lt;T&gt; uses the List&lt;T&gt; structure internally which is similar to ArrayList in that it keeps the objects in the same order in which they were inserted.&nbsp; With HashTable-based collections, the objects are retrieved via key, and the order is not guaranteed, so if&nbsp; you foreach on a HashTable, you can never know in what order the objects will be retrieved.&nbsp; I hope this post helps someone.</p>

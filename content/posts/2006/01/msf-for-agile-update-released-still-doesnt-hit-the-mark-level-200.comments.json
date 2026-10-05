@@ -1,0 +1,29 @@
+[
+  {
+    "id": 623,
+    "parent": 0,
+    "author_name": "Fregas",
+    "author_url": "http://www.dotnettricks.com/",
+    "date": "2006-01-11T23:09:56",
+    "type": "comment",
+    "content_html": "<p>I’m confused.</p>\n<p>Where are these companies that have builds mesured in hours?  Am I misunderstanding the meaning of the word “Build”?  Does “Build” mean “Compile?” I’ve worked on some fairly sizable software applications with anywhere between 3 and 20 developers, but it never takes that long for all the projects to compile, even if they are in seperate (but related) solutions.  </p>\n<p>We have a rule here at work that if you can’t compile, you can’t check in your changes.  You must be able to build the solution/projects.</p>\n<p>Am I just on too small of projects to see these huge applications?  Do software companies have THAT MANY projects and solutions that reference each other?   </p>\n<p>I’m not criticizing, just curious.</p>\n<p>Good article Jeffrey.</p>"
+  },
+  {
+    "id": 624,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-01-12T14:22:53",
+    "type": "comment",
+    "content_html": "<p>Fregas,<br>\nBuild is much more than just compile.  Build means:<br>\nupdate from source control.<br>\ncompile solution<br>\ncopy application files to test location<br>\nrun unit tests.<br>\nrun integration tests.<br>\nrun regression tests (if you have them)<br>\ntag source control with build number if successful</p>\n<p>At Microsft, this process takes all night because projects have dependencies of other bits that must be built first.</p>\n<p>Our slowest build is 20 minutes, and we are clamoring to speed it up.  If the build is slow, it won’t be run often.</p>\n<p>We have another build thats less than 1 minute.  We keep our tests fast so that it stays that way.  We run that build very often.</p>"
+  },
+  {
+    "id": 625,
+    "parent": 0,
+    "author_name": "Bruce Chapman",
+    "author_url": "http://www.ifinity.com.au",
+    "date": "2007-05-09T01:12:07",
+    "type": "comment",
+    "content_html": "<p>@Fregas</p>\n<p>As Jeffrey said, build is the _entire_ process which happens from a check-in to a working system in an environment.  For simple executable apps or single class libraries, this isn’t much.  For a large system comprising of several websites, web services, 30+ components and hundreds of graphics files, by the time you extract from source control, compile, deploy to various webservers a build can easily run to 20-30 minutes.  This is the case even when a developer doing a local compile only has to wait 30 seconds for a full build to complete.</p>\n<p>Not understanding the difference between build and compile can be associated to the 20% gap when something is ‘80% complete’.   Many developers declare a project ‘finished’ when the project compiles and runs on their local machine.  The reality for an integrated team project is somewhat different</p>"
+  }
+]

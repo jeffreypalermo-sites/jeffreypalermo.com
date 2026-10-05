@@ -1,0 +1,17 @@
+---
+wp_id: 324
+title: Visual Studio 2005 Release Candidate thoughts for web projects part 1 – level 100
+slug: visual-studio-2005-release-candidate-thoughts-for-web-projects-part-1-level-100
+permalink: /2005/09/visual-studio-2005-release-candidate-thoughts-for-web-projects-part-1-level-100/
+date: 2005-09-22T15:47:00
+date_utc: 2005-09-22T15:47:00Z
+modified: 2005-09-22T15:47:00
+format: html
+excerpt: I’ve now installed Visual Studio 2005 Release Candidate on a virtual pc with Windows 2003 Server SP1. My primary focus at this point is the web projects. I love ASP.NET, and I think it is a brilliant runtime. I have a website management framework built on ASP.NET, and I commend the folks at Microsoft for […]
+comments_open: true
+---
+<p>I’ve now installed Visual Studio 2005 Release Candidate on a virtual pc with Windows 2003 Server SP1.&nbsp; My primary focus at this point is the web projects.&nbsp; I love ASP.NET, and I think it is a brilliant runtime.&nbsp; I have a <a href="http://workspaces.gotdotnet.com/ezweb">website management framework </a>built on ASP.NET, and I commend the folks at Microsoft for this great framework.&nbsp; I’ve kept up with ASP.NET 2.0 since Beta 1 came out, and Whidbey Beta 1 was stable enough to work alongside VS.NET 2003 on my dev machine for a long time.&nbsp; </p>
+<p>There are a number of items I was displeased with during the Beta cycle.&nbsp; One issue was excluding files from a web projects.&nbsp; In Beta 2 it wasn’t possible.&nbsp; With the RC, it is possible, but the IDE appends “.exclude” to the end of the file name.&nbsp; If you exclude BrokenClass.cs, it becomes “BrokenClass.cs.exclude”.&nbsp; This works as far as Visual Studio is concerned, but this will cause headaches in a real development environment.&nbsp; For instance, source control systems don’t support renaming that well.&nbsp; Those that do require a manual step to associate the history of a file with the new renamed file.&nbsp; The IDE just renames the file and goes on.&nbsp; It’s a partial solution, but it’s a shame that this has to be so hard.&nbsp; </p>
+<p>Using this “feature” isn’t going to be feasible in real-world situations.&nbsp; A developer would “exclude” a file from the project when he wants to ignore it.&nbsp; It’s not an acceptable scenario to allow the automatic renaming of files that just happen to be in that directory tree.&nbsp; What’s worse, you can’t exclude a folder. . . only the files inside (which now requires&nbsp;a renaming of them).&nbsp; </p>
+<p>Excluding files from a read web project is not supported in Visual Studio 2005.&nbsp; We’ll have to live with a workaround.&nbsp; This thing that they _call_ “exclude from project” isn’t usable, so it can’t be called a feature.&nbsp; It will only work in the most trivial of web projects that are isolated from the real world:&nbsp; MSDN Events demos.</p>
+<p>I still don’t understand what is SO special about web projects that they don’t deserve a project file like the rest of the project types.&nbsp; <a href="http://weblogs.asp.net/scottgu/archive/2005/08/21/423201.aspx">Scott Guthrie makes some statements here </a>if you care to read about some other points.&nbsp; Overall, the Microsoft team has done much more good than harm, and I commend them for that, and I’m also glad that they are open to accepting feedback.</p>

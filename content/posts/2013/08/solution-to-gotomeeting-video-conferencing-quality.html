@@ -1,0 +1,24 @@
+---
+wp_id: 1205
+title: Solution to GoToMeeting video conferencing quality
+slug: solution-to-gotomeeting-video-conferencing-quality
+permalink: /2013/08/solution-to-gotomeeting-video-conferencing-quality/
+date: 2013-08-26T09:08:59
+date_utc: 2013-08-26T09:08:59Z
+modified: 2013-08-26T09:08:59
+format: html
+categories:
+- blog
+excerpt: In a previous post, I spoke about a problem with GoToMeeting when video feeds are enabled. The problem manifests as audio AND video degrading to the point of unusability. Throughout this time, we as a company evaluated many other options for online meetings that include video. This is very important to us since our clients […]
+comments_open: true
+---
+<p>In a <a href="/2013/07/gotomeeting-works-great-ndash-until-you-add-video-conferencing/">previous post</a>, I spoke about a problem with GoToMeeting when video feeds are enabled.&nbsp; The problem manifests as audio AND video degrading to the point of unusability.&nbsp; Throughout this time, we as a company evaluated many other options for online meetings that include video.&nbsp; This is very important to us since our clients are busy, and we have staff in Austin, Dallas, and the Toronto area.&nbsp; Also, using video allows us to create a more personal relationship with out clients.&nbsp; In my experience, you naturally build trust quicker with people you can see.&nbsp; And adding video to conference calls is a great tool.</p>
+<p>There were two issues we were experiencing with G2M video meeting quality.&nbsp; </p>
+<ol>
+<ol>
+<li>Intel speed-step interference.&nbsp; <br>First, Running three screens and video conferencing is a big tax to the CPU.&nbsp; It works fine initially, and then 15 minutes into the meeting, the CPU gets hotter, and if not cooled enough, the CPU steps down in speed, sometimes to 0.79 Mhz.&nbsp; When this happens, there just isn’t enough horsepower for G2M to do what it needs to do.&nbsp; The first solution was to ensure proper airflow to the machines running the software so that the CPU stays cool.        </li>
+<li>Lower the CPU priority of the g2mvideoconference.exe process       <br>IF the CPU is going to be starved for any reason, we wanted the video feed to be the thing that suffered.&nbsp; Currently, the audio cuts out to the point of unusability.&nbsp; The fix for this is to change the CPU priority to “Low”.&nbsp; The picture below shows how to do this using the Task Manager windows (you can get to task manager by pressing CTRL+SHIFT+ESC all at the same time.</li>
+</ol>
+</ol>
+<p><a href="/wp-content/uploads/2018/07/solution-to-gotomeeting_7cb9image_2.png"><img loading="lazy" decoding="async" title="image" style="border-top:0; border-right:0; background-image:none; border-bottom:0; padding-top:0; padding-left:0; border-left:0; display:inline; padding-right:0" border="0" alt="image" src="/wp-content/uploads/2018/07/solution-to-gotomeeting_7cb9image_thumb.png" width="624" height="526"></a></p>
+<p>I want to figure out a way to have this process launch with Low CPU priority every time it launches.&nbsp; If anyone knows a registry setting or some other way to have this be automated, I would be grateful.&nbsp; </p>

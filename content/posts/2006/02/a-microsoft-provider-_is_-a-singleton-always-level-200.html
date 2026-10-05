@@ -1,0 +1,26 @@
+---
+wp_id: 376
+title: A Microsoft provider _is_ a singleton – always – level 200
+slug: a-microsoft-provider-_is_-a-singleton-always-level-200
+permalink: /2006/02/a-microsoft-provider-_is_-a-singleton-always-level-200/
+date: 2006-02-17T13:52:00
+date_utc: 2006-02-17T13:52:00Z
+modified: 2006-02-17T13:52:00
+format: html
+tags:
+- asp-net
+excerpt: I’ve done quite a bit with Whidbey and .Net 2.0 since Beta 1 hit in mid-2004. I was one of the early adopters that submitted bug reports as well, and I’ve tech editted several .Net 2.0 books, and I’m mostly impressed with .Net 2.0, but there are some aspects that I’m dissapointed with (you can […]
+comments_open: true
+---
+<p>I’ve done quite a bit with Whidbey and .Net 2.0 since Beta 1 hit in mid-2004.&nbsp; I was one of the early adopters that submitted bug reports as well, and I’ve tech editted several .Net 2.0 books, and I’m mostly impressed with .Net 2.0, but there are some aspects that I’m dissapointed with (you can read past ones on my blog).</p>
+<ul>
+<li><a href="/blogs/jeffrey.palermo/search.aspx?q=whidbey&amp;p=1">My Whidbey posts</a></li>
+</ul>
+<p>I’ve been wrapping some of my existing code with the built-in providers in ASP.NET.&nbsp; I’m finished with the MembershipProvider, but all I needed was 4 of the methods, and the abstract class has over 20.&nbsp; What a waste.&nbsp; I’m in the process of wrapping my code with the SiteMapProvider, and that one looks more civilized.</p>
+<p>Microsoft has touted it’s Provider pattern as a way to configure application behavior.&nbsp; They’ve touted it as a custom mix of <a href="http://en.wikipedia.org/wiki/Strategy_pattern">Strategy </a>and <a href="http://en.wikipedia.org/wiki/Plugin">Plugin</a>.&nbsp; It’s true that you can change the configuration file, and you’ll hook up a different provider, and the behavior of the application will change. </p>
+<p>What’s not widely known is that _every_ provider is a <a href="http://en.wikipedia.org/wiki/Singleton_pattern">Singleton</a>.&nbsp; There is no getting around it.&nbsp; The biggest implication of this is that where before, only few had to worry about writing thread-safe code, now even the hobbyist has to be aware of threads when creating a provider.&nbsp; There is not a way to configure them away from being singletons, either.&nbsp; </p>
+<p>Using them with ASP.NET is the biggest concern because every request runs on a different thread.&nbsp; Handlers are per-thread, but IHttpModule(s) have AppDomain scope just like providers.&nbsp; What this means is that providers are not pluggable components. . . they are services and must be treated as such.&nbsp; They are entities that will serve multiple customers.&nbsp; Each customer doesn’t get his own instance of the provider, but one instance is shared for the life of the application.&nbsp; I’d prefer to have one instance per use.&nbsp; </p>
+<p>Early on in the Beta cycle, <a href="http://weblogs.asp.net/rhoward/archive/2004/04/16/115103.aspx">Rob Howard had the same thoughts</a> as me:<br>“This is a disastor waiting to happen. We you have an API that is<br>
+funtionally wrapped up into a package a static methods (I know the Role<br>
+Provider class isn’t static, but it’s access is) you have a service. . . ” 4/16/2004</p>
+<p>You can verify my facts here by reading <a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnaspp/html/ASPNETProvMod_Intro.asp">this article on MSDN</a> (search for “thread”).</p>

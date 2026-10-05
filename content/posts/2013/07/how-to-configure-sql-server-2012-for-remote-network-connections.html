@@ -1,0 +1,24 @@
+---
+wp_id: 1203
+title: How to configure SQL Server 2012 for remote network connections
+slug: how-to-configure-sql-server-2012-for-remote-network-connections
+permalink: /2013/07/how-to-configure-sql-server-2012-for-remote-network-connections/
+date: 2013-07-31T15:44:23
+date_utc: 2013-07-31T15:44:23Z
+modified: 2013-07-31T15:44:23
+format: html
+categories:
+- blog
+excerpt: SQL Server 2012, especially when using a named instance, changes the way us old SQL Server veterans manage connectivity to the server. We are so used to relying on port 1433 for SQL Server that setting up a new SQL Server 2012 database server might give us some fits. I have one software engineering team […]
+comments_open: true
+---
+<p>SQL Server 2012, especially when using a named instance, changes the way us old SQL Server veterans manage connectivity to the server.&nbsp; We are so used to relying on port 1433 for SQL Server that setting up a new SQL Server 2012 database server might give us some fits.</p>
+<p>I have one software engineering team that just did this recently.&nbsp; Our dev and test environments are in Windows Azure, and then our production environment is in a specialized data center on the east coast of the U.S.</p>
+<p>To make a long story short, we are using Azure’s point-to-site VPN so that none of the servers can have any contact from the outside world.&nbsp; The only way to get to them is to VPN in.&nbsp; Then, the servers respond to pings, and it’s as if they are on the LAN.&nbsp; It works great – except connecting SQL Management Studio to a new Windows Server 2012 box running SQL Server 2012 wouldn’t work.&nbsp; All the old tricks of using SQL Configuration Manager and enabling TCP/IP yielded no fruit.&nbsp; And opening port 1433 on the firewall yielded no fruit as well.</p>
+<p>Just for completeness, we were using a named instance, not a default instance.&nbsp; A quick look at NetStat revealed that SQL Server wasn’t listening on port 1433 at all.</p>
+<p><img decoding="async" src="https://i0.wp.com/uploads.hipchat.com/49050/330643/l5axfqj5hq9tr8t/netstat%20-an.png?w=776"></p>
+<p>Notice how port 1434 is listening, however.&nbsp; This is the SQL Server Browser service.&nbsp; A search through the documentation reveals that Microsoft has made a bit of a change to the way SQL Server operates regarding ports.&nbsp; These named instances now use dynamic ports – I think for security.&nbsp; This <a href="http://technet.microsoft.com/en-us/library/ms175043.aspx">TechNet article</a> explains that to connect, the client will send a UDP packet to port 1434 first to resolve the dynamic port.&nbsp; Then it will connect as normal.</p>
+<p>The appropriate Windows Firewall rule to establish is a program rule, not a port rule.</p>
+<p><img loading="lazy" decoding="async" src="https://i0.wp.com/uploads.hipchat.com/49050/330643/qwt6vkqf8455tj7/bf-uat-sql01%20firewall%20config.png?resize=670%2C500" width="670" height="500"></p>
+<p>By adding SQL Server’s exe as a program rule in the firewall, it now works.</p>
+<p>It’s been several versions since something like this has changed in SQL Server, so hopefully this article will help someone else using SQL Server 2012 for the first time.</p>

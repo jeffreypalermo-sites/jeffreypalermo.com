@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2694,
+    "parent": 0,
+    "author_name": "Chris McKenzie",
+    "author_url": "http://iextendable.com",
+    "date": "2013-03-15T00:59:23",
+    "type": "comment",
+    "content_html": "<p>I’m doing something that I think is similar. My MVC api controllers expose which operations are available in the application. The operations themselves are executed by a class that implements ICommand&lt;TRequest, TResponse&gt; where TRequest describes the required inputs of the operation, and TResponse gives the results, execution time, and any validation errors that may have occurred.<br>\nIn your example, I’d have an UpdateCustomerAddressRequest accepted by an UpdateCustomerAddressCommand. Using the terminology from your Onion Architecture post, I use this style of commands to implement my Domain Services layer.</p>"
+  }
+]

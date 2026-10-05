@@ -1,0 +1,15 @@
+---
+wp_id: 50
+title: Possible bug in ASP.NET 1.1?
+slug: possible-bug-in-asp-net-1-1
+permalink: /2004/04/possible-bug-in-asp-net-1-1/
+date: 2004-04-16T23:01:00
+date_utc: 2004-04-16T23:01:00Z
+modified: 2004-04-16T23:01:00
+format: html
+excerpt: I’ll preface this post by saying that I don’t have constant connectivity to the Internet from where I am right now. Every morning I wake up at 4:45AM, walk 1/2 of a mile to a satellite Internet Cafe run by some Arabs, and pay $6/hour to hook my laptop up to the Internet. Imagine 1 […]
+comments_open: true
+---
+<p>I’ll preface this post by saying that I don’t have constant connectivity to the Internet from where I am right now.&nbsp; Every morning I wake up at 4:45AM, walk 1/2 of a mile to a satellite Internet Cafe run by some Arabs, and pay $6/hour to hook my laptop up to the Internet.&nbsp; Imagine 1 hour of Internet per day, and you can calculate that monthly bill and compare it to your cable modem bill.&nbsp; I use Net2Phone and for $.02 per minute, I can talk to my wife over the Net.&nbsp; </p>
+<p>The point of that preface is that it’s hard to do some immediate Internet research into this issues, but here it is:</p>
+<p>I have a page that has a user control containing a form.&nbsp; The form uses some of the validation controls with client script enabled.&nbsp; Everything works great.&nbsp; The form got a little long, and sometimes the length of one of the grids causes the page to scroll, and the save button is at the button.&nbsp; I turn on SmartNavigation to remedy the post-back-lose-scroll-position problem, but now, instead of posting back, some of the buttons will erroneously trigger the client validation script to fail even though input values are valid.&nbsp; I turn off SmartNavigation, and everything is perfect.&nbsp; Very frustrating.&nbsp; I’m wondering if the two features have a javascript conflict because I also get a javascript error when this occurs.&nbsp; I’m wondering if anyone else in the ASP.NET community has experienced this and if there is a workaround.</p>

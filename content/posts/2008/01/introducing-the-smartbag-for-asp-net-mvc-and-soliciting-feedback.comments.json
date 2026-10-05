@@ -1,0 +1,227 @@
+[
+  {
+    "id": 2233,
+    "parent": 0,
+    "author_name": "Javier Lozano",
+    "author_url": "http://blog.lozanotek.com",
+    "date": "2008-01-19T18:46:11",
+    "type": "comment",
+    "content_html": "<p>Why did you choose Hashtable rather than Dictionary to implement SmartBag?</p>"
+  },
+  {
+    "id": 2234,
+    "parent": 0,
+    "author_name": "Oren Novotny",
+    "author_url": "http://",
+    "date": "2008-01-19T19:04:23",
+    "type": "comment",
+    "content_html": "<p>I’d come up with something similar when writing  LINQ provider — the major difference is that it implements ICustomTypeDescriptor and which allows it to be databound easily w/o extracting the items:</p>\n<p>public class ObjectSet : ICustomTypeDescriptor<br>\n    {<br>\n        Dictionary _typeMap;</p>\n<p>        private ObjectSet()<br>\n        {<br>\n        }</p>\n<p>        public ObjectSet(params object[] objects)<br>\n        {<br>\n            _typeMap = new Dictionary();<br>\n            _typeMap = objects.ToDictionary(o =&gt; o.GetType());<br>\n        }</p>\n<p>        public T GetObject()<br>\n        {<br>\n            return (T)_typeMap[typeof(T)];<br>\n        }</p>\n<p>        public bool Contains()<br>\n        {<br>\n            return _typeMap.ContainsKey(typeof(T));<br>\n        }</p>\n<p>        ///<br>\n        /// Returns a new ObjectSet with the object added in<br>\n        ///<br>\n        ///<br>\n        ///<br>\n        public ObjectSet AddOrUpdate(object obj)<br>\n        {<br>\n            if(obj == null)<br>\n                throw new ArgumentNullException(“obj”);</p>\n<p>            var cs = new ObjectSet();</p>\n<p>            cs._typeMap = new Dictionary(_typeMap);<br>\n            cs._typeMap[obj.GetType()] = obj;</p>\n<p>            return cs;<br>\n        }</p>\n<p>        ///<br>\n        /// Returns a new ObjectSet without the object<br>\n        ///<br>\n        ///<br>\n        ///<br>\n        public ObjectSet Remove(object obj)<br>\n        {<br>\n            if (obj == null)<br>\n                throw new ArgumentNullException(“obj”);</p>\n<p>            var cs = new ObjectSet();</p>\n<p>            cs._typeMap = new Dictionary(_typeMap);<br>\n            cs._typeMap.Remove(obj.GetType());</p>\n<p>            return cs;<br>\n        }</p>\n<p>        #region ICustomTypeDescriptor Members</p>\n<p>        AttributeCollection ICustomTypeDescriptor.GetAttributes()<br>\n        {<br>\n            return TypeDescriptor.GetAttributes(this, true);<br>\n        }</p>\n<p>        string ICustomTypeDescriptor.GetClassName()<br>\n        {<br>\n            return TypeDescriptor.GetClassName(this, true);<br>\n        }</p>\n<p>        string ICustomTypeDescriptor.GetComponentName()<br>\n        {<br>\n            return TypeDescriptor.GetComponentName(this, true);<br>\n        }</p>\n<p>        TypeConverter ICustomTypeDescriptor.GetConverter()<br>\n        {<br>\n            return TypeDescriptor.GetConverter(this, true);<br>\n        }</p>\n<p>        EventDescriptor ICustomTypeDescriptor.GetDefaultEvent()<br>\n        {<br>\n            return TypeDescriptor.GetDefaultEvent(this, true);<br>\n        }</p>\n<p>        PropertyDescriptor ICustomTypeDescriptor.GetDefaultProperty()<br>\n        {<br>\n            return TypeDescriptor.GetDefaultProperty(this, true);<br>\n        }</p>\n<p>        object ICustomTypeDescriptor.GetEditor(Type editorBaseType)<br>\n        {<br>\n            return TypeDescriptor.GetEditor(this, editorBaseType, true);<br>\n        }</p>\n<p>        EventDescriptorCollection ICustomTypeDescriptor.GetEvents(Attribute[] attributes)<br>\n        {<br>\n            var eds = from kvp in _typeMap<br>\n                      from ed in TypeDescriptor.GetEvents(kvp.Value, attributes).Cast()<br>\n                      select new KeyValuePair(ed, kvp.Value.GetType());</p>\n<p>            return WrapEvents(eds);<br>\n        }</p>\n<p>        EventDescriptorCollection ICustomTypeDescriptor.GetEvents()<br>\n        {<br>\n            var eds = from kvp in _typeMap<br>\n                      from ed in TypeDescriptor.GetEvents(kvp.Value).Cast()<br>\n                      select new KeyValuePair(ed, kvp.Value.GetType());</p>\n<p>            return WrapEvents(eds);<br>\n        }</p>\n<p>        PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties(Attribute[] attributes)<br>\n        {</p>\n<p>            var pds = from kvp in _typeMap<br>\n                      from pd in TypeDescriptor.GetProperties(kvp.Value, attributes).Cast()<br>\n                      select new KeyValuePair(pd, kvp.Value.GetType());</p>\n<p>            return WrapProperties(pds);<br>\n        }</p>\n<p>        PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties()<br>\n        {</p>\n<p>            var pds = from kvp in _typeMap<br>\n                      from pd in TypeDescriptor.GetProperties(kvp.Value).Cast()<br>\n                      select new KeyValuePair(pd, kvp.Value.GetType());</p>\n<p>            return WrapProperties(pds);<br>\n        }</p>\n<p>        object ICustomTypeDescriptor.GetPropertyOwner(PropertyDescriptor pd)<br>\n        {<br>\n            return this;<br>\n        }</p>\n<p>        private static PropertyDescriptorCollection WrapProperties(IEnumerable&lt;KeyValuePair&gt; source)<br>\n        {<br>\n            var s = source.Select(kvp =&gt; new ObjectSetPropertyDescriptor(kvp.Key, kvp.Value)).ToArray();</p>\n<p>            return new PropertyDescriptorCollection(s);<br>\n        }</p>\n<p>        private static EventDescriptorCollection WrapEvents(IEnumerable&lt;KeyValuePair&gt; source)<br>\n        {<br>\n            var s = source.Select(kvp =&gt; new ObjectSetEventDescriptor(kvp.Key, kvp.Value)).ToArray();</p>\n<p>            return new EventDescriptorCollection(s);<br>\n        }</p>\n<p>        #endregion</p>\n<p>        private sealed class ObjectSetEventDescriptor : EventDescriptor<br>\n        {<br>\n            private EventDescriptor _baseDesc;<br>\n            private Type _ownerType;</p>\n<p>            public ObjectSetEventDescriptor(EventDescriptor ed, Type ownerType)<br>\n                : base(ed)<br>\n            {<br>\n                if(ed == null)<br>\n                    throw new ArgumentNullException(“ed”);<br>\n                if (ownerType == null)<br>\n                    throw new ArgumentNullException(“ownerType”);</p>\n<p>                _ownerType = ownerType;<br>\n                _baseDesc = ed;<br>\n            }</p>\n<p>            private object GetTarget(object source)<br>\n            {<br>\n                if (source == null)<br>\n                    throw new ArgumentNullException(“source”);</p>\n<p>                ObjectSet os = source as ObjectSet;<br>\n                if (os != null)<br>\n                    return os._typeMap[_ownerType];</p>\n<p>                if (source.GetType().Equals(_ownerType))<br>\n                    return source;</p>\n<p>                throw new ArgumentException(string.Format(“Type mismatch.  Source must be of Type {0}.”, _ownerType), “source”);<br>\n            }</p>\n<p>            public override void AddEventHandler(object component, Delegate value)<br>\n            {<br>\n                _baseDesc.AddEventHandler(GetTarget(component), value);<br>\n            }</p>\n<p>            public override Type ComponentType<br>\n            {<br>\n                get { return _baseDesc.ComponentType; }<br>\n            }</p>\n<p>            public override Type EventType<br>\n            {<br>\n                get { return _baseDesc.EventType; }<br>\n            }</p>\n<p>            public override bool IsMulticast<br>\n            {<br>\n                get { return _baseDesc.IsMulticast; }<br>\n            }</p>\n<p>            public override void RemoveEventHandler(object component, Delegate value)<br>\n            {<br>\n                _baseDesc.RemoveEventHandler(GetTarget(component), value);<br>\n            }</p>\n<p>            public override string DisplayName<br>\n            {<br>\n                get<br>\n                {<br>\n                    return string.Concat(_ownerType.Name, “.”, base.DisplayName);<br>\n                }<br>\n            }<br>\n        }</p>\n<p>        private sealed class ObjectSetPropertyDescriptor : PropertyDescriptor<br>\n        {<br>\n            private PropertyDescriptor _baseDesc;<br>\n            private Type _ownerType;</p>\n<p>            public ObjectSetPropertyDescriptor(PropertyDescriptor pd, Type ownerType) : base(pd)<br>\n            {<br>\n                if (pd == null)<br>\n                    throw new ArgumentNullException(“pd”);</p>\n<p>                if (ownerType == null)<br>\n                    throw new ArgumentNullException(“ownerType”);</p>\n<p>                _ownerType = ownerType;<br>\n                _baseDesc = pd;<br>\n            }</p>\n<p>            private object GetTarget(object source)<br>\n            {<br>\n                if(source == null)<br>\n                    throw new ArgumentNullException(“source”);</p>\n<p>                ObjectSet os = source as ObjectSet;<br>\n                if (os != null)<br>\n                    return os._typeMap[_ownerType];</p>\n<p>                if (source.GetType().Equals(_ownerType))<br>\n                    return source;</p>\n<p>                throw new ArgumentException(string.Format(“Type mismatch.  Source must be of Type {0}.”, _ownerType), “source”);<br>\n            }</p>\n<p>            public override bool CanResetValue(object component)<br>\n            {<br>\n                return _baseDesc.CanResetValue(GetTarget(component));<br>\n            }</p>\n<p>            public override Type ComponentType<br>\n            {<br>\n                get<br>\n                {<br>\n                    return _baseDesc.ComponentType;<br>\n                }<br>\n            }</p>\n<p>            public override object GetValue(object component)<br>\n            {<br>\n                return _baseDesc.GetValue(GetTarget(component));<br>\n            }</p>\n<p>            public override bool IsReadOnly<br>\n            {<br>\n                get { return _baseDesc.IsReadOnly; }<br>\n            }</p>\n<p>            public override Type PropertyType<br>\n            {<br>\n                get { return _baseDesc.PropertyType; }<br>\n            }</p>\n<p>            public override void ResetValue(object component)<br>\n            {<br>\n                _baseDesc.ResetValue(GetTarget(component));<br>\n            }</p>\n<p>            public override void SetValue(object component, object value)<br>\n            {<br>\n                _baseDesc.SetValue(GetTarget(component), value);<br>\n            }</p>\n<p>            public override bool ShouldSerializeValue(object component)<br>\n            {<br>\n                return _baseDesc.ShouldSerializeValue(GetTarget(component));<br>\n            }</p>\n<p>            public override string DisplayName<br>\n            {<br>\n                get<br>\n                {<br>\n                    return string.Concat(_ownerType.Name, “.”, base.DisplayName);<br>\n                }<br>\n            }<br>\n        }<br>\n    }</p>"
+  },
+  {
+    "id": 2235,
+    "parent": 0,
+    "author_name": "Brian Sullivan",
+    "author_url": "http://",
+    "date": "2008-01-19T19:14:37",
+    "type": "comment",
+    "content_html": "<p>Sounds good to me.  Anything that would keep me from using string-keyed collections and casting would be a plus.  That just gives me the willies.  Even if it turns out not to be the best solution, getting it out there in the ecosystem can only be beneficial.</p>"
+  },
+  {
+    "id": 2236,
+    "parent": 0,
+    "author_name": "Evan",
+    "author_url": "http://www.evanhoff.com/",
+    "date": "2008-01-19T20:04:44",
+    "type": "comment",
+    "content_html": "<p>You might think about adding an overload to allow passing in a key.. Your current design only allows passing 1 value per type in the bag..</p>\n<p>T Get(); //use the type-specific default key<br>\nT Get(string key); // use a type-specific prefix + key</p>\n<p>void Set();  // use the type-specific default key<br>\nvoid Set(string key); // use the type-specific prefix + key</p>"
+  },
+  {
+    "id": 2237,
+    "parent": 0,
+    "author_name": "Adam Tybor",
+    "author_url": "http://abombss.com",
+    "date": "2008-01-19T20:55:57",
+    "type": "comment",
+    "content_html": "<p>It seems more simple than Castle’s DictionaryAdapter and could cover, like you say, 80% of cases, but its still forcing you to create strongly typed viewdata objects.  </p>\n<p>I prefer the DictionaryAdaper because I can just create my interfaces and use primitives like strings, and ints, and not have to worry about keys.  The advantage of interfaces over strongly typed objects is you can achieve multiple inheritance very easily.</p>\n<p>You can certainly achieve the same thing with the SmartBag, it just adds extra line noise with the generic parameter and the get method.</p>\n<p>ViewData.Get().Title as opposed to ViewData.SiteHeader with the DictionaryAdapter.</p>\n<p>+1 to adding it to mvc contrib.</p>\n<p>@Evan, I like that extension too.</p>"
+  },
+  {
+    "id": 2238,
+    "parent": 0,
+    "author_name": "Bill Pierce",
+    "author_url": "http://blechie.com/wpierce/",
+    "date": "2008-01-19T21:11:02",
+    "type": "comment",
+    "content_html": "<p>“If you are passing one object/type to the view, we don’t need a key because the SmartBag can use the type as the key”</p>\n<p>How is this different than the current support for strongly typed ViewData?</p>"
+  },
+  {
+    "id": 2239,
+    "parent": 0,
+    "author_name": "Kyle Baley",
+    "author_url": "http://codebetter.com/blogs/kyle.baley",
+    "date": "2008-01-19T22:05:46",
+    "type": "comment",
+    "content_html": "<p>Good idea and not just for passing ViewData. Seems like a good pattern whenever you need to pass any collection of heterogeneous objects around.</p>\n<p>Have you seen PowerCollections: <a href=\"http://www.codeplex.com/PowerCollections\" rel=\"nofollow ugc\">http://www.codeplex.com/PowerCollections</a></p>\n<p>I haven’t looked into it myself but reading through your code made me think of it. It may have something similar that you could pilfer.</p>"
+  },
+  {
+    "id": 2240,
+    "parent": 0,
+    "author_name": "Andy",
+    "author_url": "http://",
+    "date": "2008-01-19T22:16:58",
+    "type": "comment",
+    "content_html": "<p>Looks a great idea for MVCContrib. Perhaps it could be called ConventionViewData to accompany ConventionController? Though I suppose SmartBag sounds quite funky!</p>"
+  },
+  {
+    "id": 2241,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-20T05:30:32",
+    "type": "comment",
+    "content_html": "<p>@Bill,<br>\nThis is different because with SmartBag, we can pass many objects to the view and use no key if we have only one of each type.  If we have two objects of the same type passed, then we’ll have to use a key.</p>\n<p>@Evan,<br>\nYou are right.  I missed that method.  I’ll be adding it.  </p>"
+  },
+  {
+    "id": 2242,
+    "parent": 0,
+    "author_name": "Hernan",
+    "author_url": "http://blog.latrompa.com",
+    "date": "2008-01-20T06:25:33",
+    "type": "comment",
+    "content_html": "<p>It sounds like a very good solution for me. The casting and the key’s are a problem. I guest there is no way to avoid them altogether as Evan mention we still will need the key if we have to objects of the same type.<br>\nI will love to see this solution inside MvcContrib, it still bothers me that you may access to (let’s say) Users objects one doing Get() and another one doing Get(“key”);. Not sure why, but I’m thinking on a third person reading the code three month later and trying to figure out why sometimes we pass a key and sometimes we don’t.</p>"
+  },
+  {
+    "id": 2243,
+    "parent": 0,
+    "author_name": "eric hexter",
+    "author_url": "http://",
+    "date": "2008-01-20T14:22:05",
+    "type": "comment",
+    "content_html": "<p>I like the idea of this.  I would rather see it called TypedBag rather than smart bag.    The idea of making anything key based really feels like a smell to me.   I would rather see the creation of a DTO that includes all of the objects that are needed for a view / viewlet / component.  Than you can create a composite view by including multiple DTOs in the SmartBag. </p>\n<p>I do like the Castle DictionaryAdaptor approach in that you could define your DTOs as interfaces and you never have to create concrete types.  The adaptor does that work for you.  You might want to look at that object to get a better feel for what it can do.</p>"
+  },
+  {
+    "id": 2244,
+    "parent": 0,
+    "author_name": "Kevin Isom",
+    "author_url": "http://weblogs.asp.net/kevinisom",
+    "date": "2008-01-20T20:23:58",
+    "type": "comment",
+    "content_html": "<p>I must agree with what Eric said about the Monorail DictionaryAdaptor. Definately a nice way to do it.</p>"
+  },
+  {
+    "id": 2245,
+    "parent": 0,
+    "author_name": "Hernan",
+    "author_url": "http://blog.latrompa.com",
+    "date": "2008-01-20T22:01:26",
+    "type": "comment",
+    "content_html": "<p>What bout this, instead of store the object in the hashtable directly, store an array of objects of the given type.<br>\nThat way we won’t need to use keys to get those objects.</p>\n<p>Get(index);<br>\nI also provide a First method that returns the first one just to make client notation cleaner.</p>\n<p>I also provide a CountOf method (not crazy about the name but I don’t want to override Count from the hashtable, this method returns the number of a given object.</p>\n<p>What do you think?<br>\nCode below.</p>\n<p>    public class SmartBag : Hashtable<br>\n    {<br>\n        public T First()<br>\n        {<br>\n            return (T)this.Get(typeof(T), 0);<br>\n        }</p>\n<p>        public int CountOf()<br>\n        {<br>\n            Type type = typeof(T);<br>\n            if (!ContainsKey(type))<br>\n            {<br>\n                string message = string.Format(“No object exists that is of type ‘{0}’.”, type);<br>\n                throw new ArgumentException(message);<br>\n            }</p>\n<p>            return ((ArrayList)this[type]).Count;<br>\n        }</p>\n<p>        public T Get(int index)<br>\n        {<br>\n            return (T)this.Get(typeof(T), index);<br>\n        }</p>\n<p>        private object Get(Type type, int index)<br>\n        {<br>\n            if (!ContainsKey(type))<br>\n            {<br>\n                string message = string.Format(“No object exists that is of type ‘{0}’.”, type);<br>\n                throw new ArgumentException(message);<br>\n            }</p>\n<p>            return ((ArrayList)this[type])[index];<br>\n        }</p>\n<p>        public void Add(object anObject)<br>\n        {<br>\n            Type type = anObject.GetType();<br>\n            this.Add(type, anObject);<br>\n        }</p>\n<p>        public override void  Add(object key, object value)<br>\n        {<br>\n            if (ContainsKey(key))<br>\n            {<br>\n                ((ArrayList)this[key]).Add(value);<br>\n            }<br>\n            else<br>\n            {<br>\n                ArrayList al = new ArrayList();<br>\n                al.Add(value);<br>\n                base.Add(key, al);<br>\n            }<br>\n        }</p>\n<p>        public bool Contains()<br>\n        {<br>\n            return ContainsKey(typeof(T));<br>\n        }<br>\n    }</p>"
+  },
+  {
+    "id": 2246,
+    "parent": 0,
+    "author_name": "Garry Shutler",
+    "author_url": "http://",
+    "date": "2008-01-21T00:11:20",
+    "type": "comment",
+    "content_html": "<p>I was going to make a similar suggestion to Hernan, basically making it support enumerations by each entry being a List of the type. Then the Get would get the first element and there would be an EnumerationOf method as well. </p>\n<p>I personally don’t see why you would need to retrieve elements by their index if you are using DTOs for the data you want to display.</p>"
+  },
+  {
+    "id": 2247,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-21T03:08:36",
+    "type": "comment",
+    "content_html": "<p>I’ve posted an update in CodeCampServer and converted all the conference views and actions to use it.  I think it comes out pretty clean.  Please comment on the new usage.</p>"
+  },
+  {
+    "id": 2248,
+    "parent": 0,
+    "author_name": "Matt Hinze",
+    "author_url": "http://mhinze.com",
+    "date": "2008-01-21T13:50:18",
+    "type": "comment",
+    "content_html": "<p>I’ve been trying to get a more robust option for ViewData implemented.  I like the SmartBag.  But using a Type based key isn’t as beneficial as you might think.  It’s very common to have multiple objects of the same type in the collection.  The first will populate the main page and a second for an associated viewlet.  Think a page for all products vs. a viewlet for My Products in the sidebar. They both use ProductsPresentationCollection or whatever. I had to extend the SmartBag to handle object based keys too. </p>\n<p> [Test]<br>\n        public void ShouldRetrieveSingleObjectByKey()<br>\n        {<br>\n            SmartBag bag = new SmartBag();<br>\n            Guid guid = new Guid();<br>\n            Guid guid2 = new Guid();<br>\n            bag.Add(guid);<br>\n            bag.Add(“key”, guid2);</p>\n<p>            Assert.That(bag.Get(“key”), Is.EqualTo(guid2));<br>\n        }</p>\n<p>and </p>\n<p>\tpublic class SmartBag : Hashtable<br>\n\t{<br>\n\t\t// …</p>\n<p>        public T Get(object key)<br>\n        {<br>\n            if (!ContainsKey(key))<br>\n            {<br>\n                string message = string.Format(“No object exists with key ‘{0}’.”, key);<br>\n                throw new ArgumentException(message);<br>\n            }<br>\n            return (T) this[key];<br>\n        }</p>\n<p>by the way, this is sort of similar to my PageData class which inherits from ViewData class and has a ViewData generic property and an IDictionary(string,object) collection as a property called ViewletData.  It worked quite well because it nicely segregated the viewdata from the viewlet data.  See the Issue6 thread on the ccs-discuss list for more info. </p>\n<p>Either way – there is some funny business occurring as the controller does more than control.  We now need a centralized contact-based mechanism for creating this massive SmartBag..  Certain site-wide presentation objects need to be added to the SmartBag even in seemingly unrelated controllers.  Which concerns me, as I do not want my repos querying for every request. </p>\n<p>It’s a fine solution for what we have now Jeremy.  But I think in the long run that RenderAction is a lot less messy and even, as our SmartBag gets bigger than we’d like to admit now that it will, more “performant”</p>\n<p>The onus </p>\n<p>I think enhanced viewdata like SmartBag or PageData</p>"
+  },
+  {
+    "id": 2249,
+    "parent": 0,
+    "author_name": "Ken Egozi",
+    "author_url": "http://www.kenegozi.com/blog",
+    "date": "2008-01-21T14:20:55",
+    "type": "comment",
+    "content_html": "<p>I’ll second Adam.<br>\nImo, every view should have an interface anyway. Having that, the use of the DictionaryAdapter is most natural.</p>\n<p>So, you’d declare ViewBase { … IView view = dictionaryAdapter.GetAdapter(ViewData); }<br>\nand have the dictionary adapter injected to your page with your IoC container of choice.</p>\n<p>here:<br>\n<a href=\"http://www.kenegozi.com/Blog/2007/10/17/typed-view-properties-in-monorail-and-aspview.aspx\" rel=\"nofollow ugc\">http://www.kenegozi.com/Blog/2007/10/17/typed-view-properties-in-monorail-and-aspview.aspx</a><br>\nis a sample for MonoRail/AspView.  This could be easily adapted to ASPNET.MVC (just swap propertybag with ViewData)</p>"
+  },
+  {
+    "id": 2250,
+    "parent": 0,
+    "author_name": "Greg",
+    "author_url": "http://",
+    "date": "2008-01-21T17:10:05",
+    "type": "comment",
+    "content_html": "<p>shouldn’t this be encapsulating a hashtable/dictionary instead of BEING a hashtable/dictionary? Perhaps even meeting the interface? i.e. in the above how do I insure my invariant that there aren’t “other things” in my dictionary since it is exposed?</p>\n<p>also since this is to be used so often it could really benefit from being a dictionary where it could avoid dual lookups (contains then get etc) on every operation ….</p>\n<p>further … I need to be able to say StoreThisObjectAsThisType as opposed to it always using GetType() … otherwise it defeats the purpose of polymorphism … it would really suck that I want to add a proxy to AnObject and my view mysteriously start failing.</p>"
+  },
+  {
+    "id": 2251,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-22T17:02:18",
+    "type": "comment",
+    "content_html": "<p>@Greg,<br>\nI think it IS an IDictionary, and Hashtable gives us that.  All Hashtable operations are still valid.</p>\n<p>Regarding the adding as type:  You are completely correct.  This should support proxies, so we’ll have to change it to store as explicit type and not derive the type of the actual object.  We need to be able to support polymorphism.</p>"
+  },
+  {
+    "id": 2252,
+    "parent": 0,
+    "author_name": "Greg",
+    "author_url": "http://",
+    "date": "2008-01-22T17:52:48",
+    "type": "comment",
+    "content_html": "<p>jeffrey: you miss my point … if it IS a hashtable what prevents me from saying</p>\n<p>Bag[“Foo777”] = Something </p>\n<p>or</p>\n<p>myBag.Add(“Bar”, new object());</p>\n<p>.</p>"
+  },
+  {
+    "id": 2253,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-22T18:04:41",
+    "type": "comment",
+    "content_html": "<p>@Greg,<br>\nLet me try again.  It is a hashtable, so<br>\nBag[“Foo777”] = Something is a perfectly valid scenario.</p>\n<p>If you need the full flexibility of the IDictionary, then it is there to use.</p>"
+  },
+  {
+    "id": 2254,
+    "parent": 0,
+    "author_name": "Jeremy D. Miller",
+    "author_url": "http://codebetter.com/blogs/jeremy.miller",
+    "date": "2008-01-22T18:38:04",
+    "type": "comment",
+    "content_html": "<p>@Jeffrey,</p>\n<p>If I can make a suggestion that *might* satisfy Greg.</p>\n<p>Make it:</p>\n<p>T Bag.Get() or T Bag.Get(key),</p>\n<p>but not:</p>\n<p>object Bag.Get(key)</p>\n<p>To stay a little more true to the MVC theme, shouldn’t you always be passing a single Model object to the View?  Passing a hashtable just seems like a great way to get yourself into trouble.  What’s going on with the ConventionController idea?</p>"
+  },
+  {
+    "id": 2255,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-24T15:32:15",
+    "type": "comment",
+    "content_html": "<p>@Jeremy,<br>\nDone.</p>\n<p>Single model:  No, realistic views are going to need a flexible number of objects, so we need a flexible container to pass.  One object is only sufficient if you have a presentation DTO for every view OR you have a trivial view.</p>\n<p>ConventionController is alive and well in the MvcContrib project (<a href=\"http://mvccontrib.org\" rel=\"nofollow ugc\">http://mvccontrib.org</a>)</p>"
+  },
+  {
+    "id": 2256,
+    "parent": 0,
+    "author_name": "Jeff Handley",
+    "author_url": "http://www.JeffHandley.com",
+    "date": "2008-01-25T02:29:18",
+    "type": "comment",
+    "content_html": "<p>This is excellent.  Second time sitting down to work on my first ASP.NET MVC project, I spent the entire evening trying to create a specific solution to this problem, not thinking about it being a generic problem.  The ‘Current User’ scenario is dead on… there’s no reason for every Model passed down to have to know that the UI needs to have a User object.  We’re going to end up having too much UI embedded into our Model that way.</p>\n<p>I agree with sticking with the single model.  If you need to put multiple objects of the same type into the View, then just wrap those objects into a dictionary or array yourself and stick that collection into the bag.</p>\n<p>Thanks!</p>"
+  },
+  {
+    "id": 2257,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-25T13:08:58",
+    "type": "comment",
+    "content_html": "<p>@Greg,<br>\nCheck out my follow-up to see if I have it now.<br>\n<a href=\"http://codebetter.com/blogs/jeffrey.palermo/archive/2008/01/24/smartbag-for-asp-net-mvc-take-two.aspx\" rel=\"nofollow ugc\">http://codebetter.com/blogs/jeffrey.palermo/archive/2008/01/24/smartbag-for-asp-net-mvc-take-two.aspx</a></p>"
+  }
+]

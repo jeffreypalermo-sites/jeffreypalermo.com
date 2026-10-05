@@ -1,0 +1,34 @@
+---
+wp_id: 1028
+title: The flow of team software design
+slug: the-flow-of-team-software-design
+permalink: /2009/03/the-flow-of-team-software-design/
+date: 2009-03-26T14:33:12
+date_utc: 2009-03-26T14:33:12Z
+modified: 2009-03-26T14:33:12
+format: html
+categories:
+- blog
+excerpt: This week, I taught another installment of Headspring’s Agile Boot Camp, part 2. On one of the days, I lead the team (class) through a team design session to add some rather involved behavior to the software system used in the class. I started out by putting on my customer hat and laying out the […]
+comments_open: true
+---
+<p>This week, I taught another installment of Headspring’s Agile Boot Camp, part 2.&nbsp; On one of the days, I lead the team (class) through a team design session to add some rather involved behavior to the software system used in the class.&nbsp; I started out by putting on my customer hat and laying out the release objectives.</p>
+<p><img loading="lazy" decoding="async" height="309" src="https://i0.wp.com/jeffreypalermo.com/files/media/image/WindowsLiveWriter/Theflowofteamsoftwaredesign_CC9E/PIC-0106%5B1%5D.jpg?resize=411%2C309" width="411" align="left"> When attempting to get everyone on the same page, visuals are very important.&nbsp; Either whiteboard, chalkboard, paper, or anything visual will do.&nbsp; Here is a picture of the release goals written out.&nbsp; I invited the team to ask me clarifying questions about the goals.</p>
+
+<p>The top three, we pulled out as stories and put them on our story wall.&nbsp; The next three were cross-cutting business rules that applied to the three stories.&nbsp; The team quickly complete the first story and then split up the next two.&nbsp; <img loading="lazy" decoding="async" height="309" src="https://i0.wp.com/jeffreypalermo.com/files/media/image/WindowsLiveWriter/Theflowofteamsoftwaredesign_CC9E/PIC-0107%5B13%5D.jpg?resize=412%2C309" width="412">  </p>
+<p>Before the team began test-driving the functionality through pair-programming, we conducted a team design session to get everyone on the same page.&nbsp; We did just enough drawing to ensure that everyone had a meeting of the minds.&nbsp; In reality, if team members start slinging code before everyone has a shared understanding of the approach, there is bound to be wasted work.&nbsp; Individuals will create assumptions and act on them.&nbsp; Then, when the assumptions are invalidated, we also have work that becomes invalidated.&nbsp; This is waste, and you never get that time back.&nbsp; A little bit of communications (meeting of the minds) goes a long way to ensuring that the work done is the right work.&nbsp; </p>
+<p>We started the design session by coming up with all the individual responsibilities that are necessary to satisfy the stories.</p>
+<p><img loading="lazy" decoding="async" height="308" src="https://i0.wp.com/jeffreypalermo.com/files/media/image/WindowsLiveWriter/Theflowofteamsoftwaredesign_CC9E/PIC-0105%5B2%5D.jpg?resize=409%2C308" width="409"> </p>
+<p>The blue initials next to each responsibility is the acronym for the interface that has been assigned the responsibility.&nbsp; After responsibilities had been identified, we took to the whiteboard and created a sequence diagram using the chosen type names.&nbsp; This allowed us to determine dependencies and flow.</p>
+<p><img loading="lazy" decoding="async" height="431" src="https://i0.wp.com/jeffreypalermo.com/files/media/image/WindowsLiveWriter/Theflowofteamsoftwaredesign_CC9E/PIC-0101%5B4%5D.jpg?resize=573%2C431" width="573"></p>
+<p>There are actually two different threads present on this sequence diagram.&nbsp; On the left, the state command initiates a notification that gets placed into a queue.&nbsp; On the right, a queue watcher peeks at the queue (intended to be run with Windows Scheduler) and kicks off&nbsp;the sending process according to business rules.</p>
+<p>There are only certain state transitions when a notification needs to be send.&nbsp; This is visualized through a state diagram:</p>
+<p><img loading="lazy" decoding="async" height="322" src="https://i0.wp.com/jeffreypalermo.com/files/media/image/WindowsLiveWriter/Theflowofteamsoftwaredesign_CC9E/PIC-0104%5B2%5D.jpg?resize=428%2C322" width="428"> </p>
+<p>The most hairy part of the design is the IQueueWatcher implementation.&nbsp; This deserved its own graphic, and there was lots of discussion while we were fleshing out the flowchart.</p>
+<p><img loading="lazy" decoding="async" height="335" src="https://i0.wp.com/jeffreypalermo.com/files/media/image/WindowsLiveWriter/Theflowofteamsoftwaredesign_CC9E/PIC-0103%5B2%5D.jpg?resize=445%2C335" width="445"> </p>
+<p>Even as crude as it looks, the act of creating this as a team caused each team member to think critically about how the feature needed to be implemented.&nbsp; There are lots of different places in code where a decision can be made, and putting it in visual form solidified the approach across the team.</p>
+<p>The last step before actually pairing up and hitting the keyboards was to task out everything that needed to be done.</p>
+<p><img loading="lazy" decoding="async" height="335" src="https://i0.wp.com/jeffreypalermo.com/files/media/image/WindowsLiveWriter/Theflowofteamsoftwaredesign_CC9E/PIC-0102%5B3%5D.jpg?resize=445%2C335" width="445"> </p>
+<p>Notice that the first task was to create all the interfaces and common types.&nbsp; By doing this first, other tasks could be accomplished without being blocked by uncompleted work.&nbsp; One pair can work on the calling side of an interface, and another pair can work on the implementation.&nbsp; Interfaces are natural seams, and when used liberally, provide a natural decoupling.&nbsp; This decoupling enables team development while still working closely on the same stories.&nbsp; My experience has shown that collective code ownership falls in line naturally when using this approach.</p>
+<p>At the end of the day, the team hammered through the stories very quickly because each class by itself was very, very simple.&nbsp; I really enjoyed the class, and I look forward to teaching the next Agile Boot Camp.</p>
+<p><img loading="lazy" decoding="async" height="313" src="https://i0.wp.com/jeffreypalermo.com/files/media/image/WindowsLiveWriter/Theflowofteamsoftwaredesign_CC9E/PIC-0108%5B2%5D.jpg?resize=416%2C313" width="416"></p>

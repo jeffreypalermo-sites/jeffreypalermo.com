@@ -1,0 +1,36 @@
+---
+wp_id: 72
+title: Here’s how I track down memory leaks in my .Net apps – level 400
+slug: heres-how-i-track-down-memory-leaks-in-my-net-apps-level-400
+permalink: /2004/08/heres-how-i-track-down-memory-leaks-in-my-net-apps-level-400/
+date: 2004-08-18T17:13:00
+date_utc: 2004-08-18T17:13:00Z
+modified: 2004-08-18T17:13:00
+format: html
+excerpt: I was planning on posting this anyway, but Steve’s post has convinced me to do it sooner. Here are methods and tools I use to track down memory leaks in my applications. First, I profile my app. I do web applications, so I’ll use Application Center Test that comes with VS 2003 EA, but you […]
+comments_open: true
+---
+<p>I was planning on posting this anyway, but <a href="http://dotnetjunkies.com/WebLog/seichert/archive/2004/08/18/22481.aspx">Steve’s post </a>has convinced me to do it sooner.&nbsp; Here are methods and tools I use to track down memory leaks in my applications.&nbsp; </p>
+<ul><br>
+<li>First, I profile my app.&nbsp; I do web applications, so I’ll use Application Center Test that comes with VS 2003 EA, but you can also use the free tool, <a href="http://www.microsoft.com/technet/archive/itsolutions/intranet/downloads/webstres.mspx">Microsoft Application Stress Tool</a>.</li><br>
+<li>I run perfmon while the stress tool is running.&nbsp; The stress tool will push my app to the limit and simulate heavy traffic.&nbsp; Here are counters I ALWAYS look at:</li><br>
+<ul><br>
+<li># of Excepts Thrown /sec (0 is the number you are shooting for.</li><br>
+<li>Gen 0 heap size</li><br>
+<li>Gen 1 heap size</li><br>
+<li>Gen 2 heap size (this is where your memory will likely accumulate.&nbsp; If you have objects that won’t go away, they will end up here and end up taking up ALL your memory)</li><br>
+<li>Large Object Heap size</li><br>
+<li>Application Restarts (if your memory usage gets too high, ASP.NET might automatically restart the AppDomain, and you’ll be able to see it here).</li><br>
+<li>Any others you feel are appropriate.</li></ul><br>
+<li>Run the stress tool while watching the performance counters.&nbsp; Your memory usage should go up and down but overall remain consistent.&nbsp; If your gen 2 keeps getting bigger and bigger and bigger, then you probably have a memory leak. </li><br>
+<li>Here is how I go about finding out exactly what objects are taking up all my gen 2 memory</li><br>
+<ul><br>
+<li>Bookmark the <a href="http://msdn.microsoft.com/vcsharp/team/tools/default.aspx">C# Team’s Tools page</a>.&nbsp; There are several memory profilers to choose from.&nbsp; There are several commercial products you can buy, but I chose to try the free one: <a href="http://www.gotdotnet.com/community/usersamples/details.aspx?sampleguid=36a3e666-6877-4c26-b62d-bfd7cb3154ac">Allocation Profiler</a>.&nbsp; I also tried <a href="http://nprof.sourceforge.net/site/sitehomenews.html">NProf</a>, but it seemed to profile processor performance and not memory (unless I used it wrong).</li><br>
+<li>Note, for AllocationProfiler or NProf to work, you have to modify your machine.config file’s &lt;processModel/&gt; node to have username=“SYSTEM“ instead of “machine“.</li><br>
+<li>Open AllocationProfiler, and have it start profiling your app.</li><br>
+<li>I would run the stress tool on my web apps to generate a lot of traffic.&nbsp; When I’m done, I stop profiling.&nbsp; Application Profiler generates some good graphs from its logfile.&nbsp; I look at where the memory is allocated, and I see generation 2 has a bunch of stuff.&nbsp; I can see what types make up the most memory.&nbsp; You can also look at the contents of the managed heap with other views, and you can drill down and determine what is taking up all your memory.&nbsp; Once you have found the offending type, you can dig into your code and look for no-nos.</li></ul><br>
+<li>Read my <a href="http://dotnetjunkies.com/WebLog/jpalermo/archive/2004/08/18/22471.aspx">previous post about my nasty memory leak</a>.</li><br>
+<li>If would also do you good to read Jeffrey Richter’s book: <a href="http://www.microsoft.com/MSPress/books/6835.asp">Applied Microsoft .Net Programming in C#</a>.&nbsp; It has a great section about the managed heap and garbage collector.</li><br>
+<li>Once you know how the managed heap and garbage collector work in .Net (and no sooner), you can evaluate your code for scenarios where long-lived objects keep references to other objects and thereby prohibit the garbage collector from reclaiming their memory.</li><br>
+<li>Example:&nbsp; If you have a long-lived object that has long strings as members, the memory those strings consume cannot be collected as long as the long-lived object is alive.&nbsp; </li></ul>
+<p>I hope this helps someone find memory leaks in their application.&nbsp; Practice makes perfect, and I had to read books and articles to understand the inner workings of the CLR before I could effectively analyze my code for leaks.</p>

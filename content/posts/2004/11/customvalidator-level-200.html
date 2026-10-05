@@ -1,0 +1,22 @@
+---
+wp_id: 141
+title: CustomValidator – level 200
+slug: customvalidator-level-200
+permalink: /2004/11/customvalidator-level-200/
+date: 2004-11-12T00:26:00
+date_utc: 2004-11-12T00:26:00Z
+modified: 2004-11-12T00:26:00
+format: html
+excerpt: 'The CustomValidator control is really flexible. Here’s a quick example of validating that a checkbox is checked: <%@ Page language=”c#” Codebehind=”ValidateCheckbox.aspx.cs” AutoEventWireup=”false” Inherits=”WebApplication1.ValidateCheckbox” %><!DOCTYPE HTML PUBLIC “-//W3C//DTD HTML 4.0 Transitional//EN” ><HTML> <HEAD> function ValidateChecked(oSrc, args){ if(document.all[“”].checked == false){ alert(“Has to be checked.”); args.IsValid = false; } } </HEAD> <body> <form id=”Form1″ method=”post” runat=”server”> <asp:CustomValidator ClientValidationFunction=”ValidateChecked” Runat=”server” ID=”val” /> <asp:CheckBox ID=”chk” Runat=”server” /> <asp:Button ID=”btn” Runat=”server” Text=”Submit” /> </form> </body></HTML> And […]'
+comments_open: true
+---
+<p>The CustomValidator control is really flexible. Here’s a quick example of validating that a checkbox is checked:</p>
+<p>&lt;%@ Page language=”c#” Codebehind=”ValidateCheckbox.aspx.cs” AutoEventWireup=”false” Inherits=”WebApplication1.ValidateCheckbox” %&gt;<br>&lt;!DOCTYPE HTML PUBLIC “-//W3C//DTD HTML 4.0 Transitional//EN” &gt;<br>&lt;HTML&gt;<br>&nbsp;&lt;HEAD&gt;<br>&nbsp;&nbsp;<br>&nbsp;function ValidateChecked(oSrc, args){<br>&nbsp;&nbsp;if(document.all[“”].checked == false){<br>&nbsp;&nbsp;&nbsp;alert(“Has to be checked.”);<br>&nbsp;&nbsp;&nbsp;args.IsValid = false;<br>&nbsp;&nbsp;}<br>&nbsp;}<br>&nbsp;&nbsp;<br>&nbsp;&lt;/HEAD&gt;<br>&nbsp;&lt;body&gt;<br>&nbsp;&nbsp;&lt;form id=”Form1″ method=”post” runat=”server”&gt;<br>&nbsp;&nbsp;&nbsp;&lt;asp:CustomValidator ClientValidationFunction=”ValidateChecked” Runat=”server” ID=”val” /&gt;<br>&nbsp;&nbsp;&nbsp;&lt;asp:CheckBox ID=”chk” Runat=”server” /&gt;<br>&nbsp;&nbsp;&nbsp;&lt;asp:Button ID=”btn” Runat=”server” Text=”Submit” /&gt;<br>&nbsp;&nbsp;&lt;/form&gt;<br>&nbsp;&lt;/body&gt;<br>&lt;/HTML&gt;</p>
+<p>And the code-behind:</p>
+<div><br>
+<p><span>private</span> <span>void</span> val_ServerValidate(<span>object</span> source, ServerValidateEventArgs args)</p><br>
+<p>{</p><br>
+<p>&nbsp;&nbsp;&nbsp; args.IsValid = <span>true</span>;</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>if</span>(chk.Checked == <span>false</span>)</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; args.IsValid = <span>false</span>;</p><br>
+<p>}</p></div><!--EndFragment-->

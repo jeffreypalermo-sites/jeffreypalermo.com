@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2596,
+    "parent": 0,
+    "author_name": "Christopher Painter",
+    "author_url": "http://blog.deploymentengineering.com",
+    "date": "2009-06-05T09:06:14",
+    "type": "comment",
+    "content_html": "<p>I’d be interested in a metric comparing deployment complexities for the two systems.    How many files, virtual directories, xml configuration settings,  windows services  ectera does each system have?</p>"
+  }
+]

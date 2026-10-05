@@ -1,0 +1,20 @@
+[
+  {
+    "id": 2231,
+    "parent": 0,
+    "author_name": "Aaron Lerch",
+    "author_url": "http://www.aaronlerch.com/blog/",
+    "date": "2008-01-10T15:22:37",
+    "type": "comment",
+    "content_html": "<p>Well the pingback beat me to it, but I have a post that lists some ways to determine “collocated” files (like .config files).</p>\n<p><a href=\"http://www.aaronlerch.com/blog/2007/12/12/loading-collocated-file-dependencies-at-runtime/\" rel=\"nofollow ugc\">http://www.aaronlerch.com/blog/2007/12/12/loading-collocated-file-dependencies-at-runtime/</a></p>"
+  },
+  {
+    "id": 2232,
+    "parent": 0,
+    "author_name": "Francois Tanguay",
+    "author_url": "http://",
+    "date": "2008-01-10T17:31:08",
+    "type": "comment",
+    "content_html": "<p>Just remember than in VS2008, runnint tests with VS Tests, this value leads incorrect results.</p>"
+  }
+]

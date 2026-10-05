@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2656,
+    "parent": 0,
+    "author_name": "shine",
+    "author_url": "http://",
+    "date": "2010-01-24T02:39:51",
+    "type": "comment",
+    "content_html": "<p>Enjoyed the webinar and liked the Onion architecture approach (rather the thinking that drove the same). I think the DI (dependency injection) techniques (made popular by Spring etc in the java world) would help realize the same in a big way (similar to how your startup code gets the references active)</p>"
+  }
+]

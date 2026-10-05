@@ -1,0 +1,22 @@
+---
+wp_id: 488
+title: Building a dev/test server farm with Virtual Server 2005 R2 – level 300
+slug: building-a-devtest-server-farm-with-virtual-server-2005-r2-level-300
+permalink: /2007/02/building-a-devtest-server-farm-with-virtual-server-2005-r2-level-300/
+date: 2007-02-08T12:59:18
+date_utc: 2007-02-08T12:59:18Z
+modified: 2007-02-08T12:59:18
+format: html
+excerpt: My team has used Virtual Server 2005 and a single beefy physical server to do some great things this week, and I have to share. The problem we are faced with is that we need multiple test environments for release and deployment testing. We have a release very soon, and we’ve been doing our normal […]
+comments_open: true
+---
+<p>My team has used Virtual Server 2005 and a single beefy physical server to do some great things this week, and I have to share.&nbsp; The problem we are faced with is that we need multiple test environments for release and deployment testing.&nbsp; We have a release very soon, and we’ve been doing our normal testing every day (automated testing, customer acceptance testing, etc), but now we are getting the whole company involved to lay a critical eye on everything.&nbsp; Then we’ll package up the release candidate and do our deployment testing (Windows app- installed on the client).&nbsp; We need to make sure the setup experience is great.</p>
+<p>Situation:</p>
+<ul>
+<li>We need 6 test environments for release testing.&nbsp; They should all have the software set up for testing.</li>
+<li>We need to clean these 6 environments multiple times to rerun tests.</li>
+<li>We don’t have 6 extra servers or client machines.</li>
+</ul>
+<p>Solution:</p>
+<p>We used Virtual Server 2005 to create a virtual pc with XPSP2 on it.&nbsp; We then created a differencing disk and installed the software with the correct configuration for testing.&nbsp; Then, we created 6 differencing disks that referenced the first.&nbsp; We allocated 400MB of RAM to each 6 that need to run, and we have our 6 test environments.&nbsp; The two root disks are there read-only since they are the base for the 6 live environments.&nbsp; We enabled undo disks on each of the 6 test images, and now we can have all of our people run tests, and we scrap the undo disk to roll back changes to the clean, freshly set-up state.</p>
+<p>When getting these set up, we did have one hiccup – we couldn’t access the virtual pcs from the network except through the ip address.&nbsp; Solution:&nbsp; Windows firewall was blocking network name access.&nbsp; Fix:&nbsp; “Allow incoming ICMP request”.&nbsp; Yep.&nbsp; Because we couldn’t ping the machine by name, we couldn’t remote desktop into it except by IP address.&nbsp; We allowed ping, stopped, restarted Windows firewall, and it’s all gravy.&nbsp; (In case you don’t know about this setting, check out <a title="http://www.cam.ac.uk/cs/docs/faq/m8.html" href="http://www.cam.ac.uk/cs/docs/faq/m8.html">http://www.cam.ac.uk/cs/docs/faq/m8.html</a>).</p>

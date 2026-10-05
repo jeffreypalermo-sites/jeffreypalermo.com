@@ -1,0 +1,119 @@
+---
+wp_id: 512
+title: Streamline Model-View-Presenter with new StructureMap feature – level 300
+slug: streamline-model-view-presenter-with-new-structuremap-feature-level-300
+permalink: /2007/04/streamline-model-view-presenter-with-new-structuremap-feature-level-300/
+date: 2007-04-16T03:05:00
+date_utc: 2007-04-16T03:05:00Z
+modified: 2007-04-16T03:05:00
+format: html
+tags:
+- asp-net
+- services
+- tools
+excerpt: I'm going to present you with a very exciting new feature of StructureMap that is available in the 2.0 release. You can download StructureMap from SourceForge. There are plenty of articles about StructureMap's service location capabilities, and the documentation is quite good, but I'll throw out the bread-and-butter usage scenario for service location. Here is […]
+comments_open: true
+---
+<p>I'm going to present you with a very exciting new feature of StructureMap that is available in the 2.0 release.&nbsp; You can download StructureMap from <a href="http://sourceforge.net/projects/structuremap">SourceForge</a>.</p>
+<p>There are plenty of articles about StructureMap's service location capabilities, and the <a href="http://structuremap.sourceforge.net/Default.htm">documentation</a> is quite good, but I'll throw out the bread-and-butter usage scenario for service location.&nbsp; Here is is.</p>
+<p>I have an ICustomerRepository, and an "impl" class that implements the interface, CustomerRepository.&nbsp; As the names suggest, this interface will return an array of Customer(s) given a whole or partial phone number.&nbsp; Here is the full code.</p>
+
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;1</span>&nbsp;<span style="color:blue">using</span> StructureMap;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;2</span>&nbsp;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;3</span>&nbsp;[<span style="color:#2b91af">PluginFamily</span>(<span style="color:#a31515">"Default"</span>)]</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;4</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">interface</span> <span style="color:#2b91af">ICustomerRepository</span></p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;5</span>&nbsp;{</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#2b91af">Customer</span>[] GetCustomersByPartialPhoneNumber(<span style="color:blue">string</span> phoneNumberOrPartial);</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;}</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;[<span style="color:#2b91af">Pluggable</span>(<span style="color:#a31515">"Default"</span>)]</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;10</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">class</span> <span style="color:#2b91af">CustomerRepository</span> : <span style="color:#2b91af">ICustomerRepository</span></p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;11</span>&nbsp;{</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;12</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:#2b91af">Customer</span>[] GetCustomersByPartialPhoneNumber(<span style="color:blue">string</span> phoneNumberOrPartial)</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;14</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:green">//do the right thing to find the customers;</span></p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;15</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span> <span style="color:blue">null</span>;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;16</span>&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;17</span>&nbsp;}</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;18</span>&nbsp;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;19</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">class</span> <span style="color:#2b91af">Customer</span></p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;20</span>&nbsp;{</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;21</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:blue">string</span> _name;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;22</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span> <span style="color:blue">string</span> _phoneNumber;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;23</span>&nbsp;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;24</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> Customer(<span style="color:blue">string</span> name, <span style="color:blue">string</span> phoneNumber)</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;25</span>&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;26</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _name = name;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;27</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _phoneNumber = phoneNumber;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;28</span>&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;29</span>&nbsp;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;30</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">string</span> Name</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;31</span>&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;32</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> { <span style="color:blue">return</span> _name; }</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;33</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">set</span> { _name = <span style="color:blue">value</span>; }</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;34</span>&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;35</span>&nbsp;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;36</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">string</span> PhoneNumber</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;37</span>&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;38</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> { <span style="color:blue">return</span> _phoneNumber; }</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;39</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">set</span> { _phoneNumber = <span style="color:blue">value</span>; }</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;40</span>&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;41</span>&nbsp;}</p>
+</div>
+<p>In another place, I want to make use of the ICustomerRepository interface, so all I need are the following lines:</p>
+
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;49</span>&nbsp;<span style="color:green">//imagine this method were real.</span></p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;50</span> <span style="color:#2b91af">ICustomerRepository</span> repository = <span style="color:#2b91af">ObjectFactory</span>.GetInstance&lt;<span style="color:#2b91af">ICustomerRepository</span>&gt;();</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;51</span> <span style="color:#2b91af">Customer</span>[] customers = repository.GetCustomersByPartialPhoneNumber(<span style="color:#a31515">"555-5555"</span>);</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;52</span> <span style="color:blue">return</span> customers;</p>
+</div>
+<p>Of course, when my application starts, I'll put these lines to ensure it will work (or I could use a StructureMap.config file).</p>
+
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;47</span>&nbsp;<span style="color:#2b91af">StructureMapConfiguration</span>.UseDefaultStructureMapConfigFile = <span style="color:blue">false</span>;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;48</span> <span style="color:#2b91af">StructureMapConfiguration</span>.ScanAssemblies().IncludeTheCallingAssembly();</p>
+</div>
+<p>Now that you get the gist of it, I'm going to use StructureMap to enable the Model-View-Presenter pattern in a cleaner way with ASP.NET UserControls.&nbsp; First consider the following usage:<br><img decoding="async" src="https://i0.wp.com/farm1.static.flickr.com/216/460985825_4830c15926_o.jpg?w=776"> </p>
+<p>I have a page that has a complicated piece which has been delegated to a usercontrol-presenter pair.&nbsp; The page, of course, will embed this usercontrol in the appropriate place.&nbsp; Immediately you can spot the problem:&nbsp; The "Foo" view is responsible for creating the "Widget" view.&nbsp; Then the Widget view creates its presenter and uses it.&nbsp; This is too much responsibility for both views.&nbsp; </p>
+<p>Now consider an alternative:<br>&nbsp;<img decoding="async" src="https://i0.wp.com/farm1.static.flickr.com/169/461023121_334419f7bb_o.jpg?w=776"> </p>
+<p>Now notice that the FooPresenter is responsible for creating and using WidgetPresenter.&nbsp; WidgetPresenter, in return, uses StructureMap to service-locate its view, which implements IWidgetView.&nbsp; Because Widget.ascx.cs implements IWidgetView, this wiring works easily.&nbsp; The StructureMap change that made this possible is the following usage of the configuration.&nbsp; Here is the code:</p>
+
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;58</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">interface</span> <span style="color:#2b91af">IWidgetView</span></p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;59</span>&nbsp;{</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;60</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">void</span> ShowWidget(<span style="color:#2b91af">RedWidget</span> theRedWidget);</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;61</span>&nbsp;}</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;62</span>&nbsp;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;63</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">class</span> <span style="color:#2b91af">RedWidget</span></p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;64</span>&nbsp;{</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;65</span>&nbsp;}</p>
+</div>
+<p>&nbsp;And the usercontrol that is the view:</p>
+
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;5</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">partial</span> <span style="color:blue">class</span> <span style="color:#2b91af">Widget</span> : <span style="color:#2b91af">UserControl</span>, <span style="color:#2b91af">IWidgetView</span></p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;{</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span> <span style="color:blue">void</span> Page_Load(<span style="color:blue">object</span> sender, <span style="color:#2b91af">EventArgs</span> e)</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;10</span>&nbsp;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;11</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">void</span> ShowWidget(<span style="color:#2b91af">RedWidget</span> theRedWidget)</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;12</span>&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:#2b91af">HttpContext</span>.Current.Response.Write(<span style="color:#a31515">"Red widget shown"</span>);</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;14</span>&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;15</span>&nbsp;}</p>
+</div>
+<p>&nbsp;And the configuration that makes this possible:</p>
+
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;66</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">void</span> Application_Start(<span style="color:blue">object</span> sender, <span style="color:#2b91af">EventArgs</span> e)</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;67</span>&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;68</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:#2b91af">StructureMapConfiguration</span>.UseDefaultStructureMapConfigFile = <span style="color:blue">false</span>;</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;69</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:#2b91af">StructureMapConfiguration</span>.ScanAssemblies().IncludeTheCallingAssembly();</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;70</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:#2b91af">StructureMapConfiguration</span>.BuildInstancesOf&lt;<span style="color:#2b91af">IWidgetView</span>&gt;().TheDefaultIs(</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:#2b91af">Registry</span>.LoadUserControlFrom&lt;<span style="color:#2b91af">IWidgetView</span>&gt;(<span style="color:#a31515">"Widget.ascx"</span>));</p>
+<p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;71</span>&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+</div>
+<p>&nbsp;Now that we can service-locate asp.net usercontrols, we can inject them as well.&nbsp; The next step is having the WidgetPresenter receive IWidgetView in the constructor.&nbsp; StructureMap will chain-create the usercontrol in order to create WidgetPresenter.&nbsp; Now, our presenter is in control, and the views can concentrate on presenting information to the user and not worry about control flow.</p>

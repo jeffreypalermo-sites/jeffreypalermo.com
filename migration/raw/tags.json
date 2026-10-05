@@ -1,0 +1,272 @@
+[
+  {
+    "id": 264,
+    "count": 10,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/learning/",
+    "name": "Learning",
+    "slug": "learning",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 1736,
+    "count": 3,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/services/",
+    "name": "Services",
+    "slug": "services",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 1981,
+    "count": 15,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/tools/",
+    "name": "Tools",
+    "slug": "tools",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 2290,
+    "count": 0,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/architecture/",
+    "name": "architecture",
+    "slug": "architecture",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 3301,
+    "count": 43,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/tips-tricks/",
+    "name": "Tips &amp; Tricks",
+    "slug": "tips-tricks",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 11287,
+    "count": 30,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/agile/",
+    "name": "Agile",
+    "slug": "agile",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 11696,
+    "count": 12,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/managing/",
+    "name": "Managing",
+    "slug": "managing",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 35890,
+    "count": 16,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/featured/",
+    "name": "Featured",
+    "slug": "featured",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 36699,
+    "count": 5,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/mvc/",
+    "name": "mvc",
+    "slug": "mvc",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 94234,
+    "count": 9,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/asp-net/",
+    "name": "ASP.NET",
+    "slug": "asp-net",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 179011,
+    "count": 8,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/fit/",
+    "name": "FIT",
+    "slug": "fit",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 549460,
+    "count": 6,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/data-access/",
+    "name": "Data Access",
+    "slug": "data-access",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 2040328,
+    "count": 5,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/altnetconf/",
+    "name": "altnetconf",
+    "slug": "altnetconf",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 2499587,
+    "count": 35,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/developer-community/",
+    "name": "Developer Community",
+    "slug": "developer-community",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 4183965,
+    "count": 4,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/build-automation/",
+    "name": "Build Automation",
+    "slug": "build-automation",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 4236303,
+    "count": 3,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/aspnetmvc/",
+    "name": "aspnetmvc",
+    "slug": "aspnetmvc",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 13353940,
+    "count": 4,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/onion-architecture/",
+    "name": "onion architecture",
+    "slug": "onion-architecture",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 14210236,
+    "count": 2,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/asp-net-mvc/",
+    "name": "asp.net mvc",
+    "slug": "asp-net-mvc",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 15857100,
+    "count": 1,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/alt-net/",
+    "name": "alt.net",
+    "slug": "alt-net",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 37674412,
+    "count": 26,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/coding-principles/",
+    "name": "Coding Principles",
+    "slug": "coding-principles",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 503886180,
+    "count": 3,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/party-with-palermo/",
+    "name": "Party with Palermo",
+    "slug": "party-with-palermo",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 642856383,
+    "count": 1,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/aspnetmvc-mvc-asp-net-palermo/",
+    "name": "aspnetmvc mvc asp.net palermo",
+    "slug": "aspnetmvc-mvc-asp-net-palermo",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 642856384,
+    "count": 9,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/partywithpalermo/",
+    "name": "partywithpalermo",
+    "slug": "partywithpalermo",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 642856385,
+    "count": 1,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/teched-teched2008-nhibernate-aspnetmvc-orm-scm/",
+    "name": "teched teched2008 nhibernate aspnetmvc orm scm",
+    "slug": "teched-teched2008-nhibernate-aspnetmvc-orm-scm",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 643871091,
+    "count": 0,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/asp-net-mvc-in-action-blog/",
+    "name": "ASP.NET MVC in Action blog",
+    "slug": "asp-net-mvc-in-action-blog",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 643871094,
+    "count": 1,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/devops/",
+    "name": "devops",
+    "slug": "devops",
+    "taxonomy": "post_tag",
+    "meta": []
+  },
+  {
+    "id": 643871095,
+    "count": 5,
+    "description": "",
+    "link": "https://jeffreypalermo.com/tag/clear-measure/",
+    "name": "clear measure",
+    "slug": "clear-measure",
+    "taxonomy": "post_tag",
+    "meta": []
+  }
+]

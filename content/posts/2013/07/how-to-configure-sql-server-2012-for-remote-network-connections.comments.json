@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2703,
+    "parent": 0,
+    "author_name": "Ekrem Onsoy",
+    "author_url": "http://",
+    "date": "2013-08-04T13:09:36",
+    "type": "comment",
+    "content_html": "<p>Well, simply this is not correct. SQL Server Named Instances use Dynamic Ports and it is not since SQL Server 2012. It is the same for SQL Server 2005. Only SQL Server Default Instances use 1433 as Default Port number. </p>"
+  }
+]

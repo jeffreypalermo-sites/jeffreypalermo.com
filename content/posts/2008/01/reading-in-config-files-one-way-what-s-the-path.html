@@ -1,0 +1,16 @@
+---
+wp_id: 597
+title: Reading in config files _one_ way – what’s the path?
+slug: reading-in-config-files-one-way-what-s-the-path
+permalink: /2008/01/reading-in-config-files-one-way-what-s-the-path/
+date: 2008-01-10T13:17:43
+date_utc: 2008-01-10T13:17:43Z
+modified: 2008-01-10T13:17:43
+format: html
+excerpt: 'Executive summary: AppDomain.CurrentDomain.SetupInformation.ApplicationBase Subscribe here: http://feeds.feedburner.com/jeffreypalermo. In a console app, this directory is where the assemblies are. In ASP.NET, this directory is where the web.config file is, not the assemblies. Other methods seem to be less reliable and rely on the current directory. This can change whether the code is executing stand-alone or through Visual […]'
+comments_open: true
+---
+<p>Executive summary:&nbsp; <strong>AppDomain.CurrentDomain.SetupInformation.ApplicationBase</strong></p>
+<p><a href="http://feeds.feedburner.com/jeffreypalermo">Subscribe here</a>: <a href="http://feeds.feedburner.com/jeffreypalermo">http://feeds.feedburner.com/jeffreypalermo</a>.</p>
+<p>In a console app, this directory is where the assemblies are.&nbsp; In ASP.NET, this directory is where the web.config file is, not the assemblies.&nbsp; Other methods seem to be less reliable and rely on the current directory.&nbsp; This can change whether the code is executing stand-alone or through Visual Studio.&nbsp; the above API seems to be very consistent.</p>
+<p>Please share your experiences.</p>

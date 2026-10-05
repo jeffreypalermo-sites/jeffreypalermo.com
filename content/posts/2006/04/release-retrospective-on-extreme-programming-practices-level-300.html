@@ -1,0 +1,148 @@
+---
+wp_id: 416
+title: Release retrospective on extreme programming practices – level 300
+slug: release-retrospective-on-extreme-programming-practices-level-300
+permalink: /2006/04/release-retrospective-on-extreme-programming-practices-level-300/
+date: 2006-04-13T04:03:00
+date_utc: 2006-04-13T04:03:00Z
+modified: 2006-04-13T04:03:00
+format: html
+tags:
+- agile
+excerpt: Tomorrow, my team will make a software release that’s been in the works since the end of January (2.5 months of work). We’ve been using exteme programming practices, and I’ll lay out the good, the bad, and the ugly as I look back on the release. First, here is a rundown of some things we […]
+comments_open: true
+---
+<p>Tomorrow, my team will make a software release that’s been in the works<br>
+since the end of January (2.5 months of work).&nbsp; We’ve been using <a href="http://en.wikipedia.org/wiki/Extreme_programming">exteme programming</a><br>
+practices, and I’ll lay out the good, the bad, and the ugly as I look<br>
+back on the release.&nbsp; First, here is a rundown of some things we<br>
+have been doing:</p>
+<ul>
+<li>Source control with <a href="http://subversion.tigris.org/">Subversion</a>.&nbsp;<br>
+Every developer also receives email notifications of every commit to<br>
+source control.&nbsp; Each developer is responsible for reviewing<br>
+commits.</li>
+<li>Continuous integration with <a href="http://ccnet.thoughtworks.com/">CruiseControl.Net</a>.&nbsp; Every time code is committed to source control, CC.Net runs our automated build that is based on <a href="http://nant.sourceforge.net/">NAnt</a>.&nbsp;<br>
+Each developer receives a success or failure notification in his<br>
+CCTray.&nbsp; Broken builds are not acceptable and must be fixed<br>
+immediately.&nbsp; Code cannot be checked into source control while the<br>
+build is broken.&nbsp; Our build runs unit tests, integration tests and<br>
+acceptance tests as well as creating a deployment package that’s used<br>
+for the install.
+  </li>
+<li>Automation.&nbsp; We automate everything.&nbsp; For example, we<br>
+have 8 development databases, and when the database scripts are updated<br>
+in source control, all 8 databases are dropped and recreated from the<br>
+changed scripts.&nbsp; Builds of components are propogated to<br>
+components that depend on them.&nbsp; Installation of the latest build<br>
+on the dev and test environment is completely automated allowing our<br>
+tester to pull the latest build with the click of a button.&nbsp; 
+  </li>
+<li><a href="http://en.wikipedia.org/wiki/Test_driven_development">Test-driven development (TDD)</a><br>
+– we drive the design of our classes through unit tests.&nbsp; The<br>
+byproducts are a loosely-coupled design and a large battery of unit<br>
+tests that are run continuously with every build.</li>
+<li><a href="http://www.pairprogramming.com/">Pair programming</a>.&nbsp;<br>
+All production code is written by a pair of developers.&nbsp; We have<br>
+single tasks too (like tweaks to the CC.Net build, etc), but all new<br>
+code and code changes are written by two developers.&nbsp; We use VNC<br>
+for pairing because it allows us more comfort by having our own mouse,<br>
+keyboard and display even though we are working on a single workstation.</li>
+<li><a href="http://www.extremeprogramming.org/rules/collective.html">Collective code ownership</a>.&nbsp;<br>
+We don’t have a concept of a single person’s code.&nbsp; If we need to<br>
+change some code, we change it.&nbsp; No need to consult someone for<br>
+“permission”.</li>
+<li><a href="http://xp.c2.com/DoTheSimplestThingThatCouldPossiblyWork.html">The simplest design that will work</a>.&nbsp;<br>
+Not the simplest design that will compile.&nbsp; “Work” is defined by<br>
+the customer.&nbsp; We will defer longer-range designs because in<br>
+practice we know that code written for 6 months down the road will<br>
+likely be wasted work because in 6 months, the customer will decide to<br>
+go in a different direction.&nbsp; If not, it’s just as easy to add the<br>
+same code 6 months from now. 
+  </li>
+<li>Constant improvement.&nbsp; We are constantly improving the<br>
+system and the way in which it’s tested.&nbsp; We have an idea wall<br>
+(whiteboard) with a list of items we try to squeeze in that will allow<br>
+us to go faster.</li>
+<li><a href="http://www.extremeprogramming.org/rules/iterative.html">Iterations</a>.&nbsp;<br>
+We use 2 week iterations.&nbsp; We define and execute work two weeks at<br>
+a time.&nbsp; The customer is allowed to reprioritize every two<br>
+weeks.&nbsp; We know change is a part of software engineering, so we<br>
+don’t try to fight it.
+  </li>
+</ul>
+<p>So now, I’ll run down the good, the bad, and the ugly:<br>
+<b>The good:<br>
+</b></p>
+<ul>
+<li>We finished a week early.&nbsp; Our automated testing and<br>
+installs really paid off by allowing us to move very quickly.&nbsp;<br>
+From the time we changed some code, a new build could be on the test<br>
+environment within 30 minutes (after being confirmed by all automated<br>
+tests passing).</li>
+<li>Very, very few bugs.&nbsp; Because of the heavy emphasis on<br>
+automated testing, bugs are squeezed out of existence.&nbsp; The only<br>
+place where bugs creeped in were places where we missed an opportunity<br>
+for an integration test or a small feature overlooked.&nbsp; The code<br>
+with tests had absolutely no bugs.</li>
+<li>Easy deployment.&nbsp; Because of our emphasis on automation, our<br>
+system installs on development and test servers, and it’s super easy to<br>
+use the same process for deployment to our hosted servers.&nbsp; 
+  </li>
+<li>No deathmarch at the end of the release cycle.&nbsp; We used a<br>
+sustainable pace throughout the release, and we avoided a last-minute<br>
+firedrill to make a date.</li>
+</ul>
+<p><b>The bad:<br>
+</b></p>
+<ul>
+<li>It was hard.&nbsp; To maintain the sustainable pace, we worked<br>
+hard all day every day.&nbsp; It was mentally tiring because of the<br>
+discipline required to work at this level of efficiency.</li>
+<li>It makes it hard for the wife to be able to call at any<br>
+time.&nbsp; Because we all work in the same war room and are pairing on<br>
+all production code, when my wife calls, it’s never a good time to<br>
+talk, and I have to help her understand our way of working and that I<br>
+can’t have a phone conversation at any time.&nbsp; Family emergencies<br>
+obviously take precendence, but my wife likes to call and chat, and<br>
+that doesn’t work with extreme programming because we are engaged all<br>
+the time.</li>
+<li>It takes a certain type of programmer to work in this disciplined<br>
+fashion, and not all programmers want to work this way.&nbsp; It is<br>
+taxing for us because sometimes we don’t want to pair program, but we<br>
+know we must.&nbsp; 
+  </li>
+</ul>
+<p><b>The ugly:<br>
+</b></p>
+<ul>
+<li>The code we inherited.&nbsp; We are improving a system with<br>
+inadequate test coverage.&nbsp; The test that are there are integration<br>
+tests and when they fail, it’s a mystery to discover what part of the<br>
+code is actually the problem.&nbsp; We made vast improvements on the<br>
+testability of the system, and we’ve employed acceptance tests with the<br>
+    <a href="http://fitnesse.org/">FitNesse</a> wiki to allow for automated full system tests.</li>
+<li>Technical debt and politics.&nbsp; We constantly made<br>
+improvements to the code and the way we worked.&nbsp; Sometimes this<br>
+wasn’t obvious to management.&nbsp; We had to make some changes to<br>
+facilitate some needed behavior, but management wanted the behavior<br>
+without paying for the prerequisite work.&nbsp; In this case, it was<br>
+our responsibility to push back and not allow technical debt to<br>
+accumulate just for political reasons.&nbsp; We try as much as possible<br>
+to keep technical decisions out of political ones.&nbsp; It’s our job<br>
+to take customer requirements and translate them into working<br>
+software.&nbsp; The manner in which we do that is our decision (the<br>
+decision of the technical players on the software team).
+  </li>
+</ul>
+<p>Overall, the employment of these extreme programming practices has been<br>
+wildly successful.&nbsp; We’ve improved the system in a very short<br>
+period of time while adding functionality, and we’ve paid down<br>
+technical debt we inherited without incurring more.&nbsp; We are<br>
+encouraged by these results, and we will continue these practices that<br>
+have been working for us.&nbsp; We’ll look for even more ways to go<br>
+faster by improving efficiency.&nbsp; We’ll increase our level of test<br>
+automation to free up our tester for more in-depth exploratory<br>
+testing.&nbsp; Overall, management is pleased because we’ve produced<br>
+the business value that matters.&nbsp; That’s all that matters:&nbsp;<br>
+delivering software that adds business value.</p>

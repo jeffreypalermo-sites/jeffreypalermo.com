@@ -1,0 +1,22 @@
+---
+wp_id: 582
+title: Running VS2008 & VS 2005 side by side – project file difference
+slug: running-vs2008-amp-vs-2005-side-by-side-project-file-difference
+permalink: /2007/11/running-vs2008-amp-vs-2005-side-by-side-project-file-difference/
+date: 2007-11-27T23:55:00
+date_utc: 2007-11-27T23:55:00Z
+modified: 2007-11-27T23:55:00
+format: html
+tags:
+- developer-community
+- tips-tricks
+- tools
+excerpt: Previously, I posted how to support developers running Visual Studio 2008 and Visual Studio 2005 on the same .Net 2.0 solution on the same team, built, CI server, etc. The solution is to have 2 solution files. These files have to be kept in sync to keep a healthy build process. It is very important […]
+comments_open: true
+---
+<p>Previously, <a href="/blogs/jeffrey.palermo/archive/2007/11/21/enabling-team-development-with-vs2008-2005-mix.aspx">I posted how to support developers running Visual Studio 2008 and Visual Studio 2005 on the same .Net 2.0 solution on the same team, built, CI server, etc</a>.&nbsp; The solution is to have 2 solution files.&nbsp; These files have to be kept in sync to keep a healthy build process.</p>
+<p>It is very important to keep the VS2005 solution the main solution and the solution used in the continuous build because VS2008 supports everything there, but if you add a project using VS2008, VS2005 might not recognize some things.&nbsp; An example of this is with the path to the Microsoft.CSharp.targets file.</p>
+<p>If you create a new project using VS2008, you’ll see the following in the newly created project:</p>
+<p><img decoding="async" src="https://i0.wp.com/farm3.static.flickr.com/2084/2070096040_494e972601_o_d.jpg?w=776"> </p>
+<p>Note the $(MSBuildToolsPath) property.&nbsp; This was added in .Net 3.5, and Visual Studio 2005 and MSBuild for .Net 2.0 doesn’t understand this property.&nbsp; Changing the project file to the following makes both versions of Visual Studio happy. (change it to $(MSBuildBinPath)</p>
+<p><img decoding="async" src="https://i0.wp.com/farm3.static.flickr.com/2130/2070095208_2ac2e7ce3c_o_d.jpg?w=776"></p>

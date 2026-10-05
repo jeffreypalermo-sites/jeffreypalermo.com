@@ -1,0 +1,17 @@
+---
+wp_id: 54
+title: Behavior of DataGrid.ItemDataBound and DataGrid.ItemCreated – level 200
+slug: behavior-of-datagrid-itemdatabound-and-datagrid-itemcreated-level-200
+permalink: /2004/07/behavior-of-datagrid-itemdatabound-and-datagrid-itemcreated-level-200/
+date: 2004-07-27T15:46:00
+date_utc: 2004-07-27T15:46:00Z
+modified: 2004-07-27T15:46:00
+format: html
+excerpt: When using the DataGrid control, one needs to know when to use the ItemDataBound event and when to use the ItemCreated event. These event names are pretty easy to follow. ItemCreated is when that row of the DataGrid is created. The controls are there, but that’s it. On the ItemDataBound event, the controls are bound […]
+comments_open: true
+---
+<p>When using the DataGrid control, one needs to know when to use the ItemDataBound event and when to use the ItemCreated event.&nbsp; These event names are pretty easy to follow.&nbsp; ItemCreated is when that row of the DataGrid is created.&nbsp; The controls are there, but that’s it.&nbsp; On the ItemDataBound event, the controls are bound to their data, an dthe data is available for access.&nbsp; If you have logic that depends on the bound data, use the ItemDataBound event, which fires after the ItemCreated event.</p>
+<p>In my dealings with using an embedded control in the DataGrid header, I need to access this control after it is created.&nbsp; I can access this control in either event since this control doesn’t depend on data, so I elect to use the ItemDataBound event for this.&nbsp; I have a button in my header, and I want to add a ServerClick event handler to it after it is created, so in the ItemDataBound event handler, I have to test the e.Item.ItemIndex.&nbsp; The ItemDataBound event fires once for every row in the DataGrid.&nbsp; The data-bound rows are 0-based, but for the header and footer, the ItemIndex is -1.&nbsp; So if you have both the header and footer, then ItemIndex will be -1 twice.&nbsp; For instance, to get the control in my header, I have to test for ItemIndex == -1, and then FindControl(”myButton”).&nbsp; That will work for the header, but it will bomb later.&nbsp; Why?</p>
+<p>Because ItemDataBound is fired twice with ItemIndex == -1.&nbsp; First for the header, then 0,1,2,3,4, etc for the data-bound rows, and then -1 again for the Footer.&nbsp; Since myButton isn’t in the footer, I can’t find it.&nbsp; Ok, so now I know that -1 in ItemDataBound happens twice.&nbsp; Knowing this, I can code against it.</p>
+<p>What I would rather see is DataGrid.Header.Controls and DataGrid.Footer.Controls since the Header and Footer are both controls within the DataGrid.&nbsp; This would be a simpler API.</p>
+<p>Just remember when embedding controls in your header or footer that the ItemIndex will be -1 when you access these controls in the ItemCreated or ItemDataBound event handlers.</p>

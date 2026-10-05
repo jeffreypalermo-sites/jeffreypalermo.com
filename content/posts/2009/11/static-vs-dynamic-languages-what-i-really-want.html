@@ -1,0 +1,21 @@
+---
+wp_id: 1110
+title: 'Static vs. Dynamic languages: What I really want'
+slug: static-vs-dynamic-languages-what-i-really-want
+permalink: /2009/11/static-vs-dynamic-languages-what-i-really-want/
+date: 2009-11-11T10:21:00
+date_utc: 2009-11-11T10:21:00Z
+modified: 2009-11-11T10:21:00
+format: html
+categories:
+- blog
+excerpt: “I want static behavior between assemblies/libraries/packages but dynamic abilities within.” – JeffreyPalermo.com With C# 4.0, code within method can be dynamic because of the new dynamic keyword. This is a short post expressing what I want out of C#. I recently listened to a great debate about the advantages and shortcomings of both dynamic and […]
+comments_open: true
+---
+<h2>“I want static behavior between assemblies/libraries/packages but dynamic abilities within.” – JeffreyPalermo.com</h2>
+<p>With C# 4.0, code within method can be dynamic because of the new dynamic keyword.&nbsp; This is a short post expressing what I want out of C#.</p>
+<p>I recently <a href="http://javaposse.com/index.php?post_id=544693">listened to a great debate about the advantages and shortcomings of both dynamic and static languages</a>, and the biggest pain of 100% dynamic languages is that when using a library, you really don’t know what is supports except if the documentation is liberal and flawless.&nbsp; There are no interface types to describe what properties and methods will be called once you pass the object in.&nbsp; If the documentation doesn’t cover every API, you are forced to write characterization tests.</p>
+<p>The other big challenge is that when working with a dynamic language, you have to keep more of the system in your head in order to program.&nbsp; You have to remember which object is overriding which method, and what objects have new functionality attached to them.</p>
+<p>Both of these points are only an issue between package boundaries.&nbsp; Within a package, everything is fine because you own all that code.&nbsp; All the conventions are yours.&nbsp; This dovetails with the main strength of a static language:&nbsp; All the APIs are self-describing.&nbsp; Every method declares types on the arguments.&nbsp; Objects explicitly implement interfaces.</p>
+<p>The problem with static languages is that this rigor is extended within the package as well forcing the programmer to write every method body using the same compiler strictness of typing.</p>
+<p>If we can have a dynamic keyword in C# so that code within a method body is dynamic, then some of this might already be achieved.&nbsp; We’ll have to see.&nbsp; Public interfaces that are at package boundaries need to be self-describing, from my point of view.&nbsp; After that, writing dynamic code within controlled boundaries can make things go smoother.&nbsp; </p>

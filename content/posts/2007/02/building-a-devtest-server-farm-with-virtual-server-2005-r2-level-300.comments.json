@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1132,
+    "parent": 0,
+    "author_name": "Harris",
+    "author_url": "http://hrboyceiii.blogspot.com",
+    "date": "2007-02-08T13:48:00",
+    "type": "comment",
+    "content_html": "<p>Jeffrey:</p>\n<p>Not sure if you know this or not, but you can automate some of this process as Virtual Server exposes a COM API that you can interact with via managed code…or even PowerShell.  Here’s a great resource on both:</p>\n<p><a href=\"http://blogs.msdn.com/Virtual_PC_Guy/\" rel=\"nofollow ugc\">http://blogs.msdn.com/Virtual_PC_Guy/</a></p>"
+  },
+  {
+    "id": 1133,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-02-08T14:34:06",
+    "type": "comment",
+    "content_html": "<p>Harris,<br>\nYeah!  Great stuff.</p>"
+  }
+]

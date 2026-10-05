@@ -1,0 +1,23 @@
+---
+wp_id: 385
+title: Oracle-style joins in Sql server.  There is no performance difference – level 300
+slug: oracle-style-joins-in-sql-server-there-is-no-performance-difference-level-300
+permalink: /2006/03/oracle-style-joins-in-sql-server-there-is-no-performance-difference-level-300/
+date: 2006-03-02T13:47:00
+date_utc: 2006-03-02T13:47:00Z
+modified: 2006-03-02T13:47:00
+format: html
+tags:
+- data-access
+excerpt: 'I recently came across some sql code that caught me off guard. Here is is: select something from table1, table2where table1.id = table2.id I immediately thought that a Cartesian product was happening and the rows were being filtered afterward. All my database experience has been with Microsoft databases, so I didn’t know that this syntax […]'
+comments_open: true
+---
+<p>I recently came across some sql code that caught me off guard.&nbsp; Here is is:</p>
+<p>select something <br>from table1, table2<br>where table1.id = table2.id</p>
+<p>I immediately thought that a <a href="http://en.wikipedia.org/wiki/Cartesian_product">Cartesian product</a> was happening and the rows were being filtered afterward.&nbsp; All my database experience has been with Microsoft databases, so I didn’t know that this syntax used to be the way most people did sql..&nbsp; Like any good engineer, I set out to find out for myself what was really going on.</p>
+<p>I used the Northwind database to compare the following two queries:&nbsp; the first with Sql server syntax, and the second with “old school” syntax (which Sql server 2000 suppports).<br>SELECT&nbsp;&nbsp;&nbsp; *<br>FROM&nbsp;&nbsp;&nbsp; Orders o <br>&nbsp;&nbsp;&nbsp; INNER JOIN Customers c ON o.CustomerID = c.CustomerID <br>&nbsp;&nbsp;&nbsp; INNER JOIN [Order Details] od ON o.OrderID = od.OrderID <br>&nbsp;&nbsp;&nbsp; INNER JOIN Products p ON od.ProductID = p.ProductID</p>
+<p>SELECT&nbsp;&nbsp;&nbsp; *<br>FROM Customers c, Orders o, [Order Details] od, Products p<br>WHERE o.CustomerID = c.CustomerID<br>&nbsp;&nbsp;&nbsp; AND o.OrderID = od.OrderID<br>&nbsp;&nbsp;&nbsp; AND od.ProductID = p.ProductID</p>
+<p>I ran these two queries many, many times together and in isolation, and I examined the execution plans, the client statistics as well as the Sql trace.&nbsp; It appears that at a lower level, these two operations are identical.&nbsp; Both queries took the same Duration, CPU cycles, and Reads to execute.&nbsp; Here is the Execution plan.&nbsp; Both queries have this same exact exectuion plan:</p>
+<p><img decoding="async" src="/photos/jeffrey.palermo/images/139614/original.aspx"></p>
+<p>Personally, I like the INNER JOIN syntax.&nbsp; It’s very explicit, and it’s easy to add RIGHT and LEFT to dictate OUTER joins.&nbsp; A plus is that it is the ANSI standard and Microsoft’s recommendation for Sql Server.&nbsp; </p>
+<p>The <b>objective conclusion of this experiment is that the style picked for a query will not affect the speed at which that query runs</b>.&nbsp; The differences are <i>subjective</i>.&nbsp; My advice, however, is that a single style be adopted as part of the team’s coding standard.&nbsp; </p>

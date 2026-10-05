@@ -1,0 +1,20 @@
+[
+  {
+    "id": 533,
+    "parent": 0,
+    "author_name": "Brandon Hunt",
+    "author_url": "http://",
+    "date": "2005-10-17T18:14:14",
+    "type": "comment",
+    "content_html": "<p>I’ve always liked the idea of using something like CC to handle the integration / acceptance testing, since those will typically take longer than you would want to run as a developer.  Granted, I haven’t done this personally – I’m working on getting my co-workers moved into TDD mode and using more of the automated tools available for .NET, but we aren’t there yet. \uD83D\uDE42</p>\n<p>Brandon</p>"
+  },
+  {
+    "id": 534,
+    "parent": 0,
+    "author_name": "Darrell Norton",
+    "author_url": "http://codebetter.com/blogs/darrell.norton/",
+    "date": "2005-10-21T01:22:20",
+    "type": "comment",
+    "content_html": "<p>The whole point about Cruise Control is you don’t EXPECT to break the build, but it catches it when you do.</p>\n<p>And I don’t need Test-Driven Development if I don’t ever write any faulty code.  Haha.</p>"
+  }
+]

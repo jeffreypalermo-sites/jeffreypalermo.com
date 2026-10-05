@@ -1,0 +1,22 @@
+---
+wp_id: 1102
+title: MvcContrib working on Portable Areas
+slug: mvccontrib-working-on-portable-areas
+permalink: /2009/10/mvccontrib-working-on-portable-areas/
+date: 2009-10-06T11:33:57
+date_utc: 2009-10-06T11:33:57Z
+modified: 2009-10-06T11:33:57
+format: html
+categories:
+- blog
+excerpt: This is a pretty short post, and it is just enough to announce some plans on the MvcContrib roadmap. Portable Areas What is a portable area? As you know, ASP MVC 2 is going to ship with an implementation of areas where an area can either be in in a single project or separate projects. […]
+comments_open: true
+---
+<p>This is a pretty short post, and it is just enough to announce some plans on the <a href="http://mvccontrib.org">MvcContrib</a> roadmap.</p>
+<h2>Portable Areas</h2>
+<p>What is a <strong>portable area</strong>?&nbsp; As you know, <a href="http://aspnet.codeplex.com/Wiki/View.aspx?title=Road%20Map">ASP MVC 2</a> is going to ship with an implementation of areas where an area can either be in in a single project or separate projects.&nbsp; <a href="http://mvccontrib.org">MvcContrib</a> already has an Embedded View ViewEngine, which lets views be embedded as resources in an assembly.&nbsp; The next step is to take an MVC2 area, wire in the embedded view engine, and compile it to a single assembly.&nbsp; Then, you can publish your area as an assembly to distribute any number of controllers and views.&nbsp; This can be used to distribute multiple pages that all work together.</p>
+<p>I expect control vendors to use portable areas to make their rich control suites work with ASP MVC.&nbsp; After all, when registering the portable area at application start, the routes are essentially being registered.&nbsp; Even if there are no top-level pages in the area, it would be really easy for a control vendor to supply an area allowing the developer to type:</p>
+<p>&lt;%=Html.RenderAction&lt;ControlVendor.SuperGridController&gt;(c=&gt;c.List(Model.Products))%&gt;</p>
+<p>The area has multiple controllers and views, and they can be wired into an application in many ways.</p>
+<h2>Call for participation</h2>
+<p>If you are interested in participating in the development of Portable Areas within MvcContrib, please join the <a href="http://groups.google.com/group/mvccontrib-discuss">discuss</a> list and create a <a href="http://github.com/mvccontrib">GitHub</a> fork of MvcContrib.</p>

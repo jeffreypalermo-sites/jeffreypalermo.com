@@ -1,0 +1,14 @@
+---
+wp_id: 153
+title: Solution to my UnauthorizedAccessException problem – level -1000
+slug: solution-to-my-unauthorizedaccessexception-problem-level-1000
+permalink: /2004/12/solution-to-my-unauthorizedaccessexception-problem-level-1000/
+date: 2004-12-01T11:19:00
+date_utc: 2004-12-01T11:19:00Z
+modified: 2004-12-01T11:19:00
+format: html
+excerpt: Yesterday afternoon, my web application broke. I have a page that takes a user data file and saves it to the server. I have a web service that takes the contents of a file and does the same thing. A process consumes these files on our development server. I am developing part of it on […]
+comments_open: true
+---
+<p>Yesterday afternoon, my web application broke.&nbsp; I have a page that takes a user data file and saves it to the server.&nbsp; I have a web service that takes the contents of a file and does the same thing.&nbsp; A process consumes these files on our development server.&nbsp; I am developing part of it on my machine and dropping the file to the DEV machine for consumption, so I’m creating files on a UNC path.&nbsp; Mysteriously I started getting UnauthorizedAccessException, but my code had been working.&nbsp; I didn’t change anything.&nbsp; I double-checked all the important stuff (identity impersonation, security, etc), and everything was in order.&nbsp; I did the normal research. . . Google groups.&nbsp; For all of you <a href="http://groups.google.com/groups?q=UnauthorizedAccessException&amp;hl=en&amp;lr=&amp;sa=N&amp;tab=wg">Googlers out there</a>&nbsp;having problems with this exception, I have a solution.&nbsp; Reboot!&nbsp; I checked everything I could think of, and I remembered the rule of thumb that I always tell everyone else:&nbsp; “When in doubt, reboot.”&nbsp; Since I’ve been using Win XP and now 2003 Server as my dev OS, I haven’t had to do much rebooting.&nbsp; My home computer (XP Pro) hasn’t been rebooted in at least two months, and it gets a lot of abuse as well as having umpteen external devices connected to it.</p>
+<p>I’m using Windows Server 2003, and it is very stable, and even with the abuse I put it through, this was the first time I’d rebooted this week.&nbsp; It’s a laptop, so I hibernate it.&nbsp; I rarely reboot, but remember that when there is no rational explanation for a problem. . . reboot.</p>

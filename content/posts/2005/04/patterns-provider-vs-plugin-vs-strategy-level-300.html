@@ -1,0 +1,30 @@
+---
+wp_id: 209
+title: 'Patterns:  Provider vs. Plugin vs. Strategy – level 300'
+slug: patterns-provider-vs-plugin-vs-strategy-level-300
+permalink: /2005/04/patterns-provider-vs-plugin-vs-strategy-level-300/
+date: 2005-04-05T12:54:00
+date_utc: 2005-04-05T12:54:00Z
+modified: 2005-04-05T12:54:00
+format: html
+excerpt: Previously I made an implementation and called it the Provider pattern. After some good discussion, I must redefine what I implemented. I implemented something that had major traits of Provider, Plugin, and Strategy. I implemented a Repository class that used a configuration service to get the assembly and type of the class to load. This […]
+comments_open: true
+---
+<p>Previously <a href="http://dotnetjunkies.com/WebLog/jpalermo/archive/2005/04/04/62265.aspx">I<br>
+made an implementation and called it the Provider pattern</a>.&nbsp; After some good<br>
+discussion, I must redefine what I implemented.&nbsp; I implemented something that<br>
+had major traits of Provider, Plugin, and Strategy.&nbsp; I implemented a Repository<br>
+class that used a configuration service to get the assembly and type of the<br>
+class to load.&nbsp; This class loads the appropriate type that implements my<br>
+interface.&nbsp; My implementation implements every element of Provider except that<br>
+instead of an abstract base class for contract, I use an interface.&nbsp; That breaks<br>
+the definition.&nbsp; Strategy is defined as using interfaces, but in my<br>
+implementation uses a configuration item to dynamically load the concrete<br>
+implementation via reflection, so I’ve added something not explicitly not<br>
+defined in the pattern.</p>
+<p>I have a feeling that our vocabulary is getting a bit muddled because we now<br>
+have pattern names from different sources, and they overlap quite a bit.&nbsp; I<br>
+don’t feel that I can use a pattern name:&nbsp; I have to define it first so that<br>
+fellow developers know what I really mean.</p>
+<p>Perhaps as our industry matures more, a common vocabulary will truly<br>
+emerge.</p>

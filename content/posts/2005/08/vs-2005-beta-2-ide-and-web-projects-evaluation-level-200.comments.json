@@ -1,0 +1,47 @@
+[
+  {
+    "id": 401,
+    "parent": 0,
+    "author_name": "Martijn Boland",
+    "author_url": "http://www.cuyahoga-project.org",
+    "date": "2005-08-06T23:58:58",
+    "type": "comment",
+    "content_html": "<p>I can confirm that an ASP.NET project that is a class library upgrades perfectly, including pre- and post build events. Just tried it today with Cuyahoga and everything ran fine. There was only a naming conflict because ASP.NET 2.0 also appears to have a Menu class :).</p>\n<p>Btw, I still had full designer support on the .aspx pages only hitting F7 didn’t bring up the code-behind. What designer support are you missing with Class Library Projects and is it diiferent in VS.NET 2005? </p>"
+  },
+  {
+    "id": 402,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-08-07T18:37:19",
+    "type": "comment",
+    "content_html": "<p>When I want to use the old CodeBehind model instead of partial classes, double-clicking on a button in the designer puts my new event handler method in the markup view instead of the code-behind.  Otherwise, the designer is mostly functional.</p>\n<p>Thanks for the testimony.</p>"
+  },
+  {
+    "id": 403,
+    "parent": 0,
+    "author_name": "Eric Newton",
+    "author_url": "http://geekswithblogs.net/ensoftBlog/",
+    "date": "2005-08-10T14:47:11",
+    "type": "comment",
+    "content_html": "<p>I didnt know you could do it as a Class Library… I agree with you, I dont much care for the “new” compilation model for v2.0.  </p>\n<p>Although I do like the partial class use, whats so wrong with making all the codebehinds into dependencies for the dll?  Its so much cleaner and references are tracked a lot better.</p>"
+  },
+  {
+    "id": 404,
+    "parent": 0,
+    "author_name": "Bob Archer",
+    "author_url": "http://",
+    "date": "2005-08-11T03:12:06",
+    "type": "comment",
+    "content_html": "<p>Jeff,</p>\n<p>Just finished listening to your dot net rocks episode, and went searching on using class lib project vs web project. I’m still not sure of the mainbenefit. </p>\n<p>Anyway, as far as Pre-Build / Post-Build events. Isn’t the VS 2005 solution now an XML file for MSBuild. And doesn’t the VS 2005 IDE use MSBuild in the background to build stuff. </p>\n<p>If this is the case, then you should be able to modify the solution to do your pre/post build events. Of course, I think the new Web Apps are designed so you don’t have to build each time you make a change. That supposed to be an advantage so you can now edit / refresh / test, no need for the build step as you have in 1.1.</p>\n<p>BOb</p>"
+  },
+  {
+    "id": 405,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-08-11T14:14:26",
+    "type": "comment",
+    "content_html": "<p>Bob,  Thanks for the comment.  The main benefit of the class library is that you don’t have the binding with IIS in v1.1.  In 2.0, you can void the headaches of a projectless web site.  Working alone, it’s easy to deploy a site manually, but in a team, everything needs to automated.  This is where the problems begin, and we have a step backward from v1.1.  </p>"
+  }
+]

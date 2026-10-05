@@ -1,0 +1,23 @@
+---
+wp_id: 1157
+title: 'What is the difference in <%: variable%> and <%= variable%> in ASP.NET MVC?'
+slug: what-is-the-difference-in-lt-variable-gt-and-lt-variable-gt-in-asp-net-mvc
+permalink: /2010/08/what-is-the-difference-in-lt-variable-gt-and-lt-variable-gt-in-asp-net-mvc/
+date: 2010-08-23T08:21:26
+date_utc: 2010-08-23T08:21:26Z
+modified: 2010-08-23T08:21:26
+format: html
+categories:
+- blog
+excerpt: 'With many folks adopting ASP.NET MVC as well as Visual Studio 2010, there is a fairly confusing change if you are one of those people who doesn’t engage in the alpha and beta phases of new product releases from Microsoft or any other vendor, for that matter. The issue of <%: vs. <%= has had […]'
+comments_open: true
+---
+<p>With many folks adopting ASP.NET MVC as well as Visual Studio 2010, there is a fairly confusing change if you are one of those people who doesn’t engage in the alpha and beta phases of new product releases from Microsoft or any other vendor, for that matter.</p>
+<p>The issue of &lt;%: vs. &lt;%= has had a great deal of discussion around it in the years leading up to the Visual Studio 2010 release.&nbsp; This new expression syntax, or code nugget, is a new feature of ASP.NET 4.&nbsp; It applies equally to ASP.NET Web Forms and ASP.NET MVC applications that are using the Web Forms view engine (ASPX).</p>
+<p><strong>In short, &lt;%: ViewData["Message"] %&gt; does the same thing as &lt;%= Html.Encode(ViewData["Message"]) %&gt;.</strong></p>
+<p>When creating a new ASP.NET MVC web application in Visual Studio 2010, you will see that the default Home/Index.aspx view is as follows.</p>
+<p><a href="/wp-content/uploads/2018/07/whatisthedifferenceinvariableandv.netmvc_7578image_2.png"><img loading="lazy" decoding="async" style="border-bottom:0; border-left:0; display:inline; border-top:0; border-right:0" title="image" border="0" alt="image" src="/wp-content/uploads/2018/07/whatisthedifferenceinvariableandv.netmvc_7578image_thumb.png" width="586" height="225"></a></p>
+<p>However, if you create an ASP.NET MVC 2 web application in Visual Studio 2008, you see that ViewData[“Message”] is printed using the syntax that heralds back to the IDC/HTX technology of IIS 2.</p>
+<p><a href="/wp-content/uploads/2018/07/whatisthedifferenceinvariableandv.netmvc_7578image_4.png"><img loading="lazy" decoding="async" style="border-bottom:0; border-left:0; display:inline; border-top:0; border-right:0" title="image" border="0" alt="image" src="/wp-content/uploads/2018/07/whatisthedifferenceinvariableandv.netmvc_7578image_thumb_1.png" width="583" height="224"></a> </p>
+
+<p>I hope this tidbit helps in sorting through code samples online.&nbsp; If you see &lt;%: %&gt;, you know that the code sample was produced for ASP.NET 4 or later.</p>

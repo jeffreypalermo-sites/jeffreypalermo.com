@@ -1,0 +1,263 @@
+[
+  {
+    "id": 2467,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-06-23T05:29:35",
+    "type": "comment",
+    "content_html": "<p>test</p>"
+  },
+  {
+    "id": 2468,
+    "parent": 0,
+    "author_name": "Lee Brandt",
+    "author_url": "http://www.codebucket.org",
+    "date": "2008-06-23T05:46:31",
+    "type": "comment",
+    "content_html": "<p>Nice post. +1 for loose coupling data access. Those who say “We’ll never change our database vendor or O/R mapper” will end up have to explin to their boss later, why they need to spend 50K to rewrite the application later and it will be harder to convince theiry boss that the “new and improved” solution won’t need a rewrite in a few years.<br>\n~Lee</p>"
+  },
+  {
+    "id": 2469,
+    "parent": 0,
+    "author_name": "Gary A",
+    "author_url": "http://",
+    "date": "2008-06-23T07:58:17",
+    "type": "comment",
+    "content_html": "<p>I’m not sure why you’re focussing on the Data Access layer when you say that you want to keep it independent of the technology.  The same applies to the presentation layer and business layer.  Technology moves on. ASP and .NET 1.1 are legacy technologies that, unfortunately, we have to support.  I don’t know what we will be wriring apps in in 5 years time, but it won’t be in .NET 3.5.  You say that you don’t believe there is a business justification for re-writing apps when technology moves on.  I beleive there is – cost of support and maintenance.  My belief is that when we build apps it should be done on the basis that in 5 years the technology will be outdated and we have to rewrite it.  Giving the business the impression that this is not the case is misleading.</p>"
+  },
+  {
+    "id": 2470,
+    "parent": 0,
+    "author_name": "FransBouma",
+    "author_url": "http://weblogs.asp.net/fbouma",
+    "date": "2008-06-23T09:07:18",
+    "type": "comment",
+    "content_html": "<p>If you see an O/R mapper as a layer which simply pulls data out of a database and stores it into objects and vice versa, creates queries to save data inside objects, then yes, there’s little to be said about o/r mappers.</p>\n<p>But that’s a very naive view on the world. In 2008, O/R mappers are far more powerful than object fetchers. Just because you use nhibernate and think there’s nothing to be said about entity graph management in memory for example, because nhibernate doesn’t have features in that direction, doesn’t mean all O/R mappers don’t have these and other advanced features. </p>\n<p>Also, the naive view on being able to swap out any o/r mapper you pick clearly shows you never gave it much thought: no matter which data access solution you pick, (so that means: whatever you choose) it will leak through into your own code. This means that your own code will use and will be based on the characteristics provided by the data-access solution of choice: does it do graph maintenance in memory? Does it offer entity views on entity collections for easy in-memory filtering/sorting ? does it offer auditing/authorization? Which concurrency models are supported? Does it offer deep support for distributed systems so you don’t have to babysit what’s going over the wire? Does it offer what I need out of the box or do I have to invest a couple of man-months writing additional code ?etc. etc..</p>\n<p>And as Gary said above: whatever you pick / choose in the other layers is also important and will also be a factor in maintenance of the application, like which UI package is chosen. But, isn’t it also important how database migrations and feature migrations can be done with the data-access solution of choice? Like: if the database chances in the coming year, how easy is it to adapt to those changes? Is it possible to simply point the data-access solution of choice to the new database schemas and let it migrate the work you’ve done? Or do you have to do that all by yourself and therefore schedule alot of extra testing to check whether you didn’t miss a spot? </p>\n<p>If you’re so concerned about maintenance, those things would be on the top of your list. However you don’t even mention them. </p>"
+  },
+  {
+    "id": 2471,
+    "parent": 0,
+    "author_name": "Rick Strahl",
+    "author_url": "http://www.west-wind.com/weblog",
+    "date": "2008-06-23T10:28:36",
+    "type": "comment",
+    "content_html": "<p>Jeff, can you give a concrete example of what your abstraction that you’re talking about here would look like? </p>\n<p>I agree with your point to a large extent which is why I typically build another layer ontop of the whatever data access mechanism I use be it high or low level. This helps with abstraction considerably and would make a conversion relatively painless, but I can’t see how to make this completely transparent. So I’d like to know how you can do this in a way that is indeed pluggable?</p>\n<p>I’ve always done this for many different applications mainly because it provides a more consistent model to talk to data for my own work.  But in the end I’ve also found that I have never actually built an application and switched out the data engine completely (backends yes, but DAL engines no). I’ve seen apps where the engine’s been swapped but in the process the app was redesigned and re-written. </p>\n<p>So I’m not so sure that this is as valuable as you are making this out to be and maybe falls under the category over-designing for a non realistic scenario :-}</p>"
+  },
+  {
+    "id": 2472,
+    "parent": 0,
+    "author_name": "Mike",
+    "author_url": "http://",
+    "date": "2008-06-23T10:43:45",
+    "type": "comment",
+    "content_html": "<p>Frans,</p>\n<p>So, you are saying he should use LLBLGen?</p>"
+  },
+  {
+    "id": 2473,
+    "parent": 0,
+    "author_name": "FransBouma",
+    "author_url": "http://weblogs.asp.net/fbouma",
+    "date": "2008-06-23T11:46:45",
+    "type": "comment",
+    "content_html": "<p>Mike: where do I say that? </p>\n<p>That’s the stupidity of these kind of discussions and comparisons: the people who write o/r mappers, and that group is really small, know these systems in and out, what they can do and can’t do. If a person of that group points out that the world is bigger than just fetching objects, it might be the case that that person does that because… the world IS actually bigger than just fetching objects? You also don’t listen to any MS employee on any MS organized conference? (because, hey, they’re just trying to sell you their stuff! ;)).</p>\n<p>What I don’t like about the article is that it appears to make nhibernate as the most feature rich, standard o/r mapper for .NET. That’s simply not the case, on the contrary.</p>"
+  },
+  {
+    "id": 2474,
+    "parent": 0,
+    "author_name": "Andy",
+    "author_url": "http://",
+    "date": "2008-06-23T12:49:17",
+    "type": "comment",
+    "content_html": "<p>I’m interested this article doesn’t mention IUpdateable or IQueryable. For ASP.NET Dynamic Data, ADO.NET Entity Framework and any other entity technology from Microsoft at the moment, LINQ and providers for these new scaffolding and web service technologies are surely essential. Which is great that LLGLGen is supporting these, to provide a key alternative to ADO.NET Entity Framework. I think it’s for these specifics that NHibernate will struggle. For new projects, it doesn’t play nice with new takes on rapid development and tooling in Visual Studio.</p>\n<p>In other words, too strict de-coupling can actually hinder some enterprise application from quickly creating new interfaces such as for Silverlight or use new Sync type technologies. The blurring of Data Access and Business Logic isn’t too evil after all.</p>"
+  },
+  {
+    "id": 2475,
+    "parent": 0,
+    "author_name": "Mike",
+    "author_url": "http://",
+    "date": "2008-06-23T15:07:53",
+    "type": "comment",
+    "content_html": "<p>@Jeffrey</p>\n<p>I completely agree with this approach, both the isolation of the OR/M and the IoC bits. Could you please post a small sample solution demonstrating your technique? If you could keep the mappings simple and provide an IoC swap between NHibernate and LinqToSql you would probably be the first to provide such a sample.</p>\n<p>@Frans</p>\n<p>I believe you may be one of the most knowledgeable people in the OR/M arena, so with all due respect. The discussion is about architecture and even if LL is the OR/M of choice the points Jeffrey is making are valid. As you have stated Linq is a great step as it provides a unified query language.  Linq eliminates the largest hurdle in swapping OR/Ms, eventually all OR/Ms will have Linq providers. We still need a unified session or context but IoC with a simple interface and proxy for the context/session gets us pretty close to a swappable data layer.</p>"
+  },
+  {
+    "id": 2476,
+    "parent": 0,
+    "author_name": "Matt Smith",
+    "author_url": "http://swoofware.com/",
+    "date": "2008-06-23T15:32:14",
+    "type": "comment",
+    "content_html": "<p>I agree with Jeff’s fundamental premise: “How do we ensure the long-term maintainability of our systems in the face of constantly changing infrastructure?  The answer:  Don’t couple to infrastructure.”</p>\n<p>This applies to all aspects of the system regardless of whether or not it is infrastructure, presentation, core, etc.</p>\n<p>However, like Gary and Frans said “Whatever you pick / choose in the other layers is also important and will also be a factor in maintenance of the application, like which UI package is chosen.”</p>\n<p>As much as we would love to have completely pluggable and swappable components and layers in the application, there are usually a number of areas (despite your best attempts at abstraction) where said component has coupled itself a little more deeply that you would have liked.</p>\n<p>For our application, we have swapped date pickers twice now. We’d love to do it a third time but it is such a pain. </p>\n<p>And for the record, we use LLBLGen Pro. However, we spent a lot of time arguing about whether or not we should use the generated entities in the presentation layer. Gut feel is that we didn’t want to do it to avoid coupling the application. However, at the time the benefit of all the plumbing code that was provided (IBindable, etc.) was worth it (CSLA just wasn’t working for us at the time). </p>\n<p>As so many things in life, there aren’t many clear cut answers to everyone’s problems. Everybody has to make their decisions based on experiences.</p>\n<p>Matt</p>"
+  },
+  {
+    "id": 2477,
+    "parent": 0,
+    "author_name": "Mike Griffin",
+    "author_url": "http://mike.griffin@entityspaces.net",
+    "date": "2008-06-23T18:38:48",
+    "type": "comment",
+    "content_html": "<p>Frans, now you know why I don’t comment on such posts, we are allowed to write them, but unable to comment on them, sigh …. That is not true with Microsoft as was pointed out.</p>"
+  },
+  {
+    "id": 2478,
+    "parent": 0,
+    "author_name": "Onur Gumus",
+    "author_url": "http://reverseblade.blogspot.com",
+    "date": "2008-06-23T19:11:10",
+    "type": "comment",
+    "content_html": "<p>Isolating nhibernate doesn’t work in practice. Here’s the reason, first 99% of the time you will have to use ISession per request pattern where an httpmodule will ignite Isession and commit it back at the end. 2nd consider within the business layer you have modified a typical domain object which you got it from ISession. You know it nhibernate is tracking your domain object. Thus within your business code you won’t be doing anything to save your object since your session will be committed at the end. Once you have such a coding style , how are you going to replace it ?. I think trying to loosely couple against NHibernate is impractical and has little benefit.</p>"
+  },
+  {
+    "id": 2479,
+    "parent": 0,
+    "author_name": "Chris Wash",
+    "author_url": "http://www.cwash.org",
+    "date": "2008-06-23T20:06:24",
+    "type": "comment",
+    "content_html": "<p>What Onur Gumus said above is actually a very valid point, a point of much contention between the Hibernate and Spring groups and the motivating factor behind another new framework in Java.  Seam is the next step after ORM to provide a proper implementation and ease of use around conversational access to your domain objects (in particular, when they’re stored in a transactional system like a RDBMS).</p>\n<p>Hibernate is under the covers, but Seam will likely be where Hibernate is in a few years, at least in the Java space.</p>"
+  },
+  {
+    "id": 2480,
+    "parent": 0,
+    "author_name": "Paul Smith",
+    "author_url": "http://sourceforge.net/projects/stormfactory",
+    "date": "2008-06-23T23:25:10",
+    "type": "comment",
+    "content_html": "<p>Thanks so much for this article and this perspective, Jeffrey. So often “the basis on which we should accept or reject an O/R Mapper” gets missed in the rush to use whatever’s perceived as the “new hotness” at the time of consideration. nHibernate and Enterprise Library’s data helpers certainly have their merits and I don’t mean to discount those, but I’ve personally never seen why they are *quite* as popular as they are. </p>\n<p>There is tension in any ORM solution between learning curve, performance, time saved on deliverables, dependencies, redundancy, and maintainability. I started out preferring frameworks to generated code (and so, dependencies to redundancy), but over time I’ve been converted to the opposite viewpoint and gone the roll-your-own-tool route in the process. Maybe I’m just a System-namespace purist curmudgeon now, but I can live with that label.</p>\n<p>Now I use generators instead of templates or helper frameworks. As a result I have a bit of redundancy in my Data Access tier, but I can tolerate that. The domain objects are pure collections of value types, with a DA layer fronted by a simple get / save / serialize to stream / deserialize from stream interface that could quickly be remapped to any persistence or caching mechanism. The generator tool itself is a bit ugly, to be sure (never bothered prettying it up much), but in return it buys me (a) an extremely quick learning curve, even for less experienced developers, (b) respectable runtime performance, (c) no dependencies outside of .NET itself, (d) really rapid CRUD coding, (e) domain objects that are coupled to nothing, and (f) a DA tier that’s only coupling is a loose one to SQL Server, but with an interface that would allow for uncomplicated substitution with another provider, whether by tweaking the generator or updating the classes by hand. It may not be “sexy,” and it may have a lot of room for improvement in the SQL coupling, but it’s functional, easily taught &amp; learned, and leaves very portable code behind. </p>\n<p>Anyway, I really appreciated this article. Whatever tool people use, designers would do well to print out your “How do I ensure I’m not coupled to my O/R Mapper?” and “When choosing an O/R Mapper” sections and pin them up where they’ll be seen often.</p>"
+  },
+  {
+    "id": 2481,
+    "parent": 0,
+    "author_name": "Fregas",
+    "author_url": "http://www.dotnettricks.com",
+    "date": "2008-06-24T20:55:20",
+    "type": "comment",
+    "content_html": "<p>@onur</p>\n<p>I think you’re missing the point.  Your business objects *SHOULDN’T* be saving themselves.  Thats persistance logic (plumbing) not business or domain logic.  Its true if you remove nhibernate you’d have to replace it with something else since the objects aren’t saving themselves, but presumably another ORM that supports Persistance Ignorance will let you do the same thing without your domain objects being touched.</p>\n<p>If for some reason you DID have to remove nhibernate and roll your own, you could do so by replacing the Repositories and the business objects wouldn’t have to change.  It would be a lot of work, but thats thats the whole reason we use ORMs.</p>\n<p>As for the HttpModule, being able to switch that out with something else is built into NHibernate I believe.  That part is actually pretty easy.  </p>"
+  },
+  {
+    "id": 2482,
+    "parent": 0,
+    "author_name": "Tim Scott",
+    "author_url": "http://lunaverse.wordpress.com",
+    "date": "2008-06-25T00:16:30",
+    "type": "comment",
+    "content_html": "<p>I guess de-coupling does get a little fuzzy.  When I first used nHibernate, we had the idea to build a data gateway layer that would know about nHibernate.  This layer would be ignorant to concrete business entities.  The repository layer would know about entities and not about nHibernate.  In theory we could then swap out the data gateway for something non-nHibernate.</p>\n<p>This is not practical.  As soon you start to write HQL in the repository layer, you have coupling.  The repository must be aware of session…more coupling.</p>\n<p>However, it surely is possible to achieve near persistence ignorance in the core business entity layer and also clients higher up the stack.</p>\n<p>So +1 for the overall idea of the article.  I just inherited a system that has Linq to SQL woven throughout (up to the UI.)  Luckily it’s a sort of prototype, and the boss has told me I am free to chuck it.  However, I could have kept a lot more if the spirit of this article had been followed.</p>"
+  },
+  {
+    "id": 2483,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-06-25T03:11:16",
+    "type": "comment",
+    "content_html": "<p>@Gary,<br>\nYou are correct about the presentation layer and other infrastructure.  My company also uses ASP.NET with MonoRail and is starting a large project with the MVC Framework.  We consider that as infrastructure and likely to change, and we keep that away from the application core.  We treat WinForms and WPF similarly.</p>\n<p>I don’t expect my clients to have to rewrite an application I delivered after only five short years.  If they had to rewrite Headspring’s work at five years, we would have a pretty bad reputation.  We expect that system we develop will have a very long life.  They will see infrastructure technology come and go, and the core will live on.</p>"
+  },
+  {
+    "id": 2484,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-06-25T03:13:28",
+    "type": "comment",
+    "content_html": "<p>@Frans,<br>\nI definitely did now write a comparison of O/R Mappers.  Rather I’m trying to communicate that whatever tool is used, it should be used decoupled from the core of the application’s logic.  In this way, upgrades and eventual replacement will be possible without rewriting the entire application.</p>\n<p>Since you bring up features, I’m sure LLBLGen has many more features than NHibernate.  Given that, if folks bought products based on feature lists, our economy would be quite a bit more predictable.</p>"
+  },
+  {
+    "id": 2485,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-06-25T03:16:49",
+    "type": "comment",
+    "content_html": "<p>@Rick,<br>\nDiscussing theory and being impractical is a bit dangerous, and I try not to give any guidance through my blog unless I have specific experience with it through real work.  As the CTO of Headspring Systems in Austin, this is a topic we’ve put quite a bit of work into.  We’ve worked with legacy systems, built new systems and continually upgraded and enhanced systems already built.</p>\n<p>This scenario is real for us and practical.  We don’t have a lot of code around this (I also am leery about overengineering).  We accomplish this loose coupling by interfaces and reversing the project reference so that infrastructure references core and not the other way around.</p>\n<p>I intend to make a full application available to the community that illustrates the principles we follow as a company.  I understand it’s difficult for me to clearly communicate without concrete examples.</p>"
+  },
+  {
+    "id": 2486,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-06-25T03:20:20",
+    "type": "comment",
+    "content_html": "<p>@Andy,<br>\n&gt;”The blurring of Data Access and Business Logic isn’t too evil after all.”</p>\n<p>The coupling of data access and business logic is still “evil”.  The context I’m living in is long-lived enterprise applications, not small, quick-hit applications.  Therefore, these parts need to be de-coupled for maintenance reasons.</p>\n<p>I am fully aware of the new technologies and APIs coming from Microsoft, but object-oriented principles and design practices are not altered by these new APIs.  Consider them all and then choose which to use on small, trivial apps vs. which to use on long-lived enterprise apps.  </p>"
+  },
+  {
+    "id": 2487,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-06-25T03:23:40",
+    "type": "comment",
+    "content_html": "<p>@Onur,<br>\nIsolating NHibernate _does_ work in practice, and I have 10 systems in production using NHibernate (for various clients) that illustrates how it can be done.  I intend to release a reference application to help the community with this issue.</p>\n<p>There are some conventions that _could_ bleed over if we aren’t careful, but with a disciplined domain-driven design approach, it’s not only possible, but quite easy to pull out NHibernate and create new repository implementations which persist in a different way.</p>"
+  },
+  {
+    "id": 2488,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-06-25T03:27:22",
+    "type": "comment",
+    "content_html": "<p>@Paul,<br>\nAt Headspring, we tend not to prefer frameworks.  Rather, we enjoy using libraries.  For instance, we hand-role the entire core of our application and then use libraries to keep from writing the following types of code:  logging, data access, UI controls, caching, mocking, IoC. . . </p>\n<p>We use a framework in ASP.NET, but that’s our only compromise.  The other libraries used are easily kept behind interfaces, and they don’t bleed into the core of the system.  These libraries include: Log4Net, NHibernate, various UI controls, Lucene.Net, RhinoMocks, StructureMap, Windsor.</p>"
+  },
+  {
+    "id": 2489,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-06-25T03:30:17",
+    "type": "comment",
+    "content_html": "<p>@Tim,<br>\nWe don’t de-couple NHibernate from our repository classes.  We intentionally couple them to NHibernate.  The core of the application relies on repository interfaces, which merely have implementing classes that are coupled to NHibernate.  The core only depends on the interfaces.</p>\n<p>To bring in different persistence, we would create new repository classes that all implement the same repository interfaces.  By using the same automated test cases (APIs changed to support the new persistence technique), we can reliably ensure that the needed persistence scenarios are supported.</p>"
+  },
+  {
+    "id": 2490,
+    "parent": 0,
+    "author_name": "Fregas",
+    "author_url": "http://www.dotnettricks.com",
+    "date": "2008-06-25T13:35:51",
+    "type": "comment",
+    "content_html": "<p>My experience with O/R Mappers is that you’ll have to rewrite at least some code if you decide to switch out SOME code, like querying, no matter how loosely coupled your application was written.  As Jeffrey already mentioned, in order to switch out nhibernate he would have to rewrite his repository implementations, but thats it.  </p>\n<p>NHIbernate is probably the one mapper that allows the LEAST possible coupling to itself.  I’ve used Wilson, LLBLGen, Nolics, and a few others.  By far, NHibernate is the least intrusive to your code.  </p>\n<p>Frans, I’m going to pick on you a bit here, but please don’t take it personally:</p>\n<p>“This means that your own code will use and will be based on the characteristics provided by the data-access solution of choice…Also, the naive view on being able to swap out any o/r mapper you pick clearly shows you never gave it much thought: no matter which data access solution you pick, (so that means: whatever you choose) it will leak through into your own code” </p>\n<p>Not so.  If you layer your code correctly, you won’t have to change near as much.  I recently switched a small application from using WilsonORM to NHibernate.  It took me about 4 hours, and most of that was changing queries to use HQL instead of OPath.  Its true that if it was a bigger application it would have taken longer, but it would have also been easier had a layered things more the way Jeffrey suggests.</p>\n<p>“Does it offer entity views on entity collections for easy in-memory filtering/sorting ? does it offer auditing/authorization? Which concurrency models are supported? Does it offer deep support for distributed systems so you don’t have to babysit what’s going over the wire?”</p>\n<p>Those are all great features, but honestly, even for large complex applications, i don’t often need all that.  I can do an in-memory sort or filter of a collection using lambdas in .net 3.5 in just a few lines of code.  I follow the Martin Fowler first rule of distributed architectures: “Don’t distribute” unless there’s a real need to.  There are other tools to do auding and authorization.  And in any case, do all these BELONG in an o/r mapper?  Yes, if you rely on an ORM that has all these features and you use all of them throughout your domain objects, you’ll be pretty tied that that ORM.  But i see no compelling reason to do that.  Those kind of things don’t really belong in my domain model. If the ORM forces you to put them in the domain model, then something is wrong, in my opinion.  But if you stick to the core of your application being POCOs and not being tied to the ORM, switching the ORM out really doesn’t require a full rewrite.  </p>\n<p>It really depends on the ORM being used and how its used.  Just because many ORMs require strong coupling between themselves and the domain objects doesn’t mean all of them do.  I think its a good idea to consider that coupling when choosing an ORM and whether or not you want your app to be tied to it 5 years from now.  </p>"
+  },
+  {
+    "id": 2491,
+    "parent": 0,
+    "author_name": "Z",
+    "author_url": "http://",
+    "date": "2008-06-25T14:03:58",
+    "type": "comment",
+    "content_html": "<p>I do wonder why you would want to swap an orm. Because you start using another database? Nah, that can’t be the reason; most mappers support the majority of databases and if not they most likely have an API you can implement. And if it really doesn’t support it, you have done something wrong in the beginning.</p>\n<p>Or because you reach technical/functional limitations of the ORM? In that case, you didn’t do your homework correctly in the first place. You should already have looked at that kind of stuff when you decided what to use.</p>\n<p>There is not a single company in the world who would want to switch their existing perfectly working applications which are using NHibernate to EF (Just an example), because it is “available” or “possible”. Maybe in an application rebuild or a business decision to migrate fully to EF. But if you start keeping all that kind of things in mind, start preparing your applications for an nuclear warfare! It might happen!</p>"
+  },
+  {
+    "id": 2492,
+    "parent": 0,
+    "author_name": "Fregas",
+    "author_url": "http://www.dotnettricks.com",
+    "date": "2008-06-25T14:43:43",
+    "type": "comment",
+    "content_html": "<p>@Z</p>\n<p>It depends on the application.  For many applications such as small business websites we work on, the ORM will possibly outlive the website, i.e. the website will be rewritten or die before there is a need to switch out an ORM.  For other applications with a longer lifespan, a new ORM may come along that works better, no matter how much homework you do ahead of time.  Its not unusual for some applications to have a very long life–think of all the cobol apps that are still out there!</p>\n<p>As an example, we have this one “small” website with a lot of database functionality that has homemade domain objects that are tightly coupled to a homemade ORM using ado.net objects like datareaders.  I can’t switch out the homemade ORM because all the persistence logic is mixed in with the domain objects.  But man would i ever be more productive if i could plug in NHibernate or EF without having to rewrite the whole thing!  So in this case, we really would have benefited from the previous developers loosely coupling the ORM from day one.  </p>\n<p>Another example was at my last job we had some apps using CSLA and one using LLBLGen and we were moving to WilsonORM.  The swap was impossible without a rewrite, but desired by management in order to standardize on WIlson.</p>\n<p>Most companies don’t want to switch out their ORMs precisely because it would involve rewriting their whole application.  But if it only involved swapping one layer and could provide standardization on the new ORM and enable more productivity, I think many companies would.  </p>"
+  },
+  {
+    "id": 2493,
+    "parent": 0,
+    "author_name": "Ed",
+    "author_url": "http://",
+    "date": "2008-07-08T20:30:16",
+    "type": "comment",
+    "content_html": "<p>Late to the conversation here, but have a real(ish) example.</p>\n<p>If you stick to using Interfaces, such as IRepository and implement concrete repositories such as NHibernateRepository, which has minimal bleed through, so you’re practising strict separation of concerns and decoupling  then exercises like this become easier:</p>\n<p>A quick prototype app, which utilises ISubSonicRepository, suddenly ‘evolves’ into production and then in a blink of an eye needs to scale…</p>\n<p>Just to keep you on your toes (and more likely to happen to all of us) the business decides to Persist People entities in Active Directory, of course augmented with database persisted details…(that hurt, hence my strong endorsement of at least trying to implement Jeffrey’s suggestion.)</p>\n<p>We recently outsourced an application the data is still available and mutable. However we have to use web services (some XML-RPC, some SOAP).</p>\n<p>Therefore I think the above article is incredibly sensible because not only may you need to change O/RMs but you may need to chance persistence technologies entirely. LDAP is very different to SubSonic!</p>\n<p>Don’t learn the hard way like I did!</p>"
+  },
+  {
+    "id": 2494,
+    "parent": 0,
+    "author_name": "Garry McGlennon",
+    "author_url": "http://www.dotNetProfessional.com/blog/",
+    "date": "2008-07-10T23:44:01",
+    "type": "comment",
+    "content_html": "<p>Such a heated debate but also interesting too. For my two cents worth I agree with the concepts of the article and question anyone using features of an O/RM outside of their business/application layers. The general approach I take is one of service based whereby data access is service based at a CRUD level and business process level (two logical layers). Should we want to change the O/RM we’d only have to swap out the CRUD service layer (its the only thing that typically access the database). Now, having said that, this ‘seperation’ does have its drawbacks, namely that you can’t access data as easily as you might like ie via an LLBGEN/nHibernate/Linq etc query from other layers. As you’ve abstracted this into data retrieval/storage interfaces, which have no understanding of the implementation. There are definately pros and cons for any solution, though I think the added abstractions will serve you better in the long run.</p>\n<p>As a side note: Am I the only one who doesn’t like the concept of DataContexts with O/RMs? Ie they don’t play very well in service oriented architectures.<br>\n———————————————<br>\nDisclosure: I’m working on an O/RM mapper using a service based approach. Based on templates and the assumption you will change it!</p>"
+  },
+  {
+    "id": 2495,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-07-11T13:02:39",
+    "type": "comment",
+    "content_html": "<p>This discussion can be continued here:<br>\n<a href=\"/2008/07/making-it-easy-to-replace-nhibernate-in-five-years/\" rel=\"ugc\">http://jeffreypalermo.com/blog/making-it-easy-to-replace-nhibernate-in-five-years/</a></p>"
+  }
+]

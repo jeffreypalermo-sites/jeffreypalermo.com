@@ -1,0 +1,20 @@
+[
+  {
+    "id": 202,
+    "parent": 0,
+    "author_name": "Richard Dudley",
+    "author_url": "http://",
+    "date": "2004-11-09T12:59:00",
+    "type": "comment",
+    "content_html": "<p>My favorite is:</p>\n<p>‘can u plz give me code for X’</p>\n<p>where X is a project worth at least a couple of mortgage payments.</p>\n<p>Since a lot of these requests are foreign, I have to wonder if these are the guys who are being outsourced to.</p>"
+  },
+  {
+    "id": 203,
+    "parent": 0,
+    "author_name": "Bobbo",
+    "author_url": "http://",
+    "date": "2004-11-09T13:37:00",
+    "type": "comment",
+    "content_html": "<p>Yes, it is quite worrying the number of people who will just post a question without even trying to search.  Sometimes putting the exact text of their question into google will give you the answer in the first link!</p>\n<p>Another worrying thing is the people who DO seem to have jobs – I am helping a guy at the moment who is struggling to edit and maintain a website developed in a combination of Javascript and PHP – and he doesn’t even know ONE of these languages.  He has no idea how and where JS and PHP operate (so he tries some stupid-ass things like posting an array to PHP from Javascript, using a javascript ‘if’ to control PHP execution, etc)…  and yet this guy is somehow employed?  While smart knowledgeable people can’t find jobs?  What the hell is going on?</p>"
+  }
+]

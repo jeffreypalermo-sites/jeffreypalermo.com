@@ -1,0 +1,54 @@
+---
+wp_id: 278
+title: 'How to decide: user controls vs. composite controls vs. rendered custom controls'
+slug: how-to-decide-user-controls-vs-composite-controls-vs-rendered-custom-controls
+permalink: /2005/07/how-to-decide-user-controls-vs-composite-controls-vs-rendered-custom-controls/
+date: 2005-07-08T13:28:00
+date_utc: 2005-07-08T13:28:00Z
+modified: 2005-07-08T13:28:00
+format: html
+excerpt: 'There are several ways to make your own server controls in ASP.NET. You may have wondered which type you should make. There are two basic types: user controls custom controls Within custom controls, you have rendered controls, and composite controls. A composite control could merely inherit from another control and change or add something. More […]'
+comments_open: true
+---
+<p>There are several ways to make your own server controls in<br>
+ASP.NET.&nbsp; You may have wondered which type you should make.&nbsp;<br>
+There are two basic types:</p>
+<ul>
+<li>user controls</li>
+<li>custom controls</li>
+</ul>
+<p>Within custom controls, you have rendered controls, and composite<br>
+controls.&nbsp; A composite control could merely inherit from another<br>
+control and change or add something.&nbsp; More often, though, it<br>
+creates many child controls to render inside itself.</p>
+<p>A User Control is the easiest to make, and it was originally going to<br>
+be called “pagelets” because the creation experience is pretty close to<br>
+that of a page.&nbsp; You have the html view and a code-behind.&nbsp;<br>
+It’s just a snippet of what would go on a page.&nbsp; You can lay out<br>
+your html and add other server controls inside, and then control them<br>
+with your code-behind.&nbsp; <b>This type of control should be considered first.</b>&nbsp; If you need a control that is specific to a particular application, this type of control is for you.</p>
+<p>A custom control is all code and is compiled into an assembly.&nbsp;<br>
+The main benefit is that the assembly can be distributed and shared<br>
+among many applications.&nbsp; If you don’t need to share controls<br>
+between applications, then it may be hard to justify using this type of<br>
+control.&nbsp; This control is more time-consuming to create.&nbsp; One valid reason may be that you need a control all over in<br>
+your application.</p>
+<p>Within the custom control umbrella, you have the rendered controls and<br>
+composite or inherited controls.&nbsp; I prefer the inherited controls<br>
+myself.&nbsp; Often, I’ll inherit from a Panel (a &lt;div/&gt;) and add<br>
+other controls as children.&nbsp; Another method some prefer is<br>
+rendered controls.&nbsp; This is when you inherit from Control and<br>
+override the Render method and output all html yourself.&nbsp; This can<br>
+quickly become cumbersome and if very error-prone.&nbsp; I would<br>
+consider this a last resort.&nbsp; In some cases, a performance<br>
+argument is made, and your decision will have to be based on the<br>
+application environment.</p>
+<p>In summary, if you need to distrubute controls in an assembly, you will<br>
+have to use custom controls and decide between rendered or<br>
+composite.&nbsp; If all your controls will stay with the application,<br>
+user controls are the most compelling answer.</p>
+<p>A must read for every ASP.NET developer is <a href="http://www.amazon.com/exec/obidos/tg/detail/-/0735615829/qid=1120846316/sr=8-1/ref=sr_8_xs_ap_i1_xgl14/103-9531794-2539052?v=glance&amp;s=books&amp;n=507846">Developing ASP.NET Server Controls and Components.</a></p>
+<hr>
+<p>In the current events space, contratulations to <a href="http://www.dotnetjunkies.com">.Net Junkies for upgrading their blogging engine to Community Server</a>.</p>
+<p>Update:&nbsp; Thank you Fregas for the correction.&nbsp; I’m very<br>
+excited about declaratively setting properties on user controls.</p>

@@ -1,0 +1,137 @@
+[
+  {
+    "id": 1096,
+    "parent": 0,
+    "author_name": "Tom Opgenorth",
+    "author_url": "http://www.opgenorth.net",
+    "date": "2007-01-15T14:22:08",
+    "type": "comment",
+    "content_html": "<p>Nice trick.  One thing that I have done, along the same lines, is to create my own custom attributes to hold a user friendly display value.  Then I write a helper to pull that information out of the attribute.  Argueably not as flexible as what you’ve done here, but it got the job done for what I needed to do.</p>"
+  },
+  {
+    "id": 1097,
+    "parent": 0,
+    "author_name": "Daniel Pollock",
+    "author_url": "http://",
+    "date": "2007-01-15T14:48:36",
+    "type": "comment",
+    "content_html": "<p>I second the custom attribute idea. Once you have the attribute class set up and a “helper” function to pull the attribute out, the syntax is very similiar like you descibed for the java implementation. </p>\n<p>I would argue that the attribute method with use of reflection is just as flexible and easy, if not better. With the process that Jeff describes, you still have to hard-code the values that you want inside of the status class instead of at the enum level. That makes it damn hard to later add on other properties that you’d like to attribute to that enum.</p>\n<p>The only room for improvement, I see, on the attribute method is maybe make the process of pulling the attribute through reflection a bit cleaner. </p>"
+  },
+  {
+    "id": 1098,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-01-15T14:55:58",
+    "type": "comment",
+    "content_html": "<p>Daniel,<br>\nPerhaps a code sample of this attribute method?</p>"
+  },
+  {
+    "id": 1099,
+    "parent": 0,
+    "author_name": "Johan Eijlders",
+    "author_url": "http://",
+    "date": "2007-01-15T19:16:49",
+    "type": "comment",
+    "content_html": "<p>Hi Jeffrey,<br>\nI found this attribute example on the codeproject and used it several times.<br>\n<a href=\"http://www.codeproject.com/csharp/enumwithdescription.asp\" rel=\"nofollow ugc\">http://www.codeproject.com/csharp/enumwithdescription.asp</a></p>"
+  },
+  {
+    "id": 1100,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-01-15T19:30:50",
+    "type": "comment",
+    "content_html": "<p>Johan,<br>\nYes, I’m aware of that sample.  In my opinion, it’s a bad option.  Yes, it’s possible, but only through reflection and only by adding a UI-related property in  your domain class.</p>\n<p>With the attribute approach, there is no way to override the display text at runtime or configure it for a particular customer (and forget localization or translation).</p>"
+  },
+  {
+    "id": 1101,
+    "parent": 0,
+    "author_name": "Johan Eijlders",
+    "author_url": "http://",
+    "date": "2007-01-15T19:43:31",
+    "type": "comment",
+    "content_html": "<p>Hi Jeffrey,</p>\n<p>You’re right it should not be in the domain. I asume you’re using the class which is some kind of descriptor in the presenter. I like the idea and use it the next time. It is always good to see something new.</p>"
+  },
+  {
+    "id": 1102,
+    "parent": 0,
+    "author_name": "Eric McVicker",
+    "author_url": "http://",
+    "date": "2007-01-15T22:18:34",
+    "type": "comment",
+    "content_html": "<p>I’m not sure about adopting an enum scheme like JDK 5.  However, I do have a gripe about .Net Enum and that is the lack of type safety since you can cast any number to one not just a number that is in range.</p>"
+  },
+  {
+    "id": 1103,
+    "parent": 0,
+    "author_name": "Ben Scheirman",
+    "author_url": "http://www.flux88.com",
+    "date": "2007-01-16T02:34:58",
+    "type": "comment",
+    "content_html": "<p>I wouldn’t shy away from the [Description] attribute, Jeffrey.  Sure it’s UI related information in the domain, but it doesn’t have to be localized.  You could just as easy add a localization constant instead of the string there.</p>\n<p>Since that would be such an easy change, I wouldn’t worry about it until that was actually a requirement, citing YAGNI with the localization.  (Usually this is an upfront requirement anyway)</p>"
+  },
+  {
+    "id": 1104,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-01-16T12:54:25",
+    "type": "comment",
+    "content_html": "<p>Ben,<br>\nYou are right about the YAGNI in most cases, and if this display text never needs to change, I’m sure there is a way to make that solution not feel so dirty, but any time the display text is needed in a view, this reflection code is going to have to be called (or a function that wraps the reflection code).  It’s a lot of duplication.</p>\n<p>Creating an enumerated class cuts that enumeration and is the solution that Java developers have used pre-JDK5 since 1995. </p>"
+  },
+  {
+    "id": 1105,
+    "parent": 0,
+    "author_name": "Daniel Pollock",
+    "author_url": "http://",
+    "date": "2007-01-16T14:30:26",
+    "type": "comment",
+    "content_html": "<p>The codeproject that Johan sites is what I was referring too.   </p>\n<p>I commented that the reflection code could be cleaner and I see that as the same problem you sited: having to “add a UI-related property in your domain class.”.  </p>\n<p>I re-read, in detail, your implementation of a enumerated class and now agree  (guess i jumped on the attribute wagon to soon!)  that its definitely the way it should head. </p>\n<p>Should Microsoft copy java’s syntax? It seems really clean, and  the syntax seems to be a natural fit into the current .net language. What other features should it contain? ( generics? inheritance?)</p>"
+  },
+  {
+    "id": 1106,
+    "parent": 0,
+    "author_name": "Tom Opgenorth",
+    "author_url": "http://",
+    "date": "2007-01-17T00:44:02",
+    "type": "comment",
+    "content_html": "<p>FWIW, in my current project/contract, I’m going to opt with the technique that you show here.  Your “enumerated class” approach does offer some flexibility that I won’t get with custom attributes on an enum (most notiably with custom serialization of said value).</p>"
+  },
+  {
+    "id": 1107,
+    "parent": 0,
+    "author_name": "Bill Pierce",
+    "author_url": "http://blogs.meetandplay.com/wpierce/",
+    "date": "2007-01-17T19:19:15",
+    "type": "comment",
+    "content_html": "<p>I do something very similar however, your Status class eliminates the need for a StatusValue enum.</p>\n<p>Change Status.Value to an int rather than the enum, implement equals/gethashcode, then change your private statics to public static readonlys, and your other fields to readonly.</p>\n<p>Makes the enum superfluous.</p>\n<p>I also use this technique to represent well known lookup table entries in code.</p>"
+  },
+  {
+    "id": 1108,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-01-17T21:04:09",
+    "type": "comment",
+    "content_html": "<p>Bill,<br>\nThat’s pretty darned close to how my team has it in our production app, but I guess I watered it down too much for the blog post.  Yes, equals and GetHashCode() are definitely necessary as now we have value objects and not entities.  I also map the Status class to the database through a StatusType NHibernate translator that knows to take the status code and store it in the database column (and read it back, etc).</p>"
+  },
+  {
+    "id": 1109,
+    "parent": 0,
+    "author_name": "Stano Peťko",
+    "author_url": "http://",
+    "date": "2007-01-18T12:57:35",
+    "type": "comment",
+    "content_html": "<p>Hello.</p>\n<p>I did something similar with my enums. I have a class EnumClass, which I derive from and fill it with enum values together with their string descriptions. All enum values are in a collection (actually, EnumClass is derived from Collection). This way I can use the final class for each enum as a datasource – for comboboxes.</p>"
+  },
+  {
+    "id": 1110,
+    "parent": 0,
+    "author_name": "Colin Jack",
+    "author_url": "http://colinjack.blogspot.com/",
+    "date": "2007-05-22T08:15:58",
+    "type": "comment",
+    "content_html": "<p>We’ve used the sort of approach you are discussing, moving the description class out of the domain at the same time.</p>"
+  }
+]

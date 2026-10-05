@@ -1,0 +1,65 @@
+[
+  {
+    "id": 50,
+    "parent": 0,
+    "author_name": "JosephCooney",
+    "author_url": "http://",
+    "date": "2004-05-13T20:15:00",
+    "type": "comment",
+    "content_html": "<p>I think base pages are one of (possibly THE) best feature about ASP.NET.</p>"
+  },
+  {
+    "id": 51,
+    "parent": 0,
+    "author_name": "Peter van Ooijen",
+    "author_url": "http://",
+    "date": "2004-05-14T06:52:00",
+    "type": "comment",
+    "content_html": "<p>They are great, but it is a pitty you don’t inherit the markup. You only inherit the codebehind, not the aspx itself. You can drop controls on your base form but they will not show up in the inheriting page.</p>"
+  },
+  {
+    "id": 52,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-05-14T07:04:00",
+    "type": "comment",
+    "content_html": "<p>Yeah, but all this is is class inheritance.  I’ve been able to do some much since I’ve wrapped my brain around object-oriented concepts.  This isn’t unique to ASP.NET, it’s just a benefit from the underlying object-oriented .Net Framework.  From what I read about Master pages, you’ll be able to inherit markup by nesting master pages.</p>\n<p>Have you checked out my EZWeb Project?  <a href=\"http://workspaces.gotdotnet.com/ezweb\" rel=\"nofollow\">http://workspaces.gotdotnet.com/ezweb</a></p>"
+  },
+  {
+    "id": 53,
+    "parent": 0,
+    "author_name": "Peter van Ooijen",
+    "author_url": "http://",
+    "date": "2004-05-14T10:54:00",
+    "type": "comment",
+    "content_html": "<p>Hi.<br>\nIt is class inheritance. Asp.Net does even more. When it comes to serving the page it will generate a new class which includes members for all controls on the aspx and which includes all &lt;%s &gt; stuff like databindings in plain C#. This generated class inherits from your code behind class.</p>\n<p>Before .net I used to do Delphi which was fully OOP from version 1. In there you could inherit visual (win) form classes, including controls. It could be pretty flaky but the idea worked. Sometimes I wished I could do that with an aspx (production) webforms as well. Have to wait till it is accepted to roll out 2005 apps. With masterpages.</p>\n<p>In .NET I do use base (form) classes and I like it. Just like you. Havn’t looked at you project (yet).</p>\n<p>Peter</p>"
+  },
+  {
+    "id": 54,
+    "parent": 0,
+    "author_name": "stefan demetz",
+    "author_url": "http://",
+    "date": "2004-05-15T12:39:00",
+    "type": "comment",
+    "content_html": "<p>Enterprise grade ASP.NET Development and code reuse<br>\n<a href=\"http://dotnetjunkies.com/WebLog/stefandemetz/archive/2004/01/14/5631.aspx\" rel=\"nofollow\">http://dotnetjunkies.com/WebLog/stefandemetz/archive/2004/01/14/5631.aspx</a></p>"
+  },
+  {
+    "id": 55,
+    "parent": 0,
+    "author_name": "Shannon J Hager",
+    "author_url": "http://",
+    "date": "2004-05-17T09:53:00",
+    "type": "comment",
+    "content_html": "<p>I have EZWeb in the root of a test web and am running into the problem described here:<br>\n<a href=\"http://weblogs.asp.net/dneimke/archive/2004/05/17/133116.aspx\" rel=\"nofollow\">http://weblogs.asp.net/dneimke/archive/2004/05/17/133116.aspx</a></p>"
+  },
+  {
+    "id": 56,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-05-17T10:37:00",
+    "type": "comment",
+    "content_html": "<p>Thanks.  I respond here <a href=\"http://dotnetjunkies.com/WebLog/jpalermo/archive/2004/05/17/13810.aspx\" rel=\"nofollow\">http://dotnetjunkies.com/WebLog/jpalermo/archive/2004/05/17/13810.aspx</a></p>"
+  }
+]

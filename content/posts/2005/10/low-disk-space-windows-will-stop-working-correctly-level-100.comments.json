@@ -1,0 +1,20 @@
+[
+  {
+    "id": 531,
+    "parent": 0,
+    "author_name": "Bil Simser",
+    "author_url": "http://weblogs.asp.net/bsimser",
+    "date": "2005-10-13T18:57:37",
+    "type": "comment",
+    "content_html": "<p>Don’t knock this simple tip. I once had our outsourced service provide call me with all kinds of issues the server was having running a SharePoint server. Since I didn’t have access to the server, I came up with a number of diagnosises around what might be the problem. When I did finally get access, I did a dir on the c: drive and immiately found it had about 100k remaining. </p>\n<p>If you have monitoring software to monitor disk space, it might not work because it need space to swap out and run the event to send you the notification so check the simple things like this first!</p>"
+  },
+  {
+    "id": 532,
+    "parent": 0,
+    "author_name": "venkatesh",
+    "author_url": "http://",
+    "date": "2007-11-19T10:40:20",
+    "type": "comment",
+    "content_html": "<p>I have a website (ASP.NET 2.0+C#+SQL Server 2000) published on the server. The server’s disk space runs out and so the website is no longer viewable to the user. I would like to provide a custom message to the user, if the server space is low.</p>\n<p> How to provide the customized message to the user, incase the disk space on the primary drive( c:) runs out?</p>\n<p>Please help. </p>"
+  }
+]

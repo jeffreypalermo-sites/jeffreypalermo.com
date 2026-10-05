@@ -1,0 +1,31 @@
+---
+wp_id: 82
+title: Extending web.config with your custom configuration sections – level 300
+slug: extending-web-config-with-your-custom-configuration-sections-level-300
+permalink: /2004/08/extending-web-config-with-your-custom-configuration-sections-level-300/
+date: 2004-08-22T18:51:00
+date_utc: 2004-08-22T18:51:00Z
+modified: 2004-08-22T18:51:00
+format: html
+excerpt: The web.config file in ASP.NET enables configuration of the entire ASP.NET application. It is a file that is part of just about every ASP.NET application, yet I see many developer who roll their own configuration schemes beside the web.config file instead of making use of the functionality already built in. Yes, some may use the […]
+comments_open: true
+---
+<p>The web.config file in ASP.NET enables configuration of the entire ASP.NET application.&nbsp; It is a file that is part of just about every ASP.NET application, yet I see many developer who roll their own configuration schemes beside the web.config file instead of making use of the functionality already built in.&nbsp; Yes, some may use the appSettings section and then just retrieve a value from a key, but web.config can do so much more than that!&nbsp; Here is a sample of how easy it is to add your own configuration section, thereby partitioning a section of configuration items away from the others:</p><pre><span class="ColorStartHtmlTag">&lt;</span><span class="ColorControlTag">configuration</span><span class="ColorEndHtmlTag">&gt;</span><br>
+<br>   <span class="ColorStartHtmlTag">&lt;</span><span class="ColorControlTag">configSections</span><span class="ColorEndHtmlTag">&gt;</span><br>
+<br>      <span class="ColorStartHtmlTag">&lt;</span><span class="ColorControlTag">sectionGroup</span> name=”MyCompany.MyApp.MyNamespace”<span class="ColorEndHtmlTag">&gt;</span><br>
+<br>         <span class="ColorStartHtmlTag">&lt;</span><span class="ColorControlTag">section</span> name=”SomeClassesConfig”<br>
+<br>            type=“MyCompany.MyApp.MyConfigHandler“,MyCompany.MyApp” <span class="ColorEndHtmlTag">/&gt;</span><br>
+<br>      <span class="ColorStartHtmlTag">&lt;/</span><span class="ColorControlTag">sectionGroup</span><span class="ColorEndHtmlTag">&gt;</span><br>
+<br>   <span class="ColorStartHtmlTag">&lt;/</span><span class="ColorControlTag">configSections</span><span class="ColorEndHtmlTag">&gt;</span><br>
+<br>   <span class="ColorStartHtmlTag">&lt;</span><span class="ColorControlTag">MyCompany.MyApp.MyNamespace</span><span class="ColorEndHtmlTag">&gt;</span><br>
+<br>      <span class="ColorStartHtmlTag">&lt;</span><span class="ColorControlTag">SomeClassesConfig</span><span class="ColorEndHtmlTag">&gt;</span><br>
+<br>         <span class="ColorStartHtmlTag">&lt;</span><span class="ColorControlTag">add</span> key=”myKey” value=”myValue” <span class="ColorEndHtmlTag">/&gt;</span><br>
+<br>      <span class="ColorStartHtmlTag">&lt;/</span><span class="ColorControlTag"><span class="ColorControlTag">SomeClassesConfig</span></span><span class="ColorEndHtmlTag">&gt;</span><br>
+<br>   <span class="ColorStartHtmlTag">&lt;/</span><span class="ColorControlTag"><span class="ColorControlTag">MyCompany.MyApp.MyNamespace</span></span><span class="ColorEndHtmlTag">&gt;</span><br>
+<br><span class="ColorStartHtmlTag">&lt;/</span><span class="ColorControlTag">configuration</span><span class="ColorEndHtmlTag">&gt;</span></pre>
+<p>Then, in your code, you just have a class, MyCompany.MyApp.MyConfigHandler that inherits from System.Configuration.NameValueSectionHandler, and that’s all it takes.&nbsp; If you don’t make your own ConfigHandler, then you have to specify the strong name in your type=”” attribute, and not only is that painful, but when you migrate this code to .Net 2.0 and beyond, you will have to modify every place where you gave a strong name.&nbsp; If you make a superclass of it, then when you migrate the superclass, you’re golden.</p>
+<p>To get to these values in your code, you just use a NameValueCollection that you can get from calling:</p>
+<p>ConfigurationSettings.GetConfig(“<span class="ColorControlTag"><span class="ColorControlTag">MyCompany.MyApp.MyNamespace</span></span>/<span class="ColorControlTag"><span class="ColorControlTag">SomeClassesConfig</span></span>“);</p>
+<p>Does that look like an XPath expression to you?</p>
+<p>You can further extend the web.config file with your own ConfigHandler that has nested XML elements instead of just a key and a value.&nbsp; You could store complete object information in the web.config (if the data rarely changes).&nbsp; Remember that every change of the web.config forces a restart on that directory and its children.</p>
+<p>Coming up in May of next year, .Net 2.0 will have the APIs to modify .config files programmatically.&nbsp; Check out the Beta 1 to use this functionality right now.<br></p>

@@ -1,0 +1,14 @@
+---
+wp_id: 175
+title: If you log exceptions, watch out for Response.Redirect() – level 200
+slug: if-you-log-exceptions-watch-out-for-response-redirect-level-200
+permalink: /2005/02/if-you-log-exceptions-watch-out-for-response-redirect-level-200/
+date: 2005-02-14T11:44:00
+date_utc: 2005-02-14T11:44:00Z
+modified: 2005-02-14T11:44:00
+format: html
+excerpt: A common practice with any web application is to log fatal exceptions. After all, if the user can’t complete the intended operation, wouldn’t you want to know about it? I log all fatal exceptions in my apps because if one of these happens, I want to know about it so I can fix the bug. […]
+comments_open: true
+---
+<p>A common practice with any web application is to log fatal exceptions.&nbsp; After all, if the user can’t complete the intended operation, wouldn’t you want to know about it?&nbsp; I log all fatal exceptions in my apps because if one of these happens, I want to know about it so I can fix the bug.&nbsp; Often, a production environment will uncover bugs in fringe use cases — bugs that would never turn up in the normal test cycle.&nbsp; The exception information can help you reproduce and fix the bug.</p>
+<p>Recently I employed the use of Response.Redirect( ) for a situation where I wanted to stop doing the work on the current page and go to another that was dependent on the query string.&nbsp; I used Response.Redirect( ) for this, and my exception log started growing.&nbsp; After investigation, I found that a ThreadAbortException was being thrown with every Response.Redirect( ) call.&nbsp; By looking at the call stack, I discovered that Response.Redirect( ) actually calls Response.End( ) internally.&nbsp; Response.End( ) throws the ThreadAbortException to terminate work on the current thread after sending the redirect message.</p>

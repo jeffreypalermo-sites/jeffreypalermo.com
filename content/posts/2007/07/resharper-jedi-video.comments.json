@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1794,
+    "parent": 0,
+    "author_name": "Jason Meridth",
+    "author_url": "http://www.lostechies.com/blogs/jason_meridth",
+    "date": "2007-07-04T18:49:50",
+    "type": "comment",
+    "content_html": "<p>If that isn’t a great example of how powerful ReSharper is, I don’t know what will be.</p>\n<p>The music was also played on the movie Hackers.</p>\n<p>Thanks for the share.</p>"
+  },
+  {
+    "id": 1795,
+    "parent": 0,
+    "author_name": "Ilya Ryzhenkov",
+    "author_url": "http://resharper.blogspot.com",
+    "date": "2007-07-13T07:38:38",
+    "type": "comment",
+    "content_html": "<p>Jeffry, could you please link to the original post (<a href=\"http://resharper.blogspot.com/2007/05/coding-session-with-resharper.html\" rel=\"nofollow ugc\">http://resharper.blogspot.com/2007/05/coding-session-with-resharper.html</a>) instead? Thanks.</p>"
+  },
+  {
+    "id": 1796,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-07-13T12:34:57",
+    "type": "comment",
+    "content_html": "<p>@Ilya,<br>\ndone.</p>"
+  }
+]

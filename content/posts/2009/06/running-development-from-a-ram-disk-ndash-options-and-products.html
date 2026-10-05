@@ -1,0 +1,33 @@
+---
+wp_id: 1071
+title: Running development from a RAM disk – options and products
+slug: running-development-from-a-ram-disk-ndash-options-and-products
+permalink: /2009/06/running-development-from-a-ram-disk-ndash-options-and-products/
+date: 2009-06-30T17:26:08
+date_utc: 2009-06-30T17:26:08Z
+modified: 2009-06-30T17:26:08
+format: html
+categories:
+- blog
+excerpt: In my post about ditching the Solid State Drive in favor of the RAM disk, I mentioned the speed increases. Taking away the IO bottleneck is significant, and it can let us turn our attention to other bottlenecks that remain. Here, I am going to outline what I’m currently using, what I’ve tried, and some […]
+comments_open: true
+---
+<p>In my <a href="/2009/06/speeding-up-the-build-ndash-ditch-the-ssd-and-go-for-the-ram-drive/">post about ditching the Solid State Drive in favor of the RAM disk</a>, I mentioned the speed increases.&nbsp; Taking away the IO bottleneck is significant, and it can let us turn our attention to other bottlenecks that remain.&nbsp; Here, I am going to outline what I’m currently using, what I’ve tried, and some steps to get it all working.</p>
+<p><strong>Workstation specs</strong></p>
+<p>If your Windows OS is already paging to disk because of a lack of RAM, then using a ram disk doesn’t make much sense.&nbsp; You must have unused RAM.&nbsp; I tried Vista SuperFetch for almost a year, and while it did fill up all available RAM, I still didn’t see the machine fly.&nbsp; Allocating&nbsp; a RAM disk with my surplus of RAM did make the machine move much quicker.&nbsp; I’ve looked at SuperCache and SuperVolume from SuperSpeed, but those products are only offered for Windows XP.&nbsp; They seem very promising because SuperCache does a delayed write on the entire boot drive and uses RAM as the primary IO resource.&nbsp; </p>
+<p>My workstation (and that of all of my employees) is:&nbsp; <strong>Dell Precision M4300 laptop (2.x GHz dual core proc, 8 GB RAM, Seagate 7200 hard drives)</strong></p>
+<p>I was able to get 4GB RAM sticks from memory-up.com for less than $160 each.</p>
+<p><strong>Products</strong></p>
+<p>I tried out <a href="http://www.superspeed.com/desktop/ramdisk.php">SuperSpeed RamDisk Plus</a> as well as <a href="http://www.dataram.com/products-and-services/ramdisk/">DataRam RAMDisk</a>.&nbsp; Both products can support the size of the RAM disk that I need (3GB).&nbsp; Both products automatically persist the contents of the RAM disk to the hard drive upon shutdown and restart, so there is a seamless experience with both.&nbsp; Because I’m using these in a laptop scenario, a sudden power outage is unlikely, and all the stored files are working copies of Subversion, where commits happen multiple times per day.</p>
+<p><strong>Decision</strong></p>
+<p>Ultimately, I’m currently running DataRam RAMDisk not because I see it as materially superior to SuperSpeed’s product, but because it gives me what I need for a lower investment.&nbsp; RamDisk Plus gives me much more than I need; therefore, I would be paying for unneeded features.&nbsp; I used both, and both are easy to use.&nbsp; RamDisk Plus is about $100 for a Vista x64 license, and DataRam’s RAMDisk is free for the size I need, which is &lt;= 4GB.&nbsp; You have to pay for larger.</p>
+<p><img decoding="async" style="display:inline" alt="Ramdisk Screenshot" src="https://i0.wp.com/www.dataram.com/images/page-images/ramdisk-screenshot-lowres.jpg?w=776"></p>
+<p>With DataRam RAMDisk, you can format it yourself, so that’s what I did by formatting it as NTFS with Disk Manager.&nbsp; You can see that I’ve mapped a 3GB RAM disk to the R: drive.</p>
+<p><img loading="lazy" decoding="async" title="image" style="display:inline" height="138" alt="image" src="/wp-content/uploads/2018/07/runningdevelopmentfromaramdiskoptionsand_88c1image_5c916a04-18c2-4166-9938-37a894d613b2.png" width="610"></p>
+<p>I have also mounted it inside the C: drive so that I can access it quickly from WINDOWS+R:</p>
+<p><img loading="lazy" decoding="async" title="image" style="display:inline" height="268" alt="image" src="/wp-content/uploads/2018/07/runningdevelopmentfromaramdiskoptionsand_88c1image_54daf0da-67bf-474f-ae2b-83a3288367f7.png" width="493"></p>
+<p>I did this through the Disk Manager’s mount points:</p>
+<p><img loading="lazy" decoding="async" title="image" style="display:inline" height="327" alt="image" src="/wp-content/uploads/2018/07/runningdevelopmentfromaramdiskoptionsand_88c1image_3639413f-3f01-4e5e-9563-bfffb6fdb0bf.png" width="494"> </p>
+<p>My final step was to set SQL Server to use the RAM disk as its disk for newly-created databases.&nbsp; Our line-of-business applications are IO intensive including database interaction, and the automated tests are especially so.</p>
+<p>&nbsp;<img loading="lazy" decoding="async" title="image" style="display:inline" height="599" alt="image" src="/wp-content/uploads/2018/07/runningdevelopmentfromaramdiskoptionsand_88c1image_055347cf-27db-49d2-bbc7-64b5eb12d09c.png" width="669"> </p>
+<p>All-in-all, the setup is pretty simple regardless of which RAM disk product is used.&nbsp; I love the speed improvement it has given the workstations.&nbsp; Obviously running less stuff in an automated build will make it run faster, but there are some things that just MUST be run in a first-line build, and that build must remain fast.&nbsp; Besides the build, even compilation and working inside Visual Studio is quicker because all of the files are in RAM.</p>

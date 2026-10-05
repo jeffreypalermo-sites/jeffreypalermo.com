@@ -1,0 +1,15 @@
+---
+wp_id: 64
+title: VS 2005 Beta 1 project convert wizard performs well except. . . – level 100
+slug: vs-2005-beta-1-project-convert-wizard-performs-well-except-level-100
+permalink: /2004/08/vs-2005-beta-1-project-convert-wizard-performs-well-except-level-100/
+date: 2004-08-17T11:49:00
+date_utc: 2004-08-17T11:49:00Z
+modified: 2004-08-17T11:49:00
+format: html
+excerpt: When it pulls my code files into the Code directory, my casing is lost. MyObjectException.cs becomes myobjectexception.cs. I’ve already logged a bug with Microsoft, so hopefully this will get fixed. The code inside is good, but the filename is converted to all lowercase. Otherwise the project convert wizard works well. I took my VS.NET 2003 […]
+comments_open: true
+---
+<p>When it pulls my code files into the Code directory, my casing is lost.&nbsp; MyObjectException.cs becomes myobjectexception.cs.&nbsp; I’ve already logged a bug with Microsoft, so hopefully this will get fixed.&nbsp; The code inside is good, but the filename is converted to all lowercase.</p>
+<p>Otherwise the project convert wizard works well.&nbsp; I took my VS.NET 2003 project, and I opened the project file in VS 2005.&nbsp; The convert wizard was automatically launched, and it succeeded.&nbsp; It removed every CodeBehind and Inherits attributes from my @Page directives, and it converted all my code-behind files to code-beside (converted them from stand-alone classes to partial classes that merge with the aspx file upon compilation).&nbsp; It pulled all my class files into the Code directory, and it preserved all my namespaces.</p>
+<p>The issue I’m wrestling with now is how to declare variables of type MyUsercontrol.&nbsp; All my usercontrols were converted to code-beside with partial classes, and my code can’t see the user controls (build error).&nbsp; There is code in the Code directory that is referencing a Usercontrol type (to dynamically load later on), and I’m guessing that the code in the Code directory is compile first (and it can’t find the user control which will be compiled later).&nbsp; I’m not sure if this is a bug or if I just haven’t figured out the *new* way yet.</p>

@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1991,
+    "parent": 0,
+    "author_name": "Max Pool",
+    "author_url": "http://www.codesqueeze.com",
+    "date": "2007-09-18T14:24:34",
+    "type": "comment",
+    "content_html": "<p>You could run a 301 redirect from your old feed address to your feedburner address (if you have control over it)</p>"
+  },
+  {
+    "id": 1992,
+    "parent": 0,
+    "author_name": "Oli",
+    "author_url": "http://",
+    "date": "2007-09-19T17:20:21",
+    "type": "comment",
+    "content_html": "<p>[pedantic]<br>\n&gt; I’m not using FeedBurner…<br>\nI’m _now_ using FeedBurner… (???)<br>\n[/pedantic]</p>"
+  }
+]

@@ -1,0 +1,50 @@
+---
+wp_id: 694
+title: altnetconf – Scott Guthrie announces ASP.NET MVC framework at Alt.Net Conf
+slug: altnetconf-scott-guthrie-announces-asp-net-mvc-framework-at-alt-net-conf
+permalink: /2007/10/altnetconf-scott-guthrie-announces-asp-net-mvc-framework-at-alt-net-conf/
+date: 2007-10-06T04:57:00
+date_utc: 2007-10-06T04:57:00Z
+modified: 2007-10-06T04:57:00
+format: html
+tags:
+- altnetconf
+- featured
+excerpt: 'asp.net mvc framework Note: Much more MVC information coming. Subscribe to my feed: http://feeds.feedburner.com/jeffreypalermo Subscribe to email feed. Scott Guthrie proposed a topic at the Alt.Net Conference today, and the topic was an overview of the MVC Framework his team is working on. His topic is actually the first timeslot of the conference at 9:30am […]'
+comments_open: true
+---
+<p>asp.net mvc framework&nbsp;</p>
+<p><b>Note:&nbsp; Much more MVC information coming.&nbsp; Subscribe to my feed: <a href="http://feeds.feedburner.com/jeffreypalermo">http://feeds.feedburner.com/jeffreypalermo</a></b> <b>Subscribe to <a href="http://www.feedburner.com/fb/a/emailverifySubmit?feedId=1195861&amp;loc=en_US">email feed</a>.</b></p>
+<p>Scott Guthrie proposed a topic at the <a href="http://www.altnetconf.com">Alt.Net Conference</a> today, and the topic was an overview of the MVC Framework his team is working on.&nbsp; His topic is actually the first timeslot of the conference at 9:30am tomorrow morning.&nbsp; Just about everyone showed interest, so I wouldn’t be surprised to see most of the folks just listening.</p>
+<p>Scott and I had supper after the opening, and I received a personal demo of the prototype.&nbsp; First, here are some of the goals:</p>
+<ul>
+<li>Natively support TDD model for controllers.</li>
+<li>Provide ASPX (without viewstate or postbacks) as a view engine</li>
+<li>Provide a hook for other view engines from MonoRail, etc.</li>
+<li>Support IoC containers for controller creation and DI on the controllers</li>
+<li>Provide complete control over URLs and navigation</li>
+<li>Be pluggable throughout</li>
+<li>Separation of concerns</li>
+<li>Integrate nicely within ASP.NET</li>
+<li>Support static as well as dynamic languages</li>
+</ul>
+<p>I’m sure I missed some of the goals, and more people will blog their takeaways since this all is public information.</p>
+<p>The first question might be: <b>Is webforms going away?&nbsp; Do I have to rewrite my web applications?</b>&nbsp; Some people might wish, but no.&nbsp; Both models will be supported and even be supported within the same web application.&nbsp; I, for one, after seeing this, think it is very good, and my company will be recommending it to our clients.</p>
+<p>We might get a public CTP by the end of the year, and it will be released in a similar fashion as ASP.NET AJAX was, as an add-on after the Visual Studio 2008 release some time next year.</p>
+<p><b>URLs</b></p>
+<p>The default URL scheme will look something like this:</p>
+<blockquote>
+<p>/&lt;RouteName&gt;/&lt;Action&gt;/&lt;Param1&gt;/&lt;Param2&gt; </p>
+<p>where RouteName is configured to map to SomeController.&nbsp; Multiple routes can map to the same controller for the purpose of providing more URLs (think SEO).</p>
+</blockquote>
+<p>The developer can completely override the URL processing also by providing an implementation of an interface.&nbsp;</p>
+<p><b>Controllers</b></p>
+<p>Controllers will inherit from a base class by default, but it doesn’t hinder unit testing, and it’s not even required.&nbsp; I’ll probably use the option of implementing the <i>IController</i> interface instead&nbsp;and creating a controller factory to support controller creation using my IoC container of choice (currently <a href="http://structuremap.sourceforge.net/">StructureMap</a>).&nbsp; In this manner, I implement an interface with one method that accepts <i>IHttpContext</i> (yep, we have an interface now), and <i>RouteData</i>, a simple DTO that includes the action and parameters for the web request (parsed from the URL scheme you are using).</p>
+<p><b>Views</b></p>
+<p>Like I said before, NVelocity, Brail, etc can be bolted on as view engines, and ASPX is provided as a view engine (the only thing that has been changed is that the code-behind will inherit from <i>ViewPage<b> </b></i>as opposed to the current <i>Page</i>).&nbsp; Controllers can either using IViewEngine (I think that’s the name) to request a view by name (key) or using a helper method on the optional controller base class <i>RenderView(string, viewData)</i>.&nbsp; The default model uses a DTO for the objects passed to the view, so it is similar to MonoRail’s property bag except it’s a strongly-typed DTO (using generics for that), so when you rename stuff with <a href="http://www.jetbrains.com/resharper/">Resharper</a>, you don’t have to worry about any string literals lying around.</p>
+<p><b>My impressions</b></p>
+<p>I first saw the early prototype in March of this year, and I was encouraged.&nbsp;&nbsp;I was able to give some early feedback, which has already been encorporated into the product.&nbsp; I’m not one to promote a Microsoft offering just because it’s there (I have never recommended the use of MSTest over NUnit, for instance), but I will say this: <b>As soon as I can get my hands on a build, I will be building something with it.</b>&nbsp; I am very encouraged by this, and I think they are going in the right direction.&nbsp; While they have chosen a model to use with demos, they have broken down the walls.&nbsp; Interfaces abound, and none of it is <i>sealed</i>.&nbsp; I will start by swapping out the controller factory so I can get my IoC container in the mix, but it’s easy to do.&nbsp; For testing, there is no coupling of the controller.&nbsp; The views are decoupled.&nbsp; The httpcontext is decoupled with the new IHttpContext interface.&nbsp; The actions are simple public methods with an attribute attached to them (<i>[ControllerAction]</i>, I think).</p>
+<p><b>Isn’t it just like MonoRail?</b></p>
+<p>Someone using MonoRail for more serious project than me can comment more intelligently, but here goes.&nbsp;&nbsp;MonoRail is MVC.&nbsp; This is MVC, so yes, it’s very similar but different.&nbsp; This gives us a controller that executes before a view ever comes into play, <b>and</b> it simplifies ASPX as a view engine by getting rid of viewstate and server-side postbacks with the event lifecycle.&nbsp; That’s about it.&nbsp; MonoRail is <b>much</b> more.&nbsp; MonoRail has tight integration with Windsor, ActiveRecord and several view engines.&nbsp; MonoRail is more than just the MVC part.&nbsp; I wouldn’t be surprised if MonoRail were refactored to take advantage of the ASP.NET MVC HttpHandler just as a means to reduce the codebase a bit.&nbsp; I think it would be a very easy move, and it would probably encourage MonoRail adoption (even beyond its current popularity).</p>
+
+<p>[tags:&nbsp; altnetconf, asp.net mvc]&nbsp;</p>

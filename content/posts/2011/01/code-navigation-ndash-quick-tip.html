@@ -1,0 +1,166 @@
+---
+wp_id: 1166
+title: Code navigation – quick tip
+slug: code-navigation-ndash-quick-tip
+permalink: /2011/01/code-navigation-ndash-quick-tip/
+date: 2011-01-19T16:42:02
+date_utc: 2011-01-19T16:42:02Z
+modified: 2011-01-19T16:42:02
+format: html
+categories:
+- blog
+excerpt: 'When downloading open-source projects, tutorials and other code, there is an initial reaction: This code is really easy to digest Wow, let me dig in and see what is here! Obviously, the reader would appreciate the first experience. Here is one tip on how to turn a bad navigation experience into a good one. This […]'
+comments_open: true
+---
+<p>When downloading open-source projects, tutorials and other code, there is an initial reaction:</p>
+<ul>
+<li>This code is really easy to digest</li>
+<li>Wow, let me dig in and see what is here!</li>
+</ul>
+<p>Obviously, the reader would appreciate the first experience.&nbsp; Here is one tip on how to turn a bad navigation experience into a good one.&nbsp; This is not the only factor, but it is one I have experienced.&nbsp; </p>
+<p>This code is very simple in its own right, and it doesn’t take long to fully digest this class, but there are some improvements that can be made, and this file came from a very useful tutorial.</p>
+<p>Let’s start with a simple class for a GuestBook app:</p>
+<div class="csharpcode">
+<pre><span class="lnum">   1:  </span><span class="rem">// ----------------------------------------------------------------------------------</span></pre>
+<pre><span class="lnum">   2:  </span><span class="rem">// Title, something, something, something</span></pre>
+<pre><span class="lnum">   3:  </span><span class="rem">// </span></pre>
+<pre><span class="lnum">   4:  </span><span class="rem">// Copyright (c) Some Company. LICENSE TITLE</span></pre>
+<pre><span class="lnum">   5:  </span><span class="rem">// </span></pre>
+<pre><span class="lnum">   6:  </span><span class="rem">// THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, </span></pre>
+<pre><span class="lnum">   7:  </span><span class="rem">// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES </span></pre>
+<pre><span class="lnum">   8:  </span><span class="rem">// OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.</span></pre>
+<pre><span class="lnum">   9:  </span><span class="rem">// ----------------------------------------------------------------------------------</span></pre>
+<pre><span class="lnum">  10:  </span><span class="rem">// The example companies, organizations, products, domain names,</span></pre>
+<pre><span class="lnum">  11:  </span><span class="rem">// e-mail addresses, logos, people, places, and events depicted</span></pre>
+<pre><span class="lnum">  12:  </span><span class="rem">// herein are fictitious.  No association with any real company,</span></pre>
+<pre><span class="lnum">  13:  </span><span class="rem">// organization, product, domain name, email address, logo, person,</span></pre>
+<pre><span class="lnum">  14:  </span><span class="rem">// places, or events is intended or should be inferred.</span></pre>
+<pre><span class="lnum">  15:  </span><span class="rem">// ----------------------------------------------------------------------------------</span></pre>
+<pre><span class="lnum">  16:  </span>&nbsp;</pre>
+<pre><span class="lnum">  17:  </span><span class="kwrd">using</span> System;</pre>
+<pre><span class="lnum">  18:  </span><span class="kwrd">using</span> System.Collections.Generic;</pre>
+<pre><span class="lnum">  19:  </span><span class="kwrd">using</span> System.Linq;</pre>
+<pre><span class="lnum">  20:  </span><span class="kwrd">using</span> System.Text;</pre>
+<pre><span class="lnum">  21:  </span>&nbsp;</pre>
+<pre><span class="lnum">  22:  </span><span class="kwrd">namespace</span> GuestBook_Data</pre>
+<pre><span class="lnum">  23:  </span>{</pre>
+<pre><span class="lnum">  24:  </span>    <span class="kwrd">public</span> <span class="kwrd">class</span> GuestBookEntry</pre>
+<pre><span class="lnum">  25:  </span>        : Microsoft.WindowsAzure.StorageClient.TableServiceEntity</pre>
+<pre><span class="lnum">  26:  </span>    {</pre>
+<pre><span class="lnum">  27:  </span>        <span class="kwrd">public</span> GuestBookEntry()</pre>
+<pre><span class="lnum">  28:  </span>        {</pre>
+<pre><span class="lnum">  29:  </span>            PartitionKey = DateTime.UtcNow.ToString(<span class="str">"MMddyyyy"</span>);</pre>
+<pre><span class="lnum">  30:  </span>&nbsp;</pre>
+<pre><span class="lnum">  31:  </span>            <span class="rem">// Row key allows sorting, so we make sure the rows come back in time order.</span></pre>
+<pre><span class="lnum">  32:  </span>            RowKey = <span class="kwrd">string</span>.Format(<span class="str">"{0:10}_{1}"</span>, DateTime.MaxValue.Ticks - DateTime.Now.Ticks, Guid.NewGuid());</pre>
+<pre><span class="lnum">  33:  </span>        }</pre>
+<pre><span class="lnum">  34:  </span>&nbsp;</pre>
+<pre><span class="lnum">  35:  </span>        <span class="kwrd">public</span> <span class="kwrd">string</span> Message { get; set; }</pre>
+<pre><span class="lnum">  36:  </span>        <span class="kwrd">public</span> <span class="kwrd">string</span> GuestName { get; set; }</pre>
+<pre><span class="lnum">  37:  </span>        <span class="kwrd">public</span> <span class="kwrd">string</span> PhotoUrl { get; set; }</pre>
+<pre><span class="lnum">  38:  </span>        <span class="kwrd">public</span> <span class="kwrd">string</span> ThumbnailUrl { get; set; }</pre>
+<pre><span class="lnum">  39:  </span>    }</pre>
+<pre><span class="lnum">  40:  </span>}</pre>
+</div>
+<p>.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+<p>I’ll outline some issues with this code file besides my partial violation of the license.</p>
+<ol>
+<li>The auto properties are not fully visible without scrolling.&nbsp; For a class as small as this, the most meaningful information is hidden until the reader scrolls down.</li>
+<li>The least important information is at the very top of the file (license information).&nbsp; The license is at the package level, and the reader already knows the license before diving into each individual file.</li>
+<li>The structure of the class is de-emphasized.&nbsp; The properties of the class are the basic structure, and they are at the end.</li>
+</ol>
+<p>I will refactor this class and present what I believe to be a more easily digestible version.&nbsp; Here goes:</p>
+<div class="csharpcode">
+<pre><span class="lnum">   1:  </span><span class="kwrd">using</span> System;</pre>
+<pre><span class="lnum">   2:  </span>&nbsp;</pre>
+<pre><span class="lnum">   3:  </span><span class="kwrd">namespace</span> GuestBook_Data</pre>
+<pre><span class="lnum">   4:  </span>{</pre>
+<pre><span class="lnum">   5:  </span>    <span class="kwrd">public</span> <span class="kwrd">class</span> GuestBookEntry</pre>
+<pre><span class="lnum">   6:  </span>        : Microsoft.WindowsAzure.StorageClient.TableServiceEntity</pre>
+<pre><span class="lnum">   7:  </span>    {</pre>
+<pre><span class="lnum">   8:  </span>        <span class="kwrd">public</span> <span class="kwrd">string</span> Message { get; set; }</pre>
+<pre><span class="lnum">   9:  </span>        <span class="kwrd">public</span> <span class="kwrd">string</span> GuestName { get; set; }</pre>
+<pre><span class="lnum">  10:  </span>        <span class="kwrd">public</span> <span class="kwrd">string</span> PhotoUrl { get; set; }</pre>
+<pre><span class="lnum">  11:  </span>        <span class="kwrd">public</span> <span class="kwrd">string</span> ThumbnailUrl { get; set; }</pre>
+<pre><span class="lnum">  12:  </span>&nbsp;</pre>
+<pre><span class="lnum">  13:  </span>        <span class="kwrd">public</span> GuestBookEntry()</pre>
+<pre><span class="lnum">  14:  </span>        {</pre>
+<pre><span class="lnum">  15:  </span>            PartitionKey = DateTime.UtcNow.ToString(<span class="str">"MMddyyyy"</span>);</pre>
+<pre><span class="lnum">  16:  </span>&nbsp;</pre>
+<pre><span class="lnum">  17:  </span>            <span class="rem">// Row key allows sorting, so we make sure the rows come back in time order.</span></pre>
+<pre><span class="lnum">  18:  </span>            RowKey = <span class="kwrd">string</span>.Format(<span class="str">"{0:10}_{1}"</span>, DateTime.MaxValue.Ticks - DateTime.Now.Ticks, Guid.NewGuid());</pre>
+<pre><span class="lnum">  19:  </span>        }</pre>
+<pre><span class="lnum">  20:  </span>    }</pre>
+<pre><span class="lnum">  21:  </span>}</pre>
+<pre><span class="lnum">  22:  </span>&nbsp;</pre>
+<pre><span class="lnum">  23:  </span><span class="rem">// ----------------------------------------------------------------------------------</span></pre>
+<pre><span class="lnum">  24:  </span><span class="rem">// Title, something, something, something</span></pre>
+<pre><span class="lnum">  25:  </span><span class="rem">// </span></pre>
+<pre><span class="lnum">  26:  </span><span class="rem">// Copyright (c) Some Company. LICENSE TITLE</span></pre>
+<pre><span class="lnum">  27:  </span><span class="rem">// </span></pre>
+<pre><span class="lnum">  28:  </span><span class="rem">// THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, </span></pre>
+<pre><span class="lnum">  29:  </span><span class="rem">// EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES </span></pre>
+<pre><span class="lnum">  30:  </span><span class="rem">// OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.</span></pre>
+<pre><span class="lnum">  31:  </span><span class="rem">// ----------------------------------------------------------------------------------</span></pre>
+<pre><span class="lnum">  32:  </span><span class="rem">// The example companies, organizations, products, domain names,</span></pre>
+<pre><span class="lnum">  33:  </span><span class="rem">// e-mail addresses, logos, people, places, and events depicted</span></pre>
+<pre><span class="lnum">  34:  </span><span class="rem">// herein are fictitious.  No association with any real company,</span></pre>
+<pre><span class="lnum">  35:  </span><span class="rem">// organization, product, domain name, email address, logo, person,</span></pre>
+<pre><span class="lnum">  36:  </span><span class="rem">// places, or events is intended or should be inferred.</span></pre>
+<pre><span class="lnum">  37:  </span><span class="rem">// ----------------------------------------------------------------------------------</span></pre>
+</div>
+<p>.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+<p>Here are the improvements:</p>
+<ul>
+<li>Using statements have been minimized to remove the unneeded.</li>
+<li>Properties are first to emphasize class structure.</li>
+<li>License is at the bottom.</li>
+<li>The entire class code is visible without scrolling – the license falls off the fold instead.</li>
+</ul>
+<p>This has been a quick tip.&nbsp; Hopefully you will benefit from this.&nbsp; I haven’t always thought about factors like this in software, but readability is very important.&nbsp; Code will be read MANY more times than it is written or modified.</p>
