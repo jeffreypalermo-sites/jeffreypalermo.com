@@ -265,7 +265,7 @@ Since a request-time server is mandatory, make it the .NET showcase:
 - **Open-source the repo** as a template ("a production-grade personal site on .NET"). It doubles as Clear Measure marketing.
 
 ## 7. Decisions needed from you
-1. ~~Option D-S (static on SWA)~~. The all-URLs requirement (§4b) points back to **Option D: ASP.NET Core serving everything**. Confirm?
+1. ✅ **Decided 2026-10-05: Option D, ASP.NET Core serving everything** (required by the all-URLs rule in §4b). Option D-S (static on SWA) and Astro were rejected.
 2. Cloud: Azure (aligns with your books and Clear Measure) vs anything else?
 3. CDN: Cloudflare (cheaper) vs Azure Front Door (all-Azure story)?
 4. Is the GoDaddy email on this domain still in use? That decides the MX/SPF plan.
