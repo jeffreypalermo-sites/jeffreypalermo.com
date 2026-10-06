@@ -1,0 +1,71 @@
+# Nightly replay of the URL contract against every deployed environment (ADR-0006). A deployment verifies only the
+# health path, so this is what notices a legacy URL that broke in tdd, uat or prod. While one fails, an issue labelled
+# url-contract stays open; the next clean run closes it.
+#
+# The environments' base URLs are the repository variable ENVIRONMENT_URLS, separated by spaces. The session that
+# operates the system jpcom sets it once the environments exist; until then the job is skipped.
+name: Verify environments
+
+on:
+  schedule:
+    # After the system repository's nightly drift (06:17 UTC) and capability (06:47 UTC) checks.
+    - cron: '23 7 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: verify-environments
+  cancel-in-progress: false
+
+jobs:
+  contract:
+    name: URL contract in every environment
+    if: vars.ENVIRONMENT_URLS != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v6.0.1
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Replay the contract
+        env:
+          ENVIRONMENT_URLS: ${{ vars.ENVIRONMENT_URLS }}
+        run: |
+          # Split on spaces: one argument per environment.
+          read -r -a urls <<< "$ENVIRONMENT_URLS"
+          scripts/verify-environments.sh "${urls[@]}"
+
+      - name: Open an issue while an environment fails
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          gh label create url-contract --repo "$GITHUB_REPOSITORY" --color B60205 \
+            --description "A deployed environment breaks the URL contract" --force
+          open="$(gh issue list --repo "$GITHUB_REPOSITORY" --label url-contract --state open --json number --jq '.[0].number // empty')"
+          if [ -n "$open" ]; then
+            gh issue comment "$open" --repo "$GITHUB_REPOSITORY" --body "Still failing: $RUN_URL"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --label url-contract \
+              --title "An environment breaks the URL contract" \
+              --body "The nightly replay of tests/contract/url-contract.tsv failed: $RUN_URL. The job summary names the environment; the log lists each violation. This issue closes itself on the next clean run."
+          fi
+
+      - name: Close the issue after a clean run
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          for number in $(gh issue list --repo "$GITHUB_REPOSITORY" --label url-contract --state open --json number --jq '.[].number'); do
+            gh issue close "$number" --repo "$GITHUB_REPOSITORY" --comment "Every environment passes again: $RUN_URL"
+          done
