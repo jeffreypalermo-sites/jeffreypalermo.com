@@ -1,6 +1,5 @@
 using System.Net;
 using System.Text.Json;
-using JeffreyPalermo.Core.Content;
 using JeffreyPalermo.Infrastructure.Content;
 using JeffreyPalermo.Infrastructure.FrontMatter;
 using JeffreyPalermo.Tools.WpMigrator;
@@ -39,15 +38,16 @@ public sealed class WpMigratorPipelineTests : IDisposable
         Assert.Contains("/wp-json/wp/v2/posts?per_page=100&page=2&orderby=id&order=asc", handler.Requests);
 
         // convert: post file with front matter, cleaned body, and rewritten Graffiti-era link.
-        Assert.Equal(new ConversionSummary(2, 1, 2, 1, 2, 3), conversion);
+        Assert.Equal(new ConversionSummary(2, 1, 2, 2, 3, 4), conversion);
         var onion = Layout.PostFile("/2008/07/the-onion-architecture-part-1/", ContentFormat.Html);
-        var (metadata, body) = FrontMatterDocument.Read<PostMetadata>(await File.ReadAllTextAsync(onion));
+        var (metadata, body) = FrontMatterDocument.Read<PostFrontMatter>(await File.ReadAllTextAsync(onion));
         Assert.Equal(945, metadata.WpId);
         Assert.Equal("The Onion Architecture : part 1", metadata.Title);
         Assert.Equal(new DateTime(2008, 7, 29, 8, 8, 44), metadata.Date);
         Assert.Equal(["blog"], metadata.Categories);
         Assert.Equal(["onion-architecture"], metadata.Tags);
         Assert.Equal(ContentFormat.Html, metadata.Format);
+        Assert.Equal("user-1", metadata.Author); // /users was 401, so the author term is synthesized
         Assert.Equal("Part one text.", metadata.Excerpt);
         Assert.Contains("<a href=\"/2008/07/the-onion-architecture-part-2/\">part 2</a>", body, StringComparison.Ordinal);
         Assert.Contains("src=\"/wp-content/uploads/2018/06/onion.png\"", body, StringComparison.Ordinal);
@@ -64,9 +64,15 @@ public sealed class WpMigratorPipelineTests : IDisposable
         Assert.Contains("\"slug\": \"onion-architecture\"", await File.ReadAllTextAsync(Layout.TermsFile), StringComparison.Ordinal);
 
         // media: downloaded (after one throttled retry), and a genuinely missing file is reported, not fatal.
-        Assert.Equal(2, media.Downloaded);
+        Assert.Equal(3, media.Downloaded);
         Assert.Equal(["/wp-content/uploads/2018/07/lost.net.png"], media.Missing);
         Assert.Equal([1, 2, 3], await File.ReadAllBytesAsync(Layout.UploadFile("/wp-content/uploads/2018/06/onion.png")));
+
+        // off-site media (VideoPress) is localized under uploads/external/ and fetched from its original host.
+        const string video = "/wp-content/uploads/external/videos.files.wordpress.com/HMwzTDe7/episode-001.mp4";
+        Assert.Contains($"\"source_path\": \"{video}\"", attachments, StringComparison.Ordinal);
+        Assert.Contains($"{video}\thttps://videos.files.wordpress.com/HMwzTDe7/episode-001.mp4", await File.ReadAllLinesAsync(Manifest));
+        Assert.Equal([9, 9], await File.ReadAllBytesAsync(Layout.UploadFile(video)));
     }
 
     [Fact]
@@ -104,6 +110,7 @@ public sealed class WpMigratorPipelineTests : IDisposable
             "/wp-content/uploads/2018/06/onion.png" when Interlocked.Exchange(ref _throttledOnce, 1) == 0 => StubHttpHandler.Status(HttpStatusCode.PreconditionRequired),
             "/wp-content/uploads/2018/06/onion.png" => new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent([1, 2, 3]) },
             "/wp-content/uploads/2018/06/onion-300x200.png" => new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent([4]) },
+            "/HMwzTDe7/episode-001.mp4" when request.RequestUri.Host == "videos.files.wordpress.com" => new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent([9, 9]) },
             _ => StubHttpHandler.Status(HttpStatusCode.NotFound),
         };
     }
@@ -113,14 +120,14 @@ public sealed class WpMigratorPipelineTests : IDisposable
           "date":"2008-07-29T08:08:44","date_gmt":"2008-07-29T13:08:44","modified":"2018-07-04T15:29:19",
           "title":{"rendered":"The Onion Architecture : part 1"},
           "content":{"rendered":"<P>See <A href=\"http://jeffreypalermo.com/blog/the-onion-architecture-part-2/\">part 2</A>.</P><p><img data-recalc-dims=\"1\" src=\"https://i0.wp.com/jeffreypalermo.com/wp-content/uploads/2018/06/onion.png?ssl=1\"></p><p><img src=\"/wp-content/uploads/2018/07/lost.net.png\"></p>"},
-          "excerpt":{"rendered":"<p>Part one&nbsp;text.</p>"},"categories":[1],"tags":[7],"featured_media":0,"comment_status":"open","_links":{"self":[]}}]
+          "excerpt":{"rendered":"<p>Part one&nbsp;text.</p>"},"author":1,"categories":[1],"tags":[7],"featured_media":0,"comment_status":"open","_links":{"self":[]}}]
         """;
 
     private const string PostsPage2 = """
         [{"id":950,"type":"post","slug":"the-onion-architecture-part-2","link":"https://jeffreypalermo.test/2008/07/the-onion-architecture-part-2/",
           "date":"2008-07-30T08:14:37","date_gmt":"2008-07-30T13:14:37","modified":"2008-07-30T08:14:37",
           "title":{"rendered":"The Onion Architecture : part 2"},"content":{"rendered":"<p>Part two.</p>"},
-          "excerpt":{"rendered":""},"categories":[1],"tags":[],"featured_media":0,"comment_status":"closed"}]
+          "excerpt":{"rendered":""},"author":1,"categories":[1],"tags":[],"featured_media":0,"comment_status":"closed"}]
         """;
 
     private const string Pages = """
@@ -137,6 +144,9 @@ public sealed class WpMigratorPipelineTests : IDisposable
     private const string Media = """
         [{"id":28,"slug":"the-onion-architecture-part-1-3","link":"https://jeffreypalermo.test/the-onion-architecture-part-1-3/",
           "title":{"rendered":"Onion diagram"},"source_url":"https://jeffreypalermo.test/wp-content/uploads/2018/06/onion.png","mime_type":"image/png","post":945,"alt_text":"",
-          "caption":{"rendered":""},"media_details":{"sizes":{"medium":{"source_url":"https://jeffreypalermo.test/wp-content/uploads/2018/06/onion-300x200.png"}}}}]
+          "caption":{"rendered":""},"media_details":{"sizes":{"medium":{"source_url":"https://jeffreypalermo.test/wp-content/uploads/2018/06/onion-300x200.png"}}}},
+         {"id":1405,"slug":"episode-001-mp4","link":"https://jeffreypalermo.test/2008/07/the-onion-architecture-part-1/episode-001-mp4/",
+          "title":{"rendered":"episode-001-mp4"},"source_url":"https://videos.files.wordpress.com/HMwzTDe7/episode-001.mp4","mime_type":"video/videopress","post":945,
+          "alt_text":"","caption":{"rendered":""},"media_details":{}}]
         """;
 }

@@ -28,3 +28,5 @@ Columns: `url`, `class` (`LegacyUrlClassifier`), first `status`, first redirect 
    `.aspx`, Graffiti `/blog/` slugs WordPress failed to guess) is an improvement, not a regression.
 3. `WordPressSystem` URLs answer 404 or 410. They are not preserved.
 4. No URL in the contract answers 5xx.
+5. Compare paths **percent-decoded**. The capture tool normalized escapes to upper case (`%E5`), while WordPress and
+   the content use lower case (`%e5`). RFC 3986 treats the two as equivalent.

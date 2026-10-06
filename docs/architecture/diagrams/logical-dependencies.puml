@@ -1,0 +1,87 @@
+@startuml logical-dependencies
+!include <C4/C4_Component>
+
+title jeffreypalermo.com: logical dependencies (Onion Architecture)
+
+AddElementTag("planned", $borderColor="#888888", $fontColor="#555555", $bgColor="#F4F4F4", $legendText="planned (build steps 2-6)")
+AddElementTag("port", $shape=EightSidedShape(), $bgColor="#F2C94C", $fontColor="#1F1F1F", $borderColor="#B8860B", $legendText="port (interface owned by Core)")
+AddRelTag("implements", $lineStyle=DashedLine(), $legendText="implements a Core port")
+AddRelTag("inward", $lineColor="#2E7D32", $textColor="#2E7D32", $legendText="compile-time dependency (always inward)")
+
+Person(reader, "Reader / crawler / feed reader", "Any URL the site ever answered since 2004")
+Person(author, "Jeffrey", "Author: publishes by merging a PR")
+
+System_Boundary(site, "jeffreypalermo.com web app: .NET 10 container on Azure Container Apps") {
+
+  Container_Boundary(ui, "UI.Server (outer ring): composition root and delivery") {
+    Component(legacyMw, "LegacyUrlMiddleware", "ASP.NET Core middleware", "First in the pipeline: turns a UrlResolution into 301 / 410 / rewrite / pass-through", $tags="planned")
+    Component(pages, "Pages", "Blazor static SSR (no client runtime)", "Home, post, date / term archives, pages, attachments, search, 404", $tags="planned")
+    Component(feeds, "Feeds and sitemaps", "Minimal API endpoints", "RSS / Atom at WordPress URLs, wp-sitemap*.xml, robots.txt", $tags="planned")
+    Component(host, "Program (composition root)", "DI, output cache, security headers, health, OpenTelemetry", "Wires Core ports to Infrastructure adapters", $tags="planned")
+  }
+
+  Container_Boundary(infra, "Infrastructure (outer ring): adapters") {
+    Component(fsSource, "FileSystemContentSource", "C#, YamlDotNet, Markdig", "Loads content/ into the domain; reports every broken file")
+    Component(search, "InMemoryPostSearch", "C#", "Inverted index built at startup", $tags="planned")
+    Component(clock, "SystemClock", "C#", "UTC now")
+    Component(formats, "Storage formats", "FrontMatterDocument, ContentLayout, ContentJson, UrlContractFile", "File shapes and paths: YAML front matter, JSON archives, TSV contract")
+  }
+
+  Container_Boundary(core, "Core (center): references nothing, not even NuGet packages") {
+    Component(resolver, "LegacyUrlResolver", "Pure function", "13 ordered, named rules: query routes, case, /blog/ slug guessing, legacy map, …", $tags="planned")
+    Component(queries, "Queries + QueryDispatcher", "One record + handler per use case", "PostByPermalink, RecentPosts, DateArchive, TermArchive, Feed, Sitemap, Search, ResolveUrl", $tags="planned")
+    Component(domain, "SiteContent aggregate", "Immutable read model", "Post, Page, Permalink, Comment, Attachment, Term; enforces content invariants; paging")
+    Component(urls, "URL primitives", "Slug, LegacyUrlClassifier", "WordPress-compatible slug normalization; legacy URL classes")
+    Component(ports, "Ports", "ISiteContentSource, IPostSearch, IClock", "Interfaces Core needs; adapters live outside", $tags="port")
+  }
+
+  ComponentDb(contentStore, "content/ snapshot", "Files baked into the image", "966 posts, 2,708 comments, 275 attachments, uploads (LFS for large binaries)")
+}
+
+System_Boundary(repoTools, "Repository tools (outer ring, run by the author or CI)") {
+  Component(migrator, "WpMigrator", "C# console", "fetch / convert / media: WordPress → content/")
+  Component(contract, "UrlContract", "C# console", "Captures 9,337 legacy URLs → tests/contract/url-contract.tsv")
+}
+
+System_Ext(wordpress, "WordPress.com (legacy)", "REST API, live site, VideoPress; retired after cutover")
+System_Ext(wayback, "Wayback Machine", "CDX index of every URL ever captured")
+System_Ext(github, "GitHub", "Repo = system of record; Actions builds the image and deploys revisions")
+System_Ext(appInsights, "Application Insights", "Traces, metrics (legacy rule hits, 404s), logs")
+
+' ---- runtime request flow
+Rel(reader, legacyMw, "HTTPS")
+Rel_R(legacyMw, pages, "pass-through / rewrite")
+Rel(legacyMw, resolver, "ResolveUrlQuery", $tags="inward")
+Rel(pages, queries, "dispatches", $tags="inward")
+Rel(feeds, queries, "dispatches", $tags="inward")
+Rel(host, fsSource, "registers adapters")
+Rel(host, appInsights, "OpenTelemetry")
+
+' ---- Core internals (all inward)
+Rel(resolver, domain, "looks up posts, pages, attachments, terms, redirects")
+Rel(resolver, urls, "normalizes slugs")
+Rel(queries, domain, "reads")
+Rel(queries, ports, "IPostSearch, IClock")
+Rel(domain, urls, "slug index")
+
+' ---- adapters implement Core ports
+Rel(fsSource, ports, "implements ISiteContentSource", $tags="implements")
+Rel(search, ports, "implements IPostSearch", $tags="implements")
+Rel(clock, ports, "implements IClock", $tags="implements")
+Rel(fsSource, domain, "builds SiteContent.Create(...)", $tags="inward")
+Rel(fsSource, formats, "parses")
+Rel(fsSource, contentStore, "reads at startup")
+
+' ---- tools
+Rel(migrator, formats, "writes content files", $tags="inward")
+Rel(contract, formats, "writes the URL contract", $tags="inward")
+Rel(migrator, wordpress, "REST API + media")
+Rel(contract, wordpress, "probes live behavior")
+Rel(contract, wayback, "CDX query")
+
+' ---- delivery
+Rel(author, github, "pull request")
+Rel(github, contentStore, "builds image with content/")
+
+SHOW_LEGEND()
+@enduml

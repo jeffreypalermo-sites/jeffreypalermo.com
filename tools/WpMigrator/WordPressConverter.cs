@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Net;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
@@ -16,14 +15,6 @@ public sealed record ConversionSummary(int Posts, int Pages, int Comments, int A
 /// <summary>Turns the raw REST snapshot (<c>migration/raw/*.json</c>) into the repository's <c>content/</c> tree.</summary>
 public sealed partial class WordPressConverter
 {
-    public static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
-        WriteIndented = true,
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
-    };
-
     public static async Task<ConversionSummary> ConvertAsync(string rawDirectory, ContentLayout layout, string uploadsManifestFile, CancellationToken cancellationToken = default)
     {
         var posts = await ReadRawAsync(rawDirectory, "posts", cancellationToken).ConfigureAwait(false);
@@ -34,7 +25,8 @@ public sealed partial class WordPressConverter
         var tags = await ReadRawAsync(rawDirectory, "tags", cancellationToken).ConfigureAwait(false);
         var users = await ReadRawAsync(rawDirectory, "users", cancellationToken).ConfigureAwait(false);
 
-        foreach (var generated in (string[])[layout.PostsDirectory, layout.PagesDirectory, Path.GetDirectoryName(layout.TermsFile)!])
+        // Regenerate everything derived from the snapshot; curated files (e.g. legacy-redirects.json) are left alone.
+        foreach (var generated in (string[])[layout.PostsDirectory, layout.PagesDirectory])
         {
             if (Directory.Exists(generated))
             {
@@ -44,6 +36,12 @@ public sealed partial class WordPressConverter
 
         var categorySlugs = categories.ToDictionary(c => Int(c, "id"), c => Str(c, "slug"));
         var tagSlugs = tags.ToDictionary(t => Int(t, "id"), t => Str(t, "slug"));
+
+        // WordPress.com hides /users from anonymous callers on some sites; fall back to a stable synthetic author.
+        var authorTerms = users.Count > 0
+            ? users.Select(u => new Term(Int(u, "id"), Taxonomies.Author, Str(u, "slug"), WebUtility.HtmlDecode(Str(u, "name")), 0)).ToList()
+            : posts.Select(p => Int(p, "author")).Distinct().Select(id => new Term(id, Taxonomies.Author, $"user-{id}", $"User {id}", 0)).ToList();
+        var authorSlugs = authorTerms.ToDictionary(t => t.Id, t => t.Slug);
         var permalinksBySlug = posts
             .GroupBy(p => Slug.Normalize(Str(p, "slug")))
             .ToDictionary(g => g.Key, g => PathOf(Str(g.First(), "link")));
@@ -60,7 +58,7 @@ public sealed partial class WordPressConverter
             var cleaned = cleaner.Clean(Rendered(post, "content"));
             uploads.UnionWith(cleaned.UploadPaths);
 
-            var metadata = new PostMetadata
+            var metadata = new PostFrontMatter
             {
                 WpId = Int(post, "id"),
                 Title = WebUtility.HtmlDecode(Rendered(post, "title")).Trim(),
@@ -70,6 +68,7 @@ public sealed partial class WordPressConverter
                 DateUtc = UtcDate(Str(post, "date_gmt")),
                 Modified = LocalDate(Str(post, "modified")),
                 Format = ContentFormat.Html,
+                Author = isPage ? null : authorSlugs[Int(post, "author")],
                 Categories = Ids(post, "categories").Select(id => categorySlugs[id]).ToList(),
                 Tags = Ids(post, "tags").Select(id => tagSlugs[id]).ToList(),
                 Excerpt = isPage ? null : PlainText(Rendered(post, "excerpt")),
@@ -99,9 +98,18 @@ public sealed partial class WordPressConverter
             }
         }
 
+        // Media hosted off-site (e.g. VideoPress on videos.files.wordpress.com) is localized under uploads/external/,
+        // because it disappears with the WordPress.com account. The manifest records where to fetch it from.
+        var externalSources = new SortedDictionary<string, string>(StringComparer.Ordinal);
         var attachments = media.Select(m =>
         {
-            var source = PathOf(Str(m, "source_url"));
+            var sourceUrl = Str(m, "source_url");
+            var source = LocalMediaPath(sourceUrl);
+            if (source != PathOf(sourceUrl))
+            {
+                externalSources[source] = sourceUrl;
+            }
+
             uploads.Add(source);
             if (m["media_details"]?["sizes"] is JsonObject sizes)
             {
@@ -127,14 +135,16 @@ public sealed partial class WordPressConverter
         }).ToList();
         await WriteJsonAsync(layout.AttachmentsFile, attachments, cancellationToken).ConfigureAwait(false);
 
-        var terms = categories.Select(c => Term(c, "category"))
-            .Concat(tags.Select(t => Term(t, "post_tag")))
-            .Concat(users.Select(u => new Term(Int(u, "id"), "author", Str(u, "slug"), WebUtility.HtmlDecode(Str(u, "name")), 0)))
+        var postsByAuthor = posts.CountBy(p => Int(p, "author")).ToDictionary();
+        var terms = categories.Select(c => Term(c, Taxonomies.Category))
+            .Concat(tags.Select(t => Term(t, Taxonomies.Tag)))
+            .Concat(authorTerms.Select(a => a with { Count = postsByAuthor.GetValueOrDefault(a.Id) }))
             .ToList();
         await WriteJsonAsync(layout.TermsFile, terms, cancellationToken).ConfigureAwait(false);
 
-        var uploadList = uploads.Where(u => u.StartsWith("/wp-content/uploads/", StringComparison.OrdinalIgnoreCase)).ToList();
-        await WriteTextAsync(uploadsManifestFile, string.Join('\n', uploadList) + "\n", cancellationToken).ConfigureAwait(false);
+        var uploadList = uploads.Where(u => u.StartsWith(UploadsPrefix, StringComparison.OrdinalIgnoreCase)).ToList();
+        var manifest = uploadList.Select(u => externalSources.TryGetValue(u, out var from) ? $"{u}\t{from}" : u);
+        await WriteTextAsync(uploadsManifestFile, string.Join('\n', manifest) + "\n", cancellationToken).ConfigureAwait(false);
 
         return new ConversionSummary(posts.Count, pages.Count, commentCount, attachments.Count, terms.Count, uploadList.Count);
     }
@@ -155,7 +165,7 @@ public sealed partial class WordPressConverter
     }
 
     private static async Task WriteJsonAsync<T>(string file, T value, CancellationToken cancellationToken) =>
-        await WriteTextAsync(file, JsonSerializer.Serialize(value, JsonOptions) + "\n", cancellationToken).ConfigureAwait(false);
+        await WriteTextAsync(file, JsonSerializer.Serialize(value, ContentJson.Options) + "\n", cancellationToken).ConfigureAwait(false);
 
     private static async Task WriteTextAsync(string file, string text, CancellationToken cancellationToken)
     {
@@ -163,7 +173,38 @@ public sealed partial class WordPressConverter
         await File.WriteAllTextAsync(file, text.ReplaceLineEndings("\n"), cancellationToken).ConfigureAwait(false);
     }
 
-    private static string PathOf(string url) => new Uri(url, UriKind.Absolute).AbsolutePath;
+    private const string UploadsPrefix = "/wp-content/uploads/";
+
+    /// <summary>
+    /// On-site uploads keep their path. Anything else maps to <c>/wp-content/uploads/external/{host}{path}</c>:
+    /// <c>https://videos.files.wordpress.com/HMwzTDe7/a.mp4</c> → <c>/wp-content/uploads/external/videos.files.wordpress.com/HMwzTDe7/a.mp4</c>.
+    /// </summary>
+    public static string LocalMediaPath(string url)
+    {
+        var path = PathOf(url);
+        if (path.StartsWith(UploadsPrefix, StringComparison.OrdinalIgnoreCase))
+        {
+            return path;
+        }
+
+        var host = new Uri(url, UriKind.Absolute).Host.ToLowerInvariant();
+        return $"{UploadsPrefix}external/{host}{path}";
+    }
+
+    // Keep WordPress's exact path; System.Uri would re-encode percent-escapes in upper case (%e5 → %E5).
+    private static string PathOf(string url)
+    {
+        var match = AbsoluteUrlPath().Match(url);
+        if (!match.Success)
+        {
+            throw new FormatException($"Not an absolute http(s) URL: '{url}'.");
+        }
+
+        return match.Groups["path"].Success ? match.Groups["path"].Value : "/";
+    }
+
+    [GeneratedRegex(@"^https?://[^/?#]+(?<path>/[^?#]*)?", RegexOptions.IgnoreCase)]
+    private static partial Regex AbsoluteUrlPath();
 
     private static string Rendered(JsonNode node, string property) => node[property]?["rendered"]?.GetValue<string>() ?? string.Empty;
 

@@ -29,7 +29,7 @@ switch (args[0])
     case "convert":
     {
         var summary = await WordPressConverter.ConvertAsync(args[1], new ContentLayout(args[2]), args[3]);
-        Console.WriteLine(JsonSerializer.Serialize(summary, WordPressConverter.JsonOptions));
+        Console.WriteLine(JsonSerializer.Serialize(summary, ContentJson.Options));
         return 0;
     }
 

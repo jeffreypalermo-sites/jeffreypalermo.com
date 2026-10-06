@@ -45,6 +45,10 @@ There are no runtime calls to third-party systems in v1. The only external depen
 
 ## 3. Onion layers
 
+![Logical dependencies (C4 component view)](diagrams/logical-dependencies.png)
+
+_C4 component view rendered from [`diagrams/logical-dependencies.puml`](diagrams/logical-dependencies.puml) (PlantUML stdlib C4). Grey boxes are planned for build steps 2–6; green arrows are compile-time dependencies, which always point inward._
+
 ```mermaid
 flowchart TB
     subgraph outer["Outer ring: UI, infrastructure, tests, tools (depend inward)"]
@@ -120,8 +124,9 @@ classDiagram
       +DateTime PublishedUtc
       +string HtmlBody
       +string Excerpt
-      +List~Term~ Categories
-      +List~Term~ Tags
+      +List~string~ CategorySlugs
+      +List~string~ TagSlugs
+      +string AuthorSlug
       +List~Comment~ Comments
       +IsVisibleAt(DateTime) bool
     }
@@ -415,6 +420,8 @@ Each step is one PR that meets the Definition of Done.
 |---|---|---|
 | Images in posts still loaded through WordPress.com Photon (`i0.wp.com/<external host>/…`) or hotlinked from third parties | ~230 | Download from Photon's cache now (it may be the only surviving copy), else the original host, else the Wayback Machine; store under `content/uploads/external/` and rewrite `src` |
 | Graffiti-era `/files/media/…` images (the live site returns a 29-byte soft 404) | 44 | Recover from the Wayback Machine; serve at the same paths via `legacy-map` |
+| VideoPress video hosted on `videos.files.wordpress.com` (Palermo Pamphlet 001, 76 MB) | 1 | ✅ Localized under `uploads/external/` in build step 1; large binaries are stored with Git LFS |
+| Unrendered `[podcast src=…]` shortcodes in old posts (already broken on the live site) | a few | Replace with the Libsyn embed or a link when the post pages are built |
 | Uploads already 404 on the live site (lost in the 2018 import) | 44 | Recover from the Wayback Machine; list in `migration/uploads-manifest.missing.txt` |
 | Community Server `.aspx` URLs (already 404) | 64 in contract | Map to posts by title using Wayback captures, into `legacy-redirects.json` |
 | Graffiti `/blog/` slugs WordPress fails to guess | 63 | Prefix-match rule plus curated map entries |

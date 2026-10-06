@@ -1,4 +1,3 @@
-using JeffreyPalermo.Core.Content;
 
 namespace JeffreyPalermo.Infrastructure.Content;
 
@@ -12,6 +11,7 @@ public sealed class ContentLayout(string root)
     public string UploadsDirectory => Path.Join(Root, "uploads");
     public string AttachmentsFile => Path.Join(Root, "archive", "attachments.json");
     public string TermsFile => Path.Join(Root, "archive", "terms.json");
+    public string LegacyRedirectsFile => Path.Join(Root, "archive", "legacy-redirects.json");
 
     /// <summary><c>/2008/07/the-onion-architecture-part-1/</c> → <c>posts/2008/07/the-onion-architecture-part-1.html</c>.</summary>
     public string PostFile(string permalink, ContentFormat format)

@@ -1,8 +1,10 @@
-namespace JeffreyPalermo.Core.Urls;
+using JeffreyPalermo.Core.Urls;
+
+namespace JeffreyPalermo.Infrastructure.Urls;
 
 /// <summary>
-/// How the WordPress-era site answered one URL. The rebuilt site must answer every entry equivalently:
-/// a 200 stays reachable, and a redirect still lands on the same final URL.
+/// How the WordPress-era site answered one URL. The rebuilt site must answer every entry equivalently
+/// (see <c>tests/contract/README.md</c>).
 /// </summary>
 /// <param name="Url">Root-relative path and query, e.g. <c>/?p=945</c>.</param>
 /// <param name="Location">First redirect target (root-relative when on this site), or null.</param>
