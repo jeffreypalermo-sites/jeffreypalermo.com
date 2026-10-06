@@ -44,12 +44,24 @@ WordPress guesses are preserved on purpose through curated entries in `content/a
 
 ## Verifying
 
-- **Every build:** `UrlContractReplayTests` (integration, in-process) and `PublishedSiteTests` (full-system, the
-  published app over real HTTP) replay all 9,337 URLs.
+- **Every build:** `UrlContractReplayTests` (integration, in-process), `PublishedSiteTests` (full-system, the
+  published app over real HTTP) and `ContainerSiteTests` (full-system, the container image built from the
+  `Dockerfile`) replay all 9,337 URLs. An image that breaks a URL is never released.
 - **Any running site:**
 
   ```bash
   dotnet run --project tools/UrlContract -- verify https://<host>/ tests/contract/url-contract.tsv tests/contract/exceptions.tsv
   ```
 
-  It exits 1 on any violation. The pipeline will run it against each new revision before it receives traffic.
+  It exits 1 on any violation.
+- **Every deployed environment, every night:** the workflow `Verify environments` runs
+
+  ```bash
+  scripts/verify-environments.sh https://<tdd host> https://<uat host> https://<prod host>
+  ```
+
+  with the URLs of the repository variable `ENVIRONMENT_URLS`. For each one it waits for `/_health/ready` (an
+  environment that scaled to zero has a cold start), then replays the contract. It checks every environment and
+  exits 1 if any failed; an issue labelled `url-contract` stays open until the next clean run
+  ([ADR-0006](../../docs/adr/0006-deliver-through-the-demo-environment-kit.md)). Run the same script by hand after
+  a deployment.
