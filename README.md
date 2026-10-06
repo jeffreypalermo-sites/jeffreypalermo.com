@@ -81,5 +81,6 @@ dotnet test JeffreyPalermo.slnx
 
 `.github/workflows/build.yml` runs every test layer and keeps the tested image as the artifact `container-image`.
 From there the system `jpcom` takes over: its Release pushes that image and creates an Octopus release, which is
-promoted through `tdd`, `uat` and `prod`. See [ADR-0006](docs/adr/0006-deliver-through-the-demo-environment-kit.md)
+promoted through `tdd`, `uat` and `prod`. Every night `.github/workflows/verify-environments.yml` replays the URL
+contract against each environment (`scripts/verify-environments.sh`). See [ADR-0006](docs/adr/0006-deliver-through-the-demo-environment-kit.md)
 and [docs/architecture](docs/architecture/README.md), sections 8 and 9.

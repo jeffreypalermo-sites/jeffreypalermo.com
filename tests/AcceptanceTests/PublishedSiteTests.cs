@@ -7,6 +7,7 @@ namespace JeffreyPalermo.AcceptanceTests;
 /// The published application over real HTTP. Build step 2 has no UI pages yet, so this layer drives the HTTP surface;
 /// Playwright browser tests join this project with the Blazor pages in build step 3.
 /// </summary>
+[Collection(FullSystem.Collection)]
 public sealed class PublishedSiteTests(PublishedSite site, ITestOutputHelper output) : IClassFixture<PublishedSite>
 {
     [Fact]

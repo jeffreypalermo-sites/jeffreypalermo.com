@@ -3,7 +3,7 @@
 # demo-environment-kit when it adopts this repository) pushes that same image to the system's registry and creates the
 # Octopus release; nothing is built a second time.
 #
-# The kit keeps this file instead of its generic Build because the image needs a checkout with Git LFS (the video under
+# The kit keeps this file instead of its generic Build because the image needs the Git LFS files (the video under
 # content/uploads). What release.yml and the kit rely on, pinned by BuildWorkflowContractTests:
 #   - the name "Build";
 #   - MAJOR_VERSION and MINOR_VERSION below: the version is MAJOR_VERSION.MINOR_VERSION.<run number>;
@@ -57,10 +57,22 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      # With LFS: without it the image would hold a pointer instead of the video, and the Dockerfile refuses to build.
       - uses: actions/checkout@v6.0.1
+
+      # The image needs the Git LFS files: without them it would hold a pointer instead of the video, and the
+      # Dockerfile refuses to build. They are cached by their object ids, so a run downloads only what is new and
+      # the 76 MB video does not count against the LFS bandwidth allowance on every run.
+      - name: List the Git LFS objects
+        run: git lfs ls-files --long | cut --delimiter=' ' --fields=1 | sort > .lfs-objects
+
+      - name: Restore the Git LFS objects
+        uses: actions/cache@v6
         with:
-          lfs: true
+          path: .git/lfs
+          key: lfs-${{ hashFiles('.lfs-objects') }}
+
+      - name: Check out the Git LFS files
+        run: git lfs pull
 
       - name: Version
         run: echo "VERSION=${MAJOR_VERSION}.${MINOR_VERSION}.${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"

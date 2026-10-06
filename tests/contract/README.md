@@ -53,5 +53,15 @@ WordPress guesses are preserved on purpose through curated entries in `content/a
   dotnet run --project tools/UrlContract -- verify https://<host>/ tests/contract/url-contract.tsv tests/contract/exceptions.tsv
   ```
 
-  It exits 1 on any violation. Run it against each environment's URL (`tdd`, `uat`, `prod`) after a deployment
-  ([ADR-0006](../../docs/adr/0006-deliver-through-the-demo-environment-kit.md)).
+  It exits 1 on any violation.
+- **Every deployed environment, every night:** the workflow `Verify environments` runs
+
+  ```bash
+  scripts/verify-environments.sh https://<tdd host> https://<uat host> https://<prod host>
+  ```
+
+  with the URLs of the repository variable `ENVIRONMENT_URLS`. For each one it waits for `/_health/ready` (an
+  environment that scaled to zero has a cold start), then replays the contract. It checks every environment and
+  exits 1 if any failed; an issue labelled `url-contract` stays open until the next clean run
+  ([ADR-0006](../../docs/adr/0006-deliver-through-the-demo-environment-kit.md)). Run the same script by hand after
+  a deployment.

@@ -367,7 +367,7 @@ flowchart TB
 | Resource | Settings | Notes |
 |---|---|---|
 | Container Apps environment `cae-jpcom` | consumption; static IP; resource group `rg-jpcom-apps`; Central US | Created once by the kit's seed, not by an environment. One slot of the subscription's two per region. Prod shares this runtime with nonprod (ADR-0006) |
-| Container apps `ca-jpcom-<env>-web` | ingress on 8080; health path `/_health/ready`; scale to zero unless `alwaysOn` is set | One per environment: `tdd`, `uat`, `prod`. Each belongs to its environment's deployment stack, in its tier's resource group, and joins `cae-jpcom` |
+| Container apps `ca-jpcom-<env>-web` | ingress on 8080; health path `/_health/ready`; scale to zero (ADR-0006) | One per environment: `tdd`, `uat`, `prod`. Each belongs to its environment's deployment stack, in its tier's resource group, and joins `cae-jpcom` |
 | Deployment stacks `stack-jpcom-<env>` | deny settings | Only the tier's deploy identity changes an environment's resources. A nightly what-if reports drift from `jpcom-system` |
 | Container Registry | Basic | Images `jpcom/web:<version>`. Pulled by each environment's runtime identity, so no registry password exists. A released tag is write- and delete-locked |
 | Identities | user-assigned, federated (GitHub OIDC, Octopus OIDC) | Push: `id-jpcom-acr-push`. Deploy: `id-jpcom-deploy-nonprod`, `id-jpcom-deploy-prod`. Read-only previews and drift: `id-jpcom-plan`. No client secret |
@@ -378,7 +378,8 @@ There is no SQL server, no SQL secret and no database runbook: the system has no
 
 **Cost:** the registry (Basic) is the one fixed charge. Three container apps that scale to zero run within the
 subscription's monthly free grant (180,000 vCPU-seconds, 360,000 GiB-seconds, 2M requests), which other systems in
-the subscription share. A warm production replica (`alwaysOn`) uses that grant all month.
+the subscription share. A warm production replica, once the kit can set one per environment, uses that grant all
+month.
 
 **Deferred: Azure Front Door.** Add it when traffic, WAF, or global latency justifies ~$35+/month. Because managed
 certificates require direct DNS to the app, adding Front Door later moves the certificates to Front Door. That
@@ -434,9 +435,10 @@ The version is `MAJOR_VERSION.MINOR_VERSION.<run number>` from `build.yml`. The 
 beside it, on the chiseled, non-root `aspnet:10.0` base image. Large uploads are stored with Git LFS, so the image
 must be built from a checkout with LFS; the build fails if an upload is still a pointer.
 
-**After a deployment** Octopus verifies the health path. The URL contract is replayed against each environment's
-URL with `tools/UrlContract verify` ([tests/contract](../../tests/contract/README.md)). Today a person runs it;
-making it a step of the deployment is open work.
+**After a deployment** Octopus verifies the health path. The workflow `Verify environments` replays the URL contract
+against every environment each night with `scripts/verify-environments.sh`
+([tests/contract](../../tests/contract/README.md)). While an environment fails, an issue labelled `url-contract`
+stays open; the next clean run closes it. Making the replay a step of the deployment is open work in the kit.
 
 ## 10. Testing strategy (Definition of Done)
 
@@ -444,8 +446,8 @@ making it a step of the deployment is open work.
 |---|---|---|
 | **Unit** | The kit's contract in `build.yml` (`BuildWorkflowContractTests`); `SiteContent` invariants and queries; every resolver rule (table-driven, one case per rule plus precedence conflicts); pagination; feed item selection; front matter and Markdown loading; **architecture rules** (Core references no project and no package; Infrastructure doesn't reference UI.Server) | every build |
 | **Integration** | `FileSystemContentSource` over the **real `content/` tree**, which validates every PR's content; `WebApplicationFactory` tests: **full contract replay (9,337 rows)**, feed XML validity, sitemaps, headers/CSP, caching, health | every build |
-| **Full-system (acceptance)** | The published app as a process and the **container image built from the `Dockerfile`**, each over real HTTP: full contract replay, the version on the health path, uploads served as files (not Git LFS pointers), an unprivileged user on port 8080. From build step 3, Playwright for .NET drives the container in a real browser: home, post with comments, archives, tag pages, search, feed link, 404 page, legacy redirects. YouTube iframes are stubbed by Playwright request interception; there are no other third-party calls | every build; the image that passes is the image released |
-| **Post-deploy verification** | Octopus verifies `/_health/ready` after every deployment. `tools/UrlContract verify` replays the contract against each environment's URL | every deployment; the contract replay is run by hand for now (§9) |
+| **Full-system (acceptance)** | The published app as a process and the **container image built from the `Dockerfile`**, each over real HTTP: full contract replay, the version on the health path, uploads served as files (not Git LFS pointers), an unprivileged user on port 8080, and the nightly verification script against the container, a site that doesn't answer and a site that breaks the contract. From build step 3, Playwright for .NET drives the container in a real browser: home, post with comments, archives, tag pages, search, feed link, 404 page, legacy redirects. YouTube iframes are stubbed by Playwright request interception; there are no other third-party calls | every build; the image that passes is the image released |
+| **Post-deploy verification** | Octopus verifies `/_health/ready` after every deployment. `Verify environments` replays the contract against each environment's URL | every deployment; the contract replay every night (§9) |
 
 ## 11. Build sequence
 
@@ -493,5 +495,7 @@ Decided 2026-10-06 (recommendations approved):
 Open:
 - **Newsletter:** an external provider's embed vs our own signup endpoint (would trigger the database ADR).
 - **Search quality:** the in-memory index is enough for 966 posts. Azure AI Search arrives with "ask the archive".
-- **A warm production replica:** the kit's apps scale to zero by default; `alwaysOn` in `jpcom-system` decides it.
-- **Contract replay after each deployment:** run by hand today; a deployment step is open work in the kit.
+- **A warm production replica:** the site launches with scale to zero. The kit's `alwaysOn` pins exactly one
+  replica, so a per-environment minimum is asked of the kit (ADR-0006).
+- **Contract replay as a step of each deployment:** it runs nightly today; the deployment step is open work in the
+  kit.
