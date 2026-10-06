@@ -9,10 +9,27 @@ internal static class Command
     /// <summary>Returns standard output, trimmed. Arguments are passed one by one, so none needs quoting.</summary>
     public static async Task<string> RunAsync(string file, params string[] arguments)
     {
+        var result = await TryRunAsync(file, environment: null, arguments);
+        if (result.ExitCode != 0)
+        {
+            throw new InvalidOperationException($"{file} {string.Join(' ', arguments)} failed ({result.ExitCode}):\n{result.Output}\n{result.Error}");
+        }
+
+        return result.Output.Trim();
+    }
+
+    /// <summary>Runs to completion whatever the exit code, with extra environment variables.</summary>
+    public static async Task<CommandResult> TryRunAsync(string file, IReadOnlyDictionary<string, string>? environment, params string[] arguments)
+    {
         var start = new ProcessStartInfo(file) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
         foreach (var argument in arguments)
         {
             start.ArgumentList.Add(argument);
+        }
+
+        foreach (var (name, value) in environment ?? new Dictionary<string, string>())
+        {
+            start.Environment[name] = value;
         }
 
         using var process = Process.Start(start) ?? throw new InvalidOperationException($"Could not start {file}.");
@@ -24,12 +41,7 @@ internal static class Command
         // The exit ends the command, not the end of its streams: dotnet leaves build servers running that inherit the
         // pipes and keep them open. A tool without such children ends its streams as it exits.
         await Task.WhenAny(streams, Task.Delay(TimeSpan.FromSeconds(5)));
-        if (process.ExitCode != 0)
-        {
-            throw new InvalidOperationException($"{file} {string.Join(' ', arguments)} failed ({process.ExitCode}):\n{Text(output)}\n{Text(error)}");
-        }
-
-        return Text(output).Trim();
+        return new CommandResult(process.ExitCode, Text(output), Text(error));
     }
 
     private static async Task CopyAsync(StreamReader reader, StringBuilder text)
@@ -60,3 +72,6 @@ internal static class Command
         }
     }
 }
+
+/// <summary>How a command ended and what it wrote.</summary>
+internal sealed record CommandResult(int ExitCode, string Output, string Error);

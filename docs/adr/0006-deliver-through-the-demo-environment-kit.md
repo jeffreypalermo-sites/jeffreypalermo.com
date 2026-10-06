@@ -68,15 +68,21 @@ system delivered differently.
 - **Verification moves earlier.** ADR-0003 replayed the URL contract against a `candidate` revision at 0% traffic.
   Now the full-system tests run the exact image as a container in the Build and replay all 9,337 URLs against it
   before the image is kept, so an image that breaks a URL is never released. After each deployment Octopus verifies
-  the health path only. `tools/UrlContract verify` replays the contract against an environment's URL; today a person
-  runs it per environment. Running it as a step of the deployment is open work in the kit.
+  the health path only. The workflow `Verify environments` in this repository replays the contract against every
+  environment each night (`scripts/verify-environments.sh`, the URLs in the repository variable `ENVIRONMENT_URLS`)
+  and keeps an issue labelled `url-contract` open while one fails. A broken URL in an environment is therefore
+  noticed within a day, not before the deployment finishes; running the replay as a step of the deployment is open
+  work in the kit.
 - **No per-PR preview environment.** A pull request's image runs as a container in CI, not in Azure. The first
   deployed environment is `tdd`, after the merge.
 - **Rollback is a redeployment.** Octopus redeploys the previous release, whose image is locked in the registry. It
   takes minutes, not the sub-minute traffic shift of ADR-0003.
 - **Scale to zero by default.** The kit's container apps run with a minimum of zero replicas, so the first request
-  after idle has a cold start. ADR-0003 wanted one warm replica in production. The kit's `alwaysOn` setting on a
-  deployable in `system.json` keeps exactly one replica running; decide it in `jpcom-system` before cutover.
+  after idle has a cold start. ADR-0003 wanted one warm replica in production, scaling out to three. The kit's
+  `alwaysOn` setting is not that: it pins exactly one replica (minimum 1, maximum 1), which suits a background
+  service and removes scale-out. **Decided 2026-10-06: the site launches with scale to zero and does not set
+  `alwaysOn`.** A minimum and maximum replica count per environment is asked of the kit (its issue #8); prod gets a
+  warm replica before cutover when that exists.
 - **One stored secret exists, in the system repository:** the token Octopus uses to write the version pin. This
   repository still has none.
 - **Not provided by the kit yet:** the custom domain and managed certificate for `jeffreypalermo.com` on the prod

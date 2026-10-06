@@ -126,7 +126,7 @@ public sealed class PublishedSite : IAsyncLifetime
         }
     }
 
-    private static int FreePort()
+    internal static int FreePort()
     {
         using var listener = new TcpListener(IPAddress.Loopback, 0);
         listener.Start();

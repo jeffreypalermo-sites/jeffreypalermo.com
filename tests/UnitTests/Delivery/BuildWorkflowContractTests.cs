@@ -1,5 +1,4 @@
 using System.Text.RegularExpressions;
-using JeffreyPalermo.UnitTests.Architecture;
 using YamlDotNet.RepresentationModel;
 
 namespace JeffreyPalermo.UnitTests.Delivery;
@@ -12,8 +11,7 @@ namespace JeffreyPalermo.UnitTests.Delivery;
 /// </summary>
 public class BuildWorkflowContractTests
 {
-    private static readonly string Workflows = Path.Join(DependencyRuleTests.RepositoryRoot(), ".github", "workflows");
-    private static readonly string Text = File.ReadAllText(Path.Join(Workflows, "build.yml"));
+    private static readonly Workflow Build = new("build.yml");
 
     [Theory]
     [InlineData(@"(?m)^name:\s*Build\s*$", "the workflow name Build, which Release is triggered by")]
@@ -23,46 +21,63 @@ public class BuildWorkflowContractTests
     [InlineData(@"name:\s*Build result", "the job Build result, the required check")]
     public void TheWorkflowKeepsWhatTheKitChecksBeforeAdoptingIt(string pattern, string what)
     {
-        Assert.True(Regex.IsMatch(Text, pattern), $"build.yml lost {what}.");
+        Assert.True(Regex.IsMatch(Build.Text, pattern), $"build.yml lost {what}.");
     }
 
     [Fact]
     public void TheImageArtifactHasTheShapeReleaseLoads()
     {
         // Release runs: gunzip --stdout container-image.tar.gz | docker load, then expects container-image:<version>.
-        var image = Steps("image");
+        var image = Build.Steps("image");
 
-        Assert.Contains(image, step => Run(step).Contains("--tag \"container-image:${VERSION}\"", StringComparison.Ordinal));
-        Assert.Contains(image, step => Run(step).Contains("docker save \"container-image:${VERSION}\" | gzip > container-image.tar.gz", StringComparison.Ordinal));
-        Assert.Contains(image, step => Run(step).Contains("VERSION=${MAJOR_VERSION}.${MINOR_VERSION}.${GITHUB_RUN_NUMBER}", StringComparison.Ordinal));
-        var upload = Assert.Single(image, step => With(step, "name") == "container-image");
-        Assert.Equal("container-image.tar.gz", With(upload, "path"));
+        Assert.Contains(image, step => Workflow.Run(step).Contains("--tag \"container-image:${VERSION}\"", StringComparison.Ordinal));
+        Assert.Contains(image, step => Workflow.Run(step).Contains("docker save \"container-image:${VERSION}\" | gzip > container-image.tar.gz", StringComparison.Ordinal));
+        Assert.Contains(image, step => Workflow.Run(step).Contains("VERSION=${MAJOR_VERSION}.${MINOR_VERSION}.${GITHUB_RUN_NUMBER}", StringComparison.Ordinal));
+        var upload = Assert.Single(image, step => Workflow.With(step, "name") == "container-image");
+        Assert.Equal("container-image.tar.gz", Workflow.With(upload, "path"));
     }
 
     [Fact]
-    public void TheImageIsBuiltFromACheckoutWithGitLfs()
+    public void TheImageIsBuiltFromACheckoutWithTheGitLfsFiles()
     {
-        var checkout = Assert.Single(Steps("image"), step => Scalar(step, "uses").StartsWith("actions/checkout@", StringComparison.Ordinal));
+        // The kit's generic Build has no Git LFS files, which is why this repository keeps its own.
+        var steps = Build.Steps("image");
+        var pulled = steps.FindIndex(step => Workflow.Run(step) == "git lfs pull");
+        var built = steps.FindIndex(step => Workflow.Scalar(step, "name") == "Build the image");
 
-        Assert.Equal("true", With(checkout, "lfs"));
+        Assert.True(pulled >= 0 && pulled < built, "The image job must run git lfs pull before it builds the image.");
+    }
+
+    [Fact]
+    public void TheGitLfsObjectsAreCachedByTheirIds()
+    {
+        // A run downloads an object once per set of ids, not on every run: LFS bandwidth is metered.
+        var steps = Build.Steps("image");
+        var listed = steps.FindIndex(step => Workflow.Run(step).StartsWith("git lfs ls-files --long ", StringComparison.Ordinal) && Workflow.Run(step).EndsWith("> .lfs-objects", StringComparison.Ordinal));
+        var restored = steps.FindIndex(step => Workflow.Scalar(step, "uses").StartsWith("actions/cache@", StringComparison.Ordinal));
+        var pulled = steps.FindIndex(step => Workflow.Run(step) == "git lfs pull");
+
+        Assert.True(listed >= 0 && listed < restored && restored < pulled, "Expected: list the objects, restore the cache, then git lfs pull.");
+        Assert.Equal(".git/lfs", Workflow.With(steps[restored], "path"));
+        Assert.Equal("lfs-${{ hashFiles('.lfs-objects') }}", Workflow.With(steps[restored], "key"));
     }
 
     [Fact]
     public void TheImageIsTestedBeforeItIsKept()
     {
-        var names = Steps("image").Select(step => Scalar(step, "name")).ToList();
+        var names = Build.Steps("image").Select(step => Workflow.Scalar(step, "name")).ToList();
 
         var built = names.IndexOf("Build the image");
         var tested = names.IndexOf("Full-system tests");
         var kept = names.IndexOf("Upload the image");
         Assert.True(built >= 0 && built < tested && tested < kept, $"Expected build, then test, then upload; found: {string.Join(", ", names)}");
-        Assert.Equal("container-image:${{ env.VERSION }}", Scalar((YamlMappingNode)Steps("image")[tested]["env"], "JPCOM_IMAGE"));
+        Assert.Equal("container-image:${{ env.VERSION }}", Workflow.Scalar((YamlMappingNode)Build.Steps("image")[tested]["env"], "JPCOM_IMAGE"));
     }
 
     [Fact]
     public void EveryTestLayerRuns()
     {
-        var commands = Jobs().SelectMany(job => Steps(job.Key)).Select(Run).ToList();
+        var commands = Build.Jobs().SelectMany(job => Build.Steps(job.Key)).Select(Workflow.Run).ToList();
 
         Assert.Contains(commands, run => run.StartsWith("dotnet test tests/UnitTests ", StringComparison.Ordinal));
         Assert.Contains(commands, run => run.StartsWith("dotnet test tests/IntegrationTests ", StringComparison.Ordinal));
@@ -72,14 +87,14 @@ public class BuildWorkflowContractTests
     [Fact]
     public void BuildResultNeedsEveryOtherJobAndAlwaysReports()
     {
-        var jobs = Jobs();
-        var result = Assert.Single(jobs, job => Scalar(job.Value, "name") == "Build result");
+        var jobs = Build.Jobs();
+        var result = Assert.Single(jobs, job => Workflow.Scalar(job.Value, "name") == "Build result");
         var needs = ((YamlSequenceNode)result.Value["needs"]).Select(node => ((YamlScalarNode)node).Value!).Order().ToList();
         var others = jobs.Keys.Where(key => key != result.Key).Order().ToList();
 
         Assert.Equal(others, needs);
-        Assert.Equal("always()", Scalar(result.Value, "if"));
-        var check = Run(Assert.Single(Steps(result.Key)));
+        Assert.Equal("always()", Workflow.Scalar(result.Value, "if"));
+        var check = Workflow.Run(Assert.Single(Build.Steps(result.Key)));
         Assert.All(others, job => Assert.Contains($"test \"${{{job.ToUpperInvariant()}_RESULT}}\" = \"success\"", check, StringComparison.Ordinal));
     }
 
@@ -89,37 +104,17 @@ public class BuildWorkflowContractTests
         // The kit's own guard: Azure and Octopus are reached through OIDC only.
         var stored = new Regex(@"secrets\.(AZURE_CREDENTIALS|OCTO_API_KEY|OCTOPUS_URL|COPILOT_PAT)\b");
 
-        Assert.All(Directory.EnumerateFiles(Workflows, "*.yml"), file => Assert.DoesNotMatch(stored, File.ReadAllText(file)));
+        Assert.All(Directory.EnumerateFiles(Workflow.Directory, "*.yml"), file => Assert.DoesNotMatch(stored, File.ReadAllText(file)));
     }
 
     [Fact]
     public void BuildIsTheOnlyWorkflowThatBuildsOrTests()
     {
         // ci.yml was folded into build.yml: a second workflow running the tests would be a second, unrequired verdict.
-        var others = Directory.EnumerateFiles(Workflows, "*.yml")
+        var others = Directory.EnumerateFiles(Workflow.Directory, "*.yml")
             .Where(file => Path.GetFileName(file) != "build.yml")
             .Where(file => Regex.IsMatch(File.ReadAllText(file), @"dotnet (build|test)|docker build"));
 
         Assert.Empty(others);
     }
-
-    private static Dictionary<string, YamlMappingNode> Jobs()
-    {
-        var yaml = new YamlStream();
-        using var reader = new StringReader(Text);
-        yaml.Load(reader);
-        var jobs = (YamlMappingNode)((YamlMappingNode)yaml.Documents[0].RootNode)["jobs"];
-        return jobs.Children.ToDictionary(job => ((YamlScalarNode)job.Key).Value!, job => (YamlMappingNode)job.Value);
-    }
-
-    private static List<YamlMappingNode> Steps(string job) =>
-        ((YamlSequenceNode)Jobs()[job]["steps"]).Cast<YamlMappingNode>().ToList();
-
-    private static string Scalar(YamlMappingNode node, string key) =>
-        node.Children.TryGetValue(new YamlScalarNode(key), out var value) ? ((YamlScalarNode)value).Value ?? string.Empty : string.Empty;
-
-    private static string Run(YamlMappingNode step) => Scalar(step, "run");
-
-    private static string With(YamlMappingNode step, string key) =>
-        step.Children.TryGetValue(new YamlScalarNode("with"), out var with) ? Scalar((YamlMappingNode)with, key) : string.Empty;
 }

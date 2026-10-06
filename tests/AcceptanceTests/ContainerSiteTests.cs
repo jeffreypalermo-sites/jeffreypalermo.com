@@ -10,6 +10,7 @@ namespace JeffreyPalermo.AcceptanceTests;
 /// The container image over real HTTP: what the kit's GitOps system deploys to every environment (ADR-0006). These
 /// tests put the <c>Dockerfile</c> itself under test, including the content it ships beside the app.
 /// </summary>
+[Collection(FullSystem.Collection)]
 public sealed partial class ContainerSiteTests(ContainerSite site, ITestOutputHelper output) : IClassFixture<ContainerSite>
 {
     private const string LfsPointerHeader = "version https://git-lfs.github.com/spec/v1";
@@ -79,6 +80,77 @@ public sealed partial class ContainerSiteTests(ContainerSite site, ITestOutputHe
             Assert.Equal(HttpStatusCode.PartialContent, response.StatusCode);
             Assert.True(response.Content.Headers.ContentRange?.Length > 1024, $"{file} is only {response.Content.Headers.ContentRange?.Length} bytes in the image.");
             Assert.NotEqual(LfsPointerHeader, Encoding.Latin1.GetString(await response.Content.ReadAsByteArrayAsync()));
+        }
+    }
+
+    /// <summary>The nightly Verify environments workflow runs this script against tdd, uat and prod.</summary>
+    [Fact]
+    public async Task TheNightlyVerificationPassesAgainstTheContainer()
+    {
+        var environment = site.BaseAddress.GetLeftPart(UriPartial.Authority);
+
+        var result = await Command.TryRunAsync("bash", environment: null, VerifyScript, environment);
+
+        Assert.True(result.ExitCode == 0, $"{result.Output}\n{result.Error}");
+        Assert.Contains("0 violations", result.Output, StringComparison.Ordinal);
+        Assert.Contains($"PASS {environment} (ready {site.Version})", result.Output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task TheNightlyVerificationFailsForAnEnvironmentThatDoesNotAnswerAndStillChecksTheNext()
+    {
+        var silent = $"http://127.0.0.1:{PublishedSite.FreePort()}";
+        var environment = site.BaseAddress.GetLeftPart(UriPartial.Authority);
+
+        var result = await Command.TryRunAsync("bash", new Dictionary<string, string> { ["READY_TIMEOUT"] = "1" }, VerifyScript, silent, environment);
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Contains($"FAIL {silent}: /_health/ready did not answer 200", result.Output, StringComparison.Ordinal);
+        Assert.Contains($"PASS {environment}", result.Output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task TheNightlyVerificationFailsForAnEnvironmentThatBreaksTheContract()
+    {
+        // A site that is ready and answers 404 to everything else: every preserved URL is a violation.
+        var broken = $"http://127.0.0.1:{PublishedSite.FreePort()}";
+        using var listener = new HttpListener();
+        listener.Prefixes.Add($"{broken}/");
+        listener.Start();
+        using var stop = new CancellationTokenSource();
+        var serving = ServeAsync(listener, stop.Token);
+
+        var result = await Command.TryRunAsync("bash", environment: null, VerifyScript, broken);
+
+        await stop.CancelAsync();
+        listener.Stop();
+        await serving;
+        Assert.Equal(1, result.ExitCode);
+        Assert.Contains($"FAIL {broken} (ready broken): the URL contract is broken", result.Output, StringComparison.Ordinal);
+    }
+
+    private static string VerifyScript => Path.Join(PublishedSite.RepositoryRoot, "scripts", "verify-environments.sh");
+
+    private static async Task ServeAsync(HttpListener listener, CancellationToken stop)
+    {
+        while (!stop.IsCancellationRequested)
+        {
+            HttpListenerContext context;
+            try
+            {
+                context = await listener.GetContextAsync().WaitAsync(stop);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+
+            var ready = context.Request.Url?.AbsolutePath == "/_health/ready";
+            context.Response.StatusCode = ready ? 200 : 404;
+            await using (var body = context.Response.OutputStream)
+            {
+                await body.WriteAsync(Encoding.ASCII.GetBytes(ready ? "ready broken" : "not found"), stop);
+            }
         }
     }
 
