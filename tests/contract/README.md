@@ -19,8 +19,11 @@ Columns: `url`, `class` (`LegacyUrlClassifier`), first `status`, first redirect 
 
 ## Rules the rebuilt site must satisfy
 
-1. Every entry with `final_status` 200 outside `WordPressSystem` answers 200, directly or by permanent redirect, at the
-   same `final_url` (path comparison is case-sensitive on the target, as WordPress canonicalized it).
+1. Every entry with `final_status` 200 outside `WordPressSystem` answers 200, directly or by permanent (301) redirect.
+   - Where WordPress **redirected**, the new site must land on the same `final_url` path.
+   - Where WordPress answered **200 at a non-canonical alias** (case variants, `?m=` archives, tracking query strings),
+     a single 301 to the canonical URL counts as preserved and is preferred
+     ([ADR-0004](../../docs/adr/0004-legacy-url-resolution-in-core.md)).
 2. A 200 may not become a 404. A 404 *may* become a 200 or a redirect. Rescuing dead legacy URLs (Community Server
    `.aspx`, Graffiti `/blog/` slugs WordPress failed to guess) is an improvement, not a regression.
 3. `WordPressSystem` URLs answer 404 or 410. They are not preserved.

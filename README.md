@@ -17,6 +17,7 @@ See [MODERNIZATION-PLAN.md](MODERNIZATION-PLAN.md) for the analysis, options con
 | `migration/raw/` | The WordPress REST snapshot that `content/` was generated from. |
 | `tests/contract/url-contract.tsv` | The URL contract: every legacy URL and how it must answer. |
 | `tests/UnitTests`, `tests/IntegrationTests` | Automated tests (see below). |
+| `docs/architecture`, `docs/adr` | Web app architecture and architecture decision records. |
 
 ## Content format
 
