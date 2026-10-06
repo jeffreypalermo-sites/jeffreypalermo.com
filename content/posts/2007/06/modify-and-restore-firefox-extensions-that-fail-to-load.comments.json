@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1776,
+    "parent": 0,
+    "author_name": "Sean",
+    "author_url": "http://",
+    "date": "2007-06-25T17:36:09",
+    "type": "comment",
+    "content_html": "<p>This happened to me once, so now I have FEBE and CLEO installed.  I keep a current backup so if it ever happens again i just rerun my single .xpi package.  </p>\n<p><a href=\"https://addons.mozilla.org/en-US/firefox/search?q=febe&amp;status=4\" rel=\"nofollow ugc\">https://addons.mozilla.org/en-US/firefox/search?q=febe&amp;status=4</a></p>"
+  },
+  {
+    "id": 1777,
+    "parent": 0,
+    "author_name": "Andreas Kraus",
+    "author_url": "http://www.andreas-kraus.net",
+    "date": "2007-06-25T18:34:32",
+    "type": "comment",
+    "content_html": "<p>Now I’m really curious about the list of extensions you are using for firefox \uD83D\uDE09</p>"
+  },
+  {
+    "id": 1778,
+    "parent": 0,
+    "author_name": "sergiopereira",
+    "author_url": "http://",
+    "date": "2007-06-25T22:55:18",
+    "type": "comment",
+    "content_html": "<p>I agree with all your comments regarding Firefox. I’d add that on the Mac it only gets worse. It hangs all the time and eats CPU like candy.</p>"
+  }
+]

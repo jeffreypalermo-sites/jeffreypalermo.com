@@ -1,0 +1,29 @@
+[
+  {
+    "id": 504,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-05T17:01:37",
+    "type": "comment",
+    "content_html": "<p>I use the GMail interface for all my mail, also.  POP access is great, but the interface is so good, I’m happy using their web app.</p>"
+  },
+  {
+    "id": 505,
+    "parent": 0,
+    "author_name": "sahilmalik",
+    "author_url": "http://codebetter.com/blogs/sahil.malik",
+    "date": "2005-10-05T17:18:23",
+    "type": "comment",
+    "content_html": "<p>The draft autosave is annoying. If I start typing an email and change my mind (i.e. don’t wanna send that email anymore), I have to go to drafts and delete it from there. There should be an option to turn it off.</p>"
+  },
+  {
+    "id": 506,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-05T18:31:49",
+    "type": "comment",
+    "content_html": "<p>It does require an explicit “Discard” click, I think it’s well worth it.  It’s only seldom that I type an email and don’t send it.  It’s more frequent that my browser might crash or something else that would cause me to lose the body of the email.</p>\n<p>You don’t have to go to drafts to delete it.  If you start typing and change your mind, just click the Discard button.  It’s one click either way.  One click on the Discard button, or one click to get back to “Inbox”.</p>\n<p>I think it’s a great feature!</p>"
+  }
+]

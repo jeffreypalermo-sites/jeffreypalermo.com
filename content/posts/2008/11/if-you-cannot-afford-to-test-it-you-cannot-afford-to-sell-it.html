@@ -1,0 +1,50 @@
+---
+wp_id: 972
+title: If you cannot afford to test it, you cannot afford to sell it
+slug: if-you-cannot-afford-to-test-it-you-cannot-afford-to-sell-it
+permalink: /2008/11/if-you-cannot-afford-to-test-it-you-cannot-afford-to-sell-it/
+date: 2008-11-17T14:01:35
+date_utc: 2008-11-17T14:01:35Z
+modified: 2008-11-17T14:01:35
+format: html
+categories:
+- blog
+excerpt: In software, everyone agrees that testing is good, but there is a lot of disagreement on the level of testing that is necessary. Fortunately, there is not an industry standard or government software code that mandates certain testing because this industry is still figuring it out. The hypothesis of this article is that if you […]
+comments_open: true
+---
+<p>In software, everyone agrees that testing is good, but there is a lot of disagreement on the level of testing that is necessary.&nbsp; Fortunately, there is not an industry standard or government software code that mandates certain testing because this industry is still figuring it out.&nbsp; The hypothesis of this article is that <strong><em>if you can’t afford to test it, you can’t afford to sell it</em></strong>.</p>
+<p>Producing, selling, and supporting software is expensive, and, like any business venture, it requires capital in order to make it happen.&nbsp; Testing is one of the investments required in order to sell and support a software product.&nbsp; I believe this is relevant for consultancies as well because, ultimately, consultants are helping someone else produce a product that can be sold and supported.</p>
+<p>When sales staff are selling the software product, they are making certain claims about the software.&nbsp; Often, the underlying assumption is that the software works as expected.&nbsp; Consider the following dialog between a customer and a salesman:</p>
+<p><strong>Customer:&nbsp; </strong>What do I need to run your software?</p>
+<p><strong>Salesman:&nbsp; </strong>You just need Internet Explorer 7 or Firefox 2</p>
+<p><strong>Customer:&nbsp; </strong>So it will work on my Linux and Macintosh computers as long as I have Firefox 2?</p>
+<p><strong>Salesman:&nbsp; </strong>All you need is Firefox 2, yes</p>
+<p>A responsible product company will have supported platforms enumerated and will have tested their product on all said platforms.&nbsp; With the web, the nirvana dream is that with the browser, we can write one application and run it anywhere.&nbsp; We haven’t actually accomplished that as an industry, for even Firefox is different from Linux to Mac to Windows.&nbsp; Just because we test with Firefox on one platform doesn’t guarantee identical behavior on others.&nbsp; We actually have to <strong>test</strong> on all the supported platforms.</p>
+<p>In the above case, this salesman was not given operating system details.&nbsp; Sales staff were told that only the browser mattered.&nbsp; Furthermore, the product team emphasized browser testing but not full platform testing.&nbsp; The team tested every release with Internet Explorer 7 and Firefox 2.&nbsp; They had high confidence that the product worked in these browsers. . . on Windows.</p>
+<p><strong>Supported Platforms</strong></p>
+<p>This is a common scenario, and the proper way to deal with it is to publish supported platforms.&nbsp; If a customer calls the support line for a problem running Firefox 2 on Linux, support must be capable of reproducing the problem.&nbsp; The support team would have to have an environment similar to the customers.&nbsp; </p>
+<p>We have to really decide what we are going to support.&nbsp; If we are going to support two browsers on three operating systems, then we need these six platforms readily available to the support team.&nbsp; If we would rather not do this, then we need to restrict the number of platforms we will support, <strong>an the sales team needs to be made aware.</strong>&nbsp; It is not an acceptable answer for the sales team to sell on the basis that it works in all operating systems but yet the support team cannot help anyone who is not running Windows.&nbsp; Deciding the supported platforms in the responsibility of product management.&nbsp; <em>If we can’t afford to test on Linux, then we can’t afford to sell for Linux.;</em></p>
+<p><strong>New Releases, New Bugs</strong></p>
+<p>Unfortunately, users are accustomed to seeing new bugs appear along with new releases of software.&nbsp; Sometimes, even service packs designed to fix bugs introduce new ones, like the <a href="https://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=361606">reflection bug introduced</a> in .Net 3.5 SP1.&nbsp; </p>
+<p>New releases are good.&nbsp; In order to serve our customers, we need to put out new releases.&nbsp; New releases are intended to have new features, but not new bugs.&nbsp; New releases assume that features in old releases continue to work properly.&nbsp;&nbsp;&nbsp; Here is the kicker:&nbsp; how do we know that old features still work?&nbsp; How do we really know?&nbsp; How do we ensure that customers, when using the new release, won’t have to call customer support because an old feature that they depend on is malfunctioning?&nbsp; <strong>The answer:&nbsp; we have to test it.</strong>&nbsp; This seems like an obvious statement, but it is very difficult to completely regression test a new release of software.&nbsp; If each release has roughly 1000 function points, then the sixth release will have 6000 function points.&nbsp; Therefore, the regression test burden for each subsequent release is the sum&nbsp; of the efforts of every previous release.</p>
+<p><strong>We can’t afford to test everything</strong></p>
+<p>Quality Assurance thought leadership in the industry has identified a point of diminishing returns in testing.&nbsp; For example, if a data entry form works with representative data values, do we know for sure that it works with every combination of characters possible in regular text fields?&nbsp; There is no return on the investment of testing with every possible combination of characters.&nbsp; Skilled testers categorize data and test with representative samples of data, not every possible combination.&nbsp; This is just an obvious example of where it doesn’t make sense to test everything.</p>
+<p>What we must test is software behavior.&nbsp; Testing every possible data value has diminishing returns, but failing to test every behavior has huge potential support implications, especially if you sell a successful product.&nbsp; The number of software behaviors in software products is staggering.&nbsp; We often only demonstrate a subset of all the functionality in the software, but we must test the full behavior.</p>
+<p><strong>How do we know it works?</strong></p>
+<p>That is the kicker, isn’t it?&nbsp; As a product manager, don’t I want to know that answer?&nbsp; Every release, I want to ask that question and have the answer always be “yes”.&nbsp; It is unacceptable for the answer to ever be “no”.&nbsp; Often, the answer is: “I tested that last week.”.&nbsp; That’s great, but we have a new build of the software today.&nbsp; Duplicating software is cheap.&nbsp; Designing software is expensive.&nbsp; Duplicating an automobile is not as cheap but still cheaper than designing the car.&nbsp;&nbsp; If I change my design, I must retest the new result.&nbsp; It is not adequate to say that I tested last week but I’m “sure” that this week’s changes haven’t broken anything.&nbsp; Famous last words.</p>
+<p><strong>We must test</strong></p>
+<p>Testing is expensive, we’re told.&nbsp; If we look at the effort we spend in building up exhaustive automated regression test suites, it is pretty extensive.&nbsp; The untold story is the other activities that go away or are mostly diminished.&nbsp; These activities that are diminished are:</p>
+<ul>
+<li>Weekly production hotfixes</li>
+<li>Delayed releases due to surprise defects</li>
+<li>Huge lists of defects</li>
+<li>Usage of a bug-tracking system</li>
+<li>Triage meetings for defects</li>
+<li>Negotiations with customers regarding what hotfix fixes the defect</li>
+<li>Scripting sales demos around current defects</li>
+<li>Hate-hate relationship between developers and testers</li>
+</ul>
+<p>My experience has been that investment in testing is very quickly recouped; therefore, I don’t consider it a long-term cost.&nbsp; When viewed holistically regarding the product, it actually saves the program money.&nbsp; We actually end up trading off time after development for time during.</p>
+<p>The hard part is structuring the test infrastructure so that it decreases the cost of the software instead of being a cost in and of itself.&nbsp; If not done properly, the test suite actually has maintenance costs of its own, and that defeats the purpose.&nbsp; Done properly, the test suite verifies every behavior in the software every day.&nbsp; It catches problems early and gives us confidence that the product works. . . that all of it works.</p>
+<p>If we say we support the product regardless of operating system, we must run our test suite on many operating systems.&nbsp; Realistically, we wouldn’t support every operating system, only Windows, Mac, and Linux (and specific versions of each).&nbsp; We must enumerate what we support, and then we run our test suite on each platform.&nbsp; If we don’t run our test suite on a platform, then we cannot say that we support that platform.&nbsp; We don’t actually know if our software runs perfectly if we don’t test it.&nbsp; Running a&nbsp;few tests manually is insufficient as well.&nbsp; Our full regression test suite must completely pass on each platform.&nbsp; If there are some known issues with a specific platform, we should call those out so our customers are aware.&nbsp; </p>
+<p>First we must decide what to support.&nbsp; Then we must test for what we decided.&nbsp; Then we can sell what we tested.&nbsp; <strong>If we can’t afford to test it, we can’t afford to sell it.</strong></p>

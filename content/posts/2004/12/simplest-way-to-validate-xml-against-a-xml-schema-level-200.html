@@ -1,0 +1,51 @@
+---
+wp_id: 155
+title: Simplest way to validate Xml against a Xml Schema – level 200
+slug: simplest-way-to-validate-xml-against-a-xml-schema-level-200
+permalink: /2004/12/simplest-way-to-validate-xml-against-a-xml-schema-level-200/
+date: 2004-12-10T11:56:00
+date_utc: 2004-12-10T11:56:00Z
+modified: 2004-12-10T11:56:00
+format: html
+excerpt: There are plenty of articles out that explaining how to validate Xml, but they all seem to use namespaces or have other factors in them. I didn’t find one that used plain Xml with no namespace declaration, so I whipped up a little example. I included the Xml and Xsd inline and load it using […]
+comments_open: true
+---
+<p>There are plenty of articles out that explaining how to validate Xml, but they all seem to use namespaces or have other factors in them.&nbsp; I didn’t find one that used plain Xml with no namespace declaration, so I whipped up a little example.&nbsp; I included the Xml and Xsd inline and load it using a StringReader, but for your purposes, they would probably be in physical files.</p>
+<div><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>string</span><span> xsd;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>string</span><span> xml;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; xsd = @”&lt;xs:schema xmlns:xs=””<a href="http://www.w3.org/2001/XMLSchema””&amp;gt" rel="nofollow">http://www.w3.org/2001/XMLSchema””&amp;gt</a>;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;xs:element name=””address””&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;xs:complexType&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;xs:sequence&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;xs:element name=””name”” type=””xs:string””/&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;xs:element name=””street”” type=””xs:string””/&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;xs:element name=””city”” type=””xs:string””/&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;xs:element name=””country”” type=””xs:string””/&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/xs:sequence&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/xs:complexType&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/xs:element&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/xs:schema&gt;”;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; xml = @”&lt;?xml version=””1.0″”?&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;address&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;name&gt;John Smith&lt;/name&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;street&gt;109 Abbey Close&lt;/street&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;city&gt;Hayes&lt;/city&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;country&gt; UK&lt;/country&gt;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/address&gt;”;</span></p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; XmlValidatingReader&nbsp;&nbsp; vr&nbsp;&nbsp; = </span><span>null</span><span>;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; vr = </span><span>new</span><span> XmlValidatingReader(</span><span>new</span><span> XmlTextReader(</span><span>new</span><span> StringReader(xml)));</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; vr.Schemas.Add(</span><span>null</span><span>, </span><span>new</span><span> XmlTextReader(</span><span>new</span><span> StringReader(xsd)));</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; vr.ValidationType = ValidationType.Schema;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; vr.ValidationEventHandler += </span><span>new</span><span> ValidationEventHandler(vr_ValidationEventHandler);</span></p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>// Validate XML data</span></p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>try</span><span>{</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>while</span><span>(vr.Read());</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span><span>catch</span><span>{</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Console.WriteLine(“Xml Document is not well-formed.”);</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span><span>finally</span><span>{</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; vr.Close();</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p></div><!--EndFragment-->

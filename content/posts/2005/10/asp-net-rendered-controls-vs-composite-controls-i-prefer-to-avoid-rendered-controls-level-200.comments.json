@@ -1,0 +1,29 @@
+[
+  {
+    "id": 542,
+    "parent": 0,
+    "author_name": "BlackTigerX",
+    "author_url": "http://ebersys.blogspot.com",
+    "date": "2005-10-18T22:56:42",
+    "type": "comment",
+    "content_html": "<p>uff… for a minute I thought you preferred the “rendered controls”…</p>\n<p>the composite control uses rendering behind the scenes anyway, but all the dirty work is already done. reuse code!</p>"
+  },
+  {
+    "id": 543,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-19T00:48:50",
+    "type": "comment",
+    "content_html": "<p>Yes, reuse.  One point I failed to mention:  The included web controls are very smart.  They will render differently based the browser capabilities, and they know exactly how to maintain viewstate if need be.  By ignoring that and rendering html myself, I would have to take on a lot more responsibility.  I’d rather reuse Microsoft’s work than attempt try create my own rendering logic.</p>"
+  },
+  {
+    "id": 544,
+    "parent": 0,
+    "author_name": "johnpapa",
+    "author_url": "http://codebetter.com/blogs/john.papa",
+    "date": "2005-10-19T04:39:45",
+    "type": "comment",
+    "content_html": "<p>I agree that composite controls are the way to go. I prefer them myself, never liked formatting and spitting out HTML much. </p>\n<p>I guess one counterargument that I hear is that the rendered controls can be more efficient since they don’t involve nearly as many objects instantiations. But frankly, I have not seen the performance of composite controls be a factor in my projects. It might truly be an issue, but I just have not seen it in my limited usage of it. Because of that, I opt for readability and maintainability of the composite controls.</p>"
+  }
+]

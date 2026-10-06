@@ -1,0 +1,46 @@
+---
+wp_id: 450
+title: Configuring Subversion (SVN) on Windows – level 200
+slug: configuring-subversion-svn-on-windows-level-200
+permalink: /2006/08/configuring-subversion-svn-on-windows-level-200/
+date: 2006-08-03T22:59:00
+date_utc: 2006-08-03T22:59:00Z
+modified: 2006-08-03T22:59:00
+format: html
+tags:
+- tips-tricks
+excerpt: I just finished configuring my team’s Subversion server, and I’ve learned quite a few things in the process. On past teams, someone else gravitated to svn admin duties, so I didn’t complain. My subversion server is running Windows 2003 server. Setting up subversion initially is a piece of cake, and the distribution comes with […]
+comments_open: true
+---
+<p>I just finished configuring my team’s Subversion server, and<br>
+I’ve learned quite a few things in the process.<span>&nbsp;<br>
+</span>On past teams, someone else gravitated to svn admin duties, so I didn’t<br>
+complain.<span>&nbsp; </span></p>
+
+<p>My subversion server is running Windows 2003 server.<span>&nbsp; </span>Setting up subversion initially is a piece of<br>
+cake, and <a href="http://subversion.tigris.org/files/documents/15/32856/svn-1.3.2-setup.exe">the<br>
+distribution</a> comes with an installer for Windows.<span>&nbsp; </span>At that point, you can expose the repository<br>
+to the network via a URN share.<span>&nbsp; </span>You can<br>
+use <a href="/////server/repository">file://server/repository</a> to<br>
+access it.<span>&nbsp; </span>This doesn’t require a daemon<br>
+running to keep track of the source code.<span>&nbsp;<br>
+</span>You can give folks NTFS permission to the share.<span>&nbsp; </span>I prefer, however, to manage users through<br>
+subversion by using svnserve.exe.<span>&nbsp; </span>This<br>
+is an executable, so I chose to use <a href="http://www.clanlib.org/%7Embn/svnservice/">svsservice.exe</a> to install it<br>
+as a Windows service that would automatically start up with the server.</p>
+
+<p>I have everything set up with the svn:// protocol, and each<br>
+person with access to the repository gets commit emails now.<span>&nbsp; </span>Commit emails are very important in a team<br>
+environment because each team member is responsible for the well-being of the<br>
+code, so everyone needs to know what is being changed.</p>
+
+<p><b>I want to publicly<br>
+thank some people who have saved me some time.<span>&nbsp;<br>
+</span>Steve Donie and James Higgs have both posted about setting up subversion<br>
+on Windows, and reading those posts has saved me some time.</b></p>
+
+<p><a href="http://donie.homeip.net:8080/pebble/Steve/">Steve<br>
+Donie’s</a> tutorial: <a href="http://donie.homeip.net:8080/pebble/Steve/2006/02/27/1141079943879.html">http://donie.homeip.net:8080/pebble/Steve/2006/02/27/1141079943879.html</a></p>
+<p><a href="http://staff.interesource.com/james/">James Higgs’</a><br>
+tutorials: <a href="http://staff.interesource.com/james/search/?keyword=subversion">http://staff.interesource.com/james/search/?keyword=subversion</a></p>
+<p>[tags: svn, subversion, scc, windows, programming]</p>

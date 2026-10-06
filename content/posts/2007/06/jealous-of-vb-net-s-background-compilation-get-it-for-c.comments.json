@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1756,
+    "parent": 0,
+    "author_name": "Erick",
+    "author_url": "http://",
+    "date": "2007-06-22T16:08:20",
+    "type": "comment",
+    "content_html": "<p>Eclipse does since the very beginings of it. It is such an obiquituos feature in java that it is assumed to be there always.</p>"
+  },
+  {
+    "id": 1757,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-06-22T17:06:36",
+    "type": "comment",
+    "content_html": "<p>@Erick,<br>\nThe .Net world has gotten so much from the innovation of the Java world.</p>"
+  }
+]

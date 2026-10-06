@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1537,
+    "parent": 0,
+    "author_name": "Stu Smith",
+    "author_url": "http://www.feedghost.com/",
+    "date": "2007-03-30T16:36:53",
+    "type": "comment",
+    "content_html": "<p>Darn, we were too late!</p>\n<p>FeedGhost (our RSS reader for Windows) lets you produce link blogs, with one neat addition to Google’s: you can add your own comment to explain what you thought was interesting. Additionally, as well as the usual RSS feed and web-page, you can add a gadget to your website listing your latest linked articles.</p>\n<p>Hey ho. I’ll be subscribing to your link blog, whatever the provider.</p>\n<p>Stu</p>"
+  },
+  {
+    "id": 1538,
+    "parent": 0,
+    "author_name": "FransBouma",
+    "author_url": "http://weblogs.asp.net/fbouma",
+    "date": "2007-03-30T18:17:26",
+    "type": "comment",
+    "content_html": "<p>Whoa, I tried google reader some time ago when it was still in v0.lame state. This is really really cool. </p>\n<p>I’ll abandone omea for this, thanks for sharing this idea! \uD83D\uDE42</p>"
+  }
+]

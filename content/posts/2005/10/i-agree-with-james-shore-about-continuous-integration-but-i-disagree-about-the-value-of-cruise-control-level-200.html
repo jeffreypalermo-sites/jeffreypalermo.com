@@ -1,0 +1,21 @@
+---
+wp_id: 334
+title: I agree with James Shore about Continuous Integration, but I disagree about the value of Cruise Control – level 200
+slug: i-agree-with-james-shore-about-continuous-integration-but-i-disagree-about-the-value-of-cruise-control-level-200
+permalink: /2005/10/i-agree-with-james-shore-about-continuous-integration-but-i-disagree-about-the-value-of-cruise-control-level-200/
+date: 2005-10-17T13:27:00
+date_utc: 2005-10-17T13:27:00Z
+modified: 2005-10-17T13:27:00
+format: html
+excerpt: James Shore writes that “Continuous Integration is an Attitude, Not a Tool“. I agree with first half of his post. Continuous integration _is_ a shared understanding among team members that all commits accompany a full integration and commits happen very often. I disagree, however, with the second half where he slams Cruise Control. Mr. Shore […]
+comments_open: true
+---
+<p>James Shore writes that “<a href="http://www.jamesshore.com/Blog/Continuous-Integration-is-an-Attitude.html">Continuous Integration is an Attitude, Not a Tool</a>“.&nbsp; I agree with first half of his post.&nbsp; Continuous integration _is_ a shared understanding among team members that all commits accompany a full integration and commits happen very often.&nbsp; I disagree, however, with the second half where he slams Cruise Control.&nbsp; Mr. Shore contends that CC is a crutch, and if you use it, “. . .it’s a clear sign that you have opportunities to improve”.&nbsp; I don’t disagree that my team has opportunities to improve, but the mere use of CC doesn’t cause this fact to be true.&nbsp; I agree with every one of his ideas:</p>
+<ul><br>
+<li>Team members ensure the build always works.</li><br>
+<li>When we get the latest code from the repository, it will <i>always</i> build successfully and pass all tests. </li><br>
+<li>We will check in our code every two to four hours.</li><br>
+<li>Cruise Control is a traffic cop that tells you when you broke the build</li></ul>
+<p>Mr. Shore’s main point is that you don’t need the traffic cop if you don’t break the build.&nbsp; I envy Mr. Shore if his team has never experienced a broken build.&nbsp; He makes a false assumption about users of CC.&nbsp; He assumes that users of CC, unlike his team, don’t run the build locally before committing.&nbsp; If his assumption were correct, then CC would always be the entity that reports problems.&nbsp; </p>
+<p>My team’s routine is similar to Mr. Shore’s, but with the inclusion of CC.&nbsp; Before committing to the source code repository, we update to merge in the latest code.&nbsp; Next, we run the full build locally, and we make our commit ONLY if it builds.&nbsp; CC then is just an&nbsp;automated, independent build that should always pass.&nbsp; A broken build at the CC level is _always_ a surprise.&nbsp; Speed of the build is important, and it should constantly be improved.&nbsp; We focus on build speed since it is run locally as well as by CC.</p>
+<p>CC may just be a traffic cop, but it saves time because it automates the steps of going to&nbsp;a different server to do an integration build, and it notifies early if one of us makes a mistake.&nbsp; Hopefully we don’t have to depend on Cruise Control (since our build should always work anyway) or the debugger (since the code should always work too).&nbsp; They may be used infrequently (both CC and the debugger), but they are valuable tools to have available.</p>

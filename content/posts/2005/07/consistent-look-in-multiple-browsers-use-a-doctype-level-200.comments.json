@@ -1,0 +1,11 @@
+[
+  {
+    "id": 362,
+    "parent": 0,
+    "author_name": "Zhaph",
+    "author_url": "http://www.doodle.co.uk/",
+    "date": "2005-07-07T05:07:01",
+    "type": "comment",
+    "content_html": "<p>You can change the template files that VS uses to generate the default code quite easily…</p>\n<p>Go to the VS install directory and take a look in the following folders:<br>\nVC#VC#Wizards<br>\nVb7VBWizards</p>\n<p>Etc – you’ll find a bunch of folders for each file type, and in those folders you’ll find the following folder structure:<br>\nTemplates1033<br>\nWhich contain a file(s) with the default name that appears in the “Add new” wizard.</p>\n<p>So to change the HTML page to default to the correct doctype go to:<br>\nVb7VBWizardsHTMLPageTemplates1033<br>\nAnd update HTMLPage.htm</p>\n<p>There’s also a version in:<br>\nCommon7IDENewFileItems</p>\n<p>Hth</p>\n<p>Ben</p>"
+  }
+]

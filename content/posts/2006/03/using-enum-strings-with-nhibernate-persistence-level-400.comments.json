@@ -1,0 +1,29 @@
+[
+  {
+    "id": 689,
+    "parent": 0,
+    "author_name": "Udi Dahan - The Software Simplist",
+    "author_url": "http://udidahan.weblogs.us",
+    "date": "2006-03-16T06:04:06",
+    "type": "comment",
+    "content_html": "<p>For the performance concious, I would recommend staying with NHibernate’s default behavior. That way you could probably have the column be smaller – like tinyint (how many enum values do you really have?) allowing more rows to be kept on the same page. </p>\n<p>Moreover, since you would probably like to be able to perform queries like Get me all rows with Enum value X, indexes on int based columns take much less memory than string based indexes. And the performance of an int based index is also better than that of a string based index.</p>\n<p>If you really want to have those strings in the database, create a lookup table, and join to it.</p>"
+  },
+  {
+    "id": 690,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-03-17T21:13:50",
+    "type": "comment",
+    "content_html": "<p>You are correct.  It takes more space in the database, but if you have the space to spare, it’s easier to deal with.  Your point is very valid, though.</p>"
+  },
+  {
+    "id": 691,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-12-20T12:19:36",
+    "type": "comment",
+    "content_html": "<p>I received this directly from Dan Morphis via email:While trying to solve another issue today I saw your blog posting on enum strings and NHibernate (<a href=\"/blogs/jeffrey.palermo/archive/2006/03/14/140949.aspx\" rel=\"nofollow\">http://codebetter.com/blogs/jeffrey.palermo/archive/2006/03/14/140949.aspx</a>). Your solution was to use a one off C# Enum Mapper class. &nbsp;After we had written out 5th or 6th one today, we decided there had to be a better way. &nbsp;We ended up coming up with a generic enum mapper that works amazingly well. &nbsp;My co-worker wrote all this up in his blog(<a href=\"http://orand.blogspot.com/2006/12/generic-nhibernate-enum-string-mapping.html\" rel=\"nofollow\">http://orand.blogspot.com/2006/12/generic-nhibernate-enum-string-mapping.html</a>), and in-fact even referenced your blog posting. </p>"
+  }
+]

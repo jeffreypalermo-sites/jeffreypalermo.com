@@ -1,0 +1,20 @@
+[
+  {
+    "id": 2184,
+    "parent": 0,
+    "author_name": "cmyers",
+    "author_url": "http://www.chadmyers.com/Blog",
+    "date": "2007-12-08T05:37:51",
+    "type": "comment",
+    "content_html": "<p>Where is my MVC! You said ‘tomorrow’ (today)! I WANT MY MVC! (queue drum intro… background singers)</p>"
+  },
+  {
+    "id": 2185,
+    "parent": 0,
+    "author_name": "kekekela",
+    "author_url": "http://",
+    "date": "2007-12-08T13:58:17",
+    "type": "comment",
+    "content_html": "<p>Argh, looks like we’re not getting it this weekend :<br>\n Friday, December 07, 2007 9:23 PM by ScottGu</p>\n<p>Quick update to everyone – we found a last minute bug late last night, and had to-do a rebuild of the bits.  This unfortunately means we won’t go live today as origionally planned.  The team is working hard, though, to try and get it out ASAP (they will be here this weekend finishing the test pass).  </p>\n<p>I’ll do a blog post announcing it as soon as it is live.  As penance I’m also doing a long Part 4 blog post this weekend that covers editing and form posting scenarios, which combined with the first three tutorial posts should provide a pretty good foundation for working with the bits.</p>\n<p>Many apologies for the delay – almost there now though,</p>\n<p>Scott</p>"
+  }
+]

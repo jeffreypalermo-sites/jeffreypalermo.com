@@ -1,0 +1,20 @@
+---
+wp_id: 287
+title: How to develop an ASP.NET web project without IIS binding – level 200
+slug: how-to-develop-an-asp-net-web-project-without-iis-binding-level-200
+permalink: /2005/07/how-to-develop-an-asp-net-web-project-without-iis-binding-level-200/
+date: 2005-07-25T21:19:00
+date_utc: 2005-07-25T21:19:00Z
+modified: 2005-07-25T21:19:00
+format: html
+excerpt: If you’ve every shared an ASP.NET project or worked on one on multiple computer, you know what a pain it is to ensure that all computers have the same IIS virtual directory configured. If you don’t, the project won’t open. For ASP.NET 1.1, it’s easier to use a class library project instead of a web […]
+comments_open: true
+---
+<p>If you’ve every shared an ASP.NET project or worked on one on multiple computer, you know what a pain it is to ensure that all computers have the same IIS virtual directory configured.&nbsp; If you don’t, the project won’t open.</p>
+<p>For ASP.NET 1.1, it’s easier to use a class library project instead of a web project.&nbsp; You lose a bit of designer support, but you gain project portability.&nbsp; If you are like me, you don’t use the designer at all, and it’s all gain and no loss.</p>
+<p>The trick is to delete the *.csproj.webinfo file, &nbsp;take your web project and open the .csproj file in notepad.&nbsp; Then find the following at the top of the file:</p>
+<p>&lt;VisualStudioProject&gt;<br>&nbsp;&nbsp;&nbsp; &lt;CSHARP<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ProjectType = “Web”<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ProductVersion = “7.10.3077”<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SchemaVersion = “2.0”<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ProjectGuid = “{09E1A7E2-B51D-42EA-A2BE-4A5991BDF2A7}”<br>&nbsp;&nbsp;&nbsp; &gt;. . . . . . .</p>
+<p>And just change “Web” to “Local”</p>
+<p>&lt;VisualStudioProject&gt;<br>&nbsp;&nbsp;&nbsp; &lt;CSHARP<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ProjectType = “Local”<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ProductVersion = “7.10.3077”<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SchemaVersion = “2.0”<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ProjectGuid = “{09E1A7E2-B51D-42EA-A2BE-4A5991BDF2A7}”<br>&nbsp;&nbsp;&nbsp; &gt;. . . . . &lt;snip/&gt;</p>
+<p>Literally, that’s all it takes.&nbsp; Now your poject opens as a class library, and you just set up IIS to wherever the project is.&nbsp; You can debug just like before, and you can use pages and user controls just like before.</p>
+<p>One note:&nbsp; Change the project type back to “Web” before upgrading to .Net 2.0 or the project conversion wizard won’t properly create a website.</p>

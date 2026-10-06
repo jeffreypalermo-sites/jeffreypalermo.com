@@ -1,0 +1,74 @@
+[
+  {
+    "id": 65,
+    "parent": 0,
+    "author_name": "Peter van Ooijen",
+    "author_url": "http://",
+    "date": "2004-06-03T06:44:00",
+    "type": "comment",
+    "content_html": "<p>Hi,<br>\nwhy not create you own datalist. Inherit from datalist and add your own header property. No big deal : <a href=\"http://www.dotnetjunkies.com/Tutorial/6614EF8F-2ADB-4AEB-B2B7-D96278B53D74.dcik\" rel=\"nofollow\">http://www.dotnetjunkies.com/Tutorial/6614EF8F-2ADB-4AEB-B2B7-D96278B53D74.dcik</a></p>\n<p>Templates are not very nice to work with from code. When some coding on a template is needed I drop an usercontrol on the template and do my coding in there.</p>"
+  },
+  {
+    "id": 66,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-06-03T10:49:00",
+    "type": "comment",
+    "content_html": "<p>That’s a good point, and I could easily do that, and I may.  Right now I have a UserControl that is only the DataList, so I have added a HeaderText and FooterText property to the UserControl, and I handle it that way.  I agree with you, though.  What I was perturbed about was that this functionality isn’t included in the DataList object.</p>"
+  },
+  {
+    "id": 67,
+    "parent": 0,
+    "author_name": "Peter van Ooijen",
+    "author_url": "http://",
+    "date": "2004-06-04T07:32:00",
+    "type": "comment",
+    "content_html": "<p>My main problem with the datalist are the templates. Flexible but unfriendly to program. They have been overhauled in Whidbey. Looks like they support events now. But no class members yet (?)</p>"
+  },
+  {
+    "id": 68,
+    "parent": 0,
+    "author_name": "tim",
+    "author_url": "http://",
+    "date": "2004-09-07T17:09:00",
+    "type": "comment",
+    "content_html": "<p>I put I label on the header and next i databind it to a Context.Items(\"headercaption\")</p>\n<p>before the databind takes place i set Context.Items(\"headercaption\") to what i like</p>\n<p>works perfectly.</p>"
+  },
+  {
+    "id": 69,
+    "parent": 0,
+    "author_name": "eoghan",
+    "author_url": "http://",
+    "date": "2004-11-18T04:35:00",
+    "type": "comment",
+    "content_html": "<p>Trying to work around this exact problem:</p>\n<p>Where do you get the ‘Count’ in DataList.Controls[Count – 1] in order to access the footer?</p>\n<p>(pity we couldn’t do it with elegant Python indexing:<br>\nDatalist.Controls[-1] mirroring Datalist.Controls[0])</p>"
+  },
+  {
+    "id": 70,
+    "parent": 0,
+    "author_name": "Leon",
+    "author_url": "http://www.leonlandgersing.com",
+    "date": "2005-09-07T14:28:37",
+    "type": "comment",
+    "content_html": "<p>There is a quick and simple way to interact with the Header and Footer at Runtime. Simple handle the ItemDataBound event for your datalist. eg: To access your literal control that is in your header you’d add this to that method: </p>\n<p>if(e.Item.ItemType == ListItemType.Header)<br>\n{<br>\n     Literal lit = (Literal)e.Item.FindControl(“litHeader”);<br>\n     lit.Text = “Hello World”;<br>\n}</p>\n<p>That will do the trick, you can also look for the Footer, Item, AltItems…whatever you like! \uD83D\uDE42</p>"
+  },
+  {
+    "id": 71,
+    "parent": 0,
+    "author_name": "Steve",
+    "author_url": "http://",
+    "date": "2007-02-02T20:47:37",
+    "type": "comment",
+    "content_html": "<p>Leon, thanks for the concise and accurate answer.  Exactly what I needed.</p>"
+  },
+  {
+    "id": 72,
+    "parent": 0,
+    "author_name": "Steve",
+    "author_url": "http://",
+    "date": "2007-02-02T21:03:31",
+    "type": "comment",
+    "content_html": "<p>For those new to .NET here are a few more details to help you implement Leon’s advice:</p>\n<p>To handle the ItemDataBound event:  Go to the aspx or ascx source page where the DataList control is declared.  Inside the asp DataList tag  add the attribute OnItemDataBound=”your_method_name_here”.  I prefer the method name DataList1_OnItemDataBound however.</p>\n<p>To code the handler:  Add a method in your codebehind or inline script with the following signature (C#)<br>\n  protected void your_method_name_here(object sender, DataListItemEventArgs e)</p>\n<p>Place Leon’s (or preferrably your) code in the aforementioned handler method and enjoy the results.</p>"
+  }
+]

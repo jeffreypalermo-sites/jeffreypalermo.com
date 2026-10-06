@@ -1,0 +1,29 @@
+[
+  {
+    "id": 764,
+    "parent": 0,
+    "author_name": "Jake Good",
+    "author_url": "http://www.thoughtstoblog.com",
+    "date": "2006-04-07T03:07:14",
+    "type": "comment",
+    "content_html": "<p>Count me in.</p>"
+  },
+  {
+    "id": 765,
+    "parent": 0,
+    "author_name": "sahilmalik",
+    "author_url": "http://codebetter.com/blogs/sahil.malik",
+    "date": "2006-04-07T14:00:46",
+    "type": "comment",
+    "content_html": "<p>Me 2. I’ll be @ Boston Logan.</p>"
+  },
+  {
+    "id": 766,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://flimflan.com/blog",
+    "date": "2006-04-07T14:19:56",
+    "type": "comment",
+    "content_html": "<p>If I’m at TechEd, I’ll be at the Party.</p>\n<p>You won’t find an IHOP in Boston… as crazy as it sounds, its actually pretty difficult to find an all-night eatery within the city. There was one little breakfast place on Cambridge St near Mass General Hospital that I can remember being open at odd hours.<br>\nIt will probably be pretty difficult to find a “private room” at a restaurant without shelling out some cash – Boston is very different than the typical TechEd convention cities, there isn’t a lot of space to go around. We might want to just go for one of the open air bar/restaurants in Faneuil Hall, or nearby on the water (can’t remember any names).</p>"
+  }
+]

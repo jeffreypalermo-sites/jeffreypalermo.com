@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1010,
+    "parent": 0,
+    "author_name": "Jacob Proffitt",
+    "author_url": "http://rabidpaladin.spaces.live.com",
+    "date": "2006-08-23T16:58:23",
+    "type": "comment",
+    "content_html": "<p>I’m going to ask this here but it’s something I’ve wondered about for years. What does O/R Mapping give you that is better than using strongly-typed datasets? The need for custom object models of your data seems to be taken as a given in so many articles and discussions that I’m wondering what I’m missing here. I’ve seen a lot of stupid perpetrated by people creating custom objects (and their associated custom collections) for no reason I can detect.</p>\n<p>I ask here because the reasons I don’t typically bother with objects beyond a strongly-typed dataset is because I believe in dodging as much work as possible. Going through an additional layer of objects seems to me to violate the “Performance Tuning”, “Technical Stories”, and “Not Created Here Syndrome” sections above–particularly with .NET 2.0 where the data access can be created in their own namespace and with the Enterprise Library data access factory functionality if database abstraction is a concern.</p>\n<p>I’m hoping you (or other readers) can shed light on this for me. Why is the need for O/R Mapping so vital that the need for one is such a universal assumption? Why don’t “real programmers” ever talk strongly-typed datasets?</p>"
+  },
+  {
+    "id": 1011,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2006-08-23T19:44:27",
+    "type": "comment",
+    "content_html": "<p>@Jacob,<br>\nDataset works as a table model. This means that a lot of things are pretty awkward to do with it.<br>\nI have yet to see the dataset that I can add strategy (as in the design pattern).<br>\nDataSets also put you firmly in Data Is King camp, and it means that you code turns into a set of operations on the data, instead of a set of interacting objects.</p>\n<p>@Jeffrey, just to point out, I built a (small part of) a web framework. Because ASP.Net model sucks.<br>\nThe build vs. buy has to take into account the various tradeoffs.<br>\nIn general, I _much_ rather start my applications at least one level down than what I am “supposed” to according to most people.<br>\nMost often, the place where you are supposed to be include a lot of stuff that constrains you.</p>"
+  },
+  {
+    "id": 1012,
+    "parent": 0,
+    "author_name": "jmiller",
+    "author_url": "http://",
+    "date": "2006-08-23T19:58:17",
+    "type": "comment",
+    "content_html": "<p>Jacob,</p>\n<p>Testing business logic is simpler and easier mechanically with domain objects.  Maybe my persistence is more work (I’d dispute that, it’s not that hard to use NHibernate), but my unit testing is easier.  Net win.</p>\n<p>The biggest advantage isn’t in persistence, it’s in the organization of the business logic in the Domain Model approach versus the procedural Transaction Script approach that usually follows from using DataSet’s.  Go check out a copy of Fowler’s PEAA book, there’s a great chapter that compares the approaches for organizing business logic.  Using an O/R mapper just makes it easier to do a Domain Model approach.</p>\n<p>Ayende, He’s Jeffrey, I’m Jeremy;)</p>"
+  },
+  {
+    "id": 1013,
+    "parent": 0,
+    "author_name": "Jacob Proffitt",
+    "author_url": "http://rabidpaladin.spaces.live.com",
+    "date": "2006-08-23T22:15:15",
+    "type": "comment",
+    "content_html": "<p>Thanks for taking the time to respond, Jeremy. I’m curious how unit testing is easier. It seems to me that in either case it’s a matter of creating the object, populating the properties, then testing the logic. I’m not sure how that’d be easier or harder to do with a domain object vs. a strongly-typed dataset. It could be that I just haven’t done enough unit testing in a purely domain object environment, but it seems to me that they’d be similar.</p>\n<p>That said, yeah, *organizing* the business logic is a drawback to strongly-typed datasets. I just find that I dodge a whole lot more work by creating objects to logically encapsulate business logic in conjunction with strongly-typed datasets. Yeah, that makes things less orthogonal and less pure OO (I’m not sure that puts me in a Data is King camp, though, Ayende). I’m just game for the trade-off when it makes it so much easier to generate the relational pieces is all. I also recognize that it’s a good opportunity to shoot myself in the foot because I’d be creating two objects instead of one, but that’s more than manageable, I think. That said, there’s some strengths to offset those disadvantages as well (for one, SOA tends to be broken in exactly the same way–separating the logic from the objects being acted upon).</p>\n<p>Saying that using an O/R mapper makes it easier to do a Domain Model makes sense, but is kind of a tautology, really. I’ll look for Fowler’s PEAA, but from what I can tell, it looks to me like he might have some of that same prejudice at work. At least some of his judgement seems like it flows as much from his underlying assumptions (he admits to being an object bigot) as from the strengths or weaknesses of those approaches. That’s an admitted pre-judgement on my part, though… \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1014,
+    "parent": 0,
+    "author_name": "Carlton",
+    "author_url": "http://",
+    "date": "2006-08-23T23:34:08",
+    "type": "comment",
+    "content_html": "<p>PEAA is an excellent read – good stuff in there, but some of it is hard to grasp if you have never used some of the patterns.  I find I have to read, re-read and then read again to get it.</p>"
+  },
+  {
+    "id": 1015,
+    "parent": 0,
+    "author_name": "ben",
+    "author_url": "http://benreichelt.net/blog",
+    "date": "2006-08-24T02:49:39",
+    "type": "comment",
+    "content_html": "<p>wow, great post jeffrey.  I’ve really enjoyed the last few posts that you and jeremy have had, I even printed one off to read over lunch \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1016,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-08-25T03:56:59",
+    "type": "comment",
+    "content_html": "<p>Ben,<br>\nThanks.  I’m not sure how many “parts” I have in me, but we’ll see.</p>"
+  }
+]

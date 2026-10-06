@@ -1,0 +1,119 @@
+[
+  {
+    "id": 510,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-07T23:28:06",
+    "type": "comment",
+    "content_html": "<p>If there is interest in the code, I’d be willing to open-source it.  Just leave me a comment.</p>"
+  },
+  {
+    "id": 511,
+    "parent": 0,
+    "author_name": "Rob Bazinet",
+    "author_url": "http://www.robertbazinet.com",
+    "date": "2005-10-07T23:53:09",
+    "type": "comment",
+    "content_html": "<p>Nice utility!  I have a need for something like this right now and was going to write one.  I would be interested in the source for sure, it would certainly save some time and provide some enhancements too.</p>"
+  },
+  {
+    "id": 512,
+    "parent": 0,
+    "author_name": "Jeremy D. Miller",
+    "author_url": "http://",
+    "date": "2005-10-08T01:55:00",
+    "type": "comment",
+    "content_html": "<p>The very first thing you should do with C# Scripter is apply it to a certain codebase Monday morning so our solution doesn’t contain 50 projects anymore.</p>"
+  },
+  {
+    "id": 513,
+    "parent": 0,
+    "author_name": "Brendan Tompkins",
+    "author_url": "http://",
+    "date": "2005-10-08T15:28:40",
+    "type": "comment",
+    "content_html": "<p>Oh, this is very cool!</p>"
+  },
+  {
+    "id": 514,
+    "parent": 0,
+    "author_name": "Jon Galloway",
+    "author_url": "http://weblogs.asp.net/jgalloway",
+    "date": "2005-10-09T00:22:20",
+    "type": "comment",
+    "content_html": "<p>Very cool. It’s always bugged me that I program in c# and script in VBS.</p>\n<p>How would you compare this to NScript (<a href=\"http://www.codeproject.com/dotnet/nscript.asp\" rel=\"nofollow ugc\">http://www.codeproject.com/dotnet/nscript.asp</a>)?</p>"
+  },
+  {
+    "id": 515,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-09T15:39:08",
+    "type": "comment",
+    "content_html": "<p>I haven’t compared it to NScript, but it solves the same problem.  I believe one advantage I have is that it’s just a stand-along executable.  You don’t have to execute the .msi to install it on the machine.  You just need the .EXE to use it (much like NAnt, NUnit, etc).  I don’t claim that this is an orginial idea, and there have been others that wrote a similar tool (see the links in my post).</p>"
+  },
+  {
+    "id": 516,
+    "parent": 0,
+    "author_name": "Daniel F",
+    "author_url": "http://www.redgum.com.au",
+    "date": "2005-10-10T02:44:55",
+    "type": "comment",
+    "content_html": "<p>Ooh, nice. Very nice! I can already think of a few things I’ve been putting off simply because I don’t want a full solution and exe floating around just to do simple things. </p>\n<p>Try not to point and laugh at the mort, but… any chance it can do .vb files?</p>"
+  },
+  {
+    "id": 517,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-10T03:08:09",
+    "type": "comment",
+    "content_html": "<p>Daniel,<br>\nNo, this is C# -specific.  It invokes the C# compiler internally.</p>"
+  },
+  {
+    "id": 518,
+    "parent": 0,
+    "author_name": "Daniel F",
+    "author_url": "http://www.redgum.com.au",
+    "date": "2005-10-10T03:21:07",
+    "type": "comment",
+    "content_html": "<p>hehe, no probs. Guess I’d better brush up my c# skills to get stuff done. Thanks for the quick reply, much appreciated \uD83D\uDE42</p>"
+  },
+  {
+    "id": 519,
+    "parent": 0,
+    "author_name": "Andy",
+    "author_url": "http://www.milbertus.com",
+    "date": "2005-10-10T13:52:06",
+    "type": "comment",
+    "content_html": "<p>Depending on how you implemented it, I don’t think that it would be very hard to add VB support. If you use CodeDom to compile the the passed in file, I think all that would need to be done is to create an instance of the correct CodeProvider (VB vs C#) based on the file that was passed in. Maybe the code could decide based on the file extension?</p>"
+  },
+  {
+    "id": 520,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-10T13:56:13",
+    "type": "comment",
+    "content_html": "<p>Andy,<br>\nYes, it definitely could be made to compile VB as well.  I’ll have to think about adding that.  I have no use for that, but other people may.</p>"
+  },
+  {
+    "id": 521,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-12T01:31:38",
+    "type": "comment",
+    "content_html": "<p>I’ve modified the scripter so that it now supports VB and JScript.  I’ll have to rename it to netscripter.exe.  I’ll post it soon.</p>"
+  },
+  {
+    "id": 522,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-12T16:14:54",
+    "type": "comment",
+    "content_html": "<p>Daniel,<br>\nI’ve extended the scripter to support VB.Net as well.  Let me know what you think.<br>\n<a href=\"http://codebetter.com/blogs/jeffrey.palermo/archive/2005/10/12/133007.aspx\" rel=\"nofollow ugc\">http://codebetter.com/blogs/jeffrey.palermo/archive/2005/10/12/133007.aspx</a></p>"
+  }
+]

@@ -1,0 +1,114 @@
+---
+wp_id: 159
+title: Logging using the Trace and Debug classes in the .Net framework – level 300
+slug: logging-using-the-trace-and-debug-classes-in-the-net-framework-level-300
+permalink: /2005/01/logging-using-the-trace-and-debug-classes-in-the-net-framework-level-300/
+date: 2005-01-17T19:00:00
+date_utc: 2005-01-17T19:00:00Z
+modified: 2005-01-17T19:00:00
+format: html
+excerpt: I’ve seen several homemade logging mechanism used in various applications, and they all do their job, but every one of them seems to be very tightly coupled, and the source that does the logging must to changed to add a new logging destination. I’d like to share a method that my team uses in our […]
+comments_open: true
+---
+<p>I’ve seen several homemade logging mechanism used in various applications, and they all do their job, but every one of them seems to be very tightly coupled, and the source that does the logging must to changed to add a new logging destination.&nbsp; I’d like to share a method that my team uses in our code.&nbsp; When we wanted to get the information to another destination, the code doing the logging doesn’t have to know about it.&nbsp; First, we need an object to hold our logging information.&nbsp; I’ll call it TraceEntry:</p>
+<div><br>
+<p><span>using</span><span> System;</span></p><br>
+<p><span>using</span><span> System.Collections;</span></p><br>
+<p><span>using</span><span> System.Diagnostics;</span></p><br>
+<p><span>using</span><span> System.Text;</span></p><br>
+<br>
+<p><span>namespace</span><span> ConsoleTestHarness</span></p><br>
+<p><span>{</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; </span><span>public</span><span> class</span><span> TraceEntry</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; {</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>protected</span><span> string</span><span> m_message = </span><span>string</span><span>.Empty;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>protected</span><span> DateTime m_createdOn = DateTime.Now;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>protected</span><span> TraceLevel m_entryLevel = TraceLevel.Info;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>protected</span><span> Type m_caller;</span></p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span> string</span><span> Message{</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>get</span><span> { </span><span>return</span><span> m_message; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span> DateTime CreatedOn{</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>get</span><span> { </span><span>return</span><span> m_createdOn; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span> TraceLevel EntryLevel{</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>get</span><span> { </span><span>return</span><span> m_entryLevel; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span> TraceEntry(</span><span>string</span><span> message, TraceLevel entryLevel, Type caller){</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; m_message = message;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; m_entryLevel = entryLevel;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; m_caller = caller;</span></p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Trace.Write(</span><span>this</span><span>);</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>// For the default trace listeners, this method will be called implicitly.</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span> override</span><span> string</span><span> ToString() {</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; StringBuilder builder = </span><span>new</span><span> StringBuilder();</span></p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; builder.Append(m_createdOn.ToString().PadRight(22));</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; builder.Append(m_caller.Name.PadRight(15));</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; builder.Append(m_entryLevel.ToString().PadRight(9));</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; builder.Append(m_message);</span></p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>return</span><span> builder.ToString();</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>}</span></p></div>
+<div>&nbsp;</div>
+<div>Next, we need code to use this class to log information:</div>
+<div><br>
+<p><span>using</span><span> System;</span></p><br>
+<p><span>using</span><span> System.Diagnostics;</span></p><br>
+<p><span>using</span><span> System.IO;</span></p><br>
+<p><span>using</span><span> System.Reflection;</span></p><br>
+<p><span>using</span><span> Dell.Titans.Framework.Diagnostics;</span></p><br>
+<br>
+<p><span>namespace</span><span> ConsoleTestHarness</span></p><br>
+<p><span>{</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; </span><span>class</span><span> TestHarness</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; {</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [STAThread]</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>static</span><span> void</span><span> Main(</span><span>string</span><span>[] args)</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Trace.Listeners.Add(</span><span>new</span><span> CustomTraceListener());</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>new</span><span> TraceEntry(“This is a message”, TraceLevel.Verbose, </span><span>typeof</span><span>(TestHarness));</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Console.ReadLine();</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>}</span></p></div>
+<div>Notice that all we do is create the object.&nbsp;&nbsp; The object, when created, sends itself to Trace.Write.&nbsp; This is a great feature of the .Net framework that allows “listeners” to be attached to listen for messages.&nbsp; Here we are sending a message, and our CustomTraceListener “hears” the object being sent to it.&nbsp; Here’s the source for our listener:</div>
+<div><br>
+<p><span>using</span><span> System;</span></p><br>
+<p><span>using</span><span> System.Diagnostics;</span></p><br>
+<br>
+<p><span>namespace</span><span> ConsoleTestHarness</span></p><br>
+<p><span>{</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; </span><span>public</span><span> class</span><span> CustomTraceListener : TraceListener</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; {</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span> override</span><span> void</span><span> Write(</span><span>object</span><span> o) {</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>// If we know what this object is, we can work with it.</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>if</span><span>(o </span><span>is</span><span> TraceEntry){</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; TraceEntry entry = o </span><span>as</span><span> TraceEntry;</span></p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>// Pull out the pieces of the object and log them where you wish.</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Console.WriteLine(entry);</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span> override</span><span> void</span><span> WriteLine(</span><span>object</span><span> o) {</span><span>this</span><span>.Write(o);}</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span> override</span><span> void</span><span> Write(</span><span>object</span><span> o, </span><span>string</span><span> category) {</span><span>this</span><span>.Write(o);}</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span> override</span><span> void</span><span> WriteLine(</span><span>object</span><span> o, </span><span>string</span><span> category) {</span><span>this</span><span>.Write(o);}</span></p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>// abstract method implementations.</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span> override</span><span> void</span><span> Write(</span><span>string</span><span> message) {}</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span> override</span><span> void</span><span> WriteLine(</span><span>string</span><span> message) {}</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>}</span></p></div>
+<div>And there you have it.&nbsp; Our listener receives this object.&nbsp; It tests it to make sure it is of the type it understands, and then it can&nbsp; use the different pieces of the object to log to fields in a database, log to a file, or anywhere else.&nbsp; Here, we spit it out to the console, and notice how the ToString() overridden method was implicitly called.</div>
+<div>&nbsp;</div>
+<div>A great way to extend this method is to add a listener to send a warning email to support personnel whenever a message with type “Error” is logged.</div>
+<div>&nbsp;</div>
+<div>Happy coding.<!--EndFragment--><!--EndFragment--><!--EndFragment--></div>

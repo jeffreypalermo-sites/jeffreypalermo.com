@@ -1,0 +1,38 @@
+[
+  {
+    "id": 326,
+    "parent": 0,
+    "author_name": "Dave Burke",
+    "author_url": "http://",
+    "date": "2005-05-20T13:28:00",
+    "type": "comment",
+    "content_html": "<p>I couldn’t agree with you more, Jeffrey.  The increase in productivity I’ve had over the years by working exclusively with Windows Server OS’s is substantial.  Yeah, we lose a few XP fun features, but if the computer is for work instead of play, then you can’t beat Windows 2003 Server.</p>"
+  },
+  {
+    "id": 327,
+    "parent": 0,
+    "author_name": "Marko Rangel",
+    "author_url": "http://",
+    "date": "2005-05-20T14:14:00",
+    "type": "comment",
+    "content_html": "<p>I’ve just now switched back to XP.  Though, day to day 2003 and XP \"feel\" the same, I like the end user friendliness that is missing from 2003.</p>\n<p>I have not really found too many issues between the two OS’s to really cause me troubles.</p>\n<p>That and XP came with my new Dell… \uD83D\uDE1B</p>"
+  },
+  {
+    "id": 328,
+    "parent": 0,
+    "author_name": "Chris",
+    "author_url": "http://",
+    "date": "2005-05-24T07:59:00",
+    "type": "comment",
+    "content_html": "<p>If someone can tell me how to enable dual monitor support on Win Server 2003 I would be even happier with it.  My biggest win came when I found the Policy \"Disable CD burning features\".  Shut off that policy and now CD burning works just like XP.</p>"
+  },
+  {
+    "id": 329,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2005-05-24T08:02:00",
+    "type": "comment",
+    "content_html": "<p>I don’t think I had to \"enable\" dual monitor support.  When I got the correct video drivers installed (the XP drivers – but they worked), I was easily able to use 3 monitors.</p>"
+  }
+]

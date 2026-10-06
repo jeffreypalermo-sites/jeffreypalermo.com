@@ -1,0 +1,45 @@
+---
+wp_id: 362
+title: Share login and other state between ASP.NET and classic ASP – level 300
+slug: share-login-and-other-state-between-asp-net-and-classic-asp-level-300
+permalink: /2005/12/share-login-and-other-state-between-asp-net-and-classic-asp-level-300/
+date: 2005-12-26T21:35:00
+date_utc: 2005-12-26T21:35:00Z
+modified: 2005-12-26T21:35:00
+format: html
+excerpt: Sharing a login (some call it single sign-on) between ASP.NET and classic ASP takes quite a bit of thought. Even if you have a single web application with 1 .asp and 1 .aspx, the two are running in completely separate memory spaces. You can’t share Session, or any other piece of information. Only shared resources […]
+comments_open: true
+---
+<p>Sharing a login (some call it single sign-on) between ASP.NET and<br>
+classic ASP takes quite a bit of thought.&nbsp; Even if you have a<br>
+single web application with 1 .asp and 1 .aspx, the two are running in<br>
+completely separate memory spaces.&nbsp; You can’t share Session, or<br>
+any other piece of information.&nbsp; Only shared resources can be<br>
+accessed by both.&nbsp; Shared resources could include:</p>
+<ul>
+<li>File sytem</li>
+<li>Database</li>
+<li>Registry</li>
+<li>Available services (Web services, COM, queues, etc).</li>
+</ul>
+<p>That last bullet point is what you want to concentrate on.&nbsp; Using<br>
+the file system or database to act as a Session object substitute is<br>
+not something I would recommend even if it would technically<br>
+work.&nbsp; I would recommend against the registry as well since it’s<br>
+just a specialized database.</p>
+<p>Web services would allow you to expose anything inside the ASPX memory<br>
+space, but web services are currently the slowest way to communicate<br>
+between processes, so consider the pros and cons before deciding to use<br>
+them.</p>
+<p>COM+ components are services in themselves, and communications with<br>
+them are fast, so they provide a unique way to communicate between<br>
+applications without sacrificing performance.&nbsp; I’d recommend<br>
+porting ASP to ASP.NET, but for a time, it might be necessary to make<br>
+the two work together.</p>
+<p>Using COM or COM+, you can share .Net libraries with your ASP<br>
+applications, and if you have your .Net library run as a COM+<br>
+application on it’s own, it could hold application state that could be<br>
+shared between the ASP and ASP.NET.&nbsp; If you use this approach, try<br>
+to minimize the amount of shared state and only use it as a temporary<br>
+means while you convert your ASP application to ASPX.</p>
+<p>Hint:&nbsp; Regasm.exe is a tool for exposing your .Net libraries as COM.</p>

@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1556,
+    "parent": 0,
+    "author_name": "Joe",
+    "author_url": "http://",
+    "date": "2007-05-03T22:51:26",
+    "type": "comment",
+    "content_html": "<p>That really was a piss-poor decision on Microsof’s part.  .Net 3.0 and (what’s being touted as) 3.5 both run on CLR v2?  Way to go marketing, and high-fives to whichever tech guys didnt dissuade them.</p>"
+  },
+  {
+    "id": 1557,
+    "parent": 0,
+    "author_name": "Javier Lozano",
+    "author_url": "http://blog.lozanotek.com",
+    "date": "2007-05-04T02:03:24",
+    "type": "comment",
+    "content_html": "<p>What’s the requirement for WCF that needs the .NET SDK? I have a couple of .NET 3.0 apps at work (using WCF and WF) but the SDK is not installed on the client’s machines.</p>"
+  },
+  {
+    "id": 1558,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-05-04T12:37:35",
+    "type": "comment",
+    "content_html": "<p>@Javier,<br>\nI need the .Net 2.0 SDK on machines that need to build the .Net 3.0 app (CruiseControl.net server, etc).  </p>\n<p>I don’t need the SDK on production servers or client machines.</p>"
+  }
+]

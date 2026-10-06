@@ -1,0 +1,19 @@
+---
+wp_id: 1008
+title: Cropper now works on Vista x64 – new release posted today
+slug: cropper-now-works-on-vista-x64-new-release-posted-today
+permalink: /2009/02/cropper-now-works-on-vista-x64-new-release-posted-today/
+date: 2009-02-19T22:03:20
+date_utc: 2009-02-19T22:03:20Z
+modified: 2009-02-19T22:03:20
+format: html
+categories:
+- blog
+excerpt: Brian Scott made me a committer on the Cropper open source project, so I have committed a fix for Vista x64 and made an incremental release that contains this fix. With Cropper 1.9.1, Cropper would run as a .Net Framework x64 application, but because some of the necessary libraries are Win32 libraries, the utility would […]
+comments_open: true
+---
+<p><a href="http://blogs.geekdojo.net/brian/default.aspx">Brian Scott</a> made me a committer on the <a href="http://www.codeplex.com/cropper">Cropper</a> open source project, so I have committed a fix for Vista x64 and made an incremental release that contains this fix.</p>
+<p>With <a href="http://www.codeplex.com/cropper/Release/ProjectReleases.aspx?ReleaseId=2231">Cropper 1.9.1</a>, Cropper would run as a .Net Framework x64 application, but because some of the necessary libraries are Win32 libraries, the utility would crash when used on Vista x64.</p>
+<p>The fix for this problem is to tell .Net that this needs to be a .Net Framework x86 application since it depends on Win32 APIs.&nbsp; For those who have never had to worry about this particular distinction, the setting is in project properties.&nbsp; Setting x86 explicitly instead of “any cpu” gives the .Net Framework more guidance when creating the AppDomain and loading assemblies.</p>
+
+<p><img loading="lazy" decoding="async" height="248" src="https://i0.wp.com/jeffreypalermo.com/files/media/image/WindowsLiveWriter/CroppernowworksonVistax64newreleaseposte_C03B/CropperCapture%5B5%5D%5B9%5D.jpg?resize=570%2C248" width="570" align="left"></p>

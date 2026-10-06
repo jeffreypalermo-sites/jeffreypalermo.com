@@ -1,0 +1,39 @@
+---
+wp_id: 67
+title: At last, I managed to convert my v1.1 web project to v2.0 (NOT 100% backwards compatible) – level 300
+slug: at-last-i-managed-to-convert-my-v1-1-web-project-to-v2-0-not-100-backwards-compatible-level-300
+permalink: /2004/08/at-last-i-managed-to-convert-my-v1-1-web-project-to-v2-0-not-100-backwards-compatible-level-300/
+date: 2004-08-17T17:47:00
+date_utc: 2004-08-17T17:47:00Z
+modified: 2004-08-17T17:47:00
+format: html
+excerpt: 'This is a chronicle of my adventure and probably indicative of some issues that you might face: I opened my project file which caused VS 2005 to run my project through it’s converter The converter pulls all my class files into the Code directory and converted all my code-behind classes to partial classes that compiled […]'
+comments_open: true
+---
+<p>This is a chronicle of my adventure and probably indicative of some issues that you might face:</p>
+<ul><br>
+<li>I opened my project file which caused VS 2005 to run my project through it’s converter</li><br>
+<ul><br>
+<li>The converter pulls all my class files into the Code directory and converted all my code-behind classes to partial classes that compiled with the ascx and aspx files</li></ul><br>
+<li>I tried to run the project:&nbsp; NO GO.</li><br>
+<ul><br>
+<li>I was using &lt;head id=“head“ runat=“server“/&gt; to expose the &lt;head/&gt; element to the server so I could programmatically add &lt;title/&gt; and other elements.&nbsp; Since v2.0 now has a Head property built in, my code is broken in this state.</li></ul><br>
+<li>I refactored my code to use the new Head property, and I stripped out my own implementation of this feature.</li><br>
+<li>I tried to build my web site (which doesn’t produce a .dll by the way), it just does compile-time checking, and I was made aware of several more “errors“ throughout the site:</li><br>
+<ul><br>
+<li>My base page (in the Code directory) could not see any of my UserControl types – every page in my site has to be able to dynamically load one particular user control, and I was referencing that type in my base page.&nbsp; Since code outside the Code directory is not compiled until runtime, my base page had no visibility to that type; therefore, it could not compile.</li><br>
+<ul><br>
+<li>A side-effect of the code-behind model is a hierarchy of page and control inheritence.&nbsp; Every user control gets its own base class compiled into the assembly at compile time.&nbsp; You end up with this strongly-typed web library of all your user controls.&nbsp; Pages can reference controls in code, user controls can reference other user controls, etc.&nbsp; When you take that away and make all code dynamically compiled at runtime, you no longer have that library of classes at compile time, and your coding is limited.</li></ul></ul><br>
+<li>I retrofitted code-behind to my user control by making a base user control class (in the Code directory) and having the ascx inherit from that class.&nbsp; Then I can reference that base user control class in my base page and work with it.&nbsp; Remember, code-behind just mandates a base page for every control and page.</li><br>
+<li>I refactored all my code to reference the base page type instead of the actual user control type (which really doesn’t exist until it’s compiled just before runtime).</li><br>
+<li>I ran my web site, and I received a reflection exception (could not find my assembly).</li><br>
+<ul><br>
+<li>In my project, I define a web user abstract class that inherits from GenericPrincipal.&nbsp; For the app to run, I have to be able to instantiate a user class that inherits my abstract class.&nbsp; Since any class from any library could provide this user class, I have config information with the assembly name and fully qualified type.&nbsp; I use reflection to instatiate this type at runtime.&nbsp; With VS 2003, I knew exactly what my web assembly .dll was going to be called, so it was a no-brainer.&nbsp; With Whidbey, you don’t have a .dll until runtime, and then it’s&nbsp;a temporary .dll.&nbsp; </li></ul><br>
+<li>I refactored my project and broke off the entire Code directory into a class library project within the same solution.&nbsp; This way I could guarantee the name of the assembly and perform the proper reflection code to instatiate my type.</li><br>
+<li>I ran the web site, and it worked!</li><br>
+<li>I proceeded to log in, and my site went into an infinite loop.&nbsp; The following is a REAL BREAKING CHANGE!</li><br>
+<ul><br>
+<li>When a user logs in, (upon authentication changing) I do a Server.Transfer(Request.Path, true) to start the request over fresh with the newly authenticated user.&nbsp; I do this because my login control is on every page instead of having a page as a dedicated login page (which would start a new request by going to another page).&nbsp; I pass true as the second parameter so that the querystring would be preserved.&nbsp; This is a very valuable feature.&nbsp; The problem with this in v2.0 is that this feature has been modified.&nbsp; Now, with that true parameter, both the querystring AND form variables are preserved and usable in the next request.&nbsp; This is a huge problem because when the user logs in with my login form, the page posts back and sends the data in the Form collection.&nbsp; The page authentications and does&nbsp;a Server.Transfer(. . . , true) and now sends the same form data to the next request (which logs the user in again and repeats the process all over again).&nbsp; This results in an infinite loop.</li></ul><br>
+<li>I changed the line to Server.Transfer(Request.Path, false) so that the querystring or form is not sent, and all is well.&nbsp; My app seems to be functioning as normal.&nbsp; I probably will find some other issues, but for now it’s working.&nbsp; Of course, now if the user has some querystring data, and they log in, that data will be lost.&nbsp; I may have to resort to a Response.Redirect, but I’m trying to avoid it.</li></ul>
+<p>100% backwards compatible?&nbsp; Nope.&nbsp; The addition of the Head property and the Server.Transfer() change are the two Framework breaking changes I’ve found, but the whole elimination of code-behind is where I believe a lot of people will have problems.&nbsp; Honestly, it will take a while for everyone to wrap their brains around the change and realize that their apps are breaking because they don’t have a supporting class library as they did with all their code-behind classes.&nbsp; In those cases where compile time referencing is&nbsp;a must, we can put our code-behind files in the Code directory, and they will dynamically compile.&nbsp; This isn’t an ideal solution, though because then the code files and the ascx files are physically seperated from each other.</p>
+<p>There are several bugs posted against Whidbey regarding this, and I’ve contributed one to suggest that dynamically compiled directories be configurable:&nbsp; Why “Code”.&nbsp; I may want my “Foo” directory to be dynamically compiled.&nbsp; What I would really like to see is for an explicit build process in Whidbey as their is in VS 2003.&nbsp; I want my web app to be compiled into a .dll in my bin folder.&nbsp; I want to know what the assembly name is going to be.</p>

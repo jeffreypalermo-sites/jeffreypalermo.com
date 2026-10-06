@@ -1,0 +1,11 @@
+[
+  {
+    "id": 239,
+    "parent": 0,
+    "author_name": "Eric Newton",
+    "author_url": "http://",
+    "date": "2005-01-19T09:56:00",
+    "type": "comment",
+    "content_html": "<p>good idea, and if you use the builtin textwritertracelistener that can be instantiated via the app’s config, then the output for the default still gives meaningful info.</p>\n<p>(heres what I use to capture all trace info to a trace.log file:</p>\n<p>&lt;system.diagnostics&gt;<br>\n\t&lt;switches&gt;<br>\n\t\t&lt;add name=\"Ensoft.QuoteSys.Parsing\" value=\"4\" /&gt;<br>\n\t&lt;/switches&gt;<br>\n\t&lt;trace autoflush=\"true\" indentsize=\"4\"&gt;<br>\n\t\t&lt;listeners&gt;<br>\n\t\t\t&lt;add name=\"myListener\" type=\"System.Diagnostics.TextWriterTraceListener\" initializeData=\"logstrace.log\" /&gt;<br>\n\t\t&lt;/listeners&gt;<br>\n\t&lt;/trace&gt;<br>\n&lt;/system.diagnostics&gt;</p>\n<p>the Value=\"4\" sets the TraceLevel to TraceVerbose</p>"
+  }
+]

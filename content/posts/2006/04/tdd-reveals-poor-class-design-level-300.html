@@ -1,0 +1,41 @@
+---
+wp_id: 414
+title: TDD reveals poor class design – level 300
+slug: tdd-reveals-poor-class-design-level-300
+permalink: /2006/04/tdd-reveals-poor-class-design-level-300/
+date: 2006-04-13T03:29:00
+date_utc: 2006-04-13T03:29:00Z
+modified: 2006-04-13T03:29:00
+format: html
+tags:
+- agile
+- coding-principles
+excerpt: If a class is well-designed, it will be easy to unit test. Good design speeds up unit testing, and TDD reveals bad design. In this way, TDD speeds up unit testing. For a very simple example, consider a controller class that takes a domain object and saves it to the database using a data access […]
+comments_open: true
+---
+<p>If a class is well-designed, it will be easy to unit test.&nbsp; Good<br>
+design speeds up unit testing, and TDD reveals bad design.&nbsp; In<br>
+this way, <a href="/blogs/jeffrey.palermo/archive/2006/04/12/142748.aspx">TDD speeds up unit testing</a>.</p>
+<p>For a very simple example, consider a controller class that takes a<br>
+domain object and saves it to the database using a data access<br>
+class.&nbsp; When test-driving this code, it will be impossible to<br>
+create a unit test for this if it is poorly designed.&nbsp; Consider<br>
+this poor design:&nbsp; the SaveXX() method instantiates the data<br>
+access class and passes the domain object to it for saving.&nbsp; With<br>
+TDD it would be impossible to write a unit test for that because you<br>
+can’t fake the data access class, and you must test the controller<br>
+class apart from the dependency on the data access layer.</p>
+<p>Because of the major roadblock in designing a test for code designed<br>
+poorly, it forces the developer to come up with a better design.&nbsp;<br>
+This better design will be a cinch to unit test because it will be<br>
+loosely coupled.&nbsp; <a href="http://en.wikipedia.org/wiki/Loosely_coupled">Loose coupling</a> is essential for unit testing.</p>
+<p>To write a test for this controller class, I’ll have to define an<br>
+interface for this portion of the data access layer.&nbsp; I’ll inject<br>
+this interface into the constructor of the controller class and call it<br>
+in my SaveXX() method.&nbsp; With this design pending, I can fake the<br>
+interface in my test and assert that it was called with the correct<br>
+object.&nbsp; This will be my test.&nbsp; Next, I’ll write the code<br>
+that makes the test pass.&nbsp; </p>
+<p>Poorly designed code is hard to test, and thinking about testability<br>
+will force a more thoughtful design.&nbsp; I would even go as far to<br>
+say that at the class level, a testable class is a well-designed class.</p>

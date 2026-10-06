@@ -1,0 +1,20 @@
+[
+  {
+    "id": 2028,
+    "parent": 0,
+    "author_name": "Sean Chambers",
+    "author_url": "http://www.lostechies.com/blogs/sean_chambers/default.aspx",
+    "date": "2007-09-26T00:04:22",
+    "type": "comment",
+    "content_html": "<p>Jeff,</p>\n<p>Excellent post! I wish I would have had this when I first started with subversion.</p>\n<p>One thing I would like to add and tell me what you think of this. In the project root I have an additional folder “doc”, to make a structure like this:</p>\n<p>branches/<br>\ndoc/<br>\ntags/<br>\ntrunk/</p>\n<p>In the doc folder I place photoshop files, word documents or any other files that pertain to the project but do not belong in the trunk. This way, if you have a number of very large psd files (for a recent cms I built) you don’t have to branch/tag these files all over the place when you really don’t need to.</p>\n<p>I think it goes against the norm but I have found it to work well. What do you think?</p>"
+  },
+  {
+    "id": 2029,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-09-26T00:47:44",
+    "type": "comment",
+    "content_html": "<p>@Sean,<br>\nI wouldn’t put docs at the root because you forfeit the ability to version the docs with the code.  Perhaps you need to do a production bugfix and need to branch – the change requires a doc change – how do you change the docs?  You can’t just use the HEAD of the root because the docs describe features not yet released.</p>\n<p>The concern about tagging and disk space is almost irrelevant.  I’ve never tested SVN on tagging/branching size but SVN uses binary diffing for storage, so the repository size will not grow out of control.</p>\n<p>I would put docs INSIDE the trunk.</p>"
+  }
+]

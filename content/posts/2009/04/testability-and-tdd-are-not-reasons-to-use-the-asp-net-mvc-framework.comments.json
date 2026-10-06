@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2586,
+    "parent": 0,
+    "author_name": "Brendan Enrick",
+    "author_url": "http://brendan.enrick.com/",
+    "date": "2009-05-05T13:06:11",
+    "type": "comment",
+    "content_html": "<p>Great Post. I agree that they are not reasons to adopt it, but I think that all the nice things about MVC make it more testable. I enjoy having control of the code I write.</p>"
+  }
+]

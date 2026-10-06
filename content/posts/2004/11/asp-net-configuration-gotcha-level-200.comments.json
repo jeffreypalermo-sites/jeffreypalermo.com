@@ -1,0 +1,29 @@
+[
+  {
+    "id": 229,
+    "parent": 0,
+    "author_name": "Dave",
+    "author_url": "http://",
+    "date": "2004-11-30T10:33:00",
+    "type": "comment",
+    "content_html": "<p>Yep, you’re right. Gotta always remember that config files are in XML which is case-sensitive. Has happened to me more than enough to count.</p>"
+  },
+  {
+    "id": 230,
+    "parent": 0,
+    "author_name": "NoName",
+    "author_url": "http://",
+    "date": "2004-11-30T10:57:00",
+    "type": "comment",
+    "content_html": "<p>Use C# it will give an error</p>"
+  },
+  {
+    "id": 231,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-11-30T11:36:00",
+    "type": "comment",
+    "content_html": "<p>I do use C#.  The call to GetConfig() won’t generate an exception.</p>"
+  }
+]

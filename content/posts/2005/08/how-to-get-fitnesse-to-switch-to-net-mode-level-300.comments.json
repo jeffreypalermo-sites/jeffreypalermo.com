@@ -1,0 +1,11 @@
+[
+  {
+    "id": 422,
+    "parent": 0,
+    "author_name": "Steve Donie",
+    "author_url": "http://donie.endofinternet.org/",
+    "date": "2005-08-16T14:31:20",
+    "type": "comment",
+    "content_html": "<p>Very timely. Just installed FitNesse on Friday and we’re doing .NET development, so this was a helpful kickstart. Just ordered the FIT book by Cunnigham &amp; Mugbridge also, so I hope that is helpful. The docs online seem somewhat cryptic. </p>\n<p>I need to do some reading up on how to get a .NET suite set up. I know there is an example in there, so I’m gonna go read that. Maybe I’ll write that up on my own blog. </p>"
+  }
+]

@@ -1,0 +1,200 @@
+---
+wp_id: 448
+title: Bread and butter Resharper (demo) – level 300
+slug: breadandbutterresharper
+permalink: /2006/08/breadandbutterresharper/
+date: 2006-08-03T02:01:00
+date_utc: 2006-08-03T02:01:00Z
+modified: 2006-08-03T02:01:00
+format: html
+tags:
+- tips-tricks
+excerpt: I’ve been using Resharper full-time for a year. I’d dabbled with it before then, but I didn’t learn enough to get the full benefit. I want to thank Steve Donie and Jeremy Miller for helping me to learn the full featureset of the product. I can’t imagine coding without it now. I’m using Resharper 2.0 […]
+comments_open: true
+---
+<div class="Section1"><span>I’ve been using <a href="http://www.jetbrains.com/resharper/">Resharper</a> full-time for a year.&nbsp; I’d dabbled<br>
+with it before then, but I didn’t learn enough to get the full benefit.&nbsp; I want<br>
+to thank <a href="http://donie.homeip.net:8080/pebble/Steve/">Steve Donie</a> and <a href="/blogs/jeremy.miller/default.aspx">Jeremy Miller</a> for helping me to learn the full<br>
+featureset of the product.&nbsp; I can’t imagine coding without it now.&nbsp; I’m using<br>
+<a href="http://www.jetbrains.com/resharper/">Resharper 2.0</a> (with VS 2003 as well as VS 2005), and I’m not going to talk<br>
+about what features are different from 1.5 because v1.5 has all the features I<br>
+will talk about here.&nbsp;<br>
+</span>
+
+<p><span>Resharper is a refactoring tool, yes, but that seems to be a<br>
+small portion of it.&nbsp; It is an overall productivity tool.&nbsp; It does some<br>
+code-generation, some fill-in-the-blank, some extract method/variable, some<br>
+move method, some create method/property/constructor, and a whole lot of<br>
+helping you with the job of programming.&nbsp;<br>
+    You can certainly use the mouse with<br>
+this tool if you wish, but the shortcut keys make me so productive on the<br>
+keyboard that I don’t have to slow down and reach for the mouse.</span></p>
+
+<p><span>I’m going to go over the features that I use.&nbsp; I’ve created a test project using the Movie application that comes as an example in VS 2005.&nbsp; This is not<br>
+an exhaustive list, and it isn’t every dialog, but I use these all the time.&nbsp;<br>
+Every screenshot is inside Visual Studio in the code window.&nbsp; Here is the menu<br>
+for Re#er.&nbsp; It has the standard things.</span></p>
+<p>
+        <span><br>
+            <img decoding="async" src="/photos/jeffrey.palermo/images/147901/original.aspx"></span>&nbsp;</p>
+
+<p><b><span>Optimize usings</span></b></p>
+<p><span>You’ll notice in the screenshot that two using statements<br>
+are grayed out.&nbsp; These are unnecessary.&nbsp; There is no code that requires these.&nbsp;<br>
+They are visual noise.&nbsp; Let’s get rid of them.&nbsp; <b>CTRL+ALT+O</b></span></p>
+<p>
+        <span><b><br>
+            <img decoding="async" src="/photos/jeffrey.palermo/images/147903/original.aspx"></b></span>&nbsp;</p>
+
+<p><b><span>Reformat code</span></b></p>
+<p><span>Resharper has so many formatting options that (if it’s<br>
+important to you) you can share settings with the team so that all code looks<br>
+uniform.&nbsp;<br>
+    But that not all there is.&nbsp; Re#er will include optimize usings,<br>
+shorten System.DateTime to DateTime, remove unnecessary “this”<br>
+keywords and put your “virtual public void” back to “public<br>
+virtual void” (if you have a boneheaded programmer that left it like<br>
+that). <b>CTRL+ALT+F</b></span></p>
+<p>
+        <span><b><br>
+            <img decoding="async" src="/photos/jeffrey.palermo/images/147905/425x191.aspx"></b></span>&nbsp;</p>
+
+<p><b><span>Find code file</span></b></p>
+<p><span>Why go for the solution explorer when you know the class you<br>
+want.&nbsp;<br>
+    Just start typing, and Re#er will narrow down the list as you type.&nbsp; You<br>
+can take a shortcut and type “*Tester” to find all your NUnit<br>
+classes.&nbsp;<br>
+    <b>CTRL+N</b></span></p>
+<p>
+        <span><b><br>
+            <img decoding="async" src="/photos/jeffrey.palermo/images/147891/original.aspx"></b></span>&nbsp;</p>
+
+<p><b><span>Find file</span></b></p>
+<p><span>Now you need to open one of your NHibernate mappings, but<br>
+it’s not a code file.No problem.&nbsp; &nbsp; &nbsp; Just narrow down from all files.&nbsp; <b>CTRL+SHIFT+N</b></span></p>
+<p>
+        <span><b><br>
+            <img decoding="async" src="/photos/jeffrey.palermo/images/147892/original.aspx"></b></span>&nbsp;</p>
+
+<p><b><span>Find usages</span></b></p>
+<p><span>How many times have you wondered how many classes in your<br>
+solution are calling a particular method on IConfiguration.&nbsp; Is it used at<br>
+all?&nbsp;<br>
+    How much?&nbsp; Do you have any hope to change it without major regression?&nbsp;<br>
+Find out who is using it easily and jump right to the usage, all from the code<br>
+window.&nbsp;<br>
+    <b>CTRL+ALT+F7</b></span></p>
+<p>
+        &nbsp;<img decoding="async" src="/photos/jeffrey.palermo/images/147895/425x82.aspx"></p>
+<p><b><span>Context-sensitive refactoring</span></b></p>
+<p><span>You will typically know what you want to do, and Re#er will<br>
+be there waiting for you.&nbsp; Stick the cursor on a member name and choose from<br>
+the refactorings available there.&nbsp; One of my favorites is “Change<br>
+Signature”.&nbsp;<br>
+    It makes it easy to add an extra parameter to a class<br>
+constructor, and Re#er will add it in all the places where that constructor was<br>
+used.&nbsp; <b>CTRL+SHIFT+R</b></span></p>
+<p>
+        <span><b><br>
+            <img decoding="async" src="/photos/jeffrey.palermo/images/147887/original.aspx"></b></span>&nbsp;</p>
+
+<p><b><span>Error analysis</span></b></p>
+<p><span>Ever wondered if you needed to clean up the class a bit?&nbsp;<br>
+Re#er keeps a running tab on errors and warnings in the upper-right hand corner<br>
+of the code window.&nbsp; When things are good, it will stay green.&nbsp; It’s always<br>
+there.</span></p>
+<p>
+        <span><br>
+            <img decoding="async" src="/photos/jeffrey.palermo/images/147890/original.aspx"></span>&nbsp;</p>
+
+<p><b><span>Find subclass</span></b></p>
+<p><span>You know you need to go to your default implementation of<br>
+IConfiguration.&nbsp;<br>
+    You know, the one that actually reads from app.config?&nbsp; Your<br>
+entire application uses IConfiguration since you don’t want to tightly-couple<br>
+to the app.config file.&nbsp;<br>
+    Sometimes you just want to pop over to whoever<br>
+implements the interface or inherits from a class.No problem.&nbsp; &nbsp; &nbsp; Place the<br>
+cursor on the interface (or class) name and find who inherits.&nbsp; <b>CTRL+ALT+B</b></span></p>
+<p>
+        <span><b><br>
+            <img decoding="async" src="/photos/jeffrey.palermo/images/147894/original.aspx"></b></span>&nbsp;</p>
+
+<p><b><span>Context help</span></b></p>
+<p><span>Wherever you are, if Re#er can help, it will show you a<br>
+yellow lightbulb or pop up a suggestion.&nbsp; If you like what it shows you, give<br>
+Re#er the go ahead and continue without missing a beat.&nbsp; in this case, I need<br>
+to add a using statement.&nbsp;<br>
+    Isn’t it annoying to stop your flow just to go up to<br>
+the top to adding a using?&nbsp;<br>
+    Now you don’t have to.&nbsp; With all the<br>
+context-sensitive helps, and whenever there is a lightbulb, just press:&nbsp; <b>ALT+ENTER</b></span></p>
+<p>
+        <span><b><br>
+            <img decoding="async" src="/photos/jeffrey.palermo/images/147888/original.aspx"></b></span>&nbsp;</p>
+
+<p><b><span>Line-level refactoring</span></b></p>
+<p><span>The red lightbulb is a context-sensitive help that is also a<br>
+warning.&nbsp;<br>
+    Go ahead and fix the error quickly (or just let Re#er do it for<br>
+you).&nbsp; In this case, I really wanted to match up types, but I made a mistake.&nbsp; <b>ALT+ENTER</b></span></p>
+<p>
+        &nbsp;<img decoding="async" src="/photos/jeffrey.palermo/images/147897/original.aspx"></p>
+<p><b><span>Live templates</span></b></p>
+<p><span>These are like code snippets but much simpler, and they have<br>
+been a Re#er feature for a long time, so just because VS 2005 has a similar<br>
+feature that is harder to use doesn’t mean that I should stop using my<br>
+templates.&nbsp; I have created templates for common things like creating a new<br>
+NUnit test fixture and a test method.&nbsp; In this example, I have typed<br>
+“foreach”, and Re#er awaits to take it from there.&nbsp; Here is a before<br>
+and after.&nbsp; <b>CTRL+J</b></span></p>
+<p>
+        <span><b><br>
+            <img decoding="async" src="/photos/jeffrey.palermo/images/147899/original.aspx"></b></span>&nbsp;</p>
+
+<p><b><span>Name suggestions</span></b></p>
+<p><span>I always call my IDomainRepository “repository”<br>
+when using it in a method.&nbsp; I like descriptive variable names, but it takes<br>
+more typing. . . but not with Re#er.&nbsp; After the type name, just ask Re#er for a<br>
+name.&nbsp;<br>
+    Pick from the list.&nbsp; <b>CTRL+SPACE</b></span></p>
+<p>
+        <b><span>&nbsp;<img decoding="async" src="/photos/jeffrey.palermo/images/147902/original.aspx"></span></b>&nbsp;</p>
+<p><b><span>Show Class Members</span></b></p>
+<p><span>When you are in a class you want to remember what is there<br>
+and jump to it quickly.&nbsp; Use Re#er to move around quickly.&nbsp; <b>CTRL+F12</b></span></p>
+<p>
+        <span><b><br>
+            <img decoding="async" src="/photos/jeffrey.palermo/images/147906/425x167.aspx"></b></span>&nbsp;</p>
+
+<p><b><span>Recent files</span></b></p>
+<p><span>If you want to jump between files that you have recently<br>
+opened, just pull up the list and arrow down to the one you want.&nbsp; <b>CTRL+E</b></span></p>
+<p>
+        <span><b><br>
+            <img decoding="async" src="/photos/jeffrey.palermo/images/147904/original.aspx"></b></span>&nbsp;</p>
+
+<p><b><span>Dead code detection</span></b></p>
+<p><span>If code is dead, delete it.&nbsp; It’s never a good idea to save<br>
+code for a rainy day.&nbsp; It just pollutes the codebase.&nbsp; Re#er will color it gray<br>
+for you.&nbsp; Let it help you keep the codebase clean.&nbsp; </span></p>
+<p>
+        <span><br>
+            <img decoding="async" src="/photos/jeffrey.palermo/images/147889/original.aspx"></span>&nbsp;</p>
+
+<p><b><span>Generate Code</span></b></p>
+<p><span>I saved this one for last because it’s my favorite one.&nbsp;<br>
+This is a micro-code-generator.&nbsp; It will create a property/constructor, etc<br>
+exactly the way I would have typed it.&nbsp; In that case, why do I want to type<br>
+it.&nbsp;<br>
+    Imagine this:&nbsp; You have a new domain class with 8 fields.&nbsp; Do you really<br>
+want to type those 8 boring properties and a constructor?&nbsp; I don’t.&nbsp; A few<br>
+shortcut keys, and the class is done.&nbsp; <b>ALT+INSERT</b></span></p>
+<p>
+        <span><b><br>
+            <img decoding="async" src="/photos/jeffrey.palermo/images/147896/original.aspx"></b></span> </p>
+
+
+<p>[tags: programmer, programming, resharper, jetbrains, productivity, c#, .net, vs2005, visualstudio]</p>
+</div>

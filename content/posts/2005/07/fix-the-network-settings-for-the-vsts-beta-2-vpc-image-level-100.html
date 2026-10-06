@@ -1,0 +1,43 @@
+---
+wp_id: 274
+title: Fix the network settings for the VSTS Beta 2 VPC image – level 100
+slug: fix-the-network-settings-for-the-vsts-beta-2-vpc-image-level-100
+permalink: /2005/07/fix-the-network-settings-for-the-vsts-beta-2-vpc-image-level-100/
+date: 2005-07-01T12:25:00
+date_utc: 2005-07-01T12:25:00Z
+modified: 2005-07-01T12:25:00
+format: html
+excerpt: 'At Tech Ed, Microsoft handed out DVDs with a VPC image ready to go with: Windows Server 2003 Standard VS Team Suite (included all of Team System and Whidbey). Sql Server 2005 April CTP Microsoft Office 2003 Visual Studio Tools for Office. All of it expires in Sept 2006. This is the one of the […]'
+comments_open: true
+---
+<p>At Tech Ed, Microsoft handed out DVDs with a VPC image ready to go with:</p>
+<ul>
+<li>Windows Server 2003 Standard</li>
+<li>VS Team Suite (included all of Team System and Whidbey).</li>
+<li>Sql Server 2005 April CTP</li>
+<li>Microsoft Office 2003</li>
+<li>Visual Studio Tools for Office.</li>
+<li>All of it expires in Sept 2006.</li>
+</ul>
+<p>This is the one of the best ideas that Microsoft has had!&nbsp; Many<br>
+were feeling the pain of beta installs, especially with Team System, so<br>
+now they release VPC images&nbsp; that are ready to be evaluated.&nbsp;<br>
+I’m loving it.&nbsp; I’m using this image for all my .Net 2.0 Beta 2<br>
+goodness, and I didn’t have to spend hours setting it up.&nbsp; Hop<br>
+over to Microsoft or talk to your local Developer Evangelist (or User<br>
+Group) to get your copy of the DVD.</p>
+<p>I was frustrated, however, that my image couldn’t get on the<br>
+Internet.&nbsp; After some investigating, I discovered that the network<br>
+connection had an explicit IP and a gateway of 198.168.1.1.&nbsp; I’ve<br>
+made that typo before (198 instead of 192), but I just cleared it out,<br>
+use DHCP, and now my image can get to the Internet.&nbsp; A small<br>
+oversite on the image-creators, but an easy fix.&nbsp; I love VPC for<br>
+beta software!&nbsp; I’m diving into all the ASP.NET security<br>
+features.&nbsp; </p>
+<p>A _great_ idea with 2.0 is a machine-wide web.config file located at:<br>
+%WinDir%Microsoft.NETFrameworkv1.1.4322CONFIG.&nbsp; If you have a<br>
+team of developers that are in charge of an app, you can set the<br>
+machine to High trust instead of Full, turn override off, and they<br>
+won’t be able to set their app to Full trust (this assumes that you<br>
+don’t want them running arbitrary Win32 API calls from their web pages,<br>
+or COM interop).</p>

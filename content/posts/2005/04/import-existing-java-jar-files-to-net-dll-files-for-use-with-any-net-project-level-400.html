@@ -1,0 +1,22 @@
+---
+wp_id: 211
+title: Import existing Java .jar files to .Net .dll files for use with any .Net project – level 400
+slug: import-existing-java-jar-files-to-net-dll-files-for-use-with-any-net-project-level-400
+permalink: /2005/04/import-existing-java-jar-files-to-net-dll-files-for-use-with-any-net-project-level-400/
+date: 2005-04-06T12:55:00
+date_utc: 2005-04-06T12:55:00Z
+modified: 2005-04-06T12:55:00
+format: html
+excerpt: If you have existing .jar files from a Java application, and you need to use that existing business logic or rewrite it, wouldn’t it be nice if you could just leverage the existing package? You can with the JBImp utility. I recently had to do this, and it was a breeze. I ran the utility on […]
+comments_open: true
+---
+<p>If you have existing .jar files from a Java application, and you need to use<br>
+that existing business logic or rewrite it, wouldn’t it be nice if you could<br>
+just leverage the existing package?&nbsp; </p>
+<p>You can with the <a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dv_vjsharp/html/vjgrfjavabinaryconverter.asp">JBImp</a>&nbsp;utility.&nbsp;<br>
+I recently had to do this, and it was a breeze.&nbsp; I ran the utility on my .jar,<br>
+and out came a managed .dll that I subsequently referenced and used in my .Net<br>
+app.</p>
+<p>According to the <a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dv_vjsharp/html/vjgrfjavabinaryconverter.asp">documentation</a>,<br>
+the utility actually converts the Java IL to MSIL at the bytecode level.&nbsp; It<br>
+sure did make the reuse picture a lot prettier.</p>

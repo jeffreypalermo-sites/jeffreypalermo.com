@@ -1,0 +1,42 @@
+---
+wp_id: 425
+title: VS 2005 Web Application Projects installed! *breaths a breath of fresh air* – level 100
+slug: vs-2005-web-application-projects-installed-breaths-a-breath-of-fresh-air-level-100
+permalink: /2006/05/vs-2005-web-application-projects-installed-breaths-a-breath-of-fresh-air-level-100/
+date: 2006-05-10T02:30:00
+date_utc: 2006-05-10T02:30:00Z
+modified: 2006-05-10T02:30:00
+format: html
+tags:
+- asp-net
+- tips-tricks
+excerpt: Upon hearing the announcement that Web Application Projects has been released, I wanted to get EZWeb converted over as soon as possible (I’m close to making another release). I’d been limping along with the default web site option in Whidbey, and I didn’t like it at all. First, you can download the VS 2005 add-in […]
+comments_open: true
+---
+<p><a href="/blogs/jeffrey.palermo/archive/2006/05/09/144373.aspx">Upon hearing the announcement that Web Application Projects has been released</a>, I wanted to get <a href="http://www.gotdotnet.com/workspaces/workspace.aspx?id=949a0c93-38f2-4bd2-9f69-a49bb3c7938d">EZWeb </a>converted<br>
+over as soon as possible (I’m close to making another release).&nbsp;<br>
+I’d been limping along with the default web site option in Whidbey, and<br>
+I didn’t like it at all.&nbsp; </p>
+<p>First, you can download the <a href="http://msdn.microsoft.com/asp.net/reference/infrastructure/wap/">VS 2005 add-in here</a>.&nbsp; There isn’t an automatic port of a VS 2005 website, but it was easy enough to do.&nbsp; Here were my steps:</p>
+<ol>
+<li>Add new web application project to my solution.&nbsp; 
+  </li>
+<li>In Win Explorer, copy the entire contents of my web site project to the web application folder.</li>
+<li>Delete my web site folder.</li>
+<li>Remove the website from my solution.</li>
+<li>Show all files in the web application.</li>
+<li>Explicitly include everything except bin and obj</li>
+<li>Add any assembly references necessary to the new project.</li>
+<li>Set any post-build events that you’ve been jerry-rigging up to this point.</li>
+<li>Run a build.&nbsp; You’ll notice it fails on control declarations in code-behind files.</li>
+<li><b>Right click on the web project and run “Convert to Web Application”.&nbsp; </b>This adds an explicit partial class to&nbsp; your code-behinds that hold your control declarations from the markup file.</li>
+<li>Run the build again.&nbsp; It passed for me at this point.&nbsp; I ran my application, and all was well.</li>
+<li>Run all unit tests and integration tests.&nbsp; They all passed for me.</li>
+</ol>
+<p>This project model is so much easier to use for real web applications<br>
+(that aren’t just web _sites_).&nbsp; Kudos to the ASP.NET team for<br>
+getting this patch out.</p>
+<p>If you are using Resharper 2.0 (beta), you’ll notice a slight<br>
+difference in navigating to files.&nbsp; CTRL+N will locate the ascx.cs<br>
+and ascx.designer.cs files since they are C# code files.&nbsp; To get<br>
+to the ascx files, you’ll need to use CTRL+SHIFT+N.</p>

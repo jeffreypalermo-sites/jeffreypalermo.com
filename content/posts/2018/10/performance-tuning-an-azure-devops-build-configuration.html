@@ -1,0 +1,35 @@
+---
+wp_id: 1402
+title: Performance tuning an Azure DevOps build configuration
+slug: performance-tuning-an-azure-devops-build-configuration
+permalink: /2018/10/performance-tuning-an-azure-devops-build-configuration/
+date: 2018-10-10T16:38:28
+date_utc: 2018-10-10T21:38:28Z
+modified: 2018-10-10T16:38:28
+format: html
+categories:
+- blog
+- devops
+excerpt: We’ve all seen the culprits that constantly add time to builds. One might observe that your NPM install or Nuget restore can take several minutes. I remember back to the times of CC.Net in 2005 when a small application build could happen in 45 seconds, including unit tests. And 10 minutes as a “thou shall […]
+comments_open: true
+---
+<div>We’ve all seen the culprits that constantly add time to builds.&nbsp; One might observe that your NPM install or Nuget restore can take several minutes.&nbsp; I remember back to the times of CC.Net in 2005 when a small application build could happen in 45 seconds, including unit tests.&nbsp; And 10 minutes as a “thou shall not go over this” threshold.&nbsp; So we cannot allow NPM or any other step to take minutes.&nbsp; We have to ferret that out.</div>
+<div></div>
+<div>The answer is the same as code performance profiling.&nbsp; Find out where every build is spending the same time doing work that adds no value or doesn’t vary often. Then we cache the result.&nbsp; For so many builds, these are the culprits that take time but typically aren’t the changes that are being tested from build to build:</div>
+<div>
+<ol>
+<li>Obtaining a build server (when choosing hosted build agents)</li>
+<li>Cloning the source</li>
+<li><span class="il">Package</span>&nbsp;<span class="il">restores</span></li>
+<li>Copying/archiving build artifacts</li>
+</ol>
+<div>Here are my common solutions for reducing these common culprits (I’d be interested to know how others have eliminated these time sucks)</div>
+<div>
+<ol>
+<li>Use our own Azure VMs as the build agents (running multiple agents on a single VM) – always available at a moments notice</li>
+<li>Let Azure Pipelines be a little less aggressive with cleaning source and instead have the build script delete the build directories at the beginning – removes need for a full clone and can just be a pull (works most of the time and requires probably a monthly purge for a clean clone, but saves SOOO much time)</li>
+<li>a) retain cloned working tree so that the previous&nbsp;<span class="il">package</span>&nbsp;<span class="il">restore</span>&nbsp;is used for subsequent builds or b) check in&nbsp;<span class="il">packages</span>&nbsp;so that&nbsp;<span class="il">package</span>&nbsp;<span class="il">restores</span>&nbsp;are not necessary for every build</li>
+<li>Once builds are working and reliable, only archive the build artifacts that are directly used by the release pipeline (typically the nuget&nbsp;<span class="il">packages</span>&nbsp;that house the application components)</li>
+</ol>
+</div>
+</div>

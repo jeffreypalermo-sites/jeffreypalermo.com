@@ -1,0 +1,165 @@
+---
+wp_id: 975
+title: ViewData mechanics and segmentation (excerpt from ASP.NET MVC in Action)
+slug: viewdata-mechanics-and-segmentation-excerpt-from-asp-net-mvc-in-action
+permalink: /2008/12/viewdata-mechanics-and-segmentation-excerpt-from-asp-net-mvc-in-action/
+date: 2008-12-27T01:36:32
+date_utc: 2008-12-27T01:36:32Z
+modified: 2008-12-27T01:36:32
+format: html
+categories:
+- blog
+excerpt: (excerpt from ASP.NET MVC in Action) Viewdata is the bag of state that is passed to a view. A view should get all the information it needs from the viewdata. This concept is implemented as a dictionary. It contains key/value pairs as well as some special properties, such as Model. Viewdata is accessible on the […]
+comments_open: true
+---
+<p>(excerpt from <a href="http://manning.com/palermo/">ASP.NET MVC in Action</a>)</p>
+<p><img decoding="async" src="https://i0.wp.com/jeffreypalermo.com/files/media/image/WindowsLiveWriter/ViewDatamechanicsandsegme.NETMVCinAction_1690/image%7B0%7D%5B1%5D.png?w=776" align="left"> </p>
+<p>Viewdata is the bag of state that is passed to a view. A view should get all the information it needs from the viewdata. This concept is implemented as a dictionary. It contains key/value pairs as well as some special properties, such as Model. Viewdata is accessible on the controller as well. The controller is responsible for filling the viewdata dictionary with objects, but action filters can add to the dictionary as well. When a view is executing, it will pull various object from viewdata while it is rendering. If an expected object is not present, then you will see the same type of exception present in any code using a dictionary collection in .Net.</p>
+<p>In Chapter 1, you saw a simple use of viewdata, so we will not repeat that here. In any non-trivial application, your view will be composed of layouts, a main view and many partials, possibly nested partials. It will help to know how viewdata is segmented among the views. For instance, it is important to consider a partial view that might be used by several other views. If the partial view needs an object in viewdata, whose responsibility is it to get the object into the dictionary? The following is an example that illustrates just what happens in this complex scenario. Take a moment to examine the source of the controller in listing 4.5, the Index.aspx view in listing 4.6, Partial.aspx in listing 4.7 and NestedPartial.aspx in listing 4.8. </p>
+<p><strong>Listing 4.5 The controller puts some objects into viewdata</strong> </p>
+
+<div>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#0000ff">using</span> System.Web.Mvc;
+
+<span style="color:#0000ff">namespace</span> ViewSamples.Controllers
+{
+    <span style="color:#0000ff">public</span> <span style="color:#0000ff">class</span> ViewDataController : Controller
+    {
+        <span style="color:#0000ff">public</span> ActionResult Index()
+        {
+            ViewData.Add(<span style="color:#006080">"one"</span>, <span style="color:#006080">"onevalue"</span>);
+            ViewData.Add(<span style="color:#006080">"two"</span>, <span style="color:#006080">"twovalue"</span>);
+            ViewData.Add(<span style="color:#006080">"three"</span>, <span style="color:#006080">"threevalue"</span>);
+            ViewData.Model = <span style="color:#006080">"3"</span>;
+            <span style="color:#0000ff">return</span> View();
+        }
+    }
+}
+</pre>
+</div>
+<p><strong>Listing 4.6 The Index.aspx view demonstrates the combinations of viewdata passing that are possible.</strong></p>
+<div>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">&lt;%@ Page Language=<span style="color:#006080">"C#"</span> AutoEventWireup=<span style="color:#006080">"true"</span> Inherits=<span style="color:#006080">"System.Web.Mvc.ViewPage"</span> %&gt;
+&lt;%@ Import Namespace=<span style="color:#006080">"System.Web.Mvc.Html"</span>%&gt;
+&lt;!DOCTYPE html PUBLIC <span style="color:#006080">"-//W3C//DTD XHTML 1.0 Transitional//EN"</span> <span style="color:#006080">"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"</span>&gt;
+&lt;html xmlns=<span style="color:#006080">"http://www.w3.org/1999/xhtml"</span> &gt;
+&lt;head runat=<span style="color:#006080">"server"</span>&gt;
+    &lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    <div>
+            This view:  
+            Model:  <br>
+            Model Type:  <br>
+            foreach (KeyValuePairstring, <span style="color:#0000ff">object</span>&gt; pair <span style="color:#0000ff">in</span> ViewData){%&gt;
+                View data  : <br>
+            
+            ViewDataDictionary hashcode: <br>
+            <hr>
+            PARTIAL
+            "partial"); %&gt;
+            <hr>
+            NESTED PARTIAL PASSING IN MODEL
+            "nestedpartial", 89); %&gt;
+            <hr>
+            
+            NESTED PARTIAL PASSING IN MODEL AND VIEWDATA
+            "nestedpartial", 89, <span style="color:#0000ff">new</span> ViewDataDictionary {{<span style="color:#006080">"first"</span>, <span style="color:#006080">"1"</span>} , {<span style="color:#006080">"second"</span>, <span style="color:#006080">"2"</span>}}); %&gt;
+            <hr>
+            
+            NESTED PARTIAL PASSING IN VIEWDATA
+            new ViewDataDictionary();
+                dictionary.Add(<span style="color:#006080">"first"</span>, <span style="color:#006080">"value"</span>);
+                dictionary.Model = 100;    
+        Html.RenderPartial(<span style="color:#006080">"nestedpartial"</span>, dictionary); %&gt;
+            <hr>            
+    </div>
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+</div>
+<p><strong>Listing 4.7 Partial.aspx is loaded as a partial and loads a partial itself</strong></p>
+<div>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">&lt;%@ Page Language=<span style="color:#006080">"C#"</span> AutoEventWireup=<span style="color:#006080">"true"</span>Inherits=<span style="color:#006080">"System.Web.Mvc.ViewPage"</span> %&gt;
+&lt;%@ Import Namespace=<span style="color:#006080">"System.Web.Mvc.Html"</span>%&gt;
+<div>
+    This view:  
+    Model:  <br>
+    Model Type:  <br>
+    foreach (KeyValuePairstring, <span style="color:#0000ff">object</span>&gt; pair <span style="color:#0000ff">in</span> ViewData){%&gt;
+        View data  : <br>
+    
+    ViewDataDictionary hashcode: <br>
+    <hr>
+    "nestedpartial"); %&gt;
+</div>
+</pre>
+</div>
+<p><strong>Listing 4.8 NestedPartial.aspx is loaded two views deep</strong></p>
+<div>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">&lt;%@ Page Language=<span style="color:#006080">"C#"</span> AutoEventWireup=<span style="color:#006080">"true"</span>Inherits=<span style="color:#006080">"System.Web.Mvc.ViewPage"</span> %&gt;
+<div>
+    This view:  
+    Model:  <br>
+    Model Type:  <br>
+    foreach (KeyValuePairstring, <span style="color:#0000ff">object</span>&gt; pair <span style="color:#0000ff">in</span> ViewData){%&gt;
+        View data  : <br>
+    
+    ViewDataDictionary hashcode: <br>
+    <hr>
+</div>
+</pre>
+</div>
+<p>Notice the values that are added in the controller in listing 4.5. We have three key/value pairs and an object set in the Model property. It is important to know that when a view renders a partial, the partial will get the same viewdata objects; therefore, anything passed from the controller will also make it to any partial and any layout (not shown here). We also see in listing 4.5 that while rendering a partial, a view can decide to override the viewdata passed into the partial. Even though each view will have access to the same objects in the viewdata dictionary, the instance of ViewDataDictionary is different for each one. This is very important to note that multiple views do not share instances of ViewDataDictionary. We cannot expect to use viewdata as a mechanism for a partial to pass an object back to the parent view. In fact, views should be completely isolated and should not try to communicate with one another. Views are functional and once they begin rendering, they should expect to have all the information necessary to complete rendering. Note the hashcode values printed with the data when rending /viewdata/index in a browser. The output is shown in listing 4.9</p>
+<p><strong>Listing 4.9 The output of /viewdata/index shows the viewdata values</strong></p>
+<div>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">This view: views_viewdata_index_aspx Model: 3
+Model Type: String
+View data one : onevalue
+View data two : twovalue
+View data three : threevalue
+ViewDataDictionary hashcode: 41846725
+________________________________________
+PARTIAL 
+This view: views_viewdata_partial_aspx Model: 3
+Model Type: String
+View data one : onevalue
+View data two : twovalue
+View data three : threevalue
+ViewDataDictionary hashcode: 6365999
+________________________________________
+This view: views_viewdata_nestedpartial_aspx Model: 3
+Model Type: String
+View data one : onevalue
+View data two : twovalue
+View data three : threevalue
+ViewDataDictionary hashcode: 66577120
+________________________________________
+________________________________________
+NESTED PARTIAL PASSING IN MODEL 
+This view: views_viewdata_nestedpartial_aspx Model: 89
+Model Type: Int32
+View data one : onevalue
+View data two : twovalue
+View data three : threevalue
+ViewDataDictionary hashcode: 55942245
+________________________________________
+________________________________________
+NESTED PARTIAL PASSING IN MODEL AND VIEWDATA 
+This view: views_viewdata_nestedpartial_aspx Model: 89
+Model Type: Int32
+View data first : 1
+View data second : 2
+ViewDataDictionary hashcode: 33936469
+________________________________________
+________________________________________
+NESTED PARTIAL PASSING IN VIEWDATA 
+This view: views_viewdata_nestedpartial_aspx Model: 100
+Model Type: Int32
+View data first : value
+ViewDataDictionary hashcode: 41577219
+________________________________________
+________________________________________
+</pre>
+</div>
+<p>You can see from the above example that viewdata is the central object that is passed to a view. A view relies completely on viewdata to get the information it need to render. The view can choose to pass on all or some of the same objects to partial views, and the layout has access to the viewdata as well. For proper segmentation, each view/layout/partial gets its own instance of viewdata even if the contents are identical.</p>

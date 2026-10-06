@@ -1,0 +1,47 @@
+[
+  {
+    "id": 2307,
+    "parent": 0,
+    "author_name": "Iain",
+    "author_url": "http://",
+    "date": "2008-02-12T12:28:21",
+    "type": "comment",
+    "content_html": "<p>I manage a Development support team, our main job is to enable the business developers to work on there primary business development process.  We ensure that servers are running securtiy is correct, builds are done, intergation test environments run smoothly, triage live/test/dev errors to enviromental or devleopment.  It works well and our teams are alot more productive.</p>"
+  },
+  {
+    "id": 2308,
+    "parent": 0,
+    "author_name": "tinsley",
+    "author_url": "http://",
+    "date": "2008-02-12T22:09:39",
+    "type": "comment",
+    "content_html": "<p>PDD I really feel it when fixing bugs in a mega module had handles business logic that changes once a week and is held together by a meandering if statements aka (masking tape). We get it out quick and it works but maintaining it stinks like .  Using an agile process how do you convince the team that we need a refactor we don’t live in the past.</p>"
+  },
+  {
+    "id": 2309,
+    "parent": 0,
+    "author_name": "AgileMechanic",
+    "author_url": "http://www.agilemechanic.com",
+    "date": "2008-02-13T03:41:13",
+    "type": "comment",
+    "content_html": "<p>I can’t even count the number of times I took pain killers to resolve(it is not resolving, just hiding) the bottlenecks. Most of them related to design flaws, SCM issues and off course all impacted on the quality. Most of the time, a marginal developer(an ALT.NET terminology) will try to get his business ( software development process) to break even… not worried about ROI and profit. It is the same same place, this pain kills most of us, and in turn calls the need of better thoughts/mid set to overcome these bottlenecks.</p>\n<p>Let’s more people realistically think and propose some common scenarios and solutions/ways to avoid pain killers in software industry.</p>\n<p>Nice starting Jeff. Thanks a lot.</p>"
+  },
+  {
+    "id": 2310,
+    "parent": 0,
+    "author_name": "AgileMechanic",
+    "author_url": "http://www.agilemechanic.com",
+    "date": "2008-02-13T03:42:20",
+    "type": "comment",
+    "content_html": "<p>I can’t even count the number of times I took pain killers to resolve(it is not resolving, just hiding) the bottlenecks. Most of them related to design flaws, SCM issues and off course all impacted on the quality. Most of the time, a marginal developer(an ALT.NET terminology) will try to get his business ( software development process) to break even… not worried about ROI and profit. It is the same same place, this pain kills most of us, and in turn calls the need of better thoughts/mid set to overcome these bottlenecks.</p>\n<p>Let’s more people realistically think and propose some common scenarios and solutions/ways to avoid pain killers in software industry.</p>\n<p>Nice starting Jeff. Thanks a lot.</p>"
+  },
+  {
+    "id": 2311,
+    "parent": 0,
+    "author_name": "Etzel",
+    "author_url": "http://www.YoungEntrepreneurSociety.com",
+    "date": "2008-02-16T15:57:54",
+    "type": "comment",
+    "content_html": "<p>I remember when we first set up BPCS software many years ago. The training and learning is such a pain, especially that bosses are impatiently waiting for some productivity in return.  It kinda paid back after a few years but then a new software has to be implemented the SAP so it’s back to painful learning and training.<br>\nWould you be interested with entrepreneurship? If you are I’d like to share this site I stumbled upon, the Young Entrepreneur Society from the <a href=\"http://www.YoungEntrepreneurSociety.com\" rel=\"nofollow\">http://www.YoungEntrepreneurSociety.com</a>. It has great business stuff in the site.</p>"
+  }
+]

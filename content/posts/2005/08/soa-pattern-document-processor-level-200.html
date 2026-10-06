@@ -1,0 +1,16 @@
+---
+wp_id: 308
+title: 'SOA Pattern: Document Processor – level 200'
+slug: soa-pattern-document-processor-level-200
+permalink: /2005/08/soa-pattern-document-processor-level-200/
+date: 2005-08-25T20:00:00
+date_utc: 2005-08-25T20:00:00Z
+modified: 2005-08-25T20:00:00
+format: html
+excerpt: 'At the Austin Architect Council, Ron Jacobs spoke about an SOA pattern that hit home: The Document Processor. Here is how he described it: Think back to before computers ran everything. Units of work (like a work order) were represented by a business form. These documents normally had several carbon copies. After the form was […]'
+comments_open: true
+---
+<p>At the Austin Architect Council, Ron Jacobs spoke about an SOA pattern that hit home:&nbsp; The Document Processor.&nbsp; Here is how he described it:</p>
+<p>Think back to before computers ran everything.&nbsp; Units of work (like a work order) were represented by a business form.&nbsp; These documents normally had several carbon copies.&nbsp; After the form was completed, copies were sent to different departments.&nbsp; If it was a work order, perhaps the maintenance department received the document.&nbsp; Receipt of the document kicked off the task, and the work got done.&nbsp; Ron says that this is how service interfaces should operate.&nbsp; The schema (message) should consist of the entire business document.&nbsp; In this way, the service’s implementation is hidden (such as what database is used).&nbsp;&nbsp; With the business document as the message, the service can be easy to consume from any platform, and one call can represent a single unit of work.&nbsp; </p>
+<p>In this way, a communication failure doesn’t leave the service in an incomplete state.&nbsp; Does this mean that you can’t do transacted services????&nbsp; YES!!!&nbsp; If you need transactions, then stop looking at SOA to solve that problem.&nbsp; </p>
+<p>The benefit of the Document Processor pattern is that client developer only have to think about sending a document.</p>

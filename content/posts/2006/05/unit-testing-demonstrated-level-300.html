@@ -1,0 +1,365 @@
+---
+wp_id: 421
+title: Unit testing demonstrated – level 300
+slug: unit-testing-demonstrated-level-300
+permalink: /2006/05/unit-testing-demonstrated-level-300/
+date: 2006-05-06T23:25:00
+date_utc: 2006-05-06T23:25:00Z
+modified: 2006-05-06T23:25:00
+format: html
+tags:
+- agile
+- asp-net
+- coding-principles
+excerpt: I use NUnit for my automated tests. Because of that, all my tests are unit tests, right? WRONG! The name of the testing framework has no bearing on the type of test you have. NUnit is a framework for running automated tests. You _can_ write unit tests with it, but you can also write integration […]
+comments_open: true
+---
+<p><b>I use NUnit for my<br>
+automated tests.<span>&nbsp; </span>Because of that, all my<br>
+tests are unit tests, right?</b></p>
+<p>WRONG!<span>&nbsp; </span>The name of<br>
+the testing framework has no bearing on the type of test you have.<span>&nbsp; </span>NUnit is a framework for running automated<br>
+tests.<span>&nbsp; </span>You _can_ write unit tests with<br>
+it, but you can also write integration tests as well as full-system tests with<br>
+it.<span>&nbsp; </span><b>A<br>
+unit test is a special type of developer test and can be done with or without<br>
+NUnit.</b><span>&nbsp; </span></p>
+
+<p><b>A unit test tests a<br>
+single line of code.</b></p>
+<p>How big is a unit?<span>&nbsp;<br>
+</span>Well, that’s up to you, and there is not scientific answer.<span>&nbsp; </span>Typically, you only give a class a single<br>
+responsibility.<span>&nbsp; </span>The class may have several<br>
+methods since the class may need to do several things to accomplish the single<br>
+responsibility.<span>&nbsp; </span>The class may have to<br>
+collaborate with several other classes to accomplish its purpose.<span>&nbsp; </span>A unit of code is an identifiable chunk of<br>
+code needed to accomplish part of a responsibility.<span>&nbsp; </span>Is that vague enough for you?<span>&nbsp; </span>In my example below, I’ll clear this up a<br>
+bit.</p>
+
+<p><b>A unit test isolates<br>
+the code being tested.</b></p>
+<p>A class will need to talk to other classes.<span>&nbsp; </span>That’s a given.<span>&nbsp; </span>Sometimes this is ok for testing, and<br>
+sometimes this just gets in the way.<span>&nbsp; </span>It<br>
+might be ok to talk to a class that just builds a string (like StringBuilder),<br>
+but it’s not ok to talk to a class that grabs information from a configuration<br>
+file.<span>&nbsp; </span>In a unit test, you need to take<br>
+environmental dependencies out of the equation so that a pass or failure is<br>
+truly dependent on the code being tested.<span>&nbsp;<br>
+</span>You don’t want the test failing because the configuration file wasn’t in<br>
+the right spot.<span>&nbsp; </span>There are plenty of<br>
+techniques available for this.<span>&nbsp; </span>To start,<br>
+you need to code against interfaces and use fake objects like stubs and<br>
+mocks.<span>&nbsp; </span>I like the Rhino mock framework<br>
+for this.</p>
+
+<p><b>Here are some<br>
+dependencies that will need to be frequently simulated for unit testing:</b></p>
+<ul type="disc">
+<li>Config<br>
+     files</li>
+<li>Registry<br>
+     values</li>
+<li>Databases</li>
+<li>Environment<br>
+     variables</li>
+<li>Machine<br>
+     name</li>
+<li>System<br>
+     clock (Yup.<span>&nbsp; </span>Even that has the<br>
+     potential to get in your way).</li>
+</ul>
+
+<p><b>Example:</b></p>
+<p>This example will show a real web user control that I’ve<br>
+unit-tested.<span>&nbsp; </span>This is not<br>
+theoretical.<span>&nbsp; </span>This is inside my EZWeb<br>
+software.<span>&nbsp; </span>The purpose of the following<br>
+screen is to maintain a few pieces of information for the page being<br>
+viewed.<span>&nbsp; </span>The user can set the title of<br>
+the page and some other things.</p>
+<p style="text-align:center" align="center"><img decoding="async" src="/photos/jeffrey.palermo/images/144194/original.aspx"></p>
+<p>I’ve used the Mode-View-Presenter pattern to make unit<br>
+testing this easier.<span>&nbsp; </span>Obviously if all my<br>
+code is in the code-behind of the ASCX, then I won’t be able to test any of it<br>
+because I can’t run that code outside of the ASP.NET runtime.<span>&nbsp; </span>If you aren’t familiar with the MVP pattern<br>
+now, take some time to read up on it.<span>&nbsp;<br>
+</span>The presenter is the controlling class that will be tested.<span>&nbsp; </span>The code-behind becomes very dumb.<span>&nbsp; </span>The code-behind will implement my view<br>
+interface and be responsible for taking information and setting the correct<br>
+control.<span>&nbsp; </span>The view is very small, and all<br>
+the intelligence is in the controlling class (the Presenter).<span>&nbsp; </span>The presenter is where the bugs will hide, so<br>
+I’ll unit test that class.<span>&nbsp; </span>The model is<br>
+represented by an interface IPageConfig that you’ll see being referenced.</p>
+
+<p><b>The following example<br>
+shows a unit test of the code that gets data from the model and publishes it to<br>
+the view.<span>&nbsp; </span>The textboxes and drop-downs<br>
+need to be set properly.<span>&nbsp; </span>This is not the<br>
+full code.<span>&nbsp; </span>The full code also reacts to<br>
+the save button being clicked and taking modifying information and saving it.</b></p>
+
+<p><b>Here is the view interface:</b></p>
+<p><span>namespace</span><span><br>
+Palermo.EZWeb.UI</span></p>
+<p><span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">interface</span> <span style="color:teal">IPagePropertiesView</span></span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">string</span><br>
+Title { <span style="color:blue">get</span>; <span style="color:blue">set</span>;<br>
+}</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">bool</span> HasParent<br>
+{ <span style="color:blue">get</span>; <span style="color:blue">set</span>; }</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">string</span><br>
+Template { <span style="color:blue">get</span>; <span style="color:blue">set</span>;<br>
+}</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">string</span><br>
+Theme { <span style="color:blue">get</span>; <span style="color:blue">set</span>;<br>
+}</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">string</span><br>
+Plugin { <span style="color:blue">get</span>; <span style="color:blue">set</span>;<br>
+}</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">string</span><br>
+Parameter { <span style="color:blue">get</span>; <span style="color:blue">set</span>;<br>
+}</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">bool</span><br>
+IsPostback { <span style="color:blue">get</span>; }</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">DictionaryList</span><br>
+GetTemplateChoices();</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&nbsp;</span><span style="color:blue">void</span> SetTemplatesDropDown(<span style="color:teal">DictionaryList</span><br>
+list);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">DictionaryList</span><br>
+GetThemeChoices();</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">void</span><br>
+SetThemesDropDown(<span style="color:teal">DictionaryList</span> list);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">DictionaryList</span><br>
+GetPluginChoices();</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">void</span><br>
+SetPluginDropDown(<span style="color:teal">DictionaryList</span> list);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">void</span><br>
+EnableTitle(<span style="color:blue">bool</span> enabled);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">void</span><br>
+EnableTemplate(<span style="color:blue">bool</span> enabled);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">void</span><br>
+EnableTheme(<span style="color:blue">bool</span> enabled);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">void</span><br>
+EnablePlugin(<span style="color:blue">bool</span> enabled);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">void</span><br>
+EnableParameter(<span style="color:blue">bool</span> enabled);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">void</span><br>
+ReloadParent();</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>}</span></p>
+<p><span>}</span></p>
+
+<p><b>Here is the<br>
+code-behind that implements the view interface (truncated):</b></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">partial</span> <span style="color:blue">class</span> <span style="color:teal">PageAdministration</span> : <span style="color:teal">UserControl</span>,<br>
+<span style="color:teal">IPlugin</span>, <span style="color:teal">IPagePropertiesView</span></span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">private</span><br>
+<span style="color:teal">PagePropertiesPresenter</span> _presenter;</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">string</span> Title</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">get</span><br>
+{ <span style="color:blue">return</span> txtTitle.Text; }</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">set</span><br>
+{ txtTitle.Text = <span style="color:blue">value</span>; }</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">bool</span> HasParent</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">get</span><br>
+{ <span style="color:blue">return</span> <span style="color:teal">Convert</span>.ToBoolean(ddlHasParent.SelectedValue);<br>
+}</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">set</span><br>
+{ ddlHasParent.SelectedValue = <span style="color:blue">value</span>.ToString();<br>
+}</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">string</span> Template</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">get</span><br>
+{ <span style="color:blue">return</span> ddlTemplate.SelectedValue; }</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">set</span><br>
+{ ddlTemplate.SelectedValue = <span style="color:blue">value</span>; }</span></p>
+<p><span>}</span></p>
+<p><span>. . .</span></p>
+
+<p><b>Here is the part of<br>
+the Presenter that we’ll be focusing on:</b></p>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">class</span> <span style="color:teal">PagePropertiesPresenter</span></span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">private</span><br>
+<span style="color:blue">readonly</span> <span style="color:teal">IPagePropertiesView</span><br>
+_view;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">private</span><br>
+<span style="color:teal">ICurrentContext</span> _context;</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span><br>
+PagePropertiesPresenter(<span style="color:teal">IPagePropertiesView</span><br>
+view)</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>_view = view;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>_context = (<span style="color:teal">ICurrentContext</span>) <span style="color:teal">ObjectFactory</span>.GetInstance(<span style="color:blue">typeof</span> (<span style="color:teal">ICurrentContext</span>));</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:green">//testing<br>
+constructor</span></span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&nbsp;&nbsp;</span><span style="color:blue">public</span> PagePropertiesPresenter(<span style="color:teal">IPagePropertiesView</span> view, <span style="color:teal">ICurrentContext</span><br>
+context)</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>_view = view;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>_context = context;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">virtual</span> <span style="color:blue">void</span><br>
+LoadConfiguration()</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">if</span><br>
+(!_view.IsPostback)</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">IPageConfig</span><br>
+config = _context.GetPageConfig();</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>_view.Title = config.Title;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>_view.HasParent =<br>
+config.HasParent;</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">DictionaryList</span><br>
+templates = removeBadItems(_view.GetTemplateChoices());</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span>_view.SetTemplatesDropDown(templates);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>_view.Template =<br>
+config.Template;</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">DictionaryList</span><br>
+themes = removeBadItems(_view.GetThemeChoices());</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span>_view.SetThemesDropDown(themes);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&nbsp;</span>_view.Theme = config.Theme;</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">DictionaryList</span><br>
+plugins = removeBadItems(_view.GetPluginChoices());</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span>_view.SetPluginDropDown(plugins);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>_view.Plugin = config.Plugin;</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>_view.Parameter = config.Parameter;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+<p><span>}</span></p>
+<p>.<span>&nbsp; </span>.<span>&nbsp; </span>.</p>
+
+<p>Notice that the LoadConfiguration() method checks for<br>
+postback (through the view) and then uses the MODEL to set pieces of<br>
+information on the VIEW.<span>&nbsp; </span>You may think<br>
+that this code is boring, but it’s essential for the behavior of the screen.</p>
+
+<p><b>Now for the<br>
+test.<span>&nbsp; </span>Note that we’re simulating the<br>
+view and the ICurrentContext interface since these are collaborators.<span>&nbsp; </span>The ICurrentContext provides the MODEL to the<br>
+Presenter:</b></p>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>[<span style="color:teal">TestFixture</span>]</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">class</span> <span style="color:teal">PagePropertiesPresenterTester</span></span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>[<span style="color:teal">Test</span>]</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">public</span> <span style="color:blue">void</span> ShouldSetAllInformationOnPage()</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">MockRepository</span><br>
+mocks = <span style="color:blue">new</span> <span style="color:teal">MockRepository</span>();</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">IPageConfig</span><br>
+mockConfig = (<span style="color:teal">IPageConfig</span>)mocks.CreateMock(<span style="color:blue">typeof</span>(<span style="color:teal">IPageConfig</span>));</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">IPagePropertiesView</span><br>
+view = (<span style="color:teal">IPagePropertiesView</span>)mocks.CreateMock(<span style="color:blue">typeof</span>(<span style="color:teal">IPagePropertiesView</span>));</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">ICurrentContext</span><br>
+context = (<span style="color:teal">ICurrentContext</span>)mocks.CreateMock(<span style="color:blue">typeof</span>(<span style="color:teal">ICurrentContext</span>));</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">Expect</span>.Call(view.IsPostback).Return(<span style="color:blue">false</span>);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">Expect</span>.Call(context.GetPageConfig()).Return(mockConfig);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">string</span><br>
+title = <span style="color:maroon">“fake title”</span>;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">Expect</span>.Call(mockConfig.Title).Return(title);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>view.Title = title;</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">bool</span><br>
+hasParent = <span style="color:blue">false</span>;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">Expect</span>.Call(mockConfig.HasParent).Return(hasParent);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>view.HasParent = hasParent;</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">string</span><br>
+selectedItem = <span style="color:maroon">“foo”</span>;</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">Expect</span>.Call(mockConfig.Template).Return(selectedItem);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">DictionaryList</span><br>
+list = <span style="color:blue">new</span> <span style="color:teal">DictionaryList</span>();</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>list.Add(<span style="color:maroon">“first”</span>,<br>
+<span style="color:maroon">“first”</span>);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>list.Add(<span style="color:maroon">“Foo”</span>,<br>
+selectedItem);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>list.Add(<span style="color:maroon">“.svn”</span>,<br>
+<span style="color:maroon">“.svn”</span>);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>list.Add(<span style="color:maroon">“_something”</span>,<br>
+<span style="color:maroon">“_something”</span>);</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">Expect</span>.Call(view.GetTemplateChoices()).Return(list);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>view.SetTemplatesDropDown(<span style="color:blue">null</span>);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">LastCall</span>.On(view).Constraints(<span style="color:blue">new</span> <span style="color:teal">PropertyIs</span>(<span style="color:maroon">“Count”</span>, 2));<span style="color:green">//.<br>
+and _ should be stripped out.</span></span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>view.Template = selectedItem;</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">Expect</span>.Call(mockConfig.Theme).Return(selectedItem);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">Expect</span>.Call(view.GetThemeChoices()).Return(list);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>view.SetThemesDropDown(<span style="color:blue">null</span>);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">LastCall</span>.On(view).Constraints(<span style="color:blue">new</span> <span style="color:teal">PropertyIs</span>(<span style="color:maroon">“Count”</span>, 2));</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>view.Theme = selectedItem;</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">Expect</span>.Call(mockConfig.Plugin).Return(selectedItem);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">Expect</span>.Call(view.GetPluginChoices()).Return(list);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>view.SetPluginDropDown(<span style="color:blue">null</span>);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">LastCall</span>.On(view).Constraints(<span style="color:blue">new</span> <span style="color:teal">PropertyIs</span>(<span style="color:maroon">“Count”</span>, 2));</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>view.Plugin = selectedItem;</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:blue">string</span><br>
+fakeParameter = <span style="color:maroon">“faky”</span>;</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:teal">Expect</span>.Call(mockConfig.Parameter).Return(fakeParameter);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>view.Parameter = fakeParameter;</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>mocks.ReplayAll();</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:teal">PagePropertiesPresenter</span><br>
+presenter = <span style="color:blue">new</span> <span style="color:teal">PagePropertiesPresenter</span>(view,<br>
+context);</span></p>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>presenter.LoadConfiguration();</span></p>
+
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>mocks.VerifyAll();</span></p>
+<p><span>}</span></p>
+<p><span>. . .</span></p>
+
+<p>Your first thought might be that this unit test method is<br>
+too long.<span>&nbsp; </span>It certainly pushes my comfort<br>
+level as well.<span>&nbsp; </span>I could have chosen a<br>
+small one for this example, but I chose my largest one instead.<span>&nbsp; </span>I’ve seen other unit testing examples that<br>
+are so trivial that they don’t demonstrate much.<span>&nbsp; </span>In this sample, I chose one of the most<br>
+difficult things to unit test:<span>&nbsp; </span>A UI<br>
+screen.<span>&nbsp; </span>Notice that I’m using Rhino<br>
+mocks to set up my fake objects.<span>&nbsp; </span>The call<br>
+to “mocks.VerifyAll()” does a check to ensure that the collaborators were<br>
+called with the correct input.<span>&nbsp; </span>After all,<br>
+my presenter method is in charge of getting information from the MODEL and<br>
+publishing them to the VIEW.<span>&nbsp; </span>If you<br>
+spend some time going over this test, you can see some of the rules the code<br>
+has to live by.<span>&nbsp; </span>One of the side-effects<br>
+of the unit test is documentation of the code (developer documentation).<span>&nbsp; </span>At this point, I can refactor my method<br>
+knowing that I have this test as a safety net.</p>
+
+<p><b>How do I unit test my<br>
+legacy code?</b></p>
+<p>Change it.<span>&nbsp; </span>This<br>
+screen started out several years ago with all the code in the code-behind<br>
+class.<span>&nbsp; </span>It was impossible to test this<br>
+way.<span>&nbsp; </span>I had to refactor to the MVP<br>
+pattern to enable testing.<span>&nbsp; </span>I had to<br>
+break some things away by inserting an interface so that I’d have a seam to<br>
+break dependencies.<span>&nbsp; </span>In short, you must<br>
+refactor your existing code to get it to a point where it is testable.<span>&nbsp; </span>The reason it’s not testable is that it’s<br>
+tightly-coupled with its dependencies.<span>&nbsp; </span>I<br>
+hope by now that the words “loosely-coupled” are recognized as “good” and “tightly-coupled”<br>
+are recognized as “bad”.<span>&nbsp; </span>Testable code<br>
+is loosely-coupled.<span>&nbsp; </span>Loosely-coupled code<br>
+is testable.<span>&nbsp; </span>And now the big leap:<span>&nbsp; </span>Testable code == good.</p>

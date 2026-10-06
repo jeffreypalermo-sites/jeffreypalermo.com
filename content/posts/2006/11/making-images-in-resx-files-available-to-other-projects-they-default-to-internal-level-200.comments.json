@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1058,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2006-11-10T22:46:10",
+    "type": "comment",
+    "content_html": "<p>would it be simpler to do:<br>\nresgen /public file.resx?</p>"
+  },
+  {
+    "id": 1059,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-11-12T18:41:12",
+    "type": "comment",
+    "content_html": "<p>I’ll have to try that out.  Thanks, Ayende.</p>"
+  }
+]

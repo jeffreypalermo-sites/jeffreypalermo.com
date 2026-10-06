@@ -1,0 +1,48 @@
+---
+wp_id: 687
+title: What are the Alt.Net principles? – my answer
+slug: what-are-the-alt-net-principles-a-topic-i-ll-be-proposing-at-altnetconf
+permalink: /2007/09/what-are-the-alt-net-principles-a-topic-i-ll-be-proposing-at-altnetconf/
+date: 2007-09-23T16:49:00
+date_utc: 2007-09-23T16:49:00Z
+modified: 2007-09-23T16:49:00
+format: html
+tags:
+- agile
+- build-automation
+- coding-principles
+- data-access
+- developer-community
+- featured
+- learning
+- tips-tricks
+- tools
+excerpt: 'I’ll be attending the AltNetConf. Convenient for me that it’s in Austin, TX. It’s an open space conference, and I consider it the founding conference of a conversation that is “Alt.Net”. I’ll be proposing the topic: What are the Alt.Net principles?. The definition of Alt.Net isn’t defined yet. It’s not even at a point where […]'
+comments_open: true
+---
+<p>I’ll be attending the <a href="http://www.altnetconf.com/home/index.castle">AltNetConf</a>.&nbsp; Convenient for me that it’s in Austin, TX.&nbsp; It’s an open space conference, and I consider it the founding conference of a conversation that is “Alt.Net”.&nbsp; I’ll be proposing the topic: <b>What are the Alt.Net principles?</b>.</p>
+<p>The definition of Alt.Net isn’t defined yet.&nbsp; It’s not even at a point where I can explain what it is and actually have other agree with me. &nbsp;</p>
+<p>Since I know the <a href="/blogs/david_laribee/">guy</a> who originally coined the term, I have some insight into what <a href="/blogs/david_laribee/">David</a> meant, but I’m going to propose some principles that, together, should be the definition of Alt.Net. <b></b></p>
+<p><b>First, Alt.Net inherits Agile, and IS Agile.&nbsp; Therefore:</b></p>
+<ul>
+<li>Individuals and interactions over processes and tools</li>
+<li>Working software over comprehensive documentation</li>
+<li>Customer collaboration over contract negotiation</li>
+<li>Responding to change over following a plan&nbsp; </li>
+</ul>
+<p><b>Extended principles:</b></p>
+<ul>
+<li><b>Excellence and quality</b><br>In a world of wizard-generated, disposable software (disposed 2 years later by necessity, not choice), Alt.Net focuses us on excellence in the software we create.&nbsp; While the world may pay for and accept software that lives for 2 years before becoming utterly unmaintainable, we don’t accept shoddy work.&nbsp; We know that we can deliver high quality software faster than others can deliver low quality software, so we accept no less than the highest in quality.&nbsp; We strive for excellence through solid engineering practices and a high level of software education.&nbsp; Coincidentally, <a href="http://www.extremeprogramming.org/">Extreme Programming</a> helps in this area, but Alt.Net does not specifically _mean_ XP.</li>
+<li><b>Alternative Vendors<br></b>A&nbsp; common theme in many .Net shops is they are “Microsoft” shops.&nbsp; In other words, if it doesn’t come from Microsoft, they won’t use it.&nbsp; This makes no sense.&nbsp; Microsoft is not a large enough company to be the vendor to the whole world.&nbsp; .Net is a great platform, and we as a community have chosen the platform and choose to participate in this segment of the industry.&nbsp; We strongly believe that 3rd party vendors complement the .Net platform in a way that can contribute to excellent working software.&nbsp; In fact, some 3rd party offerings are superior to Microsoft’s offering.&nbsp; For instance, in a strive for excellence in an e-commerce website, a team may choose a mature O/R Mapper like NHibernate to accelerate team speed and produce a flexible data layer; however, Alt.Net does not _mean_ ORM.&nbsp; Open source software is a source of excellent 3rd party alternatives built on the .Net platform, and it should be used over Microsoft alternatives when they contribute to <b>excellence</b>; however, Alt.Net does not _mean_ open source.</li>
+<li><b>Joy in our work<br></b>We know that we will produce better software if a team is motivated and morale is high; therefore, we use libraries, tools, and practices that add joy to the working environment.&nbsp; We abandon or correct libraries, tools, and practices that make it a drag to work on the software.&nbsp; For instance, many find that Visual Studio is a bit slow to work with and that adding Resharper to the IDE adds a high level of joy while working with .Net code; however, Alt.Net does not _mean_ Resharper.</li>
+<li><b>Knowledge<br></b>We know that we will never know everything there is to know.&nbsp; We strive for a greater understanding of software through studying successes and failures of the past as well as the present.&nbsp; We educate ourselves through many sources in order to bring the most value to our clients.&nbsp; We keep up with other platforms, such as Java and Ruby, so that we can apply their good ideas to .Net development and increase the quality of our .Net software.&nbsp; The technology is always changing, but the knowledge accumulates.&nbsp; We know that the knowledge applies no matter how the technology changes.&nbsp; With knowledge comes humility because without humility, knowledge would pass us by.</li>
+</ul>
+<p>The above are principles, so they are intentionally abstract.&nbsp; Below, I’ll list some items that are concrete.&nbsp; These items apply the principles but are more directly applicable:</p>
+<ul>
+<li>Read more than just MSDN magazine and MS Press.&nbsp; Authors like Feathers, Fowler, Martin, Evans, etc have a lot to give (<b>Knowledge)</b></li>
+<li>Use Resharper.&nbsp; It makes working with Visual Studio a (<b>Joy</b>).&nbsp; But if another vendor comes along that does even better than JetBrains, consider switching</li>
+<li>Use NUnit&nbsp; over MSTest,&nbsp; Subversion over TFS SCC,&nbsp; Infragistics/Telerik over in-the-box controls,&nbsp; RedGate over in-the-box SQL tools.&nbsp; Each of these is a better alternative to that which Microsoft provides (<b>Alternative Vendors</b>).&nbsp; Use NHibernate over hand-rolled stored procedures and especially over DataAdapter/DataSet, but if EntityFramework proves to actually be superior to NHibernate in a meaningful way, consider using it.</li>
+<li>Use a responsible application architecture.&nbsp; Don’t put everything in Page_Load like you see demonstrated at MSDN Events.&nbsp; Use <b>knowledge</b> to create an application that can stand the test of time and not be rewritten every 2 years.&nbsp; Deliver (<b>high quality and excellence</b>).&nbsp; </li>
+<li>Automate every repetitive task; builds, tests, deployments, etc – <b>excellence </b>and <b>joy</b></li>
+</ul>
+<p>The concrete examples could go on and on, and I hope AltNetConf produces a long list.&nbsp; <b>I’ll be interested in having my proposed principles accepted by the community there or revised into something better.</b>&nbsp; Either way, I’d like to get to a point where there is an accepted definition of <b>Alt.Net</b>.</p>

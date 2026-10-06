@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1763,
+    "parent": 0,
+    "author_name": "Tomas Restrepo",
+    "author_url": "http://www.winterdom.com/weblog",
+    "date": "2007-06-23T02:55:42",
+    "type": "comment",
+    "content_html": "<p>Humm… something tells me this is going to clash even worse with my VC++ 6.0 keyboard bindings than 2.5 used to \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1764,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-06-23T03:04:33",
+    "type": "comment",
+    "content_html": "<p>I’m not sure about VC++ settings, but I’ve found the ReSharper shortcuts to be nice, and they haven’t conflicted with other VS shortcuts I use.  If you’ve used a previous version of R#, the middle section will keep the same shortcut keys.</p>"
+  },
+  {
+    "id": 1765,
+    "parent": 0,
+    "author_name": "Brian Peek",
+    "author_url": "http://www.brianpeek.com/blog/",
+    "date": "2007-06-23T08:13:51",
+    "type": "comment",
+    "content_html": "<p>I think I’m the only one that is elated that they’ve finally made a Visual Studio keyboard scheme.  ReSharper’s taking over of shortcuts in the previous version was one of my biggest beefs.</p>"
+  },
+  {
+    "id": 1766,
+    "parent": 0,
+    "author_name": "bobfox",
+    "author_url": "http://",
+    "date": "2007-06-23T11:00:52",
+    "type": "comment",
+    "content_html": "<p>For new users of R# 3.0 it is IMHO better to choose the VS keyboard scheme.</p>"
+  },
+  {
+    "id": 1767,
+    "parent": 0,
+    "author_name": "Lothan",
+    "author_url": "http://",
+    "date": "2007-06-24T04:09:05",
+    "type": "comment",
+    "content_html": "<p>We’re all a bit different, so some us actually prefer the Visual Studio style key bindings. I personally find the Visual Studio style key bindings more intuitive and easy to remember than the IntelliJ IDEA key bindings. For me it’s easy to remember Rename is Ctrl+R+Ctrl+R, Refactor This is Ctrl+R, Ctrl+T, and Move Up is Ctrl+R, Ctrl+Up.</p>"
+  }
+]

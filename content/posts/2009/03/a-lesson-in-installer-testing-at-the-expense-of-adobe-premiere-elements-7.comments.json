@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2573,
+    "parent": 0,
+    "author_name": "Christopher Painter",
+    "author_url": "http://blog.deploymentengineering.com",
+    "date": "2009-03-12T00:32:15",
+    "type": "comment",
+    "content_html": "<p>I couldn’t agree more that installs should be bullet proof.  I’ve spent the last 12 years of my career focusing in just this area.<br>\nMy question is in all of this talk of Agile, TDD, ALT.NET and so on… how much does the .NET development community do to actually walk the walk when it comes to setup?    Do you know/teach MSI, InstallShield, WiX and DTF?    Do you know that VDPROJ, InstallerClass custom actions. SelfReg and Script custom actions suck?    Do you plan for deployment from the beginning or does it still get done at the end?<br>\nTesting is important, but it’s not the source of the problem that is so often the case in our industry.</p>"
+  }
+]

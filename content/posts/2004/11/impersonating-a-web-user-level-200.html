@@ -1,0 +1,13 @@
+---
+wp_id: 135
+title: Impersonating a web user – level 200
+slug: impersonating-a-web-user-level-200
+permalink: /2004/11/impersonating-a-web-user-level-200/
+date: 2004-11-06T19:33:00
+date_utc: 2004-11-06T19:33:00Z
+modified: 2004-11-06T19:33:00
+format: html
+excerpt: One of these days, it will become necessary to impersonate a user at awebsite. Or, a more common use would be to use a legacy ASP app as amake-shift web service. Say an ASP page does an important function? Fromyour application(whether windows, console, or web), you can write code tocontact this page and interact with […]
+comments_open: true
+---
+<p>One of these days, it will become necessary to impersonate a user at a<br>website.&nbsp; Or, a more common use would be to use a legacy ASP app as a<br>make-shift web service.&nbsp; Say an ASP page does an important function?&nbsp; From<br>your application(whether windows, console, or web), you can write code to<br>contact this page and interact with it over HTTP.&nbsp; Here is a sample:<br><br>String uriString = <a href="http://localhost/WebApplication1/AcceptFile.aspx">http://localhost/WebApplication1/AcceptFile.aspx</a>;<br>// Create a new WebClient instance.<br>WebClient myWebClient = new WebClient();<br>string fileName = @”c:upload.txt”;<br>byte[] responseArray = myWebClient.UploadFile(uriString, “POST”, fileName);<br><br><br>Using the WebClient class in the System.Net namespace, it’s very easy to<br>create a custom web request and execute it.&nbsp; Then you can capture the<br>response and analyze it. . . parse any important data contained in it.<br><br>If you have used Application Center Test or the Web Application Stress Tool,<br>you record a web session, and then that session is repeated many times.<br>Code is being written to repeat the web requests.<br></p>

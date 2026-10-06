@@ -1,0 +1,65 @@
+[
+  {
+    "id": 190,
+    "parent": 0,
+    "author_name": "VB",
+    "author_url": "http://",
+    "date": "2004-11-23T07:07:00",
+    "type": "comment",
+    "content_html": "<p>Thanks, I try with reporting service but it didn’t work. I work on relative path for logo picture. If you know the way around, let me know. Appreciate.</p>"
+  },
+  {
+    "id": 191,
+    "parent": 0,
+    "author_name": "John",
+    "author_url": "http://",
+    "date": "2005-02-01T10:32:00",
+    "type": "comment",
+    "content_html": "<p>I’ve been looking into app-relative paths for my .NET application.  The tilde seems to work well at runtime, but it does not resolve in the designer.  For example, &lt;img src=\"~/images/myimage.gif\"&gt; works great at runtime, but in the designer for the aspx page, the image comes up broken.  Likewise, if I try to use &lt;%=ResolveUrl(\"~/styles.css\")%&gt; for my stylesheet path.  Have you found a way around this problem?</p>"
+  },
+  {
+    "id": 192,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2005-02-01T11:25:00",
+    "type": "comment",
+    "content_html": "<p>That’s right.  This is runtime functionality.  They will not resolve in the designer.  This is not a \"problem\" but the intended design.  I don’t use the designer much anyway.  I don’t like the code it produces.  I prefer the markup or code view.</p>"
+  },
+  {
+    "id": 193,
+    "parent": 0,
+    "author_name": "John",
+    "author_url": "http://",
+    "date": "2005-02-01T11:50:00",
+    "type": "comment",
+    "content_html": "<p>Thanks for the quick reply.  The project that I am working on relies on grid layout, therefore, I need to find a designer friendly solution.</p>"
+  },
+  {
+    "id": 194,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2005-02-01T12:50:00",
+    "type": "comment",
+    "content_html": "<p>I would recommend posting this question to an ASP.NET newsgroup.  Maybe a designer guru will have a solution.</p>\n<p><a href=\"http://groups-beta.google.com/group/microsoft.public.dotnet.framework.aspnet\" rel=\"nofollow\">http://groups-beta.google.com/group/microsoft.public.dotnet.framework.aspnet</a></p>"
+  },
+  {
+    "id": 195,
+    "parent": 0,
+    "author_name": "Tim",
+    "author_url": "http://",
+    "date": "2005-05-13T06:07:00",
+    "type": "comment",
+    "content_html": "<p>Thanks! You rock.</p>"
+  },
+  {
+    "id": 196,
+    "parent": 0,
+    "author_name": "Harsh",
+    "author_url": "http://www.exfactory.com",
+    "date": "2005-12-06T21:38:12",
+    "type": "comment",
+    "content_html": "<p>Thanks a lot for the article above. I was stuck with the URL not being resolved correctly when using virtual paths with “~”. The ResolveURL method of the Control class fixed the problem.</p>"
+  }
+]

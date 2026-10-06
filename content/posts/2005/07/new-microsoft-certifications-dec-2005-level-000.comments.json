@@ -1,0 +1,38 @@
+[
+  {
+    "id": 370,
+    "parent": 0,
+    "author_name": "Raymond Lewallen",
+    "author_url": "http://www.codebetter.com/blogs/raymond.lewallen",
+    "date": "2005-07-14T12:29:03",
+    "type": "comment",
+    "content_html": "<p>Regarding design and architecture, those have always been my rants.  How come certified professionals don’t have to know how to write a custom collection, or how hash tables work, or understand afferent and efferent coupling, or abstract versus concrete and where they apply?  So many can’t even tell you how a variable _really_ works.  Its a shame.  I give little credence to certifications, especially MCAD, because of this, when talking about anything other than UI.  On the flip side, at least I have assurance that the person is very capable of knowing where and how to find the answers to those questions.  I hope.</p>"
+  },
+  {
+    "id": 371,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-07-14T13:19:14",
+    "type": "comment",
+    "content_html": "<p>Would you do a blog post on what afferent and efferent coupling is? \uD83D\uDE42</p>"
+  },
+  {
+    "id": 372,
+    "parent": 0,
+    "author_name": "Darrell Norton",
+    "author_url": "http://codebetter.com/blogs/darrell.norton/",
+    "date": "2005-07-14T14:20:49",
+    "type": "comment",
+    "content_html": "<p>MCPD also means Mayberry County Police Department, where you can hang out with the likes of Sheriff Andy and Barney Fife.</p>"
+  },
+  {
+    "id": 373,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://flimflan.com/blog",
+    "date": "2005-07-14T17:07:34",
+    "type": "comment",
+    "content_html": "<p>I don’t think you will never get what you are looking for from a vendor owned certification process.</p>\n<p>This is a good opportunity to plug Bob Reselman’s thought provoking book Coding Slave.  <a href=\"http://www.codingslave.com/\" rel=\"nofollow ugc\">http://www.codingslave.com/</a><br>\nI like his take on the whole industry certification scheme.</p>"
+  }
+]

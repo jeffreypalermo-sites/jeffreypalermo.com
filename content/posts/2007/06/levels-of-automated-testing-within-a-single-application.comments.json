@@ -1,0 +1,137 @@
+[
+  {
+    "id": 1779,
+    "parent": 0,
+    "author_name": "Ralf Kretzschmar",
+    "author_url": "http://rkse.blogspot.com/",
+    "date": "2007-06-29T04:33:21",
+    "type": "comment",
+    "content_html": "<p>I totally agree!<br>\nI always get the creeps when I talk to other devs who are claiming to do unit tests and using the db because “its there anyway”. </p>\n<p>Michael Feathers has a good list of things a unit test must not do in “Working Effectively with Legacy Code”<br>\n“A test is not a unit test if:<br>\n* It talks to a database.<br>\n* It communicates across a network.<br>\n* It touches the file system.<br>\n* You have to do special things to your environment (such as editing configuration files) to run it.”<br>\nThat puts it nicely. </p>\n<p>Maybe to have your own database on your dev machine fires back when it comes to unit testing :-). Nevertheless I really can’t understand that there are still shops that insist on having one or two central development dbs that are managed by someone in another department.</p>"
+  },
+  {
+    "id": 1780,
+    "parent": 0,
+    "author_name": "Wayne M",
+    "author_url": "http://",
+    "date": "2007-06-29T12:42:48",
+    "type": "comment",
+    "content_html": "<p>The point of the tests is to define what correct operation means.  To do effective test driven design, tests at many different levels are required and there are trade-offs in doing various levels of isolation or integration.  Don’t get hung up on precise definitions of “unit” test and “integration” test, write the most effecitve tests to get the job done.</p>"
+  },
+  {
+    "id": 1781,
+    "parent": 0,
+    "author_name": "joeyDotNet",
+    "author_url": "http://joeydotnet.com/blog",
+    "date": "2007-06-29T12:52:05",
+    "type": "comment",
+    "content_html": "<p>So would you classify automated “acceptance” tests under “full system tests” or “integration tests” or both?  Even though acceptance tests probably do fall into one or both of those categories, in my mind, acceptance tests convey a different meaning.</p>\n<p>So, perhaps they need their own “classification” in your list of automated testing types?  Your thoughts?</p>\n<p>(Even though I haven’t yet been fortunate enough to fully utilize acceptance testing on a project, I can definitely see the benefits of using them and can’t wait until I get the opportunity.)</p>"
+  },
+  {
+    "id": 1782,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-06-29T12:52:49",
+    "type": "comment",
+    "content_html": "<p>@Wayne,<br>\nThanks for the comment.  Your point is correct.  Different types of tests are required, and each have trade-offs.</p>\n<p>I don’t believe I’m “hung up” on the definitions, but I’ve found that many folks only use the term “unit tests”, and what they mean are “automated tests”.  I’d like to build a richer vocabulary around testing, and terms that have various meanings are essential to a rich vocabulary.  We can’t just have one term.</p>\n<p>@Ralf,<br>\nMichael Feathers is a genius.  I have read his book cover-to-cover.  If a test doesn’t meet the criteria, it’s not a unit test.</p>"
+  },
+  {
+    "id": 1783,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-06-29T13:03:39",
+    "type": "comment",
+    "content_html": "<p>@Joey,<br>\nI’m glad you brought that up.  I didn’t mention those, did I?  I was only thinking about developer tests at the time.</p>\n<p>Automated acceptance tests could be at any level, actually.  I think they are their own category.  You wouldn’t call an acceptance test a “unit test” even if it was used to validate behavior handled by only one class.  acceptance tests need not be full system tests.  They can be at any level and should verify behavior from the point of view of the product owner.</p>\n<p>What normally comes to mind is FIT, which I’ve used for projects at two different companies.  These are table based, don’t look much like code, but can exercise the entire system or just a small part of it if necessary.  The UI can be involved, but it doesn’t need to be for other cases.  Either way, thank you for bringing it up.</p>"
+  },
+  {
+    "id": 1784,
+    "parent": 0,
+    "author_name": "joeyDotNet",
+    "author_url": "http://joeydotnet.com/blog",
+    "date": "2007-06-29T13:26:03",
+    "type": "comment",
+    "content_html": "<p>Sure, thanks for the clarification.  Acceptance testing seems so beneficial, I’m surprised it’s not used more on projects.</p>\n<p>Oh, and while we’re at it, I don’t know how many times I’ve seen regular “unit testing” (the TAD varierty) mistakenly get put under the umbrella of TDD…  Once again I’m having to clarify this at my new company.  The TDD term seems to be getting just as vague as “service” or SOA (which seems to have 38,000 different meanings).</p>\n<p>I much prefer at the very least Test-FIRST Development or even better, Behavior-Driven Development.  Is it possible for us to retire the TDD term once and for all?  Or should we just keep clarifying what the english word “driven” means…  </p>\n<p>Sorry, this kinda got a little off-topic, but I think it’s a discussion that needs to take place.</p>"
+  },
+  {
+    "id": 1785,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-06-29T13:37:03",
+    "type": "comment",
+    "content_html": "<p>@Joey,<br>\nI don’t think it would benefit the community to retire TDD.  We’d then be starting from scratch with a different term.  We should use the term properly and assert its meaning.</p>\n<p>I’m reminded of a court case where the defendant called the judge a “pimp” and then backpedaled trying to convince the judge that it was a compliment and not an insult.  The term already has a meaning, so confusion ensues when folks try to alter the meaning.</p>"
+  },
+  {
+    "id": 1786,
+    "parent": 0,
+    "author_name": "joeyDotNet",
+    "author_url": "http://joeydotnet.com/blog",
+    "date": "2007-06-29T13:56:29",
+    "type": "comment",
+    "content_html": "<p>Yeah, I can understand that.  I’m just always puzzled when the practice of TDD, as it was intended, is seen by many as “pure” or “elitist”.  And why TAD is somehow accepted as the “practical” application of TDD?</p>\n<p>Oh well, guess that keeps us busy in the consulting world.  \uD83D\uDE1B</p>"
+  },
+  {
+    "id": 1787,
+    "parent": 0,
+    "author_name": "Wayne M",
+    "author_url": "http://",
+    "date": "2007-06-29T16:21:06",
+    "type": "comment",
+    "content_html": "<p>Hi Jeffery, my “don’t get hung up” comment was intended to be general advice to the world and I hope no one interpretted it as being directed at you.  I’ve gotta watch how I say things when I am philosophizing!</p>\n<p>I agree with you on the confusion with the term “unit tests”.  As I recall there was a recommendation several years back to replace unit tests with the term programmer tests to cover everything that is needed from the programmer’s viewpoint.  I guess I have had too many run-ins with strict definitionalists who feel unit testing is only individual class level tests and no further tests should be considered or required.</p>\n<p>Anyway, I just wanted to clarify my opinion that TDD needs to use a broad range of automated tests and emphasize I was largely in agreement with what you said and targetting the world at large with my comments.</p>"
+  },
+  {
+    "id": 1788,
+    "parent": 0,
+    "author_name": "Jimmy Bogard",
+    "author_url": "http://grabbagoft.blogspot.com/",
+    "date": "2007-06-29T20:50:28",
+    "type": "comment",
+    "content_html": "<p>I tried to define test types for my team a while back with a post:</p>\n<p><a href=\"http://grabbagoft.blogspot.com/2007/06/classifying-tests.html\" rel=\"nofollow ugc\">http://grabbagoft.blogspot.com/2007/06/classifying-tests.html</a></p>\n<p>“Unit testing” was originally defined on my team as “manually going through the web application to verify one feature under the happiest of happy paths”.</p>"
+  },
+  {
+    "id": 1789,
+    "parent": 0,
+    "author_name": "Ross",
+    "author_url": "http://",
+    "date": "2007-06-30T11:01:28",
+    "type": "comment",
+    "content_html": "<p>I agree with the five points regarding automated testing with the database. The trouble is I’ve never found a practical way of implementing this.</p>\n<p>If you wish to keep all of your database objects under source control, then it seems to me that the best way of doing this is to have one script for each object, perhaps putting them in folders such as Tables, Views, Functions, etc.</p>\n<p>That’s all fine and dandy, but when doing a get latest how the heck does one know which order to execute the scripts in? With constraints such as foreign keys this order is crucial.</p>\n<p>I appreciate this is a bit OT but if you could share some of your experiences in this area – perhaps in a future post – I’d be interested.</p>"
+  },
+  {
+    "id": 1790,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-06-30T22:48:38",
+    "type": "comment",
+    "content_html": "<p>@Jimmy,<br>\nI’ve seen that usage.  Shops that don’t do any automated testing all all have used the term to test a small portion of the code, but test it manually.  Automated testing has proven to be far superior to manual testing for this.</p>\n<p>@Ross,<br>\nI understand the problem, and I have had to tackle the same issues.  I’ve solved the problem by using a mix of source control and automation for database building/updating.  I’ve found it useful to mark the database with the same version number as the code gets.  As the code gets a new build number, the database schema should also.</p>\n<p>I’ll see about distilling that into a future post.</p>"
+  },
+  {
+    "id": 1791,
+    "parent": 0,
+    "author_name": "Carlton",
+    "author_url": "http://",
+    "date": "2007-07-02T16:18:08",
+    "type": "comment",
+    "content_html": "<p>@Ross</p>\n<p>I have solved this issue by having EVERY piece of T-SQL needed to make the DB under source control – that includes referential integrity checks.  Then I create a “big script” that knows the “right order” – established mostly through trial and error – and execute the “big script” using the osql.exe command line tool.  It is time consuming and painful if you create the “big script”  this at the end of a project, but not too bad if you add a little at each step of the way.</p>"
+  },
+  {
+    "id": 1792,
+    "parent": 0,
+    "author_name": "Ross",
+    "author_url": "http://",
+    "date": "2007-07-02T21:47:15",
+    "type": "comment",
+    "content_html": "<p>@Carlton</p>\n<p>Thanks for your suggestion. In the past I have done something similar to the “big script” idea where I maintained a bat file for running all of the scripts via the command line. This does work, but tends to fall down in multi-developer teams when colleagues forget to maintain the file, or do so incorrectly (i.e. wrong order). I don’t think it is a practical solution.</p>\n<p>It is also possible to do a “topological sort” of the tables in order to make sure they get created in the right order. I believe other objects such as views are late-bound so can be created without their dependencies.</p>\n<p>All of this seems far too clunky to me – at least if you want to roll it out to a multi-developer team.</p>"
+  },
+  {
+    "id": 1793,
+    "parent": 0,
+    "author_name": "Don",
+    "author_url": "http://",
+    "date": "2007-07-04T04:57:53",
+    "type": "comment",
+    "content_html": "<p>@Ross</p>\n<p>We handle this issue in a way similar to what you describe.  We created a batch file that runs a series of osql commands.  It crawls the directory tree and runs all of the scripts in the default order (alpha), but we set the order of the folders to run.  We keep our scripts in the folders:</p>\n<p>table<br>\npk_constraint<br>\nfk_constraint<br>\nindex<br>\nseed<br>\ntrigger<br>\nview<br>\nsproc</p>\n<p>In the root folder is the db_create script.  This sets up the mdb and log files, creates accounts and roles and sets permissions globally.  This is run first.  Then the table folder is crawled and all tables created.  Tables are created with the rule that only default, IDENTITY and NULL constraints can be defined.</p>\n<p>The pk_constraint folder contains one file.  This is a simple list of alter table commands to define the pk for each table.  We’ve debated many times whether we should collapse this into the table definitions, but it always gets religious and turns into an old timer vs new timer debate.  It is what it is.</p>\n<p>The fk_constraint folder contains only one file too.  This is an ordered list of foreign keys.  Add the head of the file is a comment list of all tables affected and the target table.  It’s a little work to maintain for a lot of gain long run.</p>\n<p>The seed folder has one script for each table that defines it’s seed data.  Used mostly for filling in lookup tables.</p>\n<p>Indexes (almost all covering) are defined and run next.  Followed by triggers, views and finally sprocs.  </p>\n<p>Another rule we have is that if your script includes a CREATE command, it has to assign permissions in the same script file.</p>\n<p>The batch file takes about five minutes to run.  The LOC all told is around 75K.  Any errors are echoed to the window with the point it occurred.  These have to be fixed before checkin (unfortunately unenforceable except by ridicule when a bad checkin is made).</p>\n<p>I’m sure there could be built a more elegant solution and this may seem very Mort, but it has worked for us for 7 years now with very few issues, included four major schema changes.</p>"
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "id": 644,
+    "parent": 0,
+    "author_name": "Geoff Appleby",
+    "author_url": "http://codebetter.com/blogs/geoff.appleby/",
+    "date": "2006-02-21T06:12:59",
+    "type": "comment",
+    "content_html": "<p>You know what might help? An actual explanation of what RAD is. What sort of things you do when developing RAD style. If you want to actually convert people with a post like this (and that’s fine! i thought it was quite funny) it might be a good idea to let people that don’t know that they’re giving themselves cancer what is _actually_ giving them cancer.</p>\n<p>I was actually going to try and start a fight with you about how it isn’t all bad (and that’s not to say i disagree with you, but the discussion would be valuable) but I realised that I can’t unless i know what you’re definition of RAD actually is \uD83D\uDE42</p>"
+  },
+  {
+    "id": 645,
+    "parent": 0,
+    "author_name": "ewise",
+    "author_url": "http://www.codebetter.com/blogs/eric.wise",
+    "date": "2006-02-21T13:22:51",
+    "type": "comment",
+    "content_html": "<p>RAD is for three things:</p>\n<p>1) Proof of concept / Sales Presentation<br>\n2) For that tiny niche application that does a very simple thing and doesn’t have any plans for continuous expansion.<br>\n3) Allowing a complete newbie to feel productive while they gain comfort level with the language/toolset.</p>"
+  },
+  {
+    "id": 646,
+    "parent": 0,
+    "author_name": "Jeremy D. Miller",
+    "author_url": "http://",
+    "date": "2006-02-21T13:33:52",
+    "type": "comment",
+    "content_html": "<p>I can’t believe I’m saying this, but…</p>\n<p>4) Shadow IT / Customer Supported System / whatever</p>\n<p>Allowing a non-programmer in the actual business pick up something like Excel or Access to automate some of their work.  Promptly grows into a sphaghetti mess that IT picks up later when it becomes mission critical, but that’s a different story.</p>"
+  },
+  {
+    "id": 647,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-02-21T14:28:47",
+    "type": "comment",
+    "content_html": "<p>Geoff,<br>\nYou have a very good point.  I didn’t define RAD, but I wasn’t too serious about starting a RAD preaching series.</p>\n<p>I think the two camps are RAD vs. Long-term (or sustainable).  One big point would be to spell out why RAD == short-term (write-only, unsupportable, etc).</p>\n<p>Part of that would be depending on a GUI designer to write code for you (code that you might not understand).  I love code-generators that write exactly the code I would have written anyway.  These save me time.  I can’t tolerate code-generators that write code in a way I don’t understand (or like).</p>\n<p>Even with NHibernate, I didn’t blindly let it generate and run SQL for me.  I tapped in with SQL Profiler to monitor the sql it was sending to the database to ensure it was acceptable to me.</p>\n<p>RAD often goes hand-in-hand with “programming by coincidence” – read The Pragmatic Programmer.</p>"
+  },
+  {
+    "id": 648,
+    "parent": 0,
+    "author_name": "pvanooijen",
+    "author_url": "http://codebetter.com/blogs/peter.van.ooijen/default.aspx",
+    "date": "2006-02-21T15:53:21",
+    "type": "comment",
+    "content_html": "<p>In the “old” days when RAD was introduced it also stood for Rapid Application Design. When it comes to designing Visual stuff I still like it very much. Drag and drop the componenets on your form and use the designer to navigate through the code which is attached to the events. Still nice. As well because the user of the software and the developer have the same view on (parts of) the code. </p>\n<p>I still like this for non visual “componenets” as well. A component with dataadapters and the like does give a good overview.</p>\n<p>But when the developer starts pouring all code in the form/component its quite easy to get the mess you describe. The real code should be quite somewhere else. To be testable, etc..</p>"
+  },
+  {
+    "id": 649,
+    "parent": 0,
+    "author_name": "Eber Irigoyen",
+    "author_url": "http://ebersys.blogspot.com/",
+    "date": "2006-02-21T17:54:11",
+    "type": "comment",
+    "content_html": "<p>as most things in programming, is hard to draw a line where you should stop using RAD and do it by hand</p>\n<p>I usually follow some simple rules<br>\n– leave the visual part to RAD<br>\n– separate the business logic from the RAD (different class)<br>\n– don’t hardcode properties like ConnectionString, ProcedureName, etc; create a method to load those at some point, this by itself avoids many “it works on my machine”<br>\n– don’t tie your data (or business specific) functions to RAD components, instead use interfaces so that the “client” (the winform, webform, console, etc) can consume your functions implementing their own way of displaying the data.<br>\nThis last one makes your code very extensible, you can use your same business object from anywhere you need</p>"
+  },
+  {
+    "id": 650,
+    "parent": 0,
+    "author_name": "Chris Holmes",
+    "author_url": "http://www.chrisholmesonline.com",
+    "date": "2006-02-27T18:47:56",
+    "type": "comment",
+    "content_html": "<p>“Allowing a non-programmer in the actual business pick up something like Excel or Access to automate some of their work. Promptly grows into a sphaghetti mess that IT picks up later when it becomes mission critical, but that’s a different story.<br>\n”</p>\n<p>So true!</p>"
+  },
+  {
+    "id": 651,
+    "parent": 0,
+    "author_name": "James Gibbons",
+    "author_url": "http://www.folding-hyperspace.com/",
+    "date": "2006-03-19T17:21:09",
+    "type": "comment",
+    "content_html": "<p>RAD can be very tempting, but in the end, it leads only to death. . . of your software.  At some point, the only recourse will be a total rewrite.</p>\n<p>Yes I agree if you use VB6 or VC and MFC wizards \uD83D\uDE42</p>\n<p>The death/rewrite is more a function of market changes than the tools or their ability to adapt to new functions.</p>\n<p>As I see it there are two types of RAD: RAD for GUI and RAD for application specific solutions like LabView, VisionBlox or Active MIL (which I will shorten to ASS). \uD83D\uDE42</p>\n<p>RAD for GUI (having started with Delphi 1.0) has saved me many hours of design effort. If you need to do many custom apps for many customers with different requirements, I only see it as a plus.</p>\n<p>RAD for ASS is another entirely different subject. I could use it for my image processing solutions, but it would not give me the control I need. All such ASS solutions tend to take aim at specific problem areas and while they solve those problems they will never address the whole world of things we do.</p>\n<p>When used as tools for the specific problems they were designed to solve, I don’t see RAD as a problem.</p>"
+  }
+]

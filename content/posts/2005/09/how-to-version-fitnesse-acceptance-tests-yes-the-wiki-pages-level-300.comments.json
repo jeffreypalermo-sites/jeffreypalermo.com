@@ -1,0 +1,29 @@
+[
+  {
+    "id": 474,
+    "parent": 0,
+    "author_name": "Jon Skeet",
+    "author_url": "http://msmvps.com/jon.skeet",
+    "date": "2006-02-10T22:12:50",
+    "type": "comment",
+    "content_html": "<p>This is definitely an ability which should be present in Fitnesse.</p>\n<p>I’m looking at the Fitnesse source code to see whether I can “crowbar in” JavaSvn to do it a bit more natively than using the CC.NET method. It looks possible but not terribly elegant at the moment – for one thing, the code is hard-wired to use FileSystemBasedPage (IIRC) on startup. Have to do something about that to start with…</p>\n<p>Jon</p>"
+  },
+  {
+    "id": 475,
+    "parent": 0,
+    "author_name": "TestingGeek",
+    "author_url": "http://www.TestingGeek.Com",
+    "date": "2007-08-09T13:21:46",
+    "type": "comment",
+    "content_html": "<p>I am using a FitNesse plugin for eclipse which allows me to have FitNesse running within my eclipse shell. I have to start version control.. as of now I have not faced any problem but I have read at many places that if we version control FitNesse pages and use refactoring, it might break something in version control.. I am curious to know more on this topic.</p>"
+  },
+  {
+    "id": 476,
+    "parent": 0,
+    "author_name": "David Worsham",
+    "author_url": "http://",
+    "date": "2007-08-17T15:28:08",
+    "type": "comment",
+    "content_html": "<p>Have you found a solution for dealing with refactoring of Fitnesse pages (specifically, deletions?)  Without a way to use svn delete, the commit will fail.</p>"
+  }
+]

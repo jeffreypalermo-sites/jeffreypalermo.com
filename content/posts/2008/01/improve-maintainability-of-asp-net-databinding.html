@@ -1,0 +1,18 @@
+---
+wp_id: 594
+title: Improve maintainability of ASP.NET databinding
+slug: improve-maintainability-of-asp-net-databinding
+permalink: /2008/01/improve-maintainability-of-asp-net-databinding/
+date: 2008-01-02T13:47:22
+date_utc: 2008-01-02T13:47:22Z
+modified: 2008-01-02T13:47:22
+format: html
+excerpt: Most of us (I think) don’t have full browser automated testing through Watir or Selenium. Because of that, even though we have tons of automated NUnit tests, we could still have problem in web pages in ASP.NET because these aren’t fully tested with the build. Even with Resharper, refactoring often leaves bad property references in […]
+comments_open: true
+---
+<p>Most of us (I think) don’t have full browser automated testing through <a href="http://wtr.rubyforge.org/">Watir</a> or <a href="http://www.openqa.org/selenium/">Selenium</a>.&nbsp; Because of that, even though we have tons of automated <a href="http://www.nunit.org/">NUnit</a> tests, we could still have problem in web pages in ASP.NET because these aren’t fully tested with the build.</p>
+<p>Even with <a href="http://www.jetbrains.com/resharper/">Resharper</a>, refactoring often leaves bad property references in databinding code that looks like this:</p>
+<p>&lt;%# Eval(“EmailAddress”) %&gt; </p>
+<p>If we get rid of the EmailAddress property on the object we’re binding (or rename it), this would break.</p>
+<p>If we convert the above line of code to the following, we benefit from strong typing (and <a href="http://www.jetbrains.com/resharper/">Resharper</a> helps us out a little more).&nbsp; We can precompile the web application to ensure all references in web pages still work.&nbsp; After all, compilation is a low-level form of testing.&nbsp; It would alert us of a bug.</p>
+<p>&lt;%# ((Customer)Container.DataItem).EmailAddress %&gt; </p>

@@ -1,0 +1,11 @@
+[
+  {
+    "id": 132,
+    "parent": 0,
+    "author_name": "Anders Norås",
+    "author_url": "http://",
+    "date": "2004-08-19T13:46:00",
+    "type": "comment",
+    "content_html": "<p>There is no such thing as one solution to all problems. In some scenarios it would make the most sense to set top-level page properties such as the title, target and similar in code. I believe that this is an exception and not the rule. If it is more of a rule, such as with generated titles in ASP 1.x, where master pages aren’t supported. I would consider injecting or altering the HTML code for the TITLE element in an HttpModule. This would separate the presentation rules from the content.<br>\nThis would of course be more difficult to develop than a extension to the System.Web.UI.Page class, but you would benefit from this in the long run since it would make the application easier to maintain.</p>"
+  }
+]

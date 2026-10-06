@@ -1,0 +1,13 @@
+---
+wp_id: 136
+title: How to use app-relative paths in ASP.NET – level 100
+slug: how-to-use-app-relative-paths-in-asp-net-level-100
+permalink: /2004/11/how-to-use-app-relative-paths-in-asp-net-level-100/
+date: 2004-11-06T19:34:00
+date_utc: 2004-11-06T19:34:00Z
+modified: 2004-11-06T19:34:00
+format: html
+excerpt: I’ve been using this feature since the beginning, but I’ve come to realizethat a lot of people aren’t aware of this. The application path shortcut:“~/”When including any resource in your page whether it be a user control,image, css or whatever, it has to be located. The simplest thing to do isto type the entire path, […]
+comments_open: true
+---
+<p>I’ve been using this feature since the beginning, but I’ve come to realize<br>that a lot of people aren’t aware of this.&nbsp; The application path shortcut:<br>“~/”<br><br>When including any resource in your page whether it be a user control,<br>image, css or whatever, it has to be located.&nbsp; The simplest thing to do is<br>to type the entire path, <a href="http://localhost/myApp/myStyle.css">http://localhost/myApp/myStyle.css</a>, but that isn’t<br>very maintainable because when you deploy, you have to change this<br>reference.&nbsp; So the next step is making the path relative to the page (buried<br>2 levels deep):&nbsp; ../../myStyle.css, but what if the site structure changes?<br>What do you do?&nbsp; You could make it domain-relative:&nbsp; /myApp/myStyle.css, but<br>what if your application needs to be deployed to it’s own domain:<br><a href="http://myAppDomain.com/">http://myAppDomain.com/</a> ?&nbsp; Now this reference is broken.&nbsp; Some people get<br>around this by setting the path with Request.ApplicationPath +<br>“/myStyle.css”, but this doesn’t work in all cases.&nbsp; If you have a virtual<br>path, you get /myApp, but if you are at the root, you get “/”, so in the<br>case of /myApp, you have to add a “/” to the end.<br><br>To get around all this, use “~/” as a shortcut to you application path.<br>With that shortcut at the beginning of your path, any server control will<br>resolve the url for you.&nbsp; If you use this in a non-server control or just<br>print it out, you will need to resolve it yourself using the ResolveUrl(…)<br>method of the Control class.&nbsp; This method is inherited by all controls, so<br>you can use it directly in Page, UserControl and all web controls.&nbsp; I use<br>nothing but app-relative paths now.<br><br>In .Net 2.0, we’ll get more App-relative shortcut properties like<br>Request.AppRelativePath.&nbsp; It’s really a much cleaner way to represent a<br>resource relative to the application no matter what the path to the<br>application is.<br></p>

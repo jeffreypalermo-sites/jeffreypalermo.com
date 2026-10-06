@@ -1,0 +1,47 @@
+[
+  {
+    "id": 96,
+    "parent": 0,
+    "author_name": "Darrell",
+    "author_url": "http://",
+    "date": "2004-06-17T11:56:00",
+    "type": "comment",
+    "content_html": "<p>And FxCop will warn you when you violate the naming guidelines, which is the only way to realistically enforce them.</p>"
+  },
+  {
+    "id": 97,
+    "parent": 0,
+    "author_name": "J. Michael Palermo IV",
+    "author_url": "http://",
+    "date": "2004-06-18T09:33:00",
+    "type": "comment",
+    "content_html": "<p>IMHO, you should explain the difference between:</p>\n<p>All private members…<br>\nAll private class members…</p>\n<p>I would identify the first one as:<br>\nAll local variables or parameters</p>\n<p>I would identify the second one as:<br>\nAll private type members</p>\n<p>my .02</p>"
+  },
+  {
+    "id": 98,
+    "parent": 0,
+    "author_name": ".",
+    "author_url": "http://",
+    "date": "2004-06-20T03:50:00",
+    "type": "comment",
+    "content_html": "<p>why are you guys wasting your time with such nonsense. Just follow the MSDN Design Guidelines.</p>"
+  },
+  {
+    "id": 99,
+    "parent": 0,
+    "author_name": "Jeff",
+    "author_url": "http://",
+    "date": "2004-08-25T09:18:00",
+    "type": "comment",
+    "content_html": "<p>I found this (devAdvantage) which I like much better than FXCop.  You can easily adjust the rules to do what you want so it isn’t as annoying.  the only downside is that it does not handle spelling yet.  the really cool thing though is that it can do the renaming for you.  definitely check it out.</p>\n<p><a href=\"http://www.anticipatingminds.com/Content/Products/devAdvantage/devAdvantage.aspx\" rel=\"nofollow\">http://www.anticipatingminds.com/Content/Products/devAdvantage/devAdvantage.aspx</a></p>"
+  },
+  {
+    "id": 100,
+    "parent": 0,
+    "author_name": "okay",
+    "author_url": "http://",
+    "date": "2004-09-08T12:12:00",
+    "type": "comment",
+    "content_html": "<p>The only argument I ever heard against<br>\nindicating the private variable type<br>\nin the variable name prefix, is,<br>\nwhat if you have to change from a bool<br>\nto an int.  Well, all you are doing is<br>\nchanging Is to Num instead of changing b to i.<br>\nYou are still re-naming every occurrence of<br>\nthe variable, unless your new int variable<br>\nstill logically deserves Is as the prefix.<br>\nThen you have strings, 45 different prefixes<br>\nwhereas you used to look at sz and know it<br>\nwas a string.  None of the dupes of MSDN<br>\nwho are against type notation are even<br>\nwilling to admit the only valid reason,<br>\nwhich is, because they say so.  Why should<br>\nSaddam Husseins picture be in my office?<br>\nBecause they say so.  </p>"
+  }
+]

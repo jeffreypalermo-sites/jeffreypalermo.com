@@ -1,0 +1,146 @@
+[
+  {
+    "id": 2351,
+    "parent": 0,
+    "author_name": "Justice~!",
+    "author_url": "http://graysmatter.codivation.com",
+    "date": "2008-03-09T22:32:30",
+    "type": "comment",
+    "content_html": "<p>You beat me to this post, but I’ll probably post about it anyway.  This to me is one of the more frustrating choices and I totally agree.  We shouldn’t have to try to find workaround for something designed fresh.  </p>\n<p>It’s more frustrating to me given we’ve already been through 6 mos worth.  I really hope it is fixed in the next drop, or at least a valid explanation given as to why it’s not available.</p>"
+  },
+  {
+    "id": 2352,
+    "parent": 0,
+    "author_name": "Paul",
+    "author_url": "http://",
+    "date": "2008-03-09T22:44:24",
+    "type": "comment",
+    "content_html": "<p>The var keyword should be banished from anything but Linq queries.</p>\n<p>Notice how similar the following is to what we VB’ers do today:</p>\n<p>“var” repository = new FakeRepository();</p>\n<p>and the corresponding VB version….</p>\n<p>“dim” respository “as” new FakeRepository()</p>\n<p>Using the var in this manner makes a code smell to high heaven! What the heck is “repository” without using R# or go to definition. So much for self-documenting code……</p>"
+  },
+  {
+    "id": 2353,
+    "parent": 0,
+    "author_name": "Simone",
+    "author_url": "http://codeclimber.net.nz",
+    "date": "2008-03-09T23:02:24",
+    "type": "comment",
+    "content_html": "<p>Now it will not work since if you that way you get a “null reference exception” because the controller context has not been set. Isn’t it?</p>"
+  },
+  {
+    "id": 2354,
+    "parent": 0,
+    "author_name": "Scott Bellware",
+    "author_url": "http://scottic.us",
+    "date": "2008-03-09T23:43:57",
+    "type": "comment",
+    "content_html": "<p>Paul,</p>\n<p>&gt; What the heck is “repository” without using R# or go to definition.<br>\n&gt; So much for self-documenting code</p>\n<p>It’s a repository.  I trust that Jeffrey will always use appropriate variable names, so I know that the variable name is likely the name of the type or a subtype (especially when mocking or stubbing).</p>\n<p>If the variable has to be something other than the type, I still don’t have to be interested in the type unless I can’t derive the intention of the code from its use or literate style and appropriate language.</p>\n<p>I agree that the “var” keyword should be struck from the language. I’d rather see a more Ruby-esque mode of variable declaration like:</p>\n<p>repository = new Repository();</p>\n<p>Explicit type declaration prefixes on variable declaration statements isn’t a significant part of readability.  The extents of language-oriented programming that can be achieved in untyped and dynamic languages are a testament to this.</p>"
+  },
+  {
+    "id": 2355,
+    "parent": 0,
+    "author_name": "Scott Bellware",
+    "author_url": "http://scottic.us",
+    "date": "2008-03-09T23:56:09",
+    "type": "comment",
+    "content_html": "<p>ScottGu,</p>\n<p>I don’t believe Jeffrey’s comments went to the MERE POSSIBILITY of testing this code, but the FRICTION involved in doing so.</p>\n<p>TDD isn’t about just being able to test, it’s about being able to design clean, clear interfaces, and we look at the amount of ancillary dependencies showing up in test scripts as an unequivocal indicator of design problems.</p>\n<p>Can this test be effected using a design that doesn’t require these test helpers, or at least requires less of them?</p>"
+  },
+  {
+    "id": 2356,
+    "parent": 0,
+    "author_name": "Derik Whittaker",
+    "author_url": "http://devlicio.us/blogs/derik_whittaker/default.aspx",
+    "date": "2008-03-10T00:01:00",
+    "type": "comment",
+    "content_html": "<p>Jeff,</p>\n<p>What is the point of using var’s for your locals?  You doing something where you need the variable to possibly be dynamic?  </p>\n<p>Personally I am not a fan of using var’s yet.  I don’t think i see a point in not using a strongly typed variable unless you are doing something with linq or something where you need the variable to be dynamic.</p>"
+  },
+  {
+    "id": 2357,
+    "parent": 0,
+    "author_name": "Scott Bellware",
+    "author_url": "http://scottic.us",
+    "date": "2008-03-10T00:02:58",
+    "type": "comment",
+    "content_html": "<p>Jeff,</p>\n<p>I’d like to see what you come up with after working with the controller testing abilities in RSpec for Rails.</p>\n<p>I find it distressing that I would have to mock a view engine to test whether a controller asked for one view or another to be rendered.</p>\n<p>I find the extend and override solution to lead to clearer test code, but I still don’t feel it as a “good” or “right” solution.  I’m spoiled by Ruby.  My expectations have been set pretty high by what I see as a much better implementation of an MVC framework using a much friendlier language.</p>\n<p>I think I’d rather see this done with a generic controller test base class that knows the type of the controller, can provide an instance of the controller to test and can prove that expectations have been met.  I think this is closer to a solution for good clear test code that you and Phil are dancing around the perimeter of.</p>"
+  },
+  {
+    "id": 2358,
+    "parent": 0,
+    "author_name": "Scott Bellware",
+    "author_url": "http://scottic.us",
+    "date": "2008-03-10T00:13:29",
+    "type": "comment",
+    "content_html": "<p>Jeff,</p>\n<p>I know I’m on your back about these things all the time, but there’s value in making controllers RESTful and resource-oriented.</p>\n<p>You would end up with a RegistrationsController rather than a MainController.  The action to create a new registration would simply be: Create.  You’d POST to Registrations/Create.  To get the new registration form, you’d GET Registrations/New.</p>\n<p>Resource controllers keep things simple by allowing you to have only a standard set of verbs that reflect the underlying resource-oriented protocols like HTTP:<br>\n– New (GET)<br>\n– Create (POST)<br>\n– Update (POST)<br>\n– Delete (or Destory) (POST)<br>\n– List (GET)</p>\n<p>With a limited set of action names to work with, the work is in figuring out the resource names.  Meaningful and appropriate resource names help your addresses to be more discoverable and often more sensible.</p>"
+  },
+  {
+    "id": 2359,
+    "parent": 0,
+    "author_name": "ScottGu",
+    "author_url": "http://weblogs.asp.net/scottgu",
+    "date": "2008-03-10T00:26:21",
+    "type": "comment",
+    "content_html": "<p>@Scott Bellware,</p>\n<p>&gt;&gt;&gt;&gt;&gt;&gt;&gt; Can this test be effected using a design that doesn’t require these test helpers, or at least requires less of them?</p>\n<p>Yes – of course it can.  You can replace this helper method:</p>\n<p>           mocks.SetFakeControllerContext(controller);</p>\n<p>with these three lines of more explicit code if you prefer:</p>\n<p>           //<br>\n           // Construct mock HttpContext and ControllerContext and explictly inject onto Controller<br>\n           //</p>\n<p>           HttpContextBase mockHttpContext = mocks.FakeHttpContext();</p>\n<p>           ControllerContext mockControllerContext = new ControllerContext(new RequestContext(mockHttpContext, new RouteData()), controller);</p>\n<p>           controller.ControllerContext = mockControllerContext;</p>\n<p>All of the objects and methods (with one exception) above are with out of the box objects and methods in the shipping MVC Preview 2.  </p>\n<p>The one exception is the mocks.FakeHttpContext() method.  This is a simple helper that constructs a mock HttpContext using RhinoMocks.  For completeness here is its complete implementation of it below:</p>\n<p>        public static HttpContextBase FakeHttpContext(this MockRepository mocks)<br>\n        {<br>\n            HttpContextBase context = mocks.PartialMock();<br>\n            HttpRequestBase request = mocks.PartialMock();<br>\n            HttpResponseBase response = mocks.PartialMock();<br>\n            HttpSessionStateBase session = mocks.PartialMock();<br>\n            HttpServerUtilityBase server = mocks.PartialMock();</p>\n<p>            SetupResult.For(context.Request).Return(request);<br>\n            SetupResult.For(context.Response).Return(response);<br>\n            SetupResult.For(context.Session).Return(session);<br>\n            SetupResult.For(context.Server).Return(server);</p>\n<p>            mocks.Replay(context);<br>\n            return context;<br>\n        }</p>\n<p>There is much more work planned to make the testing workflow simpler with future previews.  There are definitely certain testing aspects that the team feels needs to be improved (a point that all MVC preview 2 presentations from the MVC team members have explictly called out).  </p>\n<p>The biggest work items and refactorings for MVC Preview 2 were in the routing engine layer – since other components in .NET will start relying on it shortly.  Now that that is done you’ll see a bigger focus on refactoring and polishing the testing workflow of controllers with the preview releases ahead.</p>\n<p>– Scott</p>"
+  },
+  {
+    "id": 2360,
+    "parent": 0,
+    "author_name": "Scott",
+    "author_url": "http://www.OdeToCode.com/blogs/scott/",
+    "date": "2008-03-10T00:59:10",
+    "type": "comment",
+    "content_html": "<p>@Paul<br>\n&gt; What the heck is “repository” without using R# or go to definition</p>\n<p>How is: </p>\n<p>  var repository = new FakeRepository();</p>\n<p>less readable than:</p>\n<p>  FakeRepository repository = new FakeRepository();</p>\n<p>Do you need to see the type name twice to make sure it’s *really* a fake repository?</p>\n<p>P.S. var != dynamic or loose</p>"
+  },
+  {
+    "id": 2361,
+    "parent": 0,
+    "author_name": "jdn",
+    "author_url": "http://www.blogcoward.com",
+    "date": "2008-03-10T03:46:12",
+    "type": "comment",
+    "content_html": "<p>Definitely agree with Odetocode Scott (there’s a proliferation of Scotts in this comment chaing).  I think var is definitely useful here in terms of cutting down on the amount of code you need to type, and it is strongly typed.</p>"
+  },
+  {
+    "id": 2362,
+    "parent": 0,
+    "author_name": "Simone",
+    "author_url": "http://codeclimber.net.nz",
+    "date": "2008-03-10T08:16:29",
+    "type": "comment",
+    "content_html": "<p>@ScottGu,<br>\nprobably already in the pipeline, but what I’d like to see is a TestViewEngine that is part of a System.MVC.Testing.dll that can be used for testing Controllers.<br>\nHelper methods are great, but feel like something you make because the library you are working with is suboptimal.</p>"
+  },
+  {
+    "id": 2363,
+    "parent": 0,
+    "author_name": "Dan",
+    "author_url": "http://",
+    "date": "2008-03-10T16:58:13",
+    "type": "comment",
+    "content_html": "<p>IMHO, I believe too many things are being tested under this one test case. This test is testing, the setting of the attendee properties, that save was called, and that RenderView was called appropriately. This test would look more simple/readable as a interaction based test  – rather than a state based test. </p>\n<p>If you wanted to test that the attendee’s property values were set as expected I believe that should be another test – or at least rename this test more appropriately.  Also, recommend using a mock framework such as NMock or RhinoMock.  I’ve found the overhead of creating and maintaining ‘fake’ or stub classes to be time consuming and troublesome when small changes occur.</p>\n<p>This is more what I had in mind:</p>\n<p>[SetUp]<br>\npublic void setup()<br>\n{<br>\n  context = new ControllerContext(new RequestContext(new HttpContextStub(), new RouteData()), controller);<br>\n}</p>\n<p>[Test]<br>\npublic void ShouldSaveAttendee()<br>\n{<br>\n  var mockRepository =  mocks.NewMock();<br>\n  var mockViewEngine = mocks.NewMock();  </p>\n<p>  Expect.Method(“SaveNewAttendee”).On(repository);</p>\n<p>  var controller = new MainController(mockRepository, mockViewEngine);<br>\n  controller.ControllerContext = context;<br>\n  controller.Register(“Jeffrey.’,”, “http://www.jeffreypalermo.com?=&amp;@%20”, “this comment!?,’.”);</p>\n<p>  mocks.VerifyAllExpectationsHaveBeenMet();<br>\n}</p>\n<p>To test that the attendee properties were actually set to the correct values should actually tested at the Attendee class level (since the attendee constructor is doing that work). Thoughts?</p>"
+  },
+  {
+    "id": 2364,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-03-10T19:16:17",
+    "type": "comment",
+    "content_html": "<p>@Dan,<br>\nI use Rhino Mocks where it is easier than using nested classes.  In this case, I opted for nested classes.</p>\n<p>I don’t fall to either absolute on the spectrum.  I could break each assert out into its own test case, but in this particular case, I strike a balance based on reducing friction.  </p>\n<p>Regarding the Attendee’s constructor.  I need to test that the constructor is called with the appropriate arguments.</p>"
+  },
+  {
+    "id": 2365,
+    "parent": 0,
+    "author_name": "Jeremy Gray",
+    "author_url": "http://",
+    "date": "2008-03-10T19:20:50",
+    "type": "comment",
+    "content_html": "<p>@Derik – var _is_ strong typed.</p>"
+  },
+  {
+    "id": 2366,
+    "parent": 0,
+    "author_name": "ScottGu",
+    "author_url": "http://weblogs.asp.net/scottgu",
+    "date": "2008-03-11T07:47:11",
+    "type": "comment",
+    "content_html": "<p>Hi Simone,</p>\n<p>&gt;&gt;&gt;&gt;&gt;&gt; probably already in the pipeline, but what I’d like to see is a TestViewEngine that is part of a System.MVC.Testing.dll that can be used for testing Controllers.  Helper methods are great, but feel like something you make because the library you are working with is suboptimal.</p>\n<p>One of the things the team is working on right now is some refactorings to not require the need to create or assign mocks for common scenarios (like the one Jeffrey was doing above).  Phil Haack is probably going to be blogging about some of the approaches they are looking to enable in the next few weeks.</p>\n<p>Thanks,</p>\n<p>Scott</p>"
+  }
+]

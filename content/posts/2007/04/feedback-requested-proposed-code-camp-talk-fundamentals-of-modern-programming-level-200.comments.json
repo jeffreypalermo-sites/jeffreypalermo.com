@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1539,
+    "parent": 0,
+    "author_name": "Derik Whittaker",
+    "author_url": "http://devlicio.us/blogs/derik_whittaker/default.aspx",
+    "date": "2007-04-03T12:25:13",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>Here are my thoughts<br>\n– How to think in OO (basics on inheritance, usages of interfaces, etc).<br>\n– Keeping code clean/simple, go over basic signs of code smells.<br>\n– Proper commenting.  Commenting on intent, not just commenting of for the sake of commenting.  </p>\n<p>Just some ideas…. </p>"
+  },
+  {
+    "id": 1540,
+    "parent": 0,
+    "author_name": "Joe Ocampo",
+    "author_url": "http://www.lostechies.com/blogs/joe_ocampo/default.aspx",
+    "date": "2007-04-03T15:04:53",
+    "type": "comment",
+    "content_html": "<p>I picked this up from Object Mentor; it may be what you are looking for.</p>\n<p>– What is an object?<br>\n– Encapsulation<br>\n– Structured vs. Object-Oriented Design<br>\n– Benefits of Object-Oriented Design<br>\n– Managing Dependencies<br>\n– Interfaces and Polymorphism<br>\n– Design Principles<br>\n– Popular Object-Oriented Design Methods<br>\n– UML</p>"
+  },
+  {
+    "id": 1541,
+    "parent": 0,
+    "author_name": "Greg Wilson",
+    "author_url": "http://www.third-bit.com/blog",
+    "date": "2007-04-03T18:17:41",
+    "type": "comment",
+    "content_html": "<p>These days, I spend 10 minutes summarizing work on human short term memory, particularly the “seven plus or minus two” rule and the fact that our brains are wired to think that differences must be significant, before talking about programming style.  I find it helps students understand *why* style rules are important — you can’t have too many variables in scope, or deeply nested control flow, because your short-term memory can’t keep track of things, and you have to format code consistently or your brain will constantly be distracted by non-meaningful differences.</p>"
+  }
+]

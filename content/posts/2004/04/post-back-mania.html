@@ -1,0 +1,17 @@
+---
+wp_id: 48
+title: Post-back mania
+slug: post-back-mania
+permalink: /2004/04/post-back-mania/
+date: 2004-04-16T23:00:00
+date_utc: 2004-04-16T23:00:00Z
+modified: 2004-04-16T23:00:00
+format: html
+excerpt: We have a new, great post-back model with ASP.NET. In fact, I was using a similar model in ASP 3. I would choose a course of action based on a querystring or form value. I would post information back to the same page with an “action” querystring that described what to do next. The model […]
+comments_open: true
+---
+<p>We have a new, great post-back model with ASP.NET.&nbsp; In fact, I was using a similar model in ASP 3.&nbsp; I would choose a course of action based on a querystring or form value.&nbsp; I would post information back to the same page with an “action” querystring that described what to do next.&nbsp; The model worked well then.&nbsp; Now we have that model implemented for us.&nbsp; With any new capability comes the question: “When should I use it?”&nbsp; Certainly not all the time.&nbsp; I can pass XML to SQL Server, but does that mean that I should do it for every single stored procedure now?&nbsp; Certainly not!&nbsp; </p>
+<p>I am currently working on a page that modifies certain properties.&nbsp; To save the data, I have a button that posts back, and I save the information.&nbsp; I have a cancel button.&nbsp; Should I use a postback with the cancel button?&nbsp; When the user cancels, I just want to leave this page and discard any changed information.&nbsp; I really don’t have any clean-up processing for this instance.&nbsp; I could post back and do a Response.Write( ) or Server.Transfer( ), but do I really need to reload that whole form, and then execute the button event handler to leave the page?&nbsp; That would be extra, unnecessary processing.&nbsp; No, instead, I’ll just have the button do a javascript onclick event that modifies the “location.href”.&nbsp; No unnecessary post-back.&nbsp; More efficient.&nbsp; </p>
+<p>There have been several times where&nbsp;a simple hyperlink was much better suited for a task than a post-back.&nbsp; Also, remember that post-back handling comes after the Init and the Load events.&nbsp; So on a post-back, you reload all the old data before the post-back handling occurs.&nbsp; In some cases, I pass a querystring value to a page so that it knows what it needs to do right from the start.&nbsp; I can start doing work in the Init so that my usercontrols have the information they need in thier Load events.&nbsp; </p>
+<p>As with all new capabilities comes the design decision of when to use them.&nbsp; With the up-coming Yukon release of SQL Server, I see some people putting all their business logic with the database’s CLR.&nbsp; Again, we will have to really analyze when it is appropriate to write some managed code at the database.&nbsp; Certainly not all the time.&nbsp; </p>
+<p>Even when new capabilities surface, remember tried-and-true methods that have worked for years.</p>

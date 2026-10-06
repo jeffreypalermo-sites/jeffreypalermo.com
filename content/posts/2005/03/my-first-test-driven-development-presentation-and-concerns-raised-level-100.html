@@ -1,0 +1,50 @@
+---
+wp_id: 195
+title: My first Test-Driven Development presentation – and concerns raised – level 100
+slug: my-first-test-driven-development-presentation-and-concerns-raised-level-100
+permalink: /2005/03/my-first-test-driven-development-presentation-and-concerns-raised-level-100/
+date: 2005-03-09T13:37:00
+date_utc: 2005-03-09T13:37:00Z
+modified: 2005-03-09T13:37:00
+format: html
+excerpt: Sorry folks, no code in this post. I just finished giving a one-hour presentation on how to do TDD with VS 2003 and NUnit. I gave a brief overview of TDD but didn’t try to persuade them to change right off the bat. Heck, I’m just getting started! I started with the approach of referring […]
+comments_open: true
+---
+<p>Sorry folks, no code in this post.&nbsp; </p>
+<p>I just finished giving a one-hour presentation on how to do TDD with VS 2003<br>
+and NUnit.&nbsp; I gave a brief overview of TDD but didn’t try to persuade them to<br>
+change right off the bat.&nbsp; Heck, I’m just getting started!&nbsp; I started with the<br>
+approach of referring them to the explanation given on <a href="http://www.agiledata.org/essays/tdd.html">AgileData</a>.&nbsp; Then I went into<br>
+a demonstration.&nbsp; I emphasized the need to see the test fail to ensure that your<br>
+test is correct.&nbsp; One time, I forgot to add an Assert to the test, and, of<br>
+course, it would never fail.&nbsp; That hit home the point that seeing it fail<br>
+verifies that the test is good.</p>
+<p>One of the concerns raised about using this methodology is:&nbsp; “That’s a lot<br>
+more code to write”.&nbsp; We talked as a group about the benefits of having unit<br>
+tests for all the code in a project.&nbsp; The project could be shipped to another<br>
+building totally cut off from all networks, and another team could add<br>
+functionality and be sure they didn’t break anything else as long as all the<br>
+existing unit tests all continue to work.</p>
+<p>Another question was if this approach would lead to better code. . .or “what<br>
+about the novice programmer”.&nbsp; We talked about how this can lead to a clean<br>
+design but that it would not artificially make a bad programmer’s code better.&nbsp;
+</p>
+<p>I only started doing TDD last week, so if almost feels like I’m leading the<br>
+group while stumbling through the dark myself.&nbsp; It’s becoming familiar quickly,<br>
+though.&nbsp; I’m learning how to decouple external dependencies and test in<br>
+isolation, using SetUp and TearDown methods, etc.&nbsp; Performance counters were a<br>
+bit tricky, though because I couldn’t decide if they should be considered an<br>
+external dependency that should be stubbed or not.&nbsp; After all, I’m just calling<br>
+classes in the .Net Framework.&nbsp; The code isn’t calling over the network.&nbsp; With a<br>
+database, it’s clear:&nbsp; stub it!&nbsp; </p>
+<p>Another topic that came up concerned some of our existing codebase.&nbsp; We have<br>
+some class libraries that were designed to be consumed in a flexible manner, but<br>
+not test-first, and we don’t have unit tests for them.&nbsp; Each of the classes has<br>
+about 5 overloaded constructors.&nbsp; We discussed that if we developed it with TDD,<br>
+we’d only have the constructors that were required or that we tested.&nbsp; We may<br>
+still decide that we want 5 constructors, but each one would have to have a<br>
+consuming test written first, and I would think all other tests on that class<br>
+would need to be performed with an object constructed with each of the<br>
+constructors.</p>
+<p>The more I learn about TDD, the more I find I need to learn.&nbsp; What a vicious<br>
+cycle!&nbsp; I’m loving it, though.</p>

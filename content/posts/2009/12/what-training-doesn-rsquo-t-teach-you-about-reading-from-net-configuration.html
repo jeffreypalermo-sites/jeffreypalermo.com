@@ -1,0 +1,237 @@
+---
+wp_id: 1117
+title: What training doesn’t teach you about reading from .Net configuration
+slug: what-training-doesn-rsquo-t-teach-you-about-reading-from-net-configuration
+permalink: /2009/12/what-training-doesn-rsquo-t-teach-you-about-reading-from-net-configuration/
+date: 2009-12-07T08:17:36
+date_utc: 2009-12-07T08:17:36Z
+modified: 2009-12-07T08:17:36
+format: html
+categories:
+- blog
+excerpt: 'All the material I’ve seen talking about reading from .Net configuration files concentrates on explaining the API. The API of ConfigurationManager exposes members such as: public static class ConfigurationManager { static ConfigurationManager(); public static NameValueCollection AppSettings { get; } public static ConnectionStringSettingsCollection ConnectionStrings { get; } public static object GetSection(string sectionName); public static void RefreshSection(string […]'
+comments_open: true
+---
+<p>All the material I’ve seen talking about reading from .Net configuration files concentrates on explaining the API.&nbsp; The API of ConfigurationManager exposes members such as:</p>
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">static</span> <span class="kwrd">class</span> ConfigurationManager
+{
+    <span class="kwrd">static</span> ConfigurationManager();
+    <span class="kwrd">public</span> <span class="kwrd">static</span> NameValueCollection AppSettings { get; }
+    <span class="kwrd">public</span> <span class="kwrd">static</span> ConnectionStringSettingsCollection ConnectionStrings { get; }
+    <span class="kwrd">public</span> <span class="kwrd">static</span> <span class="kwrd">object</span> GetSection(<span class="kwrd">string</span> sectionName);
+    <span class="kwrd">public</span> <span class="kwrd">static</span> <span class="kwrd">void</span> RefreshSection(<span class="kwrd">string</span> sectionName);
+    <span class="kwrd">public</span> <span class="kwrd">static</span> Configuration OpenMachineConfiguration();
+    <span class="kwrd">public</span> <span class="kwrd">static</span> Configuration OpenMappedMachineConfiguration(ConfigurationFileMap fileMap);
+    <span class="kwrd">public</span> <span class="kwrd">static</span> Configuration OpenExeConfiguration(ConfigurationUserLevel userLevel);
+    <span class="kwrd">public</span> <span class="kwrd">static</span> Configuration OpenExeConfiguration(<span class="kwrd">string</span> exePath);
+
+    <span class="kwrd">public</span> <span class="kwrd">static</span> Configuration OpenMappedExeConfiguration(ExeConfigurationFileMap fileMap,
+                                                           ConfigurationUserLevel userLevel);
+}</pre>
+
+<p>.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+<p><span class="kwrd">That is a pretty fine-grained API.&nbsp; Every time a developer cracks open that class with intellisense, he is presented with too many choices.&nbsp; Besides that, after getting some functionality working (such as hiding an advanced search criteria based on configuration (for a particular application instance)), the code looks something like this, a jumble of user code and framework call:</span></p>
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">bool</span> ShouldBeVisible(CriteriaName name)
+{
+    <span class="kwrd">string</span> key = <span class="str">"criterion."</span> + name + <span class="str">".visible"</span>;
+    <span class="kwrd">string</span> <span class="kwrd">value</span> = ConfigurationManager.AppSettings.Get(key);
+    <span class="kwrd">if</span> (<span class="kwrd">string</span>.IsNullOrEmpty(<span class="kwrd">value</span>))
+    {
+        <span class="kwrd">return</span> <span class="kwrd">true</span>;
+    }
+
+    <span class="kwrd">return</span> Convert.ToBoolean(<span class="kwrd">value</span>);
+}</pre>
+<p>Given that this code wants to show the criterion by default and let configuration override that, this method needs to be tested.&nbsp; Because of the framework call to configuration, its more difficult to test than necessary.&nbsp;&nbsp; Note, if you aren’t writing automated tests for your code, you probably think I’m crazy right now.</p>
+<p>The developer has to run the app three times to ensure this work:</p>
+<ol>
+<li>Once with no configuration setting, should default to true</li>
+<li>Once with a setting that explicity sets to true</li>
+<li>Once with a setting that explicity sets to false</li>
+</ol>
+<p>In my experience as a developer and a manager, running the application manually to test these three posibilities takes longer than banging out the three short automated tests for these cases.</p>
+<p>There is a problem, through.&nbsp; Because the call to ConfigurationManager (a static class) is embedded in the method, my test code needs to move or modify a REAL configuration file at test time.</p>
+<p>The solution:&nbsp; wrap configuration and expose a course-grained interface to may application code.&nbsp; It’s very easy to write your own, but we tend to use the configuration interface defined in the Tarantino project.&nbsp; It’s definition is as follows:</p>
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">interface</span> IConfigurationReader
+{
+    <span class="kwrd">string</span> GetRequiredSetting(<span class="kwrd">string</span> key);
+    <span class="kwrd">int</span> GetRequiredIntegerSetting(<span class="kwrd">string</span> key);
+    <span class="kwrd">bool</span> GetRequiredBooleanSetting(<span class="kwrd">string</span> key);
+    IEnumerable&lt;<span class="kwrd">string</span>&gt; GetStringArray(<span class="kwrd">string</span> key);
+    <span class="kwrd">bool</span>? GetOptionalBooleanSetting(<span class="kwrd">string</span> key);
+    <span class="kwrd">string</span> GetOptionalSetting(<span class="kwrd">string</span> key);
+}</pre>
+<p>This may be more than you care to use, so you can trim it down even more very easily.&nbsp; The resulting code is as follows:</p>
+<pre class="csharpcode"><span class="kwrd">public</span> <span class="kwrd">class</span> UiPreferences : IUiPreferences
+{
+    <span class="kwrd">private</span> <span class="kwrd">readonly</span> IConfigurationReader _reader;
+
+    <span class="kwrd">public</span> UiPreferences(IConfigurationReader reader)
+    {
+        _reader = reader;
+    }
+
+    <span class="kwrd">public</span> <span class="kwrd">bool</span> ShouldBeVisible(CriteriaName name)
+    {
+        <span class="kwrd">string</span> key = <span class="str">"criterion."</span> + name + <span class="str">".visible"</span>;
+        <span class="kwrd">string</span> <span class="kwrd">value</span> = _reader.GetOptionalSetting(key);
+        <span class="kwrd">if</span> (<span class="kwrd">string</span>.IsNullOrEmpty(<span class="kwrd">value</span>))
+        {
+            <span class="kwrd">return</span> <span class="kwrd">true</span>;
+        }
+
+        <span class="kwrd">return</span> Convert.ToBoolean(<span class="kwrd">value</span>);
+    }
+}</pre>
+<p>Because of the interface, our unit tests are very simple, and the code is simpler as well.</p>
+<pre class="csharpcode">[Test]
+<span class="kwrd">public</span> <span class="kwrd">void</span> Should_show_criterion_by_default_without_configuration()
+{
+    var settings = <span class="kwrd">new</span> NameValueCollection();
+
+    var configurationReader = <span class="kwrd">new</span> ConfigurationReader(<span class="kwrd">new</span> ConfigurationStub(settings));
+    var preferences = <span class="kwrd">new</span> UiPreferences(configurationReader);
+    <span class="kwrd">bool</span> shouldBeVisible = preferences.ShouldBeVisible(CriteriaName.LastName);
+    Assert.That(shouldBeVisible, Is.True);
+}
+
+[Test]
+<span class="kwrd">public</span> <span class="kwrd">void</span> Should_show_criterion_by_configuration()
+{
+    var settings = <span class="kwrd">new</span> NameValueCollection {{<span class="str">"criterion.LastName.visible"</span>, <span class="str">"True"</span>}};
+
+    var configurationReader = <span class="kwrd">new</span> ConfigurationReader(<span class="kwrd">new</span> ConfigurationStub(settings));
+    var preferences = <span class="kwrd">new</span> UiPreferences(configurationReader);
+    <span class="kwrd">bool</span> shouldBeVisible = preferences.ShouldBeVisible(CriteriaName.LastName);
+    Assert.That(shouldBeVisible, Is.True);
+}
+
+[Test]
+<span class="kwrd">public</span> <span class="kwrd">void</span> Should_hide_criterion_by_configuration()
+{
+    var settings = <span class="kwrd">new</span> NameValueCollection {{<span class="str">"criterion.LastName.visible"</span>, <span class="str">"False"</span>}};
+
+    var configurationReader = <span class="kwrd">new</span> ConfigurationReader(<span class="kwrd">new</span> ConfigurationStub(settings));
+    var preferences = <span class="kwrd">new</span> UiPreferences(configurationReader);
+    <span class="kwrd">bool</span> shouldBeVisible = preferences.ShouldBeVisible(CriteriaName.LastName);
+    Assert.That(shouldBeVisible, Is.False);
+}</pre>
+<p>.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }<br>
+.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }<br>
+.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }<br>
+.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>

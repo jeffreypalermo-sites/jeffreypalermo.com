@@ -1,0 +1,43 @@
+---
+wp_id: 1052
+title: ASP.NET MVC and the templated partial view (death to ASCX)
+slug: asp-net-mvc-and-the-templated-partial-view-death-to-ascx
+permalink: /2009/06/asp-net-mvc-and-the-templated-partial-view-death-to-ascx/
+date: 2009-06-02T19:51:44
+date_utc: 2009-06-02T19:51:44Z
+modified: 2009-06-02T19:51:44
+format: html
+categories:
+- blog
+excerpt: 'Subscribe to my feed here: http://feeds.jeffreypalermo.com/jeffreypalermo We are used to master pages and applying them to ASPX pages. Then we pull small parts of the view into user controls or ASCX. In ASP.NET MVC, we use ASCX files as partial views because the user control model is so baked into our thinking. I propose that […]'
+comments_open: true
+---
+<pre class="prettyprint">Subscribe to my feed here:  <a href="/feed/">http://feeds.jeffreypalermo.com/jeffreypalermo</a></pre>
+
+<p>We are used to master pages and applying them to ASPX pages.&nbsp; Then we pull small parts of the view into user controls or ASCX.&nbsp; In <a href="http://www.asp.net/mvc/">ASP.NET MVC</a>, we use ASCX files as partial views because the user control model is so baked into our thinking.</p>
+<p>I propose that ASCX does not provide much benefit in ASP.NET MVC.&nbsp; It’s usefulness may end with using the extension as a naming convention for the easy identification of partial views.&nbsp; Beyond that, it’s pretty thin.</p>
+<p>Consider the following scenario where only the ASPX extension is used for views and partial views.&nbsp; The partial views, because they are ASPX files, are able to leverage master pages for small-scale templating.&nbsp; Using master pages for nested templates around partials gives us a whole new dynamic with which to break down web pages in ASP.NET MVC.</p>
+<p><img loading="lazy" decoding="async" title="image" style="display:inline" height="470" alt="image" src="/wp-content/uploads/2018/07/asp.netmvcandthetemplatedpartialviewdeat_115a4image_f4c679a5-49c4-4f5d-812d-3672b82668f5.png" width="661"> </p>
+<p>The above screen shot is the screen we are going for.&nbsp; We want consistent formatting for two partials that would hold charts.&nbsp; Here is a code sample based on the basic project template.&nbsp; I have enhanced the Home Index.aspx view as follows:</p>
+<p>/Views/Home/Index.aspx</p>
+<div id="codeSnippetWrapper">
+<pre id="codeSnippet" style="overflow:visible; width:100%; color:black; direction:ltr; text-align:left; border-style:none; padding:0">&lt;%@ Page Language=<span style="color:#006080">"C#"</span> MasterPageFile=<span style="color:#006080">"~/Views/Shared/Site.Master"</span> <br>Inherits=<span style="color:#006080">"System.Web.Mvc.ViewPage"</span> %&gt;<br><br>&lt;asp:Content ID=<span style="color:#006080">"indexTitle"</span> ContentPlaceHolderID=<span style="color:#006080">"TitleContent"</span> runat=<span style="color:#006080">"server"</span>&gt;<br>    Home Page<br>&lt;/asp:Content&gt;<br><br>&lt;asp:Content ID=<span style="color:#006080">"indexContent"</span> ContentPlaceHolderID=<span style="color:#006080">"MainContent"</span> runat=<span style="color:#006080">"server"</span>&gt;<br>    &lt;h2&gt;&lt;%= Html.Encode(ViewData[<span style="color:#006080">"Message"</span>]) %&gt;&lt;/h2&gt;<br>    <div>"float:left"&gt;"chart1"); %&gt;</div><br>    <div>"float:left"&gt;"chart2"); %&gt;</div><br>    <div>"clear:both"&gt;</div><br>    &lt;p&gt;<br>        To learn more about ASP.NET MVC visit &lt;a href=<span style="color:#006080">"http://asp.net/mvc"</span> <br>        title=<span style="color:#006080">"ASP.NET MVC Website"</span>&gt;http:<span style="color:#008000">//asp.net/mvc&lt;/a&gt;.</span><br>    &lt;/p&gt;<br>&lt;/asp:Content&gt;</pre>
+</div>
+<p>You see we are rendering two partials, chart1 and chart2.&nbsp; Here is the code for the partials:</p>
+<p>/Views/Shared/Chart1.aspx</p>
+<div id="codeSnippetWrapper">
+<pre id="codeSnippet" style="overflow:visible; width:100%; color:black; direction:ltr; text-align:left; border-style:none; padding:0">&lt;%@ Page Language=<span style="color:#006080">"C#"</span> MasterPageFile=<span style="color:#006080">"~/Views/Shared/ChartLayout.Master"</span> <br>Inherits=<span style="color:#006080">"System.Web.Mvc.ViewPage"</span> %&gt;<br><br>&lt;asp:Content ContentPlaceHolderID=<span style="color:#006080">"Main"</span> runat=<span style="color:#006080">"server"</span>&gt;<br>    Chart 1 goes here<br>&lt;/asp:Content&gt;</pre>
+</div>
+
+<p>/Views/Shared/Chart2.aspx</p>
+<div id="codeSnippetWrapper">
+<pre id="codeSnippet" style="overflow:visible; width:100%; color:black; direction:ltr; text-align:left; border-style:none; padding:0">&lt;%@ Page Language=<span style="color:#006080">"C#"</span> MasterPageFile=<span style="color:#006080">"~/Views/Shared/ChartLayout.Master"</span> <br>Inherits=<span style="color:#006080">"System.Web.Mvc.ViewPage"</span> %&gt;<br><br>&lt;asp:Content ContentPlaceHolderID=<span style="color:#006080">"Main"</span> runat=<span style="color:#006080">"server"</span>&gt;<br>    Chart 2 goes here<br>&lt;/asp:Content&gt;</pre>
+</div>
+
+<p>Notice that each of these partials declare a master page.&nbsp; Let’s see what templating the master page gives us:</p>
+<p>/Views/Shared/ChartLayout.master</p>
+<div id="codeSnippetWrapper">
+<pre id="codeSnippet" style="overflow:visible; width:100%; color:black; direction:ltr; text-align:left; border-style:none; padding:0">&lt;%@ Master Language=<span style="color:#006080">"C#"</span> Inherits=<span style="color:#006080">"System.Web.Mvc.ViewMasterPage"</span> %&gt;<br><div>"border:solid 4px green;padding:100px;margin:20px"&gt;<br>    "Main" runat=<span style="color:#006080">"server"</span>&gt;<br></div></pre>
+</div>
+
+<p>The css styling is what to look for.&nbsp; Each partial is surrounded by a green border with padding and margin.&nbsp; This formatting is consistently applied by the master page declared in both the partials.&nbsp; The main view doesn’t care about this partial formatting because it belongs to the partial.&nbsp; Look again to the screenshot above.&nbsp; Because we used ASPX partial views, we gained the formatting capability of master pages. </p>

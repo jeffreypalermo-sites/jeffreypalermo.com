@@ -1,0 +1,38 @@
+[
+  {
+    "id": 60,
+    "parent": 0,
+    "author_name": "Thomas Tomiczek",
+    "author_url": "http://",
+    "date": "2004-06-01T22:26:00",
+    "type": "comment",
+    "content_html": "<p>::My colleague insisted that script block<br>\n::incur and extra performance hit because the<br>\n::ASP.NET engine must check for changes in<br>\n::every page hit</p>\n<p>Tell your colleague McDonalds ahs a job for him – serviung burgers. He is better qualified for this than programming.</p>\n<p>* ASP.NET never checks for changes. ASP.NET subscribes to the events in the file system. When ANY file is changed, ASP.NET is notified and restarts the app.<br>\n* Even with codebehind, a change in an ASP.NET page – any change – has to trigger a recompilation. Why? New server side objects may be in there etc.</p>\n<p>Common sense, oh so rare today.</p>\n<p>Besides, this is pretty basic knowledge, properly documented in the documentation and thoroughly discussed in every message board.</p>"
+  },
+  {
+    "id": 61,
+    "parent": 0,
+    "author_name": "Steve Hebert",
+    "author_url": "http://",
+    "date": "2004-06-02T06:54:00",
+    "type": "comment",
+    "content_html": "<p>In your post, you stated… \"every time I want to make a small change to the UI that involves som C#, I have to fire up VS.NET and then build the whole project\"</p>\n<p>In your &lt;%@ Page … %&gt; tag, you can replace  Inherits= with src= to get around this.  This means you have to distribute your C# code, but there is the workaround if you need it.</p>\n<p>If you want a rundown on what’s happening on code-behind vs. in-script, check out Chapter 1 on Essential ASP.NET by Fritz Onion.  You’ll understand exactly why there is no difference and then you can hand it to your buddy. </p>\n<p>Then I’d run the following code:<br>\ncolleague.SpeaksFromSphincter = true;</p>"
+  },
+  {
+    "id": 62,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-06-02T08:30:00",
+    "type": "comment",
+    "content_html": "<p>Explanation of dynamic ASPX compilation and recompilation – level 300</p>"
+  },
+  {
+    "id": 63,
+    "parent": 0,
+    "author_name": "Rob",
+    "author_url": "http://",
+    "date": "2005-03-04T10:30:00",
+    "type": "comment",
+    "content_html": "<p>From MSDN, ASP.Net Common Performance Myths: <a href=\"http://msdn.microsoft.com/msdnmag/issues/05/01/ASPNETPerformance/default.aspx?side=true\" rel=\"nofollow\">http://msdn.microsoft.com/msdnmag/issues/05/01/ASPNETPerformance/default.aspx?side=true</a></p>\n<p>Steve, I think you meant to say \"replace Codebehind= with src= \".  Inherits= must be used with src=.</p>"
+  }
+]

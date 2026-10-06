@@ -1,0 +1,17 @@
+---
+wp_id: 217
+title: Ramping up with NAnt for automated builds – level 300
+slug: ramping-up-with-nant-for-automated-builds-level-300
+permalink: /2005/04/ramping-up-with-nant-for-automated-builds-level-300/
+date: 2005-04-21T11:31:00
+date_utc: 2005-04-21T11:31:00Z
+modified: 2005-04-21T11:31:00
+format: html
+excerpt: At first glance, the NAnt .build files may seem daunting, especially the really long ones, but the documentation for NAnt is superb! I wanted to start with a real VS solution instead of the trivial HelloWorld .cs file, so I used my Model-View-Presenter demo solution. Since this was a Visual Studio solution, all I had to […]
+comments_open: true
+---
+<p>At first glance, the NAnt .build files may seem daunting, especially the really long ones, but the documentation for <a href="http://nant.sourceforge.net/">NAnt</a> is superb!</p>
+<p>I wanted to start with a real VS solution instead of the trivial HelloWorld .cs file, so I used my <a href="http://dotnetjunkies.com/WebLog/jpalermo/archive/2005/04/03/62121.aspx">Model-View-Presenter demo solution.</a>&nbsp; Since this was&nbsp;a Visual Studio solution, all I had to do was add a Solution task in the build file.</p>
+<p>Here is my build file.&nbsp; Now if that doesn’t convince you that automated builds aren’t that hard, I don’t know what will!</p>
+<p>&lt;project name=”Model View Presenter with Repository” default=”rebuild”&gt;<br>&nbsp;&nbsp;&nbsp; &lt;property name=”configuration” value=”release”/&gt;<br>&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; &lt;target name=”clean” description=”Delete all previously compiled binaries.”&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;delete&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;fileset&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;include name=”**/bin/**” /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;include name=”**/obj/**” /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;include name=”**/*.suo” /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;include name=”**/*.user” /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/fileset&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/delete&gt;<br>&nbsp;&nbsp;&nbsp; &lt;/target&gt;<br>&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; &lt;target name=”build” description=”Build all targets.”&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;call target=”build.solution”/&gt;<br>&nbsp;&nbsp;&nbsp; &lt;/target&gt;<br>&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; &lt;target name=”rebuild” depends=”clean, build” /&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;target name=”build.solution”&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;solution configuration=”${configuration}” solutionfile=”MVPWithRepository.sln” /&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;property name=”expected.output” value=”View/bin/${configuration}/View.exe”/&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;fail unless=”${file::exists(expected.output)}”&gt;Output file doesn’t exist in ${expected.output}&lt;/fail&gt;<br>&nbsp;&nbsp;&nbsp; &lt;/target&gt;<br>&nbsp;&nbsp;&nbsp; <br>&lt;/project&gt;</p>

@@ -1,0 +1,17 @@
+---
+wp_id: 571
+title: Using embedded controls in the DataGrid control – level 300
+slug: using-embedded-controls-in-the-datagrid-control-level-300
+permalink: /2004/07/using-embedded-controls-in-the-datagrid-control-level-300/
+date: 2004-07-27T10:46:00
+date_utc: 2004-07-27T10:46:00Z
+modified: 2004-07-27T10:46:00
+format: html
+excerpt: When I first started developing with ASP.NET, I avoided the DataGrid control. It seemed too confining, but that was because I didn’t fully understand it. All the books and article I read gave DataGrid examples where you bind a data source and DataGrid takes over. That’s not where it stops at all. Now that I […]
+comments_open: true
+---
+<p>When I first started developing with ASP.NET, I avoided the DataGrid control.&nbsp; It seemed too confining, but that was because I didn’t fully understand it.&nbsp; All the books and article I read gave DataGrid examples where you bind a data source and DataGrid takes over.&nbsp; That’s not where it stops at all.&nbsp; Now that I understand the DataGrid control, I realize that if I need bound tabular data, this is the control to use; however, I still find its defaults too confining.&nbsp; I never use BoundColumns because rarely do I need just a plain textbox for data entry, so I always use TemplateColumns.&nbsp; I can stick a DropDownList in there or anything else.&nbsp; I know use embedded controls within the DataGrid very often, and I modify these controls through the DataGrid’s control tree.&nbsp; On the ItemDataBound event, I can access controls in that row using: </p>
+<p>e.Item.FindControl(…), </p>
+<p>but what about controls in the header or footer of the DataGrid?&nbsp; I’m putting my “Add New” button in the header of the DataGrid as the column head of the column that has my edit, update, cancel, delete buttons, so the user can click on “Add New”, and a new editable row will appear.&nbsp; Also, when I hide the DataGrid, this button will be hidden along with it.&nbsp; So how do I programmatically find this control and use it?&nbsp; </p>
+<p>The DataGrid has no ID property for its Header, so I can’t explicitly access it, but looking at the control tree, I find that it is always the second control in the Controls collection when it’s visible.&nbsp; I don’t know why it’s not the first, but it’s the second, and it gives it the ID of _ctl1.&nbsp; So to access my button in my Header, I have to get Controls[1].FindControl(“myButton“).&nbsp; This works, but I would like to set an ID to my Header so that I can find it explicitly.</p>
+<p>Through understanding the DataGrid’s control tree and how it is structured, I’m able to modify any embedded control or add embedded controls on-the-fly.&nbsp; Knowledge is power, and the more I learn about the DataGrid, the more powerful it becomes.</p>

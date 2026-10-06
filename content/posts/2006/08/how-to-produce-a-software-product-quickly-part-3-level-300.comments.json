@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1019,
+    "parent": 0,
+    "author_name": "Jiaozi",
+    "author_url": "http://",
+    "date": "2006-08-29T07:32:04",
+    "type": "comment",
+    "content_html": "<p>Very good idea to list useful tools. Here are some more :</p>\n<p>Fiddler (<a href=\"http://www.fiddlertool.com\" rel=\"nofollow ugc\">http://www.fiddlertool.com</a>) : Fiddler is a HTTP Debugging Proxy which logs all HTTP traffic between your computer and the Internet. Fiddler allows you to inspect all HTTP Traffic, set breakpoints, …</p>\n<p>Snippet Compiler (<a href=\"http://www.sliver.com/dotnet/SnippetCompiler/\" rel=\"nofollow ugc\">http://www.sliver.com/dotnet/SnippetCompiler/</a>) : build and test quickly C# snippets</p>\n<p>ManagedSpy (<a href=\"http://msdn.microsoft.com/msdnmag/issues/06/04/ManagedSpy/\" rel=\"nofollow ugc\">http://msdn.microsoft.com/msdnmag/issues/06/04/ManagedSpy/</a>) : Spy++ to .Net sauce</p>"
+  },
+  {
+    "id": 1020,
+    "parent": 0,
+    "author_name": "Jean-Pierre Riehl",
+    "author_url": "http://http//djeepy1.tchatcheblog.com",
+    "date": "2006-08-29T10:18:35",
+    "type": "comment",
+    "content_html": "<p>Hi,</p>\n<p>I read your blog for about a year. Every post is one of my thoughts about our job and Software Engineering in general. I agree your series of articles about productivity and how to develop software better and quicker.<br>\nI read that kind of literrature since I was student but I am disappointed to see French people reticent to apply (even to test it) those guidelines or methodologies. I think it is a “state of mind” that differentiates Latin from Anglo-Saxon…</p>\n<p>I will persevere to convince my fellows and perhaps i’ll start a blog about the French Touch (just my point of view, because frenchies are good, see <a href=\"http://www.dotnetguru.org\" rel=\"nofollow ugc\">http://www.dotnetguru.org</a> for example)</p>"
+  }
+]

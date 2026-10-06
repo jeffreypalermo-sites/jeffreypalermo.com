@@ -1,0 +1,14 @@
+---
+wp_id: 90
+title: Integrating .Net v2.0 Beta 1 with v1.1 – it’s working! – level 200
+slug: integrating-net-v2-0-beta-1-with-v1-1-its-working-level-200
+permalink: /2004/08/integrating-net-v2-0-beta-1-with-v1-1-its-working-level-200/
+date: 2004-08-26T16:23:00
+date_utc: 2004-08-26T16:23:00Z
+modified: 2004-08-26T16:23:00
+format: html
+excerpt: It’s working well. My team has an extensive v1.1 team framework of common functionality, so since I’ve been developing a web app with ASP.NET 2.0 Beta 1, I’ve started on a v2.0 team framework. Right now I only have 3 new classes, and I just reference the rest of the framework through the v1.1. It […]
+comments_open: true
+---
+<p>It’s working well.&nbsp; My team has an extensive v1.1 team framework of common functionality, so since I’ve been developing a web app with ASP.NET 2.0 Beta 1, I’ve started on a v2.0 team framework.&nbsp; Right now I only have 3 new classes, and I just reference the rest of the framework through the v1.1.&nbsp; It works well, but there is one caveat.&nbsp; When&nbsp; used by the client application, you need to have all required .dll files in the bin folder, so we have our version 1.1 framework “TeamFramework.dll” and the v2.0 compiles to TeamFramework.dll also, so what to do?&nbsp; Well, the easiest thing for me is to set the v2.0 project to compile to TeamFramework2.dll, but that was an issue.&nbsp; Now, of course, putting these in the GAC would solve this problem, but our application doesn’t require the GAC.</p>
+<p>All in all, the two versions inter-operate very well.</p>

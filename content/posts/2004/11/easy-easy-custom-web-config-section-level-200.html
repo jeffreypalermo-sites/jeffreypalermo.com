@@ -1,0 +1,25 @@
+---
+wp_id: 134
+title: EASY, EASY custom web.config section – level 200
+slug: easy-easy-custom-web-config-section-level-200
+permalink: /2004/11/easy-easy-custom-web-config-section-level-200/
+date: 2004-11-05T17:35:00
+date_utc: 2004-11-05T17:35:00Z
+modified: 2004-11-05T17:35:00
+format: html
+excerpt: Some people my shy away from this, but see how easy it is. You need a block of custom xml as configuration, so you create your own .xml file and read it in. Instead, use the web.config file. It’s already there, and it’s good to keep all configuration in one place. This is all it […]
+comments_open: true
+---
+<p>Some people my shy away from this, but see how easy it is.&nbsp; You need a block of custom xml as configuration, so you create your own .xml file and read it in.&nbsp; Instead, use the web.config file.&nbsp; It’s already there, and it’s good to keep all configuration in one place.&nbsp; This is all it takes to make your own Configuration Handler class:</p>
+<p>public class Config : IConfigurationSectionHandler {</p>
+<p>//stores authorization xml from .config file</p>
+<p>protected static XmlNode m_oXmlSection;</p>
+<p>public static XmlNode XmlSection{</p>
+<p>get { return m_oXmlSection; }</p>
+<p>}</p>
+<p>public object Create(object parent, object configContext, XmlNode section) {</p>
+<p>m_oXmlSection = section.FirstChild;</p>
+<p>return section.InnerXml;</p>
+<p>}</p>
+<p>}</p>
+<p>Then, you just access Config.XmlSection, and you have the complete Xml, so why wouldn’t you do it this way?</p>

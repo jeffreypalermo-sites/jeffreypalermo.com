@@ -1,0 +1,155 @@
+[
+  {
+    "id": 2279,
+    "parent": 0,
+    "author_name": "Aaron Erickson",
+    "author_url": "http://blog.magenic.com/blogs/aarone",
+    "date": "2008-02-08T18:08:00",
+    "type": "comment",
+    "content_html": "<p>I guess I should start paying more attention – I thought anonymous types were for local scope, transient shapes of data.  That is the only real place where I find something like that useful.</p>\n<p>Having a public interface use an anonymous type seems like a really, really bad idea.</p>"
+  },
+  {
+    "id": 2280,
+    "parent": 0,
+    "author_name": "Ran Davidovitz",
+    "author_url": "http://davidovitz.blogspot.com",
+    "date": "2008-02-08T18:18:06",
+    "type": "comment",
+    "content_html": "<p>I see the option to pass anonymous types same as passing an System.Object (or actually an open dictionary).<br>\nWhile using Anonymous types make the code more generic and add ease of programming it still causes, as you said, to not see the full contact of the API and eventually people will always need to read the manual to use the API.<br>\nYou can see example for this in ExtJS framework (JavaScript) that the constructor get a JSON object that you simply have no way to know what to pass without re-reading the docs.</p>"
+  },
+  {
+    "id": 2281,
+    "parent": 0,
+    "author_name": "wekempf",
+    "author_url": "http://",
+    "date": "2008-02-08T20:09:21",
+    "type": "comment",
+    "content_html": "<p>I don’t think you are informed on this topic.  In C#, anonymous types can’t be used in the public interface.  The work only in local scope.  They are also strongly typed.  The IDE understands them just fine, and displays the appropriate intellisense.</p>\n<p>You’ll have to be a lot more specific about how you think this concept is harmful, especially with regard to the MVC framework.  Where is an anonymous type used as an API parameter there?</p>"
+  },
+  {
+    "id": 2282,
+    "parent": 0,
+    "author_name": "Garry Shutler",
+    "author_url": "http://",
+    "date": "2008-02-08T20:26:36",
+    "type": "comment",
+    "content_html": "<p>@wekemf, if you want to create default parameters or create a link to a specific controller action you have to use something like new { controller = “MyController”, action = “MyAction” } </p>"
+  },
+  {
+    "id": 2283,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-02-08T20:30:25",
+    "type": "comment",
+    "content_html": "<p>@wekempf,<br>\nNo problem.  I can be more specific.  Let’s take the Route class, which is one of the first things you define when creating an ASP.NET MVC application:</p>\n<p>public class Route<br>\n{<br>\n. . . .</p>\n<p>    // Methods<br>\n    public Route();<br>\n    public Route(string url, Type routeHandler);<br>\n    public Route(string url, object defaults, Type routeHandler);<br>\n. . . .</p>\n<p>    public object Defaults { get; set; }<br>\n. . .<br>\n}</p>\n<p>In the constructor, what is this object “default”.  The property “Defaults”.  What is the type?  This is specifically what I’m talking about.  What is _expected_ is that an anonymous type with _just_ the right property spellings is passed in.  This is a bad API.  Clearly the class requires a specific object with specific properties, but the API lies and communicates that any object will do.</p>"
+  },
+  {
+    "id": 2284,
+    "parent": 0,
+    "author_name": "Alan Mojab",
+    "author_url": "http://mojabsoftware.com",
+    "date": "2008-02-08T20:49:45",
+    "type": "comment",
+    "content_html": "<p>I tend to agree with you on anonymous type issues. I’ve recently read about “Dynamic Lookup” another late binding language feature MS is adding to CLI 4.0.</p>\n<p>I think in real world both Anonymous types and Dynamic Lookup have very little use in 100% managed environment. It appears to me Microsoft has been adding these features for their own use mainly.</p>\n<p>I can only speak for myself in here that I would never design anything that would require late binding features. I might be missing a point in both but I always thought abstraction can overcome the late binding challenges in managed environment.</p>\n<p>In design point of view when one is developing a framework there are challenges that aren’t easy to solve. Some of these challenges can be solved by using the late binding technique. Since most systems being developed aren’t a framework or if there are then they are being used by an enterprise system it is possible to avoid using late binding approach in general.</p>\n<p>What concerns me mostly is that developers might use a feature because is just there without spending more time to understand the problem on hand better. I think we developers need more caution reminders like your post.</p>\n<p>I always said that in Software Development the hardest thing is to keep the logic of the code simple and manageable, something most take it lightly. For sure late binding technique makes everything far more difficult but not impossible.</p>"
+  },
+  {
+    "id": 2285,
+    "parent": 0,
+    "author_name": "wekempf",
+    "author_url": "http://",
+    "date": "2008-02-08T20:53:46",
+    "type": "comment",
+    "content_html": "<p>Great.  I’m not familiar with ASP.NET MVC (other than reading the hype in the blogs).  I can tell you that what you just showed is an abomination that has little to do with the anonymous type features in C#.  There is no anonymous type in the public interface.  However, based on your description, I must assume that in the implementation “defaults” is interrogated via reflection for certain properties.  The idea is to provide “named arguments” in C#, like you have in some languages, such as Python.  So, you could call it something like this:</p>\n<p>Route r = new Route(url, new { Foo=”bar” }, typeof(SomeRouteHandler));</p>\n<p>That’s just horrendous code.  Performance would be terrible.  You’d be better off using a Dictionary rather than an anonymous type, because you’re relying on reflection.  You can’t decry a language feature because someone chooses to horribly abuse it like this.  After all, you can’t name a single language feature in any language that couldn’t be abused by someone.</p>\n<p>This isn’t the purpose that anonymous types were created for.  It’s also simply a bad idea, IMHO.</p>"
+  },
+  {
+    "id": 2286,
+    "parent": 0,
+    "author_name": "wekempf",
+    "author_url": "http://",
+    "date": "2008-02-08T21:03:15",
+    "type": "comment",
+    "content_html": "<p>I found an example of Route being used, here: <a href=\"http://forums.asp.net/p/1205871/2110762.aspx#2110762\" rel=\"nofollow ugc\">http://forums.asp.net/p/1205871/2110762.aspx#2110762</a>.</p>\n<p>Again, I think this is simply misguided abuse.  Defaults should be strongly typed.  This is especially true if, as you suggest, reflection is being used to access the properties on the anonymous type.  This indicates a closed key/value mapping, and using a strongly typed object would vastly improve the performance here.</p>"
+  },
+  {
+    "id": 2287,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-02-08T21:04:46",
+    "type": "comment",
+    "content_html": "<p>@wekempf,<br>\n&gt;You’d be better off using a Dictionary rather than an anonymous type, because you’re relying on reflection. </p>\n<p>Exactly my point.</p>\n<p>&gt;You can’t decry a language feature because someone chooses to horribly abuse it like this</p>\n<p>I would agree with that statement, and I would not decry anonymous types as a language feature even though it is being misused.</p>"
+  },
+  {
+    "id": 2288,
+    "parent": 0,
+    "author_name": "Kelly Leahy (Milliman)",
+    "author_url": "http://www.milliman.com",
+    "date": "2008-02-08T22:16:05",
+    "type": "comment",
+    "content_html": "<p>Unless I misunderstood something here, Jeffrey is just saying he doesn’t like the usage of anonymous types in these examples, not that he doesn’t like the fact that these types exist in the language.</p>\n<p>If I understood him correctly, I completely agree!  If you want to use anonymous types in the local scope to solve some problems that it’s nice to have those language features for (rather than having to type a bunch of ‘declaration’ code), I’d say that’s GREAT.  But, I don’t think you should be passing those types somewhere else…</p>\n<p>I think a nice feature would be if an anonymous type could automatically implement an interface, just by casting it (and having it check at compile time that it has the proper members).  That way, MVC could get the same benefits that they are looking for without the mess of having to create a ‘real’ type to implement the interface…</p>\n<p>For instance, what if some interface was declared:</p>\n<p>interface IRouteDefaults<br>\n{<br>\n  string param1 { get; set; }<br>\n  string param2 { get; set; }<br>\n  …<br>\n}</p>\n<p>and you could say:</p>\n<p>new Route(url, new { param1 = “value1” } as IRouteDefaults, typeof(SomeRouteHandler));</p>\n<p>and have the compiler automatically do:<br>\n1) implement IRouteDefaults on the temporary type<br>\n2) provide the default implementation for param2 (which is ‘null’ in this case)<br>\n3) provide the pointer to this interface to the constructor.</p>"
+  },
+  {
+    "id": 2289,
+    "parent": 0,
+    "author_name": "Peter Ritchie",
+    "author_url": "http://www.peterritchie.com/blog",
+    "date": "2008-02-08T22:18:43",
+    "type": "comment",
+    "content_html": "<p>They using Object for defaults and Defaults because they’re leaking anonymous types from local scope?  Yuck, yuck, yuck, yuck, yuck.   Oh, did I say, yuck.  I recommend using anonymous types for short-lived (i.e. kept only to local scope) data.  That’s potentially forcing it to be long-lived data.</p>"
+  },
+  {
+    "id": 2290,
+    "parent": 0,
+    "author_name": "sergiopereira",
+    "author_url": "http://",
+    "date": "2008-02-09T01:54:21",
+    "type": "comment",
+    "content_html": "<p>Amen. In a few months whoever came up with this great idea will be sorry – unless it’s removed from the API, there’s still time.</p>"
+  },
+  {
+    "id": 2291,
+    "parent": 0,
+    "author_name": "rjevans",
+    "author_url": "http://",
+    "date": "2008-02-09T02:27:51",
+    "type": "comment",
+    "content_html": "<p>I’m not against late binding in principle; it’s hard to be like that given that most .Net ‘data binding’ is in effect ‘late binding’.</p>\n<p>The problem that I see with this usage is that it constitutes an ‘opaque contract’, in so far as the client has no immediate way of determining what expectations the API has.  </p>\n<p>So in the extreme worst case, this could trigger significant trial and error as a client developer struggles to work out what really needs to be supplied to satisfy the (ambiguous) contract through (mis)reading the documentation and perhaps even being forced to debug through the target API calls.  </p>\n<p>If an API does have contract expectations that go beyond what System.Object provides, then these need to be clearly communicated and should be easily verifiable prior to making API calls (ideally at compile time).</p>\n<p>The only upside of this usage of System.Object is that it is somewhat better than the dreaded ‘Name of Object’ supplied via a String usage, e.g. string objName =”foo” to refer to the public object ‘foo’ in a call such as myClass.doSomethingWithObject(“foo”).  Which I’m sure is expressly intended to bedevil those of us who are prone to misstttyyyping occasionally (thanks be for Intellisense and the compiler, but sadly they don’t work  inside strings ) .</p>"
+  },
+  {
+    "id": 2292,
+    "parent": 0,
+    "author_name": "Hadi Hariri",
+    "author_url": "http://www.hadihariri.com",
+    "date": "2008-02-09T08:31:00",
+    "type": "comment",
+    "content_html": "<p>+1</p>"
+  },
+  {
+    "id": 2293,
+    "parent": 0,
+    "author_name": "Lance Fisher",
+    "author_url": "http://",
+    "date": "2008-02-10T08:02:58",
+    "type": "comment",
+    "content_html": "<p>Figuring out routing in ASP.NET MVC was as easy as firing up the reflector \uD83D\uDE1B  But I don’t mind the anonymous types in some other situations, even as parameters to methods.  Such as methods that create HTML where you already know the attributes well, and you usually only need/want a couple of them.  It does make it more difficult to pick up the framework though.</p>"
+  },
+  {
+    "id": 2294,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-02-10T17:06:18",
+    "type": "comment",
+    "content_html": "<p>@Lance,<br>\nThe methods that create HTML (View helpers) do accepts html attributes, and, yes, the html attributes are well-defined, so it should be _really_ easy to create a simple object model around them.  Then, the object initializers feature allows you to create a syntactically similar line of code, but the method API is very clear and intuitive.</p>\n<p>If my method is:<br>\nHtml.Textbox(string, string, object), that’s still confusing.  What the heck is “object”?  I’d rather see.</p>\n<p>Html.Textbox(string, string, TextboxAttributes)</p>"
+  },
+  {
+    "id": 2295,
+    "parent": 0,
+    "author_name": "wekempf",
+    "author_url": "http://",
+    "date": "2008-02-11T13:41:52",
+    "type": "comment",
+    "content_html": "<p>Now that I understand what this API is doing, and more specifically, what the “Defaults” property/parameter (it’s both) is for, this isn’t as misguided as I originally thought.  Still the wrong solution, IMO, but I can understand it.</p>\n<p>The “defaults” property has little meaning to the framework.  It’s strictly a property bag or key/value collection that’s used to provide default values for “page parameters” (for lack of a better term) when they aren’t supplied in the URL.  I can even see how this usage could be optimized to be efficient, even though reflection would need to be used.  The meaning of the code isn’t any less obvious when you use an anonymous object than it is when you use a Dictionary.</p>\n<p>That said, the only reason to be using the anonymous type is to simplify the calling code.  However, I don’t find that to be a compelling reason to use an anonymous type here.  A DefaultValues dictionary type would add very little syntactically to the calling site.  The benefit here is minimal at best.  Since the Dictionary solution will perform the best here, I don’t agree with the use of the anonymous type.</p>"
+  }
+]

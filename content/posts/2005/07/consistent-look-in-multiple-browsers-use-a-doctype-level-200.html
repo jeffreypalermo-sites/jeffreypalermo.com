@@ -1,0 +1,68 @@
+---
+wp_id: 275
+title: 'Consistent look in multiple browsers: Use a DOCTYPE – level 200'
+slug: consistent-look-in-multiple-browsers-use-a-doctype-level-200
+permalink: /2005/07/consistent-look-in-multiple-browsers-use-a-doctype-level-200/
+date: 2005-07-05T11:58:00
+date_utc: 2005-07-05T11:58:00Z
+modified: 2005-07-05T11:58:00
+format: html
+excerpt: The <!DOCTYPE /> tag in an Html document is very fundamental, but a good number of people don’t know what it is, and they don’t use it. If you are one of them, read on. The W3C makes standards recommendations for the web and DOCTYPEs is one of them. The Doctype tells the browser what […]
+comments_open: true
+---
+<p>The &lt;!DOCTYPE /&gt; tag in an Html document is very fundamental,<br>
+but a good number of people don’t know what it is, and they don’t use<br>
+it.&nbsp; If you are one of them, read on.&nbsp; </p>
+<p>The <a href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">W3C makes standards recommendations for the web and DOCTYPEs is one of them.</a>&nbsp;<br>
+The Doctype tells the browser what content to expect and what set of<br>
+rules to apply.&nbsp; Look at a web page you created with Visual Studio<br>
+2003.&nbsp; You will notice that it defaults the Doctype to : </p>
+<p>&lt;!DOCTYPE HTML PUBLIC “-//W3C//DTD HTML 4.0 Transitional//EN”&gt;
+</p>
+<p>If you only test your web applications in Internet Explorer, you<br>
+have probably, through trial and error, found the workarounds to make<br>
+your web pages look good.&nbsp; Switch this top line in any page to:
+</p>
+<p>&lt;!DOCTYPE HTML PUBLIC “-//W3C//DTD HTML 4.01 Transitional//EN” “<a href="http://www.w3.org/TR/html4/loose.dtd">http://www.w3.org/TR/html4/loose.dtd</a>“&gt;
+</p>
+<p>See what parts of your web page look messed up.&nbsp; You will<br>
+see that CSS is rendered differently in some cases.&nbsp; There are<br>
+plenty of resources on the web for learning the rules of a particular<br>
+Html version.&nbsp; What you want to do is choose a Doctype that will<br>
+allow you to write a web page once and have it look good in multiple<br>
+browsers.&nbsp; With that goal in mind, don’t use the Html 4.0<br>
+Doctype.&nbsp; Use at least the Html 4.01 doctype.&nbsp; There are some<br>
+specific CSS rendering *bugs* with the 4.0 Doctype, but you can study<br>
+those on your own if you wish.&nbsp; Here’s a simple web page you can<br>
+use to see the difference each Doctype makes (with different browsers<br>
+as well).&nbsp; </p>
+<p>&lt;html&gt;<br>&nbsp;&lt;head&gt;<br>&nbsp;&nbsp;&lt;meta http-equiv=”content-type” content=”text/html;charset=utf-8″ /&gt;<br>&nbsp;&nbsp;&lt;meta http-equiv=”Content-Style-Type” content=”text/css” /&gt;<br>&nbsp;&nbsp;<br>&nbsp;&nbsp;&lt;style type=”text/css”&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;#myDiv{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;background-color: yellow;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;padding: 5px;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;margin: 5px; <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;border-style: double; <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height: 100px; <br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&lt;/style&gt;<br>&nbsp;&lt;/head&gt;<br>&nbsp;&lt;body style=”margin:0px; background-color:AliceBlue”&gt;<br>&nbsp;&nbsp;</p>
+<div id="myDiv">Hello, this is a div.</div>
+<p>&nbsp;&lt;/body&gt;<br>&lt;/html&gt;
+</p>
+<p>This page is incomplete because it doesn’t have a Doctype at the top.&nbsp; Choose a doctype from the <a href="http://www.w3.org/QA/2002/04/valid-dtd-list.html">W3C </a>and<br>
+see how this page is rendered.&nbsp; You won’t see any difference<br>
+between Html 4.01 and the Xhtml varieties.&nbsp; This page doesn’t have<br>
+any mal-formed tags, so there’s no observable differences.&nbsp; Note<br>
+that ASP.NET 1.1 server controls don’t render Xhtml, so it may be a<br>
+good idea to use the Xhtml 1.0 Transitional Doctype.&nbsp; ASP.NET 2.0<br>
+server controls will render proper Xhtml.
+</p>
+<p>With Internet Explorer, you can control “standards-compliant”<br>
+mode.&nbsp; If your Doctype includes the full Url where the DTD can be<br>
+found, it will render with standards in mind.&nbsp; If the full Url is<br>
+left out, it will render in old-style “Quirks mode”&nbsp; <a href="http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/compatmode.asp">Check out this page by Microsoft that explains how to ensure IE 6 renders in standards mode.</a></p>
+<p>There are valid reasons to choose one Doctype over the other, and<br>
+currently I use Html 4.0, Html 4.01 as well as Xhtml 1.0<br>
+Transitional.&nbsp; A gotcha is that VS 2003 puts the Html 4.0 Doctype<br>
+at the top of the page without the Url to the DTD.&nbsp; Excluding the<br>
+DTD Url leaves IE in quirks mode, and will render pages differently<br>
+that other standards-compliant browsers.&nbsp; To tell IE to use web<br>
+standards, add the DTD Url to the Doctype, and IE will switch its<br>
+rendering mode.
+ </p>
+<p>I would also recommend reading up on web standards.&nbsp;<br>
+Doing that will take the mystery out of afternoons when you can’t<br>
+figure out why your pages don’t render as you expect them too.&nbsp; If<br>
+you know the rules that are being applied, you can create your web<br>
+pages faster.</p>

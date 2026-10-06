@@ -1,0 +1,47 @@
+[
+  {
+    "id": 357,
+    "parent": 0,
+    "author_name": "reteep",
+    "author_url": "http://www.sunlab.de",
+    "date": "2005-06-30T09:24:02",
+    "type": "comment",
+    "content_html": "<p>Hi Jeffrey,</p>\n<p>I’m just curious if this counts for ASP.NET 2.0, too?</p>\n<p>Thanks!</p>"
+  },
+  {
+    "id": 358,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-06-30T09:47:05",
+    "type": "comment",
+    "content_html": "<p>I haven’t explicitly tested it, but I’ve very confident that 2.0 knows about FireFox.  Within a few months I’ll be converting an app to 2.0, so I’ll post my experiences.</p>"
+  },
+  {
+    "id": 359,
+    "parent": 0,
+    "author_name": "Zhaph",
+    "author_url": "http://www.doodle.co.uk/",
+    "date": "2005-07-01T05:51:34",
+    "type": "comment",
+    "content_html": "<p>Check out:<br>\n<a href=\"http://slingfive.com/pages/code/browserCaps/\" rel=\"nofollow ugc\">http://slingfive.com/pages/code/browserCaps/</a></p>\n<p>This has a fairly complete overhaul of the Browser Caps section that includes a host of other browsers as well (Opera, Safari, etc).</p>"
+  },
+  {
+    "id": 360,
+    "parent": 0,
+    "author_name": "Steve Reddoch",
+    "author_url": "http://www.ontime-technologeis.com",
+    "date": "2005-07-11T23:50:18",
+    "type": "comment",
+    "content_html": "<p>Hi,</p>\n<p>This seems to work – sorta, but I have a bunch of stuff on my web site (www.ontime-technologies.com) that still does not render correctly.  Any ideas?</p>\n<p><a href=\"mailto:sreddoch@ontime-technologies.com\">sreddoch@ontime-technologies.com</a></p>\n<p>thanks!</p>"
+  },
+  {
+    "id": 361,
+    "parent": 0,
+    "author_name": "Rahul",
+    "author_url": "http://",
+    "date": "2008-01-09T20:05:08",
+    "type": "comment",
+    "content_html": "<p>Only first page getting displayed with links are not working.We have frames on default page they are not getting displayed.</p>"
+  }
+]

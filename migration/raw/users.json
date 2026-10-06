@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "Jeffrey Palermo",
+    "url": "",
+    "description": "",
+    "link": "https://jeffreypalermo.com/author/jeffreypalermo/",
+    "slug": "jeffreypalermo",
+    "avatar_urls": {
+      "24": "https://secure.gravatar.com/avatar/383ee89c279c4e18925e257c82f6d8c5db67a6bc4c52b03f176095d29cf44db8?s=24&r=g",
+      "48": "https://secure.gravatar.com/avatar/383ee89c279c4e18925e257c82f6d8c5db67a6bc4c52b03f176095d29cf44db8?s=48&r=g",
+      "96": "https://secure.gravatar.com/avatar/383ee89c279c4e18925e257c82f6d8c5db67a6bc4c52b03f176095d29cf44db8?s=96&r=g"
+    },
+    "meta": {
+      "wp_7325293_wpcom_plan_expiry_notice_dismiss": 0,
+      "wp_7325293_wpcom_plan_expiry_modal_dismiss": 0,
+      "wp_7325293_wpcom_plan_expiry_modal_dismiss_grace": 0
+    }
+  },
+  {
+    "id": 4,
+    "name": "Christina McFarling",
+    "url": "",
+    "description": "",
+    "link": "https://jeffreypalermo.com/author/christinamcfarling/",
+    "slug": "christinamcfarling",
+    "avatar_urls": {
+      "24": "https://secure.gravatar.com/avatar/391b32c7fa6fa445960d1e6813154f789f0f652527510765ef41501e9c9c3b09?s=24&r=g",
+      "48": "https://secure.gravatar.com/avatar/391b32c7fa6fa445960d1e6813154f789f0f652527510765ef41501e9c9c3b09?s=48&r=g",
+      "96": "https://secure.gravatar.com/avatar/391b32c7fa6fa445960d1e6813154f789f0f652527510765ef41501e9c9c3b09?s=96&r=g"
+    },
+    "meta": {
+      "wp_7325293_wpcom_plan_expiry_notice_dismiss": 0,
+      "wp_7325293_wpcom_plan_expiry_modal_dismiss": 0,
+      "wp_7325293_wpcom_plan_expiry_modal_dismiss_grace": 0
+    }
+  }
+]

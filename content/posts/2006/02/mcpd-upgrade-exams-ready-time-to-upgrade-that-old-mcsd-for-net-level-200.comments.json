@@ -1,0 +1,47 @@
+[
+  {
+    "id": 652,
+    "parent": 0,
+    "author_name": "johnpapa",
+    "author_url": "http://codebetter.com/blogs/john.papa",
+    "date": "2006-02-21T15:11:12",
+    "type": "comment",
+    "content_html": "<p>So it looks like exams 70-553 and 70-554 are the upgrade exams to maintain the MCSD.NET. Thanks for the reminder \uD83D\uDE42</p>"
+  },
+  {
+    "id": 653,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-02-21T15:14:39",
+    "type": "comment",
+    "content_html": "<p>MCSD.Net will stay around for a good while, but with .Net 2.0, the new letters are MCTS, MCPD, etc.</p>"
+  },
+  {
+    "id": 654,
+    "parent": 0,
+    "author_name": "johnpapa",
+    "author_url": "http://codebetter.com/blogs/john.papa",
+    "date": "2006-02-21T18:25:01",
+    "type": "comment",
+    "content_html": "<p>OK, I admit it. I am confused by the new track. From their web page it sounds like MCTS and MCPD are new certifications in addition to the MCSD and MCAD ones. Ihad htought they were relacing them, guess not.</p>"
+  },
+  {
+    "id": 655,
+    "parent": 0,
+    "author_name": "Michael",
+    "author_url": "http://",
+    "date": "2006-02-22T01:38:09",
+    "type": "comment",
+    "content_html": "<p>John,</p>\n<p>The MCSD.NET is still around for VS2003/.NET1.1 certification.  The MCPD is new for VS2005/.NET2.0 certification.  The two titles will sort of complement one another until 2003/1.1 fades out of mainstream use.</p>"
+  },
+  {
+    "id": 656,
+    "parent": 0,
+    "author_name": "certguru",
+    "author_url": "http://mcpdcert.blogspot.com",
+    "date": "2006-03-14T06:14:27",
+    "type": "comment",
+    "content_html": "<p>For those planning to take MCPD afresh or upgrading to MCPD from MCSD, please refer to the Free Microsoft Certified Professional Developer Study Guide which is available at <a href=\"http://mcpdcert.blogspot.com.This\" rel=\"nofollow ugc\">http://mcpdcert.blogspot.com.This</a> contains all the latest resources about how to obtain the MCPD at your fingertips</p>"
+  }
+]

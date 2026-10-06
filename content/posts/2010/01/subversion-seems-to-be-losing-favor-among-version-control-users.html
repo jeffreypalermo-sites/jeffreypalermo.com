@@ -1,0 +1,30 @@
+---
+wp_id: 1126
+title: Subversion seems to be losing favor among version control users
+slug: subversion-seems-to-be-losing-favor-among-version-control-users
+permalink: /2010/01/subversion-seems-to-be-losing-favor-among-version-control-users/
+date: 2010-01-11T11:23:31
+date_utc: 2010-01-11T11:23:31Z
+modified: 2010-01-11T11:23:31
+format: html
+categories:
+- blog
+excerpt: I haven’t done a study, but Subversion is a very popular Version Control System, but it is centralized. Centralized VCSes have the notion of a “patch” since you can’t share source without submitting it to the central Version Control server. Decentralized version control systems are proving to scale much better and actually be more usable […]
+comments_open: true
+---
+<p>I haven’t done a study, but <a href="http://subversion.tigris.org/">Subversion</a> is a very popular Version Control System, but it is centralized.&nbsp; Centralized VCSes have the notion of a “patch” since you can’t share source without submitting it to the central Version Control server.&nbsp; Decentralized version control systems are proving to scale much better and actually be more usable in the process.&nbsp; <a href="http://git-scm.com/">Git</a> and <a href="http://mercurial.selenic.com/">Mercurial</a> are two of the distributed version control systems that seem to be proving themselves among their customer base.&nbsp; I have experience with Git, and at <a href="http://www.headspring.com/">Headspring</a>, we are considering running a pilot project on it since we have successfully moved one of our sponsored open-source projects onto the system (<a href="http://mvccontrib.org">MvcContrib</a>).</p>
+<p>The point of this post isn’t to point to any single product and say “use this product”.&nbsp; It is merely to recognize what I see as a shift toward distributed version control.&nbsp; Because every developer has a cloned repository, the only operations that require a network connection are push and pull (this probably differs a bit).&nbsp; Conceptually, the advantages of distribution of version control is that it is fast, really fast, to show logs, commit, roll back – because you don’t have to wait for the network to do so.&nbsp; </p>
+<p>With the distributed workflow, you perform the following steps:</p>
+<ol>
+<li>Clone the remote repository</li>
+<li>Modify some of the source</li>
+<li>Commit your changes locally</li>
+<li>Do some more modifications and commit</li>
+<li>Perhaps roll back some of your modifications</li>
+<li>More modifications and commit</li>
+<li>“Pull” from the remote repository (merge remote changes to your local repository)</li>
+<li>Run your private build to ensure the software is stable</li>
+<li>“Push” changes to the remote repository (now the rest of the team can get your changes)</li>
+</ol>
+<p>You still go through this cycle very quickly, but it adds another level of being able to describe discreet changes.</p>
+<p>We’ll see where the industry goes with distributed vs. centralized version control systems.&nbsp; </p>

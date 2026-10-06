@@ -1,0 +1,20 @@
+---
+wp_id: 246
+title: 'Tech Ed 2005 Day 1 – Microsoft Visual C# 2005: IDE Tips and Tricks'
+slug: tech-ed-2005-day-1-microsoft-visual-c-2005-ide-tips-and-tricks
+permalink: /2005/06/tech-ed-2005-day-1-microsoft-visual-c-2005-ide-tips-and-tricks/
+date: 2005-06-06T19:43:00
+date_utc: 2005-06-06T19:43:00Z
+modified: 2005-06-06T19:43:00
+format: html
+excerpt: 'In the Microsoft Visual C# 2005: IDE Tips and Tricks session, Lucas Hoban, Anson Horton showed VS 2005 and various features in contained. They started with the Whidbey class designer. It has some similarities with UML, but much more since VS keeps the diagram in sync with the code. The diagram and code can share […]'
+comments_open: true
+---
+<p>In the Microsoft Visual C# 2005: IDE Tips and Tricks session, Lucas Hoban, Anson Horton showed VS 2005 and various features in contained. They started with the Whidbey class designer. It has some similarities with UML, but much more since VS keeps the diagram in sync with the code. The diagram and code can share the screen and changes to one affect the other. Changes in code are immediately shown in the diagram. I’m quite excited about this particular feature because it enables design documentation generation based on the code, and the diagram will stay in sync. This is much different from UML diagrams because if I change an inheritence relationship, I have to manually alter the UML diagram.</p>
+
+<p>They also went over some of the refactoring features. Some of them are basic but necessary. The Rename refactoring does a smart search and replace for you instead of requiring a manual process. VS 2005 also includes static code analysis (FX Cop). You can use the warnings found by FX Cop as a springboard to the refactoring features. </p>
+<p>I was most impressed with built-in cyclomatic complexity analysis. Cyclomatic complexity is a factor of how many possible paths execution can take through a particular method. The metric you want to have is 1. By default there is 1 path through code. When you add an “if” statement, the metric automatically goes to 2 because there are now two paths through the code. A high cyclomatically complexity denotes smelly code that is hard to debug, and you need to refactor to smaller methods. Spaghetti methods are also hard to test because there are multiple paths through the code.</p>
+<p>Intellisense is also beefed up in 2.0. When starting a new class, just type “c”, and an intellisense window pops up, and you can complete the word with tab, and “class” will be inserted. It also has code snippets in the list, and it will include the opening and closing braces along with a fill-in section for the class name. Other common ones are “prop”, and hitting tab will insert a private field as well as the property wrapper. Just tab to the next section of the template to fill in the types and names. If you worked with the Beta 1 last year, you’re familiar with most of the features, but the IDE is a lot less buggy from what I can tell.</p>
+<p>The IDE includes a code snippet manager where you can manage the snippets. You can modify a snippet or add your own to improve your coding experience. All the snippet is is an Xml file with the information for building the snippet.</p>
+<p>I saw a feature that will probably be an aid in Test-Driven development. When writing a test we call a method that doesn’t yet exist. VS will detect that the method doesn’t exist and give a “smart tag” that, when activated, will generate the method stub in the target class. Some resharper features are also included in the new IDE. Insert using statement is now supported with a smart tag. </p>
+<p>Exceptions are in the tooltips now, and typenames are colorized (Resharper style).</p>

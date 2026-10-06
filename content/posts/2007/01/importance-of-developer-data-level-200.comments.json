@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1111,
+    "parent": 0,
+    "author_name": "Mark",
+    "author_url": "http://",
+    "date": "2007-01-23T12:47:28",
+    "type": "comment",
+    "content_html": "<p>You are exactly right!  The one I hate most is the full production copy on a shared server.  </p>\n<p>“Hey guys, nobody touch the database!  It took me 10 minutes to debug to this point, so don’t screw it up for me!!”</p>"
+  },
+  {
+    "id": 1112,
+    "parent": 0,
+    "author_name": "Mike",
+    "author_url": "http://",
+    "date": "2007-01-23T19:39:49",
+    "type": "comment",
+    "content_html": "<p>Any chance of some samples on how to do create the database during the build process?</p>"
+  },
+  {
+    "id": 1113,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-01-26T17:54:46",
+    "type": "comment",
+    "content_html": "<p>Mike,<br>\nI’ll have to put that on my todo post list.</p>"
+  }
+]

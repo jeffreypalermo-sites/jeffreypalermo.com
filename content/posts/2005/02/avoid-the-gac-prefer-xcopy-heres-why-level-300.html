@@ -1,0 +1,45 @@
+---
+wp_id: 183
+title: Avoid the GAC, prefer XCOPY.  Here’s why – level 300
+slug: avoid-the-gac-prefer-xcopy-heres-why-level-300
+permalink: /2005/02/avoid-the-gac-prefer-xcopy-heres-why-level-300/
+date: 2005-02-22T13:32:00
+date_utc: 2005-02-22T13:32:00Z
+modified: 2005-02-22T13:32:00
+format: html
+excerpt: 'I know I may get some comments saying that the GAC should be used for shared assemblies, but it’s so much easier to maintain XCOPY deployment with a consuming assembly in a directory by itself with the shared assemblies it needs. Let me give a scenario where I would do this: I have a windows […]'
+comments_open: true
+---
+<p>I know I may get some comments saying that the GAC should be used for shared<br>
+assemblies, but it’s so much easier to maintain XCOPY deployment with a<br>
+consuming assembly in a directory by itself with the shared assemblies it<br>
+needs.&nbsp;</p>
+<p>Let me give a scenario where I would do this:&nbsp; I have a windows application<br>
+that is modularized into main features.&nbsp; The base directory has the main<br>
+executable and all the shared libraries.&nbsp; Feature teams work on the main<br>
+features and deploy the feature’s .dll files into a subdirectory along with the<br>
+version of the shared assemblies they compiled and tested against.&nbsp; Maybe I<br>
+release a new version of the program shell (the main assembly).&nbsp; That team has<br>
+to test against the most current build of the shared assembly and deploy.&nbsp; The<br>
+feature assemblies aren’t retested and continue to use the assembly they were<br>
+tested with.&nbsp; A single feature team can redeploy their feature along with the<br>
+current build (at that time) of the shared assembly.&nbsp; The features are<br>
+completely decoupled and the deployment is easy.&nbsp; </p>
+<p>Consider the alternative:&nbsp; the main executable and feature assemblies are<br>
+deployed to the same directory.&nbsp; No matter the feature, the shared assembly in<br>
+the current directory is loaded.&nbsp; I version the main EXE, and it needs the<br>
+latest version of the shared assembly.&nbsp; I have a situation where I have to<br>
+<strong>retest </strong>all the features because they were built against an<br>
+older version of the shared assembly.&nbsp; I have no way to version each major piece<br>
+separately.&nbsp; Or if a feature team makes a new release, and they have to have the<br>
+latest shared dll, you have a major retest burden every time this happens.&nbsp; If<br>
+you keep the binaries separate, you avoid this problem.</p>
+<p>Put the shared assembly in the GAC, you say?&nbsp; Yes, that would work.&nbsp; If you<br>
+prefer it, go ahead, but what, really, is the benefit?&nbsp; There is no<br>
+<strong>real</strong> performance difference.&nbsp; It is another method that would<br>
+work, but there is no benefit to the increased deployment burden.&nbsp; KISS.&nbsp; Keep<br>
+it simple, stupid, that’s my motto.&nbsp; The simplest thing that will work.&nbsp; If I’m<br>
+wrong, I would <strong>love</strong> to hear the <strong>real</strong> benefits<br>
+of the GAC.</p>
+<p>I’m not knocking the MS team who made the GAC, but XCOPY is just such a great<br>
+deployment model, why mess with a good thing?</p>

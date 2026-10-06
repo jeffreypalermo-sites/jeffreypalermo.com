@@ -1,0 +1,119 @@
+[
+  {
+    "id": 957,
+    "parent": 0,
+    "author_name": "ewise",
+    "author_url": "http://www.codebetter.com/blogs/eric.wise",
+    "date": "2006-07-30T13:43:10",
+    "type": "comment",
+    "content_html": "<p>Interesting about the take home assignment.  For myself, I find it to be not so helpful because you are so limited in what you can ask people to do with their spare time.</p>\n<p>This draws from my own experience… if a hiring manager asks me to do a take home assignment that is going to take more than 90 minutes of my time, they can pretty much forget it.  In addition, when you interview candidates, make sure to no have them come in more than 2 times.  If you make candidates dance around, getting off their real job to come in and interview multiple times as well as doing takehome assignments, it says to me that you don’t respect my personal time or my dedication to my current employer.</p>\n<p>For a stringent interview process I find it better to do a short phone interview, then block off an entire morning, 3-4 hours.  Give them a personality check with your HR person first, and ask any followup tech questions you have.  Then put them in a conference room or something with a short test/coding assignment.  Explain that code is pseudocode and that they should try to get the syntax right but without a compiler it’s not a requirement.  If they don’t know at all, have them write what they would do to find the answer (imho being able to find answers is more valuable than being a walking dictionary). This also ensures they aren’t using the internet or friends to get answers.</p>\n<p>If they’re working on a close knit team, you should also have them meet team members during a light tech talk.  The more people come in contact with a candidate the better feel you can get for personality match.</p>"
+  },
+  {
+    "id": 958,
+    "parent": 0,
+    "author_name": "sahilmalik",
+    "author_url": "http://winsmarts.com",
+    "date": "2006-07-30T15:17:25",
+    "type": "comment",
+    "content_html": "<p>I like to do the audition if I can help it.</p>\n<p>But I usually ask them about something they think they are james bond in. The spectrum of technology is so vast, that it is unfair to expect everyone to know everything. </p>\n<p>So I turn them tables on them, and ask them, what they feel they are good in. And then cook up a real problem on the spot for them concerning what they said they were good in, and ask them to solve it in the real conditions they will be working on – A computer, an internet connection, coffee and peace.</p>\n<p>10 minutes later, I check up on the progress, and question them on their approach.</p>\n<p>Usually that works out pretty well for me.</p>\n<p>Wait, that’s a lie!! It is difficult finding qualified people anymore, so it still takes a lot of time to interview candidates – frankly I don’t like doing that, because the dudes that you turn down run into you somewhere else and then it is really uncomfortable. :-/</p>\n<p>So the best way to interview is to delegate it to your team member. Frankly they are the ones who will be working with them anyway.</p>"
+  },
+  {
+    "id": 959,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-07-30T16:53:01",
+    "type": "comment",
+    "content_html": "<p>Eric,<br>\n“. . . if a hiring manager asks me to do a take home assignment that is going to take more than 90 minutes of my time, they can pretty much forget it.. . .”</p>\n<p>I agree with it not being a huge assignment, but if there was a position that you were really motivated about, you would probably do anything asked of you.  If you respected the company and the person doing the hiring, why would you snub your nose at a 2-hour assignment?  </p>\n<p>My goal is to make the interview a final step before an offer.  I don’t want the interview to be a large part of the evaluation process.  If I don’t know before the interview, then I haven’t learned enough about the candidate first.</p>"
+  },
+  {
+    "id": 960,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-07-30T16:56:41",
+    "type": "comment",
+    "content_html": "<p>Eric,<br>\n“. . .they should try to get the syntax right but without a compiler it’s not a requirement.”</p>\n<p>This is completely subjective, but I like to put them in similar conditions as the real work environment.  They will be given good tools on the job, so I think giving them the same tools in the audition is appropriate.  If a programmer knows how to find everything out with Google, more power to them.  After all, isn’t that what we ALL do?</p>\n<p>I don’t like asking someone to write code without the proper tools.  I don’t think it tells me anything concrete about them.</p>"
+  },
+  {
+    "id": 961,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-07-30T17:01:17",
+    "type": "comment",
+    "content_html": "<p>Sahil,<br>\n“. . .10 minutes later, I check up on the progress. . .”</p>\n<p>Wow, your candidates must be fast!  It would take me about 30 minutes to an hour to produce anything worth showing.  The design process in my head takes a while.  Sure I could Wizard my way through to some crap code, but I wouldn’t want to do that.</p>\n<p>Having them do it in-house is a toss-up when I could have them do it before the interview.  That way, they can spend the appropriate amount of time on it.</p>\n<p>——————————-<br>\n“So the best way to interview is to delegate it to your team member. Frankly they are the ones who will be working with them anyway.”</p>\n<p>I’m sure my situation is different being a manager for an ISV product team, but I would never hire someone “who is good enough only to work with someone ELSE.”  I evaluate from the perspective that I will be working with them. . . because I will.  We’re all going to be in the same bull-pen.  If I didn’t have a stake in it, then I shouldn’t be evaluating.</p>"
+  },
+  {
+    "id": 962,
+    "parent": 0,
+    "author_name": "ewise",
+    "author_url": "http://www.codebetter.com/blogs/eric.wise",
+    "date": "2006-07-30T22:07:51",
+    "type": "comment",
+    "content_html": "<p>Yeah, I would give them a computer loaded with VS etc if it was an option, it just isn’t at my current job.  I really think that you have it backwards on the time response though.  </p>\n<p>“If you respected the company and the person doing the hiring, why would you snub your nose at a 2-hour assignment?”</p>\n<p>You said yourself in the posting the truth of the matter is that good candidates are hard to find.  They certainly are!  This is why the company should be respecting the person’s time, being sensitive to needs by providing VPN, laptop, and work from home abilities as needed, and also be sure to provide the tools and environment for success.  Highly qualified people can and will pick and choose their positions, so attraction and more importantly, retension are a key.  If a company is going to ask me to take 3 days off work, spend several hours programming at home during my personal family time, that always comes off to me as a company that doesn’t respect the work/life balance and drives me away.</p>\n<p>Some people don’t mind running the gauntlet, I know that many experienced, family men like me take exception to it.  *shrug*</p>"
+  },
+  {
+    "id": 963,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-07-31T00:24:23",
+    "type": "comment",
+    "content_html": "<p>FYI: I’m coming from the perspective of the hiring manager, and I have to balance screening a candidate with attracting the very best.  I completely agree with respecting the candidates time, and I would never ask anyone to take 3 days off of work (or even 1).  I think we are talking past each other a bit.  What I’ve described isn’t a gauntlet, it’s merely a low-impact screening process that’s saved me a lot of time.  </p>"
+  },
+  {
+    "id": 964,
+    "parent": 0,
+    "author_name": "Vikas Kerni",
+    "author_url": "http://vikasnetdev.blogspot.com/",
+    "date": "2006-07-31T02:45:53",
+    "type": "comment",
+    "content_html": "<p>Fact: Good programmers are staying in job market for only one or at most two weeks.</p>\n<p>A good  hiring process has to take notice of that also.</p>\n<p>Non-technical recruiter asking technical questions may be a big turn off for some canidates.</p>"
+  },
+  {
+    "id": 965,
+    "parent": 0,
+    "author_name": "ewise",
+    "author_url": "http://www.codebetter.com/blogs/eric.wise",
+    "date": "2006-07-31T02:56:57",
+    "type": "comment",
+    "content_html": "<p>Yeah, the three days off comment was for those companies that like to have you come in multiple times.  I prefer once, twice at most, and no more than that unless I’m really really into the company.</p>\n<p>It also depends on the level of the candidate, there’s a big difference in process for someone you plan on grooming versus someone you plan on hitting the ground running or taking a leadership role.  =)</p>"
+  },
+  {
+    "id": 966,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-07-31T03:33:57",
+    "type": "comment",
+    "content_html": "<p>Vikas,<br>\n“Good programmers are staying in job market for only one or at most two weeks”</p>\n<p>I think that’s true.  If the first phone screen uncovers a strong candidate, the process must move along quickly to avoid losing to another company.</p>"
+  },
+  {
+    "id": 967,
+    "parent": 0,
+    "author_name": "sahilmalik",
+    "author_url": "http://winsmarts.com",
+    "date": "2006-07-31T06:28:10",
+    "type": "comment",
+    "content_html": "<p>My thoughts – </p>\n<p><a href=\"http://blah.winsmarts.com/Post.aspx?postID=69\" rel=\"nofollow ugc\">http://blah.winsmarts.com/Post.aspx?postID=69</a></p>"
+  },
+  {
+    "id": 968,
+    "parent": 0,
+    "author_name": "Jason Follas",
+    "author_url": "http://jasonf-blog.blogspot.com",
+    "date": "2006-07-31T11:00:08",
+    "type": "comment",
+    "content_html": "<p>I also give a small take-home programming assignment to my candidates that pushes their comfort level a little bit.  I’ve got to know that my guys can use Google to find answers on their own, so that while on the job, they don’t sit there shellshocked waiting for me to check up on them before they ask how to do something.</p>\n<p>I try to come up with assignments on-the-spot, but for the most part, they’ve come from little programming challenges that I had to solve within the past year or so.  If the candidate Googles hard enough, they might even find the answer in my blog.  \uD83D\uDE09  (But, to date, nobody has blindly plagerized me)</p>\n<p>For instance, I’ve asked people to write a word-wrap function: I’ll provide a long string of text and a column width, and they must return that string with inserted /r/n at appropriate places.</p>\n<p>And, if they’ve never listened to a Mondays or DNR, then I also give an assignment to write a program to pull down one of the RSS feeds, discover the enclosure URL, and then download the binary file.  (This is actually a fun little assignment to see what they know about System.Xml and System.Net)</p>"
+  },
+  {
+    "id": 969,
+    "parent": 0,
+    "author_name": "Gary",
+    "author_url": "http://",
+    "date": "2006-07-31T16:49:58",
+    "type": "comment",
+    "content_html": "<p>“With unemployment at essentially ZERO these days,”<br>\nNot to nitpick but the unemployment stat is not the only indicator of the state of the labor market. For example, the employment doesn’t take into count the millions (<a href=\"http://www.nytimes.com/2006/07/31/business/31men.html\" rel=\"nofollow ugc\">http://www.nytimes.com/2006/07/31/business/31men.html</a>) of discourage workers that fled the market after the downturn in 2001. The true unemployment rate, as calculated by Federal Reserve of Boston (<a href=\"http://www.bos.frb.org/economic/ppb/2005/ppb052.htm\" rel=\"nofollow ugc\">http://www.bos.frb.org/economic/ppb/2005/ppb052.htm</a>) , is actually about 1-3% (or 1.6 million to 5.1 millions unemployed workers) higher.</p>"
+  }
+]

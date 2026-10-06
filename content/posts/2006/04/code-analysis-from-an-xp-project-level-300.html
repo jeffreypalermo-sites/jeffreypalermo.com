@@ -1,0 +1,26 @@
+---
+wp_id: 417
+title: Code analysis from an XP project – level 300
+slug: code-analysis-from-an-xp-project-level-300
+permalink: /2006/04/code-analysis-from-an-xp-project-level-300/
+date: 2006-04-14T02:06:00
+date_utc: 2006-04-14T02:06:00Z
+modified: 2006-04-14T02:06:00
+format: html
+tags:
+- agile
+- coding-principles
+excerpt: I’ve posted on a retrospective of my team’s current release, and I’ve run a few code analysis numbers to get a baseline trend. I normally don’t do code analysis since working code is our real goal, but here it is:I analyzed our latest component, which is a part of a larger software product. This component […]
+comments_open: true
+---
+<p>I’ve posted on a <a href="/blogs/jeffrey.palermo/archive/2006/04/12/142757.aspx">retrospective of my team’s current release</a>, and I’ve run a few code analysis numbers to get a baseline trend.</p>
+<p>I normally don’t do code analysis since working code is our real goal, but here it is:<br>I analyzed our latest component, which is a part of a larger software product.&nbsp; This component delivers tremendous business value, and it was developed from scratch on my team using XP methods.&nbsp; Here’s the stats:<br>Statements: 6600<br>Productions statements: 2500.&nbsp; The rest is test code.<br>Number of classes 141 – 71 production classes.&nbsp; The rest are test classes.<br>7.5 methods per class.<br>About 5 lines of code per method on average.<br>Maximum cyclomatic complexity of any method: 6.&nbsp; Average is 1.5</p>
+<p>We have a few methods that are close to 20 lines of code, but the number of those can be counted on 1 hand.</p>
+<p>This release has seen very few bugs<br>I don’t see any value in using code metrics as a direct measurement of the quality of the code.&nbsp; It may be a trend, but there is no causality between the two.&nbsp; It is, however, interesting to look at the trends from time to time.</p>
+<ul>
+<li>We ended up with 2 times as much test code as production code.</li>
+<li>Our classes ended up very small.&nbsp; Our methods even smaller.</li>
+<li>Our method cyclomatic complexity averaged between 1 and 2.</li>
+<li>We ended up with about 5 actual bugs in the release.&nbsp; This might seem unreal, but I credit all the automated test coverage for this result.</li>
+</ul>
+<p>I know some of you will cringe at the thought of writing two times as much test code as production code, but given the results we have achieved, I consider it worth it.</p>

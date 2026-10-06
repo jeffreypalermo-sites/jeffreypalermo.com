@@ -1,0 +1,14 @@
+---
+wp_id: 123
+title: With ADO.NET, if the DB schema changes, restart your app – level 200
+slug: with-ado-net-if-the-db-schema-changes-restart-your-app-level-200
+permalink: /2004/10/with-ado-net-if-the-db-schema-changes-restart-your-app-level-200/
+date: 2004-10-03T17:37:00
+date_utc: 2004-10-03T17:37:00Z
+modified: 2004-10-03T17:37:00
+format: html
+excerpt: Wow! Hard-to-find bugs can really give you insight into how the .Net Framework works. I recently just battled an elusive bug that turned out to be quite simple. In a history table, I logged events. Each event had a description that a user could type in. Well, I noticed that longer descriptions were being cut off […]
+comments_open: true
+---
+<p>Wow!&nbsp; Hard-to-find bugs can really give you insight into how the .Net Framework works.&nbsp; I recently just battled an elusive bug that turned out to be quite simple.&nbsp; In a history table, I logged events.&nbsp; Each event had a description that&nbsp;a user could type in.&nbsp; Well, I noticed that longer descriptions were being cut off short.&nbsp; I looked at the database and noticed that my nvarchar(50) field was the culprit.&nbsp; So I just changed it to nvarchar(4000) to give the users the most flexibility.&nbsp; I change the corresponding stored proc to mimic the new field length and then went to test the change.&nbsp; No dice.&nbsp; It still cut off my description.&nbsp; What gives?</p>
+<p>ADO.NET!!!&nbsp; I use an ADO.NET command to call my stored procedure.&nbsp; The description was being truncated in the ADO call.&nbsp; I restarted the app, and it worked fine.&nbsp; ADO caches information about sproc parameters, and I had to restart the app for that cache to be recreated with the new length. </p>

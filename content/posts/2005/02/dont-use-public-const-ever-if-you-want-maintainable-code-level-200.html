@@ -1,0 +1,16 @@
+---
+wp_id: 170
+title: Don’t use public const EVER (if you want maintainable code) – level 200
+slug: dont-use-public-const-ever-if-you-want-maintainable-code-level-200
+permalink: /2005/02/dont-use-public-const-ever-if-you-want-maintainable-code-level-200/
+date: 2005-02-02T14:47:00
+date_utc: 2005-02-02T14:47:00Z
+modified: 2005-02-02T14:47:00
+format: html
+excerpt: The c# const keyword is great. At compile time, the contant is actual replaced by the actual string anywhere that the constant is referenced. The compiler just does a find/replace. This is great for private and internal constants. If ever the constant changes (and it might), it’s replaced when the assembly is rebuilt. If you […]
+comments_open: true
+---
+<p>The c# const keyword is great.&nbsp; At compile time, the contant is actual <strong>replaced</strong> by the actual string anywhere that the constant is referenced.&nbsp; The compiler just does a find/replace.&nbsp; This is great for private and internal constants.&nbsp; If ever the constant changes (and it might), it’s replaced when the assembly is rebuilt.&nbsp; If you use the contant 50 times in your code.&nbsp; Use <a href="http://www.aisto.com/roeder/dotnet/">Lutz Roeder’s Reflector</a>&nbsp;to look at one of your assemblies that references these contants.&nbsp; You won’t find the constant name.&nbsp;&nbsp; You will actually find the string that the constant was set to.&nbsp; This is the optimization benefit fo constants.&nbsp; </p>
+<p>Now, what happens when you have a public constant, and you reference it from a client assembly?&nbsp; Same thing.&nbsp; The compiler takes the value of the constant and replaces it with the literal string.&nbsp; 100% optimized.&nbsp; Then, a new version of the shared assembly comes out, and the constant has changed.&nbsp; You drop this new assembly in your app directory and try your application.&nbsp; No dice.&nbsp; Your assembly has the old constant string <strong>hard-coded</strong> in it.&nbsp; The shared assembly is expecting the new string.&nbsp; <strong>Bad</strong> situation.&nbsp; You have to recompile the client assembly (hoping that the 5-year old source code is the right copy and that things weren’t <strong>misplaced over the years</strong>) and completely retest the new build (the cost of that depending on the size of the application).</p>
+<p>The <strong>good news</strong> is that there is a very easy way to prevent this maintenance nightmare:&nbsp; don’t use public constants.&nbsp; Instead, use public static readonly varName.&nbsp; This is a normal variable with the same scope as a public const, but client assemblies reference the variable instead of replacing it with the literal string.&nbsp; Now when the const changes, the client assembly gets the new string through the public static variable.</p>
+<p>It only takes a minute to do a global search for “public const” to see if your application might fall prey to this problem.&nbsp; Also, be sure to convert protected constants as well because client assemblies could contain classes that derive from the offending class.</p>

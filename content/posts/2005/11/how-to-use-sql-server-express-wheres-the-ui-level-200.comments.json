@@ -1,0 +1,65 @@
+[
+  {
+    "id": 568,
+    "parent": 0,
+    "author_name": "Sheldon",
+    "author_url": "http://",
+    "date": "2005-11-04T15:34:30",
+    "type": "comment",
+    "content_html": "<p>You mention osql, but that implies a configured ODBC datasource.  What about sqlcmd?  It uses SQLBrowser to detect a local connection, potentially requiring no configuration at all.</p>\n<p>I ask as well as suggest, as I am currently automating the database setup for my unit tests, and I am hoping I’m on the right path.</p>\n<p>Sheldon</p>"
+  },
+  {
+    "id": 569,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-11-04T15:43:25",
+    "type": "comment",
+    "content_html": "<p>Yes, sqlcmd works as well, and it is listed in the page:<br>\n<a href=\"http://www.aspfaq.com/sql2005/show.asp?id=3\" rel=\"nofollow ugc\">http://www.aspfaq.com/sql2005/show.asp?id=3</a></p>\n<p>Thanks for the input.</p>"
+  },
+  {
+    "id": 570,
+    "parent": 0,
+    "author_name": "Chris Wallace",
+    "author_url": "http://uallas.com/blog",
+    "date": "2005-11-07T12:27:30",
+    "type": "comment",
+    "content_html": "<p>There was a free Express manager beta at one time but it appears MS has taken down the download page.</p>"
+  },
+  {
+    "id": 571,
+    "parent": 0,
+    "author_name": "Danny",
+    "author_url": "http://",
+    "date": "2005-11-07T19:22:25",
+    "type": "comment",
+    "content_html": "<p>Here it is : <a href=\"http://www.microsoft.com/downloads/details.aspx?FamilyID=c7a5cc62-ec54-4299-85fc-ba05c181ed55&amp;DisplayLang=en\" rel=\"nofollow ugc\">http://www.microsoft.com/downloads/details.aspx?FamilyID=c7a5cc62-ec54-4299-85fc-ba05c181ed55&amp;DisplayLang=en</a></p>"
+  },
+  {
+    "id": 572,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-11-07T19:36:18",
+    "type": "comment",
+    "content_html": "<p>Yeah, but it looks like it’s been rolled into the Express IDEs as an add-in.  It remains to be seen whether MS will release it as a stand-alone tool.</p>"
+  },
+  {
+    "id": 573,
+    "parent": 0,
+    "author_name": "Rajeev Gopal",
+    "author_url": "http://www.geekswithblogs.net/rajeevgopal",
+    "date": "2005-11-14T18:26:36",
+    "type": "comment",
+    "content_html": "<p>Jeff,</p>\n<p>I think you need to get the SQL Management Studio, which is in CTP right now.</p>\n<p>Thanks,<br>\nRajeev</p>"
+  },
+  {
+    "id": 574,
+    "parent": 0,
+    "author_name": "Ethan Allen",
+    "author_url": "http://",
+    "date": "2005-12-14T22:55:09",
+    "type": "comment",
+    "content_html": "<p>Does anyone know if any of the Express line is available for download at present ?  I get this message when I try any download :</p>\n<p>The download you requested is unavailable. If you continue to see this message when trying to access this download, go to the “Search for a Download” area on the Download Center home page. </p>\n<p>Thanks for any clues …</p>"
+  }
+]

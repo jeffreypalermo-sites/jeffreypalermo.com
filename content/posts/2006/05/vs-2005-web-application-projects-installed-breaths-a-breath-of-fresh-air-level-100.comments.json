@@ -1,0 +1,47 @@
+[
+  {
+    "id": 877,
+    "parent": 0,
+    "author_name": "scottgu",
+    "author_url": "http://weblogs.asp.net/scottgu",
+    "date": "2006-05-10T03:37:37",
+    "type": "comment",
+    "content_html": "<p>Cool stuff — glad it went well!</p>\n<p>BTW — I have VS 2005 Web Site-&gt;Web Application Project migration tutorials on this web-site for future folks to use: <a href=\"http://webproject.scottgu.com\" rel=\"nofollow ugc\">http://webproject.scottgu.com</a></p>\n<p>Hope this helps,</p>\n<p>Scott</p>"
+  },
+  {
+    "id": 878,
+    "parent": 0,
+    "author_name": "Greg",
+    "author_url": "http://geekswithblogs.net/gyoung",
+    "date": "2006-05-10T07:43:53",
+    "type": "comment",
+    "content_html": "<p>Been waiting for this one!</p>"
+  },
+  {
+    "id": 879,
+    "parent": 0,
+    "author_name": "Danny Chen",
+    "author_url": "http://blogs.msdn.com/dannychen",
+    "date": "2006-05-10T15:15:34",
+    "type": "comment",
+    "content_html": "<p>I’m happy to see that WAPs worked so well for you.</p>\n<p>But… I’m super-happy to see that you had unit tests and integration suites written to verify your code.  I wish more web developers invested time in writing regression suites for their sites, we’d have a LOT less busted websites out there.</p>\n<p>—<br>\nDanny</p>"
+  },
+  {
+    "id": 880,
+    "parent": 0,
+    "author_name": "Justin",
+    "author_url": "http://",
+    "date": "2006-05-19T03:23:33",
+    "type": "comment",
+    "content_html": "<p>Hi,</p>\n<p>I followed the same steps you went through .. but i do not have the convert to web applicaiton option available to  get partial classes … do you know a way around this?</p>"
+  },
+  {
+    "id": 881,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-05-19T03:36:05",
+    "type": "comment",
+    "content_html": "<p>Justin,<br>\nI don’t.  I was converting a .net 2.0 website that already had partial classes.  Perhaps try the more detailed guide by Scott Guthrie.</p>"
+  }
+]

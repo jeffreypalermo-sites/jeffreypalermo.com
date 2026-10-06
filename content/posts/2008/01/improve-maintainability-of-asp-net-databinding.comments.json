@@ -1,0 +1,119 @@
+[
+  {
+    "id": 2205,
+    "parent": 0,
+    "author_name": "Chris Sutton",
+    "author_url": "http://subjunctive.wordpress.com",
+    "date": "2008-01-02T14:30:39",
+    "type": "comment",
+    "content_html": "<p>I understand the issue, but would you seriously want to use the second syntax over the first?  There’s gotta be a better way to test this than resorting to Container.DataItem syntax.</p>"
+  },
+  {
+    "id": 2206,
+    "parent": 0,
+    "author_name": "Sean Feldman",
+    "author_url": "http://weblogs.asp.net/sfeldman",
+    "date": "2008-01-02T15:17:57",
+    "type": "comment",
+    "content_html": "<p>JP Boodhoo had a nice way of creating a mapper that could be easily tested.</p>"
+  },
+  {
+    "id": 2207,
+    "parent": 0,
+    "author_name": "Mike Moore",
+    "author_url": "http://blowmage.com/",
+    "date": "2008-01-02T17:05:59",
+    "type": "comment",
+    "content_html": "<p>So you make your code uglier because you don’t want to inconvenience a tool that you intentionally make yourself dependent on? I <em>really</em> don’t understand everyone’s fascination with tools like Resharper. Write less code, write simpler code, and you won’t think you need more tools.</p>"
+  },
+  {
+    "id": 2208,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-02T17:48:48",
+    "type": "comment",
+    "content_html": "<p>@Mike,</p>\n<p>This tip is orthogonal to Resharper and is focused on making databinding code more maintainable.  Regardless of the refactoring tool, changes in objects require changes to databinding code, and these problems pop themselves up if they can be detected with a  compiler.</p>\n<p>This is really about increasing the speed of the feedback loop.  With an Eval(“string”) how long can the problem hide before it’s found.</p>\n<p>I understand your predisposition to dynamic languages, and you see no value in strong typing.  I can respect that viewpoint, and I know it’s working very well for you.  </p>\n<p>Yes, the code is a bit uglier, but I’m open for other options that would speed up the feedback loop if one of these property bindings became incorrect.</p>"
+  },
+  {
+    "id": 2209,
+    "parent": 0,
+    "author_name": "Mike Moore",
+    "author_url": "http://blowmage.com/",
+    "date": "2008-01-02T21:28:33",
+    "type": "comment",
+    "content_html": "<p>@Jeffrey I thoroughly disagree that I “see no value in strong typing”! Wow, there is so much wrong with that statement that its hard for me to begin.</p>\n<p>First, I love strong typing. Love it. I can’t ever conceive of me voluntarily using a language that isn’t strongly typed for any considerable amount of code. Strong typing is so much better than weak typing. I really don’t want to live in a world where everything is a scalar or a var. I think you have confused strong typing with static typing. I assume you know the difference and hope that wasn’t intentional.</p>\n<p>Second, I see very little value in static type checking at compile time for the vast majority of the code we write. Sometimes you need it, but mostly you don’t. Alot of the arguments I hear against dynamic typing smell like FUD. It seems to me alot of the approaches taken in the C#-heavy Alt.NET world are to get us around the problems static type checking and code bloat. Static type checking leads to code bloat, which makes folks think they need Resharper. But, if you control your code bloat, you don’t need Resharper. A really good way to control code bloat is to use a strongly typed, dynamic language like Ruby or Python.</p>"
+  },
+  {
+    "id": 2210,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-02T22:19:48",
+    "type": "comment",
+    "content_html": "<p>@Mike,<br>\nForgive me.  I did mean “static” typing, not strong typing in general.</p>\n<p>For code that’s easily unit-tested, static type checking isn’t so valuable because the automated unit tests are what count.  In the case of my post, ASP.NET markup is near impossible to unit test, so in this case, I find it valuable to leverage the ASP.NET pre-compiler to find any type errors.</p>\n<p>Regarding dynamic typing arguments:  there are none here.  </p>\n<p>Regarding your last statement about controlling code bloat.  I think this, too, is orthogonal to dynamic/static languages.  Neither will do anything for you with regards to code bloat.  You can write bad/bloated code with either, and you can write small, tight code with either.  Writing the correct code in an iterative fashion with a tight feedback loop will help with code bloat because you will only write what’s completely necessary and nothing more.</p>\n<p>Thanks for the comments.  I’m also subscribed to your blog’s rss feed.</p>"
+  },
+  {
+    "id": 2211,
+    "parent": 0,
+    "author_name": "Mike Moore",
+    "author_url": "http://blowmage.com/",
+    "date": "2008-01-02T23:12:07",
+    "type": "comment",
+    "content_html": "<p>@Jeffrey I think this all comes down to the fact that I believe that you shouldn’t use unit tests to determine the correctness of your presentation tier. There are other better ways to test your presentation tier, and relying on the static type checking at compilation is a bad smell to me. (I know thats the second time I’ve said “smell” in my comments. I don’t mean to imply that anything you said in this post was FUDdy.)</p>\n<p>Also, I disagree that dynamic vs. static is orthoginal to code bloat. Both Steve Yegge and Jeff Atwood blogged recently about this recently.</p>\n<p><a href=\"http://steve-yegge.blogspot.com/2007/12/codes-worst-enemy.html\" rel=\"nofollow ugc\">http://steve-yegge.blogspot.com/2007/12/codes-worst-enemy.html</a><br>\n<a href=\"http://www.codinghorror.com/blog/archives/001025.html\" rel=\"nofollow ugc\">http://www.codinghorror.com/blog/archives/001025.html</a></p>"
+  },
+  {
+    "id": 2212,
+    "parent": 0,
+    "author_name": "Morten Overgaard",
+    "author_url": "http://",
+    "date": "2008-01-05T08:36:34",
+    "type": "comment",
+    "content_html": "<p>Strongly typed databinding can be done using Lambda expression in .Net 3.5</p>\n<p>This little helper function solves the issue.</p>\n<p> private static string MemberName(Expression&lt;Func&gt; exp)<br>\n        {<br>\n             MemberExpression me = exp.Body as MemberExpression;</p>\n<p>            if (me == null) return “”;</p>\n<p>            return me.Member.Name;<br>\n        }</p>\n<p>Using the</p>\n<p> customer.EmailAddress)) %&gt;</p>\n<p>You only have to get  reference to the Customer instance…</p>\n<p>I would like to hear your opinions \uD83D\uDE42</p>\n<p>Regards Morten</p>"
+  },
+  {
+    "id": 2213,
+    "parent": 0,
+    "author_name": "John Chapman",
+    "author_url": "http://jaychapman.blogspot.com",
+    "date": "2008-01-05T14:11:16",
+    "type": "comment",
+    "content_html": "<p>A point which seems to be missed by this whole post is that the second syntax actually performs in a much faster way.  Using the Eval method on an object (not a dataset) results in the use of Reflection.  By casting the DataItem to the appropriate type and then acting on the public property we no longer rely only reflection to obtain the needed value, resulting in improved performance.</p>\n<p>However, I actually prefer a third syntax.  I prefer to place controls in the ASPX file while I then assign values to in the code-behind on item databound.  This way I still get all of the benefits of your second syntax, but none of my perceived cluter.  I feel that this keeps the ASPX file cleaner and easier to read.</p>"
+  },
+  {
+    "id": 2214,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2008-01-06T15:07:53",
+    "type": "comment",
+    "content_html": "<p>One thing that Eval does is ignore nulls, so you can do something like<br>\nEval(“Status.Name”)<br>\nAnd it will return an empty string rather than throw.</p>"
+  },
+  {
+    "id": 2215,
+    "parent": 0,
+    "author_name": "Dave",
+    "author_url": "http://",
+    "date": "2008-01-09T17:28:37",
+    "type": "comment",
+    "content_html": "<p>I see nothing wrong with Eval(“EmailAddress”). Its much easier for end users to find my errors rather than the compiler. \uD83D\uDE09 </p>"
+  },
+  {
+    "id": 2216,
+    "parent": 0,
+    "author_name": "Ron Paul",
+    "author_url": "http://",
+    "date": "2008-01-10T17:23:47",
+    "type": "comment",
+    "content_html": "<p>Why are people doing their databinding in the asp.net page. AHHHHHHHHHHHHHH!!!!!!!</p>\n<p>Get it out of there and start using your code behind but keep the scripting and binding out of your asp.net page.</p>"
+  },
+  {
+    "id": 2217,
+    "parent": 0,
+    "author_name": "Ron Jeremy",
+    "author_url": "http://",
+    "date": "2008-01-15T22:50:30",
+    "type": "comment",
+    "content_html": "<p>YEEHAA</p>"
+  }
+]

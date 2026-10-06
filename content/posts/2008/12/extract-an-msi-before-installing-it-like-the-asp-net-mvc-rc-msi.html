@@ -1,0 +1,27 @@
+---
+wp_id: 974
+title: Extract an msi before installing it. (like the ASP.NET MVC RC msi)
+slug: extract-an-msi-before-installing-it-like-the-asp-net-mvc-rc-msi
+permalink: /2008/12/extract-an-msi-before-installing-it-like-the-asp-net-mvc-rc-msi/
+date: 2008-12-26T21:10:38
+date_utc: 2008-12-26T21:10:38Z
+modified: 2008-12-26T21:10:38
+format: html
+categories:
+- blog
+excerpt: If you are like me, then you probably have quite a few projects going that are using the ASP.NET MVC Framework. The team has been very good about giving us frequent releases over the past year. Because of this, my company has been able to plan for this release in ongoing projects. Because of this […]
+comments_open: true
+---
+<p>If you are like me, then you probably have quite a few projects going that are using the ASP.NET MVC Framework.&nbsp; The team has been very good about giving us frequent releases over the past year.&nbsp; Because of this, my company has been able to plan for this release in ongoing projects.&nbsp; Because of this also, I, and my employees have projects that depend on the beta release of the ASP.NET MVC Framework.&nbsp; When the RC is released in January, we will plan the migration, but since the MVC Framework comes in an MSI file, we prefer to consume the binaries in raw form to undergo migration testing rather than make the big jump by uninstalling the previous release and installing from the MSI.&nbsp;</p>
+<p>Because of our build system, it is easy for us to just plop the new assemblies into the "lib" folder and run the local build.&nbsp; To go further, we can easily run our regression test suite as well, which includes WatiN tests running the system through its paces with over 1700 asserts.</p>
+<p>In order to get at the binaries, I want to extract the MSI instead of installing it the first time around.&nbsp; The following command will extract the MSI so I can get at the contents:</p>
+<div>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:rgb(244,244,244)">msiexec /a AspNetMVCRC-setup.msi</pre>
+</div>
+<div>&nbsp;</div>
+<div>This command took a few seconds to complete, but when it completed, I clicked a "Finish" button, and then I was able to find the extracted files in the following path.</div>
+<div>&nbsp;</div>
+<div>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:rgb(244,244,244)">C:PFilesMicrosoft ASP.NET</pre>
+</div>
+<p>By using this technique, I was able to check out the Release Candidate (internal MS build) without affecting my local GAC or Visual Studio templates.</p>

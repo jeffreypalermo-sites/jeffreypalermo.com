@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2399,
+    "parent": 0,
+    "author_name": "Eric Hexter",
+    "author_url": "http://hex.lostechies.com",
+    "date": "2008-03-19T21:40:30",
+    "type": "comment",
+    "content_html": "<p>I think the more interesting MvcContrib build link would be to the code coverage for the latest build….</p>\n<p><a href=\"http://build.mvccontrib.org/ccnet/server/local/project/MVCContrib-coverage/build/log20080319134641Lbuild.3.xml/NCoverBuildReport.aspx\" rel=\"nofollow ugc\">http://build.mvccontrib.org/ccnet/server/local/project/MVCContrib-coverage/build/log20080319134641Lbuild.3.xml/NCoverBuildReport.aspx</a></p>"
+  }
+]

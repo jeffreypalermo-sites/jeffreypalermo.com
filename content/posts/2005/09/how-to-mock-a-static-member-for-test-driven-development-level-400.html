@@ -1,0 +1,22 @@
+---
+wp_id: 321
+title: How to mock a static member for test-driven development – level 400
+slug: how-to-mock-a-static-member-for-test-driven-development-level-400
+permalink: /2005/09/how-to-mock-a-static-member-for-test-driven-development-level-400/
+date: 2005-09-16T15:52:00
+date_utc: 2005-09-16T15:52:00Z
+modified: 2005-09-16T15:52:00
+format: html
+excerpt: If you are interested in mocking a static member or class in order to facilitate testing a component in isolation, you are traveling down the wrong path. First, to be blunt, you cannot mock a static. Static members belong to the AppDomain, and are not replaceable instances. For instance, if I have a class with […]
+comments_open: true
+---
+<p>If you are interested in mocking a static member or class in order to facilitate testing a component in isolation, you are traveling down the wrong path.&nbsp; First, to be blunt, <strong>you cannot mock a static.</strong>&nbsp; Static members belong to the AppDomain, and are not replaceable instances.&nbsp; For instance, if I have a class with static methods called SqlHelper (like version 2 of the DAAB), and I want to unit test a class that calls methods on SqlHelper, I’m stuck.&nbsp; I can’t do it.&nbsp; SqlHelper’s static methods call directly into data access code, so now anything that calls SqlHelper has a transitive dependency on the data access code (and most likely the database behind it).&nbsp; </p>
+<p>So you have code that can’t be tested in isolation.&nbsp; What do you do?&nbsp; </p>
+<ul><br>
+<li>Don’t waste you time trying to find a solution to mocking the static members of SqlHelper.&nbsp; You can’t do it.&nbsp; Just like you can’t run Java Swing code inside a WinForms .Net project – there’s no point in searching for a solution because one doesn’t exist).&nbsp;<br>
+</li><li>Refactor your code because your component is highly coupled.&nbsp; You desire loosely coupled code.&nbsp; Change your SqlHelper class’s static members into instance members, or if you can’t, wrap it in another class – let’s call this SqlRunner.<br>
+</li><li>Accept an instance of SqlRunner in the constructor of the component you are testing; save it in a class-level variable.<br>
+</li><li>Unit test to your heart’s content.</li></ul>
+<p>It’s really that simple.&nbsp; In your test, you can create a <a href="http://www.nmock.org/">dynamic mock </a>of the SqlRunner class and pass that into the constructor of your tested component.&nbsp; Your component will now call out to your mock, and you have succeeded in testing your component in isolation.&nbsp; </p>
+<p>You may be wondering what to do if you need to call some static members in the .Net framework.&nbsp; For instance, what about HttpContext.Current in a web control?&nbsp; Current is a static property that returns the current instance of the HttpContext class.&nbsp; You <strong>do not </strong>want to call that property directly in your code if you <strong>ever</strong> hope to test it.&nbsp; In that case, use the same technique as above with a thin wrapper class that knows how to get HttpContext.Current.</p>
+<p>If you still aren’t convinced about the rigidity of statics in code, feel free to keep searching, but when you come back around and follow the above steps, come back and leave a comment.</p>

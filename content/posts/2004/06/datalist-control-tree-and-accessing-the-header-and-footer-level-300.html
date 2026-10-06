@@ -1,0 +1,19 @@
+---
+wp_id: 558
+title: DataList control tree and accessing the header and footer – level 300
+slug: datalist-control-tree-and-accessing-the-header-and-footer-level-300
+permalink: /2004/06/datalist-control-tree-and-accessing-the-header-and-footer-level-300/
+date: 2004-06-02T16:32:00
+date_utc: 2004-06-02T16:32:00Z
+modified: 2004-06-02T16:32:00
+format: html
+excerpt: Recently I converted a DataGrid to a DataList because I decided that I didn’t want my two pieces of data in different table cells. After converting it to a DataList, I ran into an issue setting the Header text and Footer text programmatically. I had my HeaderTemplate with a asp:Literal in there. From my code, […]
+comments_open: true
+---
+<p>Recently I converted a DataGrid to a DataList because I decided that I didn’t want my two pieces of data in different table cells.&nbsp; After converting it to a DataList, I ran into an issue setting the Header text and Footer text programmatically.&nbsp; I had my HeaderTemplate with a asp:Literal in there.&nbsp; From my code, I expected to be able to do DataList.Header.FindControl(), but Header isn’t a property, and the HeaderTemplate property is just the interface definition.&nbsp; </p>
+<p>1.&nbsp; The control doesn’t even exist until the DataList.DataBind() method is run.</p>
+<p>2.&nbsp; Looking at the control tree in the trace, I find that it renders as DataList:_ctl0:myControl for the Header and DataList:_ctl{Count-1}:myControl for the Footer.</p>
+<p>3.&nbsp; To make it work, I have to use DataList.Controls[0].FindControl(”myControl”) for the header and DataList.Controls[Count – 1].FindControl(”myControl”).</p>
+<p>So what is the reliable way to get the Header and Footer.&nbsp; Especially for the footer, I have to get the last control in the Controls collection.&nbsp; The header and footer should be separate from the rest of the bound list, but that, apparantly, is the case.</p>
+<p>I would prefer a more elegant solution and one that is more like the rest of the classes in the .Net Framework.&nbsp; For instance, the Header and Footer should be able to accept and ID property for control naming.&nbsp; Better yet, they should be properties of the DataList, but since they don’t exist until runtime, we should at least be able to FindControl(”HeaderID”) at runtime, so the ID property would solve that.</p>
+<p>Another quirk in the ASP.NET controls, but there is a workaround.</p>

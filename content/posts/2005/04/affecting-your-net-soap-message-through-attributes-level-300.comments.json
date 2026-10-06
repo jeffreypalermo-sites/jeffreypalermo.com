@@ -1,0 +1,20 @@
+[
+  {
+    "id": 283,
+    "parent": 0,
+    "author_name": "Scott Bellware",
+    "author_url": "http://",
+    "date": "2005-04-28T08:21:00",
+    "type": "comment",
+    "content_html": "<p>Those are good tips about using the serializer attributes, but WSCF is really about creating an XML schema that defines the messages, and using a tool to transform that schema into the WSDL and the proxy code.</p>\n<p>Check out:<br>\n<a href=\"http://www.thinktecture.com/Resources/Software/WSContractFirst/default.html\" rel=\"nofollow\">http://www.thinktecture.com/Resources/Software/WSContractFirst/default.html</a></p>"
+  },
+  {
+    "id": 284,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://",
+    "date": "2005-04-29T10:33:00",
+    "type": "comment",
+    "content_html": "<p>I like the updated text.  Gets your point across and avoids getting stuck in the contract-first debate.  If someone’s motivation is customizing the auto-generated messages, this information is helpful.  My earlier comment is now irrelevant.</p>"
+  }
+]

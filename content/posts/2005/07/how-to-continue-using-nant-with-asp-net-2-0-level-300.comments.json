@@ -1,0 +1,20 @@
+[
+  {
+    "id": 398,
+    "parent": 0,
+    "author_name": "jmiller",
+    "author_url": "http://codebetter.com/blogs/jeremy.miller",
+    "date": "2005-07-30T19:21:12",
+    "type": "comment",
+    "content_html": "<p>Thanks for the tip.  I’m perfectly content to let you go first into the world of 2.0 and tell us all how to do it.  Really not looking forward to the migration from 1.1 to 2.0.</p>"
+  },
+  {
+    "id": 399,
+    "parent": 0,
+    "author_name": "Brent Asplund",
+    "author_url": "http://",
+    "date": "2005-08-15T14:32:52",
+    "type": "comment",
+    "content_html": "<p>one note: I’ve found that xmlpeek and xmlpoke do not work with xml files that have the following namespace declaration:</p>\n<p>xmlns=”http://schemas.microsoft.com/.NetConfiguration/v2.0″</p>\n<p>by default all asp.net 2.0 web.config files have this declaration. you’ll need to remove it to get xmlpeek and xmlpoke to work. You will see that intellisense will tell you that it’s looking for the namespace, but from what i’ve seen its not required.</p>\n<p>Brent Asplund</p>"
+  }
+]

@@ -1,0 +1,349 @@
+---
+wp_id: 1485
+title: My current favorite private build script
+slug: my-current-favorite-private-build-script
+permalink: /2018/11/my-current-favorite-private-build-script/
+date: 2018-11-14T10:59:46
+date_utc: 2018-11-14T16:59:46Z
+modified: 2018-11-14T10:59:46
+format: html
+categories:
+- blog
+excerpt: I do pull in the Exec function from psake just because it was coded very well. This build script is just powershell and is geared for .Net Core . .\BuildFunctions.ps1 $projectName = “OnionDevOpsArchitecture” $base_dir = resolve-path .\ $source_dir = “$base_dir\src” $unitTestProjectPath = “$source_dir\UnitTests” $integrationTestProjectPath = “$source_dir\IntegrationTests” $uiProjectPath = “$source_dir\UI” $databaseProjectPath = “$source_dir\Database” $projectConfig = […]
+comments_open: true
+---
+<p>I do pull in the Exec function from psake just because it was coded very well.&nbsp; This build script is just powershell and is geared for .Net Core</p>
+
+
+<p style="background: white"><span>.</span><span> <span>.\BuildFunctions.ps1</span></span></p>
+
+
+
+<p style="background: white"><span>$projectName</span><span> <span>=</span> <span>“OnionDevOpsArchitecture”</span></span></p>
+
+<p style="background: white"><span>$base_dir</span><span> <span>=</span> <span>resolve-path</span><br>
+<span>.\</span></span></p>
+
+<p style="background: white"><span>$source_dir</span><span> <span>=</span><br>
+<span>“</span><span>$base_dir</span><span>\src”</span></span></p>
+
+<p style="background: white"><span>$unitTestProjectPath</span><span> <span>=</span><br>
+<span>“</span><span>$source_dir</span><span>\UnitTests”</span></span></p>
+
+<p style="background: white"><span>$integrationTestProjectPath</span><span> <span>=</span><br>
+<span>“</span><span>$source_dir</span><span>\IntegrationTests”</span></span></p>
+
+<p style="background: white"><span>$uiProjectPath</span><span> <span>=</span><br>
+<span>“</span><span>$source_dir</span><span>\UI”</span></span></p>
+
+<p style="background: white"><span>$databaseProjectPath</span><span> <span>=</span><br>
+<span>“</span><span>$source_dir</span><span>\Database”</span></span></p>
+
+<p style="background: white"><span>$projectConfig</span><span> <span>=</span> <span>$env:BuildConfiguration</span></span></p>
+
+<p style="background: white"><span>$version</span><span> <span>=</span> <span>$env:Version</span></span></p>
+
+<p style="background: white"><span>$verbosity</span><span> <span>=</span> <span>“q”</span></span></p>
+
+
+
+<p style="background: white"><span>$build_dir</span><span> <span>=</span><br>
+<span>“</span><span>$base_dir</span><span>\build”</span></span></p>
+
+<p style="background: white"><span>$test_dir</span><span> <span>=</span><br>
+<span>“</span><span>$build_dir</span><span>\test”</span></span></p>
+
+
+
+<p style="background: white"><span>$aliaSql</span><span> <span>=</span><br>
+<span>“</span><span>$source_dir</span><span>\Database\scripts\AliaSql.exe”</span></span></p>
+
+<p style="background: white"><span>$databaseAction</span><span> <span>=</span> <span>$env:DatabaseAction</span></span></p>
+
+<p style="background: white"><span>if</span><span><br>
+(<span>[</span><span>string</span><span>]::</span>IsNullOrEmpty(<span>$databaseAction</span>))<br>
+{ <span>$databaseAction</span> <span>=</span> <span>“Rebuild”</span>}</span></p>
+
+<p style="background: white"><span>$databaseName</span><span> <span>=</span> <span>$env:DatabaseName</span></span></p>
+
+<p style="background: white"><span>if</span><span><br>
+(<span>[</span><span>string</span><span>]::</span>IsNullOrEmpty(<span>$databaseName</span>))<br>
+{ <span>$databaseName</span> <span>=</span><br>
+<span>$projectName</span>}</span></p>
+
+<p style="background: white"><span>$databaseServer</span><span> <span>=</span> <span>$env:DatabaseServer</span></span></p>
+
+<p style="background: white"><span>if</span><span><br>
+(<span>[</span><span>string</span><span>]::</span>IsNullOrEmpty(<span>$databaseServer</span>))<br>
+{ <span>$databaseServer</span> <span>=</span><br>
+<span>“localhost\SQL2017”</span>}</span></p>
+
+<p style="background: white"><span>$databaseScripts</span><span> <span>=</span><br>
+<span>“</span><span>$source_dir</span><span>\Database\scripts”</span></span></p>
+
+
+
+<p style="background: white"><span>if</span><span><br>
+(<span>[</span><span>string</span><span>]::</span>IsNullOrEmpty(<span>$version</span>))<br>
+{ <span>$version</span> <span>=</span> <span>“9.9.9”</span>}</span></p>
+
+<p style="background: white"><span>if</span><span><br>
+(<span>[</span><span>string</span><span>]::</span>IsNullOrEmpty(<span>$projectConfig</span>))<br>
+{<span>$projectConfig</span> <span>=</span> <span>“Release”</span>}</span></p>
+
+
+
+<p style="background: white"><span>Function</span><span> <span>Init</span> {</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp; </span><span>rd</span><br>
+<span>$build_dir</span> <span>-recurse</span> <span>-force</span><span>&nbsp; </span><span>-ErrorAction</span> <span>Ignore</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>md</span> <span>$build_dir</span><br>
+<span>&gt;</span> <span>$null</span></span></p>
+
+
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>exec</span> {</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&amp;</span><br>
+<span>dotnet</span> <span>clean</span><br>
+<span>$source_dir</span><span>\</span><span>$projectName</span><span>.sln</span><br>
+<span>-nologo</span> <span>-v</span> <span>$verbosity</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>exec</span> {</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&amp;</span><br>
+<span>dotnet</span> <span>restore</span><br>
+<span>$source_dir</span><span>\</span><span>$projectName</span><span>.sln</span><br>
+<span>-nologo</span> <span>–interactive</span> <span>-v</span><br>
+<span>$verbosity</span><span>&nbsp; </span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+
+
+
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp; </span><span>#Write-Host<br>
+ $projectConfig</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp; </span><span>#Write-Host<br>
+ $version</span></span></p>
+
+<p style="background: white"><span>}</span></p>
+
+
+
+
+
+<p style="background: white"><span>Function</span><span> <span>Compile</span>{</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>exec</span> {</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&amp;</span><br>
+<span>dotnet</span> <span>build</span><br>
+<span>$source_dir</span><span>\</span><span>$projectName</span><span>.sln</span><br>
+<span>-nologo</span> <span>–no-restore</span> <span>-v</span><br>
+<span>$verbosity</span> <span>-maxcpucount</span> <span>–configuration</span><br>
+<span>$projectConfig</span> <span>–no-incremental</span><br>
+<span>/p:Version=</span><span>$version</span> <span>/p:Authors=”Clear<br>
+Measure”</span> <span>/p:Product=”Onion<br>
+DevOps Architecture”</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p style="background: white"><span>}</span></p>
+
+
+
+<p style="background: white"><span>Function</span><span> <span>UnitTests</span>{</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>Push-Location</span> <span>-Path</span><br>
+<span>$unitTestProjectPath</span></span></p>
+
+
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>try</span> {</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>exec</span> {</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&amp;</span><br>
+<span>dotnet</span> <span>test</span> <span>-nologo</span> <span>-v</span><br>
+<span>$verbosity</span> <span>–logger:trx</span><br>
+<span>–results-directory</span> <span>$test_dir</span> <span>–no-build</span><br>
+<span>–no-restore</span> <span>–configuration</span> <span>$projectConfig</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>finally</span> {</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>Pop-Location</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p style="background: white"><span>}</span></p>
+
+
+
+<p style="background: white"><span>Function</span><span> <span>IntegrationTest</span>{</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>Push-Location</span> <span>-Path</span><br>
+<span>$integrationTestProjectPath</span></span></p>
+
+
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>try</span> {</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>exec</span> {</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&amp;</span><br>
+<span>dotnet</span> <span>test</span> <span>-nologo</span> <span>-v</span><br>
+<span>$verbosity</span> <span>–logger:trx</span><br>
+<span>–results-directory</span> <span>$test_dir</span> <span>–no-build</span><br>
+<span>–no-restore</span> <span>–configuration</span> <span>$projectConfig</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>finally</span> {</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>Pop-Location</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p style="background: white"><span>}</span></p>
+
+
+
+<p style="background: white"><span>Function</span><span> <span>MigrateDatabaseLocal</span> {</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>exec</span>{</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&amp;</span><br>
+<span>$aliaSql</span> <span>$databaseAction</span> <span>$databaseServer</span><br>
+<span>$databaseName</span> <span>$databaseScripts</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p style="background: white"><span>}</span></p>
+
+
+
+<p style="background: white"><span>Function</span><span> <span>MigrateDatabaseRemote</span>{</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>$appConfig</span> <span>=</span><br>
+<span>“</span><span>$integrationTestProjectPath</span><span>\app.config”</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp; </span><span>$injectedConnectionString</span> <span>=</span><br>
+<span>“Server=tcp:</span><span>$databaseServer</span><span>,1433;Initial<br>
+ Catalog=</span><span>$databaseName</span><span>;Persist Security<br>
+Info=False;User<br>
+ID=</span><span>$env:DatabaseUser</span><span>;Password=</span><span>$env:DatabasePassword</span><span>;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection<br>
+ Timeout=30;”</span></span></p>
+
+
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>write-host</span> <span>“Using connection string:<br>
+</span><span>$injectedConnectionString</span><span>“</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp; </span><span>if</span> (<br>
+<span>Test-Path</span> <span>“</span><span>$appConfig</span><span>“</span> )<br>
+{</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>poke-xml</span><br>
+<span>$appConfig</span> <span>“//add[@key=’ConnectionString’]/@value”</span><br>
+<span>$injectedConnectionString</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>exec</span> {</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&amp;</span><br>
+<span>$aliaSql</span> <span>$databaseAction</span> <span>$databaseServer</span><br>
+<span>$databaseName</span> <span>$databaseScripts</span><br>
+<span>$env:DatabaseUser</span> <span>$env:DatabasePassword</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p style="background: white"><span>}</span></p>
+
+
+
+<p style="background: white"><span>Function</span><span> <span>Pack</span>{</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>Write-Output</span> <span>“Packaging<br>
+nuget packages”</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>exec</span>{</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&amp;</span><br>
+<span>.\tools\octopack\Octo.exe</span> <span>pack</span> <span>–id</span><br>
+<span>“</span><span>$projectName</span><span>.UI”</span> <span>–version</span><br>
+<span>$version</span> <span>–basePath</span> <span>$uiProjectPath</span><br>
+<span>–outFolder</span> <span>$build_dir</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>exec</span>{</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&amp;</span><br>
+<span>.\tools\octopack\Octo.exe</span> <span>pack</span> <span>–id</span><br>
+<span>“</span><span>$projectName</span><span>.Database”</span><br>
+<span>–version</span> <span>$version</span> <span>–basePath</span><br>
+<span>$databaseProjectPath</span> <span>–outFolder</span> <span>$build_dir</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>exec</span>{</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>&amp;</span><br>
+<span>.\tools\octopack\Octo.exe</span> <span>pack</span> <span>–id</span><br>
+<span>“</span><span>$projectName</span><span>.IntegrationTests”</span><br>
+<span>–version</span> <span>$version</span> <span>–basePath</span><br>
+<span>$integrationTestProjectPath</span> <span>–outFolder</span><br>
+<span>$build_dir</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</span></p>
+
+<p style="background: white"><span>}</span></p>
+
+
+
+<p style="background: white"><span>Function</span><span> <span>PrivateBuild</span>{</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>Init</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>Compile</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>UnitTests</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>MigrateDatabaseLocal</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>IntegrationTest</span></span></p>
+
+<p style="background: white"><span>}</span></p>
+
+
+
+<p style="background: white"><span>Function</span><span> <span>CIBuild</span>{</span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>Init</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>MigrateDatabaseRemote</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>Compile</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>UnitTests</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>IntegrationTest</span></span></p>
+
+<p style="background: white"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>Pack</span></span></p>
+
+<p style="background: white"><span>}</span></p>

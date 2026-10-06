@@ -1,0 +1,30 @@
+---
+wp_id: 326
+title: Is your connection string really secure? – level 200
+slug: is-your-connection-string-really-secure-level-200
+permalink: /2005/09/is-your-connection-string-really-secure-level-200/
+date: 2005-09-29T02:56:00
+date_utc: 2005-09-29T02:56:00Z
+modified: 2005-09-29T02:56:00
+format: html
+excerpt: Jeremy highlights some foobar code that exposed a connection string to a database via a public static property on a class. In the comments, there was some discussion about what to do with the connection string. I’d like to address some common thoughts on connection strings (mostly concerning keeping the connection string secure). Secure the […]
+comments_open: true
+---
+<p><a href="/blogs/jeremy.miller/archive/2005/09/28/132571.aspx">Jeremy highlights some foobar code </a>that exposed a connection string to a database via a public static property on a class.&nbsp; In the comments, there was some discussion about what to do with the connection string.&nbsp; I’d like to address some common thoughts on connection strings (mostly concerning keeping the connection string secure).</p>
+<ol><br>
+<li>Secure the connection string:<br>What exactly does that mean?&nbsp; Secure from whom?&nbsp; Hackers?&nbsp; Developers? Random company employees who don’t have access to the server anyway?&nbsp; The connection string has the information needed to log on to a database as a particular user (ignoring integrated authentication for now).&nbsp; The question each organization has to answer is “who do I want to keep this information from”?&nbsp; If the answer is the general population of company employees and outsiders, then you don’t have to do much of anything.&nbsp; If you store it in plain text in a configuration file on the server, only those with access to the server can see that information.&nbsp; This assumes that security on the server is set up correctly on the server.&nbsp; If you want to keep it from server administrators, then I’d ask why you have server administrators working for&nbsp;you if you distrust them that much.</li><br>
+<li>Select the simplest deployment scenario that will secure your connection string from the people you don’t trust</li><br>
+<ul><br>
+<li>General population – anything will work because they don’t have access to the server</li><br>
+<li>Server Administrators – you have a management problem, and the admins you don’t trust need to be fired.&nbsp;</li></ul><br>
+<li>Next plan for “IF” the server is compromised.</li><br>
+<ul><br>
+<li>Use an account in the connection string that only has read privileges.&nbsp; Grant execute explicitly for stored procedures that do updates.</li><br>
+<li>Don’t use the “sa” account.</li><br>
+<li>Use network restrictions to only allow communication to the database server from the application server (yes, put your network admins to work).&nbsp; This is really simple, actually.&nbsp; The network simply won’t route packets to the database server unless they come from the application server.&nbsp; </li></ul></ol>
+<p>The above are my preferences.&nbsp; The above tends to simplify deployments because there are few hoops to jump through because the connection string often resides with other application configuration.&nbsp; I’ll also address the sometimes popular thought to store the connection string in the registry and even encrypt it!</p>
+<ul><br>
+<li>I think storing the connection string in the registry is pointless.&nbsp; Why?&nbsp; Because it doesn’t gain you anything.&nbsp; It only makes deployment more difficult.</li><br>
+<li>Encrypting the connection string is making deployments even more difficult and just try to cope with a broken IT department.&nbsp; Often the justification is to protect _when_ the machine is compromised.&nbsp; First, if someone gains ADMINISTRATIVE access to the machine (in order to read the encrypted value from the registry), they own the machine.&nbsp; This is really bad, and if they care about your database, they can just get the private key from the application (that is on that machine) and decrypt it anyway.&nbsp; (even with DPAPI).</li></ul>
+<p>My preference?&nbsp; Store it in plain text in the configuration file for most applications.&nbsp; If configuration files float around, and there is risk within the company (you have co-workers who should be fired), 1.&nbsp; stop the configuration from floating around, and 2.&nbsp; perhaps encrypt the connection string inside the configuration file (but realize that anyone with access to the private key can still get it).&nbsp;&nbsp;If you are really concerned, run your application with a service account and use integrated authentication.&nbsp; This poses another problem.&nbsp; How are you securing the password to the service account?&nbsp; And the cycle repeats itself.</p>
+<p><strong>Bottom line:</strong>&nbsp; Security is not an absolute.&nbsp; It’s not a switch that’s turned on by using a published “best practice”.&nbsp; It’s a number of steps that are determined by the established risks.&nbsp; Evaluate the real risks with your particular application and make objective decisions based on _real_ needs.&nbsp; Some “security steps” like storing the connection string in the registry often don’t deliver value but instead hurt deployment ease and make application support more difficult.&nbsp; Don’t fall prey to <a href="http://mordac.org/sub/about_mordac.php">Mordac, the Refuser</a>, working in your I/T department, &nbsp;who may insist on some inane “security measures”.&nbsp; Be practical.</p>

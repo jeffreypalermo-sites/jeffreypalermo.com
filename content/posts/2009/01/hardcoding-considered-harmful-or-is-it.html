@@ -1,0 +1,24 @@
+---
+wp_id: 981
+title: Hardcoding Considered Harmful – or is it?
+slug: hardcoding-considered-harmful-or-is-it
+permalink: /2009/01/hardcoding-considered-harmful-or-is-it/
+date: 2009-01-13T12:34:12
+date_utc: 2009-01-13T12:34:12Z
+modified: 2009-01-13T12:34:12
+format: html
+categories:
+- blog
+excerpt: 'I had an interested conversation with a colleague recently, and the topic was hard-coding. A definition from wikipedia follows: Hard coding (also, hard-coding or hardcoding) refers to the software development practice of embedding input or configuration data directly into the source code of a program or other executable object, or fixed formatting of the […]'
+comments_open: true
+---
+<p>&nbsp; I had an interested conversation with a colleague recently, and the topic was hard-coding.&nbsp; A definition from <a href="http://en.wikipedia.org/wiki/Hard_coding">wikipedia</a> follows:</p>
+<blockquote>
+<p><b>Hard coding</b> (also, <b>hard-coding</b> or <b>hardcoding</b>) refers to the software development practice of embedding input or configuration data directly into the <a href="http://en.wikipedia.org/wiki/Source_code">source code</a> of a <a href="http://en.wikipedia.org/wiki/Computer_program">program</a> or other executable object, or fixed formatting of the data, instead of obtaining that data from external sources or generating data or formatting in the program itself with the given input.</p>
+</blockquote>
+<p>Hard-coding has caused quite a bit of pain for folks trying to maintain systems.&nbsp; One of the issues is that changing the configuration information requires a code change, and then a redeployment of the system.&nbsp; Another issue is if the configuration is hard-coded into multiple places within the system.&nbsp; Then the programmer must remember all the places the hard-coding exists.&nbsp; Compounded by a situation where the system is hard to deploy, this can lead to a large maintenance problem.</p>
+<p>To get around hard-coding configuration information into the system, we often move configuration to an external source, which is a text file or database table.&nbsp; This allows us to change the configuration without rebuilding the system.&nbsp; The caveat is that it allows us to believe that we have removed the configuration from the system, but we must be wary of behavior that depends on specific configuration values to exists.&nbsp; I’ve mentioned the <a href="/2009/01/separating-configuration-from-data-lowers-total-cost-of-ownership/">location of configuration</a> in an earlier blogpost, and I’ve also mentioned <a href="/2009/01/beware-of-fear-driven-architecture-do-you-fear-deployments/">fear of deployments</a>.</p>
+<p>Oren Eini boldly makes the assertion that a system is simpler to maintain when configuration is hard-coded in one place within the system.&nbsp; Coupled with an automated testing and deployment process, changing configuration can be just as simple and predictable as possible.&nbsp; Oren asserts that <a href="http://ayende.com/Blog/archive/2008/08/21/Enabling-change-by-hard-coding-everything.aspx">hard-coding as much as possible enhances maintainability</a>.&nbsp; He then defends his position with an example in <a href="http://ayende.com/Blog/archive/2008/08/21/Enabling-change-by-hard-coding-everything-the-smart-way.aspx">a subsequent post</a>.&nbsp; </p>
+<p>I agree with Oren.&nbsp; The first draft of some functionality should hard-code everything.&nbsp; Then subsequent revisions will cause some information to be factored out into mediums that can be maintained while suppporting all the requirements in scope.&nbsp; The requirement cause us to make decisions about what information to hard-code and which information to soft-code.</p>
+<p>Hard-coding as harmful or not is not an absolute.&nbsp; When you dig deep into the requirements for a system, you will uncover specific information that doesn’t work as a part of the codebase.&nbsp; That information has to be elsewhere in a softer configuration medium.</p>
+<p>Conclusion:&nbsp; hard-code it until hard-coding it doesn’t work anymore.&nbsp; </p>

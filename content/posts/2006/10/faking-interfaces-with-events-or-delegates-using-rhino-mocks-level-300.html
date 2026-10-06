@@ -1,0 +1,15 @@
+---
+wp_id: 467
+title: Faking interfaces with events or delegates using Rhino Mocks – level 300
+slug: faking-interfaces-with-events-or-delegates-using-rhino-mocks-level-300
+permalink: /2006/10/faking-interfaces-with-events-or-delegates-using-rhino-mocks-level-300/
+date: 2006-10-25T20:16:41
+date_utc: 2006-10-25T20:16:41Z
+modified: 2006-10-25T20:16:41
+format: html
+excerpt: I think mock objects themselves are a 300-level topic. I wish it weren’t so, but from the folks I talk to, the average developer doesn’t use them. Fakes, stubs, mocks (whatever you want to call them – and I know they overlap, and I understand the semantic differences among them) are critical for testing. It’s […]
+comments_open: true
+---
+<p>I think mock objects themselves are a 300-level topic.&nbsp; I wish it weren’t so, but from the folks I talk to, the average developer doesn’t use them.&nbsp; Fakes, stubs, mocks (whatever you want to call them – and I know they overlap, and I understand the semantic differences among them) are critical for testing.&nbsp; It’s important to isolate code under test, and in order to do that, we have to fake out other classes the current class talks to.&nbsp; Not all the classes as a rule, but the ones that might give our test unpredictable results.</p>
+<p>Phil Haack lays out an example faking an event on an interface.&nbsp; While I prefer to use plain delegates for my view-controller notification, events are multicast delegates, so the work as well.&nbsp; Give it a read.</p>
+<p><a title="http://haacked.com/archive/2006/06/23/UsingRhinoMocksToUnitTestEventsOnInterfaces.aspx" href="http://haacked.com/archive/2006/06/23/UsingRhinoMocksToUnitTestEventsOnInterfaces.aspx">http://haacked.com/archive/2006/06/23/UsingRhinoMocksToUnitTestEventsOnInterfaces.aspx</a></p>

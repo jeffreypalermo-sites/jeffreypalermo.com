@@ -1,0 +1,27 @@
+---
+wp_id: 496
+title: What would I do without an automated refactoring tool? – level 200
+slug: what-would-i-do-without-an-automated-refactoring-tool-level-200
+permalink: /2007/03/what-would-i-do-without-an-automated-refactoring-tool-level-200/
+date: 2007-03-02T23:50:00
+date_utc: 2007-03-02T23:50:00Z
+modified: 2007-03-02T23:50:00
+format: html
+excerpt: Today, I made a commit to Subversion that encompassed over 200 code files. What was the change? I moved a delegate from sharing a code file with a class to be in its own file and put it in another namespace. Pretty harmless change, but so much code uses this very common delegate. As you […]
+comments_open: true
+---
+<p>Today, I made a commit to Subversion that encompassed over 200 code files.&nbsp; What was the change?&nbsp; I moved a delegate from sharing a code file with a class to be in its own file and put it in another namespace.&nbsp; Pretty harmless change, but so much code uses this very common delegate.&nbsp; As you know, I'm using Resharper, so here are my keystrokes:</p>
+<ul>
+<li>F6 to "move" the Type.</li>
+<li>TAB</li>
+<li>down arrow (to move delegate to new file).</li>
+<li>ENTER</li>
+<li>F6 (to move to new namespace)</li>
+<li>{type in new namespace}</li>
+<li>. . . wait 10 seconds for Resharper to make appropriate changes to "using" statements in over 200 code file.</li>
+<li>CTRL+SHIFT+S (save all)</li>
+<li>CTRL+SHIFT+B (compile)</li>
+</ul>
+<p>I run my automated build (with 1450+ test), and check in.</p>
+<p>I remember back to when I didn't use a refactoring tool.&nbsp; You know what I would have done?&nbsp; I wouldn't have made the change.&nbsp; The overhead would have been too great.&nbsp; I would have left the misplaced delegate definition.</p>
+<p>Please.&nbsp; Do yourself a favor.&nbsp; Don't develop with POVS (plain old Visual Studio).&nbsp; Use a coding add-in.&nbsp; Use Resharper.&nbsp; Use CodeRush/Refactor.&nbsp; Use JustCode!&nbsp; Use something!&nbsp; </p>

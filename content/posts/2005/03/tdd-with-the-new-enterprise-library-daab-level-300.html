@@ -1,0 +1,72 @@
+---
+wp_id: 193
+title: TDD with the new Enterprise Library DAAB – level 300
+slug: tdd-with-the-new-enterprise-library-daab-level-300
+permalink: /2005/03/tdd-with-the-new-enterprise-library-daab-level-300/
+date: 2005-03-08T13:35:00
+date_utc: 2005-03-08T13:35:00Z
+modified: 2005-03-08T13:35:00
+format: html
+excerpt: First, I give props to they guys at Microsoft who put out the Enterprise Library. I especially like the data access application block. I do, however, have one beef with it. Everyone preaches “code to an interface”, and ADO.NET exhibits this (IDataReader, IDbCommand, etc), but the DAAB doesn’t do this. Consequently, I can’t stub out […]
+comments_open: true
+---
+<p>First, I give props to they guys at Microsoft who put out the Enterprise<br>
+Library.&nbsp; I especially like the data access application block.&nbsp; I do, however,<br>
+have one beef with it.&nbsp; Everyone preaches “code to an interface”, and ADO.NET<br>
+exhibits this (IDataReader, IDbCommand, etc), but the DAAB doesn’t do this.&nbsp;<br>
+Consequently, I can’t stub out a mock object to decouple the DAAB from the code<br>
+I’m trying to unit test with NUnit.&nbsp; I then tried NMock to create a dynamic<br>
+mock, but the ExecuteReader(string, params object) method wasn’t marked as<br>
+virtual.&nbsp; After changing it to virtual and recompiling the source, NMock would<br>
+work (it appears most methods were marked virtual, but that some were<br>
+overlooked).&nbsp; Not having the interface to stub out _really_ makes TDD<br>
+difficult.&nbsp; It forces me to use dynamic mocks (which are more brittle).</p>
+<p>Here’s a quick test I whipped up to create&nbsp;a Category class that is a record<br>
+in the Categories table of Northwind.&nbsp; Note the use of NMock to get my unit test<br>
+to work without the dependency on the DAAB:</p>
+<div style="border:1pt solid windowtext; padding:0; background:white none repeat scroll 0; color:black"><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">class</span> Category {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">private</span> <span style="color:blue">string</span><br>
+_name = <span style="color:blue">string</span>.Empty;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span><br>
+<span style="color:blue">static</span> Database _database = <span style="color:blue">null</span>;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;11</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">private</span> <span style="color:blue">static</span><br>
+<span style="color:blue">string</span> _databaseInstance = “DEV”;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;12</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> <span style="color:blue">string</span><br>
+Name {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;14</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> { <span style="color:blue">return</span> <span style="color:blue">this</span>._name; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;15</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">set</span> {<br>
+<span style="color:blue">this</span>._name = <span style="color:blue">value</span>; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;16</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;17</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;18</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> <span style="color:blue">static</span><br>
+Database Database {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;19</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;20</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">if</span>(_database == <span style="color:blue">null</span>) <br><span style="color:teal">&nbsp;&nbsp;&nbsp;21</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _database =<br>
+DatabaseFactory.CreateDatabase(_databaseInstance);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;22</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;23</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span> _database; <br><span style="color:teal">&nbsp;&nbsp;&nbsp;24</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;25</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">set</span> {<br>
+_database = <span style="color:blue">value</span>; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;26</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;27</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;28</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> Category(<span style="color:blue">int</span> categoryID)<br><span style="color:teal">&nbsp;&nbsp;&nbsp;29</span>&nbsp;&nbsp;&nbsp;&nbsp; {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;30</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; IDataReader reader =<br>
+Category.Database.ExecuteReader(“GetCategoryByID”, categoryID);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;31</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;32</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; <span style="color:blue">if</span>(reader.Read()){<br><span style="color:teal">&nbsp;&nbsp;&nbsp;33</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">this</span>._name =<br>
+reader.GetString(reader.GetOrdinal(“CategoryName”));<br><span style="color:teal">&nbsp;&nbsp;&nbsp;34</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;35</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;36</span>&nbsp;}</div>
+<p>Now my test:</p>
+<div style="border:1pt solid windowtext; padding:0; background:white none repeat scroll 0; color:black"><span style="color:teal">&nbsp;&nbsp;&nbsp;10</span>&nbsp;[TestFixture]<br><span style="color:teal">&nbsp;&nbsp;&nbsp;11</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">class</span> CategoryTest<br><span style="color:teal">&nbsp;&nbsp;&nbsp;12</span>&nbsp;{<br><span style="color:teal">&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+[Test]<br><span style="color:teal">&nbsp;&nbsp;&nbsp;14</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">void</span><br>
+GetACategory(){<br><span style="color:teal">&nbsp;&nbsp;&nbsp;15</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;16</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Mock mockDatabase = <span style="color:blue">new</span> NMock.DynamicMock(<span style="color:blue">typeof</span>(Database));<br><span style="color:teal">&nbsp;&nbsp;&nbsp;17</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Mock mockReader = <span style="color:blue">new</span> NMock.DynamicMock(<span style="color:blue">typeof</span>(IDataReader));<br><span style="color:teal">&nbsp;&nbsp;&nbsp;18</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;19</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; mockReader.ExpectAndReturn(“GetString”, “Beverages”, 56);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;20</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+mockReader.ExpectAndReturn(“GetOrdinal”, 56, “CategoryName”);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;21</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; mockReader.ExpectAndReturn(“Read”,<br>
+<span style="color:blue">true</span>);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;22</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+mockDatabase.ExpectAndReturn(“ExecuteReader”, mockReader.MockInstance,<br>
+“GetCategoryByID”, <span style="color:blue">new</span> <span style="color:blue">object</span>[]{1});<br><span style="color:teal">&nbsp;&nbsp;&nbsp;23</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;24</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; Category.Database = (Database)mockDatabase.MockInstance;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;25</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;26</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; Category existing = <span style="color:blue">new</span><br>
+Category(1);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;27</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+Assert.AreEqual(“Beverages”, existing.Name);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;28</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;29</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; mockReader.Verify();<br><span style="color:teal">&nbsp;&nbsp;&nbsp;30</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+mockDatabase.Verify();<br><span style="color:teal">&nbsp;&nbsp;&nbsp;31</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;32</span>&nbsp;}</div>
+<p>I had to use NMock for the Database class, so I just used it for the<br>
+IDataReader interface as well (as I further this class, I will modify that to<br>
+use a mock stub that implements IDataReader).</p>
+<p>This code work and allows me to test the instantiation of my Category object<br>
+with the ID of a category.</p>
+<p>The data access block is awesome, but I WISH I had an interface to code<br>
+against instead of just the abstract class.&nbsp; I guess I’m going to have to insert<br>
+the interface myself.</p>
+<p>By the way, I attended the webcast about this block this afternoon, and I<br>
+have to say that it was the most fun webcast I’ve every attended.&nbsp; The<br>
+presenters were in shorts and cutting up and laughing the whole time.&nbsp; 🙂<!--EndFragment--></p>

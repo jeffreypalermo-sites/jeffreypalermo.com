@@ -1,0 +1,247 @@
+[
+  {
+    "id": 273,
+    "taxonomy": "category",
+    "slug": "blog",
+    "name": "Blog",
+    "count": 326
+  },
+  {
+    "id": 643871096,
+    "taxonomy": "category",
+    "slug": "azure-devops-podcast",
+    "name": "Azure DevOps Podcast",
+    "count": 1
+  },
+  {
+    "id": 643871098,
+    "taxonomy": "category",
+    "slug": "devops",
+    "name": "DevOps",
+    "count": 10
+  },
+  {
+    "id": 643871099,
+    "taxonomy": "category",
+    "slug": "architecture",
+    "name": "Architecture",
+    "count": 1
+  },
+  {
+    "id": 643871100,
+    "taxonomy": "category",
+    "slug": "podcast",
+    "name": "Podcast",
+    "count": 8
+  },
+  {
+    "id": 643871101,
+    "taxonomy": "category",
+    "slug": "palermo-pamphlet",
+    "name": "Palermo Pamphlet",
+    "count": 3
+  },
+  {
+    "id": 264,
+    "taxonomy": "post_tag",
+    "slug": "learning",
+    "name": "Learning",
+    "count": 10
+  },
+  {
+    "id": 1736,
+    "taxonomy": "post_tag",
+    "slug": "services",
+    "name": "Services",
+    "count": 3
+  },
+  {
+    "id": 1981,
+    "taxonomy": "post_tag",
+    "slug": "tools",
+    "name": "Tools",
+    "count": 15
+  },
+  {
+    "id": 2290,
+    "taxonomy": "post_tag",
+    "slug": "architecture",
+    "name": "architecture",
+    "count": 0
+  },
+  {
+    "id": 3301,
+    "taxonomy": "post_tag",
+    "slug": "tips-tricks",
+    "name": "Tips & Tricks",
+    "count": 43
+  },
+  {
+    "id": 11287,
+    "taxonomy": "post_tag",
+    "slug": "agile",
+    "name": "Agile",
+    "count": 30
+  },
+  {
+    "id": 11696,
+    "taxonomy": "post_tag",
+    "slug": "managing",
+    "name": "Managing",
+    "count": 12
+  },
+  {
+    "id": 35890,
+    "taxonomy": "post_tag",
+    "slug": "featured",
+    "name": "Featured",
+    "count": 16
+  },
+  {
+    "id": 36699,
+    "taxonomy": "post_tag",
+    "slug": "mvc",
+    "name": "mvc",
+    "count": 5
+  },
+  {
+    "id": 94234,
+    "taxonomy": "post_tag",
+    "slug": "asp-net",
+    "name": "ASP.NET",
+    "count": 9
+  },
+  {
+    "id": 179011,
+    "taxonomy": "post_tag",
+    "slug": "fit",
+    "name": "FIT",
+    "count": 8
+  },
+  {
+    "id": 549460,
+    "taxonomy": "post_tag",
+    "slug": "data-access",
+    "name": "Data Access",
+    "count": 6
+  },
+  {
+    "id": 2040328,
+    "taxonomy": "post_tag",
+    "slug": "altnetconf",
+    "name": "altnetconf",
+    "count": 5
+  },
+  {
+    "id": 2499587,
+    "taxonomy": "post_tag",
+    "slug": "developer-community",
+    "name": "Developer Community",
+    "count": 35
+  },
+  {
+    "id": 4183965,
+    "taxonomy": "post_tag",
+    "slug": "build-automation",
+    "name": "Build Automation",
+    "count": 4
+  },
+  {
+    "id": 4236303,
+    "taxonomy": "post_tag",
+    "slug": "aspnetmvc",
+    "name": "aspnetmvc",
+    "count": 3
+  },
+  {
+    "id": 13353940,
+    "taxonomy": "post_tag",
+    "slug": "onion-architecture",
+    "name": "onion architecture",
+    "count": 4
+  },
+  {
+    "id": 14210236,
+    "taxonomy": "post_tag",
+    "slug": "asp-net-mvc",
+    "name": "asp.net mvc",
+    "count": 2
+  },
+  {
+    "id": 15857100,
+    "taxonomy": "post_tag",
+    "slug": "alt-net",
+    "name": "alt.net",
+    "count": 1
+  },
+  {
+    "id": 37674412,
+    "taxonomy": "post_tag",
+    "slug": "coding-principles",
+    "name": "Coding Principles",
+    "count": 26
+  },
+  {
+    "id": 503886180,
+    "taxonomy": "post_tag",
+    "slug": "party-with-palermo",
+    "name": "Party with Palermo",
+    "count": 3
+  },
+  {
+    "id": 642856383,
+    "taxonomy": "post_tag",
+    "slug": "aspnetmvc-mvc-asp-net-palermo",
+    "name": "aspnetmvc mvc asp.net palermo",
+    "count": 1
+  },
+  {
+    "id": 642856384,
+    "taxonomy": "post_tag",
+    "slug": "partywithpalermo",
+    "name": "partywithpalermo",
+    "count": 9
+  },
+  {
+    "id": 642856385,
+    "taxonomy": "post_tag",
+    "slug": "teched-teched2008-nhibernate-aspnetmvc-orm-scm",
+    "name": "teched teched2008 nhibernate aspnetmvc orm scm",
+    "count": 1
+  },
+  {
+    "id": 643871091,
+    "taxonomy": "post_tag",
+    "slug": "asp-net-mvc-in-action-blog",
+    "name": "ASP.NET MVC in Action blog",
+    "count": 0
+  },
+  {
+    "id": 643871094,
+    "taxonomy": "post_tag",
+    "slug": "devops",
+    "name": "devops",
+    "count": 1
+  },
+  {
+    "id": 643871095,
+    "taxonomy": "post_tag",
+    "slug": "clear-measure",
+    "name": "clear measure",
+    "count": 5
+  },
+  {
+    "id": 1,
+    "taxonomy": "author",
+    "slug": "jeffreypalermo",
+    "name": "Jeffrey Palermo",
+    "count": 0
+  },
+  {
+    "id": 4,
+    "taxonomy": "author",
+    "slug": "christinamcfarling",
+    "name": "Christina McFarling",
+    "count": 0
+  }
+]

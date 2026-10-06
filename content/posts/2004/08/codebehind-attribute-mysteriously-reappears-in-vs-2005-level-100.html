@@ -1,0 +1,14 @@
+---
+wp_id: 68
+title: CodeBehind attribute mysteriously reappears in VS 2005 – level 100
+slug: codebehind-attribute-mysteriously-reappears-in-vs-2005-level-100
+permalink: /2004/08/codebehind-attribute-mysteriously-reappears-in-vs-2005-level-100/
+date: 2004-08-17T18:18:00
+date_utc: 2004-08-17T18:18:00Z
+modified: 2004-08-17T18:18:00
+format: html
+excerpt: In my last post about CodeBehind, I stated that the CodeBehind attribute for the @Page directive was gone. It was, and VS 2005 Beta 1 threw an error when i tried to put it there. Mysteriously, now, it is back. It appears in the intellisense window and everything. I can use the code-behind attribute, but […]
+comments_open: true
+---
+<p>In my last post about <a href="http://dotnetjunkies.com/WebLog/jpalermo/archive/2004/08/17/22323.aspx">CodeBehind</a>, I stated that the CodeBehind attribute for the @Page directive was gone.&nbsp; It was, and VS 2005 Beta 1 threw an error when i tried to put it there.&nbsp; Mysteriously, now, it is back.&nbsp; It appears in the intellisense window and everything.&nbsp; I can use the code-behind attribute, but it literally does nothing now.&nbsp; It doesn’t make the “View Code” menu item work.&nbsp; It’s functionality is gone.&nbsp; If you want to implement a code-behind file as a base class, you can do that by making that type the Inherits”. . “ attribute, but it really won’t be a code-behind file because it wont work if&nbsp; you keep it next to the ascx file.&nbsp; You would have to put it in the Code directory for it to even compile.&nbsp; Then&nbsp; your user control would see it and be able to inherit its functionality, so you can still do the inheritence that code-behind gave you, but code seperation is done with the code-beside partial class.</p>
+<p>To be honest, at first I was&nbsp;a bit bitter that Microsoft had taken away my code-behind, but now I do see the benefit of code-beside.&nbsp; I still think that code-behind should be an option.&nbsp;&nbsp;I don’t the the removal of features is the answer.&nbsp; I, as a developer, like options.&nbsp; I also want explicit compiling put back so that I can actually have a web-specific assembly.&nbsp; And I’d like to be able to designate more directories for dynamic compilation (not just /Code).</p>

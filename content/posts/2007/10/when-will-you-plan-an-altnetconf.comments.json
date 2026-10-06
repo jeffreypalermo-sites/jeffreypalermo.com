@@ -1,0 +1,74 @@
+[
+  {
+    "id": 2079,
+    "parent": 0,
+    "author_name": "cmyers",
+    "author_url": "http://www.chadmyers.com/Blog",
+    "date": "2007-10-12T04:19:36",
+    "type": "comment",
+    "content_html": "<p>This doesn’t sound ‘alternative’ anymore, not that it ever was. This sounds like .NET developers getting back into the game and taking back the onus of ideas back (at least in part) from Microsoft. </p>\n<p>You know, what, I used to feel that this is what the *NUG meetings were for, but somehow they always seemed to turn into product placement and advertisement presentations, or ‘the latest from Microsoft’ and, well, I dunno preaching sessions. I stopped going because they seemed dry.</p>\n<p>The thing I loved most about the ALT.NET conf, now that I think about it, is the INTERACTION and the feeling that I was part of something happening and not just sitting and being taught in a classroom.</p>\n<p>The best things I remember about the *NUG meetings also was when people asked questions and debates happened and there were comments from the peanut gallery and discourse.</p>\n<p>I think simply taking the *NUG meetings and opening them up and allowing debates and open topics and more INTERACTION among the people would be the simplest, most effective short-term thing we could do.</p>\n<p>Just change the format of a *NUG meeting to be Open Topic Night and maybe have a few suggested topics to get people interested and then have a few smaller rooms if you have a lot people, or one big room where people can migrate into corners and such.</p>"
+  },
+  {
+    "id": 2080,
+    "parent": 0,
+    "author_name": "cmyers",
+    "author_url": "http://www.chadmyers.com/Blog",
+    "date": "2007-10-12T04:28:08",
+    "type": "comment",
+    "content_html": "<p>NOTE: Taking the onus of ideas back from Microsoft isn’t a bad thing. One of Jeremy Miller’s 16 blog posts mentioned that many people in the .NET world (myself included) were took focused on this API or that API and looking to Microsoft for what was next, rather than evolving the rest of the process.  So Microsoft started P&amp;P to try to get some of these METHODS of programming (versus the frameworks and the APIs).  Well, I think the .NET rank and file out there need to be coming up with ideas and collaborating with Microsoft rather than having a big echo chamber which serves no one (including Microsoft).</p>"
+  },
+  {
+    "id": 2081,
+    "parent": 0,
+    "author_name": "Jan Van Ryswyck",
+    "author_url": "http://www.vanryswyckjan.blogspot.com/",
+    "date": "2007-10-12T06:01:09",
+    "type": "comment",
+    "content_html": "<p>We have been doing mini ALT.NET conferences with the entire team (11 people) every month for the last two years now. We come together as a team and it’s entirely driven by the team. If someone has discovered a nice tool that could ease our lifes, a nice solution to a common problem, has read a nice article, etc., we bring it to this meeting and discuss it.  We also evaluate the tools we are currently using at the beginning of each gathering. It’s not been easy to do in a company that is completely focused on Microsoft and only their technology, and I know for sure that it’s not going to be easy in the years to come. But we are trying to do a better job writing software and enhance our development proces.</p>"
+  },
+  {
+    "id": 2082,
+    "parent": 0,
+    "author_name": "Scott",
+    "author_url": "http://www.lazycoder.com",
+    "date": "2007-10-13T05:23:02",
+    "type": "comment",
+    "content_html": "<p>“Nothing but .NET. This isn’t Alt.JAVA so the conversations follow building on Microsoft platforms using the most appropriate tool, technology, and technique that makes sense for the problem at hand.”</p>\n<p>See, that right there. No. I think that’s the wrong attitude. Look at the tools a lot of ALT.NET people are using. NHibernate, Spring.NET, NUnit, NCover, etc … Where did they originate? Java. The Java people have been doing patterns a lot longer than most .NET people have. Until .NET was released, the VB/ASP people didn’t have a non-painful way to use the GOF’s patterns except using “editor inheritance”. If it weren’t for Rails, would people be pushing as hard for an MVC framework in ASP.NET? If it weren’t for Ruby and Python, what would C# 3.0 really look like?</p>\n<p>I think continuing to look ahead to the past (e.g. Smalltalk) is a good thing.</p>"
+  },
+  {
+    "id": 2083,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-10-13T15:27:51",
+    "type": "comment",
+    "content_html": "<p>@Scott,<br>\nI’m not sure what attitude is conveyed.</p>\n<p>I understand that we use libraries ported from Java.  I’m happy about that.  I’m glad we can leverage innovation used by other parts of the developer community.  For a while, we’ve been trying to catch up to the Java community, and I think it’s starting to happen now.  I appreciate the work in Java/etc that I’m able to leverage to write better .Net programs.</p>\n<p>I recognize all the great work out there, and I want to learn from all parts of the developer community, not just the .Net part.  I want to pull in knowledge wherever it can be found. . . pull it in to help me, my company, and my clients write better software (and by the way, we’re using .Net).</p>\n<p>I’m still not sure what attitude is inferred.</p>\n<p>For the record, I like to us NHibernate, NUnit, NAnt, StructureMap, RhinoMocks, FIT, Log4Net, SharpZipLib, Subversion, CruiseControl.net</p>\n<p>NCover is a commercial product now.  The last open source release was in 2004.</p>"
+  },
+  {
+    "id": 2084,
+    "parent": 0,
+    "author_name": "SteveGentile",
+    "author_url": "http://blogger.forgottenskies.com",
+    "date": "2007-10-13T17:39:42",
+    "type": "comment",
+    "content_html": "<p>Personally, every .net user group can be an opportunity to discuss technologies being used.</p>"
+  },
+  {
+    "id": 2085,
+    "parent": 0,
+    "author_name": "Scott",
+    "author_url": "http://lazycoder.com",
+    "date": "2007-10-14T03:38:50",
+    "type": "comment",
+    "content_html": "<p>Sorry, I wasn’t very clear.By attitude I meant the “nothing but .NET no ALT.JAVA”. Bill S. expressed in his post and you reposted here. I agree that you should look to other technologies for way to improve your overall coding skills and if .NET happens to be the best choice then great. I’d like to see more ALT.NET conferences/gatherings/presentations from people who don’t strictly work with .NET. As message passing/dynamic dispatch languages, like IronRuby and IronPython become more mainstream in .NET communities, I think a lot could be learned from other communities</p>\n<p>I think the learning will go both ways too. As IronRuby, IronPython, JRuby and the DLR come online, more Ruby and Python programmers may try their hand at Windows platform development. They’ll have a lot of questions about the .NET Framework and the Windows platform. Adding diverse viewpoints always enhances a conference IMO.</p>"
+  },
+  {
+    "id": 2086,
+    "parent": 0,
+    "author_name": "Bil Simser",
+    "author_url": "http://weblogs.asp.net/bsimser",
+    "date": "2007-10-16T14:02:58",
+    "type": "comment",
+    "content_html": "<p>I just wanted to quantify the Java statement from my blog post. Like Jeffrey I’m all for the tools that have sprung out of the Java world and ported to .NET (without them I couldn’t function on a day to day basis) but the concept that might have been lost in my lack of articulation is that I didn’t want an AltNetConf turn into a “Java is better, .NET sucks” argument. Leverage what might be coming out of the Java world but the focus needs to be on building better software on the .NET platform. Maybe the term Java World and .NET World (as if there are two worlds) is one of the root causes of the problem. Maybe we all need to live in one World (but not with one Language to Rule them all). Okay, coffee time for Billy as I’m sounds wierd now.</p>"
+  }
+]

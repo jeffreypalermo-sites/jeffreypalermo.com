@@ -1,0 +1,115 @@
+---
+wp_id: 367
+title: MSF for Agile update released – still doesn’t hit the mark – level 200
+slug: msf-for-agile-update-released-still-doesnt-hit-the-mark-level-200
+permalink: /2006/01/msf-for-agile-update-released-still-doesnt-hit-the-mark-level-200/
+date: 2006-01-11T15:00:00
+date_utc: 2006-01-11T15:00:00Z
+modified: 2006-01-11T15:00:00
+format: html
+excerpt: A new beta of MSF for Agile is available from Microsoft. I read through it (more reading that I normally like to do about process-oriented stuff), and it’s better than classic MSF. Classic MSF was very waterfall even though it called the waterfall a cycle. There were very rigid phases of envisioning, planning, build, […]
+comments_open: true
+---
+<p>A new beta of <a href="http://msdn.microsoft.com/vstudio/teamsystem/msf/msfagile/default.aspx">MSF<br>
+for Agile is available from Microsoft</a>.<span>&nbsp;<br>
+</span>I read through it (more reading that I normally like to do about<br>
+process-oriented stuff), and it’s better than classic MSF. <span>&nbsp;</span></p>
+<p>Classic MSF was very waterfall even though it called the<br>
+waterfall a cycle.<span>&nbsp; </span>There were very rigid<br>
+phases of envisioning, planning, build, stabilize, deploy, and maintain.<span>&nbsp; </span>The new MSF does a lot to emphasize Agile<br>
+concepts that keep us more focused on the software than the process, but it<br>
+keeps a death grip on all the documents that classic MSF had.</p>
+<p><b>Documents</b></p>
+<p>Some documents have been renamed and shuffled around, but<br>
+here are _some_ of the documents required by the MSF Agile process:</p>
+<ul type="disc">
+<li>Vision<br>
+     statement</li>
+<li>Persona</li>
+<li>Scenario<br>
+     List</li>
+<li>Quality<br>
+     of Service Requirement List</li>
+<li>Project<br>
+     Checklist</li>
+<li>Threat<br>
+     Model</li>
+<li>Scenario<br>
+     Description</li>
+<li>Iteration<br>
+     Plan</li>
+<li>Storyboard</li>
+<li>Application<br>
+     Diagram</li>
+<li>System<br>
+     Diagram</li>
+<li>Test<br>
+     Approach</li>
+<li>Release<br>
+     Plan</li>
+</ul>
+<p>I have no doubt that there are full-time folks at Microsoft<br>
+who maintain these documents all the time, but the average software company isn’t<br>
+the mammoth that Microsoft is.<span>&nbsp; </span>Most of<br>
+the points of all these documents can be summed up by some bullet points on a<br>
+whiteboard.<span>&nbsp; </span>My team uses a wiki to keep<br>
+current information since we have stakeholders in another city, so anything<br>
+that concerns them is jotted on the wiki so anyone can view or change it.<span>&nbsp; </span>Most stuff goes on a whiteboard until it’s no<br>
+longer useful.</p>
+<p>Documents are only useful for a time, so I believe there is<br>
+too much document overhead still in the MSF process.</p>
+<p><b>Builds</b></p>
+<p>MSF for Agile describes a daily build and an accepted<br>
+build.<span>&nbsp; </span>There isn’t mention of continuous<br>
+integration, and it allows many checks before a daily integration build is<br>
+done.<span>&nbsp; </span>I believe that more feedback is<br>
+desirable.<span>&nbsp; </span>Even with dependencies from<br>
+other teams, you always have a good build of those, so a build on every<br>
+check-in would give more instant feedback.<span>&nbsp;<br>
+</span>This point also stresses the need for fast builds.<span>&nbsp; </span>If your build takes hours to complete, you<br>
+have no choice but to run it daily.<span>&nbsp; </span>I<br>
+build measured in minutes (10 or less) will be run very often and build<br>
+confidence that the software is still working.</p>
+<p><b>Work Items</b></p>
+<p>The MSF for Agile process uses Visual Studio team system<br>
+terms, naturally.<span>&nbsp; </span>They have different<br>
+levels of work items:</p>
+<ul type="disc">
+<li>Scenario<br>
+     Overview</li>
+<li>Quality<br>
+     of Service Requirement Overview</li>
+<li>Task<br>
+     Overview</li>
+<li>Bug<br>
+     Overview</li>
+<li>Risk<br>
+     Overview</li>
+</ul>
+<p>All work items must be tracked permanently according to the<br>
+process.<span>&nbsp; </span>The one that jumps out as<br>
+overkill is the task work item.<span>&nbsp; </span>Tasks<br>
+are very small, and merely recording them in a tool might lengthen the duration<br>
+of the task 20% for small ones.<span>&nbsp; </span>My team<br>
+tracks at the story level and tasks out on a whiteboard when necessary.<span>&nbsp; </span>If there is a very large story with large<br>
+task within, the product manager might record the large tasks (that might need<br>
+to be called separate stories anyway), but we as developers concentrate on<br>
+creating working software.</p>
+<p><b>Conclusion</b></p>
+<p>MSF for Agile misses one major point:</p>
+<p><b><i>Software teams should be self-organizing</i></b>.</p>
+<p>Each software team is different and has different<br>
+goals.<span>&nbsp; </span>The process should be customized<br>
+for each team.<span>&nbsp; </span>MSF for Agile, even if<br>
+used, can be used out of the box.<span>&nbsp; </span>I<br>
+believe the process should stress that inappropriate items be omitted.<span>&nbsp; </span>MSF for Agile still seems pretty heavy for<br>
+me, and there is a lot of tracking that doesn’t directly validate that the<br>
+software works as intended.<span>&nbsp; </span>Tracking<br>
+every work item and having every document doesn’t matter if the customer isn’t<br>
+happy.<span>&nbsp; </span>The key metric should be customer<br>
+acceptance at every level, not just the end of the release.<span>&nbsp; </span>Automated testing wasn’t stressed either, and<br>
+that is a key way to get build feedback quickly and ensure that something a<br>
+customer liked yesterday isn’t broken today by an unrelated change.</p>
+<p>Overall, it appears that MSF for Agile is trying to embrace<br>
+real Agile, but it won’t let go of waterfall.<span>&nbsp;<br>
+</span>Right now, it’s sitting on the fence looking at both sides.</p>

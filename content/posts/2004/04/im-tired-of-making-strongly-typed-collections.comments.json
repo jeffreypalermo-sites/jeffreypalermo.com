@@ -1,0 +1,38 @@
+[
+  {
+    "id": 13,
+    "parent": 0,
+    "author_name": "Noah Coad",
+    "author_url": "http://",
+    "date": "2004-04-16T22:59:00",
+    "type": "comment",
+    "content_html": "<p>I wholeheartedly agree, I can hardly wait for generics!  I’ve seen them in Whidbey and the syntax is even better than I had hoped.  One of the C# team members said he thought anonymous delegates were even cooler which was a surprise.  They are both kewl, but of course, I am tired of casting out of ArrayList etc.</p>"
+  },
+  {
+    "id": 14,
+    "parent": 0,
+    "author_name": "Vijay",
+    "author_url": "http://",
+    "date": "2004-04-18T23:01:00",
+    "type": "comment",
+    "content_html": "<p>Maybe you should try to use CollectionGen framework … A simple XSL based templated collection type generation framework which is completely customizable ! hmm forgot the exact link but Google should get you thro !</p>"
+  },
+  {
+    "id": 15,
+    "parent": 0,
+    "author_name": "Michael Freidgeim",
+    "author_url": "http://geekswithblogs.net/mnf/",
+    "date": "2005-10-21T05:03:44",
+    "type": "comment",
+    "content_html": "<p>Why did you truncated the rest of class?<br>\nTo copy and use your class would be very handy.</p>"
+  },
+  {
+    "id": 16,
+    "parent": 0,
+    "author_name": "Alex",
+    "author_url": "http://",
+    "date": "2005-11-02T15:43:25",
+    "type": "comment",
+    "content_html": "<p>I too would be grateful of a copy of the rest of the class.</p>"
+  }
+]

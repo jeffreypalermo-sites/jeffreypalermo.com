@@ -1,0 +1,20 @@
+[
+  {
+    "id": 366,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://",
+    "date": "2005-07-08T01:06:32",
+    "type": "comment",
+    "content_html": "<p>I can see how this would be useful in a hosting scenario, where you want to be able to limit what applications can do on your server, without having to do full code reviews.  You could set the trust level in machine.config with allowOverride=false.</p>"
+  },
+  {
+    "id": 367,
+    "parent": 0,
+    "author_name": "Dave MCSD.NET",
+    "author_url": "http://www.davidyardy.com",
+    "date": "2005-08-01T23:33:33",
+    "type": "comment",
+    "content_html": "<p>Thank you very much.  Your information above regarding trust solved a problem very quickly for me.  The default trust on a hosted site was more restricted than I had expected.  Modifying within the web.config was a quick solution.  The problem was associated with an ole.db connection to an excel document.<br>\nThe 2nd associated problem was very strange.  I was having a problem after the users clicked a button on a page (that would show/hid a div section). I dont quite understand why security would have been related to this solution.  However…  Thanks again.</p>"
+  }
+]

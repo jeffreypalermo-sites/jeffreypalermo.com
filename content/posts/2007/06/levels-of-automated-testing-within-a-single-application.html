@@ -1,0 +1,39 @@
+---
+wp_id: 668
+title: Levels of automated testing within a single application
+slug: levels-of-automated-testing-within-a-single-application
+permalink: /2007/06/levels-of-automated-testing-within-a-single-application/
+date: 2007-06-29T03:11:36
+date_utc: 2007-06-29T03:11:36Z
+modified: 2007-06-29T03:11:36
+format: html
+tags:
+- featured
+excerpt: 'We need a common language for the different types of automated testing. We’re partially there, but the term “unit test” is still very confusing. Here, I’ll lay out the different types of automated tests I find helpful with a single application: Unit testing – testing a single class or possible a small group of collaborating […]'
+comments_open: true
+---
+<p>We need a common language for the different types of automated testing.&nbsp; We’re partially there, but the term “unit test” is still very confusing.&nbsp; Here, I’ll lay out the different types of automated tests I find helpful with a single application:</p>
+<ul>
+<li>Unit testing – testing a single class or possible a small group of collaborating classes (absolutely does not call out of process and is the fastest-running of all automated tests).&nbsp; Running 1000 unit tests in 3 or 4 seconds is common.</li>
+<li>Full system tests – through the UI integrated with the full application including the database.&nbsp; May or may not use real system dependencies such as external web services.&nbsp; (These are the slowest of all tests)</li>
+<li>Integration testing.&nbsp; Here, there are some categories.</li>
+<ul>
+<li>Data access tests.&nbsp; Used to test repositories, data access classes, etc.&nbsp; These tests validate the translation from entities to data.&nbsp; These tests run all SQL and test the structure of the database schema as well.&nbsp; A real database must be involved.</li>
+<li>General scenario testing.&nbsp; Any time it’s appropriate to pull a section of the application in and run a lot of classes together, this is an integration test.&nbsp; It involves several parts of the system, not just one.&nbsp; It can run fast if completely in process, or it can be slow if it requires an out-of-process call such as leveraging the file system.</li>
+</ul>
+</ul>
+<p>This is not an exhaustive list, but it includes most of the automated testing on a typical enterprise application.&nbsp; Feel free to comment with any type I may have left out.</p>
+<p><a href="http://codebetter.com/blogs/scott.bellware/archive/2007/06/26/164754.aspx">Scott Bellware reasoned that the database needs to be left out for unit testing.</a>&nbsp; I completely agree.&nbsp; Unit testing, by common definition, excludes external dependencies.&nbsp; It’s not a unit test if we reach out and touch things.&nbsp; When you have the right number of unit tests (for example, I’ve worked on a smart client system with 80,000 lines of code and 1300 unit tests and another 700 integration tests), you can’t afford to take more than a few milliseconds to run each one.&nbsp; You need your unit tests to run very quickly.&nbsp; Otherwise, you won’t run them very often.</p>
+<p>Conversely, this doesn’t mean that the database should be ignored when testing a system.&nbsp; There are plenty of reasons why a database, SQL, or stored procedures, triggers (shudder), views, etc can cause a bug in the system.&nbsp; I insist writing an automated integration test for every database operation.&nbsp; How else can we verify that the database operation works correctly?&nbsp; We can’t.&nbsp; It is important, however, for communication’s sake, to understand that these database-inclusive tests are integration tests, as are any tests that exercise an external dependency.</p>
+<p>Automated testing with the database REQUIRES the following:</p>
+<ol>
+<li>Every developer has a dedicated instance of the database that can be dropped and created at will.</li>
+<li>Tests must be responsible for their own data setup.&nbsp; An empty database should be all that is required to run the test.&nbsp; The test must be responsible for adding data for the appropriate scenario before testing the scenario.</li>
+<li>You will want to generalize test data setup because it isn’t feasible to expect EVERY test to set up all the data.&nbsp; A general data set that sets a base line of data is very useful and can be invoked with a data helper class.&nbsp; Then each test can just add specific data necessary for it’s test case.</li>
+<li>Data setup, database creation, etc should be automated.&nbsp; If it’s manual, it cost more, and you won’t run the tests as often.</li>
+<li>Database schema must be in source control with the code.&nbsp; Without that, you never know what the correct version of the schema is.</li>
+</ol>
+<p>Another of <a href="http://codebetter.com/blogs/scott.bellware/default.aspx">Scott’s</a> points: <em>“As&nbsp;a side effect of doing the necessary dependency injection, you often get a cleaner and more explicit separation of concerns – which makes software easier to change and maintain.”</em></p>
+<p>He’s right.&nbsp; If you can’t unit test your domain classes because everything you do with them requires a real database to be online, you have an indication that you aren’t separating concerns.&nbsp; Data access should be independent of domain object behavior in most cases.&nbsp; I should be able to verify that a Customer object can Sort() itself without invoking a database query, but if constructing a Customer initiates a database call, my domain model is then materially coupled to the database and needs to be separated.</p>
+<p><a href="http://codebetter.com/blogs/jeremy.miller">Jeremy Miller</a> is of the same mind in his comment: <em>“Referential integrity, non null checks, and sundry other data constraints. &nbsp;All good things. &nbsp;All a pain in the ass when you’re unit test only needs a single property set on the InvoiceItem class.”</em></p>
+<p>To help clear up some confusion with the term “unit test”, I propose a simple constraint in our dialog:&nbsp; If the test calls out-of-process, it is then disqualified from “unit test” status and falls into “integration test”.&nbsp; Feel free to argue in the comments. 🙂</p>

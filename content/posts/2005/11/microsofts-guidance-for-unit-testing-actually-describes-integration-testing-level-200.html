@@ -1,0 +1,24 @@
+---
+wp_id: 353
+title: Microsoft’s guidance for unit testing actually describes integration testing – level 200
+slug: microsofts-guidance-for-unit-testing-actually-describes-integration-testing-level-200
+permalink: /2005/11/microsofts-guidance-for-unit-testing-actually-describes-integration-testing-level-200/
+date: 2005-11-21T14:12:00
+date_utc: 2005-11-21T14:12:00Z
+modified: 2005-11-21T14:12:00
+format: html
+excerpt: I commend Microsoft for putting a big emphasis on automated testing. This is a big step for the software industry as a whole to embrace automated testing. The hardware industry has already discovered this and has a built-in self-test in almost every device. Likewise, software should have built-in self-tests to ensure that everything is working. […]
+comments_open: true
+---
+<p>I commend Microsoft for putting a big emphasis on automated testing.&nbsp; This is a big step for the software industry as a whole to embrace automated testing.&nbsp; The hardware industry has already discovered this and has a built-in self-test in almost every device.&nbsp; Likewise, software should have built-in self-tests to ensure that everything is working.</p>
+<p>Microsoft has provided <a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnvs05/html/UTFwVS05TmSys.asp">Unit Testing and Generating Source Code for Unit Test Frameworks Using Visual Studio 2005 Team System.</a>&nbsp; In this article they describe how to unit test some code using Team System’s automated testing features.&nbsp; The problem is that what is actually described is integration testing.&nbsp; The tests call a BankAccount object and exercise some methods.&nbsp; There is no mocking(stubbing) of BankAccount’s dependencies, so this cannot be a unit test.&nbsp; If BankAccount actually works, it will have to communicate with some dependency unless this BankAccount keeps everything in memory.</p>
+<p>Here are some recommended “unit tests” from the article:</p>
+<li><b>Constructor Test</b>—To make sure your object loads properly, with the correct information.<br>
+</li><li><b>PositiveLoadScalarTest</b>—To test the successful Load of a Customer that exists in the database.<br>
+</li><li><b>NegativeLoadScalarTest</b>—To test the unsuccessful Load of a Customer—that is, one that does not exist in the database.<br>
+</li><li><b>PositiveLoadTest</b>—To test the successful load of Customers, based on known data.<br>
+</li><li><b>NegativeLoadTest</b>—To test the unsuccessful load of Customers that do not exist in the database.<br>
+</li><li><b>NegativeValidationTest</b>—To make sure your validation logic is working correctly. </li><br>
+<p>Clearly, the assumption is made that a database is in the testing stack.&nbsp; This disqualifies the tests from being unit tests because they include a dependency and test more code than the “unit” – BankAccount component.&nbsp; </p>
+<p>Automated testing is very important, but I must clarify some points in this article.&nbsp; The testing described here is “integration testing”.&nbsp; This kind of testing is important too, but it’s important to make the distinction.&nbsp; Unit tests test at the unit level and exclude a database.&nbsp; Unit tests are fast and can run on any workstation, not just a specially configured development environment.</p>
+<p>Integration tests include multiple components of a system and make sure the pieces work together.&nbsp; In an integration test, it is appropriate to include multiple components including a database.&nbsp; For unit testing, including a database is not appropriate.</p>

@@ -1,0 +1,30 @@
+---
+wp_id: 126
+title: ASP.NET base page that controls page executiong – level 300
+slug: asp-net-base-page-that-controls-page-executiong-level-300
+permalink: /2004/10/asp-net-base-page-that-controls-page-executiong-level-300/
+date: 2004-10-20T08:41:00
+date_utc: 2004-10-20T08:41:00Z
+modified: 2004-10-20T08:41:00
+format: html
+excerpt: Have you ever wanted to make an ASP.NET base page that controls execution of any aspx that inherits from it? Like controlling exactly WHEN the Page_Load logic occurs? Maybe logging the beginning and ending of the Load method. I’ve come up with a way to do exactly that. I’m not claiming that this is a […]
+comments_open: true
+---
+<p>Have you ever wanted to make an ASP.NET base page that controls execution of any aspx that inherits from it?&nbsp; Like controlling exactly WHEN the Page_Load logic occurs?&nbsp; Maybe logging the beginning and ending of the Load method.&nbsp; I’ve come up with a way to do exactly that.&nbsp; I’m not claiming that this is a unique idea, but it’s a very slick way to track and control the execution of all derived pages.</p>
+<pre><span class="ColorLineNumber">1:     </span><span class="ColorCSKeyword">protected</span> <span class="ColorCSKeyword">new</span> event EventHandler Load;<br>
+<br><span class="ColorLineNumber">2:     </span>        <span class="ColorCSKeyword">private</span> <span class="ColorCSKeyword">void</span> RaiseLoad(EventArgs e)<br>
+<br><span class="ColorLineNumber">3:     </span>        {<br>
+<br><span class="ColorLineNumber">4:     </span>            <span class="ColorCSKeyword">if</span>(Load != <span class="ColorCSKeyword">null</span>)<br>
+<br><span class="ColorLineNumber">5:     </span>                Load(<span class="ColorCSKeyword">this</span>, e);<br>
+<br><span class="ColorLineNumber">6:     </span>        }<br>
+<br><span class="ColorLineNumber">7:     </span>        <span class="ColorCSKeyword">private</span> <span class="ColorCSKeyword">void</span> Page_Load(object sender, System.EventArgs e)<br>
+<br><span class="ColorLineNumber">8:     </span>        {<br>
+<br><span class="ColorLineNumber">9:     </span>            Trace.Warn(“Begin Load”);<br>
+<br><span class="ColorLineNumber">10:    </span>            RaiseLoad(e);<br>
+<br><span class="ColorLineNumber">11:    </span>            Trace.Warn(“End Load”);<br>
+<br><span class="ColorLineNumber">12:    </span>        }<br>
+<br><span class="ColorLineNumber">13:    </span>        Page()<br>
+<br><span class="ColorLineNumber">14:    </span>        {<br>
+<br><span class="ColorLineNumber">15:    </span>            <span class="ColorCSKeyword">base</span>.Load+=<span class="ColorCSKeyword">new</span> EventHandler(Page_Load);<br>
+<br><span class="ColorLineNumber">16:    </span>        }<br></pre>
+<p>Notice that I’m using the “new” keywork on my event.&nbsp; This hides the real event and creates another of my own.&nbsp; This method will trap the Load event from System.Web.UI.Page and then raise a new Load event that it completely controls.&nbsp; It can do some work before and after this happens.&nbsp; Now any aspx that derives from this will be executing within this framework.&nbsp; When it subscribes to the Load event, it will be subscribing this this class’s load event.&nbsp; You can also do this with the other events of the Control class.</p>

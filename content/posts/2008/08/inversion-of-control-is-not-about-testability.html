@@ -1,0 +1,48 @@
+---
+wp_id: 952
+title: Inversion of Control is NOT about testability
+slug: inversion-of-control-is-not-about-testability
+permalink: /2008/08/inversion-of-control-is-not-about-testability/
+date: 2008-08-14T08:18:44
+date_utc: 2008-08-14T08:18:44Z
+modified: 2008-08-14T08:18:44
+format: html
+categories:
+- blog
+excerpt: Many times, I’ve heard that the best thing about IoC is that it enables testability. When dependencies are injected into a class, it’s easy to test that class. Testability is a side-effect of good design. The lack of testability signifies a bad design, but the enable to test a class does not, by itself, signify […]
+comments_open: true
+---
+<p>Many times, I’ve heard that the best thing about IoC is that it enables testability.&nbsp; When dependencies are injected into a class, it’s easy to test that class.&nbsp; <strong>Testability is a side-effect of good design</strong>.&nbsp; The lack of testability signifies a bad design, but the enable to test a class does not, by itself, signify a good design.&nbsp; The causality is one-way.</p>
+<p>Let’s take a look at an example:</p>
+
+<div>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:rgb(244,244,244)"><span style="color:rgb(0,0,255)">public</span> <span style="color:rgb(0,0,255)">class</span> MissileLauncher{
+    <span style="color:rgb(0,0,255)">private</span> INavigator _navigator;
+    <span style="color:rgb(0,0,255)">public</span> MissileLauncher(){
+        _navigator = <span style="color:rgb(0,0,255)">new</span> MissileNavigator();
+    }
+    <span style="color:rgb(0,0,255)">public</span> <span style="color:rgb(0,0,255)">void</span> Launch(){
+        <span style="color:rgb(0,128,0)">//get direction guidance from _navigator and launch a missile</span>
+    }
+}</pre>
+</div>
+
+<p>This can be a good design or bad design depending on your needs.&nbsp; We are coupling to an interface, INavigator, but we are also coupling to a specific implementation class, MissileNavigator.</p>
+<p>If MissileLauncher can’t do its job without MissileNavigator, then this coupling makes sense, and the class should be tested together with MissileNavigator.&nbsp; Other examples are operations on domain objects:&nbsp; The logic makes no sense without the Customer object, specifically, so the operation should be tested with the real Customer, and not a mock object.</p>
+<p>If, however, MissileLauncher is a concept orthogonal to MissileNavigator, then INavigator adequately illustrates the necessary interaction.&nbsp; In this case, coupling to MissileNavigator is detrimental to our design if the MissileLauncher only depends on the operation exposed by INavigator.</p>
+<p>We would change this class to the following:</p>
+<div>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:rgb(244,244,244)"><span style="color:rgb(0,0,255)">public</span> <span style="color:rgb(0,0,255)">class</span> MissileLauncher{
+    <span style="color:rgb(0,0,255)">private</span> INavigator _navigator;
+    <span style="color:rgb(0,0,255)">public</span> MissileLauncher(INavigator navigator){
+        _navigator = navigator;
+    }
+    <span style="color:rgb(0,0,255)">public</span> <span style="color:rgb(0,0,255)">void</span> Launch(){
+        <span style="color:rgb(0,128,0)">//get direction guidance from _navigator and launch a missile</span>
+    }
+}</pre>
+</div>
+<p>Here, we have inverted the control over locating or creating the dependency.&nbsp; Now MissileLauncher does not care about the actual class, just that it receives an instance of the interface.&nbsp; With the interface it can do its job.&nbsp; This is a better design if you have determined MissileLauncher’s behavior is orthogonal to the actual MissleNavigator class.&nbsp; Again, you have to make many hard decisions about design.&nbsp; Do you couple. . . or not.&nbsp;</p>
+<p><strong>In order to do anything useful in software, you must couple.</strong>&nbsp; You must couple to something.&nbsp;</p>
+<p>The coupling determines how you will test.&nbsp; If you couple to a concrete class, you will test the code together with that class.&nbsp; If you only couple to an interface, you can test the class with only the interface.</p>
+<p>Testability is a by-product of inversion of control, and design is the driving factor to invert the control or retain it.&nbsp; Don’t invert all control just so each class can be tested independently of all other classes.&nbsp; You must decide where coupling is appropriate and where it is not.</p>

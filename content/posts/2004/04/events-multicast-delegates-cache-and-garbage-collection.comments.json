@@ -1,0 +1,11 @@
+[
+  {
+    "id": 3,
+    "parent": 0,
+    "author_name": "Adam Weigert",
+    "author_url": "http://",
+    "date": "2004-04-16T19:06:00",
+    "type": "comment",
+    "content_html": "<p>My guess, and it is just that, would be that they keep a System.WeakReference to the objects.</p>\n<p>At least this is the technique I have applied for custom cache controllers. A WeakReference will keep a pointer to the object but won’t hold on to it so GC can happen.</p>\n<p>I am not too sure if this is the same technique for the ASP.NET cache. So, if your page or object goes out of scope and is GC’d then cache lets it go because it no longer contains a valid WeakReference.</p>"
+  }
+]

@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2610,
+    "parent": 0,
+    "author_name": "Matthew Zalewski",
+    "author_url": "http://synaptixdevelopment.blogspot.com/2009/11/aspnet-mvc-and-workflow-based.html",
+    "date": "2009-11-24T04:40:57",
+    "type": "comment",
+    "content_html": "<p>After reading this post, I started thinking about how WF could be used to create actions instead. I’ve posted an example at <a href=\"http://synaptixdevelopment.blogspot.com/2009/11/aspnet-mvc-and-workflow-based.html\" rel=\"nofollow\">synaptixdevelopment.blogspot.com/…/aspnet-mvc-and-</a><br>\nI’m interested in any thoughts/suggestions you may have.</p>"
+  }
+]

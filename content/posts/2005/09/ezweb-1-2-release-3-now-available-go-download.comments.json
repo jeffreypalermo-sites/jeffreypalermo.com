@@ -1,0 +1,20 @@
+[
+  {
+    "id": 477,
+    "parent": 0,
+    "author_name": "Stefano Demiliani",
+    "author_url": "http://www.demiliani.com/blog",
+    "date": "2005-09-16T12:32:39",
+    "type": "comment",
+    "content_html": "<p>Great news, download scheduled. I’ll update my previous installation and I’ll give you other feedbacks. Nice to see that you’ve worked also on templates.<br>\nThanks.</p>"
+  },
+  {
+    "id": 478,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-10-05T15:29:18",
+    "type": "comment",
+    "content_html": "<p>Thanks for the comment.  Right now deterrants to adoption, I think, are the lack of a pretty template and themes.</p>\n<p>This month I’ll be working on a 2.0 version that uses ASP.NET 2.0.  I expect that master pages and themes will be a big thing to share in the near future, and EZWeb stands to benefit from that because I’m going to refactor the template and themes mechanism to use the ASP.NET 2.0 features.  Hopefully I’ll have this release ready for the Whidbey launch.</p>"
+  }
+]

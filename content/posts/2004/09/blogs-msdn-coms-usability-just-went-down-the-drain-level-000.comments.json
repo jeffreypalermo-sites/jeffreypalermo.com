@@ -1,0 +1,56 @@
+[
+  {
+    "id": 170,
+    "parent": 0,
+    "author_name": "Scott Galloway",
+    "author_url": "http://",
+    "date": "2004-09-07T12:24:00",
+    "type": "comment",
+    "content_html": "<p>Totally agree, seems completely arbitrary. I can see the point in reducing the size of the main page; though just ditching the names list down the left – as they have done, reducing the number of items and applying compression  would have been much more useful. Oddly Microsoft seem to have a blind-spot when it comes to IIS compression. Doing this to the RSS feed though is just plain stupid, it’ll actually increase their bandwidth use as to see the story you now have to visit the main site. Only thing this would make sense for is if they were planning on introducing advertising to that site – which would suck!</p>"
+  },
+  {
+    "id": 171,
+    "parent": 0,
+    "author_name": "Scott Allen",
+    "author_url": "http://",
+    "date": "2004-09-07T13:03:00",
+    "type": "comment",
+    "content_html": "<p>I agree – it is very annoying. I like having the full text of the post in my aggregator. I don’t like launching IE left and right to read the last sentence of a post. </p>"
+  },
+  {
+    "id": 172,
+    "parent": 0,
+    "author_name": "David Cumps",
+    "author_url": "http://",
+    "date": "2004-09-07T15:30:00",
+    "type": "comment",
+    "content_html": "<p>Ah, that’s why I suddenly felt strange when reading the feed!</p>"
+  },
+  {
+    "id": 173,
+    "parent": 0,
+    "author_name": "Scott",
+    "author_url": "http://",
+    "date": "2004-09-08T05:49:00",
+    "type": "comment",
+    "content_html": "<p>\"They want a visit to the website so that the advertising dollars come in.\"</p>\n<p>They aren’t running any ads on blogs.msdn.com though. In fact the only thing on their pages that you could even consider possibly being an ad would be the \"powered by\" links at the bottom of the page, which you are also running here at dotnetjunkies.</p>\n<p>It’s still bad form to have the \"read more\" link in the RSS feed(?!), but it’s not to drive in ad revenue. It’s more likely to cut down on bandwith. I’m sure Scoble will be giving them heck about it this week. He hates not having full text in the RSS feed.</p>"
+  },
+  {
+    "id": 174,
+    "parent": 0,
+    "author_name": "Scott",
+    "author_url": "http://",
+    "date": "2004-09-08T05:51:00",
+    "type": "comment",
+    "content_html": "<p>whoops, hit \"submit\" too soon. IIS compression is pretty flakey Scott, I’ve had problems on web sites, granted they were running IIS 5, before when I’ve turned it on. Mostly flakey problems with images and IE.</p>"
+  },
+  {
+    "id": 175,
+    "parent": 0,
+    "author_name": "Yex",
+    "author_url": "http://",
+    "date": "2004-09-08T05:57:00",
+    "type": "comment",
+    "content_html": "<p>I couldn’t agree more. I can’t stand that feature. I posted a question about this to the Community Server :: Blogs forum (<a href=\"http://www.communityserver.org/ShowPost.aspx?PostID=459910\" rel=\"nofollow\">http://www.communityserver.org/ShowPost.aspx?PostID=459910</a>) and it seems this feature will be configurable in future versions of the software that generates those feeds, which will be nice. But at the same time, I don’t like the fact that they’ve stripped down the content of those feeds though, what a drag. As was said, it doesn’t even make sense, because there’s no ads on the site(s).</p>"
+  }
+]

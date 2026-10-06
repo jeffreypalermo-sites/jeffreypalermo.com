@@ -1,0 +1,31 @@
+---
+wp_id: 346
+title: How to use SQL Server Express (where’s the UI?) – level 200
+slug: how-to-use-sql-server-express-wheres-the-ui-level-200
+permalink: /2005/11/how-to-use-sql-server-express-wheres-the-ui-level-200/
+date: 2005-11-04T12:58:00
+date_utc: 2005-11-04T12:58:00Z
+modified: 2005-11-04T12:58:00
+format: html
+excerpt: If you are used to working with SQL Server 2000, you may expect to find a tool similar to Enterprise Manager and Query Analyzer. SQL Express is a free product, and it shows, but you get an awful lot for free. . . but you don’t get it all. I think that’s perfectly fine. I’d […]
+comments_open: true
+---
+<p>If you are used to working with SQL Server 2000, you may expect to find a tool similar to Enterprise Manager and Query Analyzer.&nbsp; SQL Express is a free product, and it shows, but you get an awful lot for free. . . but you don’t get it all.&nbsp; I think that’s perfectly fine.&nbsp; I’d rather have something for free than nothing.</p>
+<p>Here’s a few tips to get you started:</p>
+<ul><br>
+<li>SQL Express installs as a local instance named “SQLEXPRESS”, so your connection string needs to include the instance name:&nbsp; “.SQLEXPRESS” or “localhostSQLEXPRESS”.<br>
+</li><li>SQL Server Configuration Manager isn’t the UI you want to add databases, tables, etc.<br>
+</li><li>Use any of the Visual Studio Express products as your database UI.&nbsp; They all have the database manager built in.<br>
+<ul><br>
+<li>Use the Server Explorer window to add your database instance.&nbsp; Then you can use it to add a new database and add tables to that database.&nbsp;<br>
+</li><li>If you have database create scripts, you can run them inside Visual Studio Express.&nbsp; If you are used to hitting F5 in Query Analyzer, then you’ll want to map a shortcut key to the “Run Selection” command: Right click -&gt; Run Selection.<br>
+</li><li>You can create all your database objects here.<br>
+</li><li>You can run and step through stored procedures for debugging.</li></ul><br>
+</li><li>You can also use osql.exe to manager your database.&nbsp; This is useful when you want to automate database scripts using NAnt.<br>
+</li><li>You have the option of how you want to connect to a SQL Express database:<br>
+<ul><br>
+<li>Through the SqlClient provider: <em>Data Source=localhostsqlexpress;Initial Catalog=MyNewTestDatabase;Integrated Security=True;Pooling=False</em><br>
+</li><li>Through a file reference: <em>Data Source=.SQLEXPRESS;AttachDbFilename=C:opensvndevelopmentezwebtrunksrcwebsiteApp_DataASPNETDB.MDF;Integrated Security=True;User Instance=True</em><br>
+</li><li>If using ASP.NET, you already have a connection string you can use: LocalSqlServer:&nbsp; <em>Data Source=.SQLEXPRESS;AttachDbFilename=|DataDirectory|ASPNETDB.MDF;Integrated Security=True;User Instance=True</em></li></ul></li></ul>
+<p>See <a href="http://www.aspfaq.com/sql2005/show.asp?id=3">http://www.aspfaq.com/sql2005/show.asp?id=3</a>&nbsp;for more information.&nbsp; There are other, non-Microsoft, tools that can be used to manager SQL Express as well.</p>
+<p>UPDATE:&nbsp; There is a <a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=82AFBD59-57A4-455E-A2D6-1D4C98D40F6E&amp;displaylang=en">November 2005 CTP of SQL Server 2005 Express Management Studio </a>available.&nbsp; This version is being linked to right off the <a href="http://msdn.microsoft.com/vstudio/express/sql/">SQL Server express download </a>page.</p>

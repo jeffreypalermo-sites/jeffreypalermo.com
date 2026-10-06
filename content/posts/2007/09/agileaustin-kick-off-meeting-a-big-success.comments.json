@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1847,
+    "parent": 0,
+    "author_name": "Chris Patterson",
+    "author_url": "http://blog.phatboyg.com/",
+    "date": "2007-09-06T02:12:36",
+    "type": "comment",
+    "content_html": "<p>Sounds like it was a good meeting. Some hard facts to deal with when going Agile, particularly when it comes to cutting folks from the team that don’t meld with the new flow.</p>\n<p>The absence of a product manager during development (in lieu of a live customer) is also a big problem, particularly when it comes to the continuous feedback needed. The here today, gone for two months ProdMgr is a major hang up when it comes time to deliver the software.</p>"
+  },
+  {
+    "id": 1848,
+    "parent": 0,
+    "author_name": "ScottBellware",
+    "author_url": "http://www.bellware.net",
+    "date": "2007-09-06T07:50:02",
+    "type": "comment",
+    "content_html": "<p>&gt; He only tracks burn-down  of an iteration as well as builds</p>\n<p>You must have been distracted by the new baby pictures when he showed two slides of code analysis metrics</p>"
+  }
+]

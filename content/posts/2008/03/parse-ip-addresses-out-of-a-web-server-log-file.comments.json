@@ -1,0 +1,83 @@
+[
+  {
+    "id": 2372,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2008-03-11T15:16:16",
+    "type": "comment",
+    "content_html": "<p>This is horribly inefficient for large files or large amount of files.<br>\nIt would be better to do this on a line by line basis.</p>"
+  },
+  {
+    "id": 2373,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-03-11T15:22:05",
+    "type": "comment",
+    "content_html": "<p>@Ayende,<br>\nPerhaps, but it works great for 10-20 files. \uD83D\uDE42  Just enough to find out what IP addresses have accessed the server in the past few days.</p>"
+  },
+  {
+    "id": 2374,
+    "parent": 0,
+    "author_name": "Sam Smoot",
+    "author_url": "http://datamapper.org",
+    "date": "2008-03-11T15:40:31",
+    "type": "comment",
+    "content_html": "<p>You asked for it. \uD83D\uDE09</p>\n<p>require ‘set’<br>\nrequire ‘pp’</p>\n<p>results = SortedSet.new</p>\n<p>Dir[‘*.log’].each do |path|<br>\n  File.read(path).scan(<br>\n    /b(d{1,3}.d{1,3}.d{1,3}.d{1,3})b/<br>\n  ).flatten.each { |ip| results &lt;&lt; ip }<br>\nend</p>\n<p>pp results</p>\n<p>It took me 2 minutes to write this (I'm slow \uD83D\uDE09 ). Not that you took any longer. I've just been thinking lately how it feels like I'm at the point where I can constantly throw away little solutions like this and not get wrapped up in reusability for a utility because they're one of the few things I can (almost) write faster in my head than I can type.</p>\n<p>That level of proficiency or approach to a problem doesn't get much press in programming circles it seems. Then again, not much more to say, so that's probably just because it's not a very interesting topic. Just thinking out loud here. \uD83D\uDE42</p>"
+  },
+  {
+    "id": 2375,
+    "parent": 0,
+    "author_name": "Peter Mounce",
+    "author_url": "http://",
+    "date": "2008-03-11T15:45:32",
+    "type": "comment",
+    "content_html": "<p>Walk, don’t run, to <a href=\"http://www.logparser.com\" rel=\"nofollow ugc\">http://www.logparser.com</a>, and query your logs like you would if they were SQL tables …  \uD83D\uDE09</p>"
+  },
+  {
+    "id": 2376,
+    "parent": 0,
+    "author_name": "Eric Hexter",
+    "author_url": "http://hex.lostechies.com",
+    "date": "2008-03-11T15:51:36",
+    "type": "comment",
+    "content_html": "<p>Log parser is the way to go… especially when you are talking about large log files.</p>\n<p><a href=\"http://www.microsoft.com/downloads/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07&amp;displaylang=en\" rel=\"nofollow ugc\">http://www.microsoft.com/downloads/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07&amp;displaylang=en</a></p>"
+  },
+  {
+    "id": 2377,
+    "parent": 0,
+    "author_name": "Aaron Lerch",
+    "author_url": "http://www.aaronlerch.com/blog/",
+    "date": "2008-03-11T16:05:07",
+    "type": "comment",
+    "content_html": "<p>1 word: PowerShell! \uD83D\uDE42</p>"
+  },
+  {
+    "id": 2378,
+    "parent": 0,
+    "author_name": "Matt (MSFT)",
+    "author_url": "http://",
+    "date": "2008-03-11T16:51:38",
+    "type": "comment",
+    "content_html": "<p>Jeffrey — Ayende’s right here. The performance implications of the following lines are really terrible:</p>\n<p>string text = “”;<br>\n…<br>\nforeach (var filePath in filePaths)    {<br>\n    text += File.ReadAllText(filePath);<br>\n}</p>\n<p>You’re allocating:<br>\n1.) A string to hold the entire contents of 1 text file<br>\n2.) Another string that holds the entire contents read up to this point PLUS the data from step #1<br>\n3.) And you’re repeating this for every log file</p>\n<p>Like he said, you could solve this by processing a file at a time, line-by-line, but if you don’t want to do that, you could improve things tremendously by using a StringBuild that you append to.</p>"
+  },
+  {
+    "id": 2379,
+    "parent": 0,
+    "author_name": "Steven Rigney",
+    "author_url": "http://stevenrigney-tech.blogspot.com/",
+    "date": "2008-03-11T17:03:33",
+    "type": "comment",
+    "content_html": "<p>I can’t believe you haven’t heard of “x”.  There are what?  600 different things that could have worked?   You did one that you know well and wrote quickly, that’s what works well.   There a couple things I don’t agree with.  </p>\n<p>1. loading all of the files into a single combined text string.  I would have opened one file, processed the matches then moved on to the next file.</p>\n<p>2. Writing and running this as a unit test.  The test framework brings nothing to your solution.  You aren’t using a setup or any assertions.  You have a console application that you use NUnit to run.  I’d have just written it as a console application.    </p>\n<p>I probably would have also output the results to a file instead of just the console window, but that’s a very minor change.</p>"
+  },
+  {
+    "id": 2380,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://flimflan.com/blog",
+    "date": "2008-03-12T01:56:11",
+    "type": "comment",
+    "content_html": "<p>I’m just left wondering what your intention with this post was…<br>\nYou knew there were better tools and method out there to do the job, and you knew people would call them out. So that rules out the “providing a solution for others to follow” motive.<br>\nBut then you seem a bit defensive when people suggest alternatives, so that rules out the “information gathering” motive.</p>"
+  }
+]

@@ -1,0 +1,236 @@
+[
+  {
+    "id": 2050,
+    "parent": 0,
+    "author_name": "Dan",
+    "author_url": "http://",
+    "date": "2007-10-06T10:07:01",
+    "type": "comment",
+    "content_html": "<p>Sounds great, in fact is what I’m doing nowadays.<br>\nA front controller ( equivalent to the asp.net MVC handler, where I map the URL to the controller ), the controllers and a view engine.<br>\nI’m using a view engine from MonoRail but decoupled of the Castle framework.</p>\n<p>I suppose server controls can’t be used with the MVC ASPX view engine, right ??</p>\n<p>And I don’t understand why to release CTPs an so on, to me seems dead simple…</p>"
+  },
+  {
+    "id": 2051,
+    "parent": 0,
+    "author_name": "Simone",
+    "author_url": "http://codeclimber.net.nz",
+    "date": "2007-10-06T13:48:37",
+    "type": "comment",
+    "content_html": "<p>The fact that controllers have to inherit from a base class (presumably from ASP.NET) make me think that this cannot be used as framework agnostic controller, but only related to ASP.NET (not winform or wpf).<br>\nHope this thing doesn’t come out as Linq/Entity Framework</p>"
+  },
+  {
+    "id": 2052,
+    "parent": 0,
+    "author_name": "Sam Smoot",
+    "author_url": "http://datamapper.org",
+    "date": "2007-10-06T15:11:34",
+    "type": "comment",
+    "content_html": "<p>Jeremy, I don’t understand a couple of your comments at the end there. You said “gives us a controller…before a view ever comes into play”. Could you elaborate on what you meant? It’s been a _long_ time since I looked at Monorail, but is that not how it works there?</p>\n<p>One other minor point… it’s… sad I guess, how little community participation in OSS there is in .NET land. I put out a ASP-ish templating library in *January*, mentioned it several times, and never a spark of interest in it from the .NET community. It’s not that people aren’t asking for almost exactly this, but they seem to have zero motivation to pick up the ball and run with it. Here’s a google-cache of the post I’m talking about (I don’t bother maintaining my blog these days \uD83D\uDE09 ):  <a href=\"http://64.233.167.104/search?q=cache:BaLAzvi6n_kJ:substantiality.net/archives/2007/1/29/templatenet_part_ii_the_son/+template.net+substantiality&amp;hl=en&amp;ct=clnk&amp;cd=1&amp;gl=us&amp;client=safari\" rel=\"nofollow ugc\">http://64.233.167.104/search?q=cache:BaLAzvi6n_kJ:substantiality.net/archives/2007/1/29/templatenet_part_ii_the_son/+template.net+substantiality&amp;hl=en&amp;ct=clnk&amp;cd=1&amp;gl=us&amp;client=safari</a></p>\n<p>This probably sounds like sour-grapes. Believe me, it’s not. If someone else bothered to come out with a similar lib I wouldn’t loose any sleep over it. I’m certainly not interested in maintaining it. It’s just sad how little community participation there seems to be. If Hamilton doesn’t serve it up wrapped with a big red bow on a fantastic website, or MS doesn’t deliver it themselves, the community is willing to limp along as long as it takes for someone else to drop it into their lap. And even when that happens, the .NET community has to be actively sold on the idea. As if the .NET community is doing the OSS contributor a favor by using their code.</p>\n<p>That went on longer than I intended. I guess it’s just how I roll. \uD83D\uDE00 Anyways, I think that may be the first time I thought of it that way… disappointing.</p>"
+  },
+  {
+    "id": 2053,
+    "parent": 0,
+    "author_name": "Jan Van Ryswyck",
+    "author_url": "http://vanryswyckjan.blogspot.com/2007/10/aspnet-mvc-framework-at-altnet-conf.html",
+    "date": "2007-10-06T15:51:00",
+    "type": "comment",
+    "content_html": "<p>ASP.NET MVC Framework at ALT.NET Conf</p>"
+  },
+  {
+    "id": 2054,
+    "parent": 0,
+    "author_name": "Jan Van Ryswyck",
+    "author_url": "http://vanryswyckjan.blogspot.com/2007/10/aspnet-mvc-framework-at-altnet-conf.html",
+    "date": "2007-10-06T15:51:01",
+    "type": "comment",
+    "content_html": "<p>ASP.NET MVC Framework at ALT.NET Conf</p>"
+  },
+  {
+    "id": 2055,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-10-06T18:47:01",
+    "type": "comment",
+    "content_html": "<p>@Simone,<br>\nYou explicitly do NOT have to derive from a base class.  The minimum required is to implement the IController interface.</p>"
+  },
+  {
+    "id": 2056,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-10-06T18:48:41",
+    "type": "comment",
+    "content_html": "<p>@Sam,<br>\nI am in the OSS community, and there is a lot of adoption.  If you compare to the world, then no, but I’m not worried about that.  I, too, have released an open source project that folks didn’t pick up and run with, but that’s no big deal either.  Other folks aren’t obligated to use my software, just like no one is obligated to buy a product from any company.  </p>"
+  },
+  {
+    "id": 2057,
+    "parent": 0,
+    "author_name": "Sam Smoot",
+    "author_url": "http://datamapper.org",
+    "date": "2007-10-06T19:13:12",
+    "type": "comment",
+    "content_html": "<p>@Jeffrey, no, believe me, I’ve said the same to others. That’s not the point, but it’s probably off topic anyways. Sorry.</p>"
+  },
+  {
+    "id": 2058,
+    "parent": 0,
+    "author_name": "sober mind",
+    "author_url": "http://",
+    "date": "2007-10-06T20:20:58",
+    "type": "comment",
+    "content_html": "<p>Silverlight, ExpressionBlend, .Net 3.0, as well as, the plethora of other inconsequential toys that have poured out of Redmond over the past two years, will soon end up on the dump site of history.</p>\n<p>An “MVC Framework,” as you call it, is the biggest news coming from the Scott Guthrie fiefdom, in the past two years. </p>"
+  },
+  {
+    "id": 2059,
+    "parent": 0,
+    "author_name": "Thomas Eyde",
+    "author_url": "http://",
+    "date": "2007-10-06T22:56:07",
+    "type": "comment",
+    "content_html": "<p>I really hope this runs on ASP.NET 2.0.</p>"
+  },
+  {
+    "id": 2060,
+    "parent": 0,
+    "author_name": "Colin Ramsay",
+    "author_url": "http://colinramsay.co.uk",
+    "date": "2007-10-06T23:02:16",
+    "type": "comment",
+    "content_html": "<p>I think this comment:</p>\n<p>“MonoRail has tight integration with Windsor, ActiveRecord and several view engines.” </p>\n<p>Is maybe a little ambiguous. While Monorail CAN integrate will several view engines, AR and Windsor, out of the box there is absolutely no dependancy or real default integration.</p>\n<p>I know this is probably what you meant but I didn’t think it was 100% clear :&gt;</p>"
+  },
+  {
+    "id": 2061,
+    "parent": 0,
+    "author_name": "Steve",
+    "author_url": "http://blogger.forgottenskies.com",
+    "date": "2007-10-07T01:55:41",
+    "type": "comment",
+    "content_html": "<p>Finally.</p>\n<p>Good stuff.  Glad to see the asp.net team take this positive course of action.</p>\n<p>I can only hope I can use my IoC of choice, in addition, I hope the viewengine is done well.</p>\n<p>Monorail has ‘ViewComponent’s – what will the ms mvp solution provide as far as ‘controls’ go? </p>"
+  },
+  {
+    "id": 2062,
+    "parent": 0,
+    "author_name": "Ricardo Fiel",
+    "author_url": "http://ricardofiel.wordpress.com/",
+    "date": "2007-10-07T10:01:46",
+    "type": "comment",
+    "content_html": "<p>Will this make the Web Client Software Factory (<a href=\"http://www.codeplex.com/websf\" rel=\"nofollow ugc\">http://www.codeplex.com/websf</a>) obsolete?</p>"
+  },
+  {
+    "id": 2063,
+    "parent": 0,
+    "author_name": "Ken Egozi",
+    "author_url": "http://www.kenegozi.com/blog",
+    "date": "2007-10-07T10:34:15",
+    "type": "comment",
+    "content_html": "<p>Good stuff.</p>\n<p>Now I’d have to step up on AspView …</p>\n<p><a href=\"http://www.kenegozi.com/Blog/2007/10/07/some-details-on-the-new-web-mvc-framework-from-microsoft.aspx\" rel=\"nofollow ugc\">http://www.kenegozi.com/Blog/2007/10/07/some-details-on-the-new-web-mvc-framework-from-microsoft.aspx</a></p>"
+  },
+  {
+    "id": 2064,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-10-07T14:23:21",
+    "type": "comment",
+    "content_html": "<p>@Ricardo,<br>\nNo it won’t.  WCSF serves a different purpose than the MVC framework</p>"
+  },
+  {
+    "id": 2065,
+    "parent": 0,
+    "author_name": "Alex",
+    "author_url": "http://www.muellerdesigns.net",
+    "date": "2007-10-07T21:22:41",
+    "type": "comment",
+    "content_html": "<p>Thanks for posting this information. I cannot tell you how excited I am hear about this. I enjoy using MR and try to emulate its simplicity in my own apps, but I am hesitant to use it in our production application since we have a dependency on third party tools. Since MS will be developing an MVC framework, my guess is that I will be able to use my third party tools with it, and that will be great news. </p>"
+  },
+  {
+    "id": 2066,
+    "parent": 0,
+    "author_name": "SixYo",
+    "author_url": "http://we.devedu.com",
+    "date": "2007-10-08T00:44:01",
+    "type": "comment",
+    "content_html": "<p>Good  stuff  ~~~</p>"
+  },
+  {
+    "id": 2067,
+    "parent": 0,
+    "author_name": "Adam Vandenberg",
+    "author_url": "http://adamv.com",
+    "date": "2007-10-08T13:58:22",
+    "type": "comment",
+    "content_html": "<p>Is ASP.NET MVC going to give us source code, a la EntLib, or just black-box compiled .DLLs, a la most of the .NET framework? At least it’s not tied to Visual Studio versions, so that’s a plus.</p>\n<p>Without source, does this library tie us all into the standard Microsoft  long-update-cycle for bug fixes?</p>"
+  },
+  {
+    "id": 2068,
+    "parent": 0,
+    "author_name": "Chris Brandsma",
+    "author_url": "http://www.chrisbrandsma.com",
+    "date": "2007-10-08T15:56:55",
+    "type": "comment",
+    "content_html": "<p>Dang it all, I was going to be there, but stayed behind to do an MSDN launch…</p>\n<p>Anyway, did Mr. Guthrie say anything about a release date/timeframe?</p>"
+  },
+  {
+    "id": 2069,
+    "parent": 0,
+    "author_name": "sergiopereira",
+    "author_url": "http://",
+    "date": "2007-10-08T18:04:58",
+    "type": "comment",
+    "content_html": "<p>@Adam,<br>\nThe source code will be available just like the announced source code availability for the greater part of the .Net framework. I.e. you’ll be able to browse and step into it but not recompile and distribute.</p>"
+  },
+  {
+    "id": 2070,
+    "parent": 0,
+    "author_name": "Yuriy",
+    "author_url": "http://weblogs.asp.net/ysolodkyy",
+    "date": "2007-10-08T21:00:22",
+    "type": "comment",
+    "content_html": "<p>Will server control relying on postbacks work in this environment?  I have some nice controls using syncpostback for their internal purposes.</p>"
+  },
+  {
+    "id": 2071,
+    "parent": 0,
+    "author_name": "Blake Caraway",
+    "author_url": "http://geekswithblogs.net/bcaraway/",
+    "date": "2007-10-09T09:53:42",
+    "type": "comment",
+    "content_html": "<p>Jeff, certainly the new MVC framework is exciting and seems to have a ton of promise. Is it possible to do something similar using ASP.Net today? How do you typically write ASP.Net MVC-ish apps in the WebForm world right now that are capable of can handling the various complex UI scenarios that we commonly face today? Have any code samples or maybe a reference implementation to discuss?</p>\n<p>Thanks!</p>\n<p>/bc</p>"
+  },
+  {
+    "id": 2072,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-10-09T12:34:50",
+    "type": "comment",
+    "content_html": "<p>@Blake,<br>\nI plan on posting a way to ease into this, so stay tuned!!</p>"
+  },
+  {
+    "id": 2073,
+    "parent": 0,
+    "author_name": "Sanjay Talon",
+    "author_url": "http://",
+    "date": "2007-10-09T22:43:58",
+    "type": "comment",
+    "content_html": "<p>ScottGu and ScottHa  are impressive</p>"
+  },
+  {
+    "id": 2074,
+    "parent": 0,
+    "author_name": "Hadi Hariri",
+    "author_url": "http://www.hadihariri.com",
+    "date": "2007-10-12T08:01:47",
+    "type": "comment",
+    "content_html": "<p>All these actions remind me of how we used to develop web applications around 6 years ago in the days of ISAPI. With Delphi we had this technology called WebBroker which was based on actions and parameter parsing. Loved it then, love it now.</p>"
+  },
+  {
+    "id": 2075,
+    "parent": 0,
+    "author_name": "Codeville",
+    "author_url": "http://blog.codeville.net/2007/10/18/jmvcnet-neat-client-side-mvc-for-aspnet/",
+    "date": "2007-11-06T15:30:41",
+    "type": "comment",
+    "content_html": "<p>I’m really glad we’re finally moving away from the clumsy WebForms model and getting some much-needed streamlining. </p>\n<p>If you’re getting into MVC, you might like to try out an open-source *client-side* MVC library for ASP.NET that makes it really easy in many circumstances to build highly dynamic UIs without AJAX or postbacks. There are demos linked from my blog<br>\n<a href=\"http://blog.codeville.net/2007/10/18/jmvcnet-neat-client-side-mvc-for-aspnet/\" rel=\"nofollow ugc\">http://blog.codeville.net/2007/10/18/jmvcnet-neat-client-side-mvc-for-aspnet/</a></p>"
+  }
+]

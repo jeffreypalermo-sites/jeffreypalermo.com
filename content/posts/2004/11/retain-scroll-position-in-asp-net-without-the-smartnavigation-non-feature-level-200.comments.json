@@ -1,0 +1,11 @@
+[
+  {
+    "id": 213,
+    "parent": 0,
+    "author_name": "Sanjay Kattimani",
+    "author_url": "http://sanjaykattimani.blogspot.com",
+    "date": "2005-10-18T04:41:28",
+    "type": "comment",
+    "content_html": "<p>Whenever you use smartnavigation, make sure you use absolute paths in your scripts, or else css gets ripped off. Take a look at my blog on this topic <a href=\"http://sanjaykattimani.blogspot.com/2005/10/net-smartnavigation.html\" rel=\"nofollow ugc\">http://sanjaykattimani.blogspot.com/2005/10/net-smartnavigation.html</a></p>"
+  }
+]

@@ -1,0 +1,44 @@
+---
+wp_id: 438
+title: Blogging from Tech Ed 2006 – Brian Button on how to write frameworks – level 300
+slug: blogging-from-tech-ed-2006-brian-button-on-how-to-write-frameworks-level-300
+permalink: /2006/06/blogging-from-tech-ed-2006-brian-button-on-how-to-write-frameworks-level-300/
+date: 2006-06-16T14:46:00
+date_utc: 2006-06-16T14:46:00Z
+modified: 2006-06-16T14:46:00
+format: html
+tags:
+- coding-principles
+- developer-community
+- tips-tricks
+excerpt: Brian Button from the patterns and practices team gave a session bright and early Friday morning that was great. He covered how to write frameworks. What’s interesting is that he focused on writing frameworks as a non-technical problem since he’s seen too many frameworks that solve the wrong problem very well. J Rules for […]
+comments_open: true
+---
+<p><a href="http://www.agileprogrammer.com/oneagilecoder/">Brian Button </a>from the patterns and practices team gave a session bright and early Friday morning that was great.<span>&nbsp; </span>He covered how to write frameworks.<span>&nbsp; </span>What’s interesting is that he focused on writing frameworks as a non-technical problem since he’s seen too many frameworks that solve the wrong problem very well. <span><span>J</span></span></p>
+
+<ul type="disc"><br>
+<li>Rules for Framework development</li><br>
+<ul type="circle"><br>
+<li>Clients come before frameworks.</li><br>
+<li>Be sure that you are solving the right problem.</li><br>
+<li>Quality, quality, quality.</li><br>
+<li>Be an enabler:<span>&nbsp; </span>You can’t solve every problem, so solve many problems but allow for extensibility points.</li><br>
+<li>Creating frameworks is a people problem.</li></ul></ul>
+
+<p>Brian stress that it’s impossible to write a good framework without a real application using it.<span>&nbsp; </span>It will end up missing the mark.<span>&nbsp; </span>He suggests, instead, writing several applications and harvest a framework from the common parts of the application.<span>&nbsp; </span>This resonates with me because I believe it’s very difficult to write code that’s intended for reuse.<span>&nbsp; </span>I write code for use, and if it needs to be used elsewhere, I’ll harvest it into a shared library.</p>
+
+<p>Brian was very bold at this Microsoft conference, and I applaud him for this.<span>&nbsp; </span>He stressed automated testing, and he said that here and now there is NO EXCUSE for not writing automated tests.<span>&nbsp; </span>Bravo!<span>&nbsp; </span>Brian contends that functional testing is a waste of a tester’s time.<span>&nbsp; </span>The thought is that testers are too valuable for functional testing that could be covered with automated testing.<span>&nbsp; </span>Testers should be testing the harder things.</p>
+
+<p>Brian shares my frustration about sealed classes in the .Net Framework.<span>&nbsp; </span>He has encountered parts of the framework that are sealed, and when he needs to extend them, he can’t.<span>&nbsp; </span>Sealed classes are hard to write testable code against.<span>&nbsp; </span>He made a good point that I hadn’t thought of before:<span>&nbsp; </span>If you seal a class, you are saying “I can predict the future, and this is all that this class will ever need to do.”</p>
+
+<p>Finally, Brian advocates these in creating a framework.</p>
+<ul type="disc"><br>
+<li>Do open planning.</li><br>
+<li>Practice open prioritization.</li><br>
+<li>Show visible progress.</li><br>
+<li>Don’t allow surprises.</li></ul>
+
+<p>Brian recommends</p>
+<ul type="disc"><br>
+<li>Resist the urge to create something new.<span>&nbsp; </span>Harvest frameworks from existing applications.</li><br>
+<li>Encourage quality throughout the project.<span>&nbsp; </span>Lead by example and testers rule!</li></ul>

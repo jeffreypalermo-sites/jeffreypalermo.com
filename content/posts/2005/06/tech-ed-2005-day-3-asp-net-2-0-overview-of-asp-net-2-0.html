@@ -1,0 +1,20 @@
+---
+wp_id: 262
+title: 'Tech Ed 2005 Day 3 – ASP.NET 2.0: Overview of ASP.NET 2.0'
+slug: tech-ed-2005-day-3-asp-net-2-0-overview-of-asp-net-2-0
+permalink: /2005/06/tech-ed-2005-day-3-asp-net-2-0-overview-of-asp-net-2-0/
+date: 2005-06-09T00:43:00
+date_utc: 2005-06-09T00:43:00Z
+modified: 2005-06-09T00:43:00
+format: html
+excerpt: Scott Guthrie gave a session on ASP.NET 2.0. I asked a question about excluding files from a web project, and I got a partial answer. In Beta 2 with source control, the system wants to check in binaries. That is a bug, and he says it will be fixed. He declared that for Beta 2, […]
+comments_open: true
+---
+<p>Scott Guthrie gave a session on ASP.NET 2.0. I asked a question about excluding files from a web project, and I got a partial answer. In Beta 2 with source control, the system wants to check in binaries. That is a bug, and he says it will be fixed.</p>
+<p>He declared that for Beta 2, all the built-in controls were enhanced with better client-side support for alternate browsers. Whidbey doesn’t require Frontpage server extensions or IIS to function. It includes a built-in development server based on Cassini. When you create a website in VWD2005, it doesn’t auto-generate anything for you. You start out with a blank directory. No WebForm1.aspx.</p>
+<p>By default, Whidbey will release with the DOCTYPE set to XHtml transitional. The code editor has intellisense everywhere including css style attributes. The editor will not reformat you code, so that’s a big improvement from v1. It will also preserve your cursor position when you switch between design and html view. Html tags are collapsable now, not just in the code file.</p>
+<p>Currently in Beta 2, there is not support for excluding files from a web site. That feature will be added for RTM.</p>
+<p>I was impressed with Scott’s demos because instead of doing all the drag and drop with datasets and no domain model, his demoes included a business logic layer, and he chose to ignore the SqlDataSource control in favor for the ObjectDataSource control which binds to his custom domain object. Many demos encourage the wrong way to design applications, but Scott’s didn’t. Bravo.</p>
+<p>Toward the end of the first half, he had a VB page, and the VB compiler crashed the IDE. He tried it again. . . .same thing. He switched to a C# page, and he was able to continue. That’s very interesting. I’ll have to try to duplicate that bug. Adding an OutputCache directive to a VB page.</p>
+<p>In the afternoon session, Scott covered master pages, navigation controls, themes, membership and roles, and web parts. Scott wrapped it up by going through a localization example. There is a built-in scraper that will find localizeable strings and create the default resource file for you. Then you can create translations, and it’s done. You don’t have to localize every control manually. A “meta” tag in the control controls localization.</p>
+<p>All in all, I’m very impressed with the ASP.NET 2.0 feature-set.</p>

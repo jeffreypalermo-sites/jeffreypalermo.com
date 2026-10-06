@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2690,
+    "parent": 0,
+    "author_name": "jeremiah",
+    "author_url": "http://",
+    "date": "2011-11-04T18:25:26",
+    "type": "comment",
+    "content_html": "<p>It’s also your shaky hand.  The phone, instead of using a gyro to correct vibration, is using camera data, analyzing the image, and re-positioning the picture to produce a smoother image.<br>\nthat’s why, when you slide screens on the tablet, the phone thinks you’re panning and tries to keep the screen still, while the frame of the tablet and the background move.</p>"
+  }
+]

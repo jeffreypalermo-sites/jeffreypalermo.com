@@ -1,0 +1,20 @@
+---
+wp_id: 92
+title: ASP.NET 2.0 Master Pages changes the Page’s control hierarchy – level 300
+slug: asp-net-2-0-master-pages-changes-the-pages-control-hierarchy-level-300
+permalink: /2004/09/asp-net-2-0-master-pages-changes-the-pages-control-hierarchy-level-300/
+date: 2004-09-01T08:45:00
+date_utc: 2004-09-01T08:45:00Z
+modified: 2004-09-01T08:45:00
+format: html
+excerpt: For most people this will not be an issue at all. Most people don’t care about the control hierarchy of the Page, but to make highly-customized pages, you’ll get to know this very intimately. In v1.1, every control on the page was in the Page’s Controls collection, so if you needed to get a reference to […]
+comments_open: true
+---
+<p>For most people this will not be an issue at all.&nbsp; Most people don’t care about the control hierarchy of the Page, but to make highly-customized pages, you’ll get to know this very intimately.&nbsp; In v1.1, every control on the page was in the Page’s Controls collection, so if you needed to get a reference&nbsp;to a user control, for instance, you could declare the user control as a member variable or you could find it at runtime:</p>
+<p>(MyUserControl)Page.FindControl(”ucMyUserControl”);</p>
+<p>I’ve seen this method in plenty of code samples around the .Net, and I’ve even used it myself.</p>
+<p>In version 2.0 (as it stands in Beta 1), if you user a Master Page along with your Page, this will not work.&nbsp; Let me tell you why.&nbsp; When you apply a master page, that master page has a ContentPlaceHolder control, and your page has only an &lt;asp:Content/&gt; control.&nbsp; This Content control get stripped and discarded and never makes it to the final Page control structure.&nbsp; The contents of the Content control are merged into the ContentPlaceHolder.&nbsp; The result is that the page ends up with only 1 control in its Controls collection:&nbsp; a ContentPlaceHolder from the master page.&nbsp; That leaves you to modify the above code to :</p>
+<p>(MyUserControl)Page.Controls[0].FindControl(”ucMyUserControl”);</p>
+<p>or you could otherwise find the ContentPlaceHolder first and then do the FindControl().&nbsp; </p>
+<p>I don’t know the reasoning for this change.&nbsp; I would reason that the &lt;asp:Content/&gt; controls should merely be added to the controls collection of the master’s ContentPlaceHolder.&nbsp; This would result in less rearranging of the&nbsp; Page’s control hierarchy.&nbsp; </p>
+<p>Overall, the master page feature is very nice.&nbsp; The IDE provides great RAD features for this, but my team develops an enterprise application that HAS to be maintainable, so RAD goes out the window.&nbsp; The master page is set on the PreInit method in our base page, and by the Load method, everything is where it should be ready to be used.</p>

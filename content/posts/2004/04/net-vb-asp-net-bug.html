@@ -1,0 +1,29 @@
+---
+wp_id: 543
+title: .NET VB ASP.NET Bug
+slug: net-vb-asp-net-bug
+permalink: /2004/04/net-vb-asp-net-bug/
+date: 2004-04-19T00:52:00
+date_utc: 2004-04-19T00:52:00Z
+modified: 2004-04-19T00:52:00
+format: html
+excerpt: 'I normally write my ASP.NET apps with C#. With my current project, I’m supporting extensions to it, so I decided to test them with extras written in other .Net languages: VB and J#. I wrote one in J#, and it worked just fine. I wrote one in VB, and it bombed with this error: Compilation […]'
+comments_open: true
+---
+<p>I normally write my ASP.NET apps with C#.&nbsp; With my current project, I’m supporting extensions to it, so I decided to test them with extras written in other .Net languages: VB and J#.&nbsp; I wrote one in J#, and it worked just fine.&nbsp; I wrote one in VB, and it bombed with this error:</p>
+<h2>Compilation Error </h2>
+<p>Description: An error occurred during the compilation of a resource required to service this request. Please review the following specific error details and modify your source code appropriately. <br><br>Compiler Error Message: The compiler failed with error code 2000.<br><br><br></p>
+<div>Show Detailed Compiler Output:</div>
+<div><br><br>
+<br><br><br><table width="100%" bgcolor="#ffffcc">
+<tbody>
+<tr>
+<td><pre>C:WINDOWSsystem32&gt; “c:windowsmicrosoft.netframeworkv1.1.4322vbc.exe” /t:library . . .
+<p>Microsoft (R) Visual Basic .NET Compiler version 7.10.3052.4<br>
+for Microsoft (R) .NET Framework version 1.1.4322.573<br>
+Copyright (C) Microsoft Corporation 1987-2002. All rights reserved.</p>
+<p>vbc : Fatal error BC2000 : compiler initialization failed unexpectedly: Cannot change thread </p></pre><pre>mode after it is set.<br>
+</pre></td></tr></tbody></table></div>
+<p>Upon further investigation, anything written in VB.Net running against ASP.NET produced this.&nbsp; Even the simplest, nothing page with Language=”VB” produced this error.&nbsp; Researching this problem on Google produced some others who have had this problem with Win XP and ASP.NET 1.1.&nbsp; They resolved it by uninstalling and reinstalling IIS and then reregistering the aspnet_isapi.dll.&nbsp; I have been hesitant to do this because of the possibility of having to reinstall VS.&nbsp; Unlikely, but I don’t have the setup files with me, so it would present a problem.&nbsp; In 3 days I’ll be back at home where I have the setup files, so I’m going to try it now so I can test out .Net Nuke (which is written with VB).&nbsp; So, here I go *crossed fingers on my knees praying to God*. . . </p>
+<p>Done!&nbsp; It worked.&nbsp; I can use VB.Net again!&nbsp; I’m glad I backed up my IIS configuration because the reinstall cleared it, but a simple restore, and it’s as if I never did anything.&nbsp; .Net Nuke is up and running.&nbsp; </p>
+<p>This was a very curious problem indeed.&nbsp; Why were VB pages the only ones affected?&nbsp; Maybe we’ll never know. . .&nbsp; 🙂</p>

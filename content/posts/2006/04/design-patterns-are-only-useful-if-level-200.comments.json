@@ -1,0 +1,92 @@
+[
+  {
+    "id": 754,
+    "parent": 0,
+    "author_name": "Sam",
+    "author_url": "http://substantiality.net",
+    "date": "2006-04-06T04:12:40",
+    "type": "comment",
+    "content_html": "<p>I think the shared vocabulary stuff is important, but I’d disagree overall. Several of the patterns books mention that design patterns were used before we had a common vocabulary.</p>\n<p>Case in point: I wrote a parser recently that used Decorators to break up the task of parsing a file in a way that was non-specific to a given file. This is a pretty big departure from the “1 file, 1 parser” mentality the company generally employs. Only I and one other coworker would probably recognize it for what it is though (Decorator). I really don’t think that has much bearing on it’s utility however.</p>\n<p>The idea of a common vocabulary is important then, definitely. But only in that it helps us abstract the idea of a particular construct in such a way that it’s reproducable (sp?) and allows us to reapply it in different contexts to solve new (to us) problems.</p>"
+  },
+  {
+    "id": 755,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-04-06T04:24:21",
+    "type": "comment",
+    "content_html": "<p>The shared vocabulary was the point of the whole post, so I’m not sure what you are disagreeing with.  </p>\n<p>I’m not saying that the OO techniques described in published design patterns aren’t useful (I think they are tremendously useful).  I’m not commenting on OO design at all.  I’m saying it’s important that the words used to describe the design technique be shared among developers.</p>\n<p>The Decorator pattern solves a particular problem, and it’s valuable for that.  The name “Decorator” is valuable only when those hearing the word understand it’s meaning (the software problem, and the technique used to solve it).</p>"
+  },
+  {
+    "id": 756,
+    "parent": 0,
+    "author_name": "johnwood",
+    "author_url": "http://dotnetjunkies.com/weblog/johnwood",
+    "date": "2006-04-06T05:16:44",
+    "type": "comment",
+    "content_html": "<p>I think this is the key to the whole post “It’s a way to speak in shortened jargon and convey meaning. ” – and I agree completely. While we still used these patterns before they were labeled, it would just take us longer to communicate ideas based around the patterns because we would have a handful of different ways to describe them – not just ‘decorator’ or ‘observer’. Without a common language it’s far more difficult to communicate.</p>"
+  },
+  {
+    "id": 757,
+    "parent": 0,
+    "author_name": "Foxey",
+    "author_url": "http://",
+    "date": "2006-04-06T07:55:43",
+    "type": "comment",
+    "content_html": "<p>I think Sam was commenting on your opening statement “Design patterns are only useful if the team has a shared vocabulary” and focussing on the word “only”.</p>\n<p>Just because my colleague doesnt know what a decorator is, doesnt mean that it is not useful to me and therefore my employer. Sure I might not be able to convey my ideas in such a succinct way in a design meeting but imo thats only a small part of design patterns, its better to use them that to talk about them \uD83D\uDE09</p>"
+  },
+  {
+    "id": 758,
+    "parent": 0,
+    "author_name": "Dennis",
+    "author_url": "http://dsnippert.wordpress.com",
+    "date": "2006-04-06T11:18:28",
+    "type": "comment",
+    "content_html": "<p>I think a company needs to have descriptions of patterns and common terms. In my study I wrote an article about design patterns and the usage of it(can be found in my weblog(in Dutch)). I find design patterns usefull. I agree in that all people have to know what they are talking about. </p>"
+  },
+  {
+    "id": 759,
+    "parent": 0,
+    "author_name": "karl",
+    "author_url": "http://",
+    "date": "2006-04-06T11:53:48",
+    "type": "comment",
+    "content_html": "<p>I think that’s part of the fundamental aspect of what a pattern is – otherwise it’s just some code that does a trick. If a pattern isn’t easily recognizable (i.e., with words), then it isn’t a pattern. It can still be used and can still solve a problem, but doesn’t have the global understandability that you’d otherwise have.</p>"
+  },
+  {
+    "id": 760,
+    "parent": 0,
+    "author_name": "Tim Murphy",
+    "author_url": "http://geekswithblogs.net/tmurphy",
+    "date": "2006-04-06T13:18:28",
+    "type": "comment",
+    "content_html": "<p>I think the key to making patterns more widely used is for those of us who have studied and practiced them to educate the teams we work with.  Also, if a team member doesn’t understand a pattern name when it is used you would think they would say something like “what the #*&amp;! are you talking about”.  If they aren’t asking these questions you might have other problems to deal with.</p>"
+  },
+  {
+    "id": 761,
+    "parent": 0,
+    "author_name": "johnwood",
+    "author_url": "http://dotnetjunkies.com/weblog/johnwood",
+    "date": "2006-04-06T15:26:26",
+    "type": "comment",
+    "content_html": "<p>A lot of people dismiss patterns because they don’t see anything new in them. “Dependency injection? I’ve had plugins in my application for decades”. But the point they’re missing, which you highlight here, is that it’s not the design itself that is a new invention, it’s just the concise terminology – and of course a reference point to save you the time of recalling exactly how the pattern works, avoiding common pitfalls and creating some discussion in the community to make sure it really is the best solution for the problem. </p>"
+  },
+  {
+    "id": 762,
+    "parent": 0,
+    "author_name": "Sam",
+    "author_url": "http://substantiality.net",
+    "date": "2006-04-08T03:46:06",
+    "type": "comment",
+    "content_html": "<p>Foxey hit it. For some reason I guess the big h2 title stood out for me. \uD83D\uDE09</p>\n<p>johnwood: See, I still think it’s the actual code that’s valuable, and the ability of a book like PoEAA to change how many many coders get the job done. The names are helpful, but not necessarily a must for me. For example you refer to DI as if it equates to plugins, which is odd to me since my fave DI tool by far is Windsor Container.</p>"
+  },
+  {
+    "id": 763,
+    "parent": 0,
+    "author_name": "Bjørn Reppen",
+    "author_url": "http://www.mashiharu.com",
+    "date": "2006-04-08T10:27:15",
+    "type": "comment",
+    "content_html": "<p>Right on johnwood!  There’s no rocket science in design patterns, it’s only about terminology.</p>\n<p>The 2 problems I have with design patterns is:</p>\n<p>a) The above mentioned problems that can occur when one or more members of the group doesn’t know what the flyweight pattern is.  (I don’t know it myself, I only remember the name)</p>\n<p>b) The other problem can occur after (some) developers have been studying design patterns and then proceed to try and find ways to (over)use them as much as possible in their code.</p>\n<p>“Make things as simple as possible, but no simpler.”<br>\n  — Albert Einstein</p>"
+  }
+]

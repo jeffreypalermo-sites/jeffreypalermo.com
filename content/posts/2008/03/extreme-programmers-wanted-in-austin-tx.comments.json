@@ -1,0 +1,56 @@
+[
+  {
+    "id": 2402,
+    "parent": 0,
+    "author_name": "Bil Simser",
+    "author_url": "http://weblogs.asp.net/bsimser",
+    "date": "2008-03-25T18:18:41",
+    "type": "comment",
+    "content_html": "<p>I’m glad you didn’t say “ALT.NET Programmers wanted in Austin, TX”</p>"
+  },
+  {
+    "id": 2403,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-03-25T19:02:14",
+    "type": "comment",
+    "content_html": "<p>@Bil,<br>\nI don’t need Alt.Net programmers.  I need XPers.</p>"
+  },
+  {
+    "id": 2404,
+    "parent": 0,
+    "author_name": "Bil Simser",
+    "author_url": "http://weblogs.asp.net/bsimser",
+    "date": "2008-03-25T19:10:27",
+    "type": "comment",
+    "content_html": "<p>Therein lies the rub. What’s the difference. I consider myself an XPer but I also consider myself an Alt.Net programmer. And a Scrummer. And an Agilist. And a Clipperhead. And, and, and… Can you really find an “XPer” out there that couldn’t be called something else? It’s as if you can’t really create an instance of XPer because it’s abstract, as are all the classes in the Agile namespace. There’s nothing concrete. Everybody is simply made up of interfaces and abstract classes. Okay, time for coffee and a nap now.</p>"
+  },
+  {
+    "id": 2405,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-03-25T19:26:09",
+    "type": "comment",
+    "content_html": "<p>@Bil,<br>\nBig difference.  XP is solid engineering practices.  Alt.Net is Agile, but Alt.Net does not mean XP.  The trend that many in the Alt.Net community also do XP practices doesn’t cause the definition of Alt.Net to mean XP.</p>\n<p>Little bit of logical runaround there.</p>"
+  },
+  {
+    "id": 2406,
+    "parent": 0,
+    "author_name": "Programmer",
+    "author_url": "http://www.dcglobal.us",
+    "date": "2008-04-08T09:24:13",
+    "type": "comment",
+    "content_html": "<p>Which is more practical XP programmers or ALL Net? and Who do you think would Do better in this line of work?</p>"
+  },
+  {
+    "id": 2407,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-04-09T15:15:12",
+    "type": "comment",
+    "content_html": "<p>@Programmer,<br>\nXP has hit mainstream consciousness while ALT.NET is still a term gaining recognition.  Most clients have not heard about ALT.NET, and it’s not beneficial to try to educate them on the new term since we espouse the principles anyway.</p>\n<p>The XPers I know who do .Net are also part of the ALT.NET community.</p>"
+  }
+]

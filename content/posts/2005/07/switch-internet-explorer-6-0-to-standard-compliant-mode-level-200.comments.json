@@ -1,0 +1,29 @@
+[
+  {
+    "id": 363,
+    "parent": 0,
+    "author_name": "Raymond Lewallen",
+    "author_url": "http://www.codebetter.com/blogs/raymond.lewallen",
+    "date": "2005-07-05T14:59:03",
+    "type": "comment",
+    "content_html": "<p>Might be a dumb question, but I’m not a GUI person.  Is this configurable somewhere so that when you create a web form, the you don’t have to change it everytime?  I know some things, like specifying which object the code-behind class inherits from, is in machine.config.  Is this is someplace to be customized as well?</p>"
+  },
+  {
+    "id": 364,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-07-05T15:11:13",
+    "type": "comment",
+    "content_html": "<p>If there was a setting, it would be in Visual Studio, and I’m not aware that it exists.  You can always create your own templates to customize the default content of a particular file type, but you would have to do that yourself.  VS 2005 will default to Xhtml 1.0 transitional. (that’s the current plan, anyway).</p>"
+  },
+  {
+    "id": 365,
+    "parent": 0,
+    "author_name": "Geoff Appleby",
+    "author_url": "http://codebetter.com/blogs/geoff.appleby/",
+    "date": "2005-07-05T20:59:44",
+    "type": "comment",
+    "content_html": "<p>Compliance mode is a must, especially doing funky stuff like I did here: <a href=\"http://codebetter.com/blogs/geoff.appleby/articles/49529.aspx\" rel=\"nofollow ugc\">http://codebetter.com/blogs/geoff.appleby/articles/49529.aspx</a></p>\n<p>For a good description of the doctypes, I found this page to be extremely useful – <a href=\"http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnie60/html/cssenhancements.asp\" rel=\"nofollow ugc\">http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnie60/html/cssenhancements.asp</a></p>\n<p>\uD83D\uDE42</p>"
+  }
+]

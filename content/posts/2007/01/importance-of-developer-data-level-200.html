@@ -1,0 +1,24 @@
+---
+wp_id: 482
+title: Importance of developer data – level 200
+slug: importance-of-developer-data-level-200
+permalink: /2007/01/importance-of-developer-data-level-200/
+date: 2007-01-23T12:38:15
+date_utc: 2007-01-23T12:38:15Z
+modified: 2007-01-23T12:38:15
+format: html
+excerpt: Most of my experience has been with systems that require a relational database to house most of the data. Some systems have used a combination of relational databases, files, and external sources. Regardless of the data store, there are different ways to set up the data stores in a developer environment that affect the ease and speed […]
+comments_open: true
+---
+<p>Most of my experience has been with systems that require a relational database to house most of the data.&nbsp; Some systems&nbsp;have used&nbsp;a combination of relational databases, files, and external sources.&nbsp; Regardless of the data store, there are different ways to set up the data stores in a developer environment that affect the ease and speed of development.&nbsp; For clarity, I am&nbsp;talking about the database that&nbsp;is used by every developer on the development workstation (not a&nbsp;development team staging server)&nbsp; I’ll start with the worst way.</p>
+<p><strong>Use last month’s production backup (BAD)<br></strong>Assume for a moment that there is not a single corrupt field in your production data.&nbsp; Even so, the data set can be so large that it is tough to see clearly what is going on while developing locally.&nbsp; While working out problems in the program’s behavior, it’s necessary to peek into tables to see what data is there, and with a full production set, the developer has to formulate queries merely for narrowing the scope of the data to view.&nbsp; Using a full production set bogs down development with unnecessary overhead.&nbsp; Finally, it will be very hard to create repeatable tests since the developer is constantly changing the data.</p>
+<p><strong>Create a development database with fake data and put it on a shared server(BAD)<br></strong>The “shared server” part of this one is the killer.&nbsp; Imagine running a scenario using this database, and the data changes.&nbsp; With a shared database, this is what happens.&nbsp; Multiple users changes the data in many different ways.&nbsp; A high degree of communication overhead and waiting is required to make this work.&nbsp; The fake data will need to be refreshed periodically, so it becomes necessary to stop the team from using the database during the data reload.</p>
+<p><strong>Use a local database with nothing in it(BAD)<br></strong>This is probably an obvious one since the system probably won’t function without a proper data set.&nbsp; If it will, security or configuration problems might lurk in the shadows (if you have security or configuration tables).&nbsp; </p>
+<p><strong>Use a local database created with the local build and populated with representative data that is enough to support every use case in the application(GOOD)<br></strong>In your local build script, have a target that creates the database locally from scratch.&nbsp; Have a routine that pumps data into this local database.&nbsp; In this data set, include enough data so that every use case in the application can be exercised.&nbsp; As functionality grows, add to this data set proportionally.&nbsp; Structure your automated build in such a way that it is easy to:</p>
+<ol>
+<li>Blow away the database and recreate it from scratch.</li>
+<li>Blow away the database and refresh it at any time.</li>
+<li>Create multiple local databases in the same way with different names.</li>
+</ol>
+<p>Your automated database tests are going to be blowing away and reading data in the normal course of execution, so it’s important to be able to refresh the database at any time.&nbsp; Using this technique, you will be able to run the system locally at any time and use it in a representative manner (and debug if necessary).</p>
+<p>WHAT ABOUT A TESTING DATABASE?<br>That’s a different animal.&nbsp; You want the testing database to make bugs obvious.&nbsp; Another tricky thing is that there isn’t just one testing database, so that’s&nbsp;a topic for another time.</p>

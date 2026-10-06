@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2557,
+    "parent": 0,
+    "author_name": "Steve Bohlen",
+    "author_url": "http://unhandled-exceptions.com/blog",
+    "date": "2009-02-20T06:09:56",
+    "type": "comment",
+    "content_html": "<p>This is great news for those R# adopters; one of the many reasons that I gave up on R# and moved to CodeRush + RefactorPro! was that RefactorPro! has introduced this same refactoring support for Javascript directly from within the VS IDE rather than making me use a diff editor for the javascript in my projects.<br>\nI’d be interested in your thoughts about the friction (if any) you experience in having some of your project work occur in one IDE and other in another IDE.  Do you think that the combination of it taking until VS 2008 for MS to get a decent javascript experience into VS and the introduction of the \"you will need to spend at least some time in BLEND\" for WPF work has dulled the overriding need to \"do all editing in a single environment\" ?</p>"
+  }
+]

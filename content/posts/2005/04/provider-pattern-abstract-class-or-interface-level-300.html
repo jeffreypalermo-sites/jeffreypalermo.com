@@ -1,0 +1,37 @@
+---
+wp_id: 206
+title: 'Provider pattern:  Abstract class or Interface? – level 300'
+slug: provider-pattern-abstract-class-or-interface-level-300
+permalink: /2005/04/provider-pattern-abstract-class-or-interface-level-300/
+date: 2005-04-04T12:52:00
+date_utc: 2005-04-04T12:52:00Z
+modified: 2005-04-04T12:52:00
+format: html
+excerpt: 'In Rob Howard’s article, http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnaspnet/html/asp02182004.asp, he describes the “Provider” pattern as coined by Microsoft. I like the pattern, and it seems similar to the Strategy pattern as put forth GoF. I love the benefits: the ability to control what provider is used by a configuration item. Microsoft seems to have coined the term “Provider”, so […]'
+comments_open: true
+---
+<p>In <a href="http://weblogs.asp.net/rhoward/">Rob Howard’s</a> article, <a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnaspnet/html/asp02182004.asp">http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnaspnet/html/asp02182004.asp</a>,<br>
+he describes the “Provider” pattern as coined by Microsoft.&nbsp; I like the pattern,<br>
+and it seems similar to the Strategy pattern as put forth GoF.</p>
+<p>I love the benefits:&nbsp; the ability to control what provider is used by a<br>
+configuration item.&nbsp; Microsoft seems to have coined the term “Provider”, so I<br>
+guess it’s their definition, but at the lowest level it is an abstract class<br>
+that defines the contract, or API.&nbsp; Then a configuration item controls which of<br>
+the abstract class’s implementation in invoked.&nbsp; For example, I could have a<br>
+class that needs data.&nbsp; I think we can all imagine different classes that allow<br>
+access to different data sources.&nbsp; All the different data sources would have a<br>
+class that inherited from the abstract provider class.&nbsp; My client class would<br>
+get the configuration item that contained the assembly and type of the provider<br>
+implementation and instantiate it through reflection.&nbsp; The reference would be of<br>
+the abstract base class, so no matter which provider is configured, The client<br>
+will instantiate the appropriate one at runtime and access it through the<br>
+methods defined in the abstract class.</p>
+<p>Personally, I would choose an interface first.&nbsp; I know they are immutable,<br>
+but is that an issue?&nbsp; Using an abstract class eliminates the possibility of<br>
+having a base class for the provider elsewhere, so it seems to me that this is<br>
+an unnecessary constraint.&nbsp; If the contract of the base class needs to provider<br>
+base functionality, then an abstract class makes sense, but as long as it is<br>
+just an API contract, I would favor an interface.</p>
+<p>I feel that the “Provider” pattern should specify the general concept and not<br>
+specify inheritance vs. interface.&nbsp; I would consider either to be the Provider<br>
+pattern depending on the application of the pattern.</p>

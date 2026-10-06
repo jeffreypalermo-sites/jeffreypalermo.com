@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1024,
+    "parent": 0,
+    "author_name": "dp",
+    "author_url": "http://",
+    "date": "2006-10-16T15:06:53",
+    "type": "comment",
+    "content_html": "<p>Well said J.  I worked on a project recently which served the purpose of being a State Engine for an application.  Instead of creating a Mondo State Engine class, with every state and all it’s complexities within, the Engine was simply a broker/manager of individual state classes, each with it’s own behavior.  Much more manageable.</p>"
+  },
+  {
+    "id": 1025,
+    "parent": 0,
+    "author_name": "Vikas Kerni",
+    "author_url": "http://vikasnetdev.blogspot.com/",
+    "date": "2006-11-03T22:02:43",
+    "type": "comment",
+    "content_html": "<p>How one can distinguish between God Code and AOP/Metadata driven/complex configuration driven code ?  Microsoft heavy use of attributes in .Net Framework shows the strength of these techniques. How can one determine if he is making effective use of these techniques or over-engineering?</p>"
+  }
+]

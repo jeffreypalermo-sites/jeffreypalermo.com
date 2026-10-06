@@ -1,0 +1,14 @@
+---
+wp_id: 59
+title: Code-beside and the Code directory in ASP.NET 2.0 – level 200
+slug: code-beside-and-the-code-directory-in-asp-net-2-0-level-200
+permalink: /2004/08/code-beside-and-the-code-directory-in-asp-net-2-0-level-200/
+date: 2004-08-16T16:41:00
+date_utc: 2004-08-16T16:41:00Z
+modified: 2004-08-16T16:41:00
+format: html
+excerpt: I am in the process of porting my EZWeb application framework to ASP.NET 2.0. Of course, this process will be similar to many projects that are currently in VS.NET 2003 format. VS.NET 2005 will automatically convert the project. I accepted the default option, and VS pulled all my code files into the newly-created “Code” folder, but […]
+comments_open: true
+---
+<p>I am in the process of porting my <a href="http://workspaces.gotdotnet.com/ezweb">EZWeb application framework</a>&nbsp;to ASP.NET 2.0.&nbsp; Of course, this process will be similar to many projects that are currently in VS.NET 2003 format.&nbsp; VS.NET 2005 will automatically convert the project.&nbsp; I accepted the default option, and VS pulled all my code files into the newly-created “Code” folder, but my (converted) code-beside files were left with the corresponding ascx files.&nbsp; I tried to run the application, and I ran into a roadblock.&nbsp; It wouldn’t build because my .cs files that didn’t make it to the code directory were ignored.&nbsp; Obviously I don’t want my code-beside files to be physically separated from the ascx files, so I think that the Code directory model is only useful for non-enterprise projects where you might want to deploy the source with the application and put all code in &lt;script runat=server/&gt; blocks in the ascx files.&nbsp; Small hobbyist projects will probably benefit from this model because the deployed code-base and be modified directly without going through a lengthy develop-test-deploy cycle.&nbsp; Academia will also probably use this model.&nbsp; Especially with the free Visual Web Dev, intellisense in the HTML view will enable students to write Page_Load code, and they can even write classes and put them in the Code directory.&nbsp; In my opinion, this change makes ASP.NET 2.0 viable for college classes.</p>
+<p>But this still leaves me to explore another model for my enterprise-level web project.&nbsp; I’m also a little annoyed that my favorite shortcut Ctrl+Shift+B (Build) was removed, and I’ll have to remap it.</p>

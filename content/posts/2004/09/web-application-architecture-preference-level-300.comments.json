@@ -1,0 +1,20 @@
+[
+  {
+    "id": 182,
+    "parent": 0,
+    "author_name": "Dave",
+    "author_url": "http://",
+    "date": "2004-09-09T17:15:00",
+    "type": "comment",
+    "content_html": "<p>I agree. Using ASPX pages as containers for user controls is the right approach, IMO.</p>"
+  },
+  {
+    "id": 183,
+    "parent": 0,
+    "author_name": "Manish Kaushal",
+    "author_url": "http://",
+    "date": "2005-04-15T01:56:00",
+    "type": "comment",
+    "content_html": "<p>Hi,</p>\n<p>I agree that user controls aid in the process of development a lot. Can you please elaborate on the best practices in n tier web applications. It would be of great help.</p>"
+  }
+]

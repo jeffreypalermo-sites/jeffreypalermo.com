@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1055,
+    "parent": 0,
+    "author_name": "Jason Haley",
+    "author_url": "http://jasonhaley.com/blog",
+    "date": "2006-11-10T19:50:44",
+    "type": "comment",
+    "content_html": "<p>Very interesting point.  It seems that most the time knowing the development side is a major drawback to how useful the system really can be … unless of course you have yoda like discipline \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1056,
+    "parent": 0,
+    "author_name": "Scott",
+    "author_url": "http://www.railsaddict.com",
+    "date": "2006-11-11T00:58:28",
+    "type": "comment",
+    "content_html": "<p>“Note that I am assuming we have a healthy organization where a product manager (or customer) is actually planning the software and thinking about business value”</p>\n<p>Where can I find one of those? It seems to me that a GOOD product manager is hard to come by, and the “business value” they deliver is sub-par.  The developers that I’ve worked with in the past know more about the product being delivered than the product manager, and have no choice but to “speculate” about design decisions because their leader isn’t qualified to do it for them.</p>\n<p>I also think “speculation” may be an unfair word to describe a developer’s ideas.  Just because they aren’t directly involved with the customer doesn’t mean that their ideas are without merit.  Imposing rules that are in-effect limiting developer creativity seems counter-intuitive to me.  How can a product manager (unless they are developers as well) know the best solution to a problem?</p>\n<p>I do agree that the solution is to erase any “dysfunctional developer culture” that may exist, but I’d like to add that it is also important to change how developers are perceived by others in the organization.  When developers are viewed as little more than sacks of meat that can talk to a computer, it does very little in the way of productivity/effectiveness.</p>\n<p>I just realized that all of this sounds a little rant-y, sorry about that \uD83D\uDE09</p>"
+  },
+  {
+    "id": 1057,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-11-12T18:39:59",
+    "type": "comment",
+    "content_html": "<p>Scott,<br>\n“It seems to me that a GOOD product manager is hard to come by. . .”</p>\n<p>Sad, but true.  The “Customer” is a role on a development team.  A lot of the time folks have to fill more than one role, and that certainly doesn’t exclude Customer.  Someone should be filling the role of Customer, and it’s that role that is responsible for business value decisions.  I, too, have worked in a situation where I had to double as Customer and talk with eventual end-users to determine what would be useful and what would not be.  If a developer has to also fill the role of Customer, then you do what you have to do.</p>\n<p>“Just because they aren’t directly involved with the customer doesn’t mean that their ideas are without merit.”</p>\n<p>You are correct, sir.  Please refer to my 3rd bullet point:  “Developers are creative and have good ideas.  These ideas should be communicated to the customer, but the customer is responsible for integrating those ideas into the roadmap.”</p>\n<p>There are also two types of solutions.  Business solutions may be “allow action by using a right click”, but the technical solution might be “use XXXX 3rd party library to accomplish XXXXX”.  </p>\n<p>I agree with you about perception of the developer.  At some companies, management treats them like a commodity.  At my company, developers enable our core business, and not all developers are the same.  A good developer is 10X more productive than an average developer (or more).  Coming straight from development, I manage with this in mind.  I know the developers I’m looking for, and I know how to stay away from the average ones.  It’s not completely managements fault though.  Our industry has so many bad developers, and it brings the industry batting average down.  There is no accreditation process to work on software.  There needs to be.</p>"
+  }
+]

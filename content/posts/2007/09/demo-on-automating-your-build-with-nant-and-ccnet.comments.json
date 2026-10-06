@@ -1,0 +1,47 @@
+[
+  {
+    "id": 2023,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://flimflan.com/blog",
+    "date": "2007-09-26T02:47:01",
+    "type": "comment",
+    "content_html": "<p>There is an svn external reference to binxcopy that is prompting for authorization.</p>"
+  },
+  {
+    "id": 2024,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-09-26T04:13:44",
+    "type": "comment",
+    "content_html": "<p>@Joshua,<br>\nModified – changed https to http, and that should work anonymously.</p>"
+  },
+  {
+    "id": 2025,
+    "parent": 0,
+    "author_name": "Mike Pond",
+    "author_url": "http://",
+    "date": "2007-11-01T20:02:17",
+    "type": "comment",
+    "content_html": "<p>Where are you getting the “updateSqlDatabase” Nant task from? </p>"
+  },
+  {
+    "id": 2026,
+    "parent": 0,
+    "author_name": "Andrew Browne",
+    "author_url": "http://blog.brownie.com.au",
+    "date": "2008-01-06T03:53:56",
+    "type": "comment",
+    "content_html": "<p>@Mike<br>\nPretty sure it comes from this project:<br>\n<a href=\"http://code.google.com/p/vincent-vega/\" rel=\"nofollow ugc\">http://code.google.com/p/vincent-vega/</a></p>"
+  },
+  {
+    "id": 2027,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-06T04:45:59",
+    "type": "comment",
+    "content_html": "<p>@Mike,<br>\nYes, the database migrations come from the vincent-vega oss project on googlecode.</p>"
+  }
+]

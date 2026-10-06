@@ -1,0 +1,11 @@
+[
+  {
+    "id": 123,
+    "parent": 0,
+    "author_name": "Romualdas",
+    "author_url": "http://",
+    "date": "2004-08-17T23:15:00",
+    "type": "comment",
+    "content_html": "<p>I thought it this way as well, when looking first time, but there is an option for that so You can change it.<br>\nIf You do that, it will create separate file (code beside now?) with partial classes.</p>"
+  }
+]

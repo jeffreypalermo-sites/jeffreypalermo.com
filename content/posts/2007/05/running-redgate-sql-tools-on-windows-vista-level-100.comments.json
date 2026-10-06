@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1559,
+    "parent": 0,
+    "author_name": "cmyers",
+    "author_url": "http://community.hdri.net/blogs/chads_blog",
+    "date": "2007-05-10T13:10:32",
+    "type": "comment",
+    "content_html": "<p>Strange that Vista doesn’t come with the 1.1 runtime. For years Windows carried around all 17 versions of the VB and C runtimes. I wonder why MS decided to skip .NET 1.1.</p>"
+  },
+  {
+    "id": 1560,
+    "parent": 0,
+    "author_name": "Samuel",
+    "author_url": "http://",
+    "date": "2007-05-10T13:18:08",
+    "type": "comment",
+    "content_html": "<p>I’m curious to understand why you think Vista should tell you that .NET 1.1 is needed to run the application.  Shouldn’t that be the responsibility of the application itself?  Seems to me that the application’s installer should check for prerequisites BEFORE even installing.  IMO, I don’t think that’s Vista’s fault.</p>"
+  },
+  {
+    "id": 1561,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-05-10T13:21:21",
+    "type": "comment",
+    "content_html": "<p>@Samuel,<br>\nYes, it is the application’s responsibility, and that was a mistake on Redgate’s part not to detect it during the installer.</p>\n<p>Vista has a new help center that is aimed at common resolutions to problems, but up to now, it has had no solutions.  It seems that this problem (.Net 1.1 not being there) would be an obvious one that should be in that database.</p>"
+  },
+  {
+    "id": 1562,
+    "parent": 0,
+    "author_name": "Brendan Tompkins",
+    "author_url": "http://",
+    "date": "2007-05-10T14:28:07",
+    "type": "comment",
+    "content_html": "<p>Jeffrey I ran into this problem a few months ago, and had a long thread of support on this with Red-Gate.  It turns out that this is a DevExpress problem, not specifically red-gate, FWIW</p>"
+  },
+  {
+    "id": 1563,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-05-10T14:34:20",
+    "type": "comment",
+    "content_html": "<p>@Brendan,<br>\nYeah, I saw that on some threads when I was searching.  </p>"
+  },
+  {
+    "id": 1564,
+    "parent": 0,
+    "author_name": "Tom",
+    "author_url": "http://",
+    "date": "2007-05-10T22:23:27",
+    "type": "comment",
+    "content_html": "<p>for what it’s worth i discovered firefly (www.getfirefly.net) the other day – for comparing data it’s easier to use and much cheaper than redgate. </p>"
+  },
+  {
+    "id": 1565,
+    "parent": 0,
+    "author_name": "Tom Harris",
+    "author_url": "http://www.redgate.com",
+    "date": "2007-05-11T11:17:21",
+    "type": "comment",
+    "content_html": "<p>Hi there,<br>\nthe v5 versions of SQL Compare and SQL Data Compare are .NET 1.1 applications. We did test carefully that they work correctly on Vista machines with only .NET 2.0 installed. However, since the release, a few people have run into a crash on start up. The problem is caused by the .NET 2.0 version of some 3rd party components we use being loaded from the GAC.</p>\n<p>SQL Compare 6 will be released early Q3 and will be a .NET 2.0 only build. A public beta will be available next week so keep on eye out on our website.</p>\n<p>Thanks,</p>\n<p>Tom</p>"
+  },
+  {
+    "id": 1566,
+    "parent": 0,
+    "author_name": "Darren Kopp",
+    "author_url": "http://",
+    "date": "2007-05-11T16:04:57",
+    "type": "comment",
+    "content_html": "<p>We didn’t run into a problem here at work with sql data compare on vista.</p>"
+  }
+]

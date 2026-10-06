@@ -1,0 +1,20 @@
+[
+  {
+    "id": 662,
+    "parent": 0,
+    "author_name": "Ben Scheirman",
+    "author_url": "http://www.flux88.com",
+    "date": "2006-03-08T16:13:51",
+    "type": "comment",
+    "content_html": "<p>Hey, I’m mentioned in that podcast!  Ben Day and I have consulted each other on NHibernate patterns…</p>"
+  },
+  {
+    "id": 663,
+    "parent": 0,
+    "author_name": "Andrew Siemer",
+    "author_url": "http://www.andrewsiemer.com",
+    "date": "2007-08-05T22:54:24",
+    "type": "comment",
+    "content_html": "<p>Here I am doing research for a paper that I am writing (comparing NHibernate vs. ADO.NET data access) and I keep coming across your name!  I guess that shouldn’t surprise me any.  You do seem like you are very PRO NHibernate!!!    I am getting there.  But I still think I like having both channels open behind a repository or something.</p>\n<p>Back to work…</p>"
+  }
+]

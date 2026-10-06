@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1081,
+    "parent": 0,
+    "author_name": "Willie Tilton",
+    "author_url": "http://blogs.meetandplay.com/WTilton",
+    "date": "2006-12-22T16:57:54",
+    "type": "comment",
+    "content_html": "<p>I don’t think it’s so black and white.  While a developer “wants” to fix a bug, upper management often times thinks more about the cost and time involved in the fix.</p>\n<p>In my current project, there are tons of bugs.  Most of them have a workaround.  Since the workaround’s are known by the people that use them, they aren’t a high priority.  Getting the business done is.  Critical bugs are moved up and taken care of first to keep things moving.</p>\n<p>If I stopped working and went to every bug found no work would ever happen.  Funny yet true.</p>"
+  },
+  {
+    "id": 1082,
+    "parent": 0,
+    "author_name": "SamGentile",
+    "author_url": "http://codebetter.com/blogs/sam.gentile",
+    "date": "2006-12-22T17:13:30",
+    "type": "comment",
+    "content_html": "<p>We tried to do that here with Jim here and its not that black and white. There just isn’t enough time to do enough business-value functionality, start testing, and fix all bugs in an Iteration.</p>"
+  },
+  {
+    "id": 1083,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-12-22T18:41:08",
+    "type": "comment",
+    "content_html": "<p>Willie,<br>\nI know where you are coming from.  My team encounters the same issues.  For instance, there are some situations that require “workarounds” because they aren’t very intuitive.  For instance, if you delete something, it doesn’t delete, just hides.  The workaround is to go to another screen and delete it.  I think that’s bad behavior, BUT, it was how the original story was designed to behave.  We delivered that story, but now we’re seeing that we were wrong.  A change in the behavior from what we delivered long ago is a new story, not a bug.  A bug means that we delivered something other than what was intended at the time.  Our product manager takes this suggestion for change and prioritizes it towards the bottom of the roadmap.  We’ll get to it in a month or so.  I think this is perfectly fine.  We have all work prioritized.  If management finds the behavior of the software acceptable, then where is the bug?  If management wants to change something 3 months from now after more important functionality, then they are making a conscious decision to prioritize it lower in the list, after more important stories.  Perhaps the problem is that “bug” is being used too broadly.  </p>"
+  },
+  {
+    "id": 1084,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-12-22T18:46:32",
+    "type": "comment",
+    "content_html": "<p>Sam,<br>\nAre you saying that some bugs live past an iteration boundary?  That happens on my team also.  Our tester sometimes doesn’t finish testing all stories before the end of the iteration.  We need to start doing acceptance tests up front for that to happen.  We have bugs that spill over, but we take care of them right away.q</p>"
+  },
+  {
+    "id": 1085,
+    "parent": 0,
+    "author_name": "Vikas Kerni",
+    "author_url": "http://vikasnetdev.blogspot.com/",
+    "date": "2006-12-23T13:17:12",
+    "type": "comment",
+    "content_html": "<p>The problem is in bug database, we also see good-to-have business functionality, and tester’s perspective how the things could have been implemented better, masquerading as bugs.  These are generally beyond the scope of initial business requirement. One has to attach priority to them to meet the release date.</p>"
+  },
+  {
+    "id": 1086,
+    "parent": 0,
+    "author_name": "Mischa Kroon",
+    "author_url": "http://bloggingabout.net/blogs/mischa",
+    "date": "2007-01-02T09:15:12",
+    "type": "comment",
+    "content_html": "<p>What your saying doesn’t make much business sence to me. </p>\n<p>It’s all about value for the users.<br>\nLow priority bugs VS New features </p>\n<p>Low priority bugs VS User friendly interface</p>\n<p>etc</p>"
+  },
+  {
+    "id": 1087,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-01-02T12:25:40",
+    "type": "comment",
+    "content_html": "<p>Mischa,<br>\nCan you be a little more specific?</p>\n<p>“It’s all about value for the users.”<br>\n– absolutely correct.</p>"
+  }
+]

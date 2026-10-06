@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2640,
+    "parent": 0,
+    "author_name": "Pierre",
+    "author_url": "http://",
+    "date": "2011-01-01T12:02:24",
+    "type": "comment",
+    "content_html": "<p>Do you really think that webforms are obsolete and that any serious programmer should start to learn MVC ?<br>\nDo you think that for example in 5 years, most applications will be written in with MVC ?</p>"
+  }
+]

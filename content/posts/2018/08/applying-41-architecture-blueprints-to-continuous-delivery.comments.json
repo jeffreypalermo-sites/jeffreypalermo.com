@@ -1,0 +1,19 @@
+[
+  {
+    "id": 2723,
+    "parent": 0,
+    "author_name": "Guilherme Utrabo",
+    "author_url": "https://plus.google.com/+GuilhermeUtrabo",
+    "date": "2018-08-23T08:09:51",
+    "type": "comment",
+    "content_html": "<p>Jeffrey, was the presentation on Cloud Austin recorded? Would you mind to share it?</p>"
+  },
+  {
+    "id": 2724,
+    "parent": 2723,
+    "author_name": "Jeffrey Palermo",
+    "date": "2018-08-23T08:15:11",
+    "type": "comment",
+    "content_html": "<p>It was not recorded. Sorry about that.  Perhaps I should give the presentation to the Microsoft DevOps user group where it would be recorded.</p>"
+  }
+]

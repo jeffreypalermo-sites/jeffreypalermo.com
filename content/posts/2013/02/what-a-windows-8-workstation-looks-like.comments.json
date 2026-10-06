@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2697,
+    "parent": 0,
+    "author_name": "Bruno",
+    "author_url": "http://blog.brunogarcia.com",
+    "date": "2013-03-21T08:31:20",
+    "type": "comment",
+    "content_html": "<p>Interesting setup.<br>\nBut I believe you meant RJ45 connector?<br>\nCAT5 is the category of the cable and I’d imagine you have at least CAT5e but most likely CAT6.<br>\nNot sure you can get gigabit full duplex with CAT5 though.</p>"
+  }
+]

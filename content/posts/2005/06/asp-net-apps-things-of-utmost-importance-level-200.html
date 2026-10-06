@@ -1,0 +1,16 @@
+---
+wp_id: 272
+title: ASP.NET apps – things of utmost importance – level 200
+slug: asp-net-apps-things-of-utmost-importance-level-200
+permalink: /2005/06/asp-net-apps-things-of-utmost-importance-level-200/
+date: 2005-06-27T14:22:00
+date_utc: 2005-06-27T14:22:00Z
+modified: 2005-06-27T14:22:00
+format: html
+excerpt: I’ve inherited an ASP.NET application that evolved as it went, and my task is jump in and continue to enhance it. In order to do that, I’ve found that I need to refactor it in order to sustain its development. As it is now, it will continue to be a large, unmaintainable beast. The most […]
+comments_open: true
+---
+<p>I’ve inherited an ASP.NET application that evolved as it went, and my task is jump in and continue to enhance it.  In order to do that, I’ve found that I need to refactor it in order to sustain its development.  As it is now, it will continue to be a large, unmaintainable beast.</p>
+<p>The most important thing I’m doing is taking parts that are repeated and refactoring them into controls.  This app was made with aspx pages as the focal point, and I’m refactoring to focus on controls.  My goal is to enable a new page to be constructed by simply adding the appropriate controls.  I don’t want any code in the code behind of pages except for a property setting or method call on child controls.  It’s a lot easier to test custom controls than it is pages.  Plus, it leads to a more maintainable site.  For those reading:  if  you aren’t comfortable with custom controls, then put everything inside user controls.  You will still get the benefits of reuse and encapsulation.  </p>
+<p>My rule of thumb for pages is if I have to scroll to see all the markup, then it’s too much, and I’m going to refactor to controls.  I’m a little more relaxed with this rule for user controls because they can be reused, but I’m firm about pages.  Less is more.</p>
+<p>One quick note:  I’m not doing RAD (disposable) software, and I rarely use the designer, so my rules apply to a more sustainable software paradigm, but they make no sense in a RAD environment [not many things do :)].</p>

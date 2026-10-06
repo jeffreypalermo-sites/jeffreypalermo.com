@@ -1,0 +1,19 @@
+---
+wp_id: 404
+title: How Microsoft Virtual Server 2005 helps software development – level 200
+slug: how-microsoft-virtual-server-2005-helps-software-development-level-200
+permalink: /2006/04/how-microsoft-virtual-server-2005-helps-software-development-level-200/
+date: 2006-04-04T13:14:00
+date_utc: 2006-04-04T13:14:00Z
+modified: 2006-04-04T13:14:00
+format: html
+tags:
+- tips-tricks
+excerpt: Since Virtual Server 2005 and VMWare server are now both free to the masses, many more developers can take advantage of virtualization. In short, with a virtual computer, you can do more things with one physical machine. You can run multiple operating systems on one machine. You can test your server farm on one machine. […]
+comments_open: true
+---
+<p>Since <a href="/blogs/jeffrey.palermo/archive/2006/04/04/142238.aspx">Virtual Server 2005 and VMWare server are now both free</a> to the masses, many more developers can take advantage of virtualization.&nbsp; In short, with a virtual computer, you can do more things with one physical machine.&nbsp; You can run multiple operating systems on one machine.&nbsp; You can test your server farm on one machine.&nbsp; You can test maintaining session state over a web farm on one machine.&nbsp; You can configure a domain of computers on one machine.&nbsp; You can test out the latest beta software without hosing your machine!</p>
+<p>In my development shop, we only have one server that we use.&nbsp; It’s a 1U 4-proc server with 4GB of RAM.&nbsp; Obviously, you need some decent hardware to be productive with virtual machines running inside because each virtual machine still needs resources just as it does when installed as the base operating system.&nbsp; We have <a href="http://confluence.public.thoughtworks.org/display/CCNET/Welcome+to+CruiseControl.NET">CruiseControl.Net</a> and <a href="http://fitnesse.org/">FitNesse </a>installed on the host machine, and we run 6 or 7 development servers all the time as virtual machines on Virtual Server 2005.&nbsp; We need all the development servers, and it’s a lot easier having one physical server than it is to maintain a whole rack.&nbsp; When a situation arises where we need another dev server, it’s no problem.&nbsp; We can copy the .vhd file from an existing one, and we instantly have another server up and running.&nbsp; We obviously have to change the network name, but that’s no problem.</p>
+<p>My workstation has 2GB of RAM, so I’m able to run virtualization locally with Virtual PC 2004 (I have run Virtual Server locally but found it simpler to use VPC for local use).&nbsp; I can test out a pre-release of software, and I’ve even been able to play around with a Longhorn (Windows Vista) beta (by the way, Virtual Server 2005 R2 has virtual machine additions for Longhorn – it’s dog-slow without them).</p>
+<p>In short, virtualization is a boon for developers, and I’m glad I it as a tool in my toolbelt.</p>
+<p><b>I haven’t installed R2 yet, but R1’s manager web site only works well with IE.&nbsp; Here’s to hoping that’s fixed with R2.</b></p>

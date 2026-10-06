@@ -1,0 +1,47 @@
+[
+  {
+    "id": 2186,
+    "parent": 0,
+    "author_name": "sandeep",
+    "author_url": "http://",
+    "date": "2007-12-19T15:51:45",
+    "type": "comment",
+    "content_html": "<p>while trying to build my code using csc task and 3.5 framework(c#) i get following error in nant:<br>\n  Target framework: Microsoft .NET Framework 2.0<br>\n            Target(s) specified: build </p>\n<p>                 [echo] getting into the script<br>\n             [property] Target framework changed to “Microsoft .NET Framework 3.5”.</p>\n<p>            BUILD FAILED</p>\n<p>            INTERNAL ERROR</p>\n<p>            System.NullReferenceException: Object reference not set to an instance of an object.<br>\n               at NAnt.Core.FrameworkInfo.get_Version()<br>\n               at NAnt.Core.Project.UpdateTargetFrameworkProperties()<br>\n               at NAnt.Core.Tasks.PropertyTask.ExecuteTask()<br>\n               at NAnt.Core.Task.Execute()<br>\n               at NAnt.Core.Project.InitializeProjectDocument(XmlDocument doc)<br>\n               at NAnt.Core.Project.Execute()<br>\n               at NAnt.Core.Project.Run()</p>\n<p>            Please send bug report to <a href=\"mailto:nant-developers@lists.sourceforge.net\">nant-developers@lists.sourceforge.net</a>.</p>\n<p>any takes??</p>"
+  },
+  {
+    "id": 2187,
+    "parent": 0,
+    "author_name": "Mark",
+    "author_url": "http://",
+    "date": "2007-12-20T12:08:15",
+    "type": "comment",
+    "content_html": "<p>Same problem here, any ideas?</p>\n<p>(We don’t have Visual Studio installed on this machine, just the framework).</p>"
+  },
+  {
+    "id": 2188,
+    "parent": 0,
+    "author_name": "Curtis",
+    "author_url": "http://",
+    "date": "2007-12-24T18:05:37",
+    "type": "comment",
+    "content_html": "<p>Same problem here.  Any ideas on how to fix this?</p>"
+  },
+  {
+    "id": 2189,
+    "parent": 0,
+    "author_name": "Tom",
+    "author_url": "http://oikology.net",
+    "date": "2008-01-03T09:49:20",
+    "type": "comment",
+    "content_html": "<p>I have just had the same problem and I think I have managed to fix it.  </p>\n<p>I had downloaded the latest NAnt and NantContrib binaries and found that the xml snippet from: <a href=\"http://codebetter.com/blogs/jeffrey.palermo/archive/2007/12/05/171380.aspx\" rel=\"nofollow ugc\">http://codebetter.com/blogs/jeffrey.palermo/archive/2007/12/05/171380.aspx</a> had already been included (or so I thought) and so I didn’t bother copying over it.  </p>\n<p>After pulling my hair out for a day or two, decided to go back to being really stupid and just copy over the .net-3.5 xml with the one from the post and hey presto, it’s now working for me.  </p>\n<p>Hope that helps. </p>"
+  },
+  {
+    "id": 2190,
+    "parent": 0,
+    "author_name": "Chris Stewart",
+    "author_url": "http://weblogs.asp.net/cstewart",
+    "date": "2008-01-09T18:06:58",
+    "type": "comment",
+    "content_html": "<p>I was having the same issue as described after upgrading NAnt to the 0.86-beta1 release.  Following Tom’s advice fixed my issue as well.</p>"
+  }
+]

@@ -1,0 +1,60 @@
+---
+wp_id: 435
+title: Blogging from Tech Ed 2006 – Stefan Shakow on ASP.NET – level 400
+slug: blogging-from-tech-ed-2006-stefan-shakow-on-asp-net-level-400
+permalink: /2006/06/blogging-from-tech-ed-2006-stefan-shakow-on-asp-net-level-400/
+date: 2006-06-13T17:28:00
+date_utc: 2006-06-13T17:28:00Z
+modified: 2006-06-13T17:28:00
+format: html
+tags:
+- asp-net
+- developer-community
+excerpt: ASP.NET Stefan Shakow 2.0 Framework assemblies have been NGENed to reduce JIT compilation. This helps with memory usage when running multiple AppDomains in a single process (multiple applications on a single web server). Another new feature new in ASP.NET 2.0 is the AppDomain unloader. This is configurable by time of inactivity. If an application […]
+comments_open: true
+---
+<p>ASP.NET</p>
+<p>Stefan Shakow</p>
+
+<ul type="disc">
+<li>2.0 Framework assemblies have been NGENed to reduce JIT compilation.<span>&nbsp; </span>This helps with memory usage when running multiple AppDomains in a single process (multiple applications on a single web server).</li>
+<li>Another new feature new in ASP.NET 2.0 is the AppDomain unloader.<span>&nbsp; </span>This is configurable by time of inactivity.<span>&nbsp; </span>If an application is idle for that amount of time, the AppDomain is unloaded to free up memory.<span>&nbsp; </span>This is configurable in the &lt;hostingEnvironment /&gt; element (idleTimeout setting).<span>&nbsp; </span>He demonstrated this feature by attaching the EventLog with the health monitoring feature to write an event when the AppDomain unloads.<span>&nbsp; </span>This feature is great for hosters because it will allow them to serve more customers on a single server (customers who have a small application with light traffic).</li>
+<li>Small assemblies still take up 64k of memory.<span>&nbsp; </span>Some customers run into problems when loading many, many (hundreds) of small assemblies in a worker process.<span>&nbsp; </span>This leads to memory waste because there will be unused space lost between assemblies.<span>&nbsp; </span>This situation is when someone has an application with way too many assemblies.<span>&nbsp; </span>The real solution is to refactor the solution to collapse code into fewer assemblies, but hosters can’t always compel their customers to do that, so Microsoft is providing a mitigating solution for this scenario.<span>&nbsp; </span></li>
+<ul type="circle">
+<li>This scenario could also happen with applications that use the App_Code directory many small assemblies are created at runtime.</li>
+<li>SGEN is a new utility to combine assemblies into a fewer number.</li>
+<li>Using Web Application Projects avoid this problem scenario because developer will decide how many assemblies their application needs. </li>
+</ul>
+<li>Large directory structures:<span>&nbsp; </span>ASP.NET relies on file change notifications.<span>&nbsp; </span>This can hiccup with large directory structures.<span>&nbsp; </span>This problem is expanded when the files are on a network share or network-area storage.<span>&nbsp; </span></li>
+<ul type="circle">
+<li>One thing we can do is change the registry to configure FCN (file-change notifications) to “1”.<span>&nbsp; </span>This will stop ASP.NET from spamming the network share with FCNs.<span>&nbsp; </span>A side-effect is that changing the web.config won’t cause an AppDomain recycle automatically.<span>&nbsp; </span>This is a solution to allowing the application file to be on a network share, but it’s a change to operational behavior.<span>&nbsp; </span>No longer would the website be recycled, but when changing files, the recycle would have to be done manually.</li>
+<li>For most of us, this problem will never come up, but it does occur with very large directory structures.</li>
+<li>ASP.NET also recycles AppDomains when too many directory changes occur or too many file changes occur.</li>
+</ul>
+<li>Other file-system changes:</li>
+<ul type="circle">
+<li>New in ASP.NET 2.0, a directory deletion now causes an app-domain recycle.<span>&nbsp; </span>Being aware of this can be beneficial if needing to delete directories.</li>
+<ul type="square">
+<li>A workaround for this is to make a directory junction using linkd.<span>&nbsp; </span>This makes a virtual folder node.<span>&nbsp; </span>File-change notifications don’t flow over virtual folders, so ASP.NET won’t receive the event, and the app-domain won’t be recycled.</li>
+</ul>
+</ul>
+<li>Asynchronous page processing:<span>&nbsp; </span>If a page has a long-running task (like calling a web-service of a 3<sup>rd</sup> party vendor), the page can set this to run asynchronously.<span>&nbsp; </span>This releases the current thread back to the threadpool while the long-running call happens.<span>&nbsp; </span>When the long-running call finishes, the request will grab a thread again and complete.<span>&nbsp; </span>The allows the thread to be available in the threadpool for other requests when, otherwise, it would be sitting there doing nothing.<span>&nbsp; </span>This helps application performance on a fewer number of threads.</li>
+<li>Unhandled exception behavior:<span>&nbsp; </span></li>
+<ul type="circle">
+<li>ASP.NET 1.1 suppressed unhandled exceptions on child threads.</li>
+<li>ASP.NET 2.0:<span>&nbsp; </span>The process is terminated.<span>&nbsp; </span>This is a big change.</li>
+<ul type="square">
+<li>If this is a real problem for you:<span>&nbsp; </span>go to the aspnet.config (in the framework directory) file and set &lt;legacyUnhandledExceptionPolicy enabled=”true” /&gt;</li>
+<li>To track down the error, you can trap the unhandled exceptioin event and log what happened before the process shuts down.</li>
+</ul>
+</ul>
+<li>Caching</li>
+<ul type="circle">
+<li>ASP.NET sets a limit of cache per process.<span>&nbsp; </span>This is a problem if you try to shove 1GB of stuff into the cache.<span>&nbsp; </span>Cache scavenging starts at 90% usage of cache.</li>
+<li>We can use the perf counter to track:<span>&nbsp; </span>ASP.NET Apps v2.0.50727 – Cache Total Entries.<span>&nbsp; </span>What might happen is shoving a lot of stuff into the cache, and the system immediately starts to clean it up. <span>&nbsp;</span>We can also avoid sliding expirations because it can cause stuff to never drop out of the cache.</li>
+<li>Cache limits:<span>&nbsp; </span>800MB is a normal limit for cache.<span>&nbsp; </span>As an ASP.NET application is running over many days, virtual memory can become fragmented.<span>&nbsp; </span>For a 32bit box with 2GB of memory, 800MB is safe for fragmentation.<span>&nbsp; </span>X64 architecture makes this limit go away.</li>
+<li>You can go into application pool settings for IIS and change the limits.<span>&nbsp; </span>There is also a new &lt;caching /&gt; config section that can be used.</li>
+</ul>
+</ul>
+
+<p>&nbsp;[tags: TechEd]</p>

@@ -1,0 +1,65 @@
+[
+  {
+    "id": 554,
+    "parent": 0,
+    "author_name": "Jeremy D. Miller",
+    "author_url": "http://",
+    "date": "2005-11-01T18:56:12",
+    "type": "comment",
+    "content_html": "<p>Nice example.</p>"
+  },
+  {
+    "id": 555,
+    "parent": 0,
+    "author_name": "johnpapa",
+    "author_url": "http://codebetter.com/blogs/john.papa",
+    "date": "2005-11-02T03:45:44",
+    "type": "comment",
+    "content_html": "<p>Interesting example, Jeffrey. I am not familiar with NMock, but it looks like it is used to “mock” a class’ behavior. I’ll check that out, thanks. Jeremy and I had a brief conversation a few weeks ago about how to make unit tests truly “unit tests” in a data retreival situation. For example, when you want to test:</p>\n<p>public Customer GetData(int customerID)<br>\n{ // … get some data by hitting a database and return it … }</p>\n<p>A few basic tests might be making sure that you can retrieve a valid Customer, which means you should know a valid ID (or be able to get one). All of which leads to knowing the database state … thus its not truly unit testing IMO. As I have said, I am not familiar with NMock but it makes me think that I could employ this technique to break the test out to not have to hit the database and to return a Customer object without knowing a valid ID. </p>\n<p>OK, so I am thinking out loud here … but that’s what blogs are for. \uD83D\uDE42</p>"
+  },
+  {
+    "id": 556,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-11-02T11:59:35",
+    "type": "comment",
+    "content_html": "<p>John,<br>\nYou are exactly right about NMock.  It will (at runtime) create a custom object instance to satisfy an interface, abstract class, or override virtual methods on a concrete class.  </p>\n<p>Testing the database is very hairing, and it’s not conducive to unit testing.  That’s why it’s a good idea to keep the stored procedures very thin.  You’ll need integration tests to go all the way through the database, and that requires putting the database in a known state for _every_ test.  Testing in managed code is much easier.</p>"
+  },
+  {
+    "id": 557,
+    "parent": 0,
+    "author_name": "anon",
+    "author_url": "http://",
+    "date": "2005-11-04T12:16:24",
+    "type": "comment",
+    "content_html": "<p>Since I’ve never written code to be unit tested, it seems very bizarre to me to write a constructor specifically for unit testing, not to mention that weird mock.expect and mock.verify crap. That doesn’t seem intuitive to me at all. What the f*ck is this actually testing? That your code compiles and runs and proves that you are not a complete moron? That’s what a compiler does! I think these blog samples are too light to make any sense or sway me to do things this way for REAL code.</p>\n<p>Also, there needs to be a book and/or website that discusses/walks through the many testing patterns that we will need to use when writing our code for testability. I mean, as developers, there’s really not a whole helluva lot of varying tasks we undertake. We all write apps that connect to databases, get/set data, write to files, consume and validate user-populated forms (win/web) of data, occassionally use multiple threads, and work off of lists/collections to do many of the previous listed things in this sentence.</p>\n<p>I think TDD will be picked up a lot quicker if these test patterns are as widely known as OO principles and patterns. If I had a pattern to follow instead of trying to sift through a bunch of smart guys’ blogs (like yours and Jeremy’s) looking for examples that I can understand and implement when learning to write testable code, that would be an IMMENSE help. As it is, I feel like I’m armed with jack s*hit as I try and muster up enough nerve to start writing unit tests for my code.</p>\n<p>I think of one app I have that just wraps calls to EXEs on the system and monitors failures and retries.  It does a bit of multithreading, but it’s just simple calls to other programs and logs stuff to a database.  If my unit tests aren’t really TESTING the code to see if it works (since evidently we aren’t supposed to unit test anything having to do with an actual file or going to/from an actual database), what is it actually testing? I read a bunch about how unit tests should be this “document” for your code so that every time you extend (don’t modify!) your system you can see if you broke anything that was previously working? If we really aren’t unit testing to see if the code “works” as intended, then what’s the frickin’ point?!</p>"
+  },
+  {
+    "id": 558,
+    "parent": 0,
+    "author_name": "Jonathan Choy",
+    "author_url": "http://tetsujinoni.blogspot.com/",
+    "date": "2005-11-04T18:08:03",
+    "type": "comment",
+    "content_html": "<p>The constructor isn’t specifically for unit testing. It’s for constructing a generalized version of the DataManager. Better would be </p>\n<pre>interface IDataStore { \nvoid SaveData(string serializationData);\n}\n</pre>\n<p>with implementations like</p>\n<pre>FileDataStore  : IDataStore\n{\npublic void SaveData(string serializationData){\n// do filesystem based storage here, as above\n// check for data file presence, create if it you need it (and can)\n// and so forth, and then store the serialization info\n}\n</pre>\n<p>that could be replaced in, for example, a clustered installation by</p>\n<pre>SqlServerDataStore : IDataStore\n{\npublic void SaveData(string serializationData){\n// do sproc based data management here, \n// doing things like checking for acessibility of the database, \n// transaction wrapping, etc.\n}\n</pre>\n<p>And then you can use <a href=\"http://www.nmock.org/\" rel=\"nofollow\">NMock</a> based unit test as above to verify the logic that is supposed to call SaveData sends in the right state. Load-time configuration to use either the SqlServerDataStore or FileDataStore is then possible, and can be integration tested with confidence that the bits that call SaveData behave in a predictable, tested manner because this unit test covers the question of “When ObjectUnderTest calls IDataStore.SaveData, does it correctly construct its serialization information”. Separate tests would deal with the question of whether SqlServerDataStore.SaveData and FileDataStore.SaveData behave correctly.</p>\n<p> There are a few good books that cover the techniques of Test Driven Development, <a href=\"http://safari.oreilly.com/?x=1&amp;mode=section&amp;sortKey=title&amp;sortOrder=asc&amp;view=&amp;xmlid=0131016490&amp;k=0&amp;g=&amp;catid=&amp;s=1&amp;b=1&amp;f=1&amp;t=1&amp;c=1&amp;u=1&amp;r=&amp;o=1&amp;n=1&amp;d=1&amp;p=1&amp;a=0&amp;page=0\" rel=\"nofollow\">Beck</a> is fairly definitive, as is <a href=\"http://safari.oreilly.com/?x=1&amp;mode=section&amp;sortKey=title&amp;sortOrder=asc&amp;view=&amp;xmlid=0131016490&amp;k=0&amp;g=&amp;catid=&amp;s=1&amp;b=1&amp;f=1&amp;t=1&amp;c=1&amp;u=1&amp;r=&amp;o=1&amp;n=1&amp;d=1&amp;p=1&amp;a=0&amp;page=0\" rel=\"nofollow\">Astels</a>.</p>"
+  },
+  {
+    "id": 559,
+    "parent": 0,
+    "author_name": "Kevin Read",
+    "author_url": "http://",
+    "date": "2005-12-06T22:56:13",
+    "type": "comment",
+    "content_html": "<p>This is a great example!</p>\n<p>Things clicked into place after reading this.  Cheers.</p>"
+  },
+  {
+    "id": 560,
+    "parent": 0,
+    "author_name": "BW",
+    "author_url": "http://",
+    "date": "2005-12-29T16:11:12",
+    "type": "comment",
+    "content_html": "<p>awsome example, follows Agile ideas of keep it simple</p>"
+  }
+]

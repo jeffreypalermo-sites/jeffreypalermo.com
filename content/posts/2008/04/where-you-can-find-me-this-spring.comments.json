@@ -1,0 +1,20 @@
+[
+  {
+    "id": 2443,
+    "parent": 0,
+    "author_name": "Justice~!",
+    "author_url": "http://graysmatter.codivation.com",
+    "date": "2008-04-13T00:39:53",
+    "type": "comment",
+    "content_html": "<p>“Unfortunately, Doug Seven cancelled by Blackbelt Software Configuration Management breakout session in the development practices track because I don’t use Team System.”</p>\n<p>Now *that* is lame.  Why is SVN persona non grata?</p>"
+  },
+  {
+    "id": 2444,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://flimflan.com/blog",
+    "date": "2008-04-13T20:28:55",
+    "type": "comment",
+    "content_html": "<p>Wow. I suspected TechEd was more about marketing than training, but didn’t realize they were so explicit about it. I feel better about saving my company’s money on it.<br>\nGlad to hear your NHibernate session escaped the censors. Good luck – hope you get a good turnout.</p>"
+  }
+]

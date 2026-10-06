@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2634,
+    "parent": 0,
+    "author_name": "MVC Best Practices",
+    "author_url": "http://www.lostechies.com/blogs/jimmy_bogard/archive/2009/10/28/mvc-best-practices.aspx",
+    "date": "2009-10-28T07:45:32",
+    "type": "comment",
+    "content_html": "<p>Simone has a great post (as usual) on 12 ASP.NET MVC Best Practices : Controller: 1 – Delete the AccountController</p>"
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "id": 188,
+    "parent": 0,
+    "author_name": "Hasani",
+    "author_url": "http://",
+    "date": "2004-11-26T13:02:00",
+    "type": "comment",
+    "content_html": "<p>One thing I don’t understand is why one cannot provide a default constructor when creating a ascx/aspx (user control/page).</p>\n<p>If I were to use your base class, I would add the following viritual method.</p>\n<p>protected virtual void OnConstructor();</p>\n<p>and add the following line to the constructor of your base class.</p>\n<p>OnConstructor();</p>"
+  },
+  {
+    "id": 189,
+    "parent": 0,
+    "author_name": "Paul Schroeder",
+    "author_url": "http://",
+    "date": "2005-04-22T08:54:00",
+    "type": "comment",
+    "content_html": "<p>Thanks Jeffrey, this saved me some time.</p>"
+  }
+]

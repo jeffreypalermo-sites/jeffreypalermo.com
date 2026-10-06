@@ -1,0 +1,20 @@
+[
+  {
+    "id": 461,
+    "parent": 0,
+    "author_name": "Andreas Kraus",
+    "author_url": "http://www.sunlab.de",
+    "date": "2005-09-08T18:16:28",
+    "type": "comment",
+    "content_html": "<p>I’m looking forward to see a ASP.NET v2 Version of EZWeb. Looks very promising, unfortunately I don’t use v1 anymore. Very nice work!</p>"
+  },
+  {
+    "id": 462,
+    "parent": 0,
+    "author_name": "DawlinLi",
+    "author_url": "http://",
+    "date": "2005-09-08T19:23:01",
+    "type": "comment",
+    "content_html": "<p>do we need a username and password to check out the features?</p>"
+  }
+]

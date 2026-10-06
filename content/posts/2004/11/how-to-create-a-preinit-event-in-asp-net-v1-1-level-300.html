@@ -1,0 +1,64 @@
+---
+wp_id: 147
+title: How to Create a PreInit event in ASP.NET v1.1 – level 300
+slug: how-to-create-a-preinit-event-in-asp-net-v1-1-level-300
+permalink: /2004/11/how-to-create-a-preinit-event-in-asp-net-v1-1-level-300/
+date: 2004-11-23T00:21:00
+date_utc: 2004-11-23T00:21:00Z
+modified: 2004-11-23T00:21:00
+format: html
+excerpt: .Net 2.0 has a PreInit event where the theme and master page can be set. When you are rolling your own theme or master page in v1.1, you need a time for the end page to set or override the them and master page. Here is how I created a PreInit event that fires before […]
+comments_open: true
+---
+<p>.Net 2.0 has a PreInit event where the theme and master page can be set.&nbsp; When you are rolling your own theme or master page in v1.1, you need a time for the end page to set or override the them and master page.&nbsp; Here is how I created a PreInit event that fires before I wire up the theme and master page:</p>
+<div><br>
+<p><span>protected</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>virtual</span> <span>event</span> EventHandler PreInit;</p><br>
+<p><span>protected</span> <span>new</span> <span>virtual</span> <span>event</span> EventHandler Init;</p><br>
+<p><span>protected</span> <span>new</span> <span>virtual</span> <span>event</span> EventHandler Load;</p><br>
+<p><span>protected</span> <span>new</span> <span>virtual</span> <span>event</span> EventHandler PreRender;</p><br>
+<p><span>protected</span> <span>new</span> <span>virtual</span> <span>event</span> EventHandler Unload;</p><br>
+<br>
+<p><span>protected</span>&nbsp;&nbsp;&nbsp; <span>virtual</span> <span>void</span> OnPreInit(EventArgs e) {</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>if</span>(PreInit != <span>null</span>)</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; PreInit(<span>this</span>, e);</p><br>
+<p>}</p><br>
+<br>
+<p><span>protected</span> <span>new</span> <span>virtual</span> <span>void</span> OnInit(EventArgs e) {</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>if</span>(Init != <span>null</span>)</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Init(<span>this</span>, e);</p><br>
+<p>}</p><br>
+<br>
+<p><span>protected</span> <span>new</span> <span>virtual</span> <span>void</span> OnLoad(EventArgs e) {</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>if</span>(Load != <span>null</span>)</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Load(<span>this</span>, e);</p><br>
+<p>}</p><br>
+<br>
+<p><span>protected</span> <span>new</span> <span>virtual</span> <span>void</span> OnPreRender(EventArgs e) {</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>if</span>(PreRender != <span>null</span>)</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; PreRender(<span>this</span>, e);</p><br>
+<p>}</p><br>
+<br>
+<p><span>protected</span> <span>new</span> <span>virtual</span> <span>void</span> OnUnload(EventArgs e) {</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>if</span>(Unload != <span>null</span>)</p><br>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Unload(<span>this</span>, e);</p><br>
+<p>}</p><br>
+<br>
+<p><span>#endregion</span></p><br>
+<br>
+<p><span>#region</span> Event Handlers</p><br>
+<p><span>private</span> <span>void</span> Page_Init(<span>object</span> sender, EventArgs e) {</p><br>
+<p>&nbsp;&nbsp;&nbsp; Trace.Write(“EZWeb.Page”, “Begin PreInitialization”);</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>this</span>.PreInitializePage();</p><br>
+<p>&nbsp;&nbsp;&nbsp; Trace.Write(“EZWeb.Page”, “End PreInitialization”);</p><br>
+<br>
+<p>&nbsp;&nbsp;&nbsp; Trace.Write(“EZWeb.Page”, “Begin PreInit”);</p><br>
+<p>&nbsp;&nbsp;&nbsp; OnPreInit(e);</p><br>
+<p>&nbsp;&nbsp;&nbsp; Trace.Write(“EZWeb.Page”, “End PreInit”);</p><br>
+<br>
+<p>&nbsp;&nbsp;&nbsp; <span>this</span>.InitializePage();</p><br>
+<br>
+<p>&nbsp;&nbsp;&nbsp; Trace.Write(“EZWeb.Page”, “Begin Init”);</p><br>
+<p>&nbsp;&nbsp;&nbsp; OnInit(e);</p><br>
+<p>&nbsp;&nbsp;&nbsp; Trace.Write(“EZWeb.Page”, “End Init”);</p><br>
+<p>}</p></div><!--EndFragment-->
+<p>I shadow the existing events in my base page and then control the raising of those events.&nbsp; In that way, I can do some work, raise PreInit, do some work, and raise Init.&nbsp; I chose this method particularly for the ease of migration to v2.0 next year.<!--EndFragment--></p>

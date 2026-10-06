@@ -1,0 +1,217 @@
+---
+wp_id: 420
+title: Automated testing with .Net – an overview – level 200
+slug: automated-testing-with-net-an-overview-level-200
+permalink: /2006/05/automated-testing-with-net-an-overview-level-200/
+date: 2006-05-03T03:58:00
+date_utc: 2006-05-03T03:58:00Z
+modified: 2006-05-03T03:58:00
+format: html
+tags:
+- agile
+- coding-principles
+excerpt: Reality In reality, developers don’t like to do much testing. Developers aren’t testers. We typically will write code while making certain assumptions about variables and, objectively knowing the expected behavior of the syntax, we might run it once and call it done. Typically, bugs hide where the code wasn’t rigorously tests or in paths that […]
+comments_open: true
+---
+<p><b>Reality</b></p>
+<p>In reality, developers don’t like to do much testing.<span>&nbsp; </span>Developers aren’t testers.<span>&nbsp; </span>We typically will write code while making<br>
+certain assumptions about variables and, objectively knowing the expected behavior<br>
+of the syntax, we might run it once and call it done.<span>&nbsp; </span>Typically, bugs hide where the code wasn’t<br>
+rigorously tests or in paths that weren’t tested at all.<span>&nbsp; </span>I think everyone agrees that without testing,<br>
+the software will have bugs (and often even after testing).<span>&nbsp; </span>I heard of a crazy management quote that is<br>
+very sad: “If you have to test it, you aren’t building it right.”<span>&nbsp; </span>I sure am glad that manager wasn’t involved<br>
+with automobile development!<span>&nbsp; </span>In reality,<br>
+we need testing</p>
+
+<p><b>Types of common<br>
+developer testing</b></p>
+<ul type="disc">
+<li>Actually<br>
+     running the code written</li>
+<li>Simple<br>
+     console application or winforms test harnesses</li>
+<li>Running<br>
+     the application through the UI locally or on a development server.</li>
+</ul>
+
+<p><b>Types of testing</b></p>
+<ul type="disc">
+<li>Unit<br>
+     testing<b></b></li>
+<li>Integration<br>
+     testing<b></b></li>
+<li>Acceptance<br>
+     testing<b></b></li>
+<li>Load<br>
+     testing<b></b></li>
+<li>Performance<br>
+     testing<b></b></li>
+<li>Security<br>
+     testing<b></b></li>
+<li>Exploratory<br>
+     testing<b></b></li>
+<li>And<br>
+     many more<b></b></li>
+</ul>
+
+<p><b>Approaches</b></p>
+<ul type="disc">
+<li>Do all<br>
+     manual testing with or without the help of small tools.</li>
+<ul type="circle">
+<li>With<br>
+      this approach, the cost is high because for every run of the test, human<br>
+      time is required.<span>&nbsp; </span>For every<br>
+      release, every test case must be repeated.</li>
+<li>This<br>
+      approach doesn’t scale.<span>&nbsp; </span>When more<br>
+      testing is needed, that directly calls for more human time.<span>&nbsp; </span>Human time is very expensive compared<br>
+      to computing time.</li>
+</ul>
+<li>Automate<br>
+     all testing.</li>
+<ul type="circle">
+<li>The<br>
+      cost is low for about 80%, but then goes up.</li>
+<li>Some<br>
+      types of tests are hard or impossible to automate effectively, such as<br>
+      security, exploratory, and concurrency testing.<span>&nbsp; </span>This type of testing needs more human<br>
+      attention and isn’t easily repeatable.</li>
+<li>To<br>
+      fully succeed at this approach, testers need to be highly skilled at<br>
+      scripting.</li>
+</ul>
+<li>A<br>
+     pragmatic approach – automate the testing that is easiest.</li>
+<ul type="circle">
+<li>Unit<br>
+      testing</li>
+<li>Integration<br>
+      testing</li>
+<li>Acceptance<br>
+      testing</li>
+</ul>
+</ul>
+<p><b>Unit testing</b></p>
+<p>What is a unit test?<span>&nbsp;<br>
+</span>From Wikipedia:<span>&nbsp; </span>A “. . .<b> unit<br>
+test</b> is a procedure used to validate that a particular module of source<br>
+code is working properly”.<span>&nbsp; </span>A unit test<br>
+is a very unique type of test with some fundamental constraints.<span>&nbsp; </span>If a test violates a constraint, it ceases<br>
+existence as a unit test.</p>
+
+<p><b>Characteristics of a<br>
+unit test</b></p>
+<ul type="disc">
+<li>A unit<br>
+     test isolates and tests a single responsibility.</li>
+</ul>
+<ul type="disc">
+<li>A unit<br>
+     test isolates a failure.</li>
+<li>A unit<br>
+     test simulates other collaborators using various methods such as fake<br>
+     objects.</li>
+<li>A unit<br>
+     test can run and pass in any environment.</li>
+</ul>
+<p>When an automated test reaches out to a file, registry key,<br>
+database, web service, external configuration, environment variable, etc, it<br>
+becomes an integration test and is polluted with dependency on its<br>
+environment.<span>&nbsp; </span>At that point, the binary<br>
+can no longer be sent to another location with the expectation that test<br>
+continue to pass.<span>&nbsp; </span></p>
+
+<p>Unit testing is hard.<span>&nbsp;<br>
+</span>It requires constant vigilance to ensure application code is<br>
+loosely-coupled.<span>&nbsp; </span>Because a unit test<br>
+must test a piece of code in isolation, the code must be designed so that<br>
+collaborators can be easily separated.<span>&nbsp;<br>
+</span>In short, calling out to a static method from inside a constructor is a<br>
+tight-coupling.<span>&nbsp; </span>This type of code will<br>
+hinder unit testing.</p>
+
+<p><b>Integration testing</b></p>
+<p>What is integration testing?<span>&nbsp;<br>
+</span>An integration test is a developer test that combines several units of<br>
+code and tests the interaction among them.<span>&nbsp;<br>
+</span>A good integration strategy will include tests along all integration<br>
+boundaries.<span>&nbsp; </span>If a unit of code is tested<br>
+at the unit level and then tested during interaction with all collaborators,<br>
+the developer has confidence that the code will work well when the entire<br>
+system is assembled.<span>&nbsp; </span>Integration<br>
+testing<br>
+is the second step in a “test small, test medium, test large”<br>
+strategy.&nbsp; Larger integration tests are certainly useful, but<br>
+large tests alone don’t help to pinpoint a problem if they fail.&nbsp; 
+</p>
+
+<p><b>Characteristics of a<br>
+good integration test</b></p>
+<ul type="disc">
+<li>It<br>
+     only includes a few classes.<span>&nbsp; </span>It<br>
+     typically focuses on a single class and then includes collaborators.<span>&nbsp; </span>If a class has 3 collaborators, the test<br>
+     would include 4 classes (the first class and its 3 collaborators).<span>&nbsp; </span>This test would aim to fake the<br>
+     collaborators twice removed so that the focus on the test can remain<br>
+     narrow.<span>&nbsp; </span>This is a subjective rule,<br>
+     and the developer should use good judgment regarding how many classes to<br>
+     include in an integration test.</li>
+<li>It is<br>
+     completely isolated in setup and teardown.<span>&nbsp;<br>
+     </span>Should not be environmentally sensitive.<span>&nbsp; </span>If the test requires a file to be on the<br>
+     drive, then setup for the test should place the required file there<br>
+     first.<span>&nbsp; </span>If the test needs data in a<br>
+     database, the setup should insert the required records first.<span>&nbsp; </span>It should not depend on any environment<br>
+     setting being present before the test is run.<span>&nbsp; </span>It should run on any developer<br>
+     workstation.</li>
+<li>Must<br>
+     run fast.<span>&nbsp; </span>If it’s slow, the build<br>
+     time will suffer, and you will run fewer builds.</li>
+<li>It<br>
+     must be order-independent.<span>&nbsp; </span>If an<br>
+     integration test causes a subsequent test to fail, it is indicative of a<br>
+     test not owning its own environmental setup.</li>
+</ul>
+
+<p><b>Acceptance testing</b></p>
+<p>What is acceptance testing?<span>&nbsp;<br>
+</span>An evaluation of acceptance criteria on the system to ensure the system<br>
+meets the customers’ needs.<span>&nbsp; </span>Before a<br>
+piece of software can be written the software team must have acceptance<br>
+criteria.<span>&nbsp; </span>This is often called<br>
+requirements.<span>&nbsp; </span>Acceptance testing seeks<br>
+to execute the requirements on the system for a pass/fail result.</p>
+
+<p><b>Characteristics of a<br>
+good acceptance test</b></p>
+<ul type="disc">
+<li>Easily<br>
+     understood by non-developers as well as the customer.</li>
+<li>Easily<br>
+     created by non-developers as well as the customer.</li>
+<li>When<br>
+     it passes, the customer is assured that the system behaves as needed.</li>
+<li>Very<br>
+     expressive using jargon of the business domain.</li>
+<li>Is<br>
+     repeatable.</li>
+</ul>
+
+<p>Automated acceptance testing is the final big gain in the<br>
+suite of automated tests.<span>&nbsp; </span>The acceptance<br>
+tests actually define requirements in an objective and executable way.<span>&nbsp; </span>If a tester finds a bug, he can write an<br>
+acceptance test that fails in the presence of the bug.<span>&nbsp; </span>When the bug is fixed, the test will<br>
+pass.<span>&nbsp; </span>Acceptance tests become an<br>
+important part of a regression test suite over time.</p>
+
+<p><b>Stay tuned for more<br>
+detailed information on the following testing topics:</b></p>
+<ul type="disc">
+<li>Unit<br>
+     testing</li>
+<li>Integration<br>
+     testing</li>
+<li>Acceptance<br>
+     testing</li>
+</ul>

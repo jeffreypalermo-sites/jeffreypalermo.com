@@ -1,0 +1,20 @@
+[
+  {
+    "id": 233,
+    "parent": 0,
+    "author_name": "Dave Donaldson",
+    "author_url": "http://",
+    "date": "2004-12-01T11:40:00",
+    "type": "comment",
+    "content_html": "<p>You could also let Visual Studio do this for you. When you add a Web Reference, in its properties the URL Behavior setting is marked as Static by default. Change that setting to Dynamic and VS adds the entry into the config file and updates the constructor of the auto-generated proxy code.</p>"
+  },
+  {
+    "id": 234,
+    "parent": 0,
+    "author_name": "Scott Bellware",
+    "author_url": "http://",
+    "date": "2005-01-21T18:57:00",
+    "type": "comment",
+    "content_html": "<p>And if you use WSDL.exe to create your proxies, there’s a command line switch that lets you specify the app settings key name: /appsettingurlkey.</p>\n<p>Check it out at:<br>\n<a href=\"http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cptools/html/cpgrfWebServicesDescriptionLanguageToolWsdlexe.asp\" rel=\"nofollow\">http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cptools/html/cpgrfWebServicesDescriptionLanguageToolWsdlexe.asp</a></p>"
+  }
+]

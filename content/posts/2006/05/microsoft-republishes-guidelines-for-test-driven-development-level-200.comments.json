@@ -1,0 +1,65 @@
+[
+  {
+    "id": 909,
+    "parent": 0,
+    "author_name": "Bil Simser",
+    "author_url": "http://weblogs.asp.net/bsimser",
+    "date": "2006-05-19T00:50:29",
+    "type": "comment",
+    "content_html": "<p>LOL. Well, I’m glad it’s back and it’s right this time. I started reading it and little checkboxes ticked off in my head and I thought, cool, they really did get it this time. </p>\n<p>Some smart dude must have smacked them upside the head and got them to do the right thing. </p>\n<p>Of course it does help when that smart dude is you, but hey, I’m glad all is right in the world again. Thanks J!</p>"
+  },
+  {
+    "id": 910,
+    "parent": 0,
+    "author_name": "Liang",
+    "author_url": "http://",
+    "date": "2006-05-19T01:18:32",
+    "type": "comment",
+    "content_html": "<p>Congratulation, Jeffrey! It is nice one. </p>"
+  },
+  {
+    "id": 911,
+    "parent": 0,
+    "author_name": "johnwood",
+    "author_url": "http://dotnetjunkies.com/weblog/johnwood",
+    "date": "2006-05-19T03:39:38",
+    "type": "comment",
+    "content_html": "<p>I especially like all the “although this varies from practitioner to practitioner” caveats and disclaimers, very diplomatic and sensible given the touchy subject matter \uD83D\uDE42</p>"
+  },
+  {
+    "id": 912,
+    "parent": 0,
+    "author_name": "Jean-Paul S. Boodhoo",
+    "author_url": "http://www.jpboodhoo.com/blog",
+    "date": "2006-05-19T13:07:38",
+    "type": "comment",
+    "content_html": "<p>Hey Jeff,</p>\n<p>I am glad that MS asked someone with real TDD experience to drive out the article for them. Simple and to the point.</p>\n<p>Great Job.</p>"
+  },
+  {
+    "id": 913,
+    "parent": 0,
+    "author_name": "Scott Bellware",
+    "author_url": "http://www.bellware.net",
+    "date": "2006-05-19T15:00:54",
+    "type": "comment",
+    "content_html": "<p>Well-done, Jeffrey!</p>"
+  },
+  {
+    "id": 914,
+    "parent": 0,
+    "author_name": "SamGentile",
+    "author_url": "http://codebetter.com/blogs/sam.gentile",
+    "date": "2006-05-19T19:52:48",
+    "type": "comment",
+    "content_html": "<p>Well done!!</p>"
+  },
+  {
+    "id": 915,
+    "parent": 0,
+    "author_name": "Noah Coad [MS]",
+    "author_url": "http://coadblog.com",
+    "date": "2006-06-30T17:20:45",
+    "type": "comment",
+    "content_html": "<p>Thanks for doing this Jeff!  Don’t forget the guy that asked ya to do it in the first place… \uD83D\uDE42  I’m very glad Paul &amp; Rob &amp; you collaborated on this.  It took a long time to get through the system, thanks for being patient.</p>"
+  }
+]

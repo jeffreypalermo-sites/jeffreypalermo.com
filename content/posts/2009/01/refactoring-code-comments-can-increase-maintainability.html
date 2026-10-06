@@ -1,0 +1,73 @@
+---
+wp_id: 983
+title: Refactoring Code Comments Can Increase Maintainability
+slug: refactoring-code-comments-can-increase-maintainability
+permalink: /2009/01/refactoring-code-comments-can-increase-maintainability/
+date: 2009-01-16T15:15:23
+date_utc: 2009-01-16T15:15:23Z
+modified: 2009-01-16T15:15:23
+format: html
+categories:
+- blog
+excerpt: The assertion of this post is that code comments are a smell. Creating obvious, readable code is more maintainable that unreadable code that is heavily commented. Matt Hinze is teaching Agile Boot Camp, part 1 this week, and one of his lessons is about code readability. He spoke about code comments being a smell. When […]
+comments_open: true
+---
+<p>The assertion of this post is that code comments are a smell.&nbsp; Creating obvious, readable code is more maintainable that unreadable code that is heavily commented.</p>
+<p><a href="http://mhinze.com/">Matt Hinze</a> is teaching <a href="http://headspringsystems.com/training">Agile Boot Camp</a>, part 1 this week, and one of his lessons is about code readability.&nbsp; He spoke about code comments being a smell.&nbsp; When something smells, it doesn’t guarantee that it is rotten, but it does create the need to examine more closely to see if any bacteria is beginning to invade the codebase.&nbsp; In this case, code comments may be a smell or harbinger of maintainability problem.</p>
+<p>Let’s get the first straw-man out of the way.&nbsp; Taking an existing codebase and merely deleting all code comments does not make a system more maintainable.&nbsp;&nbsp; I’m not suggesting you do this for your existing system.&nbsp; This course of action would be foolish.</p>
+<p>When developing code, sometime one finds that a section is less than obvious.&nbsp; When an ambiguous section of code is discovered, the wrong course of action is to add a comment describing what it does.&nbsp; The better option is the refactor the code to make it more obvious.&nbsp;</p>
+<p><strong>Problems with code comments:</strong></p>
+<ul>
+<li>Code comments are not compiled</li>
+<li>Code comments are not tested</li>
+<li>Code comments are not verified frequently</li>
+<li>Out-of-date comments have negative consequences</li>
+<li>They are likely to remain when the code changes</li>
+</ul>
+<p>How, then, do we communicate to the maintainer the purpose of code that is less than obvious?&nbsp; Consider the following example that takes some ambiguous code with comments and refactors away the comments.</p>
+<div>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:rgb(244,244,244)">public class SpeakerClickReport
+{
+    public int Total { get; set; }
+    public int IndTotal { get; set; }
+
+    // get ration of individual clicks to total clicks for a given speaker.
+    public int GetRatio()
+    {
+        //Total clicks for all speakers equaling 0
+        if (Total == 0) return 0;
+        //take clicks for this speaker and get the percentage compared to Total for all speakers
+        return (int) (100.0*IndTotal/Total);
+    }
+}</pre>
+</div>
+<p>Notice that the comments help to communicate the intent of the code, although it isn’t clear what this code is doing.&nbsp; When this code changes, these comments will be out-of-date.&nbsp; Let’s consider a refactored example and compare the readability.</p>
+<div>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:rgb(244,244,244)">public class SpeakerClickReport
+{
+    public int TotalOfAllSpeakerClicks { get; set; }
+    public int NumberOfIndividualClicks { get; set; }
+
+    public int GetPercentageOfTotalForIndividualSpeaker()
+    {
+        if (TotalOfAllSpeakerClicks == 0)
+        {
+            return 0;
+        }
+
+        var ratioOfTotal = (double)NumberOfIndividualClicks / TotalOfAllSpeakerClicks;
+        var percentFormOfRatio = (int) Math.Round(100 * ratioOfTotal);
+        return percentFormOfRatio;
+    }
+}</pre>
+</div>
+<p>Notice that none of the code comments are left.&nbsp; In their place are:</p>
+<ul>
+<li>More obvious variable names</li>
+<li>Whitespace used to divide sections</li>
+<li>More intermediate variables to describe single-step decisions and calculations</li>
+<li>Public API more obvious</li>
+<li>Obtaining return value before actually returning it</li>
+</ul>
+<p>The second example is more maintainable than the first because as code is refactored, the comments are actually embedded in the code, not ignored by the compiler.&nbsp; As class members are renamed and moved around, the contextual information will remain and be refined.&nbsp; The risk of the commenting information being out-of-date and useless is mitigated.&nbsp; In short, embedding more information into the source code creates more maintainable code.</p>
+<p>Code will be read many, many more times than it is written.</p>

@@ -1,0 +1,52 @@
+---
+wp_id: 369
+title: A software “build” is a lot more than just compiling the solution – level 200
+slug: a-software-build-is-a-lot-more-than-just-compiling-the-solution-level-200
+permalink: /2006/01/a-software-build-is-a-lot-more-than-just-compiling-the-solution-level-200/
+date: 2006-01-17T17:11:00
+date_utc: 2006-01-17T17:11:00Z
+modified: 2006-01-17T17:11:00
+format: html
+excerpt: Many developers don’t use source control and don’t use any automated tools. This is extremely inefficient and troublesome. Those on teams are forced to use source control in an effort to share the latest code with all members of the team. In the source control environments, there is a tacit agreement not to commit any […]
+comments_open: true
+---
+<p>Many developers don’t use source control and don’t use any automated tools.&nbsp; This is extremely inefficient and troublesome.&nbsp; Those on teams are forced to use source control in an effort to share the latest code with all members of the team.&nbsp; In the source control environments, there is a tacit agreement not to commit any code to the repository that will break the build.&nbsp; If the build breaks, it hinders the velocity of the other developers on the team because they cannot move on while the build is broken.</p>
+<p><b>What does “build” mean?<br></b>Some folks use the term “build” to mean compile, and that is incorrect.&nbsp; On the teams that use no automated tools, the compile might be the only step in their build process, but the two are still different.&nbsp; <b>The “build” is a process of taking the source of a software system and making it ready for deployment.</b>&nbsp; Some teams will manually compile the source and stop before deploying to a development environment.&nbsp; These teams are short-changing themselves because the only feedback they’ve obtained about the current bits is that there are no syntax or linking errors.&nbsp; There is no verification that any part of the software functions as intended.&nbsp; Next, they may manually perform some steps to get all the bits and configuration in order to deploy the system to a development environment.&nbsp; Then after some manual testing, they’ve obtained some level of feedback.</p>
+<p><b>Let’s compare the above with an Agile build.<br></b>Here are some steps that are often performed in the build process of an Agile team – these steps are always automated so they run fast and are repeatable:</p>
+<ul>
+<li>update latest code _and dependencies_ from source control.&nbsp; (automated process will get latest code from the SCC repository)
+</li>
+<li>compile solution (standard compile and link)
+</li>
+<li>copy application files to test location (output binaries moved to location to prep for automated testing)
+</li>
+<li>run automated unit tests. (automated tests produced through TDD or otherwise – give immediate feedback on the state of the system)
+</li>
+<li>automated environment setup to prepare for an integrated test of the system
+</li>
+<li>run integration tests. (gives even more feedback that the integration points of the system are functioning correctly – might include a database)
+</li>
+<li>run regression tests (if you have them – verifies that all past functionality is still working as before – this is a type of integration test)
+</li>
+<li>tag source control with build number if successful (only tag successful builds – discard unsuccessful ones)
+</li>
+<li>Notify development team members of success or failure</li>
+</ul>
+<p>Some teams add more steps depending on their needs, and some teams don’t have integration or regression tests suites yet.&nbsp; Each build process should be developed by the team and tailored to the system.&nbsp; The above are some of the more common steps that Agile teams include in a build process.</p>
+<p><b>The point of an automated build process</b> is to transform the current code into a working system and get feedback on the current quality as fast as possible.&nbsp; If the entire process is fast, you will run it often and obtain feedback often.&nbsp; If it’s slow, you won’t do it often.&nbsp; The only requirement for the developer is to start the build.&nbsp; Many Agile teams even automate that step by having a program kick off a build after every commit to the SCC repository.&nbsp; That process is called “Continuous Integration”.&nbsp; </p>
+<p><b>At the end of a build, </b>the team should be confident that if they deployed these bits to an environment, it would work.&nbsp; There still may be bugs discovered, but they are confident that old bugs haven’t resurfaced and the system works at least as good as it did on the last build.&nbsp; The extra testing steps in the build process ensure that the state of the software is always moving forward.&nbsp; Without these steps, developers have no way of knowing if a change broke an existing feature.</p>
+<p><b>Feedback</b> is key in a build process.&nbsp; The team should decide what steps can be added to the build process to generate as much feedback as possible.&nbsp; My team recently inherited a system with a build duration of 25 minutes.&nbsp; This is way to slow for us, and our initial goal is to reduce that duration to 10 minutes.&nbsp; We’ll be able to do this by emphasizing fast unit tests more and doing away with some of the really slow integration tests (that have delicate, cumbersome data setup scenarios).</p>
+<p><b>Tools my team uses in our build process:</b></p>
+<ul>
+<li><a href="http://subversion.tigris.org/">Subversion</a> (source control)
+</li>
+<li><a href="http://ccnet.thoughtworks.com/">CruiseControl.net</a> (build runner and tagger – keeper of the builds)
+</li>
+<li><a href="http://confluence.public.thoughtworks.org/display/CCNET/CCTray">CCTray </a>(system tray notification of successful or failed builds)
+</li>
+<li><a href="http://nant.sourceforge.net/">NAnt </a>(Xml scripting format to describe steps to be run during the build)
+</li>
+<li><a href="http://www.nunit.org/">NUnit </a>(automated test harness)
+</li>
+<li><a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=9B3A2CA6-3647-4070-9F41-A333C6B9181D&amp;displaylang=en">.Net SDK</a> (includes compiler and linker)</li>
+</ul>

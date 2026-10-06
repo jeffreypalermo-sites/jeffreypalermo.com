@@ -1,0 +1,19 @@
+[
+  {
+    "id": 2730,
+    "parent": 0,
+    "author_name": "David Gardiner",
+    "author_url": "https://david.gardiner.net.au",
+    "date": "2018-10-11T02:34:22",
+    "type": "comment",
+    "content_html": "<p>The new project system / PackageReference stuff saves packages centrally under the user’s profile (effectively caching them) which can help too</p>"
+  },
+  {
+    "id": 2732,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "date": "2018-10-15T10:05:06",
+    "type": "comment",
+    "content_html": "<p>Absolutely.  Thanks @David</p>"
+  }
+]

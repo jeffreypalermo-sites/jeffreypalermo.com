@@ -1,0 +1,71 @@
+---
+wp_id: 273
+title: How to render up-level html to FireFox from ASP.NET 1.1 – level 200
+slug: how-to-render-up-level-html-to-firefox-from-asp-net-1-1-level-200
+permalink: /2005/06/how-to-render-up-level-html-to-firefox-from-asp-net-1-1-level-200/
+date: 2005-06-29T15:44:00
+date_utc: 2005-06-29T15:44:00Z
+modified: 2005-06-29T15:44:00
+format: html
+excerpt: Out of the box, ASP.NET 1.1 doesn’t recognize FireFox, but FireFox is now probably the second most popular browser behind IE. IE still has the market, and if you are just checking IE, you probably won’t feel any pain, but when developing an app for the Internet, you should make sure that your site works […]
+comments_open: true
+---
+<p>Out of the box, ASP.NET 1.1 doesn’t recognize FireFox, but FireFox is<br>
+now probably the second most popular browser behind IE.&nbsp; IE still<br>
+has the market, and if you are just checking IE, you probably won’t<br>
+feel any pain, but when developing an app for the Internet, you should<br>
+make sure that your site works and looks good in the popular<br>
+browsers.&nbsp; </p>
+<p>Since ASP.NET 1.1 doesn’t recognize FireFox, the built-in WebControls<br>
+will render down-level html.&nbsp; What that means is that every<br>
+&lt;div/&gt; tag will be replaced by a single-cell table, and a host of<br>
+other changes.&nbsp; This isn’t good because it will distort the layout<br>
+of your page.</p>
+<p>The good news is that ASP.NET 1.1 can easily be told of the<br>
+capabilities of other browsers through the web.config file.&nbsp; You<br>
+can customize the regular expression used to evaluate the User Agent<br>
+string, but if you quickly need to support FireFox as well as IE, paste<br>
+the following into your web.config within the &lt;system.web/&gt; node:</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;browserCaps&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;case<br>
+match=”^Mozilla/5.0 ([^)]*) (Gecko/[-d]+)(?’VendorProductToken’<br>
+(?’type'[^/d]*)([d]*)/(?’version'(?’major’d+)(?’minor’.d+)(?’letters’w*)))?”&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; browser=Gecko<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;filter&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;case<br>
+match=”(Gecko/[-d]+)(?’VendorProductToken’<br>
+(?’type'[^/d]*)([d]*)/(?’version'(?’major’d+)(?’minor’.d+)(?’letters’w*)))”&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; type=${type}<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/case&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;case&gt; &lt;!– plain<br>
+Mozilla if no VendorProductToken found –&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; type=Mozilla<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/case&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/filter&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; frames=true<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; tables=true<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; cookies=true<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; javascript=true<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; javaapplets=true<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ecmascriptversion=1.5<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; w3cdomversion=1.0<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; css1=true<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; css2=true<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; xml=true<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; tagwriter=System.Web.UI.HtmlTextWriter<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &lt;case<br>
+match=”rv:(?’version'(?’major’d+)(?’minor’.d+)(?’letters’w*))”&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; version=${version}<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; majorversion=0${major}<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; minorversion=0${minor}<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;case match=”^b”<br>
+with=”${letters}”&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; beta=true<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/case&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/case&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/case&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/browserCaps&gt;</p>

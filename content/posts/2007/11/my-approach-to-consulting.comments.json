@@ -1,0 +1,65 @@
+[
+  {
+    "id": 2101,
+    "parent": 0,
+    "author_name": "Steve Clements",
+    "author_url": "http://geekswithblogs.net/steveclements",
+    "date": "2007-11-03T16:38:56",
+    "type": "comment",
+    "content_html": "<p>Amen!</p>"
+  },
+  {
+    "id": 2102,
+    "parent": 0,
+    "author_name": "DaRage",
+    "author_url": "http://",
+    "date": "2007-11-03T17:06:18",
+    "type": "comment",
+    "content_html": "<p>Ditto. Jeffrey can you explore more on your last paragraph. what exactly are those OO and SOA fundamentels? can you provide a couple of book titles as examples? Thanks</p>"
+  },
+  {
+    "id": 2103,
+    "parent": 0,
+    "author_name": "Sheraz",
+    "author_url": "http://",
+    "date": "2007-11-03T22:49:41",
+    "type": "comment",
+    "content_html": "<p>@DaRage<br>\n I think he already did<br>\n“Separation of concerns, partitioning, testing, “Don’t repeat yourself”, cohesion, loose coupling, readability”.<br>\nThese might sound like just a few principles but if you use them the right way, they do simplify the solutions and keep maintainability very low.</p>"
+  },
+  {
+    "id": 2104,
+    "parent": 0,
+    "author_name": "Kalpesh",
+    "author_url": "http://shahkalpesh@gmail.com",
+    "date": "2007-11-03T22:53:57",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>You are right.</p>\n<p>The sad reality of software dev. is tool makers like MS release things so fast, most people can’t keep pace with it. The job market runs on buzzwords. One should know all the latest stuff (yet in beta), to get a chance to work on it &amp; one doesn’t get a chance, until they have worked on it (catch 22).</p>\n<p>It seems everybody is in a race to be upbeat about new release that came out of ms factory.</p>\n<p>The idea of sticking to fundamentals is correct.<br>\nI would love to see smart people in s/w development to do mentoring for people, helping them scale up &amp; pass their skills on to other people. </p>\n<p>I am no anti-MS or pro-MS. However, it makes me think, whether people are sure of what they are making?<br>\nI would love to see some of this technology 15 years from now.</p>\n<p>I would love to hear what you have to advice me on this.</p>"
+  },
+  {
+    "id": 2105,
+    "parent": 0,
+    "author_name": "Evan",
+    "author_url": "http://www.evanhoff.com/",
+    "date": "2007-11-03T23:15:42",
+    "type": "comment",
+    "content_html": "<p>I agree and disagree.  The fundamentals will last forever (or at least years and years and years), but I think your company motto is a bit dangerous.</p>\n<p>Lowest cost usually has a time factor involved.  Building the lowest cost v1 can many times mean cutting out stuff that will be necessary for v2.  For v1 apps, procedural code is usually the cheapest way to go, but we know where that leaves v2.  It’s the example of taking on technical debt knowing that the loan will never get called in.  Driving things on cost can come back and bite you (although it does sound really good in presentations).  The v1, v2 thing was just an silly example.  There are others.</p>"
+  },
+  {
+    "id": 2106,
+    "parent": 0,
+    "author_name": "VB Fan",
+    "author_url": "http://",
+    "date": "2007-11-04T12:00:12",
+    "type": "comment",
+    "content_html": "<p>Amen<br>\nThanks for saying it aloud.</p>"
+  },
+  {
+    "id": 2107,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-11-04T21:19:44",
+    "type": "comment",
+    "content_html": "<p>@Evan,<br>\ngood question<br>\n<a href=\"http://codebetter.com/blogs/jeffrey.palermo/archive/2007/11/04/in-software-consulting-low-cost-consulting-can-be-real.aspx\" rel=\"nofollow ugc\">http://codebetter.com/blogs/jeffrey.palermo/archive/2007/11/04/in-software-consulting-low-cost-consulting-can-be-real.aspx</a></p>"
+  }
+]

@@ -1,0 +1,11 @@
+[
+  {
+    "id": 735,
+    "parent": 0,
+    "author_name": "johnwood",
+    "author_url": "http://dotnetjunkies.com/weblog/johnwood",
+    "date": "2006-04-05T01:21:35",
+    "type": "comment",
+    "content_html": "<p>Once I was using a third party application (I won’t say what it was for legal reasons!) and we had a number of support calls out to them to fix bugs. I knew it was written in .Net. We waited and waited and got tired of waiting. So I ran reflector over it, pulled the code out into a separate project… fixed the bugs and recompiled it.  It worked.  I never told them I did that.  Did I do something bad? Probably. Do I want people doing that to my code?  Absolutely not.  So I’ll probably obfuscate my code to stop people like me snooping.</p>"
+  }
+]

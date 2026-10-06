@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2704,
+    "parent": 0,
+    "author_name": "wil.pannell",
+    "author_url": "http://evolvingtowardagile.blogspot.com",
+    "date": "2013-09-05T18:07:42",
+    "type": "comment",
+    "content_html": "<p>(cross-posted @ <a href=\"http://alistair.cockburn.us/Hexagonal+architecture\" rel=\"nofollow ugc\">http://alistair.cockburn.us/Hexagonal+architecture</a>)<br>\nThe one question that escapes me about ports-and-adapters — other renditions are the “onion architecture,” and Bob Martin’s “Clean Architecture,” which I have also been studying — is the primary port for a rich javascript/html5 front-end. I’m interested in your thinking.<br>\nIf such a front-end exists, then necessarily much UI logic resides on it. E.g., a keyboard interface — like the IPad virtual keyboard — encapsulates much logic that’s not really relevant to the application, as such.<br>\nSo is the primary port strictly entail the request/response payloads transmitted to the server via http? Or via a rest API?</p>"
+  }
+]

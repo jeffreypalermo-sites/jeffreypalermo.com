@@ -1,0 +1,43 @@
+---
+wp_id: 475
+title: Making images in .resx files available to other projects (they default to internal) – level 200
+slug: making-images-in-resx-files-available-to-other-projects-they-default-to-internal-level-200
+permalink: /2006/11/making-images-in-resx-files-available-to-other-projects-they-default-to-internal-level-200/
+date: 2006-11-10T19:48:00
+date_utc: 2006-11-10T19:48:00Z
+modified: 2006-11-10T19:48:00
+format: html
+tags:
+- build-automation
+- tips-tricks
+- tools
+excerpt: "I find it very frustrating that there is no obvious way to have the .resx generator mark members as public instead of internal. In my team's solution, we have a need for these to be public. Here's how I solved it: Add a nant target that can do a find/replace in a file (I don't […]"
+comments_open: true
+---
+<p>I find it very frustrating that there is no obvious way to have the .resx<br>
+generator mark members as public instead of internal.&nbsp; In my team's solution, we<br>
+have a need for these to be public.&nbsp; Here's how I solved it:</p>
+<p><strong>Add a nant target that can do a<br>
+find/replace in a file (I don't know of a shell command that will do that)<br></strong></p>
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p><span style="color:blue">&lt;?</span><span style="color:maroon">xml</span><span style="color:blue"> </span><span style="color:red">version</span><span style="color:blue">=</span>"<span style="color:blue">1.0</span>"<span style="color:blue"> </span><span style="color:red">encoding</span><span style="color:blue">=</span>"<span style="color:blue">utf-8</span>"<span style="color:blue">?&gt;</span></p>
+<p><span style="color:blue">&lt;!–</span><span style="color:green">EXTERNAL_PROPERTIES:<br>
+filename;stringToReplace;newString</span><span style="color:blue">–&gt;</span></p>
+<p><span style="color:blue">&lt;</span><span style="color:maroon">project</span><span style="color:blue"> </span><span style="color:red">name</span><span style="color:blue">=</span>"<span style="color:blue">BuildTasks</span>"<span style="color:blue"> </span><span style="color:red">xmlns</span><span style="color:blue">=</span>"<span style="color:blue"><a href="http://nant.sf.net/release/0.85-rc4/nant.xsd" rel="nofollow">http://nant.sf.net/release/0.85-rc4/nant.xsd</a></span>"<span style="color:blue">&gt;</span></p>
+<p><span style="color:blue">&nbsp; &lt;</span><span style="color:maroon">target</span><span style="color:blue"> </span><span style="color:red">name</span><span style="color:blue">=</span>"<span style="color:blue">FindReplace</span>"<span style="color:blue">&gt;</span></p>
+<p><span style="color:blue">&nbsp; &nbsp; &lt;</span><span style="color:maroon">move</span><span style="color:blue"> </span><span style="color:red">file</span><span style="color:blue">=</span>"<span style="color:blue">${filename}</span>"<span style="color:blue"> </span><span style="color:red">tofile</span><span style="color:blue">=</span>"<span style="color:blue">${filename}.bak</span>"<span style="color:blue">&gt;</span></p>
+<p><span style="color:blue">&nbsp; &nbsp; &nbsp; &lt;</span><span style="color:maroon">filterchain</span><span style="color:blue">&gt;</span></p>
+<p><span style="color:blue">&nbsp; &nbsp; &nbsp; &nbsp; &lt;</span><span style="color:maroon">replacestring</span><span style="color:blue"> </span><span style="color:red">from</span><span style="color:blue">=</span>"<span style="color:blue">${stringToReplace}</span>"<span style="color:blue"> </span><span style="color:red">to</span><span style="color:blue">=</span>"<span style="color:blue">${newString}</span>"<span style="color:blue"> /&gt;</span></p>
+<p><span style="color:blue">&nbsp; &nbsp; &nbsp; &lt;/</span><span style="color:maroon">filterchain</span><span style="color:blue">&gt;</span></p>
+<p><span style="color:blue">&nbsp; &nbsp; &lt;/</span><span style="color:maroon">move</span><span style="color:blue">&gt;</span></p>
+
+<p><span style="color:blue">&nbsp; &nbsp; &lt;</span><span style="color:maroon">move</span><span style="color:blue"> </span><span style="color:red">file</span><span style="color:blue">=</span>"<span style="color:blue">${filename}.bak</span>"<span style="color:blue"> </span><span style="color:red">tofile</span><span style="color:blue">=</span>"<span style="color:blue">${filename}</span>"<span style="color:blue">/&gt;</span></p>
+<p><span style="color:blue">&nbsp; &lt;/</span><span style="color:maroon">target</span><span style="color:blue">&gt;</span></p>
+<p><span style="color:blue">&lt;/</span><span style="color:maroon">project</span><span style="color:blue">&gt;</span></p>
+</div>
+<p><strong>Add a pre-build step to the project<br>
+to run this target and feed in the correct file:<br></strong></p>
+<pre>pushd .<br>cd "$(ProjectDir)...."<br>binnantnant.exe -buildfile:buildtasks.build FindReplace  -D:filename="$(ProjectDir)PropertiesIcons.Designer.cs" -D:stringToReplace=internal -D:newString=public<br>binnantnant.exe -buildfile:buildtasks.build FindReplace  -D:filename="$(ProjectDir)PropertiesToolbarIcons.Designer.cs" -D:stringToReplace=internal -D:newString=public<br>popd<br><strong>            </strong></pre>
+<p><strong>Compile as you normally would and<br>
+note the output:<br></strong></p>
+<pre>------ Build started: Project: MyProject, Configuration: Debug Any CPU ------<br>pushd .<br>cd "C:svnMyProject-trunksrcMyProject...."<br>binnantnant.exe -buildfile:buildtasks.build FindReplace  -D:filename="C:svnMyProject-trunksrcMyProject\PropertiesIcons.Designer.cs" -D:stringToReplace=internal -D:newString=public<br>binnantnant.exe -buildfile:buildtasks.build FindReplace  -D:filename="C:svnMyProject-trunksrcMyProject\PropertiesToolbarIcons.Designer.cs" -D:stringToReplace=internal -D:newString=public<br>popd<br>NAnt 0.85 (Build 0.85.2344.0; rc4; 6/2/2006)<br>Copyright (C) 2001-2006 Gerry Shaw<br>http://nant.sourceforge.net<br><br>Buildfile: file:///C:/svn/MyProject-trunk/buildtasks.build<br>Target framework: Microsoft .NET Framework 2.0<br>Target(s) specified: FindReplace <br><br><br>FindReplace:<br><br>     [move] 1 files moved.<br>     [move] 1 files moved.<br><br>BUILD SUCCEEDED<br><br>Total time: 0 seconds.<br><br>NAnt 0.85 (Build 0.85.2344.0; rc4; 6/2/2006)<br>Copyright (C) 2001-2006 Gerry Shaw<br>http://nant.sourceforge.net<br><br>Buildfile: file:///C:/svn/MyProject-trunk/buildtasks.build<br>Target framework: Microsoft .NET Framework 2.0<br>Target(s) specified: FindReplace <br><br><br>FindReplace:<br><br>     [move] 1 files moved.<br>     [move] 1 files moved.<br><br>BUILD SUCCEEDED<br><br>Total time: 0 seconds.<br><br>Compile complete -- 0 errors, 0 warnings<br>MyProject -&gt; C:svnMyProject-trunksrcMyProjectbinDebugMyProject.dll<br>========== Build: 1 succeeded or up-to-date, 0 failed, 0 skipped ==========<br>        </pre>

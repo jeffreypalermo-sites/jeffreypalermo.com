@@ -1,0 +1,25 @@
+---
+wp_id: 465
+title: 'NHibernate:  ICriteria may cause update – know about AutoFlush mode – level 300'
+slug: nhibernate-criteria-may-cause-update-know-about-autoflush-mode-level-300
+permalink: /2006/10/nhibernate-criteria-may-cause-update-know-about-autoflush-mode-level-300/
+date: 2006-10-23T11:07:00
+date_utc: 2006-10-23T11:07:00Z
+modified: 2006-10-23T11:07:00
+format: html
+tags:
+- data-access
+- learning
+- tips-tricks
+excerpt: This topic is for those already using NHibernate. By looking at the forum, that is a whole load of people! As always, my blog posts stem from experience, and this is no different. It's been a year since I first tried out NHibernate, and since then I've used it on 4 large, unrelated applications. This latest […]
+comments_open: true
+---
+<p>This topic is for those already using NHibernate.&nbsp; By looking at the forum, that is a whole load of people!</p>
+<p>As always, my blog posts stem from experience, and this is no different.&nbsp; It's been a year since I first tried out NHibernate, and since then I've used it on 4 large, unrelated&nbsp;applications.&nbsp; This latest application of NHibernate is by far the most exciting, however, because we are able to take advantage of the full power of the library.&nbsp; The others have always been tempered with the few things that couldn't be changed that hampered seamless data access.&nbsp; My team no longer has to slow down to think about what SQL to write.&nbsp; We stay in C#, and we're going faster and faster.&nbsp; For the performance-minded, the NHibernate SQL is pretty darned fast (because there is nothing special about it – just CRUD).&nbsp; We run about 120 database tests in 2.5 seconds – not bad.</p>
+<p>Last week, I learned another thing new about NHibernate – AutoFlush mode.&nbsp; This is important because NHibernate only keeps 1 instance of your domain object per ISession instance, so if you ask for the same object multiple times from the same ISession instance, you'll get the same domain object instance.&nbsp; Imagine this scenario:&nbsp; </p>
+<ul>
+<li>You pull some objects into memory.</li>
+<li>The user modifies one object.</li>
+<li>You query for a list using ICriteria (the object the user modified is a match for this list)</li>
+</ul>
+<p>What should the system do?&nbsp; Should the fresh query refresh all the objects and throw away the user's changes?&nbsp; NHibernate's default behavior is "no".&nbsp; It is configured to "autoflush" by default.&nbsp; When it detects that some changes might inadvertently be thrown away by a fresh query, it will auto update the modified object to the database.&nbsp; If you open up SQL Profiler, look for UPDATE commands amidst SELECTs.&nbsp; If you choose to set the autoflush mode to "NEVER", then you'll get a big fat exception, and you can write some code to handle the times when you need to do a fresh query after a persistent object has been modified.</p>

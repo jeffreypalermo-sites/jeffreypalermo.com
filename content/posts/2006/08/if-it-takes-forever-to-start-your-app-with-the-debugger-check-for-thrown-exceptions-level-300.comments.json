@@ -1,0 +1,74 @@
+[
+  {
+    "id": 994,
+    "parent": 0,
+    "author_name": "David Yates",
+    "author_url": "http://",
+    "date": "2006-08-17T14:57:10",
+    "type": "comment",
+    "content_html": "<p>Jeff,</p>\n<p>My only comments is that even if you don’t turn on all the<br>\n“Common Language Runtime Exceptions” a first chance exception is still printed to the output.  I have dual monitors, so I have pulled mine out of the page control and placed it on my second monitor while I’m running in the IDE.  If I spot an error, I do as you suggested.</p>\n<p>Question:<br>\nIn an ASP.NET application, how would you handle an unhandled exception that bubbles all the way up to the user interface?</p>\n<p>How would you handle it in a winforms application? </p>\n<p>I know how I handle it, but I’m interested in your take on the subject.</p>\n<p>Dave</p>"
+  },
+  {
+    "id": 995,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-08-17T15:10:24",
+    "type": "comment",
+    "content_html": "<p>David,<br>\nYou are absolutely right.  That can tip you off to find out where these exceptions are coming from.</p>\n<p>I typically set up my user interfaces to have a global catch all that can communicate to the user that something went wrong and to notify support.  In ASP.NET, I have an Error.ascx user control that I invoke and display if an exception bubbles up.  In Winforms, I’ll show a message box.</p>"
+  },
+  {
+    "id": 996,
+    "parent": 0,
+    "author_name": "Tomas Restrepo",
+    "author_url": "http://www.winterdom.com/weblog",
+    "date": "2006-08-17T16:18:43",
+    "type": "comment",
+    "content_html": "<p>I tend to follow Jeffrey’s suggestion: Always have an unhandled exception handler in your WinForms app, and make sure you hook up to all relevant events:<br>\n<a href=\"http://www.winterdom.com/weblog/2006/08/05/ExceptionHandlingVSTOOutlookAndOtherTopics.aspx\" rel=\"nofollow ugc\">http://www.winterdom.com/weblog/2006/08/05/ExceptionHandlingVSTOOutlookAndOtherTopics.aspx</a></p>"
+  },
+  {
+    "id": 997,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2006-08-17T21:40:57",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,<br>\nHow do you handle this in a critical application?<br>\nCase in point: I have an application where the defination is that nothing short of a reboot should stop the app. And that means that I need to handle exceptions fairly close to where they start (I have a shallow call stack in this app).</p>"
+  },
+  {
+    "id": 998,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-08-17T21:53:00",
+    "type": "comment",
+    "content_html": "<p>Ayende,<br>\nI would handle it the same way.  If a class can’t make a correct course of action when an error happens, it should report up.  Eventually, you will get high enough where a class does know what to do.</p>\n<p>In a Windows service I’ve worked on, I  had a similar situation.  It would continually work, and it should never stop.  I had a wrapper around the code that started and repeated the work, and if something bubbled up, I’d log it, reinitialize the work, and start it over.  A few times, something major got to that (wrong DB connection string), but the service never stopped.  I had to fix the DB connection string, though.</p>\n<p>At the very least, you should have a top-level catch-all for the unexpected.  My advice is to handle exceptions where you can handle them, but no lower.  Ignoring an exception != handling.</p>"
+  },
+  {
+    "id": 999,
+    "parent": 0,
+    "author_name": "Tomas Restrepo",
+    "author_url": "http://www.winterdom.com/weblog",
+    "date": "2006-08-17T23:45:56",
+    "type": "comment",
+    "content_html": "<p>Ayende,</p>\n<p>Besides Jeffrey’s answer, I think one key point here is that it doesn’t necessarily mean that you need to trap the exceptions very close to where they start (though you seem to suggest this might be your case because of your design), but instead it is about identifying key points in the code that should be exception boundaries.</p>\n<p>For example, even though you might have a global unhandled exception handler, if you’re spawning threads chances are you might want to make the threaded method an exception handling boundary. Or perhaps you’re using the threadpool, then you’ll want the method fired by the threadpool to be an exception handling boundary as well. If you have command-driven, Unit-Of-Work and facade driven code scenarios, then those are likely candidates as well.</p>\n<p>I’ve had good results applying this.</p>"
+  },
+  {
+    "id": 1000,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2006-08-18T12:38:32",
+    "type": "comment",
+    "content_html": "<p>The general path is something like:</p>\n<p>Start service:<br>\n – Perform Validation on config (include connection string)<br>\n – If fail, log and stop<br>\n – Start service (basically a work manager)<br>\n – An event occurs (time related or file arrival related)<br>\n  – Queue on thread pool<br>\n  – try:<br>\n   – Start task<br>\n  – catch:<br>\n   – Log error</p>\n<p> – Tasks<br>\n  – Execute something<br>\n   – (Usuaully start transaction)<br>\n    – Do Work</p>\n<p>But some tasks may need to process stuff that are failure prone by their nature (calling Web Service), and raising an exception may rollback existing transactions.<br>\nThis means that in certain cases I have something like:</p>\n<p> – transaction:<br>\n   – Get Data<br>\n   – try:<br>\n    – Send to WS<br>\n    – Update status to success<br>\n   – catch:<br>\n    – log error<br>\n    – Update status to failed<br>\n  – save<br>\n  – commit</p>\n<p>I allow myself to ignore the higher level exception handling in those cases because I know what the conditions to failure are, and I know that there is nothing they can do that I can’t do locally.</p>"
+  },
+  {
+    "id": 1001,
+    "parent": 0,
+    "author_name": "Tomas Restrepo",
+    "author_url": "http://www.winterdom.com/weblog",
+    "date": "2006-08-18T16:06:45",
+    "type": "comment",
+    "content_html": "<p>Ayende,</p>\n<p>That sounds good, and seems pretty inline with what I mentioned before: your tasks might be (or are) exception boundaries, and that’s seems just fine.</p>"
+  }
+]

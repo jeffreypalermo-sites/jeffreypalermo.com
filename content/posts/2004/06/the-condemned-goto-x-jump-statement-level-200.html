@@ -1,0 +1,25 @@
+---
+wp_id: 561
+title: The condemned “goto x;” jump statement – level 200
+slug: the-condemned-goto-x-jump-statement-level-200
+permalink: /2004/06/the-condemned-goto-x-jump-statement-level-200/
+date: 2004-06-07T14:10:00
+date_utc: 2004-06-07T14:10:00Z
+modified: 2004-06-07T14:10:00
+format: html
+excerpt: I’ve used all of the C# Jump statements. You probably use break, continue, and return on a daily basis. And in your switch statements, you probably use default. But do you use the goto statement? If you are like me, you’ve been conditioned since QBasic to avoid the infamous goto statement. It creates spaghetti code, […]
+comments_open: true
+---
+<p>I’ve used all of the <a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/csref/html/vclrfjumpstatementss.asp">C# Jump statements</a>.&nbsp; You probably use break, continue, and return on a daily basis.&nbsp; And in your switch statements, you probably use default.&nbsp; But do you use the <strong>goto</strong> statement?&nbsp; If you are like me, you’ve been conditioned since QBasic to avoid the infamous goto statement.&nbsp; It creates spaghetti code, right?&nbsp; Well, if you use it irresponsibly, it does, but what about nested <strong>if</strong> statements?&nbsp; How do you jump out of 2 nested if statements?&nbsp; break and continue don’t work.&nbsp; My solution:&nbsp; Use the <strong>goto</strong> statement.</p><pre>&lt;snippet&gt;<br>if(condition 1)<br>
+{<br>
+    statement;<br>
+    statement;<br>
+    if(condition 2)<br>
+    {<br>
+        statement;<br>
+        goto endIf;<br>
+    }<br>
+}<br>
+statement-that-should not happen if condition 2 is not met;<br>
+endIf:;  //label to jump to and empty statement included.<br>&lt;/snippet&gt;</pre>
+<p>You can probably think of several ways to refactor the above in order to avoid the goto statement, but in this case, the goto statement was the best decision, and this is a very valid use of the statement, and it does not create spaghetti code.</p>

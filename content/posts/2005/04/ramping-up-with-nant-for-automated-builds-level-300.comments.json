@@ -1,0 +1,38 @@
+[
+  {
+    "id": 279,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://",
+    "date": "2005-04-22T20:46:00",
+    "type": "comment",
+    "content_html": "<p>Thanks for the great example.  This is exactly how I planned on easing into the NANT world (using the solution task instead of completely abandoning VS.NET), but still wasn’t sure how painful it would be.  This makes it clear that it should be a simple and straightforward.</p>"
+  },
+  {
+    "id": 280,
+    "parent": 0,
+    "author_name": "Richard Slade",
+    "author_url": "http://",
+    "date": "2005-05-19T03:26:00",
+    "type": "comment",
+    "content_html": "<p>Trying to set up nant for the first time as a noob to it all.. this is the first decent full example that has got a build working. thank you!</p>"
+  },
+  {
+    "id": 281,
+    "parent": 0,
+    "author_name": "Steve Hebert",
+    "author_url": "http://",
+    "date": "2005-05-20T09:28:00",
+    "type": "comment",
+    "content_html": "<p>I blogged about my build automation adventures last year.  I started with NAnt and still use it for one portion of the build but switched to Visual Build Pro for the overall process.  For &lt;$200 I was able to implement my full build process including source code checkout/mod/checkin, project building and moving to a staging area in one day. </p>\n<p>I did some bits for assembling a Sql Upgrade Script using NAnt and blogged the associated code….<br>\n  <a href=\"http://codebetter.com/blogs/steve.hebert/archive/category/1057.aspx\" rel=\"nofollow\">http://codebetter.com/blogs/steve.hebert/archive/category/1057.aspx</a></p>"
+  },
+  {
+    "id": 282,
+    "parent": 0,
+    "author_name": "Jason Meridth",
+    "author_url": "http://",
+    "date": "2006-02-10T15:16:30",
+    "type": "comment",
+    "content_html": "<p>Thank you. Thank you. Thank you.</p>\n<p>I’ve been looking everywhere for a global delete to allow for rebuilds.</p>\n<p>Very cool.</p>"
+  }
+]

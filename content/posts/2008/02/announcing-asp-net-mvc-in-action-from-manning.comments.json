@@ -1,0 +1,137 @@
+[
+  {
+    "id": 2312,
+    "parent": 0,
+    "author_name": "Scott Bellware",
+    "author_url": "http://scottic.us",
+    "date": "2008-02-24T03:07:26",
+    "type": "comment",
+    "content_html": "<p>A Rails guru, or a Rails developer?  A guru to me is someone pretty recognizable in the Rails world who is recognizable for conference appearances, blogging, and authoring.</p>\n<p>Not trying to be a wise-ass here.   Sincerely concerned.  I’ve heard you use the rails guru tag before and I got to thinking about it since its a pretty heavy weight moniker.</p>\n<p>If he’s a smart dude with Rails chops, great!  But if he’s not what the Rails community might think of as a guru, then the tag could backfire like John Kerry’s two purple hearts.</p>"
+  },
+  {
+    "id": 2313,
+    "parent": 0,
+    "author_name": "Scott Bellware",
+    "author_url": "http://scottic.us",
+    "date": "2008-02-24T03:09:54",
+    "type": "comment",
+    "content_html": "<p>P.S.: good to see that Manning didn’t saddle your book with one of those pictures of the middle ages transvestite cross-dressers as cover art \uD83D\uDE42</p>"
+  },
+  {
+    "id": 2314,
+    "parent": 0,
+    "author_name": "SoftMind",
+    "author_url": "http://www.softmind.biz",
+    "date": "2008-02-24T05:14:49",
+    "type": "comment",
+    "content_html": "<p>Hello,</p>\n<p>The download link for the first free chapter is offering a java book, rather than asp.net mvc book.</p>\n<p>I thought i should point out this serious error by publication, which you can inform the publishers.</p>\n<p>Thanks</p>"
+  },
+  {
+    "id": 2315,
+    "parent": 0,
+    "author_name": "Eyad Salamin",
+    "author_url": "http://",
+    "date": "2008-02-24T10:11:27",
+    "type": "comment",
+    "content_html": "<p>@Jeffery: Good news. Are you going to provide any code samples within the book? if so, what are the tools/ frameworks that will be used for testing, IOC, views.. etc.<br>\nBTW, I also tried to download it and the link is pointing to a java framework (SEAM) book.</p>\n<p>@Scott, with all respect to all what you have said. why do you think someone should agree with you on the definition of a guru?</p>"
+  },
+  {
+    "id": 2316,
+    "parent": 0,
+    "author_name": "Simone",
+    "author_url": "http://codeclimber.net.nz",
+    "date": "2008-02-24T16:07:36",
+    "type": "comment",
+    "content_html": "<p>Very cool… I think I’m going to invest 30$ to buy the early access and then the book.</p>\n<p>Keep on the good work on evangelizing on the ASP.NET MVC… I’m doing some kind of speeches and writing articles on that topic as well.. I really love this</p>"
+  },
+  {
+    "id": 2317,
+    "parent": 0,
+    "author_name": "Jason Porter",
+    "author_url": "http://",
+    "date": "2008-02-24T17:41:51",
+    "type": "comment",
+    "content_html": "<p>Jeff,<br>\nI am curious why in all the PDF books, the pictures are in color but not the code.  If you just cut and paste from VS, you can show the code in color with keywords highlighted the way we developers are used to seeing code.  It makes it so much easier to read.   Is this something that Manning decides or can you do it in your book?<br>\nJason</p>"
+  },
+  {
+    "id": 2318,
+    "parent": 0,
+    "author_name": "typeof.net",
+    "author_url": "http://typeof.net",
+    "date": "2008-02-24T18:43:42",
+    "type": "comment",
+    "content_html": "<p>Very nice, I already bought it from MEAP ! Thanks !</p>"
+  },
+  {
+    "id": 2319,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-02-24T21:08:36",
+    "type": "comment",
+    "content_html": "<p>@Simone,<br>\nI don’t consider myself as an evangelist of the ASP.NET MVC Framework.  I’m an evangelism of good architecture, test coverage and maintainability.  The Mvc framework line up with my goals, so that’s why I’m interested.  That’s my goal.  If it ends up getting the word out about the new framework, that’s an ancillary result.</p>\n<p>Our focus for the book is not to rant and rave about how cool the “new thing” is.  Our goal is to show readers how to most effectively use the good parts and work around the bad part.</p>\n<p>I hope you enjoy the book.</p>\n<p>@Jeff,<br>\nManning has a style guide, and it includes black and white code listings.  I’ll check to see if we can do color listings.</p>"
+  },
+  {
+    "id": 2320,
+    "parent": 0,
+    "author_name": "The Other Steve",
+    "author_url": "http://",
+    "date": "2008-02-25T15:59:40",
+    "type": "comment",
+    "content_html": "<p>Scott,</p>\n<p>“If he’s a smart dude with Rails chops, great!  But if he’s not what the Rails community might think of as a guru, then the tag could backfire like John Kerry’s two purple hearts.”</p>\n<p>I don’t see the point in worrying about offending a group of 4 people who are rabid unthinking hyperpartisans.</p>\n<p>Anyway, I look forward to this book.</p>"
+  },
+  {
+    "id": 2321,
+    "parent": 0,
+    "author_name": "Scott Bellware",
+    "author_url": "http://scottic.us",
+    "date": "2008-02-25T20:27:18",
+    "type": "comment",
+    "content_html": "<p>Eyad,</p>\n<p>I think you’re jumping the gun a bit here by assuming I’m talking about “my” definition of a guru.  I think that the Rails community has the freedom to define who its gurus are.  I hadn’t happened across Dave in my forays into the Rails community – which while not being complete and total are somewhat in-depth since having worked in Rails full time for the past year.. When I hang with Rails folks, it seems that the gurus are well-known through implicit cultural negotiation of meaning around who is recognizable as a knowledge leader.  And thus my question.  Yep, I might have missed Dave, and I’m not the final word, but there’s enough of a discrepancy here to inquire of Jeff whether Dave’s role and perception in the Rails community might be overstated for purposes of creating positive credibility perceptions for this book’s authors.  If the claim about Dave is overstated, then it will ultimately have the opposite effect on credibility, and there’s no real good reason to do that.  I’m disappointed with the aspect of your rejoinder which appears to be geared toward marginalizing my inquiry.</p>"
+  },
+  {
+    "id": 2322,
+    "parent": 0,
+    "author_name": "Rams",
+    "author_url": "http://braincells2pixels.net",
+    "date": "2008-02-26T02:37:42",
+    "type": "comment",
+    "content_html": "<p>@Scott:<br>\nYou are right to question the “guru” tag associated with Dave V. Although I have not indulged in Rails development I had not heard of Dave V. I don’t Dave V’s work so I am not going to be the judge but when some one says Rails Guru, DHH comes to mind. A guru is an ultimate tag, someone who can claim a 10 out of 10 in skill level and there are very few who can truly lay claim to that. You are right. The guru status bestowed was a bit counter-productive. I have been hanging around codebetter blogs and am familiar with Jeff’s work but reading the guru status resulted in a “huh??” moment </p>"
+  },
+  {
+    "id": 2323,
+    "parent": 0,
+    "author_name": "JP",
+    "author_url": "http://",
+    "date": "2008-02-26T14:23:53",
+    "type": "comment",
+    "content_html": "<p>Jeff,</p>\n<p>Do you know if the final book will be available to purchase as a pdf? I’m a huge fan of that lately. I love bringing my books with me on a keyfob and being able to open them right next to my dev environment for reference and learning. Just curious.</p>\n<p>Keep up the great work!</p>"
+  },
+  {
+    "id": 2324,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-02-26T14:47:58",
+    "type": "comment",
+    "content_html": "<p>@JP,<br>\nThe final book will be available as a PDF.</p>"
+  },
+  {
+    "id": 2325,
+    "parent": 0,
+    "author_name": "Eyad Salamin",
+    "author_url": "http://",
+    "date": "2008-02-28T06:06:34",
+    "type": "comment",
+    "content_html": "<p>@Scott:<br>\nI think my question to you gave the wrong impression.</p>\n<p>&gt;&gt;I think you’re jumping the gun a bit here by assuming I’m talking about “my” definition of a guru</p>\n<p>That’s what I understood from your first post when you said: “A guru to (me) is…”. And that’s what drove me to comment back based on that face that everyone might have his own definition of a guru. For instance, you defined a guru as someone who has remarkable activities in the community, whereas Rams defines a guru as someone who can claim 10 out of 10 in skill level.</p>\n<p>On the other hand, I strongly agree with the rest of your post especially the part that states that it’s the community freedom to define who its gurus are, the thing that made me think for the second time (the first one was upon reading ur first comment) why don’t we leave it to the community to decide whether he’s a guru or not? keeping in mind that community opinions cannot be expressed by someone’s point of view. </p>\n<p>Finally, I want you to understand that I did not (and will never) intend to disappoint or marginalize anyone here.</p>"
+  },
+  {
+    "id": 2326,
+    "parent": 0,
+    "author_name": "Fabio Maulo",
+    "author_url": "http://",
+    "date": "2008-03-05T02:08:53",
+    "type": "comment",
+    "content_html": "<p>Hi Jeffrey.<br>\nI’m Fabio Maulo from NH team. I buy the book and if you need some information about NH2.0 (next release in few month) or some sort of hand, let me know.<br>\nNH2.0 have a lot of new features, it close to Hibernate3.2.5 (our big brother).<br>\nWe are working on some others features in <a href=\"https://sourceforge.net/projects/nhcontrib\" rel=\"nofollow ugc\">https://sourceforge.net/projects/nhcontrib</a> .</p>\n<p>Thanks for your work.<br>\nBye.</p>"
+  }
+]

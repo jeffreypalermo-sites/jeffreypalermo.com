@@ -1,0 +1,62 @@
+---
+wp_id: 1111
+title: Consuming a Portable Area with a Web Forms application
+slug: consuming-a-portable-area-with-a-web-forms-application
+permalink: /2009/11/consuming-a-portable-area-with-a-web-forms-application/
+date: 2009-11-13T15:33:50
+date_utc: 2009-11-13T15:33:50Z
+modified: 2009-11-13T15:33:50
+format: html
+categories:
+- blog
+excerpt: Background Headspring has developed and donated Portable Areas to the MvcContrib project. It currently resides in the MVC2 branch on the MvcContrib GitHub source control site. Eric Hexter has written a multi-piece tutorial on how to create and publish a Portable Area assembly. Download code here. A Portable Area builds on the concept of an […]
+comments_open: true
+---
+<h2>Background</h2>
+<p><a href="http://www.headspringsystems.com/">Headspring</a> has developed and donated Portable Areas to the <a href="http://mvccontrib.org">MvcContrib</a> project.&nbsp; It currently resides in the MVC2 branch on the <a href="http://github.com/mvccontrib">MvcContrib GitHub</a> source control site.&nbsp; <a href="http://www.lostechies.com/blogs/hex/">Eric Hexter</a> has written a multi-piece tutorial on how to create and publish a Portable Area assembly.</p>
+<h2>Download code <a href="http://mvccontrib.codeplex.com/Release/ProjectReleases.aspx?ReleaseId=35865#DownloadId=92800"><strong><em>here</em></strong></a>.</h2>
+<p>A Portable Area builds on the concept of an ASP.NET control, and it takes it a step further.&nbsp; Whereas a control can encapsulate a certain part of the page to deliver rich functionality, a Portable Area can encapsulate an unlimited number of pages in a single assembly.&nbsp; The Portable Area in itself is an ASP.NET MVC 2 area that is packaged in a certain way into a single .Net assembly.</p>
+<p>Component vendors have offerings of rich functionality packaged up into web controls.&nbsp; Now with MvcContrib layered on top of ASP.NET MVC 2, component vendors as well as you and I can package and distribute entire sections of functionality in a single binary.&nbsp; Think of comprehensive user administration and diagnostics.&nbsp; Think of executive dashboards and content management.&nbsp; All this rich front-end functionality can be packaged and distributed while at the same time allowing for the application to examine and process messages being sent from the Portable Area.</p>
+<p>For example, a dashboard portable area might need 5 key metrics based on the type of dashboard used.&nbsp; It sends a QueryMessage to the application (via the Portable Areas bus) requesting these metrics.&nbsp;&nbsp; A query message handler that the application defines accepts the query message and provides the metrics for the portable area to consume and publish on the rich dashboard.</p>
+<p>In this application, I want to demonstrate how Portable Areas, while being based on ASP.NET MVC 2, are a generic ASP.NET component model.&nbsp; This example, available via the <a href="http://mvccontrib.codeplex.com/Release/ProjectReleases.aspx?ReleaseId=35865#DownloadId=92800"><strong>MvcContrib CodePlex page</strong></a>, is a standard Web Forms application with the LoginPortableArea configured.&nbsp; This is just the first sample portable area that is included in MvcContrib’s MVC2 branch.</p>
+<h2>Enabling MVC routes and views in a Web Forms app.</h2>
+<p>In you web.config, you will need to add the following section in your &lt;pages/&gt; element:</p>
+<p><a href="/wp-content/uploads/2018/07/consumingaportableareawithawebformsappli_d90aimage_2.png"><img loading="lazy" decoding="async" style="border-bottom:0; border-left:0; display:inline; border-top:0; border-right:0" title="image" border="0" alt="image" src="/wp-content/uploads/2018/07/consumingaportableareawithawebformsappli_d90aimage_thumb.png" width="544" height="286"></a> </p>
+<p>Also, you need to add the UrlRoutingModule to the &lt;httpModules/&gt; element:</p>
+<p><a href="/wp-content/uploads/2018/07/consumingaportableareawithawebformsappli_d90aimage_4.png"><img loading="lazy" decoding="async" style="border-bottom:0; border-left:0; display:inline; border-top:0; border-right:0" title="image" border="0" alt="image" src="/wp-content/uploads/2018/07/consumingaportableareawithawebformsappli_d90aimage_thumb_1.png" width="617" height="154"></a> </p>
+<p>You will also need a Site.Master page in the page where the Portable Area expects it.&nbsp; This may be a future enhancement, but it must implement content placeholders for TitleContent and MainContent.&nbsp; Use it to adapt the sections of your existing master page so that views delivered by the portable area fit nicely within your own master page.&nbsp; Also notice the web.config file that must be in the Views folder (just copy it from an empty ASP.NET MVC project):</p>
+<p><a href="/wp-content/uploads/2018/07/consumingaportableareawithawebformsappli_d90aimage_6.png"><img loading="lazy" decoding="async" style="border-bottom:0; border-left:0; display:inline; border-top:0; border-right:0" title="image" border="0" alt="image" src="/wp-content/uploads/2018/07/consumingaportableareawithawebformsappli_d90aimage_thumb_2.png" width="323" height="353"></a> </p>
+
+<h2>Registering the LoginPortableArea and handling messages sent by it:</h2>
+<p>In your Global.asax file, there are a few lines of code to register the portable area:</p>
+<p><a href="/wp-content/uploads/2018/07/consumingaportableareawithawebformsappli_d90aimage_8.png"><img loading="lazy" decoding="async" style="border-bottom:0; border-left:0; display:inline; border-top:0; border-right:0" title="image" border="0" alt="image" src="/wp-content/uploads/2018/07/consumingaportableareawithawebformsappli_d90aimage_thumb_3.png" width="585" height="195"></a> </p>
+<p>Notice that you are registering two classes of your own: </p>
+<ol>
+<li>LoginHandler</li>
+<li>ForgotPasswordHandler</li>
+</ol>
+<p>We will explore LoginHandler, but download the code if you care to see the ForgotPasswordHandler.&nbsp; We register handlers with the bus so that we have classes that can be created and passed the messages.&nbsp; Here is what LoginHandler looks like:</p>
+<p><a href="/wp-content/uploads/2018/07/consumingaportableareawithawebformsappli_d90aimage_10.png"><img loading="lazy" decoding="async" style="border-bottom:0; border-left:0; display:inline; border-top:0; border-right:0" title="image" border="0" alt="image" src="/wp-content/uploads/2018/07/consumingaportableareawithawebformsappli_d90aimage_thumb_4.png" width="579" height="162"></a> </p>
+<p>Derive from MessageHandler&lt;TMessage&gt; or implement IMessageHandler fully.&nbsp; Putting the type of the message in the declaration will tell the bus that this handler knows how to handle that message type.&nbsp; It is possible to create a handler that can inspect ALL message types by implementing IMessageHandler fully.&nbsp; </p>
+<p>There are three types of messages that a Portable Area might send:</p>
+<ol>
+<li>IEventMessage : informational purposes</li>
+<li>IQueryMessage : requesting some information</li>
+<li>ICommandMessage : requestion the app to perform some action</li>
+</ol>
+<p>All the message types are IEventMessage(s), and they all flow down the same bus.&nbsp; There is a handler factory abstraction you can set so that you are in control of the construction of event handler classes.&nbsp; The default that is built in is Activator.CreateInstance() – requires a no-arg constructor.</p>
+<p>Once this is wired up, we can run our app and see the only page present, Default.aspx</p>
+<p><a href="/wp-content/uploads/2018/07/consumingaportableareawithawebformsappli_d90aimage_12.png"><img loading="lazy" decoding="async" style="border-bottom:0; border-left:0; display:inline; border-top:0; border-right:0" title="image" border="0" alt="image" src="/wp-content/uploads/2018/07/consumingaportableareawithawebformsappli_d90aimage_thumb_5.png" width="571" height="264"></a> </p>
+<p>This is our only Web Form in the application.&nbsp; It uses some built-in login controls to show who is logged in as well as links to login and log out.&nbsp; I have configured forms authentication in the web.config file.&nbsp; We will run the browser and step through the sequence of screens:</p>
+<p><a href="/wp-content/uploads/2018/07/consumingaportableareawithawebformsappli_d90aimage_14.png"><img loading="lazy" decoding="async" style="border-bottom:0; border-left:0; display:inline; border-top:0; border-right:0" title="image" border="0" alt="image" src="/wp-content/uploads/2018/07/consumingaportableareawithawebformsappli_d90aimage_thumb_6.png" width="418" height="275"></a> </p>
+<p>We see that we are not logged in.&nbsp; Let’s click the “Login” link . . . </p>
+<p><a href="/wp-content/uploads/2018/07/consumingaportableareawithawebformsappli_d90aimage_18.png"><img loading="lazy" decoding="async" style="border-bottom:0; border-left:0; display:inline; border-top:0; border-right:0" title="image" border="0" alt="image" src="/wp-content/uploads/2018/07/consumingaportableareawithawebformsappli_d90aimage_thumb_8.png" width="529" height="229"></a> </p>
+<p>Now we are in the Portable Area.&nbsp; This page is not defined in our app at all.&nbsp; Let’s type in a user name and password and click Submit. . . </p>
+
+<p><a href="/wp-content/uploads/2018/07/consumingaportableareawithawebformsappli_d90aimage_20.png"><img loading="lazy" decoding="async" style="border-bottom:0; border-left:0; display:inline; border-top:0; border-right:0" title="image" border="0" alt="image" src="/wp-content/uploads/2018/07/consumingaportableareawithawebformsappli_d90aimage_thumb_9.png" width="427" height="228"></a> </p>
+<p>Now it knows that I am logged in, and regular Web Forms gives me a handy “Logout” link.</p>
+<h2></h2>
+<h2>Conclusion</h2>
+<p>This post has given us an example of how to consume an MvcContrib Portable Area from within a regular Web Forms app.&nbsp; Furthermore, it demonstrates how to run ASP.NET MVC pages right alongside Web Forms pages.</p>
+<h2>Call to action for component vendors</h2>
+<p>Please flood the marketplace with richer components that span multiple pages.&nbsp; The controls are nice and very useful, but there is lots of general functionality that can be bought instead of built by every development team.&nbsp; Portable Areas work in ASP.NET MVC as well as Web Forms, so while the development model is MVC, the consumption and customer market is the full breadth of ASP.NET developers.</p>

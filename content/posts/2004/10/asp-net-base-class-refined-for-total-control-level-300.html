@@ -1,0 +1,33 @@
+---
+wp_id: 127
+title: ASP.NET base class refined for total control – level 300
+slug: asp-net-base-class-refined-for-total-control-level-300
+permalink: /2004/10/asp-net-base-class-refined-for-total-control-level-300/
+date: 2004-10-21T08:06:00
+date_utc: 2004-10-21T08:06:00Z
+modified: 2004-10-21T08:06:00
+format: html
+excerpt: In my last post, I wrote about creating an ASP.NET base class that is in complete control of its execution without the possibility of a derived page executing code when it shouldn’t. With OOP, we can’t guarantee this if we are exposing virtual methods, but what I have done is laid a framework for developing […]
+comments_open: true
+---
+<p>In my last post, I wrote about creating an ASP.NET base class that is in complete control of its execution without the possibility of a derived page executing code when it shouldn’t.&nbsp; With OOP, we can’t guarantee this if we are exposing virtual methods, but what I have done is laid a framework for developing aspx’s on top of this base page.&nbsp; Some of my base page is below:</p><pre><span class="ColorCSKeyword">        protected</span> Page()<br>
+<br>        {<br>
+<br>            <span class="ColorCSKeyword">base</span>.Init +=<span class="ColorCSKeyword">new</span> EventHandler(Page_Init);<br>
+<br>            <span class="ColorCSKeyword">base</span>.Load +=<span class="ColorCSKeyword">new</span> EventHandler(Page_Load);<br>
+<br>            <span class="ColorCSKeyword">base</span>.PreRender +=<span class="ColorCSKeyword">new</span> EventHandler(Page_PreRender);<br>
+<br>            <span class="ColorCSKeyword">base</span>.Unload +=<span class="ColorCSKeyword">new</span> EventHandler(Page_Unload);<br>
+<br>        }<br>
+<br>        <span class="ColorCSKeyword">public</span> <span class="ColorCSKeyword">new</span> event EventHandler Init;<br>
+<br>        <span class="ColorCSKeyword">protected</span> <span class="ColorCSKeyword">new</span> virtual <span class="ColorCSKeyword">void</span> OnInit(EventArgs e)<br>
+<br>        {<br>
+<br>            Trace.Warn(“Begin <span class="ColorCSKeyword">Base</span> OnInit”);<br>
+<br>            <span class="ColorCSKeyword">if</span>(Init != <span class="ColorCSKeyword">null</span>)<br>
+<br>                Init(<span class="ColorCSKeyword">this</span>, e);<br>
+<br>            Trace.Warn(“End <span class="ColorCSKeyword">Base</span> OnInit”);<br>
+<br>        }<br>
+<br>        <span class="ColorCSKeyword">private</span> <span class="ColorCSKeyword">void</span> Page_Init(object sender, EventArgs e)<br>
+<br>        {<br>
+<br>            Trace.Warn(“Begin <span class="ColorCSKeyword">Base</span> Init”);<br>
+<br>            OnInit(e);<br>
+<br>            Trace.Warn(“End <span class="ColorCSKeyword">Base</span> Init”);<br>
+<br>        }</pre>Notice that I use the “new” keywork for OnInit as well.&nbsp; This is so that if the aspx overrides the OnInit method, it still cannot execute code before the base page gets a chance to.&nbsp; The base page reacts to the Init Event from its parent, executes some code, then calls its OnInit method (which raises this class’s Init event).&nbsp; The aspx subscribes to its base class’s Init event.&nbsp; The end developer experience is exactly the same, but what I do in my base class results in complete control of page executiong most of the time.&nbsp; Most of the time the aspx will override On* methods and execute event handlers.&nbsp;

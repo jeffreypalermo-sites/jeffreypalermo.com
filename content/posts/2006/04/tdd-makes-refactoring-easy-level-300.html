@@ -1,0 +1,35 @@
+---
+wp_id: 415
+title: TDD makes refactoring easy – level 300
+slug: tdd-makes-refactoring-easy-level-300
+permalink: /2006/04/tdd-makes-refactoring-easy-level-300/
+date: 2006-04-13T03:51:00
+date_utc: 2006-04-13T03:51:00Z
+modified: 2006-04-13T03:51:00
+format: html
+tags:
+- agile
+- coding-principles
+excerpt: 'Here is the main reasoning for this: TDD states that a unit test is written before a unit of code. Each unit of code will have a unit test. When a unit of code needs to be refactored (changed in structure without affecting behavior), the unit test will preserve the behavior of the code. The […]'
+comments_open: true
+---
+<p>Here is the main reasoning for this:&nbsp; TDD states that a unit test<br>
+is written before a unit of code.&nbsp; Each unit of code will have a<br>
+unit test.&nbsp; When a unit of code needs to be <a href="http://en.wikipedia.org/wiki/Refactor">refactored </a>(changed<br>
+in structure without affecting behavior), the unit test will preserve<br>
+the behavior of the code.&nbsp; The unit can be refactored quickly, and<br>
+the unit tests will assert that the code still behaves as originally<br>
+intended.</p>
+<p>Consider refactoring without unit tests or with only integration<br>
+tests.&nbsp; First, without tests.&nbsp; You refactor a piece of code<br>
+that doesn’t have a test.&nbsp; Now to ensure that you didn’t break<br>
+anything, you have to run your application with some scenarios that are<br>
+sure to exercise the changed code.&nbsp; This is more time-consuming<br>
+that merely running the unit tests for the unit in question.&nbsp; </p>
+<p>Suppose you have _some_ tests for the unit, but they aren’t unit<br>
+tests.&nbsp; The tests involve several other pieces of code as<br>
+well.&nbsp; If all is well, the tests will still pass, but it they<br>
+fail, you would have to debug into the test to find out what’s really<br>
+going on since the test has a larger scope.&nbsp; A unit test’s scope<br>
+is only that of the code unit, and if the test fails, it pinpoints the<br>
+area of failure.</p>

@@ -1,0 +1,16 @@
+---
+wp_id: 119
+title: RegisterClientScriptBlock() incompatibility in .Net v2.0 Beta 1 – level 100
+slug: registerclientscriptblock-incompatibility-in-net-v2-0-beta-1-level-100
+permalink: /2004/09/registerclientscriptblock-incompatibility-in-net-v2-0-beta-1-level-100/
+date: 2004-09-16T12:36:00
+date_utc: 2004-09-16T12:36:00Z
+modified: 2004-09-16T12:36:00
+format: html
+excerpt: 'This may impact many people because it is a change in the validation of the parameters of this method. The method is defined below: RegisterClientScriptBlock(string key, string script); In .Net 1.1, the key parameter could not be null, but it COULD be a zero-length string. In .Net 2.0 Beta 1, this parameter is validated so […]'
+comments_open: true
+---
+<p>This may impact many people because it is a change in the validation of the parameters of this method.&nbsp; The method is defined below:</p>
+<p>RegisterClientScriptBlock(string key, string script);</p>
+<p>In .Net 1.1, the key parameter could not be null, but it COULD be a zero-length string.&nbsp; In .Net 2.0 Beta 1, this parameter is validated so that an empty string is not valid input.&nbsp; It throws an exception.&nbsp; </p>
+<p>Maybe a validation change for the better, but a breaking change none-the-less.</p>

@@ -1,0 +1,65 @@
+[
+  {
+    "id": 2263,
+    "parent": 0,
+    "author_name": "Ken Egozi",
+    "author_url": "http://www.kenegozi.com/blog",
+    "date": "2008-01-25T08:28:59",
+    "type": "comment",
+    "content_html": "<p>I like the tests, I don’t like the intent they reveal.<br>\nwhy use the type as key?</p>\n<p>I like using the DictionaryAdapter and an interface-per-view approach much better. could make testing easier, too.</p>"
+  },
+  {
+    "id": 2264,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-25T13:14:55",
+    "type": "comment",
+    "content_html": "<p>@Ken,<br>\nI use the type as the key in order to provide a way to pull out the default object of a given type.  The generic usage eliminates the need for casting, and I believe we have an 80% solution here.</p>\n<p>Please elaborate on what you like about DictionaryAdapter and what you gain by defining an interface for each view.</p>"
+  },
+  {
+    "id": 2265,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-25T13:27:38",
+    "type": "comment",
+    "content_html": "<p>@Ken,<br>\nThe SmartBag is definitely not compatible with DictionaryAdapter, but it makes it easy to work in the view.</p>\n<p>I think another capability that MvcContrib should provide is a ViewBase class that leverage’s Castle’s DictionaryAdapter.  </p>\n<p>My thinking behind this is that I see value in both approaches and that I don’t think the world (or MvcContrib users) will all use the same approach.</p>\n<p>I read up on your blog about AspView and Dictionary Adapter.</p>"
+  },
+  {
+    "id": 2266,
+    "parent": 0,
+    "author_name": "Greg",
+    "author_url": "http://",
+    "date": "2008-01-25T17:39:13",
+    "type": "comment",
+    "content_html": "<p>I am morbidly curious how this test actually works …</p>\n<p> [Test]<br>\n public void ShouldHandleProxiedObjectsByType() {<br>\n     MailMessage stub = MockRepository.GenerateStub();<br>\n     SmartBag bag = new SmartBag();<br>\n     bag.Add(stub);<br>\n     MailMessage message = bag.Get();<br>\n}</p>\n<p>to add a proxied object shouldn’t I need to say bad.Add(someProxiedObject)</p>\n<p>  93:     Assert.That(message, Is.EqualTo(stub));</p>\n<p>  94: }</p>"
+  },
+  {
+    "id": 2267,
+    "parent": 0,
+    "author_name": "Greg",
+    "author_url": "http://",
+    "date": "2008-01-25T18:26:54",
+    "type": "comment",
+    "content_html": "<p>ugh yucky type inference …</p>"
+  },
+  {
+    "id": 2268,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-25T19:10:16",
+    "type": "comment",
+    "content_html": "<p>@Greg,<br>\nIf I’m still not addressing your concern, please post a unit test that illustrates your desired behavior.  OR, submit a patch to CodeCampServer that fixes SmartBag to your liking.  It would help me understand your need.</p>"
+  },
+  {
+    "id": 2269,
+    "parent": 0,
+    "author_name": "Garry Shutler",
+    "author_url": "http://garryshutler.spaces.live.com/",
+    "date": "2008-01-25T22:04:57",
+    "type": "comment",
+    "content_html": "<p>I’ve put together my own version of a SmartBag which is tailored more to my liking to add to the conversation.</p>\n<p><a href=\"http://garryshutler.spaces.live.com/blog/cns!63AE3374C229159C!152.entry\" rel=\"nofollow ugc\">http://garryshutler.spaces.live.com/blog/cns!63AE3374C229159C!152.entry</a></p>"
+  }
+]

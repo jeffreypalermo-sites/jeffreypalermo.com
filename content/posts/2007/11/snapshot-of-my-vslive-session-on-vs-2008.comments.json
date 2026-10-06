@@ -1,0 +1,20 @@
+[
+  {
+    "id": 2136,
+    "parent": 0,
+    "author_name": "Chris Patterson",
+    "author_url": "http://blog.phatboyg.com/",
+    "date": "2007-11-15T05:38:04",
+    "type": "comment",
+    "content_html": "<p>The new JavaScript features in 2008 are going to be very nice — I can’t wait.</p>\n<p>I believe XSLT debugging is already in 2005 — we use it in our systems with the compiled XSLT transforms. Now if you’re talking about being able to debug interpreted XSLT in the browser, well, that my friend is another story!</p>"
+  },
+  {
+    "id": 2137,
+    "parent": 0,
+    "author_name": "David",
+    "author_url": "http://www.geekzone.co.nz/dmw",
+    "date": "2007-11-15T08:29:47",
+    "type": "comment",
+    "content_html": "<p>I really enjoy ReSharper. I’m worried that there will be a long delay before ReSharper supports VS2008. That leaves the choice between two options in the interim:<br>\n1. VS2005 + ReSharper, or<br>\n2. VS2008 + no ReSharper?</p>"
+  }
+]

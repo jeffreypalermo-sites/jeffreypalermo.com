@@ -1,0 +1,248 @@
+---
+wp_id: 441
+title: 'NFJS:  Cleaning up your code with Neal Ford – level 200'
+slug: nfjs-cleaning-up-your-code-with-neal-ford-level-200
+permalink: /2006/07/nfjs-cleaning-up-your-code-with-neal-ford-level-200/
+date: 2006-07-11T23:47:00
+date_utc: 2006-07-11T23:47:00Z
+modified: 2006-07-11T23:47:00
+format: html
+tags:
+- developer-community
+excerpt: 'Neal gave some great tips on improving code. Here’s the rundown. These are thoughts directly from Neal: Coding standards aren’t necessary. They are just preferences that folks in charge force on underlings. There are more important things than coding standards. Tools can reformat code to some sort of standard. #1: Naming things: Use verbose variable […]'
+comments_open: true
+---
+<p><a href="http://www.nealford.com/">Neal </a>gave some great tips on improving code.<span>&nbsp; </span>Here’s the rundown.<span>&nbsp; </span>These are thoughts directly from Neal:</p>
+<p>Coding standards aren’t necessary.<span>&nbsp; </span>They are just preferences that folks in<br>
+charge force on underlings.<span>&nbsp; </span>There are<br>
+more important things than coding standards.<span>&nbsp;<br>
+</span>Tools can reformat code to some sort of standard.</p>
+<p>#1:<span>&nbsp; </span>Naming<br>
+things:<span>&nbsp; </span>Use verbose variable names.<span>&nbsp; </span>Don’t worry about having to type.<span>&nbsp; </span>Modern IDEs give you these in a drop-down<br>
+list, so you only have to type them once.<span>&nbsp;<br>
+</span>IntelliJ and Resharper will guess, and you don’t have to even type them<br>
+once.</p>
+<p>#2:<span>&nbsp; </span>Composed<br>
+Method:<span>&nbsp; </span>Comments.<span>&nbsp; </span>Xml comments are sometimes useful if you need<br>
+to generate documentation.<span>&nbsp; </span>Intra-code<br>
+comments are not necessary most of the time.<span>&nbsp;<br>
+</span>No one ever reads them, they smell, and they lie when the code around<br>
+them changes (because no one updates them).<span>&nbsp;<br>
+</span>There is nothing that anchor line comments to the code they are supposed<br>
+to describe.<span>&nbsp; </span>At least Xml comments are<br>
+anchored to the method.<span>&nbsp; </span>So, if comments<br>
+in code don’t help as much as we’d like, what can we do?<span>&nbsp; </span>Make the method name be a long, description<br>
+of what the method does, and no method should be longer than 5-15 lines of<br>
+code.<span>&nbsp; </span>All public methods should read as<br>
+an outline of things that need to be done (and call private methods to get<br>
+these things done).</p>
+<ul type="disc">
+<li>Benefits<br>
+     of compose method</li>
+<ul type="circle">
+<li>Stack<br>
+      traces become easier to read</li>
+<li>Debugging<br>
+      is easer.<span>&nbsp; </span>Instead of stepping over<br>
+      lines of code, you step over private methods that are little chunks of<br>
+      work.</li>
+<li>It<br>
+      makes writing unit tests easier because you can fake out any step.</li>
+<li>It<br>
+      makes it easier to identify generic methods that can be pushed up the<br>
+      inheritance hierarchy.</li>
+<li>Once<br>
+      the method reads easier, line comments become redundant and unnecessary.</li>
+</ul>
+</ul>
+<p>#3:<span>&nbsp; </span>Apply the Unix<br>
+Philosophies:<span>&nbsp; </span>By applying unix<br>
+principles to software will make it better.<span>&nbsp;<br>
+</span></p>
+<ul type="disc">
+<li>Write<br>
+     simple parts connected by clean interfaces.</li>
+<li>Clarity<br>
+     is better than cleverness.</li>
+<li>Design<br>
+     programs to be connected to other programs</li>
+<li>Separate<br>
+     policy from mechanism; separate interfaces from engines.</li>
+<li>Design<br>
+     for simplicity; add complexity only where you must</li>
+<li>Write<br>
+     a big program only when it is clear by demonstration that nothing else<br>
+     will do.</li>
+<li>Design<br>
+     for visibility to make inspection and debugging easier.</li>
+<li>Robustness<br>
+     is the child of transparency and simplicity.</li>
+<li>Fold<br>
+     knowledge into data so program logic can be stupid and robust.</li>
+<li>In<br>
+     interface design always do the lease surprising thing.</li>
+<li>When a<br>
+     program has nothing surprising to say, it should say nothing.</li>
+<li>When<br>
+     you must fail, fail noisily and as soon as possible.<span>&nbsp; </span>(Don’t return null if something really<br>
+     bad happens).</li>
+<li>Programmer<br>
+     time is expensive; conserve it in preference to machine time.</li>
+<li>Avoid<br>
+     hand-hacking: write programs to write programs when you can.</li>
+<li>Prototype<br>
+     before polishing. Get it working before you optimize it.</li>
+<li>Distrust<br>
+     all claims for the “one true way”.</li>
+<li>Design<br>
+     for the future because it will be here sooner than you think.</li>
+</ul>
+<p>#4:<span>&nbsp; </span>Syntactic<br>
+Stuff:<span>&nbsp; </span></p>
+<ul type="disc">
+<li>If a<br>
+     constant is tied to a particular class, it should be defined within the<br>
+     class.</li>
+<li>If a<br>
+     constant is not tied to a class, it should be tied to an interface.<span>&nbsp; </span>Don’t implement a class for the<br>
+     constant.<span>&nbsp; </span>You should use the<br>
+     constant through the interface name.</li>
+<li>In<br>
+     Java, you can use the javax.print.attribute package and inherit from the<br>
+     EnumSyntax class.<span>&nbsp; </span>Java 5 has native<br>
+     support for Enums as does .Net, but safe enumerations that are<br>
+     ranged-checked are important.</li>
+<li>How to<br>
+     implement equals()</li>
+<ul type="circle">
+<li>Use<br>
+      == to see if you have been passed yourself.</li>
+<li>Use<br>
+      instanceOf to check the lineage of the object.</li>
+<li>Check<br>
+      the equality of each field in your class.<span>&nbsp;<br>
+      </span>If any test fails, return false.</li>
+</ul>
+<li>Any<br>
+     time you override equals(), you should override GetHashCode().<span>&nbsp; </span></li>
+<ul type="circle">
+<li>If<br>
+      two objects are equal, they must return the same hash code.<span>&nbsp; </span></li>
+<li>It’s<br>
+      not required that two unequal objects return different hash codes, but<br>
+      collection performance could suffer.</li>
+<li>IntelliJ<br>
+      is smart enough to generate good equals() and hashCode() methods.<span>&nbsp; </span>I’ll have to check to see if Resharper<br>
+      will do this.</li>
+</ul>
+</ul>
+<p>#5:<span>&nbsp; </span>Orthogonality:<br>
+the absence of side-effects.</p>
+<ul type="disc">
+<li>Command/query<br>
+     separation:<span>&nbsp; </span>You should not do two<br>
+     things under the guise of one.<span>&nbsp;<br>
+     </span>Don’t calculate something if you name it “get”.</li>
+<li>For<br>
+     example, in a Stack class, if you call “pop”, you remove something just to<br>
+     read it.<span>&nbsp; </span>If an error happens, you’ve<br>
+     lost the object.<span>&nbsp; </span>A more orthogonal<br>
+     approach would use a “top” method and “removeTop” method.</li>
+</ul>
+<p>#6:<span>&nbsp; </span>Don’t repeat<br>
+yourself.</p>
+<p style="text-indent:-.25in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]-->DRY principle.<span>&nbsp;<br>
+</span>Every piece of information should have one authoritative representation.</p>
+<p style="text-indent:-.25in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]-->If you have an NHibernate mapping, you could<br>
+generate it from the database schema (if you have a 1-1 mapping).<span>&nbsp; </span></p>
+<p style="text-indent:-.25in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]-->If you want documentation of your system, you<br>
+should find a way to generate the documentation from the code.</p>
+<p style="text-indent:-.25in"><!--[if !supportLists]--><span><span>o<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]-->yDoc<br>
+is a commercial documentation product that generates UML.</p>
+<p>#7:<span>&nbsp; </span>The Methodology<br>
+Rules</p>
+<p style="text-indent:-.25in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]-->Don’t live with broken windows:<span>&nbsp; </span>If you have a broken window, it indicates<br>
+that nobody cares.<span>&nbsp; </span>If you leave it<br>
+there, your source code is fragile.<span>&nbsp; </span>Your<br>
+code will get stronger over time if you are adamant about automated testing and<br>
+fixing broken windows.</p>
+<p style="text-indent:-.25in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]-->From Agile Best Practices:</p>
+<p style="text-indent:-.25in"><!--[if !supportLists]--><span><span>o<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]-->YAGNI<br>
+– You ain’t gonna need it.<span>&nbsp; </span>If you aren’t<br>
+absolutely sure you need it right now, defer it until later.<br><!--[if !supportLists]--><span><span>o<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]-->Embrace<br>
+changing requirements by:</p>
+<p style="text-indent:-.25in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]-->Refactoring mercilessly</p>
+<p style="text-indent:-.25in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]-->Set aside time every day to refactor code.</p>
+<p style="text-indent:-.25in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]-->Refactoring is fun, and it is different from<br>
+“regular” coding.</p>
+<p style="text-indent:-.25in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]-->Automated testing.</p>
+<p style="text-indent:-.25in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]-->Test coverage gives confidence that you have<br>
+changed some code, and you haven’t broken anything.</p>
+<p style="text-indent:-.25in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]-->Testing is a frame of mind, not a tool set.</p>
+<p style="text-indent:-.25in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]-->Who cares if the test was written first or last<br>
+as long as the code and test are written close together.</p>
+<p style="text-indent:-.25in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]-->Applications tend to grow from the bottom up<br>
+with small, little units of verified code.<span>&nbsp;<br>
+</span>The alternative is writing top down (which is hard).</p>
+<p style="text-indent:-.25in"><!--[if !supportLists]--><span><span>·<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</span></span></span><!--[endif]-->Generate code coverage reports on your tests.</p>
+<p>#8:<span>&nbsp; </span>Template method<br>
+design pattern.</p>
+<ul type="disc">
+<li>If you<br>
+     know what the algorithm should look like but don’t know the details, you<br>
+     can write the outline and defer the details to child objects.</li>
+<li>It<br>
+     encourages your to define the general order of operations for some process<br>
+     in an abstract parent, then implement the details in child classes.</li>
+<li>This<br>
+     works best when the code is small, cohesive, and discrete.</li>
+<li>You<br>
+     should aggressively pull methods up the hierarchy and look for definable<br>
+     processes.</li>
+</ul>
+<p>#9: Bad Inheritance.</p>
+<ul type="disc">
+<li>Inheritance<br>
+     is hard, so use composition instead of inheritance.<span>&nbsp; </span>Encapsulate the type you were going to<br>
+     override and forward calls to it.</li>
+<li>Inheritance<br>
+     is only applicable when the child “is-a” type of the parent in EVERY case.</li>
+</ul>
+<p>#10:<span>&nbsp; </span>Use interfaces<br>
+for decoupling</p>
+<ul type="disc">
+<li>Whenever<br>
+     possible, define types and member variables as interfaces.</li>
+<li>If you<br>
+     have a class that needs to act as two things, you can implement two<br>
+     interfaces.</li>
+<li>Objects<br>
+     are more flexible because they can be treated as either a base class or an<br>
+     interface that’s implemented.</li>
+<li>This<br>
+     allows libraries to be written that are not bound to specific classes.</li>
+</ul>
+<p>The result of all this is framework code and<br>
+configuration.<span>&nbsp; </span>Framework code is common<br>
+code that’s pulled up.<span>&nbsp; </span>The code with the<br>
+details is configuration.<span>&nbsp; </span>The end result<br>
+is a domain specific language that comes out of the APIs that result.</p>
+<p>Neal’s final point is that code is the most important<br>
+artifact we create.<span>&nbsp; </span>If you create the<br>
+most brilliant piece of software with not documentation and not bugs, you’ll be<br>
+a hero.<span>&nbsp; </span>If you create beautiful<br>
+documentation without good software, you won’t be worth anything.</p>

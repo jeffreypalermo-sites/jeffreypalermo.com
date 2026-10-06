@@ -1,0 +1,25 @@
+---
+wp_id: 152
+title: ASP.NET configuration gotcha – level 200
+slug: asp-net-configuration-gotcha-level-200
+permalink: /2004/11/asp-net-configuration-gotcha-level-200/
+date: 2004-11-30T14:36:00
+date_utc: 2004-11-30T14:36:00Z
+modified: 2004-11-30T14:36:00
+format: html
+excerpt: For people starting out with ASP.NET, the appSettings node in the web.config file will be all that is necessary for storing configuration items, but when you start creating your own config section handlers and strongly-typing your configuration items, you may run into a small snag that may cost you 1/2 a day to track down. Configuration […]
+comments_open: true
+---
+<p>For people starting out with ASP.NET, the appSettings node in the web.config file will be all that is necessary for storing configuration items, but when you start creating your own config section handlers and strongly-typing your configuration items, you may run into&nbsp;a small snag that may cost you 1/2 a day to track down.</p>
+<p>Configuration section names (since they are xml) are case sensitive.&nbsp; Xml is case sensitive.</p>
+
+<p>I have a section:</p>
+<p>&lt;configSections&gt;</p>
+<p>&lt;section name=”SiteMap” type=”WebTestHarness.SiteMapConfig, WebTestHarness” /&gt;</p>
+<p>&lt;/configSections&gt;</p>
+<p>but if I call:</p>
+<div><br>
+<p><span>ConfigurationSettings.GetConfig(“siteMap”);</span></p></div>
+<p>I get mysterious errors elsewhere in my code.&nbsp; My config section didn’t get loaded.&nbsp; It turns out that the section “siteMap” wasn’t found.&nbsp; “SiteMap” is the correct name.&nbsp;&nbsp; Of course, I expected the .GetConfig() method to throw an exception if the section wasn’t found, but it doesn’t.&nbsp; It just returns nothing and lets my code keep going.</p>
+
+<p>Now, armed with this knowledge, I will just check the return value of the method to determine if the GetConfig was successful.<!--EndFragment--></p>

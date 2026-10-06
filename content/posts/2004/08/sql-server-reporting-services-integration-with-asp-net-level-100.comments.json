@@ -1,0 +1,11 @@
+[
+  {
+    "id": 131,
+    "parent": 0,
+    "author_name": "mXskweeb",
+    "author_url": "http://",
+    "date": "2004-08-20T21:20:00",
+    "type": "comment",
+    "content_html": "<p>Here here.  I just tried SSRS this week thanks to your previous post.  I didn’t look too closely at the setup for the datasource, but I think it had a handful of providers to choose from.  So, theoretically, you could run reports against any supported data provider.  That’s from memory though, and I only looked at it briefly on Wednesday, so I could be totally wrong.</p>"
+  }
+]

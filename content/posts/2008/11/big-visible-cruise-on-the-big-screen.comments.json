@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2532,
+    "parent": 0,
+    "author_name": "PandaWood",
+    "author_url": "http://bigvisiblecruise.codeplex.com/",
+    "date": "2009-05-12T03:43:07",
+    "type": "comment",
+    "content_html": "<p>@Mohammed You can do this now.<br>\nIf using CCNet, you need version 1.4.3 or above and you will need BigVisibleCruise2 (a \"fork\" of Ben’s original version) – at <a href=\"http://bigvisiblecruise.codeplex.com/\" rel=\"nofollow\">bigvisiblecruise.codeplex.com</a> .<br>\nWith BVC2 you can also setup photos/images of the build breaker to show on the screen using the new skin \"StackPhoto\"</p>"
+  }
+]

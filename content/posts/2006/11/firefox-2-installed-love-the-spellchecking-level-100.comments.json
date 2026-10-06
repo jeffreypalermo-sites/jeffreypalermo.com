@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1051,
+    "parent": 0,
+    "author_name": "Brian Schmitt",
+    "author_url": "http://",
+    "date": "2006-11-09T12:55:51",
+    "type": "comment",
+    "content_html": "<p>It is a great feature, previously you had to use an addin to support it.<br>\nOne change I would recommend is to type ‘about:config’ into the address bar, then type spell into the filter. Then change the ‘layout.spellcheckDefault’ option to a 2.<br>\nThis will enable it for ALL fields on a form.</p>"
+  },
+  {
+    "id": 1052,
+    "parent": 0,
+    "author_name": "karl",
+    "author_url": "http://",
+    "date": "2006-11-09T13:30:55",
+    "type": "comment",
+    "content_html": "<p>Spell checking is great.</p>\n<p>The find feature is also great (although it’s been in FF forever).</p>\n<p>The little things…</p>"
+  }
+]

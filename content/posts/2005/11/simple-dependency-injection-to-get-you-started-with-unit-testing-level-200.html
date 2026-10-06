@@ -1,0 +1,136 @@
+---
+wp_id: 343
+title: Simple dependency injection to get you started with unit testing – level 200
+slug: simple-dependency-injection-to-get-you-started-with-unit-testing-level-200
+permalink: /2005/11/simple-dependency-injection-to-get-you-started-with-unit-testing-level-200/
+date: 2005-11-01T16:25:00
+date_utc: 2005-11-01T16:25:00Z
+modified: 2005-11-01T16:25:00
+format: html
+excerpt: More and more people are talking about unit testing, and I’m glad. There is confusion, however, with unit testing and integration testing, and some folks don’t know there is a difference. Unit testing is testing code in isolation without exercising code not under test. Simply put, if I have a class that handles data that […]
+comments_open: true
+---
+<p>More and more people are talking about unit testing, and I’m glad.&nbsp; There is confusion, however, with unit testing and integration testing, and some folks don’t know there is a difference.&nbsp; Unit testing is testing code in isolation without exercising code not under test.&nbsp; Simply put, if I have a class that handles data that is stored in a file, I want to test my custom class without actually exercising the file system.&nbsp; How do I do that?&nbsp; Why do I want to do that.&nbsp; I’ll tackle the why first.&nbsp; If a test requires that an actual file exists, then you have a pretty significant dependency in your code.&nbsp; Your code can never run (can never be tested) except by working with the actual file on a file system configured with the correct permissions.&nbsp; This is fraught with environmental headaches.&nbsp; Unit tests should be simple and fast.&nbsp; The unit tests should pass everywhere, not just on one magic environment where everything is painstakingly set up.<br><br>Here’s how:&nbsp; Consider the following code with a test:<br><br>
+</p><div><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;1</span>&nbsp;<span>using</span> NUnit.Framework;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;2</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;3</span>&nbsp;<span>namespace</span> DIPSample</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;4</span>&nbsp;{</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;5</span>&nbsp;&nbsp;&nbsp;&nbsp; [TestFixture]</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>public</span> <span>class</span> DataManagerTester</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;&nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [Test]</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>public</span> <span>void</span> SaveDate()</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;11</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; DataManager manager = <span>new</span> DataManager();</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;12</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; manager.AddData(“Some string data”);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; manager.SaveData();</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;14</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;15</span>&nbsp;&nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;16</span>&nbsp;}</p></div>
+<div><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;1</span>&nbsp;<span>using</span> System;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;2</span>&nbsp;<span>using</span> System.IO;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;3</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;4</span>&nbsp;<span>namespace</span> DIPSample</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;5</span>&nbsp;{</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>class</span> DataManager</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;&nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>private</span> <span>string</span> _data;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>public</span> <span>void</span> AddData(<span>string</span> data)</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;11</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;12</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _data = data;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;14</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;15</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>public</span> <span>void</span> SaveData()</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;16</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;17</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>string</span> path = @”C:dataFile.dat”;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;18</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>if</span>(!File.Exists(path))</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;19</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>throw</span> <span>new</span> InvalidOperationException(“Data storage isn’t ready.”);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;20</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;21</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>//Do something to maintain this data file. . .</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp;22</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>//Add info to file, replace data in file, etc.&nbsp; Use your imagination.</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp;23</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;24</span>&nbsp;&nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;25</span>&nbsp;}</p></div>This test seeks to verify that SaveData() does what is is supposed to do.&nbsp; The problem is that if our file isn’t available the code will fail.&nbsp; I’m not in a position to configure the environment so that the file is available.&nbsp; I don’t want to mess with the actual file at this point either.&nbsp; I’ll need to modify the code so that it’s testable by itself.&nbsp; The following is the same code modified to be more flexible so that the unit test _is actually a unit test_.&nbsp; The above test is actually an integration test because its running requires the file system to be on the testing stack.I define an interface to separate my file system dependency:
+<div><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;1</span>&nbsp;<span>namespace</span> DIPSample</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;2</span>&nbsp;{</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;3</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>public</span> <span>interface</span> IDataFileStore</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;4</span>&nbsp;&nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;5</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>void</span> SaveData(<span>string</span> data);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;&nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;}</p></div>I make my concrete implementation that calls the file system.&nbsp; This will be my class for integration and acceptance tests.
+<div><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;1</span>&nbsp;<span>using</span> System;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;2</span>&nbsp;<span>using</span> System.IO;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;3</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;4</span>&nbsp;<span>namespace</span> DIPSample</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;5</span>&nbsp;{</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>public</span> <span>class</span> FileStore : IDataFileStore</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;&nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>public</span> <span>void</span> SaveData(<span>string</span> data)</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>string</span> path = @”C:dataFile.dat”;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;11</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>if</span>(!File.Exists(path))</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;12</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>throw</span> <span>new</span> InvalidOperationException(“Data storage isn’t ready.”);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;13</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;14</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>//Do something to maintain this data file. . .</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp;15</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>//Add info to file, replace data in file, etc.&nbsp; Use your imagination.</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp;16</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;17</span>&nbsp;&nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;18</span>&nbsp;}</p></div>Here is how my DataManager class changes.&nbsp; Notice the default constructor and a special constructor specifically for testing:
+<div><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;1</span>&nbsp;<span>namespace</span> DIPSample</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;2</span>&nbsp;{</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;3</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>class</span> DataManager</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;4</span>&nbsp;&nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;5</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>private</span> <span>string</span> _data;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>private</span> IDataFileStore _fileStore;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>public</span> DataManager()</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _fileStore = <span>new</span> FileStore();</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;11</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;12</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>public</span> DataManager(IDataFileStore _store)</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;14</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;15</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _fileStore = _store;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;16</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;17</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;18</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>public</span> <span>void</span> AddData(<span>string</span> data)</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;19</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;20</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _data = data;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;21</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;22</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;23</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>public</span> <span>void</span> SaveData()</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;24</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;25</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _fileStore.SaveData(_data);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;26</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;27</span>&nbsp;&nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;28</span>&nbsp;}</p></div>And in my test below, I use NMock to mock the interface.&nbsp; It also allows me to verify that the proper method is called with the right data on my interface:
+<div><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;1</span>&nbsp;<span>using</span> NUnit.Framework;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;2</span>&nbsp;<span>using</span> NMock;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;3</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;4</span>&nbsp;<span>namespace</span> DIPSample</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;5</span>&nbsp;{</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;&nbsp;&nbsp;&nbsp; [TestFixture]</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>public</span> <span>class</span> DataManagerTester</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;&nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [Test]</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>public</span> <span>void</span> SaveDate()</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;11</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;12</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; IMock mock = <span>new</span> DynamicMock(<span>typeof</span>(IDataFileStore));</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; mock.Expect(“SaveData”, “Some string data”);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;14</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;15</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; DataManager manager = <span>new</span> DataManager((IDataFileStore)mock.MockInstance);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;16</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; manager.AddData(“Some string data”);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;17</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; manager.SaveData();</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;18</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;19</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span>//Verifies SaveData method in the mock is actually called with the right input.</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp;20</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; mock.Verify();</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;21</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;22</span>&nbsp;&nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;23</span>&nbsp;}</p></div>This is called Dependency Injection.&nbsp; You are injecting a dependency to facilitate unit testing.&nbsp; This decouples your code, and it is now more flexible.&nbsp; The above is very important because if you can’t do this, then it will be VERY difficult, nay, impossible to do unit testing on a system that uses: files, a database, queues, web services, remoting, {shudder} DCOM, ASP.NET.

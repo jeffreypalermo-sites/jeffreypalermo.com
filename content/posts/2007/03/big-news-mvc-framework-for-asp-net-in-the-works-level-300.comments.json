@@ -1,0 +1,713 @@
+[
+  {
+    "id": 1443,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog",
+    "date": "2007-03-16T09:19:10",
+    "type": "comment",
+    "content_html": "<p>This is great news.<br>\nThe real question is why they inventing their own, of course.</p>"
+  },
+  {
+    "id": 1444,
+    "parent": 0,
+    "author_name": "HoyaSaxa93",
+    "author_url": "http://",
+    "date": "2007-03-16T10:58:51",
+    "type": "comment",
+    "content_html": "<p>Please… Please… Please… Look at others that have already done this.</p>"
+  },
+  {
+    "id": 1445,
+    "parent": 0,
+    "author_name": "Chris Harmon",
+    "author_url": "http://harmons.blogspot.com",
+    "date": "2007-03-16T11:42:08",
+    "type": "comment",
+    "content_html": "<p>Before last year I hadn’t ever been involved in any web development outside of ASP/ASP.NET (smattering of some older stuff: PHP and Cold Fusion) until taking a job where I had to do Java development. </p>\n<p>The architecture for my Java web-based projects was MVC: model = business objects , view = the .jsp (equivalent of .aspx) for rendering and controller = business class to handle the processing needs (e.g. reading from the database, processing requests to insert/update/etc., passing request to the .jsp view).</p>\n<p>This sounds like catch-up to me…. but I guess I see the value in different architectures. Is the aim similar to the Java methodology? I haven’t really melded the MVC concepts into my ASP.NET architectures, but it would be interesting (and probably simpler and easier to test) to have that option.</p>"
+  },
+  {
+    "id": 1446,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-16T14:01:01",
+    "type": "comment",
+    "content_html": "<p>By the way.  What we saw was a concept that is going to be worked into the product, so the details will change, but it looks like a great concept.</p>"
+  },
+  {
+    "id": 1447,
+    "parent": 0,
+    "author_name": "dhayden",
+    "author_url": "http://davidhayden.com/blog/dave/",
+    "date": "2007-03-16T14:19:44",
+    "type": "comment",
+    "content_html": "<p>Great. When can I download it? Now or is this a part of the ORCAS release? Will is be release in CTP soon?</p>"
+  },
+  {
+    "id": 1448,
+    "parent": 0,
+    "author_name": "Tim Gifford",
+    "author_url": "http://blogs.giffordconsulting.com",
+    "date": "2007-03-16T15:12:07",
+    "type": "comment",
+    "content_html": "<p>I’m glad to hear that Microsoft is going to support this model. Since you mentioned it is a new handler factory, I assume that I’ll be able to run both traditional .aspx and MVC pages within the same project. I’ll be moving to this model quickly (when it’s available) and won’t be able to convert existing pages.</p>"
+  },
+  {
+    "id": 1449,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-16T17:10:24",
+    "type": "comment",
+    "content_html": "<p>The MVC model can be used with regular control-based pages.  The url determines the handler that’s activated, so it can be mixed an matched.  In fact, a Controller could dispatch a view that _uses_ some controls. i.e. Telerik controls could still be used without  Telerik modifying them.  From what I saw, no capabilities are taken away, just more options are added.</p>"
+  },
+  {
+    "id": 1450,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-16T17:11:44",
+    "type": "comment",
+    "content_html": "<p>Scott is working and getting some bits, but it will be  a while.  This has just been created in prototype form, so there is a lot of work to do to get it to where it needs to be.  That’s not to say that a page handler factory wouldn’t be easy to create right now to do a similar thing.</p>"
+  },
+  {
+    "id": 1451,
+    "parent": 0,
+    "author_name": "dhayden",
+    "author_url": "http://davidhayden.com/blog/dave/",
+    "date": "2007-03-16T17:58:41",
+    "type": "comment",
+    "content_html": "<p>Thanks for passing this on, Jeffrey. I am really excited about this functionality as I am right smack in the middle of the Web Client Software Factory and MonoRail to get this functionality and it would be nice to have an offering from Microsoft that served as a solid combination of the pros and cons of each, etc.</p>"
+  },
+  {
+    "id": 1452,
+    "parent": 0,
+    "author_name": "macournoyer",
+    "author_url": "http://macournoyer.wordpress.com",
+    "date": "2007-03-16T20:00:58",
+    "type": "comment",
+    "content_html": "<p>Why? oh why reinvent the wheel again when their’s MonoRail?</p>\n<p>Looks like the MSTest failure to replicate NUnit.</p>"
+  },
+  {
+    "id": 1453,
+    "parent": 0,
+    "author_name": "cv",
+    "author_url": "http://",
+    "date": "2007-03-16T20:06:05",
+    "type": "comment",
+    "content_html": "<p>I’ve been ramping up on Rails (the Ruby kind) and let me just say for the record that it rocks!   Rails for .Net would be great.  However, if MS has anything to do with it , they will muck it up like everything else. \uD83D\uDE42  </p>\n<p>I’ve been using the MVP pattern in a ASP.NET app and it has been a breath of fresh air for development and testing.</p>\n<p>Lets hear it for real patterns that work.</p>\n<p>Thanks,<br>\n-cv</p>"
+  },
+  {
+    "id": 1454,
+    "parent": 0,
+    "author_name": "Scott Hanselman",
+    "author_url": "http://www.hanselman.com/blog/HanselminutesPodcast55MonoRailAsAlternativeASPNET.aspx",
+    "date": "2007-03-16T20:54:45",
+    "type": "comment",
+    "content_html": "<p>We just did a podcast on Monorail with two devs who are living in it full time:</p>\n<p><a href=\"http://www.hanselman.com/blog/HanselminutesPodcast55MonoRailAsAlternativeASPNET.aspx\" rel=\"nofollow ugc\">http://www.hanselman.com/blog/HanselminutesPodcast55MonoRailAsAlternativeASPNET.aspx</a></p>"
+  },
+  {
+    "id": 1455,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-16T21:03:19",
+    "type": "comment",
+    "content_html": "<p>@macournoyer &amp; cv:<br>\nReinvent the wheel?  Microsoft doesn’t have the option of incorporating MonoRail into ASP.NET.  They don’t own the intellectual property.  Microsoft has many, many customers who want _them_ to provide and support extensions to ASP.NET.  I, for one, use many, many open-source and 3rd party tools and libraries to help deliver software systems, but there are others who prefer to have Microsoft support most of their platform.  Microsoft might upset some of us at times, but saying to these other customers “sorry, we’re not going to do it.  MonoRail has already done it.  Go use them” isn’t an option.  First, that’s not business.  Second, it would royally piss of other customers.  Microsoft can only hope to keep most of us mostly happy most of the time.  </p>\n<p>As far as mucking it up:  I personally trust Scott Guthrie, and I’ll be providing feedback along the way.</p>"
+  },
+  {
+    "id": 1456,
+    "parent": 0,
+    "author_name": "hammett",
+    "author_url": "http://hammett.castleproject.org",
+    "date": "2007-03-16T21:08:30",
+    "type": "comment",
+    "content_html": "<p>Sun doesn’t own IP on Struts and encourage its use. Sun doesn’t have anything to do with Tomcat and yet they use it as a reference to a correct JSP/Servlet container implementation.</p>\n<p>Sun doesn’t compete with the Java Community. Why does MS have to?</p>"
+  },
+  {
+    "id": 1457,
+    "parent": 0,
+    "author_name": "Scott",
+    "author_url": "http://www.lazycoder.com",
+    "date": "2007-03-16T22:06:32",
+    "type": "comment",
+    "content_html": "<p>Comment got too long, responded at my blog. Why use up all your disk space with my ranting? \uD83D\uDE09</p>\n<p>Good news about this new ability though, bad news for me. I just start looking into see if this was possible with the current version of the framework. Now I’ll look like a hanger-on if I release it. heh heh</p>"
+  },
+  {
+    "id": 1458,
+    "parent": 0,
+    "author_name": "macournoyer",
+    "author_url": "http://macournoyer.wordpress.com",
+    "date": "2007-03-17T00:10:48",
+    "type": "comment",
+    "content_html": "<p>jpalermo: you’re describing the NIH syndrome</p>"
+  },
+  {
+    "id": 1459,
+    "parent": 0,
+    "author_name": "Steve",
+    "author_url": "http://",
+    "date": "2007-03-17T12:10:42",
+    "type": "comment",
+    "content_html": "<p>“Why? oh why reinvent the wheel again when their’s MonoRail?</p>\n<p>Looks like the MSTest failure to replicate NUnit.<br>\n”</p>\n<p>Amen.  The ONLY value I see of MS coming into this is that drone developers will say “hey, MVC must be good, MS is using it…”  \uD83D\uDE42</p>\n<p>But seriously, I hope their MVC implementation isn’t too heavy   – that is my concern with the Patterns and Practices MVC setup.</p>\n<p>Maybe ScottG can talk to the guys doing Igloo?</p>"
+  },
+  {
+    "id": 1460,
+    "parent": 0,
+    "author_name": "Steve",
+    "author_url": "http://",
+    "date": "2007-03-17T12:15:48",
+    "type": "comment",
+    "content_html": "<p>I realize I came across as negative.</p>\n<p>But, really, if ASP.NET team is going to change directions, this would be, IMO the best approach for them to take.   You’d be foolish not to see the direction the development world is going and ignore it.</p>\n<p>So, I applaud ScottG, he’s been a great thing for MS!</p>\n<p>I can see ‘control developers’ becoming ‘component developers’</p>"
+  },
+  {
+    "id": 1461,
+    "parent": 0,
+    "author_name": "karl",
+    "author_url": "http://",
+    "date": "2007-03-17T14:21:36",
+    "type": "comment",
+    "content_html": "<p>I wasn’t able to attend the meeting, but I also saw a demo from Scott and it _is_ a very nice approach. It won’t be like the Web Client Factory from P&amp;P, and it WILL help educate the drones about TDD.</p>\n<p>As for “competing against the community”, I think you all have a valid point of view, but try to look at it from the other side too. Microsoft has customers like us telling them to embrace more OSS projects, while at the same time having customers (in much larger quantities), telling them they want tools fully supported by Microsoft. I spoke to too many people this past week who had clients who refused to use anything unless it was supported by Microsoft or another big vendor. Yes it sucks, but only blaming Microsoft for this is completely ridiculous. There are also licensing restriction with some OSS projects about MS being able to incorporate it into their commercial/closed-source projects.</p>\n<p>It’s real easy to bitch about this one, but it also happens to be quite unfair.</p>"
+  },
+  {
+    "id": 1462,
+    "parent": 0,
+    "author_name": "hammett",
+    "author_url": "http://hammett.castleproject.org",
+    "date": "2007-03-17T18:57:09",
+    "type": "comment",
+    "content_html": "<p>Thanks Karl. I was ignorant about that. Poor Microsoft…</p>"
+  },
+  {
+    "id": 1463,
+    "parent": 0,
+    "author_name": "Jeff Brown",
+    "author_url": "http://bits-in-motion.blogspot.com/",
+    "date": "2007-03-17T18:59:46",
+    "type": "comment",
+    "content_html": "<p>I don’t see any contradiction between Microsoft’s distribution of OSS derivative projects and their ability to fully support them.  </p>\n<p>Microsft can indeed leverage mature OSS in a fully supported manner assuming they can minimize the risk factors.  That means obtaining satisfactory licensing agreements, participating as peers in the project, contributing heavily in the realm of documentation, acquiring the right to maintain the project in perpetuity (including forking), and having complete control over the patches they adopt in their supported stable distribution.  Of course not all OSS projects will be suitable candidates for partnership or agree to such terms.</p>\n<p>The alternative is for Microsoft to continue building “solutions” while the community innovates.  In point of fact, they can do this and still turn a hefty profit (good business) but it’s boring (bad tech).</p>\n<p>Contrariwise, the community is certainly not under the same production pressures as Microsoft.  Continuous innovation produces high volatility which is a risk Microsoft might not be able to afford to take…  At least not for early releases.</p>"
+  },
+  {
+    "id": 1464,
+    "parent": 0,
+    "author_name": "Aaron",
+    "author_url": "http://",
+    "date": "2007-03-18T02:02:49",
+    "type": "comment",
+    "content_html": "<p>I agree.  This is just plain silly how MS has to compete with the .NET community at every turn.  Its quite discouraging and hampers innovation.  Why should I invest my free time in some cool interesting open source project for .NET when MS will just come out a year or two later doing the same thing?</p>\n<p>It would be nice if they at least acknowledged the open source community and what it has done.  But they don’t even do that.  They pretend as if they don’t exist and then copy their work.  Nice \uD83D\uDE09  </p>\n<p>It really makes you think twice before spending your free time on a .NET project.</p>"
+  },
+  {
+    "id": 1465,
+    "parent": 0,
+    "author_name": "Scott",
+    "author_url": "http://www.lazycoder.com",
+    "date": "2007-03-18T03:16:15",
+    "type": "comment",
+    "content_html": "<p>Aaron, ask the Konfabulator and Virtue Desktop devs how they like producing software for the Mac. \uD83D\uDE09</p>\n<p>Face facts, if you produce software for any of the big platforms, there’s a chance the platform owner will copy you and you’re SOL.</p>"
+  },
+  {
+    "id": 1466,
+    "parent": 0,
+    "author_name": "Thomas Wagner",
+    "author_url": "http://www.wagnerblog.com",
+    "date": "2007-03-19T01:17:42",
+    "type": "comment",
+    "content_html": "<p>If there was some innovation and leadership involved I wouldn’t mind. But as it stands I have a great ORM solution that now gets questioned because MS decided to create LINQ , even though the tool I use has 4 years of maturity on them. And I have a very workable MVC solution that most certainly will also get questioned by potential customers. Some of the more timid Managers try to only work with code that comes from MS. Funny I know. So given a choice between a superior 3rd party tool and a MS solution they drift toward the MS solution and it takes a lot of selling to get them to see it differently. Of course, having our industry get more and more complex doesnt help that particular case.</p>"
+  },
+  {
+    "id": 1467,
+    "parent": 0,
+    "author_name": "Rob Conery",
+    "author_url": "http://blog.wekeroad.com",
+    "date": "2007-03-19T04:31:22",
+    "type": "comment",
+    "content_html": "<p>This is great – i was wishing/hoping/praying for something like this to come along. Now if I could only get them to use SubSonic :))))</p>"
+  },
+  {
+    "id": 1468,
+    "parent": 0,
+    "author_name": "bclubb",
+    "author_url": "http://",
+    "date": "2007-03-19T16:00:59",
+    "type": "comment",
+    "content_html": "<p>Quick question.  What is the main difference between MVP and MVC.  Jeffrey stated that with the model, the need for Model-View-Presenter goes away for web apps.  Could you explain this a bit more? </p>\n<p>I’ve been going through the Web Client Software Factory and that’s where most of my VP knowledge comes from.  I’ve gone through Monorail for MVC, but I’m not sure how one could be favored over the other here.</p>"
+  },
+  {
+    "id": 1469,
+    "parent": 0,
+    "author_name": "Dimon",
+    "author_url": "http://",
+    "date": "2007-03-19T16:58:48",
+    "type": "comment",
+    "content_html": "<p>I only can say this is great that Microsoft decided to have a look to another approach for MVC implementation. We work with ASP.NET classic paradigm few years it was fine for some time. But in time we understood this approach has many problems for example the complexity, testability. When we found Castle Monorail we were surprised because this framework provides great MVC like it described above and ever more, there is a great idea to implement different view engine to allow us to have a full control of HTML rendering. But the main problem was because many people think – “uh, this approach goes in efferent way from Microsoft that way it’s bad”. Summary, let’s do and use at first such approaches as We want but Microsoft and they will have to do the same \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1470,
+    "parent": 0,
+    "author_name": "Jeremy",
+    "author_url": "http://codebetter.com/blogs/jeremy.miller",
+    "date": "2007-03-19T17:39:11",
+    "type": "comment",
+    "content_html": "<p>bclubb,</p>\n<p>In this case the difference between MVC &amp; MVP is quite a bit.</p>\n<p>In Model View Presenter the Presenter is a stateful object that manages the behavior and workflow of the View throughout the page lifecycle.</p>\n<p>In Model View Controller as we’re talking about it here, the Controller responds to the request, builds the model (which might just be the Controller itself), and passes the final model to the view for rendering in one serial process.</p>"
+  },
+  {
+    "id": 1471,
+    "parent": 0,
+    "author_name": "stachu",
+    "author_url": "http://",
+    "date": "2007-03-19T18:14:26",
+    "type": "comment",
+    "content_html": "<p><a href=\"http://mavnet.sourceforge.net/\" rel=\"nofollow ugc\">http://mavnet.sourceforge.net/</a> </p>"
+  },
+  {
+    "id": 1472,
+    "parent": 0,
+    "author_name": "GuyIncognito",
+    "author_url": "http://",
+    "date": "2007-03-19T19:13:01",
+    "type": "comment",
+    "content_html": "<p>How about a word from our sponsor… Planet Reality Check?</p>\n<p>Maybe I don’t want to wait around for your “open source” project to mature?  Maybe I don’t want to invest my time and energy learning how to utilize your “open source” project only to have you move on to something else (a better job, get married, have children, start a new hobby, etc) and leave me stranded with a bunch of “coming soon” or  “to be implemented in the version.next” code.  Look at the wasteland of open source projects on gotdotnet, codeplex, sourceforge and the internet in general.</p>\n<p>I think it’s pivotal for Microsoft to involve ORM and MVC into the .NET framework.  How else will this ideas gain mass acceptance?  How many of your average developers even know what ORM or MVC is?  How many have heard of MonoRails or  “insert the name of your favorite 3rd party ORM here”?  If Microsoft introduces these topics to the .NET framework, book authors will write about them, magazine editors  will include articles on them, and your average code jockey (of which 99% of us who have posted a response here are NOT!) will become familiar with them.  That will open up the opportunity for 3rd parties to sell “better” (or alternative) solutions and may increase the demand (assuming the 3rd party can demonstrate a need for the alternative) by increasing the awareness of ORM and MVC technologies.    </p>\n<p>You might argue that TDD didn’t need Microsoft.  Microsoft came second to the game and for the most part failed (you can argue over which group offered the better overall solution — but there is little argument over which group offered the more accessable option).  I agree.  I think Microsoft screwed up by making the assumption that your average code monkey didn’t need the features of Visual Team Studio System (unit test, bug tracking, code coverage, automated builds, etc).  That stuff should have been available in Professional and possibly even the Express editions.  Just because I’m sometimes a “team of 1” doesn’t mean I don’t need any less of a development environment.</p>\n<p>By the way… all this talk about “Monorail already does that!” is crap.  I applaud the efforts made by the Monorail guys/gals, but it’s really such a hacked conglomeration of  libraries (and in a lot of cases… libraries/projects that have lost steam or do not have a native .NET following) that it’s only for your vodoo developers who are willing to build a project on technology that might fade away on a whim or change course.   Not to mention all the hoops you have to jump through in order to get started.  Rarely does Microsoft ever release a mainstream product without substantial documentation and examples to get you up and running.  I know a number of people who have browsed through the Monorail site and have either been discouraged by the complexity of the solution, unimpressed with the progress or been utterly confused as to where to start.  We’re not all genius code monkeys who have 6 hours each night to devote to tinkering around with experimental frameworks.   </p>\n<p>Tell me more about these alternate page templating options in ASP.NET v.next, would ya?</p>"
+  },
+  {
+    "id": 1473,
+    "parent": 0,
+    "author_name": "ChristianD",
+    "author_url": "http://",
+    "date": "2007-03-19T19:29:25",
+    "type": "comment",
+    "content_html": "<p>Why does MS compete with the community? Is there some in depth business reason why MS doesn’t do what SUn does with Struts? I assume they figure they can appear as innovators to the average joe ms dev by repeating and borrowing from established OSS projects. </p>\n<p>Has MS ever acknowledged projects like NHibernate, MonoRail, NUnit? Why can’t MSDN produce quality material using projects like those? (N)Hibernate has many years of tried and tested production code out there. I think MS is doing so many a disservice by not emphasizing these projects. I would much rather build my business on something like (N)Hibernate than something new and feature deficient from MS. The problem is the culture of a large percentage of MS dev shops is they don’t even know that much of this stuff exists. </p>\n<p>Christian</p>\n<p>The only rational business reason that makes sense to me is </p>"
+  },
+  {
+    "id": 1474,
+    "parent": 0,
+    "author_name": "ChristianD",
+    "author_url": "http://",
+    "date": "2007-03-19T20:28:35",
+    "type": "comment",
+    "content_html": "<p>GuyIncognito,</p>\n<p>Nonsense. The only reason some of what you say is true is exactly because of attitudes like yours. MonoRail and projects like it often end up failing because they end up competing against MS. Why doesn’t MS nurture a development community that acknowledges many of these OSS projects? Why doesn’t MS promote, MonoRail or NHibernate, as an example of the really cool alternative architecture that can be built on top of .NET technologies? </p>\n<p>MS really doesn’t do a very good job of leading in the realm of engineering and architecture. </p>"
+  },
+  {
+    "id": 1475,
+    "parent": 0,
+    "author_name": "Harry",
+    "author_url": "http://",
+    "date": "2007-03-19T20:29:05",
+    "type": "comment",
+    "content_html": "<p>I’d like to see Microsoft going to MVC. I am tired of persuading management and clients to use anything other than average/standard/mortal WebForm design approach. </p>\n<p>I just hope it would be a good implementation. It will be worse if Microsoft come up with a bad implementation and force upon the developer community. That will literally kill the good idea. Just make me feel chilly only think about it.</p>"
+  },
+  {
+    "id": 1476,
+    "parent": 0,
+    "author_name": "foobar",
+    "author_url": "http://",
+    "date": "2007-03-19T20:30:12",
+    "type": "comment",
+    "content_html": "<p>Sorry, but Monorail is a toy.  I took a look at it again today and it’s still laughable – it’s only useful for only the most trivial of web apps.  If you’re still scratching your head about how do CRUD, then by all means use Monorail.  For the rest of us that need something just a bit more useful, Monorail hardly delivers.</p>\n<p>And if Monorail is going to strongly suggest not to use WebForms, then I strongly suggest they provide alternatives that provide most, if not all of the functionality that WebForms delivers.</p>\n<p>And if one day the Monorail guys get bored, I’d rather not be left hanging with a product that will have no further support.</p>\n<p>I for one look forward to MSs effort with a MVC framework.  For those of you that for some strange reason think that having MS provide an official framework will somehow mean that Monorail will drop off the face of the earth, think again.</p>\n<p>And Sun has had many “official” extensions to Java – most of them have crashed and burned – a prime example is their XML functionality, which was absolute garbage.  Most people ignore it and use Xerces/Xalan.</p>"
+  },
+  {
+    "id": 1477,
+    "parent": 0,
+    "author_name": "ChristianD",
+    "author_url": "http://",
+    "date": "2007-03-20T02:48:00",
+    "type": "comment",
+    "content_html": "<p>I was using MonoRail as an example, but i will respond anyway. It seems to me all you did was look at monorail at a cursory level. SO what exactly can’t you do with MonoRail? it’s a pretty straight forward MVC framework with multiple view engines and some helpers. </p>\n<p>I don’t get the love fest with WebForms. It’s such a leaky pain in the butt abstraction. </p>"
+  },
+  {
+    "id": 1478,
+    "parent": 0,
+    "author_name": "JoeyDotNet",
+    "author_url": "http://joeydotnet.com/blog",
+    "date": "2007-03-20T03:35:00",
+    "type": "comment",
+    "content_html": "<p><a href=\"http://joeydotnet.com/blog/SinceWhenIsItBadToBeEnthusiasticAboutOSSDevelopmentTools.aspx\" rel=\"nofollow\">Since when is it bad to be enthusiastic about OSS development tools?</a></p>"
+  },
+  {
+    "id": 1479,
+    "parent": 0,
+    "author_name": "JoeyDotNet",
+    "author_url": "http://joeydotnet.com/blog",
+    "date": "2007-03-20T03:36:20",
+    "type": "comment",
+    "content_html": "<p><a href=\"http://joeydotnet.com/blog/SinceWhenIsItBadToBeEnthusiasticAboutOSSDevelopmentTools.aspx\" rel=\"nofollow ugc\">http://joeydotnet.com/blog/SinceWhenIsItBadToBeEnthusiasticAboutOSSDevelopmentTools.aspx</a></p>"
+  },
+  {
+    "id": 1480,
+    "parent": 0,
+    "author_name": "Ward",
+    "author_url": "http://www.equanimity.nl",
+    "date": "2007-03-20T06:15:22",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>Interesting news! </p>\n<p>In Scott’s prototype, how is the view associated with the controller? In other words, how does the Controller get the correct view instance? </p>"
+  },
+  {
+    "id": 1481,
+    "parent": 0,
+    "author_name": "GuyIncognito",
+    "author_url": "http://",
+    "date": "2007-03-20T14:17:32",
+    "type": "comment",
+    "content_html": "<p>I personally have a love/hate relationship with WebForms.  Well, actually it’s closer to tolerate/hate.  There are things I tolerate with WebForms and then there are things that I hate about WebForms.  I never was a huge fan of WebForms.  I thought someone was trying too hard to make CGI programming act like a VB6 form.  The best part about the Web Form architecture for me is the ability to derive from existing controls and change/extend their behavior/markup and the ability to create new server/composite/user controls.  I’m not a huge fan of WebForms by any means though… and that’s why more interest by Microsoft in alternatives to the Web Form (while still allowing for Web Forms when the situation calls for it) is great news to me.  I like options!  </p>"
+  },
+  {
+    "id": 1482,
+    "parent": 0,
+    "author_name": "Dimon",
+    "author_url": "http://",
+    "date": "2007-03-20T15:39:38",
+    "type": "comment",
+    "content_html": "<p>Well, I don’t agree with people who think that MonoRail is a toy. Please, have a look at this solution more deeper!  MonoRails guys are Rock, the first of all, they did it first!!!</p>\n<p>GuyIncognito, why must I wait when Microsoft will do something like MVC (may be will do or may be won’t do)? If MonoRail’s guys did it already, people can use it! </p>\n<p>You are right only about Monorail hasn’t such support from Book writers, magazine article authors, and etc. But community can help to people without it.  </p>"
+  },
+  {
+    "id": 1483,
+    "parent": 0,
+    "author_name": "cv",
+    "author_url": "http://",
+    "date": "2007-03-20T15:45:34",
+    "type": "comment",
+    "content_html": "<p>C,mon on people, would you use a hammer on a screw?</p>\n<p>Sometimes you just need a screwdriver to get the job done.  Ruby on Rails will make you despise the typical web form style of development when you just need a simple, quick and elegant solution.   Rails is not meant to be everything to everyone.    You won’t be calculating a scatter search or backward triangularization with rails.  But you could make some use of your all powerful C# web service from rails in an AJAX call. </p>\n<p>Don’t be afraid, go ahead and look directly at the light at the end of the tunnel… \uD83D\uDE42<br>\n<a href=\"http://www.onlamp.com/pub/a/onlamp/2006/12/14/revisiting-ruby-on-rails-revisited.html\" rel=\"nofollow ugc\">http://www.onlamp.com/pub/a/onlamp/2006/12/14/revisiting-ruby-on-rails-revisited.html</a></p>"
+  },
+  {
+    "id": 1484,
+    "parent": 0,
+    "author_name": "Mike Moore",
+    "author_url": "http://blowmage.com",
+    "date": "2007-03-20T16:15:51",
+    "type": "comment",
+    "content_html": "<p>Dimon said: “MonoRails guys are Rock, the first of all, they did it first!!!”</p>\n<p>Oh c’mon, they ripped Ruby on Rails, which ripped every other MVC framework before it. This isn’t a zero sum game people.  Folks will continue to use MonoRail and Maverick.NET in the future.  Just because Microsoft *finally* gives us an MVC framework doesn’t mean the death of OSS.  Just like SharePoint didn’t kill DNN.</p>\n<p>Besides, I can see a slim possibility of Microsoft putting the MVC handler up on CodePlex and allowing us to hack on it.</p>"
+  },
+  {
+    "id": 1485,
+    "parent": 0,
+    "author_name": "Nando",
+    "author_url": "http://",
+    "date": "2007-03-20T16:31:36",
+    "type": "comment",
+    "content_html": "<p>To JoeyDotNet (I was not able to reply in his blog… it’s buggy I guess):</p>\n<p>You commented this in your blog: </p>\n<p>“So bottom line, using tools that help me do my job better make me happy (dare I say enthusiastic) whether they come directly from Microsoft or from the great community of developers working on OSS projects.”<br>\n“Is that a bad thing?”</p>\n<p>This is my thinking:</p>\n<p>Well, it’s a bad thing if you consider “ethics”. Is it ethical to take away the innovation others do and present yourself as the “inventor” of everything? Is it ethical to punish creative developers by competing with them and taking away their ideas? You can answer that.</p>\n<p>On the other hand, I think it’s also bad business… Many developers will realize with time that it’s a bad idea to innovate for Microsoft technologies, because M$ just steals your ideas and all your work and merits are gone. So, I expect that Open Source projects will begin to decrease for M$ technologies, because M$ just disrespects them.</p>\n<p>My $0.02.</p>"
+  },
+  {
+    "id": 1486,
+    "parent": 0,
+    "author_name": "JoeyDotNet",
+    "author_url": "http://joeydotnet.com/blog",
+    "date": "2007-03-20T18:35:40",
+    "type": "comment",
+    "content_html": "<p>Hey Nando,<br>\nSorry about that.  You’re not the first one that has had problems with that.  I’m going to look into that, and possibly even SubText or CS as a replacement.</p>\n<p>Anywho, I would agree that MS doesn’t recognize the great talent in the OSS .NET community as much as it should.  But I also don’t necessarily think the OSS community should just abandon underlying frameworks like .NET as a basis for providing OSS tools that can make us more productive and improve the applications we build on top of the .NET platform.  </p>\n<p>I actually really like C# and the .NET framework (runtime) and would like to both use and participate in ongoing OSS projects like NHibernate and MonoRail in the future.</p>"
+  },
+  {
+    "id": 1487,
+    "parent": 0,
+    "author_name": "Cameron Singe",
+    "author_url": "http://www.iamsporty.com",
+    "date": "2007-03-22T00:28:26",
+    "type": "comment",
+    "content_html": "<p>Sounds great, </p>\n<p>MVC as been something that Asp as battled with for a long time, Can’t wait to us a beta version of the framework </p>"
+  },
+  {
+    "id": 1488,
+    "parent": 0,
+    "author_name": "balasundar",
+    "author_url": "http://",
+    "date": "2007-03-22T08:00:06",
+    "type": "comment",
+    "content_html": "<p>The web application mvc pattern needs to be considerd as ameba pattern. Evey cell has it own functionality. The challenge is how do they colloborate each other.I share my ideas in the due course </p>"
+  },
+  {
+    "id": 1489,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-22T12:50:43",
+    "type": "comment",
+    "content_html": "<p>In this prototype, the controller loads the appropriate view by relative path to the .aspx.  The view can be only markup – pure template, or it can take advantage of controls.  This can work without postbacks, or you can use postbacks if you prefer.</p>\n<p>The view has to inherit from PageView or if it needs properties from the controller (like the Model to display), it can inherit from PageView where T is the type of the controller it depends on.  Then the view can grab specific properties off of the controller.</p>\n<p>I would recomment making “T” an interface so that the view doesn’t bind directly to the controller type.  I’ve been collaborating with Scott Guthrie to work out the kinks.  There is still a lot of work to do.  This is only in prototype form.</p>"
+  },
+  {
+    "id": 1490,
+    "parent": 0,
+    "author_name": "Balasundar",
+    "author_url": "http://",
+    "date": "2007-03-22T13:14:46",
+    "type": "comment",
+    "content_html": "<p>I would suggest the T inteface should look like this</p>\n<p>Interface PageTempate<br>\n{<br>\n       IFrameList m_FrameList<br>\n}<br>\nInterface IFramList: System.Collection<br>\n{<br>\n}<br>\nInteface IFrame<br>\n{<br>\n      ValidateList Validation // has the javascript code for validation<br>\n      UIComponentList ComponentList // List of server side components</p>\n<p>}</p>"
+  },
+  {
+    "id": 1491,
+    "parent": 0,
+    "author_name": "Chad",
+    "author_url": "http://",
+    "date": "2007-03-22T20:00:55",
+    "type": "comment",
+    "content_html": "<p>You guys come quick, I’ve got this great idea for a wheel I want to reinvent!  And it’s even easier because we can make it out of our piles of money!</p>"
+  },
+  {
+    "id": 1492,
+    "parent": 0,
+    "author_name": "gozh2002",
+    "author_url": "http://gozh2002.cnblogs.com",
+    "date": "2007-03-26T08:56:20",
+    "type": "comment",
+    "content_html": "<p>why can’t ms just buy off or provide support to monorail ?<br>\nisn’t that what ibm or sun provided to oss projects?</p>"
+  },
+  {
+    "id": 1493,
+    "parent": 0,
+    "author_name": "Dean St",
+    "author_url": "http://",
+    "date": "2007-03-26T13:00:37",
+    "type": "comment",
+    "content_html": "<p>Oh, yeat another guy trying to convert ASP.NET to PHP. Great, great. Lets spawn 1,000 MVC frameworks, so we can enjoy LAMP like development.</p>\n<p>Get a holiday, mate. Visit the beach… or something.</p>"
+  },
+  {
+    "id": 1494,
+    "parent": 0,
+    "author_name": "Dean St",
+    "author_url": "http://",
+    "date": "2007-03-26T13:11:56",
+    "type": "comment",
+    "content_html": "<p>What exactly can’t you test currently? The presentation is in the ASPX declaration, the “controller” is in the code-behind, the model is ADO.NET or stored procedures. You can easily build a mockup of the ASP.NET runtime that passes all the cycle of the page (Init, Load, PreRender, Render) with Reflection, what else do you need?</p>\n<p>Java / Rails fanboys, I’m getting tired of that. “Scaffold” is just FormView without the command prompt and the IDE.</p>\n<p>What’s next? You do not like the Xml parser? Oh, lets build SAX parser for dotnet. The situation is worse enough already, with C# 2.0 adding more complexity with generics, anonymous function (javascript in C#? come on), etc. Please please please, stop thinking.</p>"
+  },
+  {
+    "id": 1495,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-26T13:33:04",
+    "type": "comment",
+    "content_html": "<p>@Dean,<br>\nPlease give some unit test examples for testing code in the code-behind class.</p>\n<p>Also, have a look at  <a href=\"http://codebetter.com/blogs/raymond.lewallen/archive/2007/02/20/Controller-_21003D00_-code_2D00_behind.aspx\" rel=\"nofollow ugc\">http://codebetter.com/blogs/raymond.lewallen/archive/2007/02/20/Controller-_21003D00_-code_2D00_behind.aspx</a></p>\n<p>The code-behind is part of the view, and ADO.NET is a mechanism for persisting the model, but it is not the model itself.</p>"
+  },
+  {
+    "id": 1496,
+    "parent": 0,
+    "author_name": "Dean St",
+    "author_url": "http://",
+    "date": "2007-03-26T14:19:23",
+    "type": "comment",
+    "content_html": "<p>So, what is the ASPX declaration then, if the code-behind is the View? And what is different from an ASPX template compared to what we have with the ugly  or  Rails syntax (from classic ASP, mind you) in an. rhtml Rails template residing in the model folder (so it should be the model)</p>"
+  },
+  {
+    "id": 1497,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-26T14:28:12",
+    "type": "comment",
+    "content_html": "<p>@Dean,<br>\nThe ASPX is view also.  In ASP.NET, there are two ways to render the view:  declaratively and programmatically.  You can do it all one way or a combination of the two.  You can have no markup and add all control programmatically.  Conversely, you can have all markup and add no controls programmatically.  it’s up to you, but with whatever method you choose, you are still constructing the view.</p>"
+  },
+  {
+    "id": 1498,
+    "parent": 0,
+    "author_name": "Balasundar",
+    "author_url": "http://",
+    "date": "2007-03-26T14:45:29",
+    "type": "comment",
+    "content_html": "<p>You guys are thinking mind is biased the current MVC framework pattern. Why don’t think in a different approch to acheive the same.</p>"
+  },
+  {
+    "id": 1499,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-26T14:49:05",
+    "type": "comment",
+    "content_html": "<p>@Balasundar,<br>\nPlease elaborate.  Can you give some examples?</p>"
+  },
+  {
+    "id": 1500,
+    "parent": 0,
+    "author_name": "Dean St",
+    "author_url": "http://",
+    "date": "2007-03-26T14:49:33",
+    "type": "comment",
+    "content_html": "<p>Yes, you can do the same in Rails, mate, by concatenating strings in the Controller into a variable then get it in the HTML in the  tag. ASP anyone? Then your Controller will be the View, no matter what HeineMaine says.</p>\n<p>Yes, your ASPX page CAN consist of a single ASP:Placeholder control and yes, you can add programmatically controls to the Controls collection of this placeholder control in the codebehind, but just because you can, it does not mean this is the View.</p>\n<p>By maybe, just maybe, you can also use declarative datasource to databind your grid defined in the ASPX? And use autoupdate/delete/insert for the datasource? And just have business logic in the code-behind? Is it possible?</p>"
+  },
+  {
+    "id": 1501,
+    "parent": 0,
+    "author_name": "Dean St",
+    "author_url": "http://",
+    "date": "2007-03-26T14:50:30",
+    "type": "comment",
+    "content_html": "<p>Yes, you can do the same in Rails, mate, by concatenating strings in the Controller into a variable then get it in the HTML in the  tag. ASP anyone? Then your Controller will be the View, no matter what HeineMaine says.</p>\n<p>Yes, your ASPX page CAN consist of a single ASP:Placeholder control and yes, you can add programmatically controls to the Controls collection of this placeholder control in the codebehind, but just because you can, it does not mean this is the View.</p>\n<p>By maybe, just maybe, you can also use declarative datasource to databind your grid defined in the ASPX? And use autoupdate/delete/insert for the datasource? And just have business logic in the code-behind? Is it possible?</p>"
+  },
+  {
+    "id": 1502,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-26T14:56:43",
+    "type": "comment",
+    "content_html": "<p>@Dean,<br>\nForgive me for misunderstanding, but what is your comment?  Do you have a blog where you present your views more clearly?</p>"
+  },
+  {
+    "id": 1503,
+    "parent": 0,
+    "author_name": "Dean St",
+    "author_url": "http://",
+    "date": "2007-03-26T14:57:26",
+    "type": "comment",
+    "content_html": "<p>By the way, you do understand I hope that I’m deliberately trying to flame. I do see where you are coming from. You are the “tools” guy – oh, let’s build this and that, this will make life much easier for developers… I’ve seen this suprerb framework by HeineMeine, let’s do it ASP.NET</p>\n<p>And I’m the “get things shipped to the client” guy. So I’m like, “wtf, yet another 20 year old produces the 1042th MVC framework in the world and we rush it in .NET – what do we want to achieve?”</p>\n<p>So you get the picture.</p>"
+  },
+  {
+    "id": 1504,
+    "parent": 0,
+    "author_name": "Dean St",
+    "author_url": "http://",
+    "date": "2007-03-26T15:00:38",
+    "type": "comment",
+    "content_html": "<p>My point is that the code behind is the Controller and if your coding style makes the code-behind take care of the View, then you need to review your code. The View is the ASPX and the Model can be generated by ORM tools, if you choose to.</p>\n<p>Also, anything Rails like gets us back to ASP.</p>"
+  },
+  {
+    "id": 1505,
+    "parent": 0,
+    "author_name": "Balasundar",
+    "author_url": "http://",
+    "date": "2007-03-27T15:14:05",
+    "type": "comment",
+    "content_html": "<p>In MVC, the Controller is a strategy that the view uses to handle user input. In the original MVC, it polls for user actions, but it can also be event-driven. The purpose is to handle fairly low-level events. In PAC, the Control is a mediator. Mediator is a fine pattern, but it has a different purpose and solves a different problem</p>"
+  },
+  {
+    "id": 1506,
+    "parent": 0,
+    "author_name": "Paul Schofield",
+    "author_url": "http://",
+    "date": "2007-04-04T15:55:09",
+    "type": "comment",
+    "content_html": "<p>This sounds like the FrontController pattern rather than MVC/MVP, doesn’t it?</p>\n<p>As many others have said, if Microsoft does MVC/MVP, they really need to do it right.  A few years ago, I think I heard some MS people cliam that ASP.NET already was MVC.  They need credibility on this, and more importantly ASP.NET needs a proper UI architecture.</p>"
+  },
+  {
+    "id": 1507,
+    "parent": 0,
+    "author_name": "smex",
+    "author_url": "http://",
+    "date": "2007-04-19T06:31:16",
+    "type": "comment",
+    "content_html": "<p>“the original MVC” — three-of-n tiers. 10+ year old technology, no aspect (AOP) programming needed here.  Still, you would ALL like to see this:  <a href=\"http://codebetter.com/blogs/jeffrey.palermo/archive/2007/03/16/Big-News-_2D00_-MVC-framework-for-ASP.NET-in-the-works-_2D00_-level-300.aspx\" rel=\"nofollow ugc\">http://codebetter.com/blogs/jeffrey.palermo/archive/2007/03/16/Big-News-_2D00_-MVC-framework-for-ASP.NET-in-the-works-_2D00_-level-300.aspx</a> (and the circle is now complete). hehe .. love ya all, thanks for the fun read!!!</p>"
+  },
+  {
+    "id": 1508,
+    "parent": 0,
+    "author_name": "Freedom D",
+    "author_url": "http://",
+    "date": "2007-04-19T18:14:24",
+    "type": "comment",
+    "content_html": "<p>For all of you who keep making comments about low quality of the OSS stuff out there, and claiming that frameworks like MonoRail are a “TOY”… Why not take a look at the stuff MS has been putting out lately. ATLAS is a TOY. WebForms is a recipie for BLOAT, and where is the (REAL) integrated testing?</p>\n<p>MonoRail is not for those who are “still trying to figure out how to do CRUD”, it’s for those who know that CRUD is CRUD, and they want to get past that to the specific logic of thier application.</p>\n<p>While you sit there developing your site’s CRUD layer with MS’s prescribed methodologies I have already finished Prototyping and showing my app off to management. While you are just starting to write your Business Layer, I have already released version 1.0 and the whole thing is fully Unit Tested.</p>\n<p>That said, if Microsoft’s MVC is better than MonoRail, perhaps I will use it. Perhaps I will not. When they released J++ I didn’t switch because it wasn’t as good as what I was using (Java) and the same will continue to hold true.</p>\n<p>Oh and someone said “Also, anything Rails like gets us back to ASP.”</p>\n<p>That is JUST RIDICULOUS. Take a look:</p>\n<p>RAILS (Ruby OR MonoRail):<br>\nWeb request is sent directly to the CONTROLLER which decides what to do, (update a record, display HTML data, etc. It has models to handle the domain logic, and views for customizing the output)</p>\n<p>ASP:<br>\nWeb request is sent directly to the PAGE (the view!) and the VIEW will contact another ASP script for logic or it contains its own logic.</p>\n<p>ASP.NET:<br>\nWeb request is sent directyl to the PAGE… STILL! and the logic still is either in another file from there or INCLUDED IN THE PAGE… STILL!</p>\n<p>ASP.NET 2.0:<br>\nWeb request is sent directyl to the PAGE… EVEN STILL!</p>\n<p>Sounds like rails is quite a ways away from ASP, and ASP is still… ASP.</p>"
+  },
+  {
+    "id": 1509,
+    "parent": 0,
+    "author_name": "Mike",
+    "author_url": "http://",
+    "date": "2007-04-27T14:01:15",
+    "type": "comment",
+    "content_html": "<p>One important point missed and this applies to MS and OSS.  A tool is only as good as it’s Design Time support. Take NHibernate and ActiveRecord and years later along comes ActiveWriter and knowing OSS and MS you get a good framework and tools are not the priority.</p>\n<p>ActiveWriter Rocks and should have been priority number one, and should mature in sync with the framework.  Take this approach and your OSS will be widely adopted. This also applies to MS quick to give us a framework and slow to give us tools that make us more productive with that framework.</p>\n<p>I hate doing anything that is not type safe and crashes at runtime, passing around strings, out of sync xml files, strings in attributes and MS and OSS are both still doing this.</p>"
+  },
+  {
+    "id": 1510,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-04-27T14:10:37",
+    "type": "comment",
+    "content_html": "<p>@Mike<br>\n&gt; I hate doing anything that is not type. . .</p>\n<p>This is severely limiting, and this immediately limits you to strongly-typed languages.  In fact, if you are creating a web application, the simple javascript on a page is not type-safe.  You don’t know if it works until you run it.</p>\n<p>There is no substitute for testing.  I’ve seen lots of code that compiled fail at runtime.  Type-safety does not guarantee running without crashing.  If you are covered with a suite of automated tests, then you know that your code works regardless if it is type-safe, duck-typed, or just a bunch of happy strings or Xml.</p>"
+  },
+  {
+    "id": 1511,
+    "parent": 0,
+    "author_name": "Pav",
+    "author_url": "http://www.troika-asp.com",
+    "date": "2007-05-22T12:32:54",
+    "type": "comment",
+    "content_html": "<p>Hi All,</p>\n<p>Please check this out.  ASP MVC framework!</p>\n<p><a href=\"http://www.troika-asp.com\" rel=\"nofollow ugc\">http://www.troika-asp.com</a></p>\n<p>Probably the first “proper” MVC framework for ASP 3.0! </p>\n<p>It uses OO JavaScript for Model and Controller logic and XSLT transformation templates for the View. </p>\n<p>Pav.</p>"
+  },
+  {
+    "id": 1512,
+    "parent": 0,
+    "author_name": "JP",
+    "author_url": "http://",
+    "date": "2007-05-26T07:21:15",
+    "type": "comment",
+    "content_html": "<p>J2EE has been doing this for several years with Struts, Webwork, SpringMVC etc<br>\nWhat will MS try next – EJB </p>"
+  },
+  {
+    "id": 1513,
+    "parent": 0,
+    "author_name": "DifferentMike",
+    "author_url": "http://",
+    "date": "2007-06-18T12:52:52",
+    "type": "comment",
+    "content_html": "<p>Unbelievable how so many software discussions end up about how company/group X has already made product Y. If your neighbor buys a new car do you tell him that Ford was actually the first one to mass produce a car? And that Volvo was the first one that introduced three point seat belts? You’d never be invited to another barbecue…</p>\n<p>Can we as developers please move past this nonsense? You as a developer have a choice to use whatever you want, and to base your choice on anything other than cost or technical merit is not a good way to success. Let’s see what Microsoft can do first? (Scott Guthrie and his team tend to come up with pretty good stuff, have a look at LINQ for example) If it’s not good, don’t use it! </p>\n<p>I think you will all be amazed if in the end you can switch a project to MVC by changing the web.config, adding a handler and changing some links in your pages to point to a new type of URL. </p>\n<p>But to go on and say that the project is somehow not good/not worth it/stupid/not needed when it is clearly in a prototype phase is a bit short sighted. </p>\n<p>/end of rant</p>\n<p>PS. Any news on this project since this post?</p>"
+  },
+  {
+    "id": 1514,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-06-18T13:44:24",
+    "type": "comment",
+    "content_html": "<p>No news yet.</p>"
+  },
+  {
+    "id": 1515,
+    "parent": 0,
+    "author_name": "biggy",
+    "author_url": "http://www.webrawl.com",
+    "date": "2007-06-26T15:00:50",
+    "type": "comment",
+    "content_html": "<p>I hope ScottG looks closely at monorail.  I really like the smart dispatch controller.</p>"
+  },
+  {
+    "id": 1516,
+    "parent": 0,
+    "author_name": "Travis Laborde",
+    "author_url": "http://clipmarks.com/clipper/travislaborde/",
+    "date": "2007-07-31T11:35:33",
+    "type": "comment",
+    "content_html": "<p>I for one think if Scott Guthrie does it (or his team obviously), it’ll blow the socks off the current offerings.</p>\n<p>Not to mention that it will become the defacto standard for so many developers since it comes from MS.  And it’ll be supported, etc by the largest, most talented set of developers we could hope for.</p>\n<p>Yeah, I’ll try the official version when it comes out.  I’d be an idiot not to.</p>"
+  },
+  {
+    "id": 1517,
+    "parent": 0,
+    "author_name": "Throwspoop",
+    "author_url": "http://",
+    "date": "2007-08-03T01:41:10",
+    "type": "comment",
+    "content_html": "<p>Oh please, please can we have a MonoRail vs. ASP.NET cage fight? Oh…that would be awesome!</p>"
+  },
+  {
+    "id": 1518,
+    "parent": 0,
+    "author_name": "lcj",
+    "author_url": "http://",
+    "date": "2007-08-13T00:35:00",
+    "type": "comment",
+    "content_html": "<p>I think MS should come out with something. I am looking forward to it.  I see nothing wrong with competition in the space.  I don’t see it as bad for developers to have more options.  I feel like MS is listening to the community by responding to a pattern that seems effective and incorporating it into their offering.</p>"
+  },
+  {
+    "id": 1519,
+    "parent": 0,
+    "author_name": "Fredrik",
+    "author_url": "http://",
+    "date": "2007-08-23T07:31:54",
+    "type": "comment",
+    "content_html": "<p>I just read somewhere in blogs recently that Microsoft is almost ready with MVC framework and are about to announce somewhere in October. </p>\n<p>Can any one confirm this again.</p>\n<p>Microsoft has been quiet a lot about MVC framework and VBx ( The Dynamic Language ).</p>\n<p>IronRuby shall work on Net framework and shall fully support Ruby on Rails…. My question is which MVC pattern are they going to use.</p>\n<p>Mr. Scott Guthrie in one of his blogs comments said that MVC for asp.net will be independent of language.</p>\n<p>Hoping to get some fresh news about this.</p>"
+  },
+  {
+    "id": 1520,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-10-07T05:39:35",
+    "type": "comment",
+    "content_html": "<p>More info <a href=\"http://codebetter.com/blogs/jeffrey.palermo/archive/2007/10/05/altnetconf-scott-guthrie-announces-asp-net-mvc-framework-at-alt-net-conf.aspx\" rel=\"nofollow ugc\">http://codebetter.com/blogs/jeffrey.palermo/archive/2007/10/05/altnetconf-scott-guthrie-announces-asp-net-mvc-framework-at-alt-net-conf.aspx</a></p>"
+  },
+  {
+    "id": 1521,
+    "parent": 0,
+    "author_name": "jon paul davies",
+    "author_url": "http://www.j-dee.com",
+    "date": "2008-03-05T22:02:03",
+    "type": "comment",
+    "content_html": "<p>Good summary<a href=\"http://www.j-dee.com\" title=\"jon paul davies\" rel=\"nofollow\">.</a> Makes MVC a bit clearer for me.</p>"
+  }
+]

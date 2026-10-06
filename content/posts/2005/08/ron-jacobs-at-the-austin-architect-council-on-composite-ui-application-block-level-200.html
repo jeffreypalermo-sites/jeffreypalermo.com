@@ -1,0 +1,19 @@
+---
+wp_id: 305
+title: Ron Jacobs at the Austin Architect Council on Composite UI Application Block – level 200
+slug: ron-jacobs-at-the-austin-architect-council-on-composite-ui-application-block-level-200
+permalink: /2005/08/ron-jacobs-at-the-austin-architect-council-on-composite-ui-application-block-level-200/
+date: 2005-08-19T02:56:00
+date_utc: 2005-08-19T02:56:00Z
+modified: 2005-08-19T02:56:00
+format: html
+excerpt: On Monday, Microsoft held an Architect Council at the MTC. Ron Jacobs from the patterns and practices group was in town and spoke about the upcoming Composite UI Application Block (or CAB) as well as his take on SOA. Ron runs the patterns and practices group at Microsoft and has a series of related podcasts. […]
+comments_open: true
+---
+<p>On Monday, Microsoft held an Architect Council at the MTC. <a href="http://www.ronjacobs.com/">Ron Jacobs </a>from the <a href="http://msdn.microsoft.com/practices/">patterns and practices </a>group was in town and spoke about the upcoming <a href="http://www.gotdotnet.com/Workspaces/Workspace.aspx?id=22f72167-af95-44ce-a6ca-f2eafbf2653c">Composite UI Application Block</a> (or CAB) as well as his take on SOA. Ron runs the patterns and practices group at Microsoft and has a series of related podcasts.</p>
+<p>Ron related that he doesn’t like the DataSet because it is unstructured data. I have to agree with him. I recently ripped a DataSet out of EZWeb because it was annoying me. I replaced it with a data transfer object specifically suited to the purpose.</p>
+<p>The Composite UI Application Block is written for .Net 2.0 and will ship along with the rest of Whidbey. It’s goal is to make smart client apps easier to develop. Ron recognizes that more and more smart client applications will have mutliple panes and not just a series of single forms. The CAB is largely based on lessons learned from when Microsoft created the <a href="http://www.microsoft.com/resources/casestudies/casestudy.asp?CaseStudyID=16276">Integrated Dell Desktop for Dell</a>, Inc. The IDD is a smart client app framework that loads modules and hosts them. Modules are the individual application segments, and the smart client framework allows them to work together. It’s the application shell.</p>
+<p>The CAB introduces a new dependency injection framework from Microsoft based on attributes. Personally, it’ll have to be really good if they expect people to switch from Spring.</p>
+<p>Modules in applications using the CAB can publish events and subscribe to events. This communication is managed by the CAB which is highly instrumented to allow for sophisticated debugging. The CAB offers things called application services which are components that are meant to be shared by the entire application. All code runs in the same AppDomain, and each pane, dubbed a “Smart Part”. This is a takeaway from “Web Part”.</p>
+<p>Hands-on labs for the CAB will be available soon. To download the CAB, go to <a href="http://practices.gotdotnet.com/workspace.aspx?id=22f72167-af95-44ce-a6ca-f2eafbf2653c">http://practices.gotdotnet.com/workspace.aspx?id=22f72167-af95-44ce-a6ca-f2eafbf2653c</a></p>
+<p>Check out <a href="http://msdn.demoservers.com/">http://msdn.demoservers.com/</a> for all kinds of hands-on demos of Microsoft products.</p>

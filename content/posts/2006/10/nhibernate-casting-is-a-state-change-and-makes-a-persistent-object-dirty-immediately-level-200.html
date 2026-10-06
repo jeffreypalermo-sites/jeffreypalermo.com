@@ -1,0 +1,17 @@
+---
+wp_id: 466
+title: 'NHibernate: Casting is a state change and makes a persistent object dirty immediately – level 200'
+slug: nhibernate-casting-is-a-state-change-and-makes-a-persistent-object-dirty-immediately-level-200
+permalink: /2006/10/nhibernate-casting-is-a-state-change-and-makes-a-persistent-object-dirty-immediately-level-200/
+date: 2006-10-23T12:06:23
+date_utc: 2006-10-23T12:06:23Z
+modified: 2006-10-23T12:06:23
+format: html
+excerpt: NHibernate knows when an object under its watch has changed. As soon as the object changes, it is “dirty”. Some other changes might cause an object to be dirty as well. One that my team recently encountered is a cast. We use an enum of type byte. It’s only a few items (less than 255), […]
+comments_open: true
+---
+<p>NHibernate knows when an object under its watch has changed.&nbsp; As soon as the object changes, it is “dirty”.&nbsp; Some other changes might cause an object to be dirty as well.&nbsp; One that my team recently encountered is a cast.&nbsp; We use an enum of type byte.&nbsp; It’s only a few items (less than 255), so we use a tinyint in our database.&nbsp; When our mapping uses type=”byte”, NHibernate casts from the byte to our Enum type when hydrating the object.&nbsp; This cast is a change because when NHibernate checks the value, it’s an Enum, not a byte.&nbsp; </p>
+<p>To get around this cast (implicit or not), we use the fully qualified type name of the Enum in the mapping.&nbsp; NHibernate understands Enums natively, so just put in the enum type, and you are off to the races.&nbsp; Note that if you are using an Enum that is nested inside a public class, you need to follow .Net’s rules for fully-qualified type names.</p>
+<p>See MSDN’s documentation for this:&nbsp; </p>
+<p><a title="http://msdn2.microsoft.com/en-us/library/w3f99sx1.aspx" href="http://msdn2.microsoft.com/en-us/library/w3f99sx1.aspx">http://msdn2.microsoft.com/en-us/library/w3f99sx1.aspx</a></p>
+<pre>TopNamespace.SubNameSpace.ContainingClass+NestedEnum,MyAssembly</pre>

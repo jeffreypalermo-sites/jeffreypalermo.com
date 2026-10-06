@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2700,
+    "parent": 0,
+    "author_name": "Nolan Egly",
+    "author_url": "http://",
+    "date": "2013-06-26T19:58:48",
+    "type": "comment",
+    "content_html": "<p>SourceTree is nice, but be aware the Windows version does not yet have Mercurial support like the Mac version and its not immediately obvious when you try.  See <a href=\"https://answers.atlassian.com/questions/149603/cannot-connect-to-mercurial-repos-in-sourcetree-for-windows\" rel=\"nofollow\">answers.atlassian.com/…/cannot-connect-</a> </p>"
+  }
+]

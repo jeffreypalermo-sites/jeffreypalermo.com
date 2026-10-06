@@ -1,0 +1,11 @@
+[
+  {
+    "id": 302,
+    "parent": 0,
+    "author_name": "Adam",
+    "author_url": "http://",
+    "date": "2007-08-07T15:17:01",
+    "type": "comment",
+    "content_html": "<p>My DLL is in the GAC. When I try to run your code I get an error saying it can’t find the config file. Is there something else I need to do?</p>"
+  }
+]

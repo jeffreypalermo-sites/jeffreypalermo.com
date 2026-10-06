@@ -1,0 +1,38 @@
+[
+  {
+    "id": 374,
+    "parent": 0,
+    "author_name": "Prentiss Riddle",
+    "author_url": "http://prentissriddle.com/",
+    "date": "2005-07-19T17:13:30",
+    "type": "comment",
+    "content_html": "<p>I read your headline and thought you were going to do something along the lines of these prescriptivist killjoys:</p>\n<p><a href=\"http://michaelsremarks.blogspot.com/2005/03/basic-guidelines-for-tagging-on-flickr.html\" rel=\"nofollow ugc\">http://michaelsremarks.blogspot.com/2005/03/basic-guidelines-for-tagging-on-flickr.html</a><br>\n<a href=\"http://www.flickr.com/forums/ideas/5458/\" rel=\"nofollow ugc\">http://www.flickr.com/forums/ideas/5458/</a></p>\n<p>They make me want to write something up with stern instructions on how to blow one’s nose… \uD83D\uDE42</p>"
+  },
+  {
+    "id": 375,
+    "parent": 0,
+    "author_name": "Daniel F",
+    "author_url": "http://www.redgum.com.au",
+    "date": "2005-07-19T20:25:16",
+    "type": "comment",
+    "content_html": "<p>Ahhh, you’re working on shadows. Sweet! I love the product already, but knowing there’s a gun behind it gives me the warm fuzzies.</p>\n<p>Any plans for a locally hosted version? I’d lurve to be able to run this at work for myself and my fellow geeks, or even on my lappy. Easier than “save as complete page” for archiving pages to read on the train \uD83D\uDE42</p>"
+  },
+  {
+    "id": 376,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-07-19T21:50:54",
+    "type": "comment",
+    "content_html": "<p>Sorry, no locally hosted version.  I’m glad you like the product.</p>"
+  },
+  {
+    "id": 377,
+    "parent": 0,
+    "author_name": "Andreas Kraus",
+    "author_url": "http://www.sunlab.de",
+    "date": "2005-07-21T06:01:57",
+    "type": "comment",
+    "content_html": "<p>I didn’t know Shadows.com before. I just regged there and it’s very interesting. Seeing the whole site being written in ASP.NET is even more interesting.</p>\n<p>Just curious. Do you use MSSQL as Database? Though I’m almost sure you use MSSQL .)</p>"
+  }
+]

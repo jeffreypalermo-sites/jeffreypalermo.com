@@ -1,0 +1,128 @@
+[
+  {
+    "id": 838,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2006-05-03T06:27:18",
+    "type": "comment",
+    "content_html": "<p>Your defination for Integration testing is different than what I know.<br>\nWhat do you call to a test that validate system behavior end to end? From the UI (or just below) to the database and back?</p>\n<p>This is usually what I would call integration tests, and that doesn’t run on every build (although I would probably run it on every CI build.</p>"
+  },
+  {
+    "id": 839,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-05-03T13:39:30",
+    "type": "comment",
+    "content_html": "<p>Ayende,<br>\nintegration testing is a very broad term, and end-to-end tests are certainly integration tests.  I believe the value of an integration test starts by testing just a few classes together and then testing more on top of that.  I believe it’s valuable to test in the small before testing from end-to-end.</p>"
+  },
+  {
+    "id": 840,
+    "parent": 0,
+    "author_name": "Bob",
+    "author_url": "http://",
+    "date": "2006-05-03T14:24:22",
+    "type": "comment",
+    "content_html": "<p>Jeff,</p>\n<p>I’ve seen everyone and their mother, and sometimes younger siblings, put together a blog post about TDD, or Testing, or “What is testing”  or some other title.  Most of them are pretty good, at least the ones that I can read all the way through.</p>\n<p>Every once in a while, I even see one that actually appears to have a bit of practical value, so I go and get those tools and try to apply them to my Web Application.  </p>\n<p>At which point, with everything installed and all the little “Hello World” samples running great, I now ask:  “OK, now what?  How do I test my real world app?”  Deafening silence.  I never seem to be able to find a true, fully fleshed out Web App sample, with real DB access, and DATE’s in the database.</p>\n<p>I understand generally that I need to refactor, such that my methods can be called independently.  However, most of the time when TDD or any kind of automated testing would help me, the problems are showing up in a db call or in screen layout.  Simple, or even complex, methods and functions that I write are almost NEVER the problem.  Sure I could put together tests for those methods, but that is mostly a waste of my time.</p>\n<p>I’ve been trying to get into TDD for over a year now, but without having seen a great article or a great tool that can help me test my web app, it’s all just light reading.</p>\n<p>If you and the other ( Mostly great and well-informed.  PLEASE do not think this is a rant against you or TDD. ) folks who write about TDD want the world to embrace it, take us through a small web dev process, show us what will get tested and how.  Be thorough.  Don’t ever use the “I’ll leave this as an excercise for the user.” garbage sentence.</p>\n<p>Again, I am most interested in screen layout/results ( like datagrids having and displaying the correct data ) and how to test Event functions.  I have no clue at all how to test my Datagrid1_ItemDataBound or dg2_ItemCommand from a harness.  I would LOVE to.  ( And NO, my datagrids are not called Datagrid1…  )</p>\n<p>OK, this bit can be taken as a friendly rant…</p>\n<p>Enough with the theory all you TDD gurus.  Show me real world examples, including some thorough guidance on how to set up a “TDD version” of my database.  Real examples of how to return it to it’s starting state.  When NOT to return it to start state so I can figure out where the newly introduced bug is.</p>\n<p>Especially show me how in heck to test server-side-control events, and show me how to do it without using the word “stub” or in fact using a stub.</p>\n<p>Any test that doesn’t do what a user might do is not thorough enough for me to trust.  I can’t be the only one who feels frustrated by the lack of examples.  Heck, I’ll even be happy if anyone can send me a link that contains some good hard examples of the stuff I’ve mentioned.</p>\n<p>I can’t be the only one who wants all of this stuff and doesn’t have the time to figure out all the intricate details on my own.</p>\n<p>I just noticed you’re a c# person.  I know both c# and vb.net, so I don’t even care which language, but you’d probably reach the largest audience by doing this sample in both languages.</p>\n<p>I hope some of the other TDD gurus read this, and I hope someone has the time to do it and publicize the fact that they did it.  </p>\n<p>TDD is taking over most of the blogs I get in my feeds.  As a web dev, it’s getting a bit old for me.</p>"
+  },
+  {
+    "id": 841,
+    "parent": 0,
+    "author_name": "bobwantstdd",
+    "author_url": "http://",
+    "date": "2006-05-03T14:45:42",
+    "type": "comment",
+    "content_html": "<p>Just got set to receive email updates to this post.</p>\n<p>Bob</p>"
+  },
+  {
+    "id": 842,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-05-03T15:19:16",
+    "type": "comment",
+    "content_html": "<p>Bob,<br>\nGreat point.  I was frustrated with UI and database testing as well when I started automated testing.  I’m going to make a few more posts on automated testing, and I’ll cover these.  I’m not going to even touch on TDD.  I’m only going to talk about automated testing.  Stay tuned.</p>"
+  },
+  {
+    "id": 843,
+    "parent": 0,
+    "author_name": "Carlton",
+    "author_url": "http://",
+    "date": "2006-05-03T15:47:36",
+    "type": "comment",
+    "content_html": "<p>Bob, if you are writing Dot.Net code, there is NUnitAsp out there for writing exactly the types of tests you are talking about.  I have TONS of example code I would be more than willing to share with anyone – nettletonc_at_saic_dot_com.</p>"
+  },
+  {
+    "id": 844,
+    "parent": 0,
+    "author_name": "bobwantstdd",
+    "author_url": "http://",
+    "date": "2006-05-03T18:14:32",
+    "type": "comment",
+    "content_html": "<p>I’ll take a look at NUnitAsp.  And I’ll be shooting you an email also!<br>\nThanks!</p>"
+  },
+  {
+    "id": 845,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-05-03T18:18:52",
+    "type": "comment",
+    "content_html": "<p>For unit testing close to the UI, I’m going to give an example of the Model-View-Presenter pattern.  Reading up on it now would be beneficial.  This allows testing all the way up to the GUI layer (which is made to be very small).  Because GUI needs eyeballs to ensure it looks good it will always need manual testing, but we can still unit test GUI behavior.</p>"
+  },
+  {
+    "id": 846,
+    "parent": 0,
+    "author_name": "jmiller",
+    "author_url": "http://",
+    "date": "2006-05-03T19:33:03",
+    "type": "comment",
+    "content_html": "<p>Bob,</p>\n<p>The very first thing to do is to look *hard* at the MVP pattern, and you really need to get over the intepridation over mock objects or stubs.  The actual WebForms machinery is difficult, but not impossible, to test.  Get as much code as possible away from your screen.  The datagrid event handlers should simply delegate to a controller that can be tested easily.</p>\n<p>I’d recommend Selenium over NUnitASP for testing.  NUnitASP is too fragile unless you can really enforce pure XHTML compliant pages.</p>\n<p>Model View Presenter links:</p>\n<p><a href=\"http://www.objectmentor.com/resources/articles/TheHumbleDialogBox.pdf#search='the%20humble%20dialog%20box\" rel=\"nofollow ugc\">http://www.objectmentor.com/resources/articles/TheHumbleDialogBox.pdf#search='the%20humble%20dialog%20box</a> by Michael Feathers<br>\n<a href=\"http://www.martinfowler.com/eaaDev/ModelViewPresenter.html\" rel=\"nofollow ugc\">http://www.martinfowler.com/eaaDev/ModelViewPresenter.html</a><br>\n<a href=\"http://mikemason.ca/2006/02/15/\" rel=\"nofollow ugc\">http://mikemason.ca/2006/02/15/</a><br>\n<a href=\"http://codebetter.com/blogs/jeremy.miller/archive/2006/02/01/137457.aspx\" rel=\"nofollow ugc\">http://codebetter.com/blogs/jeremy.miller/archive/2006/02/01/137457.aspx</a><br>\n<a href=\"http://codebetter.com/blogs/jeremy.miller/archive/2006/02/16/138382.aspx\" rel=\"nofollow ugc\">http://codebetter.com/blogs/jeremy.miller/archive/2006/02/16/138382.aspx</a><br>\n<a href=\"http://codebetter.com/blogs/jeremy.miller/articles/129546.aspx\" rel=\"nofollow ugc\">http://codebetter.com/blogs/jeremy.miller/articles/129546.aspx</a></p>"
+  },
+  {
+    "id": 847,
+    "parent": 0,
+    "author_name": "bobwantstdd",
+    "author_url": "http://",
+    "date": "2006-05-03T19:56:21",
+    "type": "comment",
+    "content_html": "<p>MVP pattern is the same as ModelViewController I’m guessing?</p>\n<p>I am just starting a new development project, and was looking at that.  I’ve got the same problem with the Pattern bloggers as I had with the TDD bloggers \uD83D\uDE42  Too much theory, not enough samples.  However, it seems that for once, opening my fat mouth has been a good thing…</p>\n<p>NUnitAsp seems to be what I’m looking for, at least for a start.  I’ll check out selenium in the next couple of days and will be looking at the links you sent.</p>\n<p>As I said, I know I need to refactor and get my code out of my presentation, I was just totally unclear on how that could possibly help me test.  Simply by making a new call from an event to a new method doesn’t tell me anything about how that helps me to test.  I know I have to do it, but without samples of testing code that works in my environment, it doesn’t get me to step 2.</p>\n<p>Hopefully the links you included not only tell me how to refactor a standard vanilla db driven aspx page into an MVC pattern, but also how to test that my header, detail and footer lines of my datagrid are generating correctly.</p>\n<p>Carlton, I owe you a beer if we ever meet up just for mentioning NUnitAsp.  At the very least, I can use it to tell if all my pages are loading after doing something stupid to a class.</p>\n<p>I’m still trying to figure out how I missed NUnitAsp and Selenium in my google searches.  Whatever did I do to you, oh great and powerful Google?</p>"
+  },
+  {
+    "id": 848,
+    "parent": 0,
+    "author_name": "Carlton",
+    "author_url": "http://",
+    "date": "2006-05-04T14:18:29",
+    "type": "comment",
+    "content_html": "<p>I disagree NUnitAsp is too fragile unless you use pure XHTML compliant pages.  Sometimes the pages are slow, but the tool is robust.  I have never considered this standard (I had to look up what XHTML is) when writing NUnitAsp tests.  I am not knocking Selenium since I think it is a good tool, but NUnitAsp is pretty darn good, too.</p>"
+  },
+  {
+    "id": 849,
+    "parent": 0,
+    "author_name": "John_S",
+    "author_url": "http://www.artoftest.com",
+    "date": "2007-05-08T05:07:57",
+    "type": "comment",
+    "content_html": "<p>I would actually take a look at WebAii here: <a href=\"http://www.artoftest.com\" rel=\"nofollow ugc\">http://www.artoftest.com</a>, You can use .net to automate rich web scenarios using IE or FireFox. You can also automate you javascript unit testing.</p>\n<p>Also check out TestRegions, a concept to help reduce test automation maintenance. </p>"
+  },
+  {
+    "id": 850,
+    "parent": 0,
+    "author_name": "Jack",
+    "author_url": "http://",
+    "date": "2007-07-24T15:00:37",
+    "type": "comment",
+    "content_html": "<p>I believed in NUnitASP, until I had to access a datagrid. Datagrids alone are no problem, but try accessing the contents of a datagrid row nested inside a DIV tag with the pages viewstate turned on….</p>"
+  },
+  {
+    "id": 851,
+    "parent": 0,
+    "author_name": "Jack",
+    "author_url": "http://",
+    "date": "2007-07-24T15:01:16",
+    "type": "comment",
+    "content_html": "<p>I believed in NUnitASP, until I had to access a datagrid. Datagrids alone are no problem, but try accessing the contents of a datagrid row nested inside a DIV tag with the pages viewstate turned on….</p>"
+  }
+]

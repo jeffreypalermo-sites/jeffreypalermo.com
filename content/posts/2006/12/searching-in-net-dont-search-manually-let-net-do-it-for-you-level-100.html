@@ -1,0 +1,186 @@
+---
+wp_id: 477
+title: Searching in .Net (don’t search manually, let .Net do it for you) – level 100
+slug: searching-in-net-dont-search-manually-let-net-do-it-for-you-level-100
+permalink: /2006/12/searching-in-net-dont-search-manually-let-net-do-it-for-you-level-100/
+date: 2006-12-04T13:11:00
+date_utc: 2006-12-04T13:11:00Z
+modified: 2006-12-04T13:11:00
+format: html
+tags:
+- tips-tricks
+excerpt: With .Net 2.0, we have some basic search functionality baked in to the .Net Framework. With Linq coming out in .Net 3.5, we will have full querying support on IEnumerable types, but we have quite a bit of power with .Net 2.0. In this short article, I'll outline how to search objects in memory with […]
+comments_open: true
+---
+<p>With .Net 2.0, we have some basic search<br>
+functionality baked in to the .Net Framework.&nbsp; With Linq coming out in .Net 3.5,<br>
+we will have full querying support on IEnumerable types, but we have quite a bit<br>
+of power with .Net 2.0.&nbsp; In this short article, I'll outline how to search<br>
+objects in memory with .Net 2.0 or higher.</p>
+<p>Consider the following class, Person:</p>
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p><span style="color:blue">public</span> <span style="color:blue">class</span> <span style="color:teal">Person</span> : <span style="color:teal">IComparable</span></p>
+<p>{</p>
+<p>&nbsp; &nbsp; <span style="color:blue">private</span> <span style="color:blue">string</span> _firstName;</p>
+<p>&nbsp; &nbsp; <span style="color:blue">private</span> <span style="color:blue">string</span><br>
+_lastName;</p>
+
+<p>&nbsp; &nbsp; <span style="color:blue">public</span> Person(<span style="color:blue">string</span> firstName,<br>
+<span style="color:blue">string</span><br>
+lastName)</p>
+<p>&nbsp; &nbsp;<br>
+{</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; _firstName<br>
+= firstName;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;<br>
+_lastName = lastName;</p>
+<p>&nbsp; &nbsp; }</p>
+
+<p>&nbsp; &nbsp; <span style="color:blue">public</span> <span style="color:blue">string</span> FirstName</p>
+<p>&nbsp; &nbsp; {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:blue">get</span> { <span style="color:blue">return</span> _firstName;<br>
+}</p>
+<p>&nbsp; &nbsp; }</p>
+
+<p>&nbsp; &nbsp; <span style="color:blue">public</span> <span style="color:blue">string</span><br>
+LastName</p>
+<p>&nbsp; &nbsp; {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:blue">get</span> { <span style="color:blue">return</span> _lastName;<br>
+}</p>
+<p>&nbsp; &nbsp; }</p>
+
+<p>&nbsp; &nbsp; <span style="color:blue">public</span> <span style="color:blue">string</span><br>
+FullName</p>
+<p>&nbsp; &nbsp; {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:blue">get</span> { <span style="color:blue">return</span> <span style="color:blue">string</span>.Format(<span style="color:maroon">"{0} {1}"</span>,<br>
+FirstName, LastName); }</p>
+<p>&nbsp; &nbsp; }</p>
+
+<p>&nbsp; &nbsp; <span style="color:blue">public</span> <span style="color:blue">int</span> CompareTo(<span style="color:blue">object</span> obj)</p>
+<p>&nbsp; &nbsp; {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:teal">Person</span> person = (<span style="color:teal">Person</span>)obj;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:blue">int</span> compareResult =<br>
+LastName.CompareTo(person.LastName);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:blue">if</span>(compareResult == 0)</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br>
+compareResult = FirstName.CompareTo(person.FirstName);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; }</p>
+
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:blue">return</span> compareResult;</p>
+<p>&nbsp; &nbsp; }</p>
+
+<p>&nbsp; &nbsp; <span style="color:blue">public</span> <span style="color:blue">override</span> <span style="color:blue">string</span><br>
+ToString()</p>
+<p>&nbsp; &nbsp;<br>
+{</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="color:blue">return</span><br>
+FullName;</p>
+<p>&nbsp; &nbsp;<br>
+}</p>
+<p>}</p>
+</div>
+<p>Consider<br>
+this a basic domain object within the application.&nbsp; We have the need to work<br>
+with many instances of this class in memory.&nbsp; Assume that there is no need for a<br>
+relational database for this application.&nbsp; We pull Person instances in memory<br>
+and work with them.&nbsp; Often, we'll need to pare down the set to only include<br>
+instances that match some criteria.&nbsp; We could loop through each one and create a<br>
+new list with matches, but with .Net 2.0 and "Comparison"(s), we have a more<br>
+elegant way.&nbsp; Here is an example.</p>
+
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">void</span> ShouldQueryArray()</p>
+<p>&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:teal">Person</span>[] people = <span style="color:blue">new</span> <span style="color:teal">Person</span>[]{<span style="color:blue">new</span> <span style="color:teal">Person</span>(<span style="color:maroon">"Homer"</span>, <span style="color:maroon">"Simpson"</span>), <span style="color:blue">new</span><br>
+<span style="color:teal">Person</span>(<span style="color:maroon">"Jeffrey"</span>, <span style="color:maroon">"Palermo"</span>)};</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+<span style="color:teal">Person</span>[] matches = <span style="color:teal">Array</span>.FindAll&lt;<span style="color:teal">Person</span>&gt;(people, <span style="color:blue">delegate</span>(<span style="color:teal">Person</span><br>
+obj)</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span><br>
+(obj.FirstName.Contains(<span style="color:maroon">"ome"</span>));</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; });</p>
+
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">foreach</span>(<span style="color:teal">Person</span><br>
+person <span style="color:blue">in</span> matches)</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+<span style="color:teal">Console</span>.WriteLine(person);</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p>
+</div>
+<p><!--EndFragment--><br>In this example, we can just specify the<br>
+condition that causes an instance to match, and we'll get back a new array with<br>
+only the matches.&nbsp; In this case, we get the following output:</p>
+<p><span>Homer Simpson</span></p>
+<p>I work with<br>
+arrays a lot.&nbsp; In fact, it is my favorite IEnumerable data structure because of<br>
+it's power, but it isn't the only structure that supports comparisons (and there<br>
+are other methods similar to FindAll, but FindAll is the most common).&nbsp;&nbsp;</p>
+
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p><span style="color:blue">public</span> <span style="color:blue">void</span> ShouldQueryIList()</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color:teal">List</span>&lt;<span style="color:teal">Person</span>&gt;<br>
+list = <span style="color:blue">new</span> <span style="color:teal">List</span>&lt;<span style="color:teal">Person</span>&gt;();</p>
+<p>&nbsp;&nbsp;&nbsp;<br>
+list.Add(<span style="color:blue">new</span> <span style="color:teal">Person</span>(<span style="color:maroon">"Homer"</span>,<br>
+<span style="color:maroon">"Simpson"</span>));</p>
+<p>&nbsp;&nbsp;&nbsp;<br>
+list.Add(<span style="color:blue">new</span> <span style="color:teal">Person</span>(<span style="color:maroon">"Jeffrey"</span>,<br>
+<span style="color:maroon">"Palermo"</span>));</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:teal">List</span>&lt;<span style="color:teal">Person</span>&gt;<br>
+matches = list.FindAll(<span style="color:blue">delegate</span>(<span style="color:teal">Person</span> obj)</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span><br>
+(obj.FirstName.Contains(<span style="color:maroon">"ome"</span>));</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; });</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">foreach</span> (<span style="color:teal">Person</span><br>
+person <span style="color:blue">in</span> matches)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:teal">Console</span>.WriteLine(person);</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+</div>
+<p><!--EndFragment--><br>Here, we are using the<br>
+List&lt;T&gt; class for our search.&nbsp; The following example is more complex.&nbsp;<br>
+This illustrates that the matching criteria can be as complicated as you need it<br>
+to be.</p>
+
+<div style="background:white none repeat scroll 0 50%; color:black">
+<p><span style="color:blue">public</span> <span style="color:blue">void</span> ShouldQueryArrayWithComplexComparison()</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color:teal">Person</span>[] people = <span style="color:blue">new</span> <span style="color:teal">Person</span>[] { <span style="color:blue">new</span> <span style="color:teal">Person</span>(<span style="color:maroon">"Homer"</span>, <span style="color:maroon">"Simpson"</span>), <span style="color:blue">new</span><br>
+<span style="color:teal">Person</span>(<span style="color:maroon">"Jeffrey"</span>, <span style="color:maroon">"Palermo"</span>) };</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color:teal">Person</span>[] matches = <span style="color:teal">Array</span>.FindAll&lt;<span style="color:teal">Person</span>&gt;(people, <span style="color:blue">delegate</span>(<span style="color:teal">Person</span><br>
+obj)</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span><br>
+(obj.FirstName.StartsWith(<span style="color:maroon">"j"</span>, <span style="color:teal">StringComparison</span>.InvariantCultureIgnoreCase)</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &amp;&amp; obj.LastName.EndsWith(<span style="color:maroon">"mo"</span>));</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; });</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">foreach</span> (<span style="color:teal">Person</span> person <span style="color:blue">in</span><br>
+matches)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:teal">Console</span>.WriteLine(person);</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+</div>
+<p><!--EndFragment--><br>By the way, if you aren't<br>
+familiar with the "delegate" keyword, this is an anonymous method.&nbsp; I could<br>
+refactor it into a private method, but I'm using it inline instead.&nbsp; In short,<br>
+FindAll just requires a delegate.&nbsp; However you wish to provide it is fine.</p>

@@ -1,0 +1,29 @@
+[
+  {
+    "id": 479,
+    "parent": 0,
+    "author_name": "Jonathan de Halleux",
+    "author_url": "http://blog.dotnetwiki.org",
+    "date": "2005-09-16T21:08:28",
+    "type": "comment",
+    "content_html": "<p>Have you takened a look at TypeMock ?</p>"
+  },
+  {
+    "id": 480,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-09-19T21:04:51",
+    "type": "comment",
+    "content_html": "<p>Yes, I have looked at TypeMock, and it’s trying too hard.  The solution to mocking a static isn’t to subvert the runtime but to change the static to an object that works _with_ the runtime.</p>\n<p>You can make a pig fly by shooting him out of a cannon, but you’ll kill your pig in the process.</p>\n<p>Using statics all over the place will kill your software.  Perhaps you called my bluff when I said “you cannot mock a static.”  Ok, you win.  My next question is:  Do you really _want_ to mock a static?  </p>"
+  },
+  {
+    "id": 481,
+    "parent": 0,
+    "author_name": "Maruis Marais",
+    "author_url": "http://exceptionz.blogspot.com/",
+    "date": "2006-02-08T22:39:54",
+    "type": "comment",
+    "content_html": "<p>A colleague and I have been talking about Design for testability over the past couple of weeks. The conclusion we came to was that to be able to design for testing, you really need to understand and have good OO knowledge. You need to understand why two objects have high coupling (which normally mean the objects are hard to test) and why cyclomatic complexity is an important metric to keep your code simple. </p>\n<p>The following areas need to be addressed to be able to do effective TDD: </p>\n<p>OO principles – like always code against interfaces<br>\nRefactoring – without this knowledge the TDD mantra is nullified<br>\nDesign Patterns – to know how to solve those recurring problems</p>\n<p>People also needs to understand where and what to test. I’ve found a lot of beginners don’t understand the difference between Unit Test and Functional tests. They write unit test at a functional test level and then don’t understand why the tests are brittle and break constantly.</p>\n<p>Ideas like Mocking and stubbing is also important, but they do depend on design for testability. You need to grasp concepts like dependency injection to take full advantage of mocking frameworks.</p>\n<p>I’ve posted on how to use TypeMock.NET to replace an external dependency in a SOA type application. You can find the article at the following link:<br>\n<a href=\"http://exceptionz.blogspot.com/2006/01/using-typemocknet-to-mock-external.html\" rel=\"nofollow ugc\">http://exceptionz.blogspot.com/2006/01/using-typemocknet-to-mock-external.html</a></p>\n<p>cheers,<br>\nMaruis Marais</p>"
+  }
+]

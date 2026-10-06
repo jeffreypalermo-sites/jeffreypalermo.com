@@ -1,0 +1,14 @@
+---
+wp_id: 41
+title: ASP.NET 1.1 Request Validation.
+slug: asp-net-1-1-request-validation
+permalink: /2004/04/asp-net-1-1-request-validation/
+date: 2004-04-16T22:55:00
+date_utc: 2004-04-16T22:55:00Z
+modified: 2004-04-16T22:55:00
+format: html
+excerpt: Well, this is a truly curious feature. Yes, Kudos to Microsoft for implementing this security feature by default. Now the responsibility has always and still does rest with the web developer. In 1.0, and even back with ASP 2 and 3, the web developer was responsible for validating all input. Remeber, all input is evil […]
+comments_open: true
+---
+<p>Well, this is a truly curious feature.&nbsp; Yes, Kudos to Microsoft for implementing this security feature by default.&nbsp; Now the responsibility has always and still does rest with the web developer.&nbsp; In 1.0, and even back with ASP 2 and 3, the web developer was responsible for validating all input.&nbsp; Remeber, all input is evil until it has been validated.&nbsp; I imagine that a lot of beginning ASP.NET developers won’t even know about the request validation feature of ASP.NET 1.1, but recently, I came to blows with this feature.&nbsp; I searched and searched, but in the end, I just had to turn it off.&nbsp; Yes, I know, bad stuff.&nbsp; Well, I had the need to accept script as input.&nbsp; In particular, I allow site editing, and the user has complete control over the page.&nbsp; Even ASP.NET code is valid as input, so the user can do whatever with the page.&nbsp; Only trusted users, mind you.&nbsp; So ASP.NET balked: “hey, you can input script”.&nbsp; Anyway, there is no configuring this security feature as far as I know, so in the end I just had to disable the feature.&nbsp; Now I’m in the habit of validating all input anyway, because rarely is there ever a field that can be just anything.&nbsp; There is usually at least some restriction, so I’ve always validated my own input.&nbsp; Well, now I’m accepting script as input.&nbsp; </p>
+<p>Which brings me to the point of my post:&nbsp; When displaying data from a database, always Server.HtmlEncode(your data).&nbsp; What if the data contains a little emotiexpression ?&nbsp; If you didn’t HtmlEncode it, it wouldn’t show up.&nbsp; Also, this ensures that all the data gets displayed if otherwise it would be interpreted as markup of some sort.&nbsp; So, Server.HtmlEncode() is your friend.</p>

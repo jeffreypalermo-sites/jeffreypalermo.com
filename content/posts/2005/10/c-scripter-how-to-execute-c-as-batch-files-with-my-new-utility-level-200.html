@@ -1,0 +1,36 @@
+---
+wp_id: 331
+title: 'C# Scripter:  How to execute C# as batch files with my new utility – level 200'
+slug: c-scripter-how-to-execute-c-as-batch-files-with-my-new-utility-level-200
+permalink: /2005/10/c-scripter-how-to-execute-c-as-batch-files-with-my-new-utility-level-200/
+date: 2005-10-07T21:04:00
+date_utc: 2005-10-07T21:04:00Z
+modified: 2005-10-07T21:04:00
+format: html
+excerpt: 'UPDATE: This utility has been upgraded to support more .Net languages. See here for the newer version. The Windows shell has some great programming capabilities, and we can do a lot with it, but these days, I can whip something out with C# and basically do anything I need to with files. It takes me […]'
+comments_open: true
+---
+<p>UPDATE:&nbsp; This utility has been upgraded to support more .Net languages.&nbsp; <a href="/blogs/jeffrey.palermo/archive/2005/10/12/133007.aspx"><strong>See here for the newer version.</strong></a></p>
+<p>The Windows shell has some great programming capabilities, and we can do a lot with it, but these days, I can whip something out with C# and basically do anything I need to with files.&nbsp; It takes me considerably longer to do the same thing with DOS commands (mostly because I don’t know advanced shell scripting).&nbsp; When Monad comes out in the next version of Windows, we’ll have .Net integrated into the shell, but that is many years away.&nbsp; I’m left wanting to execute C# batch-style.</p>
+<p>It’s no problem to create a console app and run it, but I want to have the .cs file available for tweaking, so it’s not feasible to just create a bunch of .exe files.&nbsp; I needed a true C# scripting solution.</p>
+<p>I now introduce the Palermo C# Scripter.&nbsp; On the command line, it’s csscripter.exe, and it takes as an argument the name of the C# file.&nbsp; For example:&nbsp; csscripter.exe myBatch.cs</p>
+<p>myBatch.cs just has be a valid console class like the following:</p>
+<div><span>&nbsp;&nbsp;&nbsp;&nbsp;1</span>&nbsp;<span>using</span> System;<br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;2</span>&nbsp;<span>using</span> System.Collections;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;3</span>&nbsp;<span>using</span> System.IO;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;4</span>&nbsp;<span>using</span> System.Windows.Forms;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;5</span>&nbsp;</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;<span>public</span> <span>class</span> Whatever</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;{</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;&nbsp;&nbsp;&nbsp; <span>public</span> <span>static</span> <span>void</span> Main(<span>string</span>[] args)</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp; {</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Console.WriteLine(“Other Script file executed. ” + <span>string</span>.Join(“|”, args));</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;11</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; MessageBox.Show(“You can even do pop-ups”, “With a title”);</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;12</span>&nbsp;&nbsp;&nbsp;&nbsp; }</p><br>
+<p><span>&nbsp;&nbsp;&nbsp;13</span>&nbsp;}</p></div>
+<p>I’m using this now to traverse thousands of nested files searching for little things and doing small things when I find something.&nbsp; This is the same stuff I’d do with batch files, but now I have the power of C# in text form doing it for me.&nbsp; </p>
+<p><strong><a href="http://palermo.cc/MyToolDownloads/Files/PalermoCSScripter.zip">You can download the utility from me here<!--EndFragment--></a>.</strong></p>
+<p>If you have feedback or a feature request, please leave me a comment.&nbsp; In putting this together, I came across some good references on C# scripting:</p>
+<ul><br>
+<li><a href="http://www.codeproject.com/csharp/cs-script_for_CP.asp">http://www.codeproject.com/csharp/cs-script_for_CP.asp</a><br>
+</li><li><a href="http://weblogs.asp.net/cumpsd/articles/80785.aspx">http://weblogs.asp.net/cumpsd/articles/80785.aspx</a></li></ul>

@@ -1,0 +1,27 @@
+---
+wp_id: 276
+title: Switch Internet Explorer 6.0 to standard-compliant mode – level 200
+slug: switch-internet-explorer-6-0-to-standard-compliant-mode-level-200
+permalink: /2005/07/switch-internet-explorer-6-0-to-standard-compliant-mode-level-200/
+date: 2005-07-05T12:47:00
+date_utc: 2005-07-05T12:47:00Z
+modified: 2005-07-05T12:47:00
+format: html
+excerpt: 'It’s very easy to have IE render your web pages using current web standards, but IE operates in “quirks” mode quite a bit, but it depends on the web author. If you are using ASP.NET 1.1 with VS 2003, then this doctype is added for you automatically: <!DOCTYPE HTML PUBLIC “-//W3C//DTD HTML 4.0 Transitional//EN”> If […]'
+comments_open: true
+---
+<p>It’s very easy to have IE render your web pages using current web<br>
+standards, but IE operates in “quirks” mode quite a bit, but it depends<br>
+on the web author.&nbsp; If you are using ASP.NET 1.1 with VS 2003,<br>
+then this doctype is added for you automatically:<br>
+&lt;!DOCTYPE HTML PUBLIC “-//W3C//DTD HTML 4.0 Transitional//EN”&gt;<br>
+If you leave this, IE will not render your page using web<br>
+standards.&nbsp; The problem is that the full Url to the DTD is not<br>
+included.</p>
+<p>To switch IE 6 to standards-mode, change the Doctype to this:<br>
+&lt;!DOCTYPE HTML PUBLIC “-//W3C//DTD HTML 4.0 Transitional//EN” “<a href="http://www.w3.org/TR/html4/loose.dtd”&amp;gt" rel="nofollow">http://www.w3.org/TR/html4/loose.dtd”&amp;gt</a>;</p>
+<p>This is the minimum you should do to every page you create with<br>
+ASP.NET.&nbsp; There are other doctypes you should use for other<br>
+reasons, but at least change the Doctype to make IE render in<br>
+standards-mode.</p>
+<p><a href="http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/compatmode.asp">Here’s a page from Microsoft that explains this more.</a></p>

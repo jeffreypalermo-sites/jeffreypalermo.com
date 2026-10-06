@@ -1,0 +1,59 @@
+---
+wp_id: 960
+title: The basics of ASP.NET MVC routes (excerpt from ASP.NET MVC in Action)
+slug: the-basics-of-asp-net-mvc-routes-excerpt-from-asp-net-mvc-in-action
+permalink: /2008/09/the-basics-of-asp-net-mvc-routes-excerpt-from-asp-net-mvc-in-action/
+date: 2008-09-01T22:48:41
+date_utc: 2008-09-01T22:48:41Z
+modified: 2008-09-01T22:48:41
+format: html
+categories:
+- blog
+excerpt: (excerpt from ASP.NET MVC in Action). The Global.asax.cs file contains some routes that are provided with the MVC Web Application project. Before continuing, we must define what a route is. A route in the ASP.NET MVC Framework is the complete definition for how to handle a web request. With Web Forms, we have little control […]
+comments_open: true
+---
+<p>(excerpt from <a href="http://manning.com/palermo/">ASP.NET MVC in Action</a>).</p>
+<p><img loading="lazy" decoding="async" height="130" src="/wp-content/uploads/2018/07/thebasicsofasp.netmvcrout.netmvcinaction_140c3image0.png" width="103" align="left"></p>
+<p>The Global.asax.cs file contains some routes that are provided with the MVC Web Application project. Before continuing, we must define what a route is. A route in the ASP.NET MVC Framework is the complete definition for how to handle a web request. With Web Forms, we have little control over this without resorting to url rewriting. With Web Forms, the url of the web request is tightly coupled to the page handling the request. If the page was named Foo.aspx in a folder named Samples, then the url was sure to be <a href="http://mvccontrib.org/Samples/Foo.aspx" rel="nofollow">http://mvccontrib.org/Samples/Foo.aspx</a>. Many teams have resorted to url rewriting to wrangle some control over the urls and how to satisfy each request. With the ASP.NET MVC Framework, routes are first class citizens in the web application. We start with defining how we want our urls structured. The project template gives us a few routes to start, shown in Listing 1.1. </p>
+<p>Listing 1.1 Default routes for a new project. These are added by the project template. </p>
+<div>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#0000ff">using</span> System.Web;
+<span style="color:#0000ff">using</span> System.Web.Mvc;
+<span style="color:#0000ff">using</span> System.Web.Routing;
+
+<span style="color:#0000ff">namespace</span> GettingStarted
+{
+    <span style="color:#0000ff">public</span> <span style="color:#0000ff">class</span> GlobalApplication : HttpApplication
+    {
+        <span style="color:#0000ff">public</span> <span style="color:#0000ff">static</span> <span style="color:#0000ff">void</span> RegisterRoutes(RouteCollection routes)
+        {
+            routes.IgnoreRoute(<span style="color:#006080">"{resource}.axd/{*pathInfo}"</span>);
+
+            routes.MapRoute(
+                <span style="color:#006080">"Default"</span>, <span style="color:#008000">// Route name</span>
+                <span style="color:#006080">"{controller}/{action}/{id}"</span>, <span style="color:#008000">// URL with parameters</span>
+                <span style="color:#0000ff">new</span> {controller = <span style="color:#006080">"Home"</span>, action = <span style="color:#006080">"Index"</span>, id = <span style="color:#006080">""</span>}
+                );
+                <span style="color:#008000">// Parameter defaults</span>
+        }
+
+        <span style="color:#0000ff">protected</span> <span style="color:#0000ff">void</span> Application_Start()
+        {
+            RegisterRoutes(RouteTable.Routes);
+        }
+    }
+}
+</pre>
+</div>
+<p>Routes need to be defined as one of the first things when the web application starts up, so the project template adds the routes to the Application_Start method in the Global.asax.cs file. Later in the book, you’ll see that we don’t leave the routes in this location except for the most trivial of web applications. </p>
+<p><strong>Note</strong></p>
+<p>We will follow long-standing best practices of Separation of Concerns and the Single Responsibility Principle , or SRP, by moving the routes to a dedication location separated by an interface. We’ll go more into these principles later, but, in short, the responsibility (or concern) of the Application_Start method is to kick off operations that must happen at the beginning of the application’s life. The responsibility is not to perform every bit of work that must happen on start. Any operations that must happen on application start should reside in separate classes and merely be called in the appropriate order in the Application_Start method.</p>
+<p>Note that the url portion of the route is simply a matching mechanism for the request. If the url matches a particular route, then we specify what controller should handle the request and what action method should execute. You can create as many routes as you like, but one route is provided for you. This route has the template, {controller}/{action}/{id}.</p>
+<p><strong>Note</strong></p>
+<p>This is a very generic route and could be used for many, many different web requests. Tokens are denoted by the inclusion of {braces}, and the word enclosed in braces matches with a value the MVC Framework understands. The most common that we’ll be interested in are controller and action. This is the route we will be using for the rest of the chapter, so we will be content with a url in the form of <a href="http://mvccontrib.org/controllername/actionname" rel="nofollow">http://mvccontrib.org/controllername/actionname</a>. The basic RouteHandler is an instance of IRouteHandler and we’ll use MvcRouteHandler most of the time. We have complete control and could provide our own implementation of IRouteHandler if we wished, but we’ll save that for a later chapter.</p>
+<p>Before we spin up our first controller, let’s examine what is different about the web.config file in an MVC Web Application project. The differences are easy to spot. Just look for “routing” or “mvc”. One difference we see is that a new IHttpModule is registerd in the config file. Here, we see the UrlRoutingModule in listing 1.2</p>
+<p>Listing 1.2 Unique addition to the web.config file. The rest of the web.config file is standard for .Net 3.5.</p>
+<p>&lt;add name=”UrlRoutingModule” type=”System.Web.Routing.UrlRoutingModule, System.Web.Routing, Version=0.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35″ /&gt;</p>
+<p>The UrlRoutingModule evaluates a request and sees if it matches a route that is stored in the RouteTable. If the route matches, it overrides the default handler (IHttpHandler) for the request so that the MVC Framework handles the request. We are going to examine our first controller as a means to handle a route for the url /home. In the next section you will see how all the pieces of the starter project fit together.</p>
+<p>Stay tuned for more:&nbsp; My feed:&nbsp; <a href="/feed/">http://feeds.jeffreypalermo.com/jeffreypalermo</a> </p>
+<p>You will also want to pay attention to my co-authors:&nbsp; <a href="http://www.flux88.com/">Ben Scheirman</a> and <a href="http://www.lostechies.com/blogs/jimmy_bogard/">Jimmy Bogard</a>.</p>

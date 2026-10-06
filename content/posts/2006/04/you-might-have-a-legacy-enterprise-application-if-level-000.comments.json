@@ -1,0 +1,119 @@
+[
+  {
+    "id": 767,
+    "parent": 0,
+    "author_name": "dherger",
+    "author_url": "http://",
+    "date": "2006-04-07T06:09:04",
+    "type": "comment",
+    "content_html": "<p>add:  You open up a project and its looking for something.vbx</p>"
+  },
+  {
+    "id": 768,
+    "parent": 0,
+    "author_name": "ewise",
+    "author_url": "http://www.codebetter.com/blogs/eric.wise",
+    "date": "2006-04-07T12:18:26",
+    "type": "comment",
+    "content_html": "<p>add: Each department is keeping copies of their data manually in excel files because the system is so unreliable that they have to fact check every record after batch processes are run.</p>"
+  },
+  {
+    "id": 769,
+    "parent": 0,
+    "author_name": "jmiller",
+    "author_url": "http://",
+    "date": "2006-04-07T15:06:19",
+    "type": "comment",
+    "content_html": "<p>add:  if you have to go looking for an ex-employee’s old laptop to find the correct version of the source code</p>"
+  },
+  {
+    "id": 770,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2006-04-07T16:41:38",
+    "type": "comment",
+    "content_html": "<p>add: The manual includes the cellular and home numbers of at least one of the developers.</p>"
+  },
+  {
+    "id": 771,
+    "parent": 0,
+    "author_name": "jmiller",
+    "author_url": "http://",
+    "date": "2006-04-07T16:43:43",
+    "type": "comment",
+    "content_html": "<p>add to Ayende’s: The codebase has a hard-coded error handler to send an email to someone you’ve never heard of</p>"
+  },
+  {
+    "id": 772,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://flimflan.com/blog",
+    "date": "2006-04-07T18:44:52",
+    "type": "comment",
+    "content_html": "<p>add: It’s running on Windows NT 4.0 because everybody is afraid to upgrade it to work with the “new” COM+ introduced in Win2K.</p>"
+  },
+  {
+    "id": 773,
+    "parent": 0,
+    "author_name": "jmiller",
+    "author_url": "http://",
+    "date": "2006-04-07T19:22:36",
+    "type": "comment",
+    "content_html": "<p>Oooh, Josh.  I bet I know exactly which system you’re referring to…</p>\n<p>add:  In reference to the above, The application takes an entire week to deploy to testing.  Every single time.</p>\n<p>add:  There is a copy of the application source for each region, factory, country, client, etc. with very slightly different code</p>"
+  },
+  {
+    "id": 774,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2006-04-07T20:00:11",
+    "type": "comment",
+    "content_html": "<p>add: The source code has comments like // John in Finance needs this so he can use the VisiCalc stuff.</p>\n<p>add: The database has tables like John_*, Jennie_*, etc.</p>"
+  },
+  {
+    "id": 775,
+    "parent": 0,
+    "author_name": "jmiller",
+    "author_url": "http://",
+    "date": "2006-04-07T20:37:45",
+    "type": "comment",
+    "content_html": "<p>Just overheard Jeffrey say –&gt; add:  They have all these IP addresses in the Global.asa we have to change for production…</p>\n<p>add:  The source code has comments like “‘this is a dirty, dirty hack. Take it out immediatly JDM 4/7/[5 years ago]”</p>\n<p>add:  You have a scheduled reboot every night</p>"
+  },
+  {
+    "id": 776,
+    "parent": 0,
+    "author_name": "MB",
+    "author_url": "http://",
+    "date": "2006-04-07T23:24:07",
+    "type": "comment",
+    "content_html": "<p>Hey, I’m not sure if what I’m supporting here qualifies as legacy….Do these count? \uD83D\uDE09<br>\n1. You have to keep a laptop from ’92 around with DOS 3.x. Anything newer has trouble with the serial port.<br>\n2. You actually know about (and use) <a href=\"http://www.merlyn.demon.co.uk/pas-r200.htm#R200\" rel=\"nofollow\">this</a> patch for machines &gt; 200MHz.<br>\n3. You have a development environment for FoxPro 2.6a…for UNIX. (Yes, there <a href=\"http://fox.wikis.com/wc.dll?Wiki~Foxpro/UNIX~VFP\" rel=\"nofollow\">was</a> such a beast).</p>"
+  },
+  {
+    "id": 777,
+    "parent": 0,
+    "author_name": "tod",
+    "author_url": "http://www.todhilton.com",
+    "date": "2006-04-10T17:19:00",
+    "type": "comment",
+    "content_html": "<p>add: You have to reinstall the application every 2-3 months because it just stops working.  Oh, and you have to install it 3 times in order for it to work (install, uninstall, install, uninstall, install and voila!).</p>"
+  },
+  {
+    "id": 778,
+    "parent": 0,
+    "author_name": "Harris",
+    "author_url": "http://hrboyceiii.blogspot.com",
+    "date": "2006-04-10T18:08:20",
+    "type": "comment",
+    "content_html": "<p>“Ayende Rahien said:<br>\nadd: The manual includes the cellular and home numbers of at least one of the developers.<br>\nApril 7, 2006 12:41 PM”</p>\n<p>It’s really bad when the phone number is yours…</p>"
+  },
+  {
+    "id": 779,
+    "parent": 0,
+    "author_name": "tod",
+    "author_url": "http://www.todhilton.com",
+    "date": "2006-04-10T19:15:20",
+    "type": "comment",
+    "content_html": "<p>I just ran into this one…</p>\n<p>add: You have SQL tables that are named as follows –<br>\n[tablename]<br>\n[tablename]new<br>\n[tablename]new_current<br>\n[tablename]new_historic</p>\n<p>Which is the one really being used?  </p>"
+  }
+]

@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2569,
+    "parent": 0,
+    "author_name": "Visual Studio Silent Crash with Designer",
+    "author_url": "http://stevesmithblog.com/blog/visual-studio-silent-crash-with-designer/",
+    "date": "2009-03-03T11:31:07",
+    "type": "comment",
+    "content_html": "<p>If you’re encountered an issue where Visual Studio 2008 SP1 crashes silently whenever you try to open a web form or master page (which by default will open the design view), there is a hotfix that will likely solve the problem.&nbsp; I ran into this recently</p>"
+  }
+]

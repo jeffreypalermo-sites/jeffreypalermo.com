@@ -1,0 +1,128 @@
+[
+  {
+    "id": 2153,
+    "parent": 0,
+    "author_name": "Kevin Miller",
+    "author_url": "http://blogs.dovetailsoftware.com/blogs/kmiller/",
+    "date": "2007-11-28T14:20:57",
+    "type": "comment",
+    "content_html": "<p>It looks like the nightly release for NAnt (a.k.a. .86 beta 1) supports .Net 3.5.</p>\n<p><a href=\"http://nant.sourceforge.net/nightly/latest/releasenotes.html\" rel=\"nofollow ugc\">http://nant.sourceforge.net/nightly/latest/releasenotes.html</a></p>"
+  },
+  {
+    "id": 2154,
+    "parent": 0,
+    "author_name": "Bil Simser",
+    "author_url": "http://weblogs.asp.net/bsimser",
+    "date": "2007-11-29T21:16:37",
+    "type": "comment",
+    "content_html": "<p>Great tip and good timing! I used this at my talk yesterday on source control!</p>"
+  },
+  {
+    "id": 2155,
+    "parent": 0,
+    "author_name": "Tim Barcz",
+    "author_url": "http://www.timbarcz.com/blog/",
+    "date": "2007-12-04T18:29:56",
+    "type": "comment",
+    "content_html": "<p>thanks for the bail out Jeff, this works great!</p>"
+  },
+  {
+    "id": 2156,
+    "parent": 0,
+    "author_name": "a Roma Tomato",
+    "author_url": "http://",
+    "date": "2007-12-05T16:54:24",
+    "type": "comment",
+    "content_html": "<p>Thanks a million, Jeff!  This post was very helpful.</p>"
+  },
+  {
+    "id": 2157,
+    "parent": 0,
+    "author_name": "James Curran",
+    "author_url": "http://honestillusion.com",
+    "date": "2007-12-06T17:36:48",
+    "type": "comment",
+    "content_html": "<p>I did something similar a while back (for .net3.5 Beta 2), but to get that to work, I had to copy to SYstem.dll file from the Frameworkv2.0.50727 folder to the Frameworkv3.5 folder</p>"
+  },
+  {
+    "id": 2158,
+    "parent": 0,
+    "author_name": "Nicolas Jeanne",
+    "author_url": "http://",
+    "date": "2008-01-08T11:39:09",
+    "type": "comment",
+    "content_html": "<p>I’m sorry but in my case it doesn’t work!</p>\n<p>i’ve got an error with the sdkInstallRoot, please help me!</p>"
+  },
+  {
+    "id": 2159,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-08T12:29:54",
+    "type": "comment",
+    "content_html": "<p>@Nicolas,<br>\nSeveral folks have solved this problem by installing the .Net 2.0 SDK.</p>"
+  },
+  {
+    "id": 2160,
+    "parent": 0,
+    "author_name": "Nicolas Jeanne",
+    "author_url": "http://",
+    "date": "2008-01-08T13:30:38",
+    "type": "comment",
+    "content_html": "<p>Maybe but for this project i want and i need to work with the .Net Framework 3.5</p>"
+  },
+  {
+    "id": 2161,
+    "parent": 0,
+    "author_name": "Nicolas Jeanne",
+    "author_url": "http://",
+    "date": "2008-01-08T13:32:14",
+    "type": "comment",
+    "content_html": "<p>the .Net Framework is intalled on my pc</p>"
+  },
+  {
+    "id": 2162,
+    "parent": 0,
+    "author_name": "Nicolas Jeanne",
+    "author_url": "http://",
+    "date": "2008-01-08T13:40:28",
+    "type": "comment",
+    "content_html": "<p>net Framework 2.0 &amp; 3.5 are installed</p>"
+  },
+  {
+    "id": 2163,
+    "parent": 0,
+    "author_name": "Nicolas Jeanne",
+    "author_url": "http://",
+    "date": "2008-01-08T16:16:30",
+    "type": "comment",
+    "content_html": "<p>when i use Nant 0.85 and i add this code, when i try Nant it says to me :<br>\ninvalid element  . Unknown task or datatype!<br>\nCan somebody help me?<br>\nplease</p>"
+  },
+  {
+    "id": 2164,
+    "parent": 0,
+    "author_name": "Nicolas Jeanne",
+    "author_url": "http://",
+    "date": "2008-01-08T16:20:01",
+    "type": "comment",
+    "content_html": "<p>sorry I didn’t add NantContrib elements in Nant, but now it says to me that : Visual Studio solution version ‘10.0’ is not supported!</p>"
+  },
+  {
+    "id": 2165,
+    "parent": 0,
+    "author_name": "Diego C.",
+    "author_url": "http://",
+    "date": "2008-03-12T17:49:02",
+    "type": "comment",
+    "content_html": "<p>I did the change on nant.exe.config but apparently the problem lies on the “solution” task.  As soon as it reads my solution file with the “Microsoft Visual Studio Solution File, Format Version 10.00” in the first line, it throws an error: Nant.Core.BuildException: Solution of file ‘pathToSolutionname.sln’ is not supported.  I tried running with Nant 0.85 and .086 and I still nothing.  However, v 0.86 does include the necessary entries in the nant config file for .net 3.5 .  From the Nant 0.86 release notes:  </p>\n<p>.NET Framework 3.5</p>\n<p>Support for targeting .NET Framework 3.5 and Mono 3.5 Profile is now available.</p>\n<p>Note: this does not apply to the  task.</p>\n<p>Does anybody knows a work around?</p>\n<p>Thanks</p>"
+  },
+  {
+    "id": 2166,
+    "parent": 0,
+    "author_name": "Jesper H.",
+    "author_url": "http://",
+    "date": "2008-03-28T04:23:52",
+    "type": "comment",
+    "content_html": "<p>It looks like Nant 0.86-beta1 supports MS framework 3.5 except for the  task.</p>\n<p><a href=\"http://nant.sourceforge.net/release/0.86-beta1/releasenotes.html\" rel=\"nofollow ugc\">http://nant.sourceforge.net/release/0.86-beta1/releasenotes.html</a></p>"
+  }
+]

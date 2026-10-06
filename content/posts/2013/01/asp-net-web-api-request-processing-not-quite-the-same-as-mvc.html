@@ -1,0 +1,19 @@
+---
+wp_id: 1185
+title: ASP.NET Web API request processing not quite the same as MVC
+slug: asp-net-web-api-request-processing-not-quite-the-same-as-mvc
+permalink: /2013/01/asp-net-web-api-request-processing-not-quite-the-same-as-mvc/
+date: 2013-01-18T13:51:01
+date_utc: 2013-01-18T13:51:01Z
+modified: 2013-01-18T13:51:01
+format: html
+categories:
+- blog
+excerpt: 'Web API is an awesome new capability for web services. One tidbit that I’m putting here for people searching is that: The request body can only be read once! In MVC and HttpContext, the request is stored so that it can be parsed over and over. In Web API, with an eye to performance, the […]'
+comments_open: true
+---
+<p>Web API is an awesome new capability for web services. &nbsp;One tidbit that I’m putting here for people searching is that:</p>
+<p><strong>The request body can only be read once! &nbsp;</strong>In MVC and HttpContext, the request is stored so that it can be parsed over and over. &nbsp;In Web API, with an eye to performance, the Body is just a stream. &nbsp;Once it has been read, a subsequent read will fail because you are at the end of the stream.</p>
+<p>That means that when you plan your model binding, you can only use one complex object. &nbsp;The rest need to be bound some other way, either via the querystring or URI.</p>
+<p>Here is an article that explains this is much more detail:</p>
+<p><a href="http://blogs.msdn.com/b/jmstall/archive/2012/04/16/how-webapi-does-parameter-binding.aspx">http://blogs.msdn.com/b/jmstall/archive/2012/04/16/how-webapi-does-parameter-binding.aspx</a></p>

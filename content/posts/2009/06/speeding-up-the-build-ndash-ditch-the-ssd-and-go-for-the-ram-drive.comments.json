@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2605,
+    "parent": 0,
+    "author_name": "Itsme",
+    "author_url": "http://",
+    "date": "2009-10-22T14:56:36",
+    "type": "comment",
+    "content_html": "<p>donjoe,<br>\nyou are the one who is ridicululous.  You can’t disable virtual memory in windows.  It is integral to windows.  Please go back to CS 101.  You can disble the paging file, but you have by no means disabled virtual memory, and you have by no means disabled paging to disk.  Sorry, but the system will still use some disk as a backing file if you want it to or not.<br>\nIf you direct this to a ram disk then you have control over this process.</p>"
+  }
+]

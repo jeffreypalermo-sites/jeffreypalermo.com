@@ -1,0 +1,47 @@
+[
+  {
+    "id": 443,
+    "parent": 0,
+    "author_name": "-e",
+    "author_url": "http://weblog.pineforestsoft.com",
+    "date": "2005-08-31T14:34:29",
+    "type": "comment",
+    "content_html": "<p>Hypothetically speaking, are you planning to release a version licensed for use on a “for-profit” site? Obviously, one would expect that you would charge for such a license, but I was just wondering if you planned to have one.</p>\n<p>It would be great if we could use your stuff to build personal sites and all, and then transfer those skills to actual work for clients… \uD83D\uDE42</p>"
+  },
+  {
+    "id": 444,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-08-31T17:06:46",
+    "type": "comment",
+    "content_html": "<p>In the READMe file, I express that if someone wants to use this for profit, just ask.  For some commercial uses, I’ll probably grant a complimentary license, but I definitely hope to make money with this in the future.</p>\n<p>Right now, I’m inclined to let everyone use it for free to get some exposure and some valuable feature requests.</p>\n<p>I’m hoping this will help spur the development of ASP.NET controls, since any control can be invoked and used within EZWeb.</p>\n<p>You could definitely use EZWeb to do actual work for clients.  I don’t see a problem working out a license for them much like Infragistics is used in many consulting projects.</p>"
+  },
+  {
+    "id": 445,
+    "parent": 0,
+    "author_name": "Liang",
+    "author_url": "http://",
+    "date": "2005-09-01T01:54:47",
+    "type": "comment",
+    "content_html": "<p>Hi Jeffery, actually I am very impressive with the sample application you were demonstrated the general DDD architecture. Do you plan to continue redfining it? </p>"
+  },
+  {
+    "id": 446,
+    "parent": 0,
+    "author_name": "Andreas Kraus",
+    "author_url": "http://www.sunlab.de",
+    "date": "2005-09-02T09:09:16",
+    "type": "comment",
+    "content_html": "<p>Will there be a Version for ASP.NET v2?</p>"
+  },
+  {
+    "id": 447,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-09-02T13:54:25",
+    "type": "comment",
+    "content_html": "<p>There will defintely be a version for .Net 2.0 probably just before or right at RTM of .Net 2.0</p>\n<p>I’ve already begun on the .Net 2.0 version, and that version will officially take advantage of the Whidbey features:  Master Pages, Themes, and my user account mechanism will change to use the Membership Provider infrastructure.  I will stay with the “no – database and keep it simple” calling, but I’ll provide dependency injection hooks for other set-ups besides file-based.</p>\n<p>Watch my blog for announcements.  I’ll be setting up an EZWeb sandbox for demonstration purposes.</p>"
+  }
+]

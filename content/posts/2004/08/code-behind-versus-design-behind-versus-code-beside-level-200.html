@@ -1,0 +1,34 @@
+---
+wp_id: 74
+title: Code-behind versus Design-behind versus Code-beside – level 200
+slug: code-behind-versus-design-behind-versus-code-beside-level-200
+permalink: /2004/08/code-behind-versus-design-behind-versus-code-beside-level-200/
+date: 2004-08-19T08:50:00
+date_utc: 2004-08-19T08:50:00Z
+modified: 2004-08-19T08:50:00
+format: html
+excerpt: 'Anders Norås’ posted an interesting article about the intent of code-behind. He says doing: <TITLE><%# GetResourceString(“PageTitle”) %></TITLE> is better than doing this: public class MyPage : System.Web.UI.Page { protected HtmlGenericControl Title; private void Page_Load(object sender, System.EventArgs e) { Title.InnerText=GetResourceString(“PageTitle”); }} On my team, there is much discussion about putting any function call int the aspx file whatsoever, […]'
+comments_open: true
+---
+<p><span><a id="Header1_HeaderTitle" href="/WebLog/anoras/">Anders Norås’</a>&nbsp;posted an <a href="http://dotnetjunkies.com/WebLog/anoras/archive/2004/08/19/22547.aspx">interesting article</a>&nbsp;about the intent of code-behind.&nbsp; He says doing:</span></p><span><br>
+<br><br><br><table cellspacing="0" cellpadding="0" border="1">
+<tbody>
+<tr>
+<td valign="top" width="590"><br>
+<p>&lt;TITLE&gt;&lt;%# GetResourceString(“PageTitle”) %&gt;&lt;/TITLE&gt;</p></td></tr></tbody></table><br>
+<p>is better than doing this:</p><br>
+<br><br><br><table cellspacing="0" cellpadding="0" border="1">
+<tbody>
+<tr>
+<td valign="top" width="590"><br>
+<p>public class MyPage : System.Web.UI.Page {<br>&nbsp;&nbsp;&nbsp;&nbsp; protected HtmlGenericControl Title;<br><span>&nbsp;&nbsp;&nbsp;&nbsp; </span>private void Page_Load(object sender, System.EventArgs e) {&nbsp;<br><span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>Title.InnerText=GetResourceString(“PageTitle”);<br><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}<br>}</p></td></tr></tbody></table><br>
+<p>On my team, there is much discussion about putting any function call int the aspx file whatsoever, so this strikes me as an interesting take.&nbsp; Honestly, I do&nbsp;a mixture of both, but in the above case, I do exactly what the second code snippet does.&nbsp; I do all programmatic manipulation in my code-behind file.&nbsp; I try to have only markup in my aspx and ascx files.&nbsp; </p><br>
+<p>In v2.0, I imagine I would do the following:</p><br>
+<br><br><br><table cellspacing="0" cellpadding="0" border="1">
+<tbody>
+<tr>
+<td valign="top" width="590"><br>
+<p>public partial class MyPage{<br>&nbsp;<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>private void Page_Load(object sender, System.EventArgs e) {&nbsp;<br><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>Header.Title = GetResourceString(“PageTitle”);<br><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}<br>}</p></td></tr></tbody></table><br>
+<p><span>And I really don’t agree that setting content in code is a bad thing to do.&nbsp; If I was forbidden to do it, I would not be a very effective programmer at all.&nbsp; For instance, I use a base page class to set the title of every page in my application.&nbsp; There is no way that I am going to put a function call in the markup of every aspx just to set the title when I can do with one call in my base page.&nbsp; That just doesn’t make sense.&nbsp; </span></p><br>
+<p><span>Anders, your method works well for mostly declarative pages, but I disagree with you.&nbsp; I prefer the code method.</span></p>
+</span>

@@ -1,0 +1,65 @@
+[
+  {
+    "id": 145,
+    "parent": 0,
+    "author_name": "kane",
+    "author_url": "http://",
+    "date": "2004-11-18T16:11:00",
+    "type": "comment",
+    "content_html": "<p>i care.  thanx man.</p>\n<p>so much for generic control compatibility.</p>\n<p>i’m enjoying 2.0 there’s no looking back,<br>\nanyway.</p>"
+  },
+  {
+    "id": 146,
+    "parent": 0,
+    "author_name": "kane",
+    "author_url": "http://",
+    "date": "2004-11-18T16:33:00",
+    "type": "comment",
+    "content_html": "<p>okay, i spoke way too soon. </p>\n<p>i couldn’t access any of the real pages controls from the 0 control of page. </p>\n<p>i had to use Parent.FindControl(ControlToPaginate) which actually makes a lot more sense.  </p>\n<p>however it would be nice then to have some generic function like in win32 i can find child windows recursively with switches.  its easy to write but….</p>"
+  },
+  {
+    "id": 147,
+    "parent": 0,
+    "author_name": "marshall",
+    "author_url": "http://",
+    "date": "2004-12-14T13:53:00",
+    "type": "comment",
+    "content_html": "<p>hrm.</p>\n<p>thanks for the tip, this was beggining to drive me batty.</p>\n<p>it makes sense but it would be nice if the msdn pages that explain master pages and how to implement made reference to this (i started trying them out after reading a page regarding new features in ado v2)!</p>"
+  },
+  {
+    "id": 148,
+    "parent": 0,
+    "author_name": "Matthew",
+    "author_url": "http://",
+    "date": "2005-05-22T04:29:00",
+    "type": "comment",
+    "content_html": "<p>Well in Beta 2 seems to have changed again. To find a control on the real page I found this solution:</p>\n<p>Page.Controls[0].FindControl(ContentPlaceHolderID).FindControl(Control)</p>"
+  },
+  {
+    "id": 149,
+    "parent": 0,
+    "author_name": "Mario",
+    "author_url": "http://",
+    "date": "2005-11-10T09:49:56",
+    "type": "comment",
+    "content_html": "<p>Thank you very much for this information! </p>\n<p>In VS2005 RTM i tried this and it works too:</p>\n<p>MyUserControl mUc =  (MyUserControl)this.myUserControl;</p>\n<p>The control e. g. myUserControl will be displayed in intellisense list.</p>"
+  },
+  {
+    "id": 150,
+    "parent": 0,
+    "author_name": "Josh",
+    "author_url": "http://",
+    "date": "2006-01-31T23:12:13",
+    "type": "comment",
+    "content_html": "<p>This looks close to what Im trying to do, but its still not working.  Im using a user control with a data grid in a web part on my main form.  During the ItemBound event, id like to dim an instance of an image thats in my grid, then based on some criteria, make the image visible or not.  Only problem is, I cant find the image in ANY control collection anywhere!  This is what Im doing.</p>\n<p>Protected Sub dgrOutOfOffice_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.DataListItemEventArgs) Handles dgrOutOfOffice.ItemDataBound</p>\n<p> Dim imgOutofOffice As Image = CType(e.Item.FindControl(“imgInfo”), Image)</p>\n<p>Could you help me figure out where in the control hierarchy I can find my image?  I tried:</p>\n<p>e.item.Control(0).FindControl(“imgInfo”) </p>\n<p>as well, but no luck.</p>\n<p>Id appreciate any help you could offer.  I know you prefer C#,  I appologize.</p>"
+  },
+  {
+    "id": 151,
+    "parent": 0,
+    "author_name": "vin",
+    "author_url": "http://",
+    "date": "2007-07-25T13:26:32",
+    "type": "comment",
+    "content_html": "<p>How to find control if having nested master page?<br>\nif required to find linkbutton on page A.aspx which uses M1 as master page and this master page M! again uses Main master page.</p>"
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "id": 197,
+    "parent": 0,
+    "author_name": "David Neal",
+    "author_url": "http://",
+    "date": "2004-11-08T09:18:00",
+    "type": "comment",
+    "content_html": "<p>Ah, cool!  Thanks for the tip Jeffrey!</p>"
+  },
+  {
+    "id": 198,
+    "parent": 0,
+    "author_name": "avnrao",
+    "author_url": "http://",
+    "date": "2004-11-09T00:31:00",
+    "type": "comment",
+    "content_html": "<p>I tried it, but .Text editor doesnt allow &lt;style&gt; tag. can you pls inform..how you have pasted this code..</p>"
+  },
+  {
+    "id": 199,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-11-09T07:20:00",
+    "type": "comment",
+    "content_html": "<p>Make sure to select the option \"embed styles\"</p>"
+  },
+  {
+    "id": 200,
+    "parent": 0,
+    "author_name": "Rainer Hilmer",
+    "author_url": "http://",
+    "date": "2007-01-23T08:08:55",
+    "type": "comment",
+    "content_html": "<p>CopyAsHTML won’t work with my german version of VS2005 standard at home but I love your tool. I use it at the institute very often for my documentations. We run english versions of VS2005 pro there.<br>\nCan you please add localization to your tool?<br>\nMany thanks in advance.<br>\nRainer Hilmer</p>"
+  }
+]

@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2663,
+    "parent": 0,
+    "author_name": "Brian",
+    "author_url": "http://redwerb.com",
+    "date": "2010-03-20T12:42:57",
+    "type": "comment",
+    "content_html": "<p>Is there a reason you use Mercurial Visual Studio 2008 SCC provider instead of VisualHg? I haven’t had a chance to try either and would be interested to know why you picked one over the other.<br>\n <a href=\"http://visualhg.codeplex.com\" rel=\"nofollow\">http://visualhg.codeplex.com</a> </p>"
+  }
+]

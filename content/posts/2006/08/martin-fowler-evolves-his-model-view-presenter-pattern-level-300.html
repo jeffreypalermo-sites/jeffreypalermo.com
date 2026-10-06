@@ -1,0 +1,17 @@
+---
+wp_id: 458
+title: Martin Fowler evolves his Model-View-Presenter pattern – level 300
+slug: martin-fowler-evolves-his-model-view-presenter-pattern-level-300
+permalink: /2006/08/martin-fowler-evolves-his-model-view-presenter-pattern-level-300/
+date: 2006-08-29T20:46:00
+date_utc: 2006-08-29T20:46:00Z
+modified: 2006-08-29T20:46:00
+format: html
+tags:
+- coding-principles
+excerpt: I subscribe to Martin's MVP pattern. If you are new to it, please have a read. It's a variation of Model-view-controller that puts more behavior in the controller and less in the view. I have tended to vary the amount of logic that belongs in the view depending on the scenario. Martin has split the […]
+comments_open: true
+---
+<p>I subscribe to Martin's MVP pattern.&nbsp; If you are new to it, <a href="http://www.martinfowler.com/eaaDev/ModelViewPresenter.html">please have a read</a>.&nbsp; It's a variation of Model-view-controller that puts more behavior in the controller and less in the view.&nbsp; I have tended to vary the amount of logic that belongs in the view depending on the scenario.&nbsp; Martin has split the pattern into two:&nbsp; one part leans toward balancing the logic and putting UI-specific behavior in the view and application behavior in the controller.&nbsp; <a href="http://www.martinfowler.com/eaaDev/SupervisingPresenter.html">Read it here.</a>&nbsp; The other seeks to make the view as thin as possible and renders the view very passive.&nbsp; In this case, the controller has every bit of behavior, including setting every single field.&nbsp; <a href="http://www.martinfowler.com/eaaDev/PassiveScreen.html">Read it here.</a></p>
+<p>I'm glad he made the split because it really is two different ways to do it.&nbsp; I tend to throw a domain object at the view and say "here, show this", whereas PassiveView would say to set each field individually and not to let the view know about the domain object.&nbsp; In Supervising controller (which I favor), the view can know about the domain object and how to bind it to it's GUI elements.</p>
+<p>As with all patterns, they have advantages and drawbacks.&nbsp; The worst thing we can do is be dogmatic about one and declare its applicability to all scenarios.&nbsp; I've used Supervising Controller in ASP.NET and WinForms, and I like the way it separates behavior from visual goo.&nbsp; I also like how it pulls behavior into a class that's easily tested.</p>

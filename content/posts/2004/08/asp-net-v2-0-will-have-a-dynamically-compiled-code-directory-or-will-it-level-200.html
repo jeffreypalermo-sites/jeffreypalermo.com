@@ -1,0 +1,14 @@
+---
+wp_id: 76
+title: ASP.NET v2.0 will have a dynamically compiled /Code directory *or will it?* – level 200
+slug: asp-net-v2-0-will-have-a-dynamically-compiled-code-directory-or-will-it-level-200
+permalink: /2004/08/asp-net-v2-0-will-have-a-dynamically-compiled-code-directory-or-will-it-level-200/
+date: 2004-08-19T11:49:00
+date_utc: 2004-08-19T11:49:00Z
+modified: 2004-08-19T11:49:00
+format: html
+excerpt: I’ve been having frustrations with the v2.0 /Code directory. Code files in it are dynamically compiled, and that’s great, but I have a /UserControls folder, and I have some usercontrols that have tightly-bound base classes that are also in the /UserControls folder. In v2.0, to get use these class files, I have to move them […]
+comments_open: true
+---
+<p>I’ve been having frustrations with the v2.0 /Code directory.&nbsp; Code files in it are dynamically compiled, and that’s great, but I have a /UserControls folder, and I have some usercontrols that have tightly-bound base classes that are also in the /UserControls folder.&nbsp; In v2.0, to get use these class files, I have to move them to the /Code directory, or they won’t be dynamically compiled, or compiled at all.&nbsp; And in Whidbey, there is no way to build a web app into a DLL like in VS 2003.&nbsp; So either I move it to the /Code directory or I’m out of luck.&nbsp; I want to be able to determine my own file hierarchy in my web project.&nbsp; I want my class file right next to the user control that depends on it.&nbsp; I need that class to be compiled to use it.&nbsp; The solution I would recommend would be to make dynamically compiled folders configurable.&nbsp; I want to specify multiple folders for dynamic compilation, and I know what I would do.&nbsp; I’d set to root to be dynamically compiled so that everything would be compiled, and I wouldn’t have to worry about it.&nbsp; As it stands now, I prefer the VS 2003 method of building code files into a DLL.&nbsp; Dynamically compiled code isn’t a step forward if it requires taking a leap back by throwing away other functionality.</p>
+<p>For those working with Whidbey, don’t rely on the /Code directory staying that way.&nbsp; It will probably change.&nbsp; The current though is having /Appllication_Code folders be dynamically compiled instead.&nbsp; See <a href="http://weblogs.asp.net/vank/archive/2004/08/17/215808.aspx#216352">Van’s comment about that.</a></p>

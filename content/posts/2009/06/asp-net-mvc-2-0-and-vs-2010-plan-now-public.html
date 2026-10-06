@@ -1,0 +1,50 @@
+---
+wp_id: 1057
+title: ASP.NET MVC 2.0 and VS 2010 plan now public
+slug: asp-net-mvc-2-0-and-vs-2010-plan-now-public
+permalink: /2009/06/asp-net-mvc-2-0-and-vs-2010-plan-now-public/
+date: 2009-06-06T20:22:17
+date_utc: 2009-06-06T20:22:17Z
+modified: 2009-06-06T20:22:17
+format: html
+categories:
+- blog
+excerpt: 'Subscribe to my feed here: http://feeds.jeffreypalermo.com/jeffreypalermo Phil Haack has shared some of the plans in the works for ASP.NET MVC 2.0 After the initial release, the team didn’t slow down at all. They have a great line-up, and I’m going to share it with you in this post. Before some of the feature areas, I wanted […]'
+comments_open: true
+---
+<pre class="prettyprint">Subscribe to my feed here:  <a href="/feed/">http://feeds.jeffreypalermo.com/jeffreypalermo</a></pre>
+
+<p><a href="http://haacked.com/">Phil Haack</a>&nbsp;<a href="http://aspnet.codeplex.com/Wiki/View.aspx?title=Road%20Map">has shared</a> some of the plans in the works for <a href="http://www.asp.net/mvc/">ASP.NET MVC</a> 2.0&nbsp; After the initial release, the team didn’t slow down at all.&nbsp; They have a great line-up, and I’m going to share it with you in this post.&nbsp; Before some of the feature areas, I wanted to share some of what the team has stated are the targets for the v2.0 release.</p>
+<p>Earlier this year, <a href="/2009/01/asp-net-mvc-rc-released/">I made the prediction</a> that within 2 years, the majority of new ASP.NET projects would choose the MVC route instead of WebForms.&nbsp; I believe that the targeted scenarios in the 2.0 roadmap support my prediction.</p>
+<p>With the 1.0 release, the target from <a href="http://microsoft.com">Microsoft</a> is to provide another options for ASP.NET developers.&nbsp; They stand by both IHttpHandler implementations and pledge to support and enhance both going forward.&nbsp; As of right now, there are some legitimate concerns about using ASP.NET MVC on certain teams where the skillset of the developer is heavily focused on designer development and UI controls.&nbsp; Also, there are some scalability scenarios that require an add-on or custom development.</p>
+<p><strong>Enterprise Ready</strong></p>
+<p>ASP.NET MVC 2.0 has a goal of being enterprise ready.&nbsp; They are targeting the enterprise with some of the upcoming features.&nbsp; This is interesting to me because some of the naysayers stood behind the idea that WebForms was for the enterprise and that ASP.NET MVC is for “small websites”.&nbsp; All-in-all, you can do enterprise development with either of them.&nbsp; In my opinion, it’s an architectural decision fraught with many trade-offs, but I digress.</p>
+<p><strong>Backwords compatibility</strong></p>
+<p>For ASP.NET 2.0, we will be able to use it with Visual Studio 2008 SP1 as well as 2010.&nbsp; I’m glad this is the case, and until there are some .Net 4.0 features baked in, it will continue to be possible.</p>
+<p><strong>What you’ve been waiting for:&nbsp; the feature list</strong></p>
+<p>I’m going to cut to the chase and just quote what Phil Haack <a href="http://aspnet.codeplex.com/Wiki/View.aspx?title=Road%20Map">posted on the CodePlex ASP.NET site</a>:</p>
+<blockquote>
+<li>Areas – Provide a means of grouping controllers and views to build out subsections of a site in isolation. </li>
+<li>Asynchronous Controller Actions – Provide an asynchronous programming model for controller actions for improved scalability. </li>
+<li>Strongly-typed input helpers – Expression-based helpers for generating form fields against the model. </li>
+<li>Strongly-typed link helpers – strongly typed helpers for generating action links </li>
+<li>Support for Data Annotations – The default model binder will include support for Data Annotations attributes (a la Dynamic Data). </li>
+<li>Caching Improvements – Improve various caching scenarios. </li>
+<li>Misc – Various improvements </li>
+</blockquote>
+<p><strong>What I’m most excited about</strong></p>
+<p>Areas are very interesting!&nbsp; Now, the term “areas” has different meaning from this in <a href="http://www.castleproject.org/monorail/">MonoRail</a> as well as the current implementations out there.&nbsp; Currently, we can use it to group controllers and views.&nbsp; If I read this correcting, this implementation will take routes into consideration also.</p>
+<p>Imagine this scenario:&nbsp; I start a project that needs user logins and a user administration section to create users, reset passwords as well as role-based configuration. . . .with ASP.NET MVC areas, I would be able to take a dependency on, let’s say, <a href="http://mvccontrib.org">MvcContrib</a>.UserManagement.dll, and in my Application_Start() method just call a few lines of start-up code to wire in the routes of the user management pages.&nbsp; After that, the urls would just be handled by the other assembly.&nbsp; I’m sure I’d have to implement some interfaces defined therein to hook into my own User object, but the power of this is just tremendous.</p>
+<p><strong>Here is another prediction</strong></p>
+<p>“Areas are the control model (commercial model) for ASP.NET MVC”.&nbsp; You heard it here first, folks.&nbsp; No, actually you didn’t.&nbsp; The masterminds are on Phil’s team.&nbsp; If the team gets nothing else, I sure hope areas stay at the top of that list.&nbsp; This is going to be a very exciting release!</p>
+<p><strong>We can’t say thank you enough</strong></p>
+<p>Phil, and the ASP.NET MVC team had an extremely open and transparent 1.0 release cycle with half a dozen public CTPs released.&nbsp; They got loads of feedback, and sometimes it’s a bit negative.&nbsp; Then again, if nobody cared about the product, no one would say anything.&nbsp; </p>
+<p>This product is doing so much to streamline the development of my company, <a href="http://headspringsystems.com"></a><a href="http://www.headspringsystems.com/">Headspring Systems</a>.&nbsp; We were headed down a course of MonoRail adoption (and we have that in production as well) when ASP.NET MVC came along.&nbsp; I want to say “thank you” again to:</p>
+<ul>
+<li><a href="http://weblogs.asp.net/scottgu/">Scott Guthrie</a> for his visionary leadership and initial prototype </li>
+<li><a href="http://haacked.com/">Phil Haack</a> for his leadership to make the vision a reality </li>
+<li><a href="http://blog.wekeroad.com/">Rob Conery</a>, Levi Broderick, <a href="http://weblogs.asp.net/leftslipper/">Eilon Lipton</a>, and everyone else at Microsoft who made the product a reality </li>
+<li><a href="http://www.hanselman.com/blog/">Scott Hanselman</a> for marketing the product to the community </li>
+<li><a href="http://bradwilson.typepad.com/">Brad Wilson</a> for laboring with the idea of Dynamic Data templates with ASP.NET MVC (don’t give up!) </li>
+</ul>
+<div class="wlWriterEditableSmartContent" id="scid:0767317B-992E-4b12-91E0-4F059A8CECA8:735b970d-6457-46c5-9f95-29243657a9b8" style="display:inline; float:none; padding:0">Technorati Tags: <a href="http://technorati.com/tags/asp.net+mvc+mvc+vs2010+web+mvccontrib" rel="tag">asp.net mvc mvc vs2010 web mvccontrib</a></div>

@@ -1,0 +1,21 @@
+---
+wp_id: 968
+title: MvcContrib latest release now with SubController support
+slug: mvccontrib-latest-release-now-with-subcontroller-support
+permalink: /2008/10/mvccontrib-latest-release-now-with-subcontroller-support/
+date: 2008-10-05T22:39:37
+date_utc: 2008-10-05T22:39:37Z
+modified: 2008-10-05T22:39:37
+format: html
+categories:
+- blog
+excerpt: One of the items that many people I know have requested are subcontrollers. Most non-trivial web applications require many things happening on a single screen. Even if it’s only the current shopping cart displayed on multiple screens, the MVC Framework needs a mechanism of screen decomposition so that web applications can scale with complexity. WebForms […]
+comments_open: true
+---
+<p>One of the items that many people I know have requested are subcontrollers.&nbsp; Most non-trivial web applications require many things happening on a single screen.&nbsp; Even if it’s only the current shopping cart displayed on multiple screens, the MVC Framework needs a mechanism of screen decomposition so that web applications can scale with complexity.&nbsp; WebForms has the Control model where markup and logic live together and can be composed easily.&nbsp; </p>
+<p>With the MVC Framework CTP 5, a single action method has to make decisions for the entire screen.&nbsp; There are ActionFilters that can do some logic, but those are attributes, and attributes are not conducive to logic decomposition.&nbsp; Furthermore, ActionFilters do not work with partial views.</p>
+<p>RenderPartial also doesn’t do the job because the main view still has to know the partials.</p>
+<p>If you haven’t looked at <a href="http://mvccontrib.org">MvcContrib’s</a> SubController support, have a look at the <a href="http://www.codeplex.com/MVCContrib">latest release</a> and check out the samples.&nbsp; The samples show many uses for SubControllers for GETs, POSTs, and unlimited nesting of SubControllers.&nbsp; Each SubController has its own view, and it uses Action methods with all the same built-in dynamicism as regular controllers.&nbsp; In Fact, SubController inherits from Controller, so a SubController IS a&nbsp; Controller.&nbsp; </p>
+<p>We (<a href="http://www.headspringsystems.com">Headspring</a>) are using MvcContrib SubControllers in real projects, and they are paying strong dividends.</p>
+<p>I’m still hoping SubControllers will make it into the ASP.NET MVC Framework, but if they don’t, I’m happy using this implementation.</p>
+<p>You can follow <a href="http://twitter.com/mvccontrib">MvcContrib on twitter</a>.&nbsp; See what Matt Hinze has said about <a href="http://mhinze.com/subcontrollers-in-aspnet-mvc/">his experience with SubControllers</a>.</p>

@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1799,
+    "parent": 0,
+    "author_name": "Paul S.",
+    "author_url": "http://",
+    "date": "2007-07-10T18:44:31",
+    "type": "comment",
+    "content_html": "<p>This is a GREAT point.  </p>\n<p>This is one main reason why I left my last job.  Of course it’s the developers fault for not getting it done in time.  \uD83D\uDE42</p>\n<p>The ingredients of a pushover and indecisive PM mixed with a demanding client with just a touch of haughtiness is like putting exlax in the brownies.  In either case, there will be crap to deal with.</p>"
+  },
+  {
+    "id": 1800,
+    "parent": 0,
+    "author_name": "James Taylor",
+    "author_url": "http://www.edmblog.com",
+    "date": "2007-07-11T05:10:23",
+    "type": "comment",
+    "content_html": "<p>One thing to make sure is that business rules are not confused with requirements. Developers can make progress on the system while rules are being defined as long as they externalize those rules and engage the business in managing them.<br>\nJT</p>"
+  },
+  {
+    "id": 1801,
+    "parent": 0,
+    "author_name": "ScottBellware",
+    "author_url": "http://www.bellware.net",
+    "date": "2007-07-11T08:58:10",
+    "type": "comment",
+    "content_html": "<p>Jeff Patton does a much better job than me in talking about why “baking requirements” is often an anti-pattern:<br>\n<a href=\"http://www.agileproductdesign.com/blog/requirements_considered_harmful.html\" rel=\"nofollow ugc\">http://www.agileproductdesign.com/blog/requirements_considered_harmful.html</a></p>\n<p>Since what you’re saying here has been increasingly challenged over the past half-decade by folks who don’t submit themselves to this kind of project ceremony, it’d be valuable to understand more about the project context that your propositions here come from, and the context wherein you believe they’re applicable.</p>\n<p>I can see this kind of stuff as valuable in traditional phased development, but I think it would be a detractor for contemporary cross-functional teams and practices.</p>"
+  },
+  {
+    "id": 1802,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-07-11T14:19:26",
+    "type": "comment",
+    "content_html": "<p>@James,<br>\nI would agree with you.</p>"
+  },
+  {
+    "id": 1803,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-07-11T14:24:41",
+    "type": "comment",
+    "content_html": "<p>@ScottBellware,<br>\nI love that article by Jeff Patton, and I don’t believe I’ve written anything that contradicts it other than use the word “requirement”.  By that, I’m talking about user stories and the details that define the scope of the user story.  The requirements for a particular user story.  </p>\n<p>To help clarify the context for you, the first story on the product backlog engendered a 30 minute conversation amoung business stakeholders while everyone else sat and listened.  Often this listening is good.  In this case, it was evidence that the requirements for this user story were not baked at all, and there was no way the team could estimate it until many more behavioral decisions had been made.  We pulled the story until we could define it better.</p>\n<p>Thanks for the comment.</p>"
+  }
+]

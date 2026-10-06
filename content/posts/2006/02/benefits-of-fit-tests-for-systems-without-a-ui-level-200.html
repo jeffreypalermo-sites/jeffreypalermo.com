@@ -1,0 +1,18 @@
+---
+wp_id: 381
+title: Benefits of FIT tests for systems without a UI – level 200
+slug: benefits-of-fit-tests-for-systems-without-a-ui-level-200
+permalink: /2006/02/benefits-of-fit-tests-for-systems-without-a-ui-level-200/
+date: 2006-02-23T13:55:00
+date_utc: 2006-02-23T13:55:00Z
+modified: 2006-02-23T13:55:00
+format: html
+tags:
+- fit
+excerpt: Sam Gentile reminds us of the value of FIT when requirements might be vague _and_ complicated. His team is using it to help the customer understand what they want. His post reminded me of the value I’m already starting to take for granted. My team is still early on in our FIT implementation. We have […]
+comments_open: true
+---
+<p><a href="/blogs/sam.gentile/archive/2006/02/22/139041.aspx">Sam Gentile reminds us of the value of FIT</a> when requirements might be vague _and_ complicated.&nbsp; His team is using it to help the customer understand what they want.&nbsp; His post reminded me of the value I’m already starting to take for granted.</p>
+<p>My team is still early on in our <a href="http://fit.c2.com/">FIT </a>implementation.&nbsp; We have a few components covered so far, but recently, we created a new service that runs all the time and does stuff.&nbsp; Do you love the vague description?&nbsp; It responds to a queue:&nbsp; One component drops off some work, and it picks it up and does it’s thing.&nbsp; We have this implemented as a Windows service, so it would be very difficult to test by manual means.&nbsp; The tester would have no UI at all, and they would have to arrange for work to be dropped off, wait a bit and check that the work was completed.&nbsp; </p>
+<p>FIT enables a whole new dimension to testing this service.&nbsp; Our tester has been creating his test cases even while we’ve been creating the FIT fixture for it.&nbsp; We hashed out what the fixture would look like on the whiteboard, and then started.&nbsp;&nbsp; We have our first draft of the FIT fixture working, and it’s a big eye-opener to be able to test a component (that has no UI) with a GUI.&nbsp; These are automated tests as well (that’s FIT’s nature), and we’ll run them forevermore.&nbsp; Once we have these tests passing, they will serve as a regression tests suite for this component.&nbsp; When a bug arrises, we’ll create a FIT test to isolate the bug and then fix it.&nbsp; </p>
+<p>We’re using the <a href="http://fitnesse.org/">FitNesse </a>wiki to organize our <a href="http://fit.c2.com/">FIT</a> tests.&nbsp; We’ve set up a special CC.Net build that detects wiki changes and commits those to Subversion.&nbsp; Our CC.Net build for the component pushes the latest bits to the FitNesse wiki so the FIT tests are always run against the current build.&nbsp; <a href="/blogs/jeffrey.palermo/archive/2005/09/13/131914.aspx">Read how we integrated FIT into our build here.</a>&nbsp;  <a href="/blogs/jeffrey.palermo/archive/2005/09/13/131922.aspx">Read how we versioned the wiki here.</a>&nbsp; <a href="http://www.mikebroberts.com/blog/archive/Tech/Tools/WikisandSourceControl%28withFitnesse,SubversionandCruiseControl.NET%29.html">Mike Roberts has done something similar as well.</a><br>&nbsp;<br>For this work, we’re using the newly-ported <a href="http://sourceforge.net/projects/fitlibrary/">FitLibrary</a>‘s DoFixture.&nbsp; The <a href="http://fitlibrary.sourceforge.net/DoFixture/index.html">DoFixture </a>allows a very intuitive layout of the test.&nbsp; For more information, I’d recommend reading the <a href="http://www.amazon.com/gp/product/0321269349/qid=1140703643/sr=2-1/ref=pd_bbs_b_2_1/102-7388820-8215301?s=books&amp;v=glance&amp;n=283155">FIT book by Ward Cunningham and Rick Mugridge.</a></p>

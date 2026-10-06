@@ -1,0 +1,24 @@
+---
+wp_id: 290
+title: How to ensure your web sites are valid Html (or XHtml) – level 300
+slug: how-to-ensure-your-web-sites-are-valid-html-or-xhtml-level-300
+permalink: /2005/07/how-to-ensure-your-web-sites-are-valid-html-or-xhtml-level-300/
+date: 2005-07-29T15:13:00
+date_utc: 2005-07-29T15:13:00Z
+modified: 2005-07-29T15:13:00
+format: html
+excerpt: 'I originally was going to label this post level 200, but given how few people know about Html standards, I’ve labeled it 300, but I don’t think this _should_ be an advanced topic. The first easy step is to try to validate your site with a validator. The one I use is from the W3C: […]'
+comments_open: true
+---
+<p>I originally was going to label this post level 200, but given how few people know about Html standards, I’ve labeled it 300, but I don’t think this _should_ be an advanced topic.</p>
+<p>The first easy step is to try to validate your site with a validator.&nbsp; The one I use is from the W3C: <a href="http://validator.w3.org/">http://validator.w3.org/</a>.&nbsp; Type in the site, and it will tell you what is wrong with it.&nbsp; A series of events brought my focus back to this.&nbsp; I’ve posted on this topics previously <a href="/blogs/jeffrey.palermo/archive/2005/07/05/128844.aspx">here</a>, <a href="/blogs/jeffrey.palermo/archive/2005/06/22/128326.aspx">here</a>, <a href="/blogs/jeffrey.palermo/archive/2005/06/08/114667.aspx">here</a>, <a href="/blogs/jeffrey.palermo/archive/2005/07/05/128841.aspx">here</a>, and&nbsp;<a href="/blogs/jeffrey.palermo/archive/2005/02/20/55629.aspx">here</a>.&nbsp; </p>
+<p>I was setting some CSS overrides for my Community Server blog, and I wasn’t getting the results I wanted.&nbsp; Then I inspected the page to find that the default skin of Community Server doesn’t set a DocType.&nbsp; I was very surprised by this since <a href="http://www.telligent.com/">Telligent </a>has been on the ball on so many things.&nbsp; Telligent’s own web site uses the XHtml 1.1 DocType, but it doesn’t validate.</p>
+<p>Not including a DocType at all leaves the browser guessing as to what kind of markup your page is.&nbsp; IE will assume Html 3.2 or (<a href="/blogs/jeffrey.palermo/archive/2005/07/05/128844.aspx">quirks mode</a>).&nbsp; FireFox wants to render it as Html 4.01&nbsp;transitional.&nbsp; In fact, if you use the default DocType in VS.Net 2003, you’ll be using an incomplete one that omits the location of the .dtd document.&nbsp; You can write valid Html 4.0 this way (<a href="http://validator.w3.org/check?uri=http%3A%2F%2Fwww.microsoft.com">and I commend Microsoft for having a main page that correctly validates</a>), but IE will still operate in quirks mode.&nbsp; This may cause you some grief when laying out your pages because you will have unpredictable browser behavior.</p>
+<p>Adhering to web standards greatly simplifies web application development when you need an attractive user interface.&nbsp; There are some simple steps that even a beginning programmer can employ to ensure the web application is valid markup:</p>
+<ul><br>
+<li>Add a DocType to the top of every page (or your master page in ASP.NET).&nbsp; I recommend using:<pre>&lt;!DOCTYPE html<br>
+PUBLIC “-//W3C//DTD XHTML 1.0 Transitional//EN”<br>
+“http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd”&gt;</pre></li><br>
+<li>Validate your app with the <a href="http://validator.w3.org/">W3C validator</a>.</li><br>
+<li>Fix every error it finds.</li></ul>
+<p>These simple steps can lead anyone to standards-compliant web application.</p>

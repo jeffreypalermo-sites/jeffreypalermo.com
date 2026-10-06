@@ -1,0 +1,20 @@
+[
+  {
+    "id": 143,
+    "parent": 0,
+    "author_name": "Scott Galloway",
+    "author_url": "http://",
+    "date": "2004-08-25T06:06:00",
+    "type": "comment",
+    "content_html": "<p>Cooperate and use common sense I’d say. If you app server has hung that’s a classic case of needing to cooperate to find a cause. Same goes for your DB connection pool running out of resources, the underlying cause could be either code, DB, Drivers or any combination thereof. Trying to work independently on such issues is just asking for trouble.</p>"
+  },
+  {
+    "id": 144,
+    "parent": 0,
+    "author_name": "Eric Wise",
+    "author_url": "http://",
+    "date": "2004-08-25T06:55:00",
+    "type": "comment",
+    "content_html": "<p>Been there done that.</p>\n<p>The flagship moment was when an exe was executing on the task schedule on the main server and was running as administrator.  When they changed the password for the administrator account it broke it.  Course they didn’t notice for weeks, by then they’d forgotten about the password change.  Took me a whlie to figure out what happened but I ended up doing most of the troubleshooting since it was \"my program\" and the network administrator was exceedingly unhelpful.</p>\n<p>Similar experience with DBAs, they always try to blame the code first, even if said code was previously stable.  I also have a major peeve with dba’s that don’t let programmers have admin rights on test servers.  I worked a contract once where anything I needed changed in the test database I had to work through a busy dba.  Sometimes my development would come to a grinding halt b/c I couldn’t move forward without something, and the guy wouldn’t have time until \"tomorrow\".</p>\n<p>In the end, I think that whoever is in charge needs to be very clear that a problem is a problem, and discourage finger pointing.  I’ve experienced alot of \"us vs them\" for programmers and dbas, and it’s extremely wasteful of time and resources.</p>"
+  }
+]

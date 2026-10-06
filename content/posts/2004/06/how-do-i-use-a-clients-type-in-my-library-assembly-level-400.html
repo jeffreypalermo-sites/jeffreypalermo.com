@@ -1,0 +1,24 @@
+---
+wp_id: 562
+title: How do I use a client’s type in my library assembly? – level 400
+slug: how-do-i-use-a-clients-type-in-my-library-assembly-level-400
+permalink: /2004/06/how-do-i-use-a-clients-type-in-my-library-assembly-level-400/
+date: 2004-06-07T16:47:00
+date_utc: 2004-06-07T16:47:00Z
+modified: 2004-06-07T16:47:00
+format: html
+excerpt: I have a library, and I use an Interface to define the required members of the clients “User” object in order for the client’s type to work with my library. As long as they implement the members in my interface, everything is fine. My Inferface implements IPrincipal, so it’s a standard .Net Framework user type. […]
+comments_open: true
+---
+<p>I have a library, and I use an Interface to define the required members of the clients “User” object in order for the client’s type to work with my library.&nbsp; As long as they implement the members in my interface, everything is fine.&nbsp; My Inferface implements IPrincipal, so it’s a standard .Net Framework user type.&nbsp; It can be used in ASP.NET seamlessly.&nbsp; When coding my library, I don’t know or have access to the client’s type that will implement my interface.&nbsp; How, then, can I get it at runtime and code against it?&nbsp; I have static and instance calls to methods in my interface.&nbsp; The answer:&nbsp; Reflection and runtime-loading of the client’s type.&nbsp; Here’s some code I’m using to do it:</p><pre>public static Type ClientType<br>
+{<br>
+    get<br>
+    {<br>
+        Assembly ClientAssembly;<br>
+        ClientAssembly = Assembly.Load(ConfigurationSettings.AppSettings[“UserAssemblyName”]);<br>
+        Type clientType = ClientAssembly.GetType(ConfigurationSettings.AppSettings[“UserTypeName”], true, false);<br>
+        return clientType;<br>
+    }<br>
+}<br>
+</pre>
+<p>This is a static property in my library to encapsulate the getting of the client’s type.&nbsp; The client will have to define in the web.config file the assembly and namespace, and then we’re good.&nbsp; Once I have the type, I can invoke the members using methods of the Type object.&nbsp; I know the members I need to invoke because I’ve defined an interface, so the client’s object MUST have the members I need.&nbsp; Now the client can have their own user object, and once they implement my interface, they are completely interoperable with my library which will make heavy use of their custom type.</p>

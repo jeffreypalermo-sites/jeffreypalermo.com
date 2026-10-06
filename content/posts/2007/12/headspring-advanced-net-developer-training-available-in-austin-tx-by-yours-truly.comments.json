@@ -1,0 +1,38 @@
+[
+  {
+    "id": 2191,
+    "parent": 0,
+    "author_name": "Phil Wheat",
+    "author_url": "http://blog.austinwheats.net",
+    "date": "2007-12-11T01:30:40",
+    "type": "comment",
+    "content_html": "<p>Hey!  What are you doing blogging during ADNUG! \uD83D\uDE42</p>"
+  },
+  {
+    "id": 2192,
+    "parent": 0,
+    "author_name": "Justin Dial",
+    "author_url": "http://",
+    "date": "2007-12-11T03:14:21",
+    "type": "comment",
+    "content_html": "<p>Ack! Already enrolled in JP’s course in college station. Wish i could attend both.</p>"
+  },
+  {
+    "id": 2193,
+    "parent": 0,
+    "author_name": "Stuart Garner",
+    "author_url": "http://www.EurekaEnvironmental.com",
+    "date": "2008-01-05T16:47:18",
+    "type": "comment",
+    "content_html": "<p>Mr Palermo,</p>\n<p>     Occasionally my company has need for a VB programmer to update our instruments’ GUIs.  Is there a venue in Austin where I could find someone qualified to work on short-term projects?  Thanks.</p>"
+  },
+  {
+    "id": 2194,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-05T16:50:39",
+    "type": "comment",
+    "content_html": "<p>@Stuart,<br>\nI’m sure we can help you out. Please give us a call:  512-459-2260.</p>"
+  }
+]

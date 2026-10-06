@@ -1,0 +1,16 @@
+---
+wp_id: 535
+title: Modify and restore Firefox extensions that fail to load
+slug: modify-and-restore-firefox-extensions-that-fail-to-load
+permalink: /2007/06/modify-and-restore-firefox-extensions-that-fail-to-load/
+date: 2007-06-25T16:32:26
+date_utc: 2007-06-25T16:32:26Z
+modified: 2007-06-25T16:32:26
+format: html
+excerpt: Recently, my Firefox browser started loading without the extensions I’ve installed. I run my Firefox browser off of my 4GB Cruzer using the PortableApps suite. When Firefox loaded, it would load without a single extension, but when I opened the “add-ins” box, it listed all of my extensions. Here is the thread where I found […]
+comments_open: true
+---
+<p>Recently, my Firefox browser started loading without the extensions I’ve installed.&nbsp; I run my Firefox browser off of my <a href="http://sandisk.com/Products/Catalog(1168)-NEW__SanDisk_Cruzer_Micro_USB_Flash_Drive.aspx">4GB Cruzer</a> using the <a href="http://portableapps.com/">PortableApps</a> suite.</p>
+<p>When Firefox loaded, it would load without a single extension, but when I opened the “add-ins” box, it listed all of my extensions.</p>
+<p>Here is <a href="http://forums.mozillazine.org/viewtopic.php?p=2549287&amp;sid=82289a032e647476e8e30aa86bb5ec29">the thread</a> where I found my particular solution.&nbsp; I was able to get Firefox to load my extensions again by modifying the files within my Firefox profile (find it in you user account appdata folder).&nbsp; I deleted extensions.cache, extensions.ini and extensions.rdf.&nbsp; When I started Firefox the next time, it regenerated these files using the extensions that were in my profile (folders like {2fa4ed95-0317-4c6a-a74c-5f3e3912c1f9}).</p>
+<p>Problem solved for me.&nbsp; I did take notice that Firefox is blazing fast on start-up. . . until I load a ton of extensions.&nbsp; With the number of extensions I have, it’s more like Visual Studio since I’m loading up a whole suite of web development tools.&nbsp; Firefox is just as much a web IDE as Visual Studio – including the RAM usage.</p>

@@ -1,0 +1,20 @@
+[
+  {
+    "id": 2370,
+    "parent": 0,
+    "author_name": "Peter Morris",
+    "author_url": "http://",
+    "date": "2008-03-11T10:38:02",
+    "type": "comment",
+    "content_html": "<p>I initially chose MonoRail over MS WebEx because of the [DataBind] attribute.  After a while though I decided that I didn’t like the UI having direct access to my business objects.</p>\n<p>For example, the site I am writing will have someone else design the views.  If I expose Employee what is to stop him from adding $Employee.Salary, $Employee.TelephoneNumber, or whatever he likes?  </p>\n<p>In addition to this I found that the view data being posted back doesn’t always map directly to a business object.  I am finding it much better in MS WebEx to use LINQ to create lists of anonymous objects etc to feed my ViewData, and straight forward value types for getting data back and then deciding how it should affect my business objects.</p>"
+  },
+  {
+    "id": 2371,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-03-11T12:13:49",
+    "type": "comment",
+    "content_html": "<p>@Peter,<br>\nIn Monorail, with the DataBind attribute, you don’t need to bind directly back into your business object.  Often your business object doesn’t have all the setters necessary to pump values in from all the form fields or querystring values.  This is where your presentation model comes in.  You need an object specifically for the view that can be used with your web framework of choice in order to leverage some of the interesting features.  Your presentation object will have the appropriate setters.  It could possible be constructed by passing the business object into the constructor, and then the presentation object might only expose the necessary properties, not all of them</p>"
+  }
+]

@@ -1,0 +1,30 @@
+---
+wp_id: 232
+title: The _real_ reason to shy away from DataSets – level 300
+slug: the-_real_-reason-to-shy-away-from-datasets-level-300
+permalink: /2005/05/the-_real_-reason-to-shy-away-from-datasets-level-300/
+date: 2005-05-17T14:06:00
+date_utc: 2005-05-17T14:06:00Z
+modified: 2005-05-17T14:06:00
+format: html
+excerpt: If the title of this post gets you worked up, you probably shouldn’t read on. I’m about to bash your beloved DataSet. Scott Mitchell has written more on why to avoid DataSets. While he touches on performance and the mechanics of what it does, I believe the issue is bigger. Everyone can argue and compare […]
+comments_open: true
+---
+<p>If the title of this post gets you worked up, you probably shouldn’t read on.&nbsp; I’m about to bash your beloved DataSet.</p>
+<p><a href="http://scottonwriting.net/sowblog/posts/3867.aspx">Scott Mitchell has written more on why to avoid DataSets</a>.&nbsp; While he touches on performance and the mechanics of what it does, I believe the issue is bigger.</p>
+<p>Everyone can argue and compare performance numbers in different scenarios to justify one versus the other.&nbsp; The real argument, I think, is design.&nbsp; No matter what you do, your application must perform well enough to meet the customer’s expectations.&nbsp; The customer doesn’t care about the internal workings.&nbsp; So what other motivations do we have?&nbsp; </p>
+<p>What about OO design.&nbsp; What about an object owning state and all behavior that goes with that state?&nbsp; A DataSet cannot substitute for a domain object.&nbsp; It has no custom behavior.&nbsp; It holds records.&nbsp; As long as DataSets are pulled and bound to the UI, the application will be of Procedural nature.&nbsp; I’m coming from a stand-point where I care about OO and the maintainability and testability gains associated with it, so DataSets don’t hold much weight with me.&nbsp; </p>
+<p>Now we are talking about another issue altogether.&nbsp;&nbsp;Are you&nbsp;dragging and dropping a RAD application that will have a short lifespan (because RAD and Maintainability are antonyms)?&nbsp; If so, you can stop reading now because this discussion has no bearing on your application.</p>
+<p>If your intention is to develop a well-factored object-oriented system with loose coupling between layers and high class cohesion, then please read on.&nbsp; You will want to identify entities in your system and develop your domain object first, NOT your database schema.&nbsp; If you start with the database schema first, you are starting with a handicap that is often hard to overcome.&nbsp; Start with your domain objects first and define the entities that your system will manage.&nbsp; Each of these entities will own some state and will encapsulate this state with custom behavior through their methods.&nbsp; One example is that if you have a Product object and you try to set the Price field to a negative number, the object shouldn’t allow it.&nbsp; The object is responsible for protecting its state.&nbsp; If you have a dumb data container (DataSet) floating around, then you have&nbsp;to jerry-rig some validating logic before you “Update” the changes back to the database.&nbsp; </p>
+<p>If you have a well-factored OO design, you will always be able to extend the system with new functionality as well as change existing functionality with minimal impact.&nbsp; This can exist because each small responsibility is housed in its own object and not shared among the logical layers.</p>
+<p>I really don’t care about convincing DataSet users to enroll in Rehab (unless they are on my team – which they aren’t).&nbsp; Good design isn’t easy, but the benefits are worth the effort.&nbsp; DataSets are easy.&nbsp; Speaking of easy. . . here are some other things that are easy:</p>
+<ul><br>
+<li>Maxing out your credit card<br>
+</li><li>Not paying your bills<br>
+</li><li>Sleeping in<br>
+</li><li>Settling for mediocrity<br>
+</li><li>Posting an nonobjective comment to this blog post</li></ul>
+<p>For the record, I have used a DataSet (and a strongly-typed one), but not any more.</p>
+<p>ADDITION:</p>
+<p>I must say that the use of a DataSet object in an application doesn’t condemn it’s design to the lake of fire, but relying on that as your _business object_ does.&nbsp; If there is a situation where the overhead is acceptable, use it _inside_ your business object or somewhere else, but protect your entities.&nbsp; Don’t pass around naked entities in a DataSet exposed to the world.&nbsp; Use encapsulation.&nbsp; Protect your data.</p>
+<p>Perhaps my main beef is with the use of DataSets as promoted by the VS.Net drag and drop tools.</p>

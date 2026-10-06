@@ -1,0 +1,47 @@
+[
+  {
+    "id": 2226,
+    "parent": 0,
+    "author_name": "Rod Paddock [MVP]",
+    "author_url": "http://",
+    "date": "2008-01-05T20:08:14",
+    "type": "comment",
+    "content_html": "<p>Yo Jeff…<br>\n   Here’s the first contribution… I bought a domain some time ago called codecampinfo.com…. My goal was to provide a clearing house for ALL that is CodeCamp…. </p>\n<p>So… I volunteer to host the web site and database for this….</p>"
+  },
+  {
+    "id": 2227,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-01-06T04:51:21",
+    "type": "comment",
+    "content_html": "<p>@Rod,<br>\nGreat.  We also have codecampserver.org as a redirect to the project workspace.  A grand vision that might come with version 2 or 3 is to have the project able to host multiple conferences for multiple groups from one installation.  In that way, we could stand up codecampinfo.com as a hosting place for all user groups and all code camps (for those who want to).  Just an idea.</p>"
+  },
+  {
+    "id": 2228,
+    "parent": 0,
+    "author_name": "Rusty",
+    "author_url": "http://",
+    "date": "2008-01-06T14:24:04",
+    "type": "comment",
+    "content_html": "<p>Look at <a href=\"http://www.bostondotnet.org/codecamp/default.aspx/CodeCamp/CodeCampSchedule.html\" rel=\"nofollow ugc\">http://www.bostondotnet.org/codecamp/default.aspx/CodeCamp/CodeCampSchedule.html</a> as it is a listing of recent code camps, as well as Code Camp basics et al.</p>"
+  },
+  {
+    "id": 2229,
+    "parent": 0,
+    "author_name": "Scott",
+    "author_url": "http://geekswithblogs.net/sdorman",
+    "date": "2008-01-06T19:02:57",
+    "type": "comment",
+    "content_html": "<p>Having a central hosting place for code camps would be great, but i think the bigger areas to focus on are being able to provide an easy way for:</p>\n<p>1. speakers to signup<br>\n2. attendees to signup<br>\n3. organizers to manage the schedule (and pubish it as both an RSS feed and in ical format)<br>\n4. people to find different code camps</p>"
+  },
+  {
+    "id": 2230,
+    "parent": 0,
+    "author_name": "Simone",
+    "author_url": "http://codeclimber.net.nz",
+    "date": "2008-01-06T20:07:21",
+    "type": "comment",
+    "content_html": "<p>A few years ago, David Silverlight developed a project that allowed attendants to submit the evaluation of sessions online:<br>\n<a href=\"http://codecampevals.com/\" rel=\"nofollow ugc\">http://codecampevals.com/</a><br>\nYou might want to check it out</p>"
+  }
+]

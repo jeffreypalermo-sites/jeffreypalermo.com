@@ -1,0 +1,13 @@
+---
+wp_id: 63
+title: CodeBehind attribute in @Page of Whidbey gone – level 100
+slug: codebehind-attribute-in-page-of-whidbey-gone-level-100
+permalink: /2004/08/codebehind-attribute-in-page-of-whidbey-gone-level-100/
+date: 2004-08-17T11:24:00
+date_utc: 2004-08-17T11:24:00Z
+modified: 2004-08-17T11:24:00
+format: html
+excerpt: In my journey down the Whidbey trail, I’m documenting key things I am discovering that are missing from the v2.0 books and articles I have read. A key piece of information is the the CodeBehind attribute of the @Page directive is gone. I’ve read that the code-behind model will still be supported in Whidbey, but […]
+comments_open: true
+---
+<p>In my journey down the Whidbey trail, I’m documenting key things I am discovering that are missing from the v2.0 books and articles I have read.&nbsp; A key piece of information is the the CodeBehind attribute of the @Page directive is gone.&nbsp; I’ve read that the code-behind model will still be supported in Whidbey, but I’m not seeing it.&nbsp; I have no problem converting to Code-beside with partial classes.&nbsp; There is still code separation, and the wizard is supposed to convert code-behind to code-beside, but it’s still a little buggy.&nbsp; It left all my code-behind files untouched, and they won’t compile unless they are in the Code directory.&nbsp; Of course the CodeBehind attribute has no bearing at runtime since it has always just been an IDE-specific attribute for linking the code file, but in the IDE, you’ll get the red squiggly line saying that no CodeBehind attribute exists.&nbsp; One thing is for sure.&nbsp; None of use will be using CodeBehind in Whidbey (but code-beside using the CompileWith attribute is better in my opinion).</p>

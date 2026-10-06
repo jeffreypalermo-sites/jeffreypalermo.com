@@ -1,0 +1,38 @@
+[
+  {
+    "id": 2138,
+    "parent": 0,
+    "author_name": "James Kovacs",
+    "author_url": "http://www.jameskovacs.com",
+    "date": "2007-11-21T22:39:29",
+    "type": "comment",
+    "content_html": "<p>If you use VS2008 to target .NET 2.0/3.0, you can leave ReSharper’s Code Assist and Intellisense turned on since VS prevents you from using the new language constructs. It’s only if you’re using the new .NET 3.5 features in VS2008 that ReSharper 3.0 goes haywire. Now if JetBrains would just toggle those settings automatically when switching between .NET 2.0/3.0 and .NET 3.5 targets. Sounds like a ReSharper add-in in the making…</p>"
+  },
+  {
+    "id": 2139,
+    "parent": 0,
+    "author_name": "SteveG",
+    "author_url": "http://blogger.forgottenskies.com",
+    "date": "2007-11-21T23:13:43",
+    "type": "comment",
+    "content_html": "<p>Very good to know – thanks for the tip!  (I’m installing VS 2008 now)</p>"
+  },
+  {
+    "id": 2140,
+    "parent": 0,
+    "author_name": "Casey",
+    "author_url": "http://blog.goinsane.co.uk/2007/11/22/IHateVisualStudio2008.aspx",
+    "date": "2007-11-22T09:06:35",
+    "type": "comment",
+    "content_html": "<p>Nice tips, thanks …</p>"
+  },
+  {
+    "id": 2141,
+    "parent": 0,
+    "author_name": "Alexey Rusakov",
+    "author_url": "http://alexeyrusakov.com",
+    "date": "2007-11-23T21:13:37",
+    "type": "comment",
+    "content_html": "<p>There’s also a Ctrl-8 hotkey to suppress the code analysis for the current file.</p>"
+  }
+]

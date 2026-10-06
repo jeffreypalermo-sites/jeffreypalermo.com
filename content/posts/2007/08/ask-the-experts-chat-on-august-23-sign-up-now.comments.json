@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1835,
+    "parent": 0,
+    "author_name": "Andreas Kraus",
+    "author_url": "http://www.andreas-kraus.net/blog",
+    "date": "2007-08-04T11:34:13",
+    "type": "comment",
+    "content_html": "<p>Just a  hint: That’s a dead link..</p>\n<p>Best Regards,<br>\nAndreas</p>"
+  },
+  {
+    "id": 1836,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-08-04T16:41:52",
+    "type": "comment",
+    "content_html": "<p>@Andreas,<br>\nThanks.  I’ve fixed it.</p>"
+  }
+]

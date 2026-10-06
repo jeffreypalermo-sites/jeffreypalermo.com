@@ -1,0 +1,38 @@
+[
+  {
+    "id": 2408,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2008-03-22T06:39:15",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,<br>\nHuh?<br>\nThis is not testing a controller. This is testing IHttpHandler. The interface is just the same, and the implications of that are likewise. No one is likely to work at this level.<br>\nWhat is important is showing testability for the real scenario, inheriting from Controller</p>"
+  },
+  {
+    "id": 2409,
+    "parent": 0,
+    "author_name": "jonnii",
+    "author_url": "http://",
+    "date": "2008-03-22T10:21:41",
+    "type": "comment",
+    "content_html": "<p>Why are you not using a mocking framework?</p>"
+  },
+  {
+    "id": 2410,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-03-22T15:30:46",
+    "type": "comment",
+    "content_html": "<p>@Ayende,<br>\nJust give me a chance.  In my book, I’m going through all kinds of scenarios, and this is one of the most basic.  Previously, I didn’t even write a unit test for this because it was such a pain.</p>"
+  },
+  {
+    "id": 2411,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-03-22T15:31:33",
+    "type": "comment",
+    "content_html": "<p>@ jonnii,<br>\nI chose not to use a mocking library for this blog post because it would clutter the sample.</p>"
+  }
+]

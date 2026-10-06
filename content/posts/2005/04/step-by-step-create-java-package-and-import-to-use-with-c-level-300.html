@@ -1,0 +1,69 @@
+---
+wp_id: 212
+title: 'Step by Step: Create java package and import to use with C# – level 300'
+slug: step-by-step-create-java-package-and-import-to-use-with-c-level-300
+permalink: /2005/04/step-by-step-create-java-package-and-import-to-use-with-c-level-300/
+date: 2005-04-07T12:56:00
+date_utc: 2005-04-07T12:56:00Z
+modified: 2005-04-07T12:56:00
+format: html
+excerpt: 'Yesterday I explained that I was able to import java .jar packages for use with .Net. Here’s the steps. First, here is my sample Java class. (Don’t put this in VS.Net, compile this with the java compiler): 1 package ClassLibraryInteropTest; 2 3 public class Calculator 4 { 5 public int Add(int first, int second) 6 { 7 return first + second; 8 } 9 10 public […]'
+comments_open: true
+---
+<p>Yesterday I <a href="http://dotnetjunkies.com/WebLog/jpalermo/archive/2005/04/06/62696.aspx">explained<br>
+that I was able to import java .jar packages for use with .Net</a>.&nbsp; Here’s the<br>
+steps.</p>
+<p>First, here is my sample Java class.&nbsp; (Don’t put this in VS.Net, compile this<br>
+with the java compiler):</p>
+<div style="border:1pt solid windowtext; padding:0; background:white none repeat scroll 0; color:black"><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;1</span>&nbsp;<span style="color:blue">package</span><br>
+ClassLibraryInteropTest;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;2</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;3</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">class</span> Calculator<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;4</span>&nbsp;{<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;5</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> <span style="color:blue">int</span><br>
+Add(<span style="color:blue">int</span> first, <span style="color:blue">int</span> second)<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;&nbsp;&nbsp;&nbsp; {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span><br>
+first + second;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> <span style="color:blue">int</span><br>
+Subtract(<span style="color:blue">int</span> first, <span style="color:blue">int</span> second)<br><span style="color:teal">&nbsp;&nbsp;&nbsp;11</span>&nbsp;&nbsp;&nbsp;&nbsp; {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;12</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span><br>
+first – second;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;14</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;15</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> <span style="color:blue">int</span><br>
+Multiply(<span style="color:blue">int</span> first, <span style="color:blue">int</span> second)<br><span style="color:teal">&nbsp;&nbsp;&nbsp;16</span>&nbsp;&nbsp;&nbsp;&nbsp; {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;17</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span><br>
+first * second;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;18</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;19</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;20</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> <span style="color:blue">float</span><br>
+Divide(<span style="color:blue">int</span> first, <span style="color:blue">int</span> second) <br><span style="color:teal">&nbsp;&nbsp;&nbsp;21</span>&nbsp;&nbsp;&nbsp;&nbsp; {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;22</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span><br>
+first / second;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;23</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;24</span>&nbsp;}</div>
+<p>This is just a sample calculator that I will leverage at the end with my C#<br>
+code.&nbsp; I’ll need to compile this, so I’ll run:</p>
+<p>javac Calculator.java</p>
+<p>This will create a Calculator.class file.&nbsp; Next I’ll package that class into<br>
+a .jar file:</p>
+<p>jar cvf Calculator.jar *.class</p>
+<p>This will take all the class files in the directory and put them in<br>
+Calculator.jar.&nbsp; I only have one class, so I’m good to go.&nbsp; Now, I’ll run JBImp,<br>
+with is a .Net utility, to convert the .jar’s Java bytecode to MSIL:</p>
+<p>jbimp /t:library Calculator.jar</p>
+<p>And you’ll see the following output:</p>
+<p>Microsoft (R) Java-language bytecode to MSIL<br>
+converter version 1.1.4322.0<br>for Microsoft (R) .NET Framework version<br>
+1.1.4322<br>Copyright (C) Microsoft Corp 2000-2002. All rights<br>
+reserved.</p>
+<p>Created<br>
+ClassLibraryInteropTest.Calculator.dll</p>
+<p>Now I have my .Net assembly named ClassLibraryInteropTest.Calculator.dll.&nbsp;<br>
+Note that the utility used the package name (defined internally) to prefix the<br>
+assembly name.</p>
+<p>Next, create a .Net project to use as a test harness, and add a reference to<br>
+this newly created .dll file.&nbsp; Once you have referenced it, you’ll be able to<br>
+use the following C# code:</p>
+<div style="border:1pt solid windowtext; padding:0; background:white none repeat scroll 0; color:black"><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;1</span>&nbsp;<span style="color:blue">using</span><br>
+System;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;2</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;3</span>&nbsp;<span style="color:blue">namespace</span><br>
+JavaInterop<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;4</span>&nbsp;{<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;5</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">class</span><br>
+Tester<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;&nbsp;&nbsp;&nbsp; {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [STAThread]<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">static</span><br>
+<span style="color:blue">void</span> Main(<span style="color:blue">string</span>[] args)<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; { <br><span style="color:teal">&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ClassLibraryInteropTest.Calculator<br>
+myCalc = <span style="color:blue">new</span><br>
+ClassLibraryInteropTest.Calculator();<br><span style="color:teal">&nbsp;&nbsp;&nbsp;11</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Console.WriteLine(myCalc.Add(23,<br>
+7).ToString());<br><span style="color:teal">&nbsp;&nbsp;&nbsp;12</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+Console.ReadLine();<br><span style="color:teal">&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;14</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;15</span>&nbsp;}</div>
+<p>If you get an error running this code (cannot find assembly Calculator),<br>
+rename the assembly: ClassLibraryInteropTest.Calculator.dll to Calculator.dll.&nbsp;
+</p>
+<p>You get full intellisense about all the methods of the Calculator class, and<br>
+essentially, you treat it exactly the same as .Net code because the JBImp<br>
+utility actually makes it a .Net assembly.</p>

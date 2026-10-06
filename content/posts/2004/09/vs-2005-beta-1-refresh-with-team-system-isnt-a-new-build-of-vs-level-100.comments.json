@@ -1,0 +1,47 @@
+[
+  {
+    "id": 157,
+    "parent": 0,
+    "author_name": "Atul",
+    "author_url": "http://",
+    "date": "2004-09-02T09:31:00",
+    "type": "comment",
+    "content_html": "<p>This post seems to contradict the part about not having to uninstall Beta1:</p>\n<p><a href=\"http://blogs.msdn.com/AskBurton/archive/2004/09/01/224392.aspx\" rel=\"nofollow\">http://blogs.msdn.com/AskBurton/archive/2004/09/01/224392.aspx</a></p>\n<p>Q: Can I install Visual Studio 2005 Beta 1 Refresh with Visual Studio 2005 Team System on top of Visual Studio 2005 Beta 1?<br>\nA: No. To install Visual Studio 2005 Beta 1 Refresh with Visual Studio 2005 Team System, you must first uninstall Visual Studio 2005 Beta 1.</p>"
+  },
+  {
+    "id": 158,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-09-02T12:56:00",
+    "type": "comment",
+    "content_html": "<p>Yeah, I read the Team System’s blog.  What I meant was that there is no reason to install this refresh at all unless I still want to try out Team System.  Since right now I’m only using VS Beta 1, I’m not going to do anything.  I’ll just continue using the build I have because it’s the same build as this new release.</p>"
+  },
+  {
+    "id": 159,
+    "parent": 0,
+    "author_name": "Rob Caron",
+    "author_url": "http://",
+    "date": "2004-09-02T14:58:00",
+    "type": "comment",
+    "content_html": "<p>RE: this item – \" Also, if I had downloaded the CTP of VSTS several months ago, then I already have what’s in these bits.\"</p>\n<p>That’s not the case. The Team System bits in this CTP are different than the bits from the May CTP.</p>"
+  },
+  {
+    "id": 160,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-09-02T15:57:00",
+    "type": "comment",
+    "content_html": "<p>Good to know, but the VS 2005 bits are the same, right?</p>"
+  },
+  {
+    "id": 161,
+    "parent": 0,
+    "author_name": "Atul",
+    "author_url": "http://",
+    "date": "2004-09-02T16:18:00",
+    "type": "comment",
+    "content_html": "<p>SQL Server Beta 2 folks might find this useful [1]. This also seems consistent w/ the assertion that VS.NET 2005 is the same coz I have 2.0.40607 installed right now. I am just going to blow off VS.NET 2005 and try to install the Refresh from scratch and hopefully my machine will come out of it in one piece :).</p>\n<p>[1]:<br>\nThomas’ Tip: VS 2005 Beta 1 Refresh uses the most recent build (40607.85) of the .NET Framework, and so must be installed prior to SQL Server 2005 Beta 2 (which includes the older 40607.42).   SQL Server Beta 2 will see that the .NET Framework is already installed and just go with that version.</p>"
+  }
+]

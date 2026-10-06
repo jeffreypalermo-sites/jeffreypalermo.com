@@ -1,0 +1,44 @@
+---
+wp_id: 1100
+title: Debunking the duct tape programmer
+slug: debunking-the-duct-tape-programmer
+permalink: /2009/09/debunking-the-duct-tape-programmer/
+date: 2009-09-25T09:12:50
+date_utc: 2009-09-25T09:12:50Z
+modified: 2009-09-25T09:12:50
+format: html
+categories:
+- blog
+excerpt: '(subscribe to my feed here: http://feeds.jeffreypalermo.com/jeffreypalermo) On 23 September, 2009, Joel Spolsky wrote a piece extolling the virtues of the duct tape programmer. He contrasted the duct tape worldview to the astronaut architect. While the astronaut architect would sit in analysis paralysis, the duct tape programmer would have some working product already out the door. […]'
+comments_open: true
+---
+<p>(subscribe to my feed here:&nbsp; <a title="http://feeds.jeffreypalermo.com/jeffreypalermo" href="/feed/">http://feeds.jeffreypalermo.com/jeffreypalermo</a>)</p>
+<p>On 23 September, 2009, <a href="http://www.joelonsoftware.com/items/2009/09/23.html">Joel Spolsky</a> wrote a piece extolling the virtues of the <a href="http://www.joelonsoftware.com/items/2009/09/23.html">duct tape programmer</a>.&nbsp; He contrasted the duct tape worldview to the astronaut architect.&nbsp; While the astronaut architect would sit in analysis paralysis, the duct tape programmer would have some working product already out the door.</p>
+<blockquote>
+<p><em>“He is the guy you want on your team building go-carts, because he has two favorite tools: duct tape and WD-40. And he will wield them elegantly even as your go-cart is careening down the hill at a mile a minute. This will happen while other programmers are still at the starting line arguing over whether to use titanium or some kind of space-age composite material that Boeing is using in the 787 Dreamliner.” – from <a title="http://www.joelonsoftware.com/items/2009/09/23.html" href="http://www.joelonsoftware.com/items/2009/09/23.html">http://www.joelonsoftware.com/items/2009/09/23.html</a></em></p>
+</blockquote>
+<p><img loading="lazy" decoding="async" style="display:inline" align="right" src="https://i0.wp.com/greenerpastures.responsiblepersonalfinance.com/wp-content/uploads/2009/04/duct-tape-baby.jpg?resize=154%2C116" width="154" height="116">While indulging in analysis paralysis is certainly the downfall of some, there are more alternatives than merely pulling out duct tape and throwing something together.&nbsp; We also have to keep in mind how to apply advice and from where the advice is coming.&nbsp; <a href="http://mhinze.com/">Matt Hinze</a> put it nicely on twitter:</p>
+<blockquote>
+<p><em>“i’ve said it before, @</em><a href="http://twitter.com/jbogard"><em>jbogard</em></a><em> : never take software advice from a bug tracking system salesman” – from <a href="http://twitter.com/mhinze/status/4341230362">http://twitter.com/mhinze/status/4341230362</a></em></p>
+</blockquote>
+<p>If you have small tasks, using the duct tape solution will probably serve you well.&nbsp; Physical analogies are powerful, so I will stay with the duct tape metaphor.&nbsp; Duct tape is strong.&nbsp; It is sticky.&nbsp; It is easy to apply.&nbsp; On the other hand, it is not durable (it deteriorates in water and direct sunlight).&nbsp; It is not removed or reapplied easily, and God help you if you get it stuck to itself.&nbsp; There are good uses for the duct tape approach, and there are times when it is professional negligence.&nbsp; If I’m developing an application or website for a political candidate, I’m probably fine using duct tape, but I have two constraints:</p>
+<ol>
+<li>I throw the whole thing away when my candidate loses. </li>
+<li>My candidate succeeds, gets more funding, and I redo the whole thing. </li>
+</ol>
+<p>The argument for quick and dirty solutions is always geared toward getting the first version out quickly.&nbsp; Time to market!&nbsp; Time to market!&nbsp; For small products, it works fine, but for larger systems, the code base can collapse on itself after a life of taking shortcuts.&nbsp; This effect is well documented in the book, <a href="http://www.mypearsonstore.com/bookstore/product.asp?isbn=0132350882&amp;xid=PSED">Clean Code</a>.&nbsp; </p>
+<p>The third option, which Mr. Spolsky neglects to address, is the approach put forth by <a href="http://www.threeriversinstitute.org/Kent%20Beck.htm">Kent Beck</a>, in his book, <a href="http://www.amazon.com/Extreme-Programming-Explained-Embrace-Change/dp/0201616416">Extreme Programming Explained</a>.&nbsp; I highly recommend the book, but I will quote <a href="http://www.extremeprogramming.org/">extremeprogramming.org</a> since it is freely accessible.&nbsp; While getting stuck in analysis paralysis or complex solutions is certainly not a good way to go, XP stresses Simplicity as a key principle:</p>
+<blockquote>
+<p><em>“A simple design always takes <strong>less time to finish</strong> than a complex one. So always do the simplest thing that could possibly work next. If you find something that is complex replace it with something simple. It’s always <strong>faster and cheaper</strong> to replace complex code now, before you waste a lot more time on it.” – from <a href="http://www.extremeprogramming.org/rules/simple.html">http://www.extremeprogramming.org/rules/simple.html</a> (emphasis mine)</em></p>
+</blockquote>
+<p>One part of Mr. Spolsky’s premise is supported by this XP principle.&nbsp; That is, if you are creating a system where a throwaway solution is appropriate (you throw away duct tape – you don’t refactor it), then that is the simplest thing that will work as you need it to.&nbsp; On the other hand, if you are creating critical business applications like <a href="http://www.headspringsystems.com">my company</a> does, you want to ensure you are:</p>
+<ol>
+<li>Using durable materials </li>
+<li>Using malleable techniques so the 2nd, 3rd versions go well </li>
+<li>The entire system is clean (<a href="http://www.artima.com/intv/fixitP.html">no broken windows</a>) </li>
+</ol>
+<p>The nasty truth about misapplying duct tape solutions in serious software development is that the duct tape solution ends up <strong>creating</strong> unnecessary additional complexity because it doesn’t address the whole problem, just the symptoms.&nbsp; This isn’t unique to software development, but if duct tape solutions are used to achieve short term gains, then future solutions are built on a foundation of duct tape instead of some sound organizational method.&nbsp; All of us have used quick and dirty fixes, but the craftsmanship quotient applies if we quickly replace the naive fix with a more organized one.&nbsp; The patch panel on the left has an organization method.&nbsp; The patch panel on the right has responded over time to “just one more cable” without much effort to proper organization.</p>
+<p><img decoding="async" src="http://t3.gstatic.com/images?q=tbn:aag7JQTSgFvXBM:http://www.amacnetworks.com.au/Images/PP.jpg"><img loading="lazy" decoding="async" src="https://i0.wp.com/farm3.static.flickr.com/2188/2206958570_64ea28ba0f.jpg?resize=164%2C123" width="164" height="123"></p>
+
+<p><strong>Conclusion</strong></p>
+<p>The choices presented between duct tape programming and analysis paralysis are not valid.&nbsp; There are many choices, and quick and dirty fixes should not be standard operating procedure (SOP).&nbsp; Organized software engineering should prevail.&nbsp; Approaches that apply rigorous discipline will always yield better product.&nbsp; Both discipline about keeping scope under control so that you can ship quickly, and solid engineering techniques to ensure that what is shipped is maintainable for the next version.</p>

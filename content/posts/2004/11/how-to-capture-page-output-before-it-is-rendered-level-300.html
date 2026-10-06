@@ -1,0 +1,21 @@
+---
+wp_id: 151
+title: How to capture page output before it is rendered – level 300
+slug: how-to-capture-page-output-before-it-is-rendered-level-300
+permalink: /2004/11/how-to-capture-page-output-before-it-is-rendered-level-300/
+date: 2004-11-26T00:47:00
+date_utc: 2004-11-26T00:47:00Z
+modified: 2004-11-26T00:47:00
+format: html
+excerpt: If for some reason you need to capture page output either to log it, analyze it or do a global string replace, then you will need to intercept the rendered Html before it makes it to the wire on the way to the client. Here is a code snippet that will do just that. protected […]
+comments_open: true
+---
+<p>If for some reason you need to capture page output either to log it, analyze it or do a global string replace, then you will need to intercept the rendered Html before it makes it to the wire on the way to the client.&nbsp; Here is a code snippet that will do just that.</p>
+<div><span>protected</span> <span>override</span> <span>void</span> Render(HtmlTextWriter writer)<br>
+<p>{</p><br>
+<p>&nbsp;&nbsp;&nbsp; StringBuilder sb = <span>new</span> StringBuilder();</p><br>
+<p>&nbsp;&nbsp;&nbsp; HtmlTextWriter htw = <span>new</span> HtmlTextWriter(<span>new</span> StringWriter(sb));</p><br>
+<p>&nbsp;&nbsp;&nbsp; <span>base</span>.Render(htw);</p><br>
+<p>&nbsp;&nbsp;&nbsp; writer.Write(sb.ToString());</p><br>
+<p>&nbsp;&nbsp;&nbsp; Trace.Warn(sb.ToString());</p><br>
+<p>}</p></div>The StringBuilder will get the content, and you can do with it what you please.&nbsp; Then just make sure to call writer.Write( ) to render the final content to the Response stream.

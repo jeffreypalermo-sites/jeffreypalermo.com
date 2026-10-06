@@ -1,0 +1,94 @@
+---
+wp_id: 182
+title: Update on XmlSerializerSectionHandler – level 200
+slug: update-on-xmlserializersectionhandler-level-200
+permalink: /2005/02/update-on-xmlserializersectionhandler-level-200/
+date: 2005-02-22T13:28:00
+date_utc: 2005-02-22T13:28:00Z
+modified: 2005-02-22T13:28:00
+format: html
+excerpt: 'Here is another update to the XmlSerializerSectionHandler that Craig Andera introduced. The code below is essentially the same: public class XmlSerializerSectionHandler : IConfigurationSectionHandler { public object Create(object p_oParent, object p_oConfigContext, System.Xml.XmlNode p_oSection) { XPathNavigator oNav = p_oSection.CreateNavigator (); string sTypeName = oNav.Evaluate(“string(@type)”).ToString(); […]'
+comments_open: true
+---
+<p>Here is another update to the XmlSerializerSectionHandler that <a href="http://pluralsight.com/blogs/craig/archive/2003/10/08/988.aspx">Craig<br>
+Andera</a> introduced.&nbsp; The code below is essentially the same: </p>
+<div>
+<p><span>&nbsp;&nbsp;&nbsp; </span><span>public</span><span><br>
+class</span><span> XmlSerializerSectionHandler : IConfigurationSectionHandler<br>
+{</span></p>
+
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span><br>
+object</span><span> Create(</span><span>object</span><span> p_oParent, </span><span>object</span><span> p_oConfigContext, System.Xml.XmlNode<br>
+p_oSection) {</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; XPathNavigator oNav =<br>
+p_oSection.CreateNavigator ();</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>string</span><span> sTypeName =<br>
+oNav.Evaluate(“string(@type)”).ToString();</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Type oType =<br>
+Type.GetType(sTypeName);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; XmlSerializer oSer = </span><span>new</span><span> XmlSerializer(oType);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; XmlNodeReader oReader = </span><span>new</span><span> XmlNodeReader(p_oSection);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>object</span><span> oRetValue =<br>
+oSer.Deserialize(oReader);</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; oReader.Close();</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>return</span><span> oRetValue;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; }</span></p>
+</div>
+
+<p>I wanted to demonstrate how powerful this really is.&nbsp; Not only can we now use<br>
+this to strongly-type our configuration keys as elements, but we can configure<br>
+arrays as well.&nbsp; Here is my config section:</p>
+
+<p>&lt;configSections&gt;</p>
+
+<p>&lt;section name=”MyConfig” type =”Dell.Titans.Framework.Configuration.XmlSerializerSectionHandler,<br>
+Dell.Titans.Framework”/&gt;<br>&lt;/configSections&gt;</p>
+<p><br>&lt;MyConfig type=”ConsoleTestHarness.MyConfig,ConsoleTestHarness”&gt;<br>&lt;List&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&lt;int&gt;1&lt;/int&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp; &lt;int&gt;2&lt;/int&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp; &lt;int&gt;4&lt;/int&gt;<br>&lt;/List&gt;<br>&lt;Foo&gt;1.234&lt;/Foo&gt;<br>&lt;Bar&gt;A bunch of<br>
+information&lt;/Bar&gt;<br>&lt;ConnectionString&gt;my string&lt;/ConnectionString&gt;<br>&lt;/MyConfig&gt;<br></p>
+<p>Now the section name must be the same as the type name, but see how we can<br>
+configure an array of int object as the “List” property.&nbsp; Here is my type:</p>
+<div>
+<p><span>&nbsp;&nbsp;&nbsp; </span><span>public</span><span><br>
+class</span><span> MyConfig {</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>private</span><span><br>
+float</span><span> foo;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>private</span><span><br>
+string</span><span> bar;</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>private</span><span><br>
+string</span><span> connectionString;</span></p>
+
+
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span><br>
+float</span><span> Foo {</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>get</span><span> { </span><span>return</span><span> foo ; }</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>set</span><span> { foo = </span><span>value</span><span> ; }</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p>
+
+
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span><br>
+string</span><span> Bar {</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>get</span><span> { </span><span>return</span><span> bar; }</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>set</span><span> { bar = </span><span>value</span><span>; }</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p>
+
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span><br>
+string</span><span> ConnectionString {</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>get</span><span> { </span><span>return</span><span> connectionString; }</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>set</span><span> { connectionString = </span><span>value</span><span>; }</span></p>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p>
+
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span><br>
+int</span><span>[] List = </span><span>new</span><span> int</span><span>[]{1, 2, 4};</span></p>
+
+<p><span>&nbsp;&nbsp;&nbsp; }</span></p>
+</div>
+
+<p>Note how I have added one more property as well as the List array.&nbsp; Another<br>
+thought is:&nbsp; What if I add a method to the getter of ConnectionString to<br>
+unencrypt the value before returning it?&nbsp; Then I could encrypt sensitive keys<br>
+without much effort.</p>
+<p>The &lt;appSettings&gt; configuration section offers basic functionality, but<br>
+the configuration architecture is so flexible that we are able to customize<br>
+configuration to our exact needs.&nbsp; Happy programming.</p>

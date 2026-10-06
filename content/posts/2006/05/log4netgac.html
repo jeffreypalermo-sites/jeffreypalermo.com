@@ -1,0 +1,27 @@
+---
+wp_id: 431
+title: When the only thing that will work is gacutil – level 200
+slug: log4netgac
+permalink: /2006/05/log4netgac/
+date: 2006-05-28T21:27:00
+date_utc: 2006-05-28T21:27:00Z
+modified: 2006-05-28T21:27:00
+format: html
+tags:
+- tips-tricks
+excerpt: I try to avoid the GAC at all costs. I prefer xcopy deployments of applications. However, if you use some projects that all reference log4net, then you know the pain of trying to resolve log4net versions. More often than not, it’s not feasible to recompile every project you depend on. If you need to reference […]
+comments_open: true
+---
+<p>I try to avoid the GAC at all costs.&nbsp; I prefer xcopy deployments<br>
+of applications.&nbsp; However, if you use some projects that all<br>
+reference log4net, then you know the pain of trying to resolve log4net<br>
+versions.&nbsp; More often than not, it’s not feasible to recompile<br>
+every project you depend on.&nbsp; If you need to reference two<br>
+libraries that each then reference different versions of log4net, you<br>
+have a tough problem because only one file named “log4net.dll” can be<br>
+copied to the /bin directory.</p>
+<p>log4net is a strong-named assembly, so version information is a part of<br>
+finding the assembly.&nbsp; In this case, I had to resort to putting<br>
+two versions in the GAC.&nbsp; As much as I hated doing so, it seemed<br>
+like the only way out.</p>
+<p>gacutil /i log4net.dll (x2)</p>

@@ -1,0 +1,56 @@
+---
+wp_id: 304
+title: A symptom of bad code – level 100
+slug: a-symptom-of-bad-code-level-100
+permalink: /2005/08/a-symptom-of-bad-code-level-100/
+date: 2005-08-12T18:52:00
+date_utc: 2005-08-12T18:52:00Z
+modified: 2005-08-12T18:52:00
+format: html
+excerpt: 'Take the following code: using System; using System.Collections.Generic;using System.Text; public class ClientCode { public void CallAnOperation() { string fileName = string.Empty; int lengthOfFile = 0; Getter get = new Getter(); get.GetFile(ref fileName, ref lengthOfFile); Doer doGuy = new Doer(); int retValue = doGuy.DoSomething(fileName, lengthOfFile); […]'
+comments_open: true
+---
+<p>Take the following code:</p>
+<div><span>using</span><span> System;</span><br>
+<p><span>using</span><span> System.Collections.Generic;<br></span><span>using</span><span> System.Text;</span></p><br>
+<br>
+<p><span>public</span><span> <span>class</span> <span>ClientCode</span></span></p><br>
+<p><span>{</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></span><span><span>public</span> <span>void</span> CallAnOperation()</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>{</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>string</span> fileName = <span>string</span>.Empty;</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>int</span> lengthOfFile = 0;</span></p><br>
+<br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>Getter</span> get = <span>new</span> <span>Getter</span>();</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>get.GetFile(<span>ref</span> fileName, <span>ref</span> lengthOfFile);</span></p><br>
+<br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>Doer</span> doGuy = <span>new</span> <span>Doer</span>();</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>int</span> retValue = doGuy.DoSomething(fileName, lengthOfFile);</span></p><br>
+<br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>if(retValue != 23) //throw an exception, etc.</span></span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>}</span></p><br>
+<p><span>}</span></p><br>
+<br>
+<p><span>public</span><span> <span>class</span> <span>Getter</span></span></p><br>
+<p><span>{</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span><span>public</span> <span>void</span> GetFile(<span>ref</span> <span>string</span> name, <span>ref</span> <span>int</span> length)</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>{</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>//Do some work to get file, and then. . . </span></span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>name = <span>“myFileName.txt”</span>;</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>length = 98;</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>}</span></p><br>
+<p><span>}</span></p><br>
+<br>
+<p><span>public</span><span> <span>class</span> <span>Doer</span></span></p><br>
+<p><span>{</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span><span>public</span> <span>int</span> DoSomething(<span>string</span> fileName, <span>int</span> fileLength)</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>{</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>//Do something with this information. . . </span></span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>//We’ll pretend the the operation succeeded and return 23;</span></span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>return</span> 23;</span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span>//If the operation had failed, we would have returned 67.</span></span></p><br>
+<p><span><span>&nbsp;&nbsp;&nbsp; </span>}</span></p><br>
+<p><span>}</span></p></div>
+<p>There are several issues with the above code.&nbsp; Kudos to you if you already know what’s going on.&nbsp; </p>
+<p>First, my CallAnOperation() method needs values for fileName, and lengthOfFile.&nbsp; He passes references to these two into a class that initializes them to correct values.&nbsp; This is the first mistake.&nbsp; Now the CallAnOperation() method has to have intimate knowledge of the inner behavior of the GetFile method.&nbsp; This is bad and leads to tightly-coupled code that doesn’t make sense.&nbsp; Instead, the GetFile method should return an object that contains the needed information.&nbsp;</p>
+<p>The second issue is with the DoSomething method.&nbsp; This method has custom return codes to signal if things are good or bad.&nbsp; This requires the user code to know that “23” is a good number, and “67” is a bad number.&nbsp; Again, this is forcing knowledge onto the client.&nbsp; The CallAnOperation() method shouldn’t have to know how a component functions.&nbsp; The method names should be descriptive enough, and the return value should be quickly understandable.&nbsp; At most, returning true or false may be acceptable, but a more preferrable approach is: &nbsp;if something unacceptable happened, throw an exception.&nbsp; If validation is in the method and is the cause for a return value instead of an exception, consider refactoring the validation into a separate method.</p>

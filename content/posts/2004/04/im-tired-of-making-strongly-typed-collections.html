@@ -1,0 +1,43 @@
+---
+wp_id: 15
+title: I’m tired of making strongly-typed collections
+slug: im-tired-of-making-strongly-typed-collections
+permalink: /2004/04/im-tired-of-making-strongly-typed-collections/
+date: 2004-04-16T23:02:00
+date_utc: 2004-04-16T23:02:00Z
+modified: 2004-04-16T23:02:00
+format: html
+excerpt: I use stongly-typed collections all the time for items that are going to be reused quite often. I have recently gone on an adventure to educate myself of what collection are available in the .Net Framework and how they differ. My current scenario had a need for a collection to store a pair of strings […]
+comments_open: true
+---
+<p>I use stongly-typed collections all the time for items that are going to be reused quite often.&nbsp; I have recently gone on an adventure to educate myself of what collection are available in the .Net Framework and how they differ.&nbsp; My current scenario had a need for a collection to store a pair of strings and retain the order with which I added them to the collection, and I need to&nbsp;be able to&nbsp;bind the collection directly to a list control.&nbsp; A dataset would be an overkill.&nbsp; Right away, I know I’m going to be dealing with a key-value pair.&nbsp; This automatically rules out all the collections based on the IList interface:&nbsp; ArrayList, StringCollection.&nbsp; Since I need a key-value pair, I need a collection based on IDictionary:&nbsp; Hashtable, HybridDictionary, ListDictionary, and SortedList.&nbsp; Not too many to choose from, but I refuse to extend CollectionBase for this tiny task that is isolated to one user control!</p>
+<p>I began to explore the differences between these four collections that are all bases on IDictionary and all stored the key-value pair in a DictionaryEntry object.&nbsp; What is really important is the underlying data structure of the collection.&nbsp; </p>
+<p>The Hashtable is meant to offer better-than-linear performance on lookups.&nbsp; The order of the items is not guaranteed, and, in fact, you can add some items, then immediately iterate through to print them out, and they will often be in a completely different order.&nbsp; Ok, Hashtable is disqualified.</p>
+<p>They HybridDictionary works well for my purposes. . . only if the number of items is no greater than 10.&nbsp; This is because it’s “Hybrid”.&nbsp; With 10 items or fewer it implements a ListDictionary under the hood (see next section).&nbsp; As soon as you add the 11th entry, it switches to a Hashtable, and all ordering reliability goes out the window.</p>
+<p>The ListDictionary meets the requirements.&nbsp; It stores a key-value pair, and it retains the order in which I add the items.&nbsp; It does this by implementing the linked list data structure internally.&nbsp; According to the SDK, the ListDictionary has better performance than a Hashtable up to 10 items, and then Hashtable becomes faster.&nbsp; The SDK also warns that the ListDictionary should not be used with many items where performance is an issue.</p>
+<p>I also looked at the SortedList just to make my comparison complete.&nbsp; The SortedList behaves like a Hashtable in that you can use a key to look up the value, but you can also use the index to find the value.&nbsp; Internally it keeps two arrays sychronized:&nbsp; one array for the keys and one for the values.&nbsp; It sorts the entries when added, so the list is always sorted, hence the name.</p>
+<p>When whidbey gets here, I won’t have to worry about strongly-typed collections anymore.&nbsp; I’ll be able to declare them generically. .&nbsp;. or is that specifically? 🙂&nbsp; I can’t wait!&nbsp; </p>
+<p>I love the SDK.&nbsp; Especially since I don’t have access to Google and my other online resources, I have used the SDK documentation so much!&nbsp; It is a wealth of knowledge that every .Net developer should reference.</p>
+<p>To get back to the collections, I did look at the NameValueCollection, but it does not implement IDictionary.&nbsp; Also, I was not able to bind it to the list control in the way I wanted.&nbsp; If I juse specified the source and then hit the “DataBind()” key [:-)], it would bind the list with the key value for the text as well as value.&nbsp; But I need to set the DataTextField and DataValueField.&nbsp; With IDictionary-based collections, “Key” and “Value” work, but the NameValueCollection returns a single string, not a DictionaryEntry object, so this presents&nbsp;a problem in getting the value in a binding situation.&nbsp; Sure, I could iterate through it and get the keys and values, but I’m just databinding, so I had to rule out this collection.</p>
+<p>Finally, I chose the ListDictionary for my purposes.&nbsp; Then I started thinking that is some cases, my key-value set could become large, so I can’t use the ListDictionary.&nbsp; I might have to write one more strongly-typed collection.&nbsp; But for now, I’ll use an ArrayList of DictionaryEntry objects.&nbsp; How’s that for thinking outside the box?&nbsp; The ArrayList will grow dynamically and keep my items in a specific order because of the IList interface, but I can bind the key and value because the object being stored is a DictionaryEntry object.&nbsp; I think I’ll call it DictionaryList.&nbsp; So one more time, I have to extend CollectionBase (it’s internal data structure is an ArrayList).&nbsp; Normally I could extend the DictionaryBase class, but internally it uses a Hashtable which doesn’t guarantee order.&nbsp; And I’m back to strongly-typed collections. . . but this one I’ll reuse over and over and over and over.&nbsp; </p><pre>public class DictionaryList : CollectionBase<br>
+{<br>
+ public DictionaryEntry this[int index]<br>
+ {<br>
+  get{ return((DictionaryEntry)List[index]);}<br>
+  set{ List[index] = value;}<br>
+ }<br>
+ public int Add(object key, object value)<br>
+ {<br>
+  DictionaryEntry entry = new DictionaryEntry(key, value);<br>
+  return List.Add(entry);<br>
+ }<br>
+ //rest of class truncated.<br>
+}<br>
+</pre>
+<p>Ahh, the answer to so many of my problems! Now it’s so simple to pop a few items in and then bind to a list control:</p>
+<pre>list.DataSource = myDictionaryList;<br>
+list.DataTextField = “Key”;<br>
+list.DataValueField = “Value”;<br>
+list.DataBind( );<br>
+list.SelectedValue = myValue;<br>
+</pre>

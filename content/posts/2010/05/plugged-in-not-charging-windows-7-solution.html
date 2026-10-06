@@ -1,0 +1,31 @@
+---
+wp_id: 1155
+title: Plugged in, not charging Windows 7 solution
+slug: plugged-in-not-charging-windows-7-solution
+permalink: /2010/05/plugged-in-not-charging-windows-7-solution/
+date: 2010-05-12T15:21:41
+date_utc: 2010-05-12T15:21:41Z
+modified: 2018-07-03T18:48:26
+format: html
+categories:
+- blog
+excerpt: I recently had the popular problem of Windows 7 battery manager malfunctioning and not charging my battery when plugged in. The battery was fine, the power supply was fine, and the motherboard was fine (I have enough laptops with the same specs in the Clear Measure office, and I was able to swap out parts […]
+comments_open: true
+---
+<p>I recently had the popular problem of Windows 7 battery manager malfunctioning and not charging my battery when plugged in.&nbsp; The battery was fine, the power supply was fine, and the motherboard was fine (I have enough laptops with the same specs in the <a href="https://www.clear-measure.com">Clear Measure</a> office, and I was able to swap out parts to isolate the problem).</p>
+<p>I also searched for this problem online, and many folks are having this problem with all makes of laptop computers.&nbsp; I found the steps that solved my problem <a href="http://social.technet.microsoft.com/Forums/en/w7itproperf/thread/a983eb5d-fbc5-4b36-9fc5-9d24d4db6982">here on the TechNet forums</a>.</p>
+<p>There are multiple solutions proposed, and here are the steps that fixed it for me:</p>
+<ol>
+<li>Disconnect AC</li>
+<li>Shutdown</li>
+<li>Remove battery</li>
+<li>Connect AC</li>
+<li>Startup</li>
+<li>Under the Batteries category, right-click all of the <strong><a href="http://www.vistax64.com/#">Microsoft </a>ACPI Compliant Control Method Battery</strong> listings, and select Uninstall (it’s ok if you only have 1).</li>
+<li>Shutdown</li>
+<li>Disconnect AC</li>
+<li>Insert battery</li>
+<li>Connect AC</li>
+<li>Startup</li>
+</ol>
+<p>Please comment if this fixes your problem so that others can solve their problem sooner.&nbsp; I was surprised at how many people were having this problem with Windows 7.</p>

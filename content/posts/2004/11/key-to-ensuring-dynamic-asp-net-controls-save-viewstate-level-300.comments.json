@@ -1,0 +1,83 @@
+[
+  {
+    "id": 217,
+    "parent": 0,
+    "author_name": "bender",
+    "author_url": "http://",
+    "date": "2005-01-15T04:17:00",
+    "type": "comment",
+    "content_html": "<p>very clever!</p>"
+  },
+  {
+    "id": 218,
+    "parent": 0,
+    "author_name": "raindog_mx",
+    "author_url": "http://",
+    "date": "2005-02-28T12:08:00",
+    "type": "comment",
+    "content_html": "<p>Nice and simple, thank you very much. By chance I got this working in a webform and couldn’t get it to work in another. Went through a lot of articles but none explanied this simple fact. As a plus, you explaind WHY it works like that. Thanks again.</p>"
+  },
+  {
+    "id": 219,
+    "parent": 0,
+    "author_name": "Tom",
+    "author_url": "http://",
+    "date": "2005-04-27T12:15:00",
+    "type": "comment",
+    "content_html": "<p>Excellent point.</p>"
+  },
+  {
+    "id": 220,
+    "parent": 0,
+    "author_name": "Th",
+    "author_url": "http://",
+    "date": "2005-04-27T14:00:00",
+    "type": "comment",
+    "content_html": "<p>Brilliant – You solved my problem. Thanks!</p>"
+  },
+  {
+    "id": 221,
+    "parent": 0,
+    "author_name": "Luke",
+    "author_url": "http://",
+    "date": "2005-05-19T01:39:00",
+    "type": "comment",
+    "content_html": "<p>Two words – life saver !!! Thanks!</p>"
+  },
+  {
+    "id": 222,
+    "parent": 0,
+    "author_name": "Anuj Kapoor",
+    "author_url": "http://",
+    "date": "2005-05-24T23:10:00",
+    "type": "comment",
+    "content_html": "<p>Brilliant – I am facing a similar problem. I think u are the right person for that. Here is the problem.<br>\nI am having a PlaceHolder Control with properties EnableViewState as true. Now i am dynamically loading a custom Datagrid in it. This Datagrid is also having its viewstate as true. Now when i press the edit button in the datagrid, i am facing a Javascript Error \"Expected ‘)’\". On pressing ‘OK’ on this POP-UP window i get the Update and Cancel Image buttons(inside the dataGrid as desired) in place of Edit Button. On updating the data in the grid and pressing Update button, i am again facing this Javascript Error. Astonishing again on pressing ‘OK’ on this POP-UP i am getting the desired functionality(new viewstate is maintained).<br>\nProblem is this javascript error which is Interrupting me in between. I have tried my level best to find the root cause of this Error but in vain. I am looking forward for the kind assistance on this problem from the Control experts like u. Any help on this topic will be highly appreciated.<br>\nLooking forward for a prompt reply.<br>\n<a href=\"http://www.experts-exchange.com/Programming/Q_21422966.html\" rel=\"nofollow\">http://www.experts-exchange.com/Programming/Q_21422966.html</a></p>\n<p>E-mail:<br>\n<a href=\"mailto:anuj.kapoor@capgemini.com\">anuj.kapoor@capgemini.com</a></p>"
+  },
+  {
+    "id": 223,
+    "parent": 0,
+    "author_name": "Parveen",
+    "author_url": "http://",
+    "date": "2005-12-08T12:10:26",
+    "type": "comment",
+    "content_html": "<p>i tried to achieve same but still facing some problem. i tried to add a text box.I can see the value in dynamically added textbox eevn on postback but if try to assign that value to some other control i dun see that value. Can somebody help in this context.</p>"
+  },
+  {
+    "id": 224,
+    "parent": 0,
+    "author_name": "jnice",
+    "author_url": "http://",
+    "date": "2005-12-21T04:08:36",
+    "type": "comment",
+    "content_html": "<p>I was encountering this exact situation.  Adding my dynamic control to the page before I set data – in my case, before I did a databind on my dynamic control – fixed my problem.</p>"
+  },
+  {
+    "id": 225,
+    "parent": 0,
+    "author_name": "BC Chong",
+    "author_url": "http://",
+    "date": "2007-06-21T02:36:17",
+    "type": "comment",
+    "content_html": "<p>I was facing problem on retaining viewstate for a dynamic control in PlaceHolder.</p>\n<p>Your tip works for me. Thank you very much \uD83D\uDE42</p>"
+  }
+]

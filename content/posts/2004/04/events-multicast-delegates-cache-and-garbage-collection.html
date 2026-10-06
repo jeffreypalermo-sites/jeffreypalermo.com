@@ -1,0 +1,15 @@
+---
+wp_id: 43
+title: Events (Multicast delegates), Cache, and Garbage Collection
+slug: events-multicast-delegates-cache-and-garbage-collection
+permalink: /2004/04/events-multicast-delegates-cache-and-garbage-collection/
+date: 2004-04-16T22:58:00
+date_utc: 2004-04-16T22:58:00Z
+modified: 2004-04-16T22:58:00
+format: html
+excerpt: 'One issue that has perplexed me since having a nasty bug associated with a static event declared in a cached object is: If you cache an object, how can your ASP.NET pages that subscribe to its events be garbage collected when that cached object has a delegate with references to event handling methods in the […]'
+comments_open: true
+---
+<p>One issue that has perplexed me since having a nasty bug associated with a static event declared in a cached object is:&nbsp; If you cache an object, how can your ASP.NET pages that subscribe to its events be garbage collected when that cached object has a delegate with references to event handling methods in the page object?</p>
+<p>Some background on my issue:&nbsp; I had declared a static Login event in a User object so I could be notified globally when a user logged in.&nbsp; Every page subscribed to this static event.&nbsp; Of course we know that only one static event exists for the app domain even though many objects of that type may exists.&nbsp; So we have one static multicast delegate containing references to event-handling methods in every single page object in my web app.&nbsp; Well, from examing the perf counters, memory keeping being consumed but never freed.&nbsp; Why isn’t the garbage collector freeing these page objects?&nbsp; Allocation Profiler reveals a whole bunch of Page objects in the Heap.&nbsp; It turns out that as long as this static delegate has a reference to a method in the page object, that page object is not available for garbage collection.</p>
+<p>Why, then, doesn’t ASP.NET exibit the same behavior when you have an instance event in an object that is cached and lives for the life of the appdomain?&nbsp; This same object retains references to the event-handling methods in the pages, but the garbage collector reclaims their memory.&nbsp; Why this difference in behavior?&nbsp; I keep searching.</p>

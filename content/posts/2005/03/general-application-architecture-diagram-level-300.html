@@ -1,0 +1,50 @@
+---
+wp_id: 199
+title: General application architecture diagram – level 300
+slug: general-application-architecture-diagram-level-300
+permalink: /2005/03/general-application-architecture-diagram-level-300/
+date: 2005-03-28T12:40:00
+date_utc: 2005-03-28T12:40:00Z
+modified: 2005-03-28T12:40:00
+format: html
+excerpt: Many applications I’ve encountered and most of my first applications had loose or no defined architecture. From a high level, everything just was. And it worked. And it became hard to maintain. I’ve been researching better ways to organize the application and how to take advantage of high-level design patterns. With this knowledge, I’ve developed […]
+comments_open: true
+---
+<p>Many applications I’ve encountered and most of my first applications had<br>
+loose or no defined architecture.&nbsp;&nbsp; From a high level, everything just was.&nbsp; And<br>
+it worked.&nbsp; And it became hard to maintain.&nbsp; I’ve been researching better ways<br>
+to organize the application and how to take advantage of high-level design<br>
+patterns.&nbsp; With this knowledge, I’ve developed a general architecture for any<br>
+application with a UI (apps without a UI will just lack that layer, and, of<br>
+course, I haven’t included a service layer (which might even be the interface<br>
+layer).</p>
+<p><img decoding="async" src="https://i0.wp.com/dotnetjunkies.com/WebLog/images/dotnetjunkies_com/jpalermo/2354/o_GeneralApplicationArchitecture.png?w=776"></p>
+<p>My goal was to describe how the layers might interact and what bindings would<br>
+exist.&nbsp; The most important things follow:&nbsp; The UI layer holds references to the<br>
+process and business layers and no others.&nbsp; The process layer holds references<br>
+to the repository, business, and UI layers.&nbsp; The repository layer references<br>
+business and DAL.&nbsp; The business layer references nothing (and this is key for<br>
+object portability).&nbsp; The DAL references only the database (most likely through<br>
+the connection string) but holds no assembly references except ADO.NET, of<br>
+course.</p>
+<p>With this architecture, we can implement Model-View-Presenter,&nbsp; Repositories,<br>
+and Observer.&nbsp;&nbsp; For example, the Process layer would hold presenter objects that<br>
+invoke business objects and set the View (UI).&nbsp; The View observes business<br>
+objects but does not control them.&nbsp; The Presenter objects control the process<br>
+layer and invoke the repository classes to get or persist the business objects.&nbsp;<br>
+The repository layer does this by calling the correct classes of the DAL.&nbsp; And<br>
+then, if the database changes (either in vender or schema), only the DAL needs<br>
+to be changed.&nbsp; The DAL should expose classes that return data by calling the<br>
+right query in the database.&nbsp; The DAL might wrap ADO.NET or perhaps the Data<br>
+Access Application Block for the direct database access.&nbsp; The DAL would know the<br>
+names of stored procedures.&nbsp; The repository objects would not know this.&nbsp; Rather<br>
+the repository objects would just know what class and method to invoke to get<br>
+information with which to populate a business object.&nbsp; The DAL should return<br>
+generic objects such as an IDataReader.&nbsp; </p>
+<p>I’ve read a lot about application design patterns and best practices, but I<br>
+wish there was some more architecture guidance out and about.&nbsp; I think the<br>
+industry would benefit from standard approaches to application development from<br>
+a high level.&nbsp; We hear a lot about n-tier and business layers, but a business<br>
+layer that knows how to persist its own objects is not the way to go, so I see<br>
+this guidance lacking.</p>
+<p>Feedback is welcome on the above diagram.</p>

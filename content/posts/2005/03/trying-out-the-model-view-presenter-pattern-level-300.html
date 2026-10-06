@@ -1,0 +1,121 @@
+---
+wp_id: 197
+title: Trying out the Model-View-Presenter pattern – level 300
+slug: trying-out-the-model-view-presenter-pattern-level-300
+permalink: /2005/03/trying-out-the-model-view-presenter-pattern-level-300/
+date: 2005-03-28T12:39:00
+date_utc: 2005-03-28T12:39:00Z
+modified: 2005-03-28T12:39:00
+format: html
+excerpt: After reading Martin Fowler’s Model View Presenter article, I did some deep thinking about how to implement that pattern. The purpose of the pattern is to decouple UI process logic from the UI container. If you think about the code-behind classes in your UI, all the examples we see have button-click handlers performing process logic. […]
+comments_open: true
+---
+<p>After reading <a href="http://www.martinfowler.com/eaaDev/ModelViewPresenter.html">Martin<br>
+Fowler’s Model View Presenter article</a>, I did some deep thinking about how to<br>
+implement that pattern.&nbsp; The purpose of the pattern is to decouple UI process<br>
+logic from the UI container.&nbsp; If&nbsp; you think about the code-behind classes in<br>
+your UI, all the examples we see have button-click handlers performing process<br>
+logic. &nbsp;Below is my first attempt at creating a behavior layer for UI<br>
+testability and portability:</p>
+<p>I’ll present this example using a simple ASP.NET page:</p>
+<p>&lt;%@ Page language=”c#” Codebehind=”default.aspx.cs”<br>
+AutoEventWireup=”false” Inherits=”ModelViewPresenter.WebForm1″<br>
+%&gt;<br>&lt;!DOCTYPE HTML PUBLIC “-//W3C//DTD HTML 4.0 Transitional//EN”<br>
+&gt;<br>&lt;HTML&gt;<br>&nbsp;&lt;body&gt;<br>&nbsp;&nbsp;&lt;form id=”Form1″ method=”post”<br>
+runat=”server”&gt;<br>&nbsp;&nbsp;&nbsp;&lt;asp:textbox id=”txtName”<br>
+runat=”server”&gt;<br>&nbsp;&nbsp;&nbsp;&lt;/asp:textbox&gt;&lt;asp:button id=”btnAdd”<br>
+runat=”server” Text=”Add Name”&gt;&lt;/asp:button&gt;&amp;nbsp; <br>&nbsp;&nbsp;&nbsp;Number of<br>
+items:<br>&nbsp;&nbsp;&nbsp;&lt;asp:label id=”lblCount”<br>
+Runat=”server”&gt;&lt;/asp:label&gt;&lt;br&gt;<br>&nbsp;&nbsp;&nbsp;&lt;asp:datagrid<br>
+id=”dgdNames”<br>
+runat=”server”&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;Columns&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;asp:ButtonColumn<br>
+CommandName=”delete” ButtonType=”PushButton” Text=”Remove”<br>
+/&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/Columns&gt;<br>&nbsp;&nbsp;&nbsp;&lt;/asp:datagrid&gt;&lt;/form&gt;<br>&nbsp;&lt;/body&gt;<br>&lt;/HTML&gt;</p>
+
+<p>This page is used to maintain a list of names.&nbsp; Type in a name and click the<br>
+add button; remove a name from the list.&nbsp; The current names are shown in a<br>
+datagrid, and the count is shown next to the button.&nbsp; Here is the<br>
+code-behind:</p>
+<div style="border:1pt solid windowtext; padding:0; background:white none repeat scroll 0; color:black"><span style="color:teal">&nbsp;&nbsp;&nbsp;14</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">class</span> WebForm1 : System.Web.UI.Page,<br>
+Presenter.INamesView<br><span style="color:teal">&nbsp;&nbsp;&nbsp;15</span>&nbsp;{<br><span style="color:teal">&nbsp;&nbsp;&nbsp;16</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span><br>
+System.Web.UI.WebControls.TextBox txtName;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;17</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span><br>
+System.Web.UI.WebControls.Button btnAdd;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;18</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span><br>
+System.Web.UI.WebControls.DataGrid dgdNames;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;19</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">protected</span><br>
+System.Web.UI.WebControls.Label lblCount;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;20</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;21</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">private</span> Presenter.NamesPresenter<br>
+_presenter;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;22</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;23</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span><br>
+Model.Names _names {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;24</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> { <span style="color:blue">return</span><br>
+(Model.Names)ViewState[“names”]; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;25</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; <span style="color:blue">set</span> { ViewState[“names”] = <span style="color:blue">value</span>; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;26</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;27</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;28</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">private</span> <span style="color:blue">void</span><br>
+Page_Load(<span style="color:blue">object</span> sender, System.EventArgs<br>
+e)<br><span style="color:teal">&nbsp;&nbsp;&nbsp;29</span>&nbsp;&nbsp;&nbsp;&nbsp; {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;30</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _presenter = <span style="color:blue">new</span> Presenter.NamesPresenter(<span style="color:blue">this</span>);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;31</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; <span style="color:blue">if</span>(!IsPostBack) {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;32</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _presenter.Load();<br><span style="color:teal">&nbsp;&nbsp;&nbsp;33</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;34</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;35</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;36</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> Model.Names Names {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;37</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> {<br>
+<span style="color:blue">return</span> _names; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;38</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">set</span> {<br>
+_names = <span style="color:blue">value</span>; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;39</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;40</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;41</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> <span style="color:blue">void</span><br>
+Update() {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;42</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; dgdNames.DataSource<br>
+= _names;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;43</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+dgdNames.DataBind();<br><span style="color:teal">&nbsp;&nbsp;&nbsp;44</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;45</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; lblCount.Text =<br>
+_names.Count.ToString();<br><span style="color:teal">&nbsp;&nbsp;&nbsp;46</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+}<br><span style="color:teal">&nbsp;&nbsp;&nbsp;47</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;48</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span><br>
+<span style="color:blue">void</span> btnAdd_Click(<span style="color:blue">object</span> sender, System.EventArgs e) {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;49</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+_presenter.AddName(txtName.Text);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;50</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; txtName.Text = <span style="color:blue">string</span>.Empty;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;51</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;52</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;53</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">private</span> <span style="color:blue">void</span><br>
+dgdNames_DeleteCommand(<span style="color:blue">object</span> source,<br>
+DataGridCommandEventArgs e) {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;54</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+_presenter.RemoveName(e.Item.ItemIndex);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;55</span>&nbsp;&nbsp;&nbsp;&nbsp; }</div>
+
+<p>I have omitted the using statements and the IDE-generated code, so this is<br>
+not complete, but it shows how I am delegating behavior to the presenter layer.&nbsp;<br>
+Here is my presenter:</p>
+<div style="border:1pt solid windowtext; padding:0; background:white none repeat scroll 0; color:black"><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;5</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">class</span> NamesPresenter<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;{<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">private</span> INamesView _view;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> NamesPresenter(INamesView view)<br>
+{<br><span style="color:teal">&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _view = view;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;11</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;12</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> <span style="color:blue">void</span><br>
+AddName(<span style="color:blue">string</span> nameToAdd) {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;14</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _view.Names.Add(nameToAdd);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;15</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _view.Update();<br><span style="color:teal">&nbsp;&nbsp;&nbsp;16</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;17</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;18</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> <span style="color:blue">void</span><br>
+RemoveName(<span style="color:blue">int</span> indexOfNameToRemove) {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;19</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+_view.Names.RemoveAt(indexOfNameToRemove);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;20</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _view.Update();<br><span style="color:teal">&nbsp;&nbsp;&nbsp;21</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;22</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;23</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> <span style="color:blue">void</span><br>
+Load() {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;24</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _view.Names = <span style="color:blue">new</span> Model.Names();<br><span style="color:teal">&nbsp;&nbsp;&nbsp;25</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _view.Update();<br><span style="color:teal">&nbsp;&nbsp;&nbsp;26</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;27</span>&nbsp;}</div>
+
+<p>This presenter controls the model (my business object) and tells the UI what<br>
+to do and when through the interface that the UI must implement (below):</p>
+<div style="border:1pt solid windowtext; padding:0; background:white none repeat scroll 0; color:black"><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;5</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">interface</span> INamesView<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;{<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Model.Names Names{<span style="color:blue">get</span>;<span style="color:blue">set</span>;}<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">void</span> Update();<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;}</div>
+
+<p>As long as my UI implements this interface, my presenter can control it, and<br>
+I can make changes to the UI (including total replacement) without impacting the<br>
+core behavior.&nbsp; </p>
+<p>Next, all this exists to manage my model or business object:</p>
+<div style="border:1pt solid windowtext; padding:0; background:white none repeat scroll 0; color:black"><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;6</span>&nbsp;[Serializable]<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">class</span> Names : IEnumerable<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;{<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">private</span> ArrayList _entries = <span style="color:blue">new</span> ArrayList();<br><span style="color:teal">&nbsp;&nbsp;&nbsp;10</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;11</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> <span style="color:blue">string</span><br>
+<span style="color:blue">this</span>[<span style="color:blue">int</span><br>
+index] {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;12</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> { <span style="color:blue">return</span><br>
+_entries[index].ToString(); }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">set</span> { _entries[index] = <span style="color:blue">value</span>; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;14</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;15</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;16</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> <span style="color:blue">int</span><br>
+Count {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;17</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> { <span style="color:blue">return</span><br>
+_entries.Count; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;18</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;19</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;20</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> <span style="color:blue">void</span><br>
+Add(<span style="color:blue">string</span> name) {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;21</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _entries.Add(name);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;22</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;23</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;24</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> <span style="color:blue">void</span><br>
+RemoveAt(<span style="color:blue">int</span> index) {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;25</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _entries.RemoveAt(index);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;26</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;27</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;28</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> IEnumerator GetEnumerator() {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;29</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span><br>
+_entries.GetEnumerator();<br><span style="color:teal">&nbsp;&nbsp;&nbsp;30</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+}<br><span style="color:teal">&nbsp;&nbsp;&nbsp;31</span>&nbsp;}</div>
+
+<p>Events from the UI are delegated to the presenter, which decides what to do<br>
+and calls interface methods on the UI.&nbsp; The presenter controls interaction<br>
+between the UI and the model just as a repository layer would control<br>
+presistence between the model and a data store.</p>
+
+<p>I don’t pretend that this example is perfect, and I’m open for criticism, but<br>
+the model view presenter pattern for the UI is very tempting for testability and<br>
+UI portability.<!--EndFragment--><!--EndFragment--><!--EndFragment--></p>

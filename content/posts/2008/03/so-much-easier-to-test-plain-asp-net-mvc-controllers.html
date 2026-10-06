@@ -1,0 +1,137 @@
+---
+wp_id: 632
+title: So much easier to test plain ASP.NET MVC controllers!!
+slug: so-much-easier-to-test-plain-asp-net-mvc-controllers
+permalink: /2008/03/so-much-easier-to-test-plain-asp-net-mvc-controllers/
+date: 2008-03-22T02:44:00
+date_utc: 2008-03-22T02:44:00Z
+modified: 2008-03-22T02:44:00
+format: html
+excerpt: I was having a hard time easily testing controller classes with the MVC Framework December CTP. Now it’s easier. For some background, I’m writing ASP.NET MVC in Action for Manning, so I’m going through all kinds of scenarios, and in the first chapter with the tiny little Hello World samples, it’s now easier to test […]
+comments_open: true
+---
+<p>I was having a hard time easily testing controller classes with the MVC Framework December CTP.&nbsp; Now it’s easier.&nbsp; For some background, I’m writing <a href="http://www.manning.com/palermo/">ASP.NET MVC in Action</a> for Manning, so I’m going through all kinds of scenarios, and in the first chapter with the tiny little Hello World samples, it’s now easier to test these.&nbsp; Consider the following controller:</p>
+
+<div>
+<div>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white"><span>using</span> System.Web.Mvc;</pre>
+<pre>&nbsp;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white"><span>namespace</span> MvcApplication.Controllers</pre>
+<pre>{</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    <span>public</span> <span>class</span> HelloWorld1Controller : IController</pre>
+<pre>    {</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        <span>public</span> <span>void</span> Execute(ControllerContext controllerContext)</pre>
+<pre>        {</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">            controllerContext.HttpContext.Response.Write(</pre>
+<pre>                <span>"&lt;h1&gt;Hello World1&lt;/h1&gt;"</span>);</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        }</pre>
+<pre>    }</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">}</pre>
+</div>
+</div>
+
+<p>And here’s my unit test:</p>
+
+<div>
+<div>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white"><span>using</span> MvcApplication.Controllers;</pre>
+<pre><span>using</span> NUnit.Framework;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white"><span>using</span> NUnit.Framework.SyntaxHelpers;</pre>
+<pre>&nbsp;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white"><span>namespace</span> MvcApplicationTest.Controllers</pre>
+<pre>{</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    [TestFixture]</pre>
+<pre>    <span>public</span> <span>class</span> HelloWorld1ControllerTester</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    {</pre>
+<pre>        [Test]</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        <span>public</span> <span>void</span> ShouldRender()</pre>
+<pre>        {</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">            var response = <span>new</span> ResponseWriteStub();</pre>
+<pre>            var contextStub = <span>new</span> HttpContextStub(response);</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">            var controller = <span>new</span> HelloWorld1Controller();</pre>
+<pre>&nbsp;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">            controller.Execute(<span>new</span> ControllerContextStub(controller, contextStub));</pre>
+<pre>&nbsp;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">            Assert.That(response.ActualWritten, Is.EqualTo(<span>"&lt;h1&gt;Hello World1&lt;/h1&gt;"</span>));</pre>
+<pre>        }</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    }</pre>
+<pre>}</pre>
+</div>
+</div>
+
+<p>Pretty darned simple.&nbsp; Below are my stub classes.</p>
+
+
+<div>
+<div>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white"><span>using</span> System.Web;</pre>
+<pre><span>using</span> System.Web.Mvc;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white"><span>using</span> System.Web.Routing;</pre>
+<pre>&nbsp;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white"><span>namespace</span> MvcApplicationTest</pre>
+<pre>{</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    <span>public</span> <span>class</span> ControllerContextStub : ControllerContext</pre>
+<pre>    {</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        <span>public</span> ControllerContextStub(IController controller)</pre>
+<pre>            : <span>base</span>(<span>new</span> RequestContext(<span>new</span> HttpContextStub(), <span>new</span> RouteData()), controller)</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        {</pre>
+<pre>        }</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">&nbsp;</pre>
+<pre>        <span>public</span> ControllerContextStub(IController controller, HttpContextBase contextBase)</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">            : <span>base</span>(<span>new</span> RequestContext(contextBase, <span>new</span> RouteData()), controller)</pre>
+<pre>        {</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        }</pre>
+<pre>    }</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">}</pre>
+</div>
+</div>
+
+
+<div>
+<div>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white"><span>using</span> System.Web;</pre>
+<pre>&nbsp;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white"><span>namespace</span> MvcApplicationTest</pre>
+<pre>{</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    <span>public</span> <span>class</span> HttpContextStub : HttpContextBase</pre>
+<pre>    {</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        <span>private</span> <span>readonly</span> HttpResponseBase _response;</pre>
+<pre>&nbsp;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        <span>public</span> HttpContextStub(HttpResponseBase response)</pre>
+<pre>        {</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">            _response = response;</pre>
+<pre>        }</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">&nbsp;</pre>
+<pre>        <span>public</span> HttpContextStub()</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        {</pre>
+<pre>            </pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        }</pre>
+<pre>&nbsp;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        <span>public</span> <span>override</span> HttpResponseBase Response</pre>
+<pre>        {</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">            get { <span>return</span> _response; }</pre>
+<pre>        }</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    }</pre>
+<pre>}</pre>
+</div>
+</div>
+
+
+<div>
+<div>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white"><span>using</span> System.Web;</pre>
+<pre>&nbsp;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white"><span>namespace</span> MvcApplicationTest.Controllers</pre>
+<pre>{</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    <span>public</span> <span>class</span> ResponseWriteStub : HttpResponseBase</pre>
+<pre>    {</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        <span>public</span> <span>string</span> ActualWritten;</pre>
+<pre>&nbsp;</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">        <span>public</span> <span>override</span> <span>void</span> Write(<span>string</span> s)</pre>
+<pre>        {</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">            ActualWritten = s;</pre>
+<pre>        }</pre>
+<pre style="border-style:none; padding:0; overflow:visible; width:100%; color:black; background-color:white">    }</pre>
+<pre>}</pre>
+</div>
+</div>

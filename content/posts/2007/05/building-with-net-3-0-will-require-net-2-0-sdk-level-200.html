@@ -1,0 +1,15 @@
+---
+wp_id: 517
+title: Building with .Net 3.0 will require .Net 2.0 SDK – level 200
+slug: building-with-net-3-0-will-require-net-2-0-sdk-level-200
+permalink: /2007/05/building-with-net-3-0-will-require-net-2-0-sdk-level-200/
+date: 2007-05-03T19:33:26
+date_utc: 2007-05-03T19:33:26Z
+modified: 2007-05-03T19:33:26
+format: html
+excerpt: Here’s a bit of info that I’ve glossed over for some time. I always have Visual Studio installed with building projects with .net 2.0 and 3.0, and VS bundles the SDK. On my current project, we have a graphics designer who works on html and css, but we have a local build that even he […]
+comments_open: true
+---
+<p>Here’s a bit of info that I’ve glossed over for some time.&nbsp; I always have Visual Studio installed with building projects with .net 2.0 and 3.0, and VS bundles the SDK.&nbsp; On my current project, we have a graphics designer who works on html and css, but we have a local build that even he uses.&nbsp; Everything is automated.&nbsp; The designer doesn’t have VS 2005 installed, and when we started using WCF in .Net 3.0 for some web service calls, his build (and the CCNet box) started breaking.&nbsp; Before .Net 3.0 libraries were used, all that was needed to build our app was the .Net Framework 2.0.</p>
+<p>.Net FX 2.0 includes MSBuild.exe, so all was well.&nbsp; Using some stuff from WCF causes some other tools to be called, so now the .Net 2.0 SDK is required on the build (CCNet) box as well as the designer’s box.</p>
+<p>What a jacked-up name: .Net 3.0, but be sure to mark “2.0” in IIS!!</p>

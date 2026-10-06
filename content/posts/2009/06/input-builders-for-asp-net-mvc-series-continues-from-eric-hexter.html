@@ -1,0 +1,35 @@
+---
+wp_id: 1060
+title: Input Builders for ASP.NET MVC series continues from Eric Hexter
+slug: input-builders-for-asp-net-mvc-series-continues-from-eric-hexter
+permalink: /2009/06/input-builders-for-asp-net-mvc-series-continues-from-eric-hexter/
+date: 2009-06-10T22:48:36
+date_utc: 2009-06-10T22:48:36Z
+modified: 2009-06-10T22:48:36
+format: html
+categories:
+- blog
+excerpt: Eric Hexter is continuing his multi-part series on Opinionated Input Builders. He’s on a role!They are expression-based, meaning they eliminate the need for most strings for Html Helpers in your views. Part 1 – Overview Part 2 – the Label Part 3 – the Source Code Part 4 – the Partial View Part 5 – […]
+comments_open: true
+---
+<pre class="prettyprint"><a href="http://www.lostechies.com/blogs/hex/default.aspx">Eric Hexter</a> is continuing his <a href="http://www.lostechies.com/blogs/hex/archive/2009/06/09/opinionated-input-builders-for-asp-net-mvc-using-partials-part-i.aspx">multi</a>-<a href="http://www.lostechies.com/blogs/hex/archive/2009/06/09/opinionated-input-builders-for-asp-net-mvc-part-2-html-layout-for-the-label.aspx">part</a> series on <a href="http://www.lostechies.com/blogs/hex/archive/2009/06/09/opinionated-input-builders-for-asp-net-mvc-using-partials-part-i.aspx">Opinionated Input Builders</a>.  He’s on a role!<br>They are expression-based, meaning they eliminate the need for most strings for Html Helpers in your views.</pre>
+<ul>
+<li><a href="http://www.lostechies.com/blogs/hex/archive/2009/06/09/opinionated-input-builders-for-asp-net-mvc-using-partials-part-i.aspx">Part 1 – Overview</a></li>
+<li><a href="http://www.lostechies.com/blogs/hex/archive/2009/06/09/opinionated-input-builders-for-asp-net-mvc-part-2-html-layout-for-the-label.aspx">Part 2 – the Labe</a>l </li>
+<li><a href="http://www.lostechies.com/blogs/hex/archive/2009/06/10/opinionated-input-builders-for-asp-net-mvc-part-3-the-source-code.aspx">Part 3 – the Source Code</a></li>
+<li><a href="http://www.lostechies.com/blogs/hex/archive/2009/06/10/opinionated-input-builders-for-asp-net-mvc-part-3-the-partial-view-inputs.aspx">Part 4 – the Partial View</a></li>
+<li><a href="http://www.lostechies.com/blogs/hex/archive/2009/06/10/opinionated-input-builders-for-asp-net-mvc-part-5-the-required-input.aspx">Part 5 – the Required Field Indicator</a></li>
+</ul>
+<pre class="prettyprint">They look like this:</pre>
+<div id="codeSnippetWrapper">
+<pre id="codeSnippet" style="overflow:visible; width:100%; color:black; direction:ltr; text-align:left; border-style:none; padding:0">&lt;%=Html.Input(x=&gt;x.FirstName)%&gt;</pre>
+</div>
+
+<p>And the output on the screen is:</p>
+<div>
+<pre id="codeSnippet" style="overflow:visible; width:100%; color:black; direction:ltr; text-align:left; border-style:none; padding:0">First Name*: ______________ ex:John</pre>
+</div>
+<div>&nbsp;</div>
+<div>Eric is collecting feedback and opinions now because this will eventually go into <a href="http://mvccontrib.org">MvcContrib</a>.&nbsp; It is being tested on a few small, low-risk projects at <a href="http://www.headspringsystems.com/">Headspring Systems</a> to ensure that they suit a general need.</div>
+<div>
+  </div>

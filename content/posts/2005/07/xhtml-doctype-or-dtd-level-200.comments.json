@@ -1,0 +1,65 @@
+[
+  {
+    "id": 391,
+    "parent": 0,
+    "author_name": "Chris Wallace",
+    "author_url": "http://uallas.com/blog",
+    "date": "2005-07-29T16:23:37",
+    "type": "comment",
+    "content_html": "<p>You forgot XHTML 1.1</p>"
+  },
+  {
+    "id": 392,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-07-29T17:04:33",
+    "type": "comment",
+    "content_html": "<p>I left that out because it’s very difficult to get ASP.NET to emit valid Xhtml 1.1 as well as Xhtml 1.0, so I’ve settled on Xhtml 1.0 transitional.</p>"
+  },
+  {
+    "id": 393,
+    "parent": 0,
+    "author_name": "Harris",
+    "author_url": "http://hrboyceiii.blogspot.com",
+    "date": "2005-07-29T18:13:41",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>I took a look at the DTDs and found that the XHTML Frameset DTD is not required if you need the IFRAME element.  Frameset is specifically for FRAMESET and FRAME elements; it does include the IFRAME element as well.</p>\n<p>XHTML Transitional defines the IFRAME element.  XHTML 1 Strict does not.</p>\n<p>Search <a href=\"http://www.w3.org/TR/xhtml1/dtds.html\" rel=\"nofollow\">the DTDs</a> for IFRAME, FRAMESET, and FRAME elements and you should find the same.</p>\n<p>If I’m wrong, please correct me.</p>\n<p>Thanks,</p>\n<p>Harris</p>"
+  },
+  {
+    "id": 394,
+    "parent": 0,
+    "author_name": "Sam",
+    "author_url": "http://srsmoot.blogspot.com",
+    "date": "2005-07-30T18:11:49",
+    "type": "comment",
+    "content_html": "<p>I started out assuming XHTML was somehow better than HTML. Then resources like this: <a href=\"http://turnipspatch.com/archives/2005/05/31/xhtml-vs-html/\" rel=\"nofollow ugc\">http://turnipspatch.com/archives/2005/05/31/xhtml-vs-html/</a> helped to enlighten me a bit (hopefully).</p>\n<p>I’ve found that by sticking to HTML4.01 strict, cross-browser compatibility is improved, and since I never used namespacing anyways (do you? I haven’t seen anyone who does in their XHTML), I lost *nothing*.</p>\n<p>And that really appeals to the pragmatic programmer in me. If XHTML causes more work, has it’s own quirks to work around between different broswers, and most importantly, offers me nothing in the way of advantages (come to find out I never was using the correct content-type anyways, so my XHTML wasn’t XML), then why use it?</p>\n<p>That’s not to say specifying a DOC-TYPE isn’t a Very Good Thing, and your message deserves a wider audience. But before jumping on the XHTML bandwagon, I think it can help to understand why or why not a certain DOC-TYPE might be appropriate for your development.</p>"
+  },
+  {
+    "id": 395,
+    "parent": 0,
+    "author_name": "Sam",
+    "author_url": "http://srsmoot.blogspot.com",
+    "date": "2005-07-30T18:15:03",
+    "type": "comment",
+    "content_html": "<p>Sorry for the double-post, but are you saying that by including the XML declaration you can add XSLT processing directives for example? That would obviously be a pretty major advantage…</p>\n<p>It’s all a little hard for amatuers like myself to sort out. \uD83D\uDE09</p>"
+  },
+  {
+    "id": 396,
+    "parent": 0,
+    "author_name": "Chris Wallace",
+    "author_url": "http://uallas.com/blog",
+    "date": "2005-08-01T00:17:27",
+    "type": "comment",
+    "content_html": "<p>While it’s true 1.x is difficult to make XHTMl compliant in any form, 2.0 emits XHTML 1.1 compliant code (mostly anyway) by default.</p>"
+  },
+  {
+    "id": 397,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-08-01T14:31:46",
+    "type": "comment",
+    "content_html": "<p>Sam,<br>\nYes, if you put an Xm declaration at the top, and your page meets Xml form specs, then it is Xml, and you can treat it as such.</p>"
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1768,
+    "parent": 0,
+    "author_name": "Joe Ocampo",
+    "author_url": "http://www.agilejoe.com",
+    "date": "2007-06-25T02:31:10",
+    "type": "comment",
+    "content_html": "<p>Congratulations Jeffery, well deserved.</p>"
+  },
+  {
+    "id": 1769,
+    "parent": 0,
+    "author_name": "FransBouma",
+    "author_url": "http://Weblogs.asp.net/fbouma",
+    "date": "2007-06-25T07:42:48",
+    "type": "comment",
+    "content_html": "<p>Congratulations with your promotion! \uD83D\uDE00</p>"
+  },
+  {
+    "id": 1770,
+    "parent": 0,
+    "author_name": "Brendan Tompkins",
+    "author_url": "http://",
+    "date": "2007-06-25T13:48:47",
+    "type": "comment",
+    "content_html": "<p>Wow!! Good job!</p>"
+  },
+  {
+    "id": 1771,
+    "parent": 0,
+    "author_name": "Raymond Lewallen",
+    "author_url": "http://www.codebetter.com/blogs/raymond.lewallen",
+    "date": "2007-06-25T15:04:32",
+    "type": "comment",
+    "content_html": "<p>Promotion?  More like defection \uD83D\uDE42</p>"
+  },
+  {
+    "id": 1772,
+    "parent": 0,
+    "author_name": "Derik Whittaker",
+    "author_url": "http://devlicio.us/blogs/derik_whittaker/default.aspx",
+    "date": "2007-06-25T20:16:01",
+    "type": "comment",
+    "content_html": "<p>Congrats,</p>\n<p>Did you take the ‘exam’ (i know it is not really an exam, but did not have a better term) for this or is like the MVP program where you were recognized?  </p>"
+  },
+  {
+    "id": 1773,
+    "parent": 0,
+    "author_name": "Matt",
+    "author_url": "http://",
+    "date": "2007-06-26T03:49:46",
+    "type": "comment",
+    "content_html": "<p>Now all you need is some modesty…</p>"
+  },
+  {
+    "id": 1774,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-06-26T16:00:10",
+    "type": "comment",
+    "content_html": "<p>@Matt,<br>\ntouché</p>"
+  },
+  {
+    "id": 1775,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-06-26T16:01:22",
+    "type": "comment",
+    "content_html": "<p>@Derik,<br>\nThe MVP program has no exam.  It’s recognition for contributing to the developer community.  Running user groups, answering questions in newsgroups, and many, many more things.</p>"
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "id": 593,
+    "parent": 0,
+    "author_name": "Cody",
+    "author_url": "http://",
+    "date": "2005-11-21T17:06:54",
+    "type": "comment",
+    "content_html": "<p>While I understand what you are saying and I completely agree, I think it would be helpful to elaborate on the practical differences…</p>\n<p>For example, Microsoft suggests I do a Constructor test on my bank account object.  That seems logical.  So do I need a unit test that validates the behavior of the object’s constructor using a mock object and then an integration test on the constructor that uses a development database?  Would these tests be pretty much identical?</p>\n<p>It seems like there should be an article somewhere that says, for each object you will probably need to test “x” with your unit tests and “y” with your integration tests, but I have never seen an article like that.</p>\n<p>Thanks for your informative blog, btw.</p>\n<p>Cody</p>"
+  },
+  {
+    "id": 594,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-11-21T17:19:14",
+    "type": "comment",
+    "content_html": "<p>First, you don’t want to put much logic in a constructor.  I normally only use the constructor to receive arguments and assign them to fields.  These arguments are normally the object dependencies, and my parameterless constructor grabs my default dependencies.  </p>\n<p>Unit tests and integration tests may be similar-looking, and that’s perfectly reasonable.  The unit test ensures that the class does what it is supposed to do.  The integration test encompases the scope of the unit tests but also would test the assumptions made in what is needed to communicate all the way to the database.  Even though the test code may look similar, it’s important to run both because they test different things.</p>"
+  }
+]

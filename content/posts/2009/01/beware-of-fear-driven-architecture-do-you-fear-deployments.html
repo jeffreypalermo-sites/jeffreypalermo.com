@@ -1,0 +1,22 @@
+---
+wp_id: 980
+title: Beware of Fear-Driven Architecture (do you fear deployments?)
+slug: beware-of-fear-driven-architecture-do-you-fear-deployments
+permalink: /2009/01/beware-of-fear-driven-architecture-do-you-fear-deployments/
+date: 2009-01-12T07:41:33
+date_utc: 2009-01-12T07:41:33Z
+modified: 2009-01-12T07:41:33
+format: html
+categories:
+- blog
+excerpt: At Headspring, we joke about PDD, or pain-driven development. We consider PDD to be a good thing. If there is pain, we do a root-cause analysis and solve the pain. If there is no pain, we call “yagni” and move on. If we are in a design discussion and we realize that we are proposing […]
+comments_open: true
+---
+<p>At <a href="http://www.headspringsystems.com">Headspring</a>, we joke about PDD, or pain-driven development.&nbsp; We consider PDD to be a good thing.&nbsp; If there is pain, we do a root-cause analysis and solve the pain.&nbsp; If there is no pain, we call “yagni” and move on.&nbsp; If we are in a design discussion and we realize that we are proposing a solution without pain existing, we stop and move on.</p>
+<p>Pain can be a good indicator of a specific problem that needs to be solved.&nbsp; Beware of fear, however.&nbsp; Often, fear of something can color our technical decisions and cause us to suboptimize one part of our system or process.</p>
+<p>Let’s take deployments, for instance.&nbsp; If our deployment is an all-weekend affair, then we will start to fear it.&nbsp; If a deployment takes several people yet always goes wrong, we will dread the deployment date.&nbsp; This is a very real scenario.&nbsp; Without an automated deployment, this is likely to happen.&nbsp; There is a deployment document with a list of steps.&nbsp; Even so, this list of steps doesn’t cover all the possible failure scenarios.&nbsp; Worse yet, in this environment, the last deployment is probably more than a month back in history.&nbsp; This makes it hard to remember the specific problems encountered the last time.</p>
+<p>With this dysfunctional deployment environment, the team is literally afraid of deploying the software.&nbsp; They will do anything to avoid one, include making design decisions base on it.&nbsp; Business rules?&nbsp; Hello rules engine with rules defined in XML files.&nbsp; Configuration?&nbsp; Hello complex config files and “magic records” in database tables.&nbsp; With this fear, it leads the team to put anything that “could” change somewhere else besides in compiled code.&nbsp; </p>
+<p>Next, the problem compounds.&nbsp; Because of so many external dependencies, the production deployment becomes a two-step process:&nbsp; Get the system out there.&nbsp; Then make sure all the external config files and “magic records” are just right.&nbsp; However, because it’s been 2 months since the last deployment, those files have been changed.&nbsp; The configuration records in the database have changed.&nbsp; They were not merged back to the development environment, however.&nbsp; As time goes one, there are actually two code-bases that have to be kept in sync:&nbsp; 1.&nbsp; The code.&nbsp; 2.&nbsp; The configuration (which has more lines of code that the system itself (maybe)).</p>
+<p>Perhaps I’ve used a little hyperbole, but I’ve seen scenarios similar to this (and have experience one that will never leave my memory).&nbsp; The team lets fear drive design decisions.</p>
+<p>Solution:&nbsp; Take the fear, and identify the pain that we are afraid of.&nbsp; Then take swift action and resolve the pain.&nbsp; Resolving the pain of deployments would lead us to automate the process, do it more frequently, and iron out any kinks.</p>
+<p><strong>Without fear driving our design decisions, we can make better choices given the system’s current requirements.</strong></p>

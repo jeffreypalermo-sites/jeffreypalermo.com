@@ -1,0 +1,19 @@
+---
+wp_id: 373
+title: Using source control can’t prevent conflicting changes – level 200
+slug: using-source-control-cant-prevent-conflicting-changes-level-200
+permalink: /2006/01/using-source-control-cant-prevent-conflicting-changes-level-200/
+date: 2006-01-24T02:37:00
+date_utc: 2006-01-24T02:37:00Z
+modified: 2006-01-24T02:37:00
+format: html
+excerpt: For those of you who use source control (and it should be everyone), you know the title of this post to be true. Source control is just a technology, and no technology makes all problems go away. In my previous post about software builds, I received a comment about locking checkouts and check-in conflicts. Rob […]
+comments_open: true
+---
+<p>For those of you who use source control (and it should be everyone), you know the title of this post to be true.&nbsp; Source control is just a technology, and no technology makes all problems go away.&nbsp; In my<a href="/blogs/jeffrey.palermo/archive/2006/01/17/136625.aspx"> previous post about software builds</a>, I received a comment about locking checkouts and check-in conflicts.&nbsp; Rob was particularly interested in whether I check in project and solution files.&nbsp; The answer is YES.&nbsp; I check in everything.</p>
+<p>If you use VSS, you use the check-out/check-in paradigm.&nbsp; In this paradigm, someone checks out a file, and it is unavailable until they check it in (much like a library book).&nbsp; VSS does have the option for shared checkouts so that checked out files are locked against change, but most VSS users I know use locking and are afraid of two code files merging.</p>
+<p>Subversion, the SCC system I prefer, uses a different paradigm.&nbsp; To get the latest source, you would check out a repository or a branch of a repository.&nbsp; The “Check out” step only happens once when setting up the working copy.&nbsp; You always have the source checked out, but it is never locked.&nbsp; If you need updated source from a team member’s changes, you issue the “Update” command.&nbsp; When you are ready to push some of your changes to the SCC server, you issue a “Commit” command.&nbsp; Every update is a merge from the source of record into your working copy, and it preserves any changes you may have made to a file while retrieving changes to the rest of the file.&nbsp; Every commit is a merge of your change into the repository.&nbsp; Every code move is a merge.&nbsp; No code file is every locked against change, and everyone can work at once.</p>
+<p>VSS users may become afraid of making a change to the same lines of code that another is changing.&nbsp; This is where you have a communication problem.</p>
+<p>SCC systems _cannot_ compensate for communication within a software team.&nbsp; Communication is essential to working as a team, and if someone is doing a major refactoring, he should communicate with the rest of the team that some big changes are coming through the next time they update.&nbsp; At the end of the day, the team should coordinate commits so that each commit is verified by the automated build before another is allowed.&nbsp; This keeps you from committing to a broken build.</p>
+<p>You may work with a distributed team, and your job is much harder because you don’t have the benefit of others with you in the war room.&nbsp; You should still be constantly communicating over IM and telephone.&nbsp; You must overcome that communication barrier.</p>
+<p>In software, communication is key.</p>

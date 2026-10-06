@@ -1,0 +1,88 @@
+---
+wp_id: 194
+title: TDD with the new Enterprise Library DAAB redux – level 300
+slug: tdd-with-the-new-enterprise-library-daab-redux-level-300
+permalink: /2005/03/tdd-with-the-new-enterprise-library-daab-redux-level-300/
+date: 2005-03-09T13:36:00
+date_utc: 2005-03-09T13:36:00Z
+modified: 2005-03-09T13:36:00
+format: html
+excerpt: 'Yesterday’s attempt at TDD with the DAAB prompted me to use NMock to imitate the external dependency so my test would be a true _unit_ test. Since then, I’ve given it more thought – about the best way to proceed for future tests. I’ve revised my test and included two concrete stub classes: one that […]'
+comments_open: true
+---
+<p>Yesterday’s attempt at TDD with the DAAB prompted me to use NMock to imitate<br>
+the external dependency so my test would be a true _unit_ test.&nbsp; Since then,<br>
+I’ve given it more thought – about the best way to proceed for future tests.&nbsp;<br>
+I’ve revised my test and included two concrete stub classes:&nbsp; one that derives<br>
+from the DAAB SqlDatabase class, and one that implements IDataReader.&nbsp; These<br>
+classes have turned out to be easier to work with, and I like being able to see<br>
+the code directly in my test.&nbsp; I would run against&nbsp; a roadblock if I needed to<br>
+stub a class that didn’t implement an interface _and_ was sealed (I’m hoping<br>
+none of the .Net Framework is like this).</p>
+<p>My Category class is the same:</p>
+<div style="border:1pt solid windowtext; padding:0; background:white none repeat scroll 0; color:black"><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;7</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">class</span> Category {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;8</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">private</span> <span style="color:blue">string</span><br>
+_name = <span style="color:blue">string</span>.Empty;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">private</span><br>
+<span style="color:blue">static</span> Database _database = <span style="color:blue">null</span>;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;11</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">private</span> <span style="color:blue">static</span><br>
+<span style="color:blue">string</span> _databaseInstance = “DEV”;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;12</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> <span style="color:blue">string</span><br>
+Name {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;14</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> { <span style="color:blue">return</span> <span style="color:blue">this</span>._name; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;15</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">set</span> {<br>
+<span style="color:blue">this</span>._name = <span style="color:blue">value</span>; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;16</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;17</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;18</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> <span style="color:blue">static</span><br>
+Database Database {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;19</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">get</span> {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;20</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">if</span>(_database == <span style="color:blue">null</span>) <br><span style="color:teal">&nbsp;&nbsp;&nbsp;21</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; _database =<br>
+DatabaseFactory.CreateDatabase(_databaseInstance);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;22</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;23</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span> _database; <br><span style="color:teal">&nbsp;&nbsp;&nbsp;24</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;25</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">set</span> {<br>
+_database = <span style="color:blue">value</span>; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;26</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;27</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;28</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> Category(<span style="color:blue">int</span> categoryID)<br><span style="color:teal">&nbsp;&nbsp;&nbsp;29</span>&nbsp;&nbsp;&nbsp;&nbsp; {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;30</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; IDataReader reader =<br>
+Category.Database.ExecuteReader(“GetCategoryByID”, categoryID);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;31</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;32</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; <span style="color:blue">if</span>(reader.Read()){<br><span style="color:teal">&nbsp;&nbsp;&nbsp;33</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">this</span>._name =<br>
+reader.GetString(reader.GetOrdinal(“CategoryName”));<br><span style="color:teal">&nbsp;&nbsp;&nbsp;34</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;35</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;36</span>&nbsp;}</div>
+
+<p>But my unit test class has changed.&nbsp; The [Test] method has been simplified<br>
+with the use of concrete stubs instead of dynamic Mocks.&nbsp; My stubs are nested<br>
+classes so that they are truly dedicated to this test class:</p>
+<div style="border:1pt solid windowtext; padding:0; background:white none repeat scroll 0; color:black"><span style="color:teal">&nbsp;&nbsp;&nbsp;12</span>&nbsp;[TestFixture]<br><span style="color:teal">&nbsp;&nbsp;&nbsp;13</span>&nbsp;<span style="color:blue">public</span> <span style="color:blue">class</span> CategoryTest<br><span style="color:teal">&nbsp;&nbsp;&nbsp;14</span>&nbsp;{<br><span style="color:teal">&nbsp;&nbsp;&nbsp;15</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> CategoryTest() {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;16</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Trace.Listeners.Add(<span style="color:blue">new</span> TextWriterTraceListener(Console.Out));<br><span style="color:teal">&nbsp;&nbsp;&nbsp;17</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;18</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;19</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+[Test]<br><span style="color:teal">&nbsp;&nbsp;&nbsp;20</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">void</span><br>
+GetACategory(){<br><span style="color:teal">&nbsp;&nbsp;&nbsp;21</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+Category.Database = <span style="color:blue">new</span><br>
+DatabaseToReturnCategory1();<br><span style="color:teal">&nbsp;&nbsp;&nbsp;22</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;23</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Category existing = <span style="color:blue">new</span> Category(1);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;24</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Assert.AreEqual(“Beverages”,<br>
+existing.Name);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;25</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;26</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;27</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> <span style="color:blue">class</span><br>
+DatabaseToReturnCategory1 : SqlDatabase {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;28</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">public</span><br>
+<span style="color:blue">override</span> IDataReader ExecuteReader(<span style="color:blue">string</span> storedProcedureName, <span style="color:blue">params</span> <span style="color:blue">object</span>[]<br>
+parameterValues) {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;29</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span> <span style="color:blue">new</span><br>
+DataReaderToReturnBeveragesAsCategoryName();<br><span style="color:teal">&nbsp;&nbsp;&nbsp;30</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;31</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;32</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;33</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<span style="color:blue">public</span> <span style="color:blue">class</span><br>
+DataReaderToReturnBeveragesAsCategoryName : IDataReader&nbsp; {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;34</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">public</span><br>
+<span style="color:blue">bool</span> Read() {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;35</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Trace.WriteLine(“Returning true<br>
+from Read()”, <span style="color:blue">this</span>.GetType().Name);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;36</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span> <span style="color:blue">true</span>;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;37</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;38</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;39</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">public</span><br>
+<span style="color:blue">string</span> GetString(<span style="color:blue">int</span> index) {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;40</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">string</span> retValue = <span style="color:blue">string</span>.Empty;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;41</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">switch</span>(index) {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;42</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">case</span> 1:<br><span style="color:teal">&nbsp;&nbsp;&nbsp;43</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; Trace.WriteLine(“Returning Beverages from<br>
+GetString(int)”, <span style="color:blue">this</span>.GetType().Name);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;44</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; retValue =<br>
+“Beverages”;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;45</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">break</span>;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;46</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;47</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;48</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span> retValue;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;49</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;50</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;51</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; <span style="color:blue">public</span> <span style="color:blue">int</span><br>
+GetOrdinal(<span style="color:blue">string</span> name) {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;52</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">int</span> retValue = 0;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;53</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">switch</span>(name) {<br><span style="color:teal">&nbsp;&nbsp;&nbsp;54</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">case</span> “CategoryName”:<br><span style="color:teal">&nbsp;&nbsp;&nbsp;55</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Trace.WriteLine(“Returning<br>
+1 from GetOrdinal(string)”, <span style="color:blue">this</span>.GetType().Name);<br><span style="color:teal">&nbsp;&nbsp;&nbsp;56</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; retValue = 1;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;57</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">break</span>;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;58</span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;59</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;60</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color:blue">return</span> retValue;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;61</span>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;&nbsp;62</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;&nbsp;63</span>&nbsp;<span style="color:blue">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+#region</span> IDataReader Members<br><span style="color:teal">&nbsp;&nbsp;&nbsp;64</span>&nbsp;<br>— unneeded stub methods not<br>
+posted<br><span style="color:teal">&nbsp;&nbsp;224</span>&nbsp;<br><span style="color:teal">&nbsp;&nbsp;225</span>&nbsp;<span style="color:blue">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<br>
+#endregion</span><br><span style="color:teal">&nbsp;&nbsp;226</span>&nbsp;&nbsp;&nbsp;&nbsp; }<br><span style="color:teal">&nbsp;&nbsp;227</span>&nbsp;}</div>
+
+<p>I have started a switch statement in the stubs so that I can easily add some<br>
+more cases to test the other fields that I expect back.</p>
+<p>Note also my use of a trace listener.&nbsp; I’ve grown to prefer Trace.Writeline<br>
+instead of Console.Writeline because with Trace I can hook up more listeners and<br>
+also get this output to other callers.&nbsp; Using Console.Out with the listeners<br>
+also allows me to get these statements to the console (and the NUnit gui).</p>
+<p>This approach is more straight-forward to me than dynamic mocks, so I’m going<br>
+to stick with this approach as much as I can.</p>
+<p>This afternoon I’ll be giving a presentation to my team about TDD and doing<br>
+this demo to help get them started.&nbsp; I hoping my team can quickly start using<br>
+iterative development to drive quality and flexibility in our software.<!--EndFragment--><!--EndFragment--></p>

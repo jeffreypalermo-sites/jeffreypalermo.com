@@ -1,0 +1,49 @@
+---
+wp_id: 109
+title: 'How to: Add a totals row to your DataGrid before the footer/pager – level 300'
+slug: how-to-add-a-totals-row-to-your-datagrid-before-the-footerpager-level-300
+permalink: /2004/09/how-to-add-a-totals-row-to-your-datagrid-before-the-footerpager-level-300/
+date: 2004-09-09T16:04:00
+date_utc: 2004-09-09T16:04:00Z
+modified: 2004-09-09T16:04:00
+format: html
+excerpt: 'In my own dealings, I’ve had to take control of how a DataGrid was rendered. One particular example is adding a Totals row to a grid BEFORE the footer. Here’s a sample:<asp:DataGrid ID=”dgd” Runat=”server” AutoGenerateColumns=”False”> <Columns> <asp:BoundColumn DataField=”Product” HeaderText=”Product”/> <asp:BoundColumn DataField=”Price” HeaderText=”Price” DataFormatString=”{0:C}”/> <asp:EditCommandColumn EditText=”Edit” UpdateText=”Update” CancelText=”Cancel” /> </Columns> </asp:DataGrid>And the code: private void Page_Load(object […]'
+comments_open: true
+---
+<p>In my own dealings, I’ve had to take control of how a DataGrid was rendered. One particular example is adding a Totals row to a grid BEFORE the footer. Here’s a sample:</p><pre><span class="ColorStartHtmlTag">&lt;</span><span class="ColorAspTemplateTag"><b>asp:DataGrid ID=”dgd” Runat=”server” AutoGenerateColumns=”False”<span class="ColorEndHtmlTag">&gt;</span><br>
+</b></span><br>   <span class="ColorStartHtmlTag">&lt;</span><span class="ColorControlTag">Columns</span><span class="ColorEndHtmlTag">&gt;</span><br>
+<br>      <span class="ColorStartHtmlTag">&lt;</span><span class="ColorAspTemplateTag"><b>asp:BoundColumn DataField=”Product” HeaderText=”Product”<span class="ColorEndHtmlTag">/&gt;</span><br>
+</b></span><br>      <span class="ColorStartHtmlTag">&lt;</span><span class="ColorAspTemplateTag"><b>asp:BoundColumn DataField=”Price” HeaderText=”Price” DataFormatString=”{0:C}”<span class="ColorEndHtmlTag">/&gt;</span><br>
+</b></span><br>      <span class="ColorStartHtmlTag">&lt;</span><span class="ColorAspTemplateTag"><b>asp:EditCommandColumn EditText=”Edit” UpdateText=”Update” CancelText=”Cancel” <span class="ColorEndHtmlTag">/&gt;</span><br>
+</b></span><br>   <span class="ColorStartHtmlTag">&lt;/</span><span class="ColorControlTag">Columns</span><span class="ColorEndHtmlTag">&gt;</span><br>
+<br><span class="ColorStartHtmlTag">&lt;/</span><span class="ColorAspTemplateTag"><b>asp:DataGrid<span class="ColorEndHtmlTag">&gt;</span></b></span><br></pre><pre><span class="ColorAspTemplateTag"><b><span class="ColorEndHtmlTag"></span></b></span>And the code:</pre><pre>        <span class="ColorCSKeyword">private</span> <span class="ColorCSKeyword">void</span> Page_Load(object sender, System.EventArgs e)<br>
+<br>        {<br>
+<br>            <span class="ColorCSComment">//creating mock table for data<br>
+</span><br>            DataTable dt = <span class="ColorCSKeyword">new</span> DataTable();<br>
+<br>            dt.Columns.Add(“Product”);<br>
+<br>            dt.Columns.Add(“Price”);<br>
+<br>            dt.Rows.Add(<span class="ColorCSKeyword">new</span> object[]{“Shoes”, “12.90”});<br>
+<br>            dt.Rows.Add(<span class="ColorCSKeyword">new</span> object[]{“Socks”, “3.50”});<br>
+<br>            dt.Rows.Add(<span class="ColorCSKeyword">new</span> object[]{“Underpants”, “8.40”});<br>
+<br>            <span class="ColorCSComment">//binding mock data<br>
+</span><br>            dgd.DataSource = dt;<br>
+<br>            dgd.DataBind();<br>
+<br><br>
+<br>            <span class="ColorCSComment">//adding totals row<br>
+</span><br>            DataGridItem row = <span class="ColorCSKeyword">new</span> DataGridItem(-1, -1, ListItemType.Separator);<br>
+<br>            TableCell cell = <span class="ColorCSKeyword">new</span> TableCell();<br>
+<br>            row.Cells.Add(cell);<br>
+<br>            cell = <span class="ColorCSKeyword">new</span> TableCell();<br>
+<br>            <span class="ColorCSComment">//calculate total<br>
+</span><br>            decimal total = 0;<br>
+<br>            <span class="ColorCSKeyword">foreach</span>(DataGridItem dgi <span class="ColorCSKeyword">in</span> dgd.Items)<br>
+<br>            {<br>
+<br>                total += decimal.Parse(dgi.Cells[1].Text);<br>
+<br>            }<br>
+<br>            cell.Font.Bold = <span class="ColorCSKeyword">true</span>;<br>
+<br>            cell.Text = total.ToString(“c”);<br>
+<br>            row.Cells.Add(cell);<br>
+<br>            cell = <span class="ColorCSKeyword">new</span> TableCell();<br>
+<br>            row.Cells.Add(cell);<br>
+<br>            dgd.Controls[0].Controls.Add(row);<br>
+<br>        }<br>I merely create a new DataGridItem, add what I want, and add it to my grid. I’ve used this concept several times, and I hope it helps out someone else.</pre>

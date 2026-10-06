@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1751,
+    "parent": 0,
+    "author_name": "joe",
+    "author_url": "http://devlicio.us/blogs/joe_niland",
+    "date": "2007-07-20T00:24:19",
+    "type": "comment",
+    "content_html": "<p>Great tip!! Thanks.</p>\n<p>On the final 3.0, the xpath is: /Configuration/SettingsComponent/integer/setting[9]</p>"
+  }
+]

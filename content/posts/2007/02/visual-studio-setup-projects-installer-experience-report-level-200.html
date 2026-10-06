@@ -1,0 +1,23 @@
+---
+wp_id: 490
+title: Visual Studio setup projects (installer) experience report – level 200
+slug: visual-studio-setup-projects-installer-experience-report-level-200
+permalink: /2007/02/visual-studio-setup-projects-installer-experience-report-level-200/
+date: 2007-02-13T14:28:12
+date_utc: 2007-02-13T14:28:12Z
+modified: 2007-02-13T14:28:12
+format: html
+excerpt: 'Recently, my team needed to produce an installer for our software package. We wanted a neat setup package that installed prerequisites as well (.Net 2.0, and SQL Express 2005). We decided to try out the Visual Studio 2005 setup project. Here’s my experience report: Creation of the project was easy, but added files to include […]'
+comments_open: true
+---
+<p>Recently, my team needed to produce an installer for our software package.&nbsp; We wanted a neat setup package that installed prerequisites as well (.Net 2.0, and SQL Express 2005).&nbsp; We decided to try out the Visual Studio 2005 setup project.&nbsp; Here’s my experience report:</p>
+<ul>
+<li>Creation of the project was easy, but added files to include wasn’t so easy.&nbsp; The setup project was default output of other projects as deployment artifacts.&nbsp; This assumes a developer is building the GA release on a workstation.&nbsp; My team uses a clean build server for all builds.</li>
+<li>Adding custom steps was nontrivial.&nbsp; There were no hook points where I could pass in a command line to run.&nbsp; I ended up creating a C# class derived from “Installer” just to Process.Start() a shell command.&nbsp; Once I had that, I ran the shell commands necessary to set up the software.</li>
+<li>Creating a start menu shortcut was very difficult.&nbsp; It appeared that it could create one for default project output, but again, I already had my GA release candidate.&nbsp; I just needed to package it up for install.&nbsp; I ended up creating another C# custom action to run Windows Script Object to create a .lnk shortcut file.</li>
+<li>Prerequisite installs worked like a breeze.&nbsp; The installer detected the need for .Net 2.0, and Sql express and installed both seamlessly without unnecessary questions to the user.&nbsp; Very pleased with this.</li>
+<li>The uninstall is good.&nbsp; I have opposite steps for my custom actions, and the uninstall performs well.&nbsp; Users get the standard experience of uninstalling from Control Panel.</li>
+<li>I have the option of including file a raw, loose file or bundled into a single .msi file. I opted for loose files to keep the install package flexible.</li>
+<li>PAIN POINT: I wasn’t able to automate the creation of the setup package.&nbsp; The .vdproj file is not an MSBuild project file, and it requires Visual Studio just to build that project.&nbsp; This means that I have to create the installer from a developer’s machine, not my build server.&nbsp; This might be a deal-breaker for me, I haven’t decided yet.&nbsp; It’s very important that everything be automated, and the only alternative is to install visual studio on the build machine (I’m not going to do that).</li>
+</ul>
+<p>Overall, with a few caveats, the setup project is doing it’s job, and we’re shipping.&nbsp; We’ll use it for the time being, but I’ll keep my eye on Nullsoft, Wise, and InstallShield.</p>

@@ -1,0 +1,47 @@
+[
+  {
+    "id": 626,
+    "parent": 0,
+    "author_name": "-e",
+    "author_url": "http://weblog.pineforestsoft.com",
+    "date": "2006-01-18T03:07:29",
+    "type": "comment",
+    "content_html": "<p>I was just wondering – are you doing any work with 2.0 yet? I’m trying to get my head around the tradeoffs between Nant (which doesn’t support 2.0 solutions) versus MSBuild (which handles solutions nicely, but doesn’t really handle any of the othew build tasks). What are your thoughts?</p>"
+  },
+  {
+    "id": 627,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-01-18T03:29:35",
+    "type": "comment",
+    "content_html": "<p>Eric,<br>\nYes, I’m doing a lot of work with .Net 2.0 as well as .Net 1.1.  I started with 2.0 at Beta 1 and currently have two projects on the RTM and 1 project on .Net 1.1.</p>\n<p>With 2.0, you’ll need to  from NAnt to MSBuild to compile and link the solution.  You’ll also need to  aspnet_compiler.exe to precompile ASP.NET websites.</p>\n<p>The MSBuild team claims the same level of functionality, but for me that’s not feasible because I need more than the usual file copy and running of unit tests.  I need targets to link into Subversion to get the latest code, and I like the NUnit2 task.</p>\n<p>They may be pretty comparable, but unless MSBuild just blows away NAnt, I’ll stick with NAnt.  It’s simple and has everything I need (and it’s easy to  to any other utility I need).</p>"
+  },
+  {
+    "id": 628,
+    "parent": 0,
+    "author_name": "Rob",
+    "author_url": "http://",
+    "date": "2006-01-18T15:42:58",
+    "type": "comment",
+    "content_html": "<p>I have some questions. I’m working at a relative small company<br>\ndoing ASP(.NET) development with specialized Content Management<br>\nSystems from different vendors.</p>\n<p>These projects typically run for 1 or 2 months before the site is<br>\ndelivered to the client. Is it workable and a good idea to setup such<br>\na complete build system in such cases as well?</p>\n<p>How do you handle build numbers in such webcases? Do you update<br>\nAssemblyInfo.cs to new build numbers, or? What about Visual Basic 6<br>\n(which we unfortunately still have to use with some clients)?</p>\n<p>Everything is in sourcecontrol (sourcesafe at the moment) so we’ve<br>\nat least got that part covered.</p>\n<p>I always have a feeling that these practices are more geared towards<br>\nlibrary or application development than web development.</p>\n<p>Do you include the Visual Studio projects files in sourcecontrol? If so,<br>\nhow do you handle that when multiple people are developing?<br>\nAs you need write access to the solution files when working on your<br>\nproject, and only one person can check out. If you don’t store it in<br>\nsourcecontrol how do you handle changes to project settings?</p>\n<p>Thanks for any thoughts on these matters</p>\n<p>p.s. I’m not yet familair with the new .NET 2.0 MSBuild or nAnt model,<br>\nso perhaps that is no longer an “issue”. We are still on 1.1 and VB6</p>"
+  },
+  {
+    "id": 629,
+    "parent": 0,
+    "author_name": "Fregas",
+    "author_url": "http://www.dotnettricks.com/",
+    "date": "2006-01-24T22:45:47",
+    "type": "comment",
+    "content_html": "<p>Ok, so I understand what all those tools do, with one exception Nant.  </p>\n<p>What does NAnt do for me?  What is its purpose?</p>\n<p>Thanks for this article.  I really didn’t understand the compile vs. build difference that deeply.</p>"
+  },
+  {
+    "id": 630,
+    "parent": 0,
+    "author_name": "Brian Brewder",
+    "author_url": "http://brewder.blogspot.com/",
+    "date": "2007-10-13T14:45:22",
+    "type": "comment",
+    "content_html": "<p>Great article. I’ve helped set up my company’s build process and have to say that an automated system can definitely improve quality in terms of consistency of the build (people would always miss steps when ran manually) as well as catching problems sooner so it is easier for developers to pinpoint exactly what went wrong. The difficulty of finding a particular build problem is a function of the amount of code, number of developers that have checked in code, and the amount of time the code has been checked in (most people can only remember a finite number of things).</p>\n<p>One of the issues that we had run into is that we have a lot of projects (over 100 and growing) that make up our application (it’s an ERP product). In order to compile the projects in the correct order without having to burden the developers with configuring the build process I developed a way to sort them automatically. </p>\n<p>If anybody is interested in this process I have written a Code Project article on the subject (Compiling Multiple Projects Without a Solution – <a href=\"http://www.codeproject.com/dotnet/Project_Build_Order.asp\" rel=\"nofollow ugc\">http://www.codeproject.com/dotnet/Project_Build_Order.asp</a>). It describes how to create an MSBuild project by reading the references defined in the vbproj files.</p>\n<p>We use FinalBuilder to automate our build. It allows you to visually configure your build. Unless you are a full time build engineer, I would definitely suggest this route. I’ve blogged on this topic if you are interested (Making the Build  – <a href=\"http://brewder.blogspot.com/2007/06/making-build.html\" rel=\"nofollow ugc\">http://brewder.blogspot.com/2007/06/making-build.html</a>).</p>"
+  }
+]

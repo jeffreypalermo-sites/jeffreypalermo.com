@@ -1,0 +1,29 @@
+[
+  {
+    "id": 680,
+    "parent": 0,
+    "author_name": "Doh!",
+    "author_url": "http://",
+    "date": "2006-03-11T14:50:59",
+    "type": "comment",
+    "content_html": "<p>That’s how relative URLs get interpreted in HTML documents.<br>\nIt’s obvious to me and I haven’t even used the API. Combining isn’t appending a child name to a parent, it’s resolving a link relative to a page.</p>\n<p>If you want to resolve relative to a directory to get the path to a child in that directory, add a “/” to the directory name.  Otherwise it’s going to be interpreted as a file, and so return a path to the child in the directory of that file.</p>"
+  },
+  {
+    "id": 681,
+    "parent": 0,
+    "author_name": "Narwade",
+    "author_url": "http://",
+    "date": "2007-07-17T11:08:57",
+    "type": "comment",
+    "content_html": "<p>plz will u help me in…………..</p>\n<p>i want to store images in separate virtual diectory &amp; wann to access that at run time </p>"
+  },
+  {
+    "id": 682,
+    "parent": 0,
+    "author_name": "Justin M. Keyes",
+    "author_url": "http://",
+    "date": "2007-09-07T00:27:13",
+    "type": "comment",
+    "content_html": "<p>@ ” Doh!”: the behavior of VirtualPathUtility.Combine() is counter to the behavior of System.IO.Path.Combine().</p>"
+  }
+]

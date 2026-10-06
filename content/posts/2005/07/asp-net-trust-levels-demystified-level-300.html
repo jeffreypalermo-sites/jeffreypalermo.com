@@ -1,0 +1,32 @@
+---
+wp_id: 277
+title: ASP.NET trust levels demystified – level 300
+slug: asp-net-trust-levels-demystified-level-300
+permalink: /2005/07/asp-net-trust-levels-demystified-level-300/
+date: 2005-07-05T13:11:00
+date_utc: 2005-07-05T13:11:00Z
+modified: 2005-07-05T13:11:00
+format: html
+excerpt: The good news is that most of the web applications I write work just fine in medium trust, so it’s very easy to run your ASP.NET app in partial trust. All it takes is a change to your web.config. <system.web> <trust level=”Full”/> . . .. </system.web> ASP.NET runs at […]
+comments_open: true
+---
+<p>The good news is that most of the web applications I write work just<br>
+fine in medium trust, so it’s very easy to run your ASP.NET app in<br>
+partial trust.&nbsp; All it takes is a change to your web.config. <br>
+&nbsp;&nbsp;&nbsp; &lt;system.web&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;trust level=”Full”/&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;  . . ..<br>
+&nbsp;&nbsp;&nbsp; &lt;/system.web&gt;</p>
+<p>ASP.NET runs at Full trust by default (trust levels didn’t exist in<br>
+v1.0).&nbsp; Change the level attribute above to a different setting to<br>
+change the permissions of your ASP.NET code.&nbsp; You can change your<br>
+trust level, and here’s the rundown of what each one means:</p>
+<ul>
+<li>Full trust – your code can do anything that the account running it can do.</li>
+<li>High trust – same as above except your code cannot call into unmanaged code. i.e. Win32 APIs, COM interop.</li>
+<li>Medium trust – same as above except your code cannot see any part of the file system except its application directory.</li>
+<li>Low trust – same as above except your code cannot make any out-of-process calls. i.e. calls to a database, network, etc.</li>
+<li>Minimal trust – code is restricted from anything but the most trival processing (calculating algorithms).</li>
+</ul>
+<p>The above lines are the most significant differences that would lead<br>
+you to choose a particular trust level.&nbsp; Read more about <a href="http://msdn2.microsoft.com/library/wyts434y%28en-us,vs.80%29.aspx">trust leves and code-access security from MSDN.</a></p>

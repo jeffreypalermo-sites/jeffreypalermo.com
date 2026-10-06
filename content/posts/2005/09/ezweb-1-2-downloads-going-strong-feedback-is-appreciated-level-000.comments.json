@@ -1,0 +1,65 @@
+[
+  {
+    "id": 448,
+    "parent": 0,
+    "author_name": "Lorenzo Barbieri",
+    "author_url": "http://weblogs.asp.net/lbarbieri",
+    "date": "2005-09-02T14:27:38",
+    "type": "comment",
+    "content_html": "<p>Hi Jeffrey,<br>\nI’ve downloaded it yesterday and I liked it for it’s semplicity.<br>\nThe only thing that I would like to see is a WYSIWYG HTML editor…</p>\n<p>Apart that it has all the functionalities that I need…</p>\n<p>See you perhaps at the next Tech Ed!!!<br>\nBye!</p>"
+  },
+  {
+    "id": 449,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-09-02T14:51:32",
+    "type": "comment",
+    "content_html": "<p>Lorenzo,<br>\nThanks.  It has a WYSIWYG Html editor.  When you log in with the “admin” account to start, there is a link “Edit Content”.  Click there, and you will see a FreeTextBox instance.  This is the “Content Editor” plugin that also allows file and image uploaders.</p>"
+  },
+  {
+    "id": 450,
+    "parent": 0,
+    "author_name": "Stefano Demiliani",
+    "author_url": "http://www.demiliani.com/blog",
+    "date": "2005-09-02T15:51:11",
+    "type": "comment",
+    "content_html": "<p>Hi Jeffrey,<br>\nI’ve downloaded your project but at the moment I’ve not tested it (too busy in these days, maybe during the weekend).<br>\nA little suggestion (or request): why don’t you launch a test site for a real demo? I think it could be useful for everyone that want to try the tool.<br>\nKeep up the great work, when I’ll test it you’ll receive my (eventual) requests.<br>\nBye!</p>"
+  },
+  {
+    "id": 451,
+    "parent": 0,
+    "author_name": "Shital Shah",
+    "author_url": "http://www.ShitalShah.com/blog",
+    "date": "2005-09-02T17:00:22",
+    "type": "comment",
+    "content_html": "<p>Do you have live demo anywhere?</p>"
+  },
+  {
+    "id": 452,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-09-02T18:46:15",
+    "type": "comment",
+    "content_html": "<p>I don’t have a live demo yet, but that’s on my list of things to do.  I plan to put up a sandbox with a public account where people can actually change the site.</p>"
+  },
+  {
+    "id": 453,
+    "parent": 0,
+    "author_name": "Simon",
+    "author_url": "http://",
+    "date": "2005-09-06T18:15:24",
+    "type": "comment",
+    "content_html": "<p>Hi Jeff,</p>\n<p>Easy install – thanks.  I was looking for alternatives for a wiki and thought I would take a look.  Very interesting.  More documentation, both for the end-user and programmer would be useful.  BTW, I noticed that when I used the Clean template, I lost the useful side menu.  </p>\n<p>Thanks for sharing,</p>\n<p>Simon</p>\n<p>P.S. I ran into a bug when I tried to edit a new page:</p>\n<p>Exception Details: System.IO.DirectoryNotFoundException: Could not find a part of the path “C:ProjectsEZWebaspnet_clientEZWeb1_2FilePageConfigProvideraspnet_client1_2ftb.imagegalleryPageInfo.xml”.</p>\n<p>[DirectoryNotFoundException: Could not find a part of the path “C:ProjectsEZWebaspnet_clientEZWeb1_2FilePageConfigProvideraspnet_client1_2ftb.imagegalleryPageInfo.xml”.]<br>\n   System.IO.__Error.WinIOError(Int32 errorCode, String str) +287<br>\n   System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean useAsync, String msgPath, Boolean bFromProxy) +888<br>\n   System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize) +44<br>\n   System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize) +79<br>\n   System.IO.StreamReader..ctor(String path, Encoding encoding) +16<br>\n   Palermo.EZWeb.FileHelper.GetFileContents(String path) in E:My DocumentsMyOpenSVNEZWebaspnet_clientEZWeb1_1FileHelper.cs:16<br>\n   Palermo.EZWeb.Providers.FilePageConfigProvider.GetPageConfig(String virtualPath) in E:My DocumentsMyOpenSVNEZWebaspnet_clientEZWeb1_1ProvidersFilePageConfigProvider.cs:72<br>\n   Palermo.EZWeb.WebManager.WebDirectory.Refresh() in E:My DocumentsMyOpenSVNEZWebaspnet_clientEZWeb1_1WebManagerWebDirectory.cs:861<br>\n   Palermo.EZWeb.WebManager.WebDirectory.LoadNow() in E:My DocumentsMyOpenSVNEZWebaspnet_clientEZWeb1_1WebManagerWebDirectory.cs:700<br>\n   Palermo.EZWeb.WebManager.WebDirectory.EnsureLoaded() in E:My DocumentsMyOpenSVNEZWebaspnet_clientEZWeb1_1WebManagerWebDirectory.cs:631<br>\n   Palermo.EZWeb.Page.InitializeWebDirectory() in E:My DocumentsMyOpenSVNEZWebaspnet_clientEZWeb1_1Page.cs:398<br>\n   Palermo.EZWeb.Page.PreInitializePage() in E:My DocumentsMyOpenSVNEZWebaspnet_clientEZWeb1_1Page.cs:328<br>\n   Palermo.EZWeb.Page.Page_Init(Object sender, EventArgs e) in E:My DocumentsMyOpenSVNEZWebaspnet_clientEZWeb1_1Page.cs:235<br>\n   System.Web.UI.Control.OnInit(EventArgs e) +67<br>\n   System.Web.UI.Control.InitRecursive(Control namingContainer) +241<br>\n   System.Web.UI.Page.ProcessRequestMain() +195</p>"
+  },
+  {
+    "id": 454,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-09-07T14:15:12",
+    "type": "comment",
+    "content_html": "<p>Thanks, Simon.  You are correct with that bug while using FreeTextBox.  I’ve fixed this with a confuration change, and I’ll make another release that is a bit different in its deployment scenario.  I’m also getting a sandbox website set up.</p>"
+  }
+]

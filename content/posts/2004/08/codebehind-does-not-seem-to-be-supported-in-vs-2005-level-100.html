@@ -1,0 +1,16 @@
+---
+wp_id: 62
+title: CodeBehind does NOT seem to be supported in VS 2005 – level 100
+slug: codebehind-does-not-seem-to-be-supported-in-vs-2005-level-100
+permalink: /2004/08/codebehind-does-not-seem-to-be-supported-in-vs-2005-level-100/
+date: 2004-08-17T10:46:00
+date_utc: 2004-08-17T10:46:00Z
+modified: 2004-08-17T10:46:00
+format: html
+excerpt: I’m using VS.NET 2005 Beta 1, and I’m converting an existing web project to Whidbey format. The wizard pulled all my supporting code files (.cs) to the Code directory, but it left my code-behind files next to their aspx and ascx files. I learned that Web apps – called web sites in Whidbey – cannot […]
+comments_open: true
+---
+<p>I’m using VS.NET 2005 Beta 1, and I’m converting an existing web project to Whidbey format.&nbsp; The wizard pulled all my supporting code files (.cs) to the Code directory, but it left my code-behind files next to their aspx and ascx files.&nbsp; I learned that Web apps – called web sites in Whidbey – cannot be explicitly compiled as in VS.NET 2003.&nbsp; Meaning, I can’t put a Class1.cs in the root and have it compiled into the bin on Build.&nbsp; I have to either put this class in the Code directory or have it in a supporting class library project that I reference from the web site.&nbsp; </p>
+<p>It appears that only code files in the Code directory get compiled on a Build, and the (legacy) code-behind files do not get compiled.&nbsp; Then on run, the page errors out because it cannot find it’s code-behind class from which to inherit.&nbsp; </p>
+<p>Code-beside, however, does get compiled no matter where it is.&nbsp; The partial class linked through the CompileWith attribute gets compiled along with the aspx page.</p>
+<p>So it seems that code-behind is really NOT supported in Whidbey.&nbsp; Am I doing something wrong?&nbsp; Is anyone else using Code-behind in Whidbey? or trying to.</p>

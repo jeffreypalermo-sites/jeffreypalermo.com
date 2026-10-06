@@ -1,0 +1,56 @@
+[
+  {
+    "id": 2142,
+    "parent": 0,
+    "author_name": "cmyers",
+    "author_url": "http://www.chadmyers.com/Blog",
+    "date": "2007-11-21T21:01:40",
+    "type": "comment",
+    "content_html": "<p>My experience:  It will ‘upgrade’ your CSPROJ files, but not in an incompatible way. 2005 can still load them.<br>\nEXCEPT for the Web Application projects. It *WILL* make a breaking change to those. Steve Harman has a workaround: <a href=\"http://tinyurl.com/3atdxe\" rel=\"nofollow ugc\">http://tinyurl.com/3atdxe</a></p>"
+  },
+  {
+    "id": 2143,
+    "parent": 0,
+    "author_name": "Daniel Moth",
+    "author_url": "http://www.danielmoth.com/Blog/2007/05/using-c-30-from-net-20.html",
+    "date": "2007-11-24T11:30:30",
+    "type": "comment",
+    "content_html": "<p>Note that your VS2008 users will still have to be careful not to use C#3.0/VB9 features (which are of course usable against v2.0 of NetFx, but not understood by VS2005).</p>"
+  },
+  {
+    "id": 2144,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-11-24T21:09:07",
+    "type": "comment",
+    "content_html": "<p>@Daniel,<br>\nYou are absolutely correct, but that is why it is important to keep the local developer build and the CI build tied to the .Net 2.0 msbuild.exe so that if someone accidentally uses a non-supported syntax, the continuous build will catch it right away even before the developer has a change to commit the change to subversion.</p>"
+  },
+  {
+    "id": 2145,
+    "parent": 0,
+    "author_name": "Carel Lotz",
+    "author_url": "http://dotnet.org.za/cjlotz",
+    "date": "2007-11-26T08:46:10",
+    "type": "comment",
+    "content_html": "<p>A concern I have is that VS 2008 installs SP1 for .NET Framework 2.0.  You therefore may run into scenarios where things work in your local VS2008 developer sandbox but not on the build server.  Highly unlikely I agree, but still something to consider.  Do you therefore install .NET Framework 3.5 also on the server to get SP1 for .NET 2.0?  I haven’t checked, but is .NET 2.0 SP1 available as a separate download?  I don’t want to make .NET 3.5 a pre-requisite just to get SP1 for .NET 2.0 installed.  </p>"
+  },
+  {
+    "id": 2146,
+    "parent": 0,
+    "author_name": "Petar Repac",
+    "author_url": "http://",
+    "date": "2007-11-28T13:22:51",
+    "type": "comment",
+    "content_html": "<p>@ Carel Lotz<br>\n&gt; I haven’t checked, but is .NET 2.0 SP1 available as a separate download?<br>\nIt is. Look at:<br>\n<a href=\"http://www.microsoft.com/downloads/details.aspx?FamilyID=79bc3b77-e02c-4ad3-aacf-a7633f706ba5&amp;DisplayLang=en\" rel=\"nofollow ugc\">http://www.microsoft.com/downloads/details.aspx?FamilyID=79bc3b77-e02c-4ad3-aacf-a7633f706ba5&amp;DisplayLang=en</a></p>"
+  },
+  {
+    "id": 2147,
+    "parent": 0,
+    "author_name": "Carel Lotz",
+    "author_url": "http://dotnet.org.za/cjlotz",
+    "date": "2007-12-06T09:37:13",
+    "type": "comment",
+    "content_html": "<p>&gt; after all, your continuous integration server should only have .Net 2.0 installed if that’s what you are targeting.</p>\n<p>MSBuild allows you to specify a TargetFrameworkVersion property by which you can force compiler errors to be generated for code that are using features not supported by the specific version of the .NET Framework, i.e. if you create an application with some LINQ queries, the following creates compile errors:</p>\n<p>msbuild ConsoleApplication1.csproj /ToolsVersion:3.5 /p:TargetFrameworkVersion=v2.0 OR<br>\nmsbuild ConsoleApplication1.csproj /ToolsVersion:3.5 /p:TargetFrameworkVersion=v3.0</p>\n<p>However, the following compiles successfully.</p>\n<p>msbuild ConsoleApplication1.csproj /ToolsVersion:3.5 /p:TargetFrameworkVersion=v3.5</p>\n<p>This allows me to still take advantage of the new improved build features like parallel builds in MSBuild 3.5.</p>"
+  }
+]

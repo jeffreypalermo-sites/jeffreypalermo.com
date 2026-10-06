@@ -1,0 +1,20 @@
+[
+  {
+    "id": 270,
+    "parent": 0,
+    "author_name": "Marc Leger",
+    "author_url": "http://",
+    "date": "2005-12-04T10:50:22",
+    "type": "comment",
+    "content_html": "<p>Absolutely amazing demo!  Thank you very much for the code.</p>"
+  },
+  {
+    "id": 271,
+    "parent": 0,
+    "author_name": "Ran Davidovitz",
+    "author_url": "http://davidovitz.blogspot.com",
+    "date": "2008-03-14T19:52:14",
+    "type": "comment",
+    "content_html": "<p>very nice diagram!,<br>\nLets take an example that we consume several WCF services, this means that we have several types of contracts.<br>\nin a default scenraio this means that our presenter will expose at least one contract from each WCF service – so we dont have a reallt domain model that is created in one project.<br>\nI don’t see a way to create a domain model that will be used by the presentation tier and other tiers , other than creating a mapping between the two models.</p>\n<p>What do you think?</p>"
+  }
+]

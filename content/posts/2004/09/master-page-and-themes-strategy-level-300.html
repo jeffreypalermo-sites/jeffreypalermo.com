@@ -1,0 +1,17 @@
+---
+wp_id: 101
+title: Master page and Themes strategy – level 300
+slug: master-page-and-themes-strategy-level-300
+permalink: /2004/09/master-page-and-themes-strategy-level-300/
+date: 2004-09-03T15:50:00
+date_utc: 2004-09-03T15:50:00Z
+modified: 2004-09-03T15:50:00
+format: html
+excerpt: 'In ASP.NET v2.0, we’re benefiting from master pages and themes. Themes not only sets the stylesheet that is applied to the page, but it also has the ability to set properties on server controls. If I want all <asp:LinkButton/> controls to NOT cause validation, then I can implement a Theme line item: <asp:LinkButton runat=”server” CausesValidation=”False”/> […]'
+comments_open: true
+---
+<p>In ASP.NET v2.0, we’re benefiting from master pages and themes.&nbsp; Themes not only sets the stylesheet that is applied to the page, but it also has the ability to set properties on server controls.&nbsp; If I want all &lt;asp:LinkButton/&gt; controls to NOT cause validation, then I can implement a Theme line item:</p>
+<p>&lt;asp:LinkButton runat=”server” CausesValidation=”False”/&gt;</p>
+<p>and then every &lt;asp:LinkButton/&gt; will have that property set automatically.</p>
+<p>When implementing master pages also, you have to think, “what themes are compatible with this master page?”&nbsp; Especially if you have graphics, and your theme is going to change color, your master page has to have another set of graphics to support this new color, so the two aren’t always independent.&nbsp; </p>
+<p>These are great features, and we’ll all surely use them in all our ASP.NET 2.0 projects.</p>

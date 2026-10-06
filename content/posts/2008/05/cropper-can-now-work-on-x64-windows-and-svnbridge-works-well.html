@@ -1,0 +1,18 @@
+---
+wp_id: 651
+title: Cropper can now work on x64 Windows (and SvnBridge works well)
+slug: cropper-can-now-work-on-x64-windows-and-svnbridge-works-well
+permalink: /2008/05/cropper-can-now-work-on-x64-windows-and-svnbridge-works-well/
+date: 2008-05-17T06:42:00
+date_utc: 2008-05-17T06:42:00Z
+modified: 2018-07-04T17:05:45
+format: html
+categories:
+- blog
+excerpt: I recently tried out Windows Server 2008 x64, and I’m gradually transitioning. I’m installing all the tools I have on my XP drive, but I won’t complete the switch until I’ve verified there are no blocking issues. I regularly use Cropper to grab snapshots of my screens and portions of them. I tried running […]
+comments_open: true
+---
+<p>I recently tried out Windows Server 2008 x64, and I’m gradually transitioning.&nbsp; I’m installing all the tools I have on my XP drive, but I won’t complete the switch until I’ve verified there are no blocking issues. &nbsp;</p>
+<p>I regularly use Cropper to grab snapshots of my screens and portions of them.&nbsp; I tried running it, and it failed spectacularly!&nbsp; I decided to grab the code from <a href="http://www.codeplex.com/cropper/SourceControl/ListDownloadableCommits.aspx">CodePlex</a> and see why it was failing. I ran through and was able to fix the issues.&nbsp; The main issue was that it was built against .Net 2.0 with Any CPU, but it depends on Win32 APIs.&nbsp; I switched the build configurations to x86, refactored an assembly load problem buried in a static constructor, modified the MSI setup project, and it started working.</p>
+<p>I’ve submitted a patch back to the <a href="http://www.codeplex.com/cropper">CodePlex project</a>, so if you need Cropper on x64 Vista or Server08, you can grab the code with TortoiseSVN, <a href="http://www.codeplex.com/cropper/SourceControl/PatchList.aspx">apply the patch </a>and make your own build.&nbsp; I’ve sent Brian a note, so I’m hoping he’ll either add me to the project or apply the patch soon.</p>
+<p>I used SvnBridge to pull down the source code.&nbsp; I didn’t want to install Team Explorer JUST to pull down one project.&nbsp; I’m happy to report that SvnBridge 2.0 worked very well.&nbsp; I followed the <a href="http://www.codeplex.com/CodePlex/Wiki/View.aspx?title=Using%20TortoiseSVN%20with%20CodePlex&amp;referringTitle=Source%20control%20clients">instructions here </a>for pulling down the source code with TortoiseSVN.&nbsp;</p>

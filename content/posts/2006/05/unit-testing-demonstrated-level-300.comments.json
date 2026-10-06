@@ -1,0 +1,164 @@
+[
+  {
+    "id": 852,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2006-05-07T08:50:14",
+    "type": "comment",
+    "content_html": "<p>The problem with this style of test is that it looks fragile to me.<br>\nYou are basically repeating the code you are testing in the test using mocks. Nearly any change that you’ll make there will break the test.</p>\n<p>How do you handle this?</p>"
+  },
+  {
+    "id": 853,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-05-07T13:39:36",
+    "type": "comment",
+    "content_html": "<p>Ayende,<br>\nI’d certainly be open to other ideas about unit testing this Presenter method.  In this craft, I learned quickly that there can be several correct ways to do things.</p>\n<p>I’ll be honest and say that I don’t understand how the test is fragile.  The code needs to get information from model and set it to controls on the veiw.  There isn’t any domain logic in this code, just coordinating logic.  There are 6 controls, so there are six pieces of information that need to be set.  The code can be reordered and refactored at will, and this tests will still pass, so I’m not sure I understand what you are telling me.  </p>"
+  },
+  {
+    "id": 854,
+    "parent": 0,
+    "author_name": "JBarbatos",
+    "author_url": "http://",
+    "date": "2006-05-07T16:23:59",
+    "type": "comment",
+    "content_html": "<p>I see you have also been using Fitnesse, how would something like this fit into these tests? Or does it at all? </p>\n<p>Based of the above sample, you would have 2 projects, EZWeb apps and something like EZWeb.Tests right? Assuming you were to use Fitnesse as well, would you then create a thrid assembly like EZWeb.Fitnesse or just keep all tests together in EZWeb.Tests? </p>"
+  },
+  {
+    "id": 855,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog/",
+    "date": "2006-05-07T20:38:19",
+    "type": "comment",
+    "content_html": "<p>The problem is that the test basically create a set of expectations for every line of code.</p>\n<p>Any change to LoadConfiguration will break the test. Even something as simple as adding logging information, which I usually don’t have tests for.</p>\n<p>I don’t see another way to test it, to tell you the truth, but I have problems with the test being so very tightly coupled with the code.</p>"
+  },
+  {
+    "id": 856,
+    "parent": 0,
+    "author_name": "Vikas Kerni",
+    "author_url": "http://vikasnetdev.blogspot.com/",
+    "date": "2006-05-07T21:46:21",
+    "type": "comment",
+    "content_html": "<p>Very nice post.<br>\nYou forced me to read Mock Objects.<br>\nAfter reading your post , I have to read article Introducing Rhino Mocks by Ayende.<br>\nNice Article, Ayende. Then again I read your post and it made sense to me. I am very sure that this framework will be very helpful for  writing  automated unit tests.<br>\nI really liked your pragmatic remarks at Ar-agilist post discussion.<br>\nI am looking forward to your Article demonstrating how you write automated test cases for entity classes which perform CRUD operations.</p>"
+  },
+  {
+    "id": 857,
+    "parent": 0,
+    "author_name": "Liang",
+    "author_url": "http://",
+    "date": "2006-05-08T13:17:05",
+    "type": "comment",
+    "content_html": "<p>Hi Jeffrey,</p>\n<p>It is a very nice post. I am just curious if you apply TDD, which means you use Mock or any other unit testing framework in your design process? or using as pure testing? If you follow TDD, you still have a basic application architecture in your mind when writing the code?</p>\n<p>Thanks!</p>"
+  },
+  {
+    "id": 858,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-05-08T19:58:58",
+    "type": "comment",
+    "content_html": "<p>JBarbatos,<br>\nYes, I also do FIT tests.  FitNesse is a GUI for running FIT tests.  I start with unit testing to test the smallest units of code first.  I then combine integration tests in the small, and then for the full system.  FIT tests then  run the same way as full-system integration tests, but they are readable by non-technical folks.  </p>\n<p>I do break my tests into another assembly.  My application assembly is EZWeb.dll, and I have EZWeb.UnitTests.dll and EZWeb.IntegrationTests.dll.  I have a Fit namespace inside integration tests for my FIT fixtures.  It’s up to you how to split them out, though.  I wouldn’t say that there is any rule on how to do it.  You don’t, however, want to deploy these tests with the application normally.</p>"
+  },
+  {
+    "id": 859,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-05-08T20:00:46",
+    "type": "comment",
+    "content_html": "<p>Ayende,<br>\nI’m still open for suggestions, but I’ve found that all my unit tests are very specific to the code.  After all, they exist to validate that unit of code.  I can reorder and extract methods all day long, but as long as I’m talking to the dependencies in the same way, this test will pass.  UI code is very different from other code.  UI code is boring (ask something for this data – push this data to UI controls).  Other parts of the system get more interesting.</p>"
+  },
+  {
+    "id": 860,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-05-08T20:02:40",
+    "type": "comment",
+    "content_html": "<p>Vikas,<br>\nI may write a post on unit testing data access controllers in the future.  I can say right now that I’ll use NHibernate, but the data access controllers will be tested in isolation first before being tested along with the database.</p>\n<p>Interfaces are the key. . . and a service locator tool like StructureMap or Spring.</p>"
+  },
+  {
+    "id": 861,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-05-08T20:06:03",
+    "type": "comment",
+    "content_html": "<p>Liang,<br>\nI do apply TDD to modifying code normally, but when refactoring legacy code to be more testable, I find it’s hard to write a test first.  I tend to break the hard dependencies first and then write a unit test.  At the point that I’ve made the old code loosely-coupled, I can then write more tests first.  I value unit testing whether the test is written first or second.</p>\n<p>I use Rhino mocks exclusively as my mock framework.  From time to time, I’ll use concrete mock and stub classes, though.</p>\n<p>I always have an application architecture in mind when writing code.  The application just won’t fall into place.  Without a design, what can you make?  Now, certain conditions pop out midstream as well, so I find that I might have to shift directions a bit while I’m going.  You can never design and predict everything from the start.</p>"
+  },
+  {
+    "id": 862,
+    "parent": 0,
+    "author_name": "Liang",
+    "author_url": "http://",
+    "date": "2006-05-08T23:35:18",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>Thank you so much for your reply! I am using Rhino Mock as well. Thanks Ayende! That is the best I can find so far. But I still have some confusion regarding the process of TDD. When I read the TDD articles, it seem to ask me to write method by method first. Then through continuous refactoring, we can reach a better design. So that is my question coming from. Obviously we can not expect everything from start, but as you said, we DO have a basic architecture in mind, for example, I have to decide to follow a real Domian/Repository pattern or other type of mapping patterns. Put another way, TDD itself won’t lead us to that.</p>\n<p>Thanks again!</p>"
+  },
+  {
+    "id": 863,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://flimflan.com/blog",
+    "date": "2006-05-09T13:46:55",
+    "type": "comment",
+    "content_html": "<p>I was making Ayende’s point at a recent AgileATX lunch as I was writing the same kidns of tests, but feeling uncomfortable about it. Unit tests that use a lot of mocking to re-iterate each step in the class being tested do feel fragile. Your unit test is now very tightly coupled to the implementation details. You usually try to hide implementation details from your unit tests (which is why you don’t test private methods), so that you can easily refactor the implementation without breaking your tests. Otherwise every time you change your code, you need to change your test.<br>\nJeremy helped me feel a little better about it by saying that (paraphrasing) in this case, you are not testing the interface of the method (inputs &amp; outputs) – you are testing and verifying the interaction of the class with its collaborators. A valid approach, you just have to live with the fragile feeling.</p>"
+  },
+  {
+    "id": 864,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-05-09T14:47:37",
+    "type": "comment",
+    "content_html": "<p>Josh,<br>\nYes, there is a lot of setup, but this method seems to be working well.  Of course, I’m always open to better ways to do things.</p>"
+  },
+  {
+    "id": 865,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://flimflan.com/blog",
+    "date": "2006-05-09T20:40:56",
+    "type": "comment",
+    "content_html": "<p>After thinking about it a little more… I wonder if maybe this method doesn’t need to be unit tested? Like a simple get/set accessor – the method is not doing any logic (there is only a single conditional (IsPostBack), which is negligible from a testing perspective). If you think of it from the angle of “unit tests as documentation”, what additional documentation does this test add? To me, it doesnt add anything. It just regurgitates the code under test. Its like the old guideline about code comments: explain what the code does, not how the code does it. This sort of heavily mocked unit test does not document what the code does, it only documents how it does it.<br>\nSo now I’m having a crisis of faith and starting to question the value of the MVP pattern for unit testing, since the only part we are (presumably) testing is the Presenter, and it is mainly performing straigtforward “getter/setter” type glue methods with negligible logic.<br>\nI’m not criticizing your approach or saying I know a better way – I’m just trying to open the conversation. Are we getting the value that we expect from this type of unit test and design? Maybe we’ll have to re-open the topic at the next lunch.</p>"
+  },
+  {
+    "id": 866,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-05-09T21:01:10",
+    "type": "comment",
+    "content_html": "<p>I don’t unit test getters and setters because my take on it is that I’m not going to unit test generated code.  All my getters and setters are generated by Resharper.  </p>\n<p>Resharper can’t generate my method here.  It does something important.  This method has to coordinate 6 pieces of information from a data source to the right places on the view. . . but only if IsPostBack is false.</p>\n<p>That doesn’t sound like a method that is immune to bugs.  In my experience, the places where bugs lie are the places that I neglect to test.</p>\n<p>The cyclomatic complexity of this method is 2 (not even 1 like getters and setters).  This method is sufficiently complicated that I would not think of ignoring it, and if I don’t test it with a unit test, then I have to test it in another way, like running the application manually (and that takes much more time).</p>"
+  },
+  {
+    "id": 867,
+    "parent": 0,
+    "author_name": "Joshua Flanagan",
+    "author_url": "http://flimflan.com/blog",
+    "date": "2006-05-10T02:07:50",
+    "type": "comment",
+    "content_html": "<p>What if you used DynamicMocks so that you didn’t have to setup all the expections (repeating your implementation code)? Your test would just focus on whether the code does SOMETHING when IsPostBack is true, and NOTHING when it is false.</p>\n<p>In your example, you would get rid of everything after:<br>\n           Expect.Call(context.GetPageConfig()).Return(mockConfig);<br>\nand before:<br>\n           mocks.ReplayAll();</p>\n<p>Any other logic that may be relevant (like stripping out . and _ folders) could be covered by another simple test.</p>"
+  },
+  {
+    "id": 868,
+    "parent": 0,
+    "author_name": "bobwantstdd",
+    "author_url": "http://",
+    "date": "2006-05-22T20:57:05",
+    "type": "comment",
+    "content_html": "<p>Hi Jeffrey,</p>\n<p>Didn’t want you to think I wrote one long comment here and promptly forgot about you.</p>\n<p>I spent about a week playing with nunitasp, along with other tasks,  and then of course got the demand “Show some results”</p>\n<p>Now that they have a lousy piece of code that “shows something”, is not really too testable and stinks, I can get back to trying to figure out how to do this the right way, or at least some approximation thereof \uD83D\uDE42</p>\n<p>Q#1, “read up on MVP”<br>\nI found Fowlers article at <a href=\"http://www.martinfowler.com/eaaDev/ModelViewPresenter.html\" rel=\"nofollow ugc\">http://www.martinfowler.com/eaaDev/ModelViewPresenter.html</a></p>\n<p>Got a recommendation of anything a bit more straightforward?  I could use a URL, if you know one, where someone actually takes hello world, maybe adds a button or two, and then changes it into a mvp version.</p>\n<p>Barring that, perhaps a recommended reading list from you?  I like your style of writing more than most others, so I’m hoping your suggestions will save me some time.</p>\n<p>Q#2  I understand the point of mocks ( well, i think i do ) and stubs ( pretty sure I do )</p>\n<p>The thing is, the group I am working in now didn’t even implement source control, in any form whatsoever, until I got here.  The one app I work on usually gets out of synch if anyone but me works on it.  ( At least they WANT to use VSS, so there is hope…. )</p>\n<p>Much less implement testing or TDD.  They are mostly a bright bunch, just severely time limited due to management requests.</p>\n<p>One of the things I like about NOT mocking or stubbing in this work environment is knowing that a failure is environmental.</p>\n<p>Other folks may ( unfortunately ) be in similar situations.</p>\n<p>OK, the actual Q#2 , could you perhaps post the codebehind of the above sample.  *thinking* I know what it looks like and seeing could be different.  I want to *know* I know what it looks like.  Even a link to a zip or rar containing these 3 or four code files wouold give me a better picture.  I think I can safely infer the contents of the .aspx itself, but include that if it might be useful to determine the names of the controls.  doh, just noticed its a control, well, whatever source files you feel might be useful.</p>\n<p>well, that’s enough for now.  I need to figure out how to convert some inherited code into something digestible, while adding functionality, to a third party DB app ( written in vb.net I think.  They don’t actually have the source or anything silly like that ) that has no documentation, apparently in three days ( or get fired / yelled at / whatever ) while adding in some automated testing to avoid self-foot-shooting.<br>\nOh, and write it all clean enough that the nightmares stop too.<br>\nRead ya later…</p>"
+  },
+  {
+    "id": 869,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-05-28T18:59:02",
+    "type": "comment",
+    "content_html": "<p>Bob,<br>\nThanks for the feedback.  I have a long bloggin todo list, and I’ll post a full sample when I’m satisfied that it clearly illustrates the pattern.</p>"
+  }
+]

@@ -1,0 +1,13 @@
+---
+wp_id: 554
+title: There is NO performance different between code-behind and in-line code. – level 200
+slug: there-is-no-performance-different-between-code-behind-and-in-line-code-level-200
+permalink: /2004/06/there-is-no-performance-different-between-code-behind-and-in-line-code-level-200/
+date: 2004-06-01T17:05:00
+date_utc: 2004-06-01T17:05:00Z
+modified: 2004-06-01T17:05:00
+format: html
+excerpt: I recently had an interesting discussion over lunch with a colleague about the performance of in-line code versus the code-behind model. I relayed that I prefer to put the small, UI-related code in a <script runat=”server”/> block in the .aspx file, and my colleague swore by the code-behind model. I currently use the code-behind model […]
+comments_open: true
+---
+<p>I recently had an interesting discussion over lunch with a colleague about the performance of in-line code versus the code-behind model.&nbsp; I relayed that I prefer to put the small, UI-related code in a &lt;script runat=”server”/&gt; block in the .aspx file, and my colleague swore by the code-behind model.&nbsp; I currently use the code-behind model because intellisense makes development so much faster, but every time I want to make a small change to the UI that involves som C#, I have to fire up VS.NET and then build the whole project.&nbsp; For my corporate projects I do this anyway because the of the source control, but not all projects need this.&nbsp; My colleague insisted that script block incur and extra performance hit because the ASP.NET engine must check for changes in every page hit.&nbsp; After lunch, I whipped up a test and created to ASP.NET pages:&nbsp; one with code-behind, and the other with the code in a script block.&nbsp; I ran each for 1 minute in <a href="http://www.microsoft.com/technet/itsolutions/intranet/downloads/webstres.mspx">WAST</a>.&nbsp; Then I ran each 8 more times.&nbsp; My results:&nbsp; It doesn’t make a hill of beans difference.&nbsp; Each test was less than 1% difference.&nbsp; Some tests the code-behind was less and 1% faster and some resulted in the in-line code being less than 1% faster.&nbsp; Averaging all the tests gave the same performance for both methods.&nbsp; So now I know first-hand that it doesn’t matter architecturally.&nbsp; It’s only personal&nbsp; and team preference.&nbsp; Now, don’t take this as an excuse for putting a lot of code in your .aspx page.&nbsp; If you choose to do that, it should only be UI event handlers.&nbsp; All REAL code should be in your business objects.&nbsp; Use this knowledge responsibly!</p>

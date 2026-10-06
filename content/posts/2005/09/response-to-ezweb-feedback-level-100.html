@@ -1,0 +1,32 @@
+---
+wp_id: 315
+title: Response to EZWeb feedback – level 100
+slug: response-to-ezweb-feedback-level-100
+permalink: /2005/09/response-to-ezweb-feedback-level-100/
+date: 2005-09-08T15:06:00
+date_utc: 2005-09-08T15:06:00Z
+modified: 2005-09-08T15:06:00
+format: html
+excerpt: 'Stefano, in this post, gives some feedback about EZWeb 1.2 release 2. He has set up EZWeb on his server here. Here is Stefano’s comments (in italics) and my response. I’ve setup the site on this address on my server and I have to say that the project has totally reached its 2 main purposes: Easy […]'
+comments_open: true
+---
+<p><a href="http://demiliani.com/blog/">Stefano</a>, in <a href="http://demiliani.com/blog/archive/2005/09/07/2926.aspx">this post</a>, gives some feedback about EZWeb 1.2 release 2.&nbsp; He has set up EZWeb on his server <a href="http://www.demiliani.com/web/">here</a>.&nbsp; Here is Stefano’s comments <em>(in italics)</em>&nbsp;and my response.</p>
+<p><em>I’ve setup the site on </em><a href="http://www.demiliani.com/web"><em>this address</em></a><em> on my server and I have to say that the project has totally reached its 2 main purposes:</em></p>
+<ul><br>
+<li><em>Easy to install: you’ve only to copy on a virtual directory of your IIS server the content of the package and set a special permission to a directory and all is done. </em><br>
+</li><li><em>Easy to edit contents: the site uses the FreeTextBox control to edit pages. You can easy create how many pages you want and edit content is so easy as writing a document with MS Word (so it’s a task that can be improved also for a person that don’t know nothing about HTML).</em></li></ul>
+<p><em>However, this post is expecially to send feedback for future improvements, and&nbsp;I think that some more work must be done on these areas:</em></p>
+<ul><br>
+<li><em>Site Templates: the templates that are present now on the package are really too much “poor”. Why not working on a graphical template, with images and CSS? The site’s appearance is not so good for eyes I think… </em></li></ul>
+<p><strong>I definitely agree with this one.&nbsp; I’ve concentrated my efforts on the internal framework, so the templates are very basic.&nbsp; Templates are just a simple UserControl that is almost exactly like v2.0 master pages.&nbsp; It is very easy to modify the markup of any of the templates to alter the look of the site.&nbsp; I’ve included the full source for all templates and plugins – which are both just user controls.&nbsp; I do plan on adding more attractive templates to choose out of the box, and if anyone wants to contribute a template, I’ll gladly include it.&nbsp; With the advent of “Master Pages”, we’ll probably see online libraries of them.&nbsp; It will be trivial to use any template or master page with EZWeb.</strong></p>
+<ul><br>
+<li><em>User Administration: adding a user to the site is really easy, but why not adding a more complete user interface, with the possibility to add user’s data for example?</em></li></ul>
+<p><strong>I have big plans for my 2.0 version to coorespond with .Net 2.0, and one of the things is using the built-in User Management provider, so I didn’t want to invest in a custom user management piece at this point.&nbsp; Even so, user attributes would only make sense in a situation where you extend EZWeb with a control that makes use of these attributes, like a control that checks roles.&nbsp; For this, you can create your own User class at this point and change the web.config to use your class.&nbsp; Without custom development, user attributes don’t make sense at this point, but I will comply with the Membership provider for my version 2.</strong></p>
+<p><em>Now two personal requests to Jeffrey: </em><a title="" href="http://demiliani.com/blog/#"><em><img src="https://i0.wp.com/messenger.msn.it/Resource/emoticons/wink_smile.gif?w=776" border="0"></em></a></p>
+<ul><br>
+<li><em>How can I change user’s permission? If I want to create a user that has permissions to add pages just like an administrato, how can I do? I’ve not understood this… </em></li></ul>
+<p><strong>To change user permissions, click on “Manage Page” when logged in as “admin”.&nbsp; At the bottom of the screen, you see “Editors”.&nbsp; All the users should appear in the drop-down.&nbsp; Click Add, and then select what permissions to delegate for the current page.&nbsp; For most cases, allowing all permissions is best, but you can give EditContent permission only if you really want.&nbsp; Click “update” in that row, and then click “Save”.&nbsp; Then, when logged in as that user, you can exercise that permission.&nbsp; Permissions work down the web tree just like NTFS permission in the filesystem.&nbsp; Permissions at the site root are inherited by all pages in the site.&nbsp; </strong></p>
+<ul><br>
+<li><em>Is it possible to add a task list or a calendar feature to the site? I think that something like an “Outlook” calendar could be useful on a site like this.</em></li></ul>
+<p><strong>It is possible if you have a calendar ASP.NET web control.&nbsp; Any web control can be invoked dynamically by any page.&nbsp; Use the “Control Loader” plugin.&nbsp; It can load a user control or custom control.&nbsp; For this version, the Content Editor is the only plugin with a GUI.&nbsp; EZWeb is expandable by adding web controls that do the functionality desired.&nbsp; Code to all plugins is included in the download.&nbsp; If anyone has a control that would be useful for EZWeb, I’ll be happy to include it.</strong></p>
+<p><strong>Also, at some point, I think an EZWebContrib open source project might be useful for Templates, Plugins, and Themes.</strong></p>

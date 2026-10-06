@@ -1,0 +1,20 @@
+[
+  {
+    "id": 384,
+    "parent": 0,
+    "author_name": "JH",
+    "author_url": "http://",
+    "date": "2005-07-27T03:38:16",
+    "type": "comment",
+    "content_html": "<p>I think that there are at least two significant difficulties with agile that causes it to fail in many cases.</p>\n<p>1. It comes off, when described in “boot camps” delivered to early-adopting larger businesses, as a “developer methodology”. It is often being presented to management who are generally non-developers. Developers tend to be easily sold on this methodology as they are generally looking for something to address the issues of poor project management in their traditional methodology. Though it is often confused that documentation and other artifacts is not a requirement of agile, the delivery of those artifacts is most definitely something that can be done within this delivery model when desired by the customer.</p>\n<p>2. Because it is in relative infancy, those that are attempting to manage the project (PM’s or “Iteration Managers”) are often very weak in addressing concerns about the methodology brought up by customers. This weakness tends to lend itself to customers distrusting what they decided they would go for during the boot camp introduction. It then becomes very easy to lapse back into the ol’ stand-by methodologies that the company has been used to in the past. Sometimes it is even the case that the poor project managers from other methodologies are now giving agile a try and proving that they are equally poor at delivering software under the agile methodology.</p>\n<p>My experience has shown me that poor project management (by whom ever is running to project), regardless of the delivery model, has been the major contributor to project downfall.  In the end, customers of custom software projects need to understand that the product being developed _is_ the livelyhood of their business and that they didn’t develop their method of delivering goods or services to the public between May and October of one calendar year. </p>\n<p>The value of the project (from both developers and customers) comes when customers acknowledge that those developing the product for them are respecting the complexities and unique nature of their business and are as unwilling to sacrifice quality, just as the customer does in their business. This seems to be the point that project managers need to be able to deliver to customers, regardless of the delivery methodology, and have been failing to sucessfully do so for years. If this problem can be solved, any methodology would be seen as successful by customers and more projects would be successful as any artifacts or deliverables can be worked in to any methodology.</p>"
+  },
+  {
+    "id": 385,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-07-27T15:34:20",
+    "type": "comment",
+    "content_html": "<p>That’s a very good point.  You must have a capable project manager as well.</p>"
+  }
+]

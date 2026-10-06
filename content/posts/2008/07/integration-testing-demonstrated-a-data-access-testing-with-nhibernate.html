@@ -1,0 +1,69 @@
+---
+wp_id: 932
+title: Integration testing demonstrated (a data access testing with NHibernate)
+slug: integration-testing-demonstrated-a-data-access-testing-with-nhibernate
+permalink: /2008/07/integration-testing-demonstrated-a-data-access-testing-with-nhibernate/
+date: 2008-07-07T11:23:37
+date_utc: 2008-07-07T11:23:37Z
+modified: 2008-07-07T11:23:37
+format: html
+categories:
+- blog
+excerpt: In this post, I’ll talk about and demonstrate integration testing. If you are just starting out with integration testing, you want to test small before you test big. For instance, full-system tests are good, but if they fail, they don’t give much of a hint as to where the failure is. Smaller integration tests […]
+comments_open: true
+---
+<p>In this post, I’ll talk about and demonstrate integration testing. If you are just starting out with integration testing, you want to test small before you test big. For instance, full-system tests are good, but if they fail, they don’t give much of a hint as to where the failure is. Smaller integration tests will help narrow the area where the failure lies.&nbsp; After designing a vertical slice of the application with my team, I like to test-drive the code (that is micro-test the code) into existence.&nbsp; Then, each scenario gets a covering integration test to prove that all the pieces fit together.</p>
+<p><b>A few rules to live by</b></p>
+<p>· An integration test must be isolated in setup and teardown. If it requires some data to be in a database, it must put it there. Environmental variables should not cause the test to fail randomly.</p>
+<p>· It must also run fast. If it is slow, build time will suffer, and you will run fewer builds – leading to other problems.</p>
+<p>· Integration tests should be order-independent. It should not matter the order you run them. They should all pass.</p>
+<p>· Feel free to make up rules that objectively result in fewer defects.</p>
+<p><b>Testing a repository class</b></p>
+<p>Below, you’ll see an integration test for ConferenceRepository.cs.&nbsp; This code is in CodeCampServer, so you have full access to the whole system if that helps you understand what’s going on. <!--
+{rtf1ansiansicpglang1024noproof1252uc1 deff0{fonttbl{f0fnilfcharset0fprq1 Lucida Console;}}{colortbl;??red0green0blue0;red255green255blue255;red43green145blue175;red0green0blue255;red163green21blue21;}??fs24 tab tab [cf3 Testcf0 ]par ??tab tab cf4 publiccf0  cf4 voidcf0  GetByKey()par ??tab tab {par ??tab tab tab cf3 Conferencecf0  theConference = CreateConference(cf5 "Frank"cf0 , cf5 "some name"cf0 );par ??tab tab tab cf3 Conferencecf0  conference2 = CreateConference(cf5 "Frank2"cf0 , cf5 "some name2"cf0 );par ??tab tab tab cf4 usingcf0  (cf3 ISessioncf0  session = getSession())par ??tab tab tab {par ??tab tab tab tab session.SaveOrUpdate(theConference);par ??tab tab tab tab session.SaveOrUpdate(conference2);par ??tab tab tab tab session.Flush();par ??tab tab tab }par ??par ??tab tab tab cf3 IConferenceRepositorycf0  repository = cf4 newcf0  cf3 ConferenceRepositorycf0 (_sessionBuilder);par ??tab tab tab cf3 Conferencecf0  conferenceSaved = repository.GetConferenceByKey(cf5 "Frank"cf0 );par ??par ??tab tab tab cf3 Assertcf0 .That(conferenceSaved, cf3 Iscf0 .Not.Null);par ??tab tab tab cf3 Assertcf0 .That(conferenceSaved, cf3 Iscf0 .EqualTo(theConference));par ??tab tab tab cf3 Assertcf0 .That(theConference.Key, cf3 Iscf0 .EqualTo(cf5 "Frank"cf0 ));par ??tab tab tab cf3 Assertcf0 .That(theConference.Name, cf3 Iscf0 .EqualTo(cf5 "some name"cf0 ));par ??tab tab }}
+--></p>
+<div style="background:white none repeat scroll 0; -moz-background-clip:-moz-initial; -moz-background-origin:-moz-initial; color:black">
+<p>&nbsp; &nbsp; [<span style="color:rgb(43,145,175)">Test</span>]</p>
+<p>&nbsp; &nbsp; <span style="color:blue">public</span> <span style="color:blue">void</span> GetByKey()</p>
+<p>&nbsp; &nbsp; {</p>
+<p>&nbsp; &nbsp; &nbsp; <span style="color:rgb(43,145,175)">Conference</span> theConference = CreateConference(<span style="color:rgb(163,21,21)">"Frank"</span>, <span style="color:rgb(163,21,21)">"some name"</span>);</p>
+<p>&nbsp; &nbsp; &nbsp; <span style="color:rgb(43,145,175)">Conference</span> conference2 = CreateConference(<span style="color:rgb(163,21,21)">"Frank2"</span>, <span style="color:rgb(163,21,21)">"some name2"</span>);</p>
+<p>&nbsp; &nbsp; &nbsp; <span style="color:blue">using</span> (<span style="color:rgb(43,145,175)">ISession</span> session = getSession())</p>
+<p>&nbsp; &nbsp; &nbsp; {</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; session.SaveOrUpdate(theConference);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; session.SaveOrUpdate(conference2);</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; session.Flush();</p>
+<p>&nbsp; &nbsp; &nbsp; }</p>
+
+<p>&nbsp; &nbsp; &nbsp; <span style="color:rgb(43,145,175)">IConferenceRepository</span> repository = <span style="color:blue">new</span> <span style="color:rgb(43,145,175)">ConferenceRepository</span>(_sessionBuilder);</p>
+<p>&nbsp; &nbsp; &nbsp; <span style="color:rgb(43,145,175)">Conference</span> conferenceSaved = repository.GetConferenceByKey(<span style="color:rgb(163,21,21)">"Frank"</span>);</p>
+
+<p>&nbsp; &nbsp; &nbsp; <span style="color:rgb(43,145,175)">Assert</span>.That(conferenceSaved, <span style="color:rgb(43,145,175)">Is</span>.Not.Null);</p>
+<p>&nbsp; &nbsp; &nbsp; <span style="color:rgb(43,145,175)">Assert</span>.That(conferenceSaved, <span style="color:rgb(43,145,175)">Is</span>.EqualTo(theConference));</p>
+<p>&nbsp; &nbsp; &nbsp; <span style="color:rgb(43,145,175)">Assert</span>.That(theConference.Key, <span style="color:rgb(43,145,175)">Is</span>.EqualTo(<span style="color:rgb(163,21,21)">"Frank"</span>));</p>
+<p>&nbsp; &nbsp; &nbsp; <span style="color:rgb(43,145,175)">Assert</span>.That(theConference.Name, <span style="color:rgb(43,145,175)">Is</span>.EqualTo(<span style="color:rgb(163,21,21)">"some name"</span>));</p>
+<p>&nbsp; &nbsp; }</p>
+</div>
+<p>You’ll probably want to pull down the entire source tree using TortoiseSVN using the Subversion url:&nbsp; <a href="https://codecampserver.googlecode.com/svn/trunk" title="https://codecampserver.googlecode.com/svn/trunk">https://codecampserver.googlecode.com/svn/trunk</a></p>
+<p>Just for context, this test is testing an implementation of the following interface: <!--
+{rtf1ansiansicpglang1024noproof1252uc1 deff0{fonttbl{f0fnilfcharset0fprq1 Lucida Console;}}{colortbl;??red0green0blue0;red255green255blue255;red0green0blue255;red43green145blue175;}??fs24 tab cf3 publiccf0  cf3 interfacecf0  cf4 IConferenceRepositorypar ??cf0 tab {par ??tab tab cf4 Conferencecf0 [] GetAllConferences();par ??tab tab cf4 Conferencecf0  GetConferenceByKey(cf3 stringcf0  key);par ??tab tab cf4 Conferencecf0  GetFirstConferenceAfterDate(cf4 DateTimecf0  date);par ??tab tab cf4 Conferencecf0  GetMostRecentConference(cf4 DateTimecf0  date);par ??tab tab cf4 Conferencecf0  GetById(cf4 Guidcf0  id);par ??tab tab cf3 voidcf0  Save(cf4 Conferencecf0  conference);par ??tab tab cf3 boolcf0  ConferenceExists(cf3 stringcf0  name, cf3 stringcf0  key);par ??tab tab cf3 boolcf0  ConferenceKeyAvailable(cf3 stringcf0  key);par ??tab }}
+--></p>
+<div style="background:white none repeat scroll 0; -moz-background-clip:-moz-initial; -moz-background-origin:-moz-initial; color:black">
+<p>&nbsp; <span style="color:blue">public</span> <span style="color:blue">interface</span> <span style="color:rgb(43,145,175)">IConferenceRepository</span></p>
+<p>&nbsp; {</p>
+<p>&nbsp; &nbsp; <span style="color:rgb(43,145,175)">Conference</span>[] GetAllConferences();</p>
+<p>&nbsp; &nbsp; <span style="color:rgb(43,145,175)">Conference</span> GetConferenceByKey(<span style="color:blue">string</span> key);</p>
+<p>&nbsp; &nbsp; <span style="color:rgb(43,145,175)">Conference</span> GetFirstConferenceAfterDate(<span style="color:rgb(43,145,175)">DateTime</span> date);</p>
+<p>&nbsp; &nbsp; <span style="color:rgb(43,145,175)">Conference</span> GetMostRecentConference(<span style="color:rgb(43,145,175)">DateTime</span> date);</p>
+<p>&nbsp; &nbsp; <span style="color:rgb(43,145,175)">Conference</span> GetById(<span style="color:rgb(43,145,175)">Guid</span> id);</p>
+<p>&nbsp; &nbsp; <span style="color:blue">void</span> Save(<span style="color:rgb(43,145,175)">Conference</span> conference);</p>
+<p>&nbsp; &nbsp; <span style="color:blue">bool</span> ConferenceExists(<span style="color:blue">string</span> name, <span style="color:blue">string</span> key);</p>
+<p>&nbsp; &nbsp; <span style="color:blue">bool</span> ConferenceKeyAvailable(<span style="color:blue">string</span> key);</p>
+<p>&nbsp; }</p>
+</div>
+<p>Every test needs to set up its own state, so in this test, we see that the beginning of the test is using the application’s data access layer to save two Conference objects to the database.&nbsp; CodeCampServer using NHibernate, so the test will use the same when setting up the database for the test.&nbsp; <strong>If you examine the source, you will notice that the base class for all the NUnit test fixtures runs a command that clears out every table in the local database.&nbsp; </strong>This is important because each test needs a known starting point, and the easiest starting point is an empty database.&nbsp; Note that we’re talking about the local developer’s database, which should be created and updated by the local build.</p>
+<p>After the database has two records, our class under test runs the GetConferenceByKey() method and returns a Conference.&nbsp; Our assert statements can then verify the code did the right thing.&nbsp; This test goes all the way through the data access layer and to the database.&nbsp; If anything was awry along the way, the test would fail.</p>
+
+<p><strong>My hope</strong>&nbsp;is that this brief example will fill in some gaps that may exist in your understanding of integration testing.&nbsp; Even though I’m doing integration testing and not unit testing, I’m keeping the scope of the test small because the larger the scope of the test, the harder it is to pinpoint the cause of any failure.</p>
+
+<p>My feed:&nbsp; <a href="/feed/" rel="nofollow">http://feeds.jeffreypalermo.com/jeffreypalermo</a></p>

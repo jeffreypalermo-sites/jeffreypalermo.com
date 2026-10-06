@@ -1,0 +1,29 @@
+[
+  {
+    "id": 354,
+    "parent": 0,
+    "author_name": "Steve Hebert",
+    "author_url": "http://codebetter.com/blogs/steve.hebert",
+    "date": "2005-06-28T11:18:50",
+    "type": "comment",
+    "content_html": "<p>Do you commonly find the need to monitor/work with UI developers to make certain they aren’t duplicating code all over the place?  </p>"
+  },
+  {
+    "id": 355,
+    "parent": 0,
+    "author_name": "Steve Hebert",
+    "author_url": "http://codebetter.com/blogs/steve.hebert",
+    "date": "2005-06-28T11:22:11",
+    "type": "comment",
+    "content_html": "<p>oops, i hit submit too soon…</p>\n<p>I think there’s something to the notion that UI has its own ‘architecture’ within the system.  And if it’s not constantly questioned and refactored you end up unmaintainable code.  </p>"
+  },
+  {
+    "id": 356,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-06-28T13:11:51",
+    "type": "comment",
+    "content_html": "<p>Absolutely.  I came into this project with a website already in place.  I’m the ASP.NET SME here now, so I now own the ASP.NET layer.  If I didn’t police it, then others would code how they are comfortable (and novices to ASP.NET are comfortable with something just working).  There are great SQL folks, and great class library folks, but they may be clueless about ASP.NET.  It’s like they just instinctively fall back into procedural mode with anything that involves markup.</p>"
+  }
+]

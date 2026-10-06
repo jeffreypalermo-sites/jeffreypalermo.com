@@ -1,0 +1,79 @@
+---
+wp_id: 639
+title: Action behavior using ASP.NET MVC and MvcContrib
+slug: action-behavior-using-asp-net-mvc-and-mvccontrib
+permalink: /2008/04/action-behavior-using-asp-net-mvc-and-mvccontrib/
+date: 2008-04-16T17:13:23
+date_utc: 2008-04-16T17:13:23Z
+modified: 2018-07-04T17:05:46
+format: html
+categories:
+- blog
+excerpt: 'This post is a quick rundown of action method behaviors. This will be halfway obsolete with the next MVC drop on codeplex, but here goes: You can download MvcContrib from http://mvccontrib.org.&nbsp; The convention controller is there. The ConventionController takes away nothing from System.Web.Mvc.Controller, but it adds some useful things on top. My example controllers inherit […]'
+comments_open: true
+---
+<p>This post is a quick rundown of action method behaviors.&nbsp; This will be halfway obsolete with the next MVC drop on <a href="http://www.codeplex.com/aspnet">codeplex</a>, but here goes:</p>
+<p>You can download MvcContrib from <a href="http://mvccontrib.org">http://mvccontrib.org</a>.&nbsp; The convention controller is there.&nbsp; The ConventionController takes away nothing from System.Web.Mvc.Controller, but it adds some useful things on top.&nbsp; My example controllers inherit from ConventionController.</p>
+<p>First, To get an action method to fire and run, just make it public.&nbsp; Now it’s web callable:</p>
+<div>
+<div style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0"><span style="color:#0000ff">public</span> <span style="color:#0000ff">class</span> TwitterController : ConventionController</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">{</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0">    <span style="color:#0000ff">public</span> <span style="color:#0000ff">void</span> SaveTweet(<span style="color:#0000ff">string</span> tweet)</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">    {</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0">        <span style="color:#008000">//integrate with twitter to do cool stuff.</span></pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">        Response.Write(<span style="color:#006080">"Wrote: "</span> + tweet);</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0">    }</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">}</pre>
+</div>
+</div>
+<p>If you run the above action with the default routes, you’ll get the error:</p>
+<p><i>A public action method named ‘Index’ could not be found on the controller.</i></p>
+<p>To fix that, we can add MvcContrib.Attributes.DefaultActionAttribute and to to the url:&nbsp; <a title="http://localhost:1308/twitter?tweet=howdy" href="http://localhost:1308/twitter?tweet=howdy">http://localhost:1308/twitter?tweet=howdy</a></p>
+
+<div>
+<div style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0">[DefaultAction]</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#0000ff">public</span> <span style="color:#0000ff">void</span> SaveTweet(<span style="color:#0000ff">string</span> tweet)</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0">{</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">    <span style="color:#008000">//integrate with twitter to do cool stuff.</span></pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0">    Response.Write(<span style="color:#006080">"Wrote: "</span> + tweet);</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">}</pre>
+</div>
+</div>
+<p>And the output is:</p>
+<p><strong>Wrote: howdy</strong></p>
+
+<p>Now, what if I didn’t want the SaveTweet method to be web-callable.&nbsp; Perhaps it’s a public method on a controller that isn’t an action.&nbsp; I can added System.Web.Mvc.NonActionAttribute, and I’ll navigate to <a title="http://localhost:1308/twitter/savetweet?tweet=howdy" href="http://localhost:1308/twitter/savetweet?tweet=howdy">http://localhost:1308/twitter/savetweet?tweet=howdy</a>.</p>
+
+<div>
+<div style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0">[NonAction]</pre>
+<p><a title="http://localhost:1308/twitter/savetweet?tweet=howdy" href="http://localhost:1308/twitter/savetweet?tweet=howdy">/twitter/savetweet?tweet=howdy</a>.</p>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0">{</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">    <span style="color:#008000">//integrate with twitter to do cool stuff.</span></pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0">    Response.Write(<span style="color:#006080">"Wrote: "</span> + tweet);</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">}</pre>
+</div>
+</div>
+<p>Then I get the following error because now SaveTweet is not an action method:</p>
+<h4><i>A public action method named ‘savetweet’ could not be found on the controller.</i></h4>
+
+<p>Now, finally, if we look at the method name, we can see that SaveTweet(string tweet) is a non-repeatable action.&nbsp; It has side effects.&nbsp; It’s pushing a tweet to twitter.&nbsp; We probably don’t want that to happen with a GET.&nbsp; In other words, we don’t want the mere act of navigating to <a title="http://localhost:1308/twitter/savetweet?tweet=howdy" href="http://localhost:1308/twitter/savetweet?tweet=howdy">/twitter/savetweet?tweet=howdy</a>&nbsp;to cause a backend change in the system.&nbsp; Because of this, it’s reasonable to restrict this action to POSTs only.&nbsp; We can do that by using the MvcContrib.Attributes.PostOnlyAttribute:</p>
+
+<div>
+<div style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0">[PostOnly]</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0"><span style="color:#0000ff">public</span> <span style="color:#0000ff">void</span> SaveTweet(<span style="color:#0000ff">string</span> tweet)</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0">{</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">    <span style="color:#008000">//integrate with twitter to do cool stuff.</span></pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:white; border-style:none; padding:0">    Response.Write(<span style="color:#006080">"Wrote: "</span> + tweet);</pre>
+<pre style="overflow:visible; width:100%; color:black; background-color:#f4f4f4; border-style:none; padding:0">}</pre>
+</div>
+</div>
+
+<p>If we attempt to run this with a GET, we’ll see the following error:</p>
+<h4><i>Action ‘SaveTweet’ can only be accessed using an HTTP Post.</i></h4>
+
+<p>I’ve given a quick rundown of different ways to use action methods.&nbsp; Note that the ASP.NET MVC Framework is still in flux, and things will still change dramatically.&nbsp; I, and others, are expressing our constantly evolving understanding of how to use the ASP.NET MVC Framework as time goes on.&nbsp; This understanding is expressed in the <a href="http://mvccontrib.org">MvcContrib</a> and <a href="http://codecampserver.org">CodeCampServer</a>.&nbsp; You can follow my understanding process on my feed at <a href="http://feeds.feedburner.com/jeffreypalermo">http://feeds.feedburner.com/jeffreypalermo</a>. </p>
+<p>Also follow <a href="http://haacked.com/">Phil Haack</a>, who is a PM steering the evolution of the framework.</p>

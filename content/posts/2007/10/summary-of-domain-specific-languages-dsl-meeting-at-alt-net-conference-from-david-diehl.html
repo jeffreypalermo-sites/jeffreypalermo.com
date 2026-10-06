@@ -1,0 +1,22 @@
+---
+wp_id: 697
+title: Summary of Domain Specific Languages (DSL) meeting at ALT.NET conference – from David Diehl
+slug: summary-of-domain-specific-languages-dsl-meeting-at-alt-net-conference-from-david-diehl
+permalink: /2007/10/summary-of-domain-specific-languages-dsl-meeting-at-alt-net-conference-from-david-diehl/
+date: 2007-10-10T12:38:53
+date_utc: 2007-10-10T12:38:53Z
+modified: 2007-10-10T12:38:53
+format: html
+excerpt: David Diehl doesn’t have a blog, but he asked me to post his notes from the Domain-specific language session at AltNetConf. Read below What is a DSL?“A thin veneer over top of an API” (Martin Fowler) Two types of DSLInternal — Domain language implemented as a fluent interface in a “standard” language (erg., Ruby, […]
+comments_open: true
+---
+<p>David Diehl doesn’t have a blog, but he asked me to post his notes from the Domain-specific language session at AltNetConf.&nbsp; Read below</p>
+
+<p><strong>What is a DSL?</strong><br>“A thin veneer over top of an API” (Martin Fowler)  </p>
+<p><strong>Two types of DSL</strong><br>Internal — Domain language implemented as a fluent interface in a “standard” language (erg., Ruby, C#, Python)<br>External — Domain language that is parsed / compiled as its own language  </p>
+<p><strong>The Key Attributes of DSLs (Fowler)</strong><br>1. Should read like a language. This is a subjective criteria, but it should have a type of grammar. <br>2. Business users (domain users) should be able to make sense of it. In other words, it uses the “ubiquitous language” (Evans) of the domain.  </p>
+<p><strong>Some Examples of DSLs</strong><br>1. XAML is a DSL for designers<br>2. NHibernate is a DSL for O/R mapping and persistence  </p>
+<p><strong>Possible Pitfalls When Using a DSL</strong><br>1. The language can become too general very easily. The language must be very specific. Some would say NAnt has drifted too far from its original intent.<br>2. It can become hard to handle errors and debug a DSL. When this becomes difficult, it’s a warning sign that the language is becoming too generic.<br>3. If you are using an external DSL, you must test the layer between the DSL and the existing API thoroughly.  </p>
+<p><strong>How to capture a DSL (Fowler). The two approaches</strong><br>1. Build the DSL over top of an existing domain model and API<br>2. Capture the DSL with the requirements. Martin noted an experience where a developer had a laptop and was doing some DSL development right with the business expert.  </p>
+<p><strong>What method should you choose?<br></strong>No clear winner. It depends on what one you are most comfortable with.  </p>
+<p><strong>Recommended Tools</strong><br>1. ANTLr is the tool recommended at the moment for parsing and creating external DSLs.<br>2. Scott Guthrie recommended the use of debug visualizers to help with debugging and error handling.</p>

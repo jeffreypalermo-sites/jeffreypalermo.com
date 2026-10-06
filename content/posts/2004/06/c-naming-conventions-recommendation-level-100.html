@@ -1,0 +1,23 @@
+---
+wp_id: 566
+title: c# Naming Conventions recommendation – level 100
+slug: c-naming-conventions-recommendation-level-100
+permalink: /2004/06/c-naming-conventions-recommendation-level-100/
+date: 2004-06-17T15:54:00
+date_utc: 2004-06-17T15:54:00Z
+modified: 2004-06-17T15:54:00
+format: html
+excerpt: Recently my team began the process of revising out coding standards document. We are revisiting this issue because the standards were developed when we used VB 6 and ASP 3.0. I have offered my opinions to the team, and I’ll post them here. Comments are welcome. All, To throw in my opinion, I would agree […]
+comments_open: true
+---
+<p>Recently my team began the process of revising out coding standards document.&nbsp; We are revisiting this issue because the standards were developed when we used VB 6 and ASP 3.0.&nbsp; I have offered my opinions to the team, and I’ll post them here.&nbsp; Comments are welcome.&nbsp;&nbsp; </p>
+<p>All,</p>
+<p>To throw in my opinion, I would agree with the below proposed changes with the following exceptions:</p>
+<p>All pulic, protected, or internal interfaces should use PascalCasing.</p>
+<p>All private members should use camelCasing.</p>
+<p>All private class members should be prefixed with “_”</p>
+<p>“p_”, “m_”, “g_”, should not be used, and Hungarian notation should not be used.</p>
+<p>For instance:</p>
+<p>namespace GpdsIT.SomeRandomApp {<br>&nbsp; public class IDBadge {<br>&nbsp;&nbsp;&nbsp; private Guid _uniqueID;<br>&nbsp;&nbsp;&nbsp; private string _badgeName = string.Empty;<br>&nbsp;&nbsp;&nbsp; public Guid UniqueID {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; get { return _uniqueID; }<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; set { _uniqueID = value; }<br>&nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp; public string Name {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; get { return _badgeName; }<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; set { _badgeName = value; }<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;public IDBadge(string badgeName) {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _uniqueID = Guid.NewGuid();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _badgeName = badgeName;<br>&nbsp;&nbsp;&nbsp; } <br>&nbsp; }<br>}<br></p>
+<p>I’ll refer you to the MSDN Design Guidelines for Class Library Developers at <a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpgenref/html/cpconNETFrameworkDesignGuidelines.asp"><u>http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpgenref/html/cpconNETFrameworkDesignGuidelines.asp</u></a>.</p>
+<p>The Naming Guidelines link has naming convention recommendations that support the above rules, and the other links have very valuable information about .Net best practices.</p>

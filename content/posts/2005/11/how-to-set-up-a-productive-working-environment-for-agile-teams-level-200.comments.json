@@ -1,0 +1,38 @@
+[
+  {
+    "id": 579,
+    "parent": 0,
+    "author_name": "ben Monro",
+    "author_url": "http://www.benmonro.com",
+    "date": "2005-11-11T19:04:32",
+    "type": "comment",
+    "content_html": "<p>You have some very interesting ideas, and in this type of scenario, it makes perfect sense.  However, I am working on a team with 2 other developers.  Both of whom are working remotely.  What do you suggest for this type of environment?</p>"
+  },
+  {
+    "id": 580,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-11-11T21:34:52",
+    "type": "comment",
+    "content_html": "<p>A remote environment is always going to have more communication challenges.  I’d suggest IM with voice so you can pop in and out of conversations at will.</p>"
+  },
+  {
+    "id": 581,
+    "parent": 0,
+    "author_name": "Ben Scheirman",
+    "author_url": "http://www.flux88.com",
+    "date": "2005-11-17T00:59:45",
+    "type": "comment",
+    "content_html": "<p>Have you read joelonsoftware’s comment on these type of spaces?</p>\n<p>Basically the gist is, if someone comes in with an issue that really only concerns 1 developer, the interruption is happening for everyone.</p>\n<p>My task board is around the corner in another office, which makes it kind of annoying when I need to pin up/take down tasks.</p>"
+  },
+  {
+    "id": 582,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-11-17T14:51:28",
+    "type": "comment",
+    "content_html": "<p>I haven’t read that.  I think that’s a less important scenario that can be managed.</p>"
+  }
+]

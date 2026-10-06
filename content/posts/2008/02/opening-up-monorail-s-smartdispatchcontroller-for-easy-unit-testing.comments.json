@@ -1,0 +1,20 @@
+[
+  {
+    "id": 2327,
+    "parent": 0,
+    "author_name": "Aaron Jensen",
+    "author_url": "http://blog.eleutian.com",
+    "date": "2008-02-26T18:04:20",
+    "type": "comment",
+    "content_html": "<p>Hi Jeffrey, </p>\n<p>Welcome to the party. You should check out Castle.MonoRail.TestSupport.BaseControllerTests or our approach we wrote before it existed:</p>\n<p><a href=\"http://blog.eleutian.com/PermaLink,guid,e9abf4e0-10f6-4c28-8494-b79ebb0d5ffa.aspx\" rel=\"nofollow ugc\">http://blog.eleutian.com/PermaLink,guid,e9abf4e0-10f6-4c28-8494-b79ebb0d5ffa.aspx</a><br>\n<a href=\"http://blog.eleutian.com/2007/03/28/EleutianControllerTests20.aspx\" rel=\"nofollow ugc\">http://blog.eleutian.com/2007/03/28/EleutianControllerTests20.aspx</a></p>\n<p>Session is part of the response. The real problem is not being able to mock the response or the request, and both of these approaches solve it in a non-invasive way.</p>"
+  },
+  {
+    "id": 2328,
+    "parent": 0,
+    "author_name": "Ken Egozi",
+    "author_url": "http://www.kenegozi.com/blog",
+    "date": "2008-02-27T10:09:28",
+    "type": "comment",
+    "content_html": "<p>@Jeffrey:<br>\nFor this exact scenario we have the BaseControllerTest as Aaron pointed out.</p>\n<p>In general, I would have also considered a slightly different approach, using an explicit interface:<br>\nIDictionary IControllerWithTestAccess.Session<br>\n{<br>\n  get { return this.Session; }<br>\n}</p>\n<p>so you’d only be able to access it if you explicitly cast to “WithTestAccess”;</p>\n<p>warning – notepad code. Not sure you can use the same prop name for explicit interface. </p>"
+  }
+]

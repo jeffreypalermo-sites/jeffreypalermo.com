@@ -1,0 +1,44 @@
+---
+wp_id: 389
+title: How VirtualPathUtility combines paths in .Net 2.0 – level 100
+slug: how-virtualpathutility-combines-paths-in-net-2-0-level-100
+permalink: /2006/03/how-virtualpathutility-combines-paths-in-net-2-0-level-100/
+date: 2006-03-11T04:44:00
+date_utc: 2006-03-11T04:44:00Z
+modified: 2006-03-11T04:44:00
+format: html
+tags:
+- asp-net
+- coding-principles
+excerpt: This is a warning that the VirtualPathUtility class in .Net 2.0 takes some time to understand the rules under which it operates. It wasn’t obvious to me, and I had to do some investigation to learn it’s behavior. I expected the following test to pass. It didn’t. [Test] public void ShouldCombineTwoWebsitePaths() { […]
+comments_open: true
+---
+<p>This is a warning that the VirtualPathUtility class in .Net 2.0 takes<br>
+some time to understand the rules under which it operates.&nbsp; It<br>
+wasn’t obvious to me, and I had to do some investigation to learn it’s<br>
+behavior.&nbsp; I expected the following test to pass.&nbsp; It didn’t.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Test]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; public void ShouldCombineTwoWebsitePaths()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; string parentPath = “/websiteRoot”;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; string subDirectory = “newPage”;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; string expected = “/websiteRoot/newPage”;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+string actual = VirtualPathUtility.Combine(parentPath, subDirectory);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Assert.AreEqual(expected, actual);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>I expected it to actually “Combine” the base path and the path that was<br>
+relative to the base path.&nbsp; After all, if these combine, the<br>
+product will be the sum of both, right?&nbsp; Not really.&nbsp; Here’s<br>
+my test output:</p>
+<p>&nbsp;&nbsp;&nbsp; String lengths differ.&nbsp; Expected length=20, but was length=8.<br>
+&nbsp;&nbsp;&nbsp; Strings differ at index 1.<br>
+&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp; expected:&lt;“/websiteRoot/newPage”&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;but was:&lt;“/newPage”&gt;<br>
+&nbsp;&nbsp;&nbsp; ————^</p>
+<p>Thanks to the first comment below, I realized that this method<br>
+tries to act like a web browser in resolving relative paths.&nbsp; If I<br>
+add a “/” to the end of “/websiteRoot”, the test would have<br>
+passed.&nbsp; As it stands, it assumes that “websiteRoot” is a page and not<br>
+a directory.</p>

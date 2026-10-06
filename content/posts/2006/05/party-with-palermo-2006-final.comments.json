@@ -1,0 +1,47 @@
+[
+  {
+    "id": 924,
+    "parent": 0,
+    "author_name": "sahilmalik",
+    "author_url": "http://blah.winsmarts.com",
+    "date": "2006-05-31T19:27:09",
+    "type": "comment",
+    "content_html": "<p>“The Atrium Lounge has free WiFi Internet, so pictures could be uploaded in realtime”</p>\n<p>Oh I’ll make sure I wear my pink bikini.</p>"
+  },
+  {
+    "id": 925,
+    "parent": 0,
+    "author_name": "Drew Robbins",
+    "author_url": "http://spaces.msn.com/drewby",
+    "date": "2006-06-01T14:51:42",
+    "type": "comment",
+    "content_html": "<p>I expect you to preprint a couple hundred “Hello my name is Palermo” tags this year. \uD83D\uDE42</p>"
+  },
+  {
+    "id": 926,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-06-01T15:07:49",
+    "type": "comment",
+    "content_html": "<p>Hmm.  That’s an idea!</p>"
+  },
+  {
+    "id": 927,
+    "parent": 0,
+    "author_name": "sahilmalik",
+    "author_url": "http://codebetter.com/blogs/sahil.malik",
+    "date": "2006-06-01T19:54:04",
+    "type": "comment",
+    "content_html": "<p>Yo Jeffrey,</p>\n<p>Do you have a list of the folks planning on attending?</p>\n<p>SM</p>"
+  },
+  {
+    "id": 928,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-06-03T22:20:15",
+    "type": "comment",
+    "content_html": "<p>Yo Sahil,</p>\n<p>Yes, I do.</p>\n<p>JP</p>"
+  }
+]

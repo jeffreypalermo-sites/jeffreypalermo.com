@@ -1,0 +1,46 @@
+---
+wp_id: 388
+title: Hiding errors is evil – level 200
+slug: hiding-errors-is-evil-level-200
+permalink: /2006/03/hiding-errors-is-evil-level-200/
+date: 2006-03-09T14:47:00
+date_utc: 2006-03-09T14:47:00Z
+modified: 2006-03-09T14:47:00
+format: html
+tags:
+- coding-principles
+excerpt: 'Hiding errors: Swallowing informative excpetions Returning a magic value instead of the error Ignoring errors I’m sure many can relate this this experience: I’m using an application or a programming API. The code runs and returns. I move on. I find out later that the code failed, and the work was never done. This scenario […]'
+comments_open: true
+---
+<p>Hiding errors:</p>
+<ul>
+<li>Swallowing informative excpetions</li>
+<li>Returning a magic value instead of the error</li>
+<li>Ignoring errors</li>
+</ul>
+<p>I’m sure many can relate this this experience:&nbsp; I’m using an application or a programming API.&nbsp; The code runs and returns.&nbsp; I move on.&nbsp; I find out later that the code failed, and the work was never done.</p>
+<p>This scenario can kill an application’s reliability and reputation.&nbsp; When this happens, you don’t find out about errors until some time later.&nbsp; Because of this, you really can’t say that the application is working correctly at any point in time unless you explicitly investigate a log somewhere where errors are stored.</p>
+<p>Hiding errors makes life harder.&nbsp; Finding out about errors when they happen makes for more reliable systems.&nbsp; I’ll give one quick example from the .Net Framework v2.0.&nbsp; This example uses C#.<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;</p>
+<div style="border:1pt solid windowtext; padding:0; background:white none repeat scroll 0 50%; color:black">
+<p><span style="color:blue">string</span> loweredUrl “/mypage.aspx”;</p>
+<p><span style="color:blue">string</span> loweredApplicationPath = “/myApplication”;</p>
+
+<p><span style="color:blue">string</span> appRelativeUrl = VirtualPathUtility.ToAppRelative(loweredUrl, loweredApplicationPath);</p>
+<p>Console.WriteLine(appRelativeUrl.Length);</p>
+</div>
+<p>This seems simple enough.&nbsp; We’re using the VirtualPathUtility class to convert a url to it’s application-relative form.&nbsp; In this case, I’m passing an invalid argument in.&nbsp; The rule this method uses is that if the url is not a part of the given application path, it’s invalid.&nbsp; What does VirtualPathUtility do in this case?&nbsp; It returns NULL!&nbsp; I passed in an invalid argument, and it returns null.&nbsp; The more appropriate response would be throwing an ArgumentException.&nbsp; Because of this error hiding, I have to know the internal rules of this method and code around them.&nbsp; I can’t afford for this code to continue while appRelativeUrl is null.&nbsp; The next line would throw a NullReferenceException.</p>
+<p>Because of the error hiding, my code ends up like this:</p>
+<div style="border:1pt solid windowtext; padding:0; background:white none repeat scroll 0 50%; color:black">
+<p><span style="color:blue">string</span> loweredUrl “/mypage.aspx”;</p>
+<p><span style="color:blue">string</span> loweredApplicationPath = “/myApplication”;</p>
+
+<p><span style="color:blue">if</span> (!loweredUrl.Contains(loweredApplicationPath))</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; <span style="color:blue">throw</span> <span style="color:blue">new</span> ApplicationException(<span style="color:blue">string</span>.Format(“url {0} is not in application path {1}”, loweredUrl, loweredApplicationPath));</p>
+<p>}</p>
+
+<p><span style="color:blue">string</span> appRelativeUrl = VirtualPathUtility.ToAppRelative(loweredUrl, loweredApplicationPath);</p>
+<p>Console.WriteLine(appRelativeUrl.Length);</p>
+</div>
+<p>I have to do an explicit check and compensate for the undesirable behavior of the API.</p>
+<p>If an error condition happens, I want to know about it.&nbsp; The term “fail fast” is very popular.&nbsp; It means that if the application encounters a condition where it can’t continue, stop now and output the exception information.&nbsp; Don’t have the application limp along until it crashes in flames.&nbsp; If you break your arm, you stop what you are doing and get a cast put on.&nbsp; Yes, you _could_ go to work if it’s not your mousing arm, but you cause less damage if you stop right away and address the problem.</p>

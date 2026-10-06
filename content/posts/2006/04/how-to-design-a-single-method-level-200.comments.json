@@ -1,0 +1,128 @@
+[
+  {
+    "id": 780,
+    "parent": 0,
+    "author_name": "Helen",
+    "author_url": "http://",
+    "date": "2006-04-11T08:30:50",
+    "type": "comment",
+    "content_html": "<p>Umm… how about refactoring your post to get rid of all the typos and spelling mistakes?<br>\nProducts / product’s, viewer / fewer, desireable / desirable, argument / arguments, and / an, blocks / blog.<br>\nIt’s hard to take a post seriously when it appears so hastily written as this one.</p>"
+  },
+  {
+    "id": 781,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-04-11T12:39:57",
+    "type": "comment",
+    "content_html": "<p>Thank you Helen.  I _was_ in a rush writing this one.  I’ve corrected the typeos.</p>"
+  },
+  {
+    "id": 782,
+    "parent": 0,
+    "author_name": "rlewallen",
+    "author_url": "http://www.codebetter.com/blogs/raymond.lewallen",
+    "date": "2006-04-11T17:32:54",
+    "type": "comment",
+    "content_html": "<p>Something I stress often that people don’t get sometimes, is that methods should be atomic in nature, which you stated above, but is often one of the most common problems one comes across in code.  TDD, and unit tests in general, help keep methods atomic based on the simple fact that a unit test should be atomic in nature.  But even if you don’t have unit tests, make sure your method serves a single, testable function.</p>\n<p>I tend to use “I want to see all code for a method without scrolling my screen”.  Keeping my methods singular in purpose helps me to conform to this.  One thing to keep in mind when refactoring and keeping methods atomic and short, is that there is a point when the call stack starts to get unhappy (the number is 8 calls, I recall K. Cwalina telling me once) and it starts to drag down the performance of the application, so there is really only so far you can refactor and maintain benefit when trying to keep methods small.  There is certainly a line to be walked when deciding about refactorings and the size of your call stack, while at the same time maintaining readability and easily understandable purpose.</p>\n<p>Nice, quick and simple to remember guildelines you have posted.</p>"
+  },
+  {
+    "id": 783,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-04-11T18:04:30",
+    "type": "comment",
+    "content_html": "<p>Raymond,<br>\nI hadn’t heard about a perf hit at 8 levels deep.  I find that sometimes a simple call into the BCL will have a 8-deep call stack.  Have you done any measurements on this?</p>"
+  },
+  {
+    "id": 784,
+    "parent": 0,
+    "author_name": "johnwood",
+    "author_url": "http://dotnetjunkies.com/weblog/johnwood",
+    "date": "2006-04-11T18:13:16",
+    "type": "comment",
+    "content_html": "<p>How about describing *why* each of these points are important. Of course most of them are obvious, but to others perhaps not. (and I should point out that sometimes it just isn’t worth being a perfectionist, it’s a yagni thing.).</p>"
+  },
+  {
+    "id": 785,
+    "parent": 0,
+    "author_name": "rlewallen",
+    "author_url": "http://www.codebetter.com/blogs/raymond.lewallen",
+    "date": "2006-04-11T19:09:07",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,  I haven’t done any performance testing, because its going to depend so much on size of objs, number of allocations, GC’s required and so much other stuff.  Chances are, under most normal circumstances, I wouldn’t think the performance hit would be too noticable.  I had this conversation during a C# chat a few years ago and was talking about refactorings and call stacks levels and the part of the answer was this number about how far deep the calls go before there starts to be *possible* problems starting to occur.  Again, this was years ago and I know of no literature regarding that information, but what was said about “going beyond 8 levels deep in the call stack” has always stuck in my head.</p>"
+  },
+  {
+    "id": 786,
+    "parent": 0,
+    "author_name": "David M. Kean",
+    "author_url": "http://davidkean.net",
+    "date": "2006-04-13T01:31:01",
+    "type": "comment",
+    "content_html": "<p>I’m sorry but I’m going to have to disagree with the following statement:</p>\n<p>* You have a method that throws exceptions if you don’t set certain properties first.</p>\n<p>This prevents the use of the Create-Set-Call pattern used extensively thoughout the .NET Framework, ie:</p>\n<p>EventLog log = new EventLog();</p>\n<p>log.Log = “Foo”;<br>\nlog.MachineName = “Bar”;<br>\nlog.WriteEntry(…);</p>\n<p>See Framework Design Guidelines page 241.</p>"
+  },
+  {
+    "id": 787,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-04-13T02:17:32",
+    "type": "comment",
+    "content_html": "<p>David,<br>\nI understand the this is used in the .Net Framework, and that it was the most common usage in COM since you didn’t have constructors with COM, and you had no other choice for members needed by multiple methods in the class.</p>\n<p>With object-oriented designs, I find it more desirable to push defining information into the constructor.  For instance, the EventLog object serves little purpose without “Foo” and “Bar”, so I’d elect to pass them into the constructor.</p>\n<p>With the Create-Set-Call method you talk about, it requires every developer to have intimate knowledge of that log.WriteEntry() method.  Instead, for this specific instance, I’d either pass Log and MachineName into the method itself or the EventLog constructor.  This make the method and class API more intention-revealing.</p>"
+  },
+  {
+    "id": 788,
+    "parent": 0,
+    "author_name": "johnwood",
+    "author_url": "http://dotnetjunkies.com/weblog/johnwood",
+    "date": "2006-04-13T02:18:36",
+    "type": "comment",
+    "content_html": "<p>I agree – not to mention how you code up your XAML objects in WPF. Sometimes having a constructor for every conceivable permutation of parameter combinations just isn’t practical. It’s a pity to have to rely on documentation, but without optional parameters create-set-call is all you have.</p>"
+  },
+  {
+    "id": 789,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-04-13T02:57:47",
+    "type": "comment",
+    "content_html": "<p>I used to have constructor overloads on some classes because one method needed two things, and another method needed some other thing.  Then I realized that this class had two responsibilities, and I refactored it into two classes with a single responsibility each.  Each class required well-defined dependencies and clearly revealed it’s capability.</p>\n<p>With huge classes, I’m sure you would have to rely on documentation because they might to several different things based on the input.  That’s why refactoring is important and makes code easier to read and use.</p>\n<p>I, personally, don’t use create-set-call and haven’t heard the term used much.</p>"
+  },
+  {
+    "id": 790,
+    "parent": 0,
+    "author_name": "johnwood",
+    "author_url": "http://dotnetjunkies.com/weblog/johnwood",
+    "date": "2006-04-13T03:25:34",
+    "type": "comment",
+    "content_html": "<p>Perhaps in your case it was different, but you can really take the “realized this class had two responsibilities” thing too far IMO and end up drowning in classes, and hitting all the other drawbacks of an over-engineered application. You really have to be pragmatic when you’re developing, it’s a balancing act. If you do everything by the text book to the extreme then you’re seriously going to compromise the life expectancy of the code base. I know, I’ve experienced it repeatedly. IMO If you need to refactor that’s fine, but not just because you hit an instance you needed to overload a constructor. </p>"
+  },
+  {
+    "id": 791,
+    "parent": 0,
+    "author_name": "johnwood",
+    "author_url": "http://dotnetjunkies.com/weblog/johnwood",
+    "date": "2006-04-13T03:32:11",
+    "type": "comment",
+    "content_html": "<p>I should add that a nice compromise between the two is to use the builder pattern, where the consructor data is abstracted to a separate class where it is built independently, and passed into the constructor.<br>\n<a href=\"http://www.dofactory.com/Patterns/PatternBuilder.aspx\" rel=\"nofollow ugc\">http://www.dofactory.com/Patterns/PatternBuilder.aspx</a></p>"
+  },
+  {
+    "id": 792,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-04-13T03:37:00",
+    "type": "comment",
+    "content_html": "<p>John,<br>\nI’m speaking from methods I’m currently employing, so I can only relate my personal experience.</p>\n<p>My team’s classes are very small, and we have a lot of them.  The system is not overengineered.  It’s actually dirt simple and very easy to test.  I don’t do anything by a text book, but I do everything based on results.  Making classes smaller has led to loose coupling an a simpler system and code that is easier to read.  If it led to a less desireable result, I would have ditched that method and used another.  </p>"
+  },
+  {
+    "id": 793,
+    "parent": 0,
+    "author_name": "johnwood",
+    "author_url": "http://dotnetjunkies.com/weblog/johnwood",
+    "date": "2006-04-13T03:55:30",
+    "type": "comment",
+    "content_html": "<p>If it’s working for you then that’s great. I guess when you post something that, to some degree, is ‘laying down the law’ it comes off as a little textbox like. It’s just that I’ve met a lot of developers who love creating classes.. it’s like an addiction of sorts. The more classes they have the more opportunity they think they have for re-use when usually the opposite is the case because it’s all become so complex and intradependent. </p>"
+  }
+]

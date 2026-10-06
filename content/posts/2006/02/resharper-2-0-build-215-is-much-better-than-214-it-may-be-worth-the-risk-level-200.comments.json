@@ -1,0 +1,65 @@
+[
+  {
+    "id": 633,
+    "parent": 0,
+    "author_name": "johnpapa",
+    "author_url": "http://codebetter.com/blogs/john.papa",
+    "date": "2006-02-01T04:43:31",
+    "type": "comment",
+    "content_html": "<p>Cool. I’ll give it a shot … I miss it in VS 2005 … … thanks for being the crash test dummy \uD83D\uDE42</p>"
+  },
+  {
+    "id": 634,
+    "parent": 0,
+    "author_name": "David",
+    "author_url": "http://www.christianasp.net",
+    "date": "2006-02-01T04:43:41",
+    "type": "comment",
+    "content_html": "<p>215 appeared OK at first, but I ended up uninstalling it.  After a while it used up far too much memory. The refactoring and intellisense, as well as VS2K5, just got slower and slower, and ended up frustrating more than it helped.  I think when I finally gave up and uninstalled my devenv was taking up over 400 MB.</p>\n<p>I can’t wait until the RTM.  I really miss ReSharper in VS2K5.</p>"
+  },
+  {
+    "id": 635,
+    "parent": 0,
+    "author_name": "johnpapa",
+    "author_url": "http://codebetter.com/blogs/john.papa",
+    "date": "2006-02-01T15:03:50",
+    "type": "comment",
+    "content_html": "<p>I had an error when I loaded VS.NET, lots of slowdowns due to what I think is memory consumption (over 450MB for me) and then another error when I shut down VS.NET. Ugh.</p>\n<p>Too bad they didn’t have this product ready when VS.NET was released. I really miss it.</p>\n<p>DevExpress works with VS.NET 2005, and I think it is still a step behind Resharper but I am going to give it a shot again at least until Resharper has a RTM.</p>"
+  },
+  {
+    "id": 636,
+    "parent": 0,
+    "author_name": "dhayden",
+    "author_url": "http://davidhayden.com/blog/dave/",
+    "date": "2006-02-01T18:56:46",
+    "type": "comment",
+    "content_html": "<p>I have essentially given up on waiting for ReSharper and installed CodeRush and Refactor! Pro, too.  Productivity is just too important in my day-to-day development.</p>"
+  },
+  {
+    "id": 637,
+    "parent": 0,
+    "author_name": "Oskar Austegard",
+    "author_url": "http://mo.notono.us",
+    "date": "2006-02-02T17:11:40",
+    "type": "comment",
+    "content_html": "<p>Hmm – I had the opposite experience, though I was using it with VS 2003: <a href=\"http://austegard.blogspot.com/2006/01/resharper-215-stay-away.html\" rel=\"nofollow ugc\">http://austegard.blogspot.com/2006/01/resharper-215-stay-away.html</a></p>\n<p>I’m back running build 165 again.</p>"
+  },
+  {
+    "id": 638,
+    "parent": 0,
+    "author_name": "Tomer Gabel",
+    "author_url": "http://www.tomergabel.com",
+    "date": "2006-02-12T15:59:23",
+    "type": "comment",
+    "content_html": "<p>Some shameless self-promition, then: I’ve been running an updated post about the ReSharper EAP for over half a year. It’s constantly updated so if anyone wants to know about the latest builds, here’s the URL: <a href=\"http://www.tomergabel.com/ReSharper+New+And+Improved.aspx\" rel=\"nofollow ugc\">http://www.tomergabel.com/ReSharper+New+And+Improved.aspx</a></p>"
+  },
+  {
+    "id": 639,
+    "parent": 0,
+    "author_name": "Tomer Gabel",
+    "author_url": "http://www.tomergabel.com",
+    "date": "2006-02-12T15:59:43",
+    "type": "comment",
+    "content_html": "<p>Some shameless self-promition, then: I’ve been running an updated post about the ReSharper EAP for over half a year. It’s constantly updated so if anyone wants to know about the latest builds, here’s the URL: <a href=\"http://www.tomergabel.com/ReSharper+New+And+Improved.aspx\" rel=\"nofollow ugc\">http://www.tomergabel.com/ReSharper+New+And+Improved.aspx</a></p>"
+  }
+]

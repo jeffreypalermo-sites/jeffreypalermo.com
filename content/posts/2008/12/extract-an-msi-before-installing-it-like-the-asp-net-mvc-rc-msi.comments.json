@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2533,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://jeffreypalermo.com",
+    "date": "2009-01-03T23:37:00",
+    "type": "comment",
+    "content_html": "<p>@Gerry,<br>\nThanks for those grammar corrections.  I have no excuse for those.<br>\nI have a private build of the MVC framework that will soon become the RC.  As an ASPInsider, I’m one of the folks that tries out and provides early feedback about the framework.<br>\nYour concerns about the templates are certainly founded, and the extent of my usage of the binaries was to decide whether I wanted to uninstall the beta.  Running my test suite, looking at them in RedGate’s Reflector, etc, is why I wanted the binaries before commiting to modify my GAC and the Visual Studio templates.<br>\nThanks for the comments.</p>"
+  }
+]

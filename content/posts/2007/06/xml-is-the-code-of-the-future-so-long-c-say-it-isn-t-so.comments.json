@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1758,
+    "parent": 0,
+    "author_name": "Gil Zilberfeld",
+    "author_url": "http://gil-zilberfeld.blogspot.com",
+    "date": "2007-06-22T17:47:02",
+    "type": "comment",
+    "content_html": "<p>I agree with everything here, and of course with Ayende’s views.<br>\nThink about it this way: first you design with a designer. Next you have intelisense to “easily” modify your “code”. It looks like you are led in the wrong direction all along.</p>\n<p>I’m not saying the tools should make it harder to code, but it is                                easy to fall into this trap and  very hard to go out.</p>"
+  },
+  {
+    "id": 1759,
+    "parent": 0,
+    "author_name": "Jim",
+    "author_url": "http://",
+    "date": "2007-06-22T21:08:51",
+    "type": "comment",
+    "content_html": "<p>XML is a powerful tool to be used in application design and development, however like any tool it requires experience and skill to use it appropriately.  The idea of using XML to implement and more importantly to override behavior at runtime can be a highly appropriate and efficient way of overcoming technical hurdles.  In SaaS environments, for instance, where business requirements make the idea of programming and compiling behavior for a particular customer cost and time prohibitive, XML (on disk, in a database, or generated on the fly) allows the administrator of the software to modify behavior and schema of classes on the fly.  This technique is very powerful and definitely does not encroach on the role of C# in developing the application.  Classes are still required to load and use the XML at runtime.  Like any advancement in application architecture, using XML to model and override behavior is a tool to complement your code and allow you to build more powerful and dynamic solutions to meet business problems.  Proper design of such a solution and well designed XML schemas are essential to make the processing of building your metadata as resistant to errors as possible.  XML is not replacing C# development, but augmenting it.</p>"
+  },
+  {
+    "id": 1760,
+    "parent": 0,
+    "author_name": "ScottBellware",
+    "author_url": "http://www,bellware.net",
+    "date": "2007-06-23T02:03:28",
+    "type": "comment",
+    "content_html": "<p>Jim,</p>\n<p>Most changes to behavior typically require regression testing, which render’s the run-time flexibility of configuration-based behavior pretty much irrelevant.  If you’rve gotta take the time to regression test, you might as well just code the configuration as a compiled plug-in in a programming language that is in fact a programming langauge rather than a persistence format attempting to play the role of a programming language.</p>"
+  },
+  {
+    "id": 1761,
+    "parent": 0,
+    "author_name": "Jim",
+    "author_url": "http://",
+    "date": "2007-06-23T23:30:26",
+    "type": "comment",
+    "content_html": "<p>Scott,</p>\n<p>I think you’ve hit the heart of the issue which is using XML to model behavior intelligently.  If XML is being used to control behavior to the point that regression testing is necessary when XML is changed then too much behavior is being modeled in XML and not enough in C#.  However, if the individual components (or activities in WF) are well defined, well written, and well abstracted, then a change to the metadata that influences the order, steps, or output of that behavior should be interchangeable (to the extent defined in your schemas).  </p>\n<p>So, if it’s possible to develop XML that passes schema validation yet can still cause exceptions in the code designed to handle XML conforming to that schema then the code/XML balance, the code, or the schema restricting the XML is poorly designed.</p>"
+  },
+  {
+    "id": 1762,
+    "parent": 0,
+    "author_name": "Dorai Thodla",
+    "author_url": "http://www.thodla.com",
+    "date": "2007-06-24T04:36:50",
+    "type": "comment",
+    "content_html": "<p>This is not an either or situation. XML is extensible. This leads to expressing solutions closer to the problem domain. The wide adoption of XML for data interchange is an example. </p>\n<p>The wide use of XML as a way to represent UI (Flex, XAML, XUL) is another. </p>\n<p>XML is not likely to replace languages like Ruby, Python, C# or Java, just like SQL never replaced programming languages. </p>\n<p>XML is a meta language. But its representation makes it difficult to read. </p>\n<p>The major benefits of XML is the high level of abstractions you can achieve in a declarative style.</p>"
+  }
+]

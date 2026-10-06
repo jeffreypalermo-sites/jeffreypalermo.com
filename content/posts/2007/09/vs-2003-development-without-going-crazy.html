@@ -1,0 +1,22 @@
+---
+wp_id: 686
+title: VS 2003 development without going crazy
+slug: vs-2003-development-without-going-crazy
+permalink: /2007/09/vs-2003-development-without-going-crazy/
+date: 2007-09-18T19:12:00
+date_utc: 2007-09-18T19:12:00Z
+modified: 2007-09-18T19:12:00
+format: html
+excerpt: I’m doing a little work with a team on a Visual Studio.Net 2003 codebase that includes the goal of upgrading the codebase to .Net 2.0 (at which time it can be developed with VS2008 using “multi-targeting”. Here are some points I had to recall that make developing with VS2003 not so bad Resharper 2.0 works […]
+comments_open: true
+---
+<p>I’m doing a little work with a team on a Visual Studio.Net 2003 codebase that includes the goal of upgrading the codebase to .Net 2.0 (at which time it can be developed with VS2008 using “multi-targeting”.</p>
+<p>Here are some points I had to recall that make developing with VS2003 not so bad</p>
+<ul>
+<li><a href="http://www.jetbrains.com/resharper/">Resharper</a> 2.0 works with VS2003 and make programming a joy.</li>
+<li><a href="http://www.visualsvn.com/">VisualSVN</a> integrates with VS2003 and helps me track what’s been modified through TortoiseSVN integration.</li>
+<li><a href="http://tortoisesvn.tigris.org/">TortoiseSVN</a> needs to be configured to use “_svn” directories instead of “.svn” directories to work with VS2003 web projects(see below)</li>
+</ul>
+<p>Instead of re-checking out the entire trunk, you can run a shell command to rename all _svn directories to .svn recursively:</p>
+<p>From <a href="http://ankhsvn.tigris.org/faq.html#XSLTsection126120121120" title="http://ankhsvn.tigris.org/faq.html#XSLTsection126120121120">http://ankhsvn.tigris.org/faq.html#XSLTsection126120121120</a>:</p>
+<pre>Rename to _svn<br>@ECHO OFF<br>FOR /R %%f IN (.svn) DO IF EXIST "%%f" (<br>   ATTRIB -h "%%f"<br>   RENAME "%%f" _svn<br>)<br><br>Rename to .svn<br>@ECHO OFF<br>FOR /R %%f IN (_svn) DO IF EXIST "%%f" (<br>   RENAME "%%f" .svn<br>   ATTRIB +h "%%~pf.svn"<br>    )      </pre>

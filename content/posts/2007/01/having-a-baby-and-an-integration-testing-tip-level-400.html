@@ -1,0 +1,26 @@
+---
+wp_id: 484
+title: Having a baby and an integration testing tip – level 400
+slug: having-a-baby-and-an-integration-testing-tip-level-400
+permalink: /2007/01/having-a-baby-and-an-integration-testing-tip-level-400/
+date: 2007-01-25T12:49:00
+date_utc: 2007-01-25T12:49:00Z
+modified: 2007-01-25T12:49:00
+format: html
+tags:
+- learning
+- tips-tricks
+excerpt: I found out today that my wife is with child, and we're having a baby! Now, on with the post. . . Integration testing isn't your basic 200-level topic at an MSDN event. It can be very involved. I believe that a good integration test has to depend on targeted unit tests being present. […]
+comments_open: true
+---
+<p><strong><em>I found out today that my wife is with child, and we're having a baby!</em></strong>&nbsp; Now, on with the post. . .</p>
+
+<p>Integration testing isn't your basic 200-level topic at an MSDN event.&nbsp; It can be very involved.&nbsp; I believe that a good integration test has to depend on targeted unit tests being present.&nbsp; Consider the scenario without unit tests:</p>
+<p>Bob has a use case that spans 15 classes.&nbsp; He sets up the environment to get this slice of the system under test.&nbsp; He then proceeds to write the test with asserts.&nbsp; He quickly becomes frustrated because for each of the 15 classes along the way, there are different scenarios that are possible.&nbsp; If each class has just 2 possible uses, his number of scenarios to test are 2^15.&nbsp; Each scenario requires many assert statements.&nbsp; Faced with 32,768 test combinations, Bob is disgruntled and concludes that automated integration testing is too much overhead.</p>
+<p><strong>What did Bob do wrong?</strong>&nbsp; First, Bob attempted to start his automated testing at the integration level.&nbsp; Second, he assumed unit test responsibilities inside the integration test.&nbsp; Third, he tried to test every possible combination of integration.&nbsp; Fourth, he hadn't surrounded himself with a quality team that could help guide the testing strategy.</p>
+<p><strong>Here's the success scenario:<br>
+</strong>Bob has written unit tests for each of his 15 classes.&nbsp; He marvels at how simple they looks since each unit test only has to cover 2 usage scenarios for each class.&nbsp; With confidence that each individual class will do its job correctly, Bob writes an integration test for the use case choosing one of the many combinations that could occur.&nbsp; Bob sets up the test, executes it, and then asserts on the resulting state of the system.&nbsp; Bob finds an integration issues caused by how two of the classes interact with each other.&nbsp; He fixes that bug, and the test passes.&nbsp; Bob now has confidence that the 15 classes are interacting properly in his use case.</p>
+
+<p>If you haven't already read the following from my friend, Jeremy Miller, take a minute to do so:</p>
+<h5>Qualities of a Good Unit Test: <a href="http://jeremydmiller.blogspot.com/2005/05/qualities-of-good-unit-test.html" title="http://jeremydmiller.blogspot.com/2005/05/qualities-of-good-unit-test.html">http://jeremydmiller.blogspot.com/2005/05/qualities-of-good-unit-test.html</a><br>
+Achieve Better Results by following Jeremy's Third Law of TDD: Test Small Before Testing Big: <a href="/blogs/jeremy.miller/archive/2006/05/30/145752.aspx" title="http://codebetter.com/blogs/jeremy.miller/archive/2006/05/30/145752.aspx">http://codebetter.com/blogs/jeremy.miller/archive/2006/05/30/145752.aspx</a></h5>

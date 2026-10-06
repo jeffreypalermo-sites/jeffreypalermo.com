@@ -1,0 +1,21 @@
+---
+wp_id: 327
+title: Why are error return codes evil? – level 100
+slug: why-are-error-return-codes-evil-level-100
+permalink: /2005/09/why-are-error-return-codes-evil-level-100/
+date: 2005-09-30T21:30:00
+date_utc: 2005-09-30T21:30:00Z
+modified: 2005-09-30T21:30:00
+format: html
+excerpt: Miller ran across some code today that used error codes for return values. We exchanged some bad examples of misusing error codes (or just using them, period). In languages without structured exception handling, we often used some sort of indicator to communicate when an error happened. For instance, a DOS program (or batch file) has […]
+comments_open: true
+---
+<p>Miller ran across some code today that used error codes for return values.&nbsp; We exchanged some bad examples of misusing error codes (or just using them, period).</p>
+<p>In languages without structured exception handling, we often used some sort of indicator to communicate when an error happened.&nbsp; For instance, a DOS program (or batch file) has a return code retrievable using the ERRORLEVEL global variable.</p>
+<p>With my platform of choice (.NET) supporting structured exception handling, using return codes for error reporting is quite far on the evil spectrum.&nbsp; Consider this code:</p><!-- code formatted by http://manoli.net/csharpformat/ -->
+<div class="csharpcode"><pre><span class="lnum">   1:  </span><span class="kwrd">public</span> <span class="kwrd">int</span> DoSomething(){</pre><pre><span class="lnum">   2:  </span>    <span class="rem">//omitted implementation</span></pre><pre><span class="lnum">   3:  </span>    <span class="kwrd">return</span> -1;</pre><pre><span class="lnum">   4:  </span>}</pre><pre><br>This method should be void.&nbsp; It is using an integer to tell whether an error occurred or not.&nbsp; If something went wrong, throw an exception:</pre><pre><span class="lnum">   1:  </span><span class="kwrd">public</span> <span class="kwrd">void</span> DoSomething(){ </pre></div>
+<div class="csharpcode"><pre><span class="lnum">   2:  </span>    <span class="kwrd">throw</span> <span class="kwrd">new</span> SomethingException();</pre><pre><span class="lnum">   3:  </span>}</pre><pre>&nbsp;</pre></div>
+<p>Then there is no chance of the program continuing while being broken under the covers.&nbsp; Some folks call this method “failing fast”.&nbsp; If the program encounters a serios error that it can’t handle, fail fast because a program not operating according to plan can only cause harm.&nbsp; That’s why so many people hate “On Error Resume Next” in VB.&nbsp; Errors are simply ignored.&nbsp; Some folks rigged up error handling in VB by using:</p><!-- code formatted by http://manoli.net/csharpformat/ -->
+<div class="csharpcode"><pre><span class="lnum">   1:  </span><span class="kwrd">On</span> <span class="kwrd">Error</span> <span class="kwrd">Goto</span> ErrHandler</pre><pre><span class="lnum">   2:  </span>    <span class="rem">‘some code</span></pre><pre><span class="lnum">   3:  </span>&nbsp;</pre><pre><span class="lnum">   4:  </span>ErrHandler:</pre><pre><span class="lnum">   5:  </span>    <span class="rem">‘do some error reporting</span></pre></div>
+<p>The team had to be very disciplined to make this work.&nbsp; One funny thing I came across was a statement like the following:</p><!-- code formatted by http://manoli.net/csharpformat/ -->
+<div class="csharpcode"><pre><span class="lnum">   1:  </span><span class="kwrd">On</span> <span class="kwrd">Error</span> <span class="kwrd">Goto</span> Hell</pre><pre><span class="lnum">   2:  </span>    <span class="rem">‘some code</span></pre><pre><span class="lnum">   3:  </span>&nbsp;</pre><pre><span class="lnum">   4:  </span>Hell:</pre><pre><span class="lnum">   5:  </span>    <span class="rem">‘do some error reporting</span></pre></div><strong>Bottom Line:&nbsp; </strong>Throw exceptions if something goes wrong.&nbsp; Don’t set a “magic number” and expect to remember to check that later on.

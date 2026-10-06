@@ -1,0 +1,38 @@
+[
+  {
+    "id": 595,
+    "parent": 0,
+    "author_name": "Roland Weigelt",
+    "author_url": "http://weblogs.asp.net/rweigelt",
+    "date": "2005-11-22T19:37:00",
+    "type": "comment",
+    "content_html": "<p>Just a quick side note: The “of the” reordering can be customized – if you find out for yourself that the reordering of “name” is something you have to correct in most cases, you can remove “name” from the list of the “of the” words. If you like the reordering in general, but would like to have e.g. “first” and “last” always in front, you can add these to the “of the adjectives”, so<br>\n– “firstName” would become “first name”<br>\n– “firstItemName” would become “first name of the item”<br>\nbut also<br>\n– “firstSpecialName” would become “first name of the special” (hmm…)</p>\n<p>So it there’s always some kind of trade-off \uD83D\uDE09</p>\n<p>Roland</p>"
+  },
+  {
+    "id": 596,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-11-22T21:48:33",
+    "type": "comment",
+    "content_html": "<p>Roland,<br>\nThanks for the tip!</p>"
+  },
+  {
+    "id": 597,
+    "parent": 0,
+    "author_name": "David M. Kean",
+    "author_url": "http://davidkean.net",
+    "date": "2005-11-22T22:08:18",
+    "type": "comment",
+    "content_html": "<p>Is there really any point documenting the classes if you’re just restating the obvious, it sort of like doing this in code:</p>\n<p>// If value is greater than 3<br>\nif (value &gt; 3)<br>\n{<br>\n   // Start work<br>\n   StartWork();<br>\n}</p>\n<p>It seems like pointless documentation.</p>"
+  },
+  {
+    "id": 598,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-11-22T22:39:35",
+    "type": "comment",
+    "content_html": "<p>The Xml docs are if you intend to build a .chm with NDoc for a distributed project.  For in-house stuff, I don’t bother.</p>"
+  }
+]

@@ -1,0 +1,29 @@
+[
+  {
+    "id": 257,
+    "parent": 0,
+    "author_name": "Hasani",
+    "author_url": "http://",
+    "date": "2005-02-23T17:36:00",
+    "type": "comment",
+    "content_html": "<p>You don’t need to have the class marked as serializable or derive from MarshalByRefObject to work across domains. If you use AppDomain.GetData/SetData, the runtime will marshal the object for you. I created a class, TelnetTraceListener, that derives from TraceListener and it works flawlessly across app domains via AppDomain.GetData/AppDomain.SetData.</p>"
+  },
+  {
+    "id": 258,
+    "parent": 0,
+    "author_name": "Hasani",
+    "author_url": "http://",
+    "date": "2005-02-26T18:40:00",
+    "type": "comment",
+    "content_html": "<p>Also want to add that because I was using remoting, my objects would sometimes expire (The lease time). To prevent this, I had to override the method InitializeLifetimeService.</p>"
+  },
+  {
+    "id": 259,
+    "parent": 0,
+    "author_name": "John M",
+    "author_url": "http://",
+    "date": "2007-06-12T23:38:03",
+    "type": "comment",
+    "content_html": "<p>What is (Audit) in the BusinessLogic class referring to?</p>"
+  }
+]

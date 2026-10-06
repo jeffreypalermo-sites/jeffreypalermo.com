@@ -1,0 +1,26 @@
+---
+wp_id: 673
+title: 'Focus on the core: the most important part of the application'
+slug: focus-on-the-core-the-more-important-part-of-the-application
+permalink: /2007/07/focus-on-the-core-the-more-important-part-of-the-application/
+date: 2007-07-15T19:36:00
+date_utc: 2007-07-15T19:36:00Z
+modified: 2007-07-15T19:36:00
+format: html
+tags:
+- coding-principles
+- featured
+- managing
+- tips-tricks
+excerpt: Technologies are coming and going faster than every before. In this environment, how can we provide companies with a good return for their software investment. Looking back, J2EE was all the rage. Software executives were banking on J2EE and making significant investments. The same thing happened with COM+, ASP 3.0, etc. Managers were projecting significant […]
+comments_open: true
+---
+<p>Technologies are coming and going faster than every before.&nbsp; In this environment, how can we provide companies with a good return for their software investment.&nbsp; Looking back, J2EE was all the rage.&nbsp; Software executives were banking on J2EE and making significant investments.&nbsp; The same thing happened with COM+, ASP 3.0, etc.&nbsp; Managers were projecting significant savings by using these.&nbsp; Now, where are the savings.&nbsp; Many applications written with these are being rewritten in newer technologies.&nbsp; </p>
+<p>Why?&nbsp; Because the applications had no core.&nbsp; By core, I mean, the center of the application that describes the business domain.&nbsp; Typically, these are classes and interfaces.&nbsp; Creating classes using COM+ or J2EE doesn’t an application core make.&nbsp; The core doesn’t care about surrounding technology. The core is your domain model.&nbsp; By its design, it’s the most important part of the application, but, done well, it’s portable.&nbsp;  </p>
+<p><b>Look around and see if you can relate to this:</b>&nbsp; A software team focuses much energy on making the database as good as possible and they create stored procedures to pull back the data as quickly as possible.&nbsp; They also consider the use cases of the screens that are necessary.&nbsp; Using technology X for the presentation, they make database table designs and stored procedures that return exactly what the screen needs to show to the user.&nbsp; Perhaps J2EE or COM+ is used in the passage of information from the database to the UI.&nbsp; Perhaps Enterprise Java Beans for COM+ components perform some transformation or calculations necessary for the screens.&nbsp; </p>
+<p><i>Take a step back and remove the screens.&nbsp; Remove the database.&nbsp; Is there any application left?&nbsp; Can you point to any business rules or domain concepts left in the application after the presentation and storage components are removed?&nbsp; In my experience, I’ve had to answer “no” more than once.&nbsp; <b>This is absolutely the wrong way to develop software.</b></i></p>
+<p><b>Software systems should be resistant to climate change.&nbsp; </b>The technology climate is always changing.&nbsp; The core is the most important part of the application, and it should be insulated against changes on the outside.&nbsp; Over time presentation technologies have changed many, many times.&nbsp; Data access technologies haven’t sat still either.&nbsp; We still have the relational database, but the manner of using it is constantly changing.&nbsp; </p>
+<p><b>Software health check:&nbsp; </b>Take away the code used to talk to the database.&nbsp; Take away every screen.&nbsp; You should still have an application.&nbsp; You should be left with your application core or domain model and domain services.&nbsp; Everything should be intact.&nbsp; </p>
+<p><b>Handle changes in technology gracefully.&nbsp; </b>If your application has a healthy core, you will be able to upgrade to the next-generation UI.&nbsp; You’ll be able to change your data access to use LINQ or an ORM without much impact.&nbsp; If you don’t have a healthy core, any change in technology requires almost a wholesale rewrite.</p>
+<p>Any software system is a large investment for a company.&nbsp; That software is expected to last a LONG time.&nbsp; By focusing on the core of the application (domain model), the software will be able to weather changes in the technology climate.&nbsp; By creating a healthy core, your software will be able to drop and adopt technologies as necessary.&nbsp; <i>Let’s stop rewriting and rewriting and start creating healthy software.</i></p>
+<p>The inspiration for this post came from <a href="http://www.jamesshore.com/Blog/A-Simple-Effective-Design-Question.html">Jim Shore’ s thoughts</a>.</p>

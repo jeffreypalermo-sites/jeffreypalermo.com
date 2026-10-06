@@ -1,0 +1,11 @@
+[
+  {
+    "id": 242,
+    "parent": 0,
+    "author_name": "Noah Coad [MS]",
+    "author_url": "http://",
+    "date": "2005-02-19T19:01:00",
+    "type": "comment",
+    "content_html": "<p>System.IO is one of my favorite namespaces since I do a lot of work with files.  Path, Directory, and File are some of my most used ‘utilitiy’ types (I coined the term for types with mostly static members).</p>\n<p>For example, one common task is that I have a file path I want with a different extension.<br>\nprivate string ChangeFileExt(string FilePath, string NewExt)<br>\n{ return Path.Combine(Path.GetDirectoryName(FilePath), Path.GetFileNameWithoutExtension(FilePath) + \".\" + NewExt); }</p>\n<p>Called with:<br>\nTrace.WriteLine(ChangeFileExt(@\"c:tempexample.exe\", \"txt\"));</p>\n<p>One nice consistancy in the types, is that \"Name\" refers to just a file’s name (ex: Run.exe), \"Path\" refers to the whole path (ex: c:tempexample.exe), and \"Directory\" refers to the folder structure leading up to the path (c:temp).  I can’t even count the number of times other devs I’ve worked with have used inconsistant member names which causes pain.  They’ll call a property \"FileName\" and have the whole path.  &lt;sigh&gt;</p>"
+  }
+]

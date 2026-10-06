@@ -1,0 +1,20 @@
+---
+wp_id: 962
+title: MvcContrib – now with SubController support for ASP.NET MVC
+slug: mvccontrib-now-with-subcontroller-support-for-asp-net-mvc
+permalink: /2008/09/mvccontrib-now-with-subcontroller-support-for-asp-net-mvc/
+date: 2008-09-19T09:31:03
+date_utc: 2008-09-19T09:31:03Z
+modified: 2008-09-19T09:31:03
+format: html
+categories:
+- blog
+excerpt: I’m still hoping that SubControllers make it into the MVC Framework release, but my company is doing several client projects right now using the MVC Framework. These projects are enterprise applications, not smaller websites, so subcontrollers are absolutely necessary to handle the complex logic and permissions. I’ve create an implementation of subcontrollers and added it […]
+comments_open: true
+---
+<p>I’m still hoping that SubControllers make it into the MVC Framework release, but my company is doing several client projects right now using the MVC Framework.&nbsp; These projects are enterprise applications, not smaller websites, so subcontrollers are absolutely necessary to handle the complex logic and permissions.&nbsp; I’ve create an implementation of subcontrollers and added it to MvcContrib.&nbsp; It is pulling its weight on one client project, so I’m happy with it.&nbsp; It can be made better, and I’m hoping the team can take my first draft and incorporate it into the product.</p>
+<p><a href="http://www.mhinze.com/">Matt Hinze</a> has recently done a very <a href="http://mhinze.com/subcontrollers-in-aspnet-mvc/">nice write-up</a> on his experience using MvcContrib SubControllers.&nbsp; I also recommend subscribing to his <a href="http://mhinze.com/feed/">blog</a>.</p>
+<p>Here is the revision that added SubController support to MvcContrib:&nbsp; <a href="http://code.google.com/p/mvccontrib/source/detail?r=508">http://code.google.com/p/mvccontrib/source/detail?r=508</a></p>
+<p>I have included a full sample with 3 levels of nested subcontrollers and an example of a nested subcontroller owning a form and posting to itself without the parent controllers caring:<br><a href="http://code.google.com/p/mvccontrib/source/browse/trunk/src/Samples/MvcContrib.Samples.SubControllers/Website?spec=svn508&amp;r=508">http://code.google.com/p/mvccontrib/source/browse/trunk/src/Samples/MvcContrib.Samples.SubControllers/Website?spec=svn508&amp;r=508</a></p>
+<p>Feel free to pull down the source and let me know what you think.&nbsp; Even better, if you find an idea for improvement, please submit a patch.&nbsp; I have leveraged the IModelBinder so that subcontrollers can be passed directly into action methods, and you can hook your IoC container up so that it creates the subcontrollers and the dependencies.&nbsp; Decomposing complex screens infinitely increases maintainability, so this is why I consider subcontrollers a critical feature.&nbsp; Even if this doesn’t make it into the product, the team has done a good job making the framework extensible, so I was able to implement subcontrollers in less than 150 lines of code.&nbsp;&nbsp; I welcome your thoughts and opinions.&nbsp; </p>
+<p>You can pull down the source for MvcContrib by pointing your TortoiseSVN client to <a href="http://mvccontrib.googlecode.com/svn/trunk/">http://mvccontrib.googlecode.com/svn/trunk/</a> Note that this is a SVN URL, not a web page URL</p>

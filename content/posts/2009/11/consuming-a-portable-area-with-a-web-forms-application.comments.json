@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2642,
+    "parent": 0,
+    "author_name": "Steve",
+    "author_url": "http://blogger.forgottenskies.com",
+    "date": "2010-01-18T08:50:59",
+    "type": "comment",
+    "content_html": "<p>Can I plug NServiceBus into the mix instead of the servicebus provided here ?</p>"
+  }
+]

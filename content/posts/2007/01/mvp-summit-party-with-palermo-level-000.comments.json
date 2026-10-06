@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1088,
+    "parent": 0,
+    "author_name": "Bil Simser",
+    "author_url": "http://weblogs.asp.net/bsimser",
+    "date": "2007-01-04T00:45:32",
+    "type": "comment",
+    "content_html": "<p>Jeff, missed the party at TechEd (I think I was sleeping from the plane trip or something) but I definately want to hook up with you at the Summit. Although the SharePoint MVPs are getting together for a day of paintball on Monday so I’ll probably show up with brusies. Nothing like starting the week in pain.</p>"
+  },
+  {
+    "id": 1089,
+    "parent": 0,
+    "author_name": "Don Demsak",
+    "author_url": "http://www.donxml.com",
+    "date": "2007-01-04T10:28:35",
+    "type": "comment",
+    "content_html": "<p>I wouldn’t miss it.</p>"
+  },
+  {
+    "id": 1090,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-01-04T13:54:19",
+    "type": "comment",
+    "content_html": "<p>I’m registered at the Grand Hyatt (FYI)</p>"
+  },
+  {
+    "id": 1091,
+    "parent": 0,
+    "author_name": "SamGentile",
+    "author_url": "http://codebetter.com/blogs/sam.gentile",
+    "date": "2007-01-07T15:16:06",
+    "type": "comment",
+    "content_html": "<p>I’m in as you know from emails and at the Westin (from Monday)</p>"
+  },
+  {
+    "id": 1092,
+    "parent": 0,
+    "author_name": "jlynch",
+    "author_url": "http://codebetter.com/blogs/jeff.lynch",
+    "date": "2007-01-08T00:03:02",
+    "type": "comment",
+    "content_html": "<p>I’m also staying at the Westin and will definitely be attending Jeffrey’s party!</p>"
+  },
+  {
+    "id": 1093,
+    "parent": 0,
+    "author_name": "Miguel Castro",
+    "author_url": "http://www.dotnetdude.com",
+    "date": "2007-01-23T01:14:40",
+    "type": "comment",
+    "content_html": "<p>I’ll be there but what time does it start?  Sunday afternoon there’s a BBQ party at Rod Paddock’s house so I plan on making both.  What’s the WHERE and WHEN?  I’m at the Westin.</p>"
+  },
+  {
+    "id": 1094,
+    "parent": 0,
+    "author_name": "Darrell",
+    "author_url": "http://codebetter.com/blogs/darrell.norton",
+    "date": "2007-01-25T17:09:44",
+    "type": "comment",
+    "content_html": "<p>I’m there!</p>"
+  },
+  {
+    "id": 1095,
+    "parent": 0,
+    "author_name": "Keith Elder",
+    "author_url": "http://keithelder.net/blog/",
+    "date": "2007-01-27T14:15:14",
+    "type": "comment",
+    "content_html": "<p>I’m in as well Jeff.  FYI, I’m at the Westin.</p>"
+  }
+]

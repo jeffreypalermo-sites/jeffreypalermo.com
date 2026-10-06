@@ -1,0 +1,101 @@
+[
+  {
+    "id": 1409,
+    "parent": 0,
+    "author_name": "Matt",
+    "author_url": "http://",
+    "date": "2007-03-01T17:28:02",
+    "type": "comment",
+    "content_html": "<p>I’m incredibly jealous.</p>"
+  },
+  {
+    "id": 1410,
+    "parent": 0,
+    "author_name": "Derik Whittaker",
+    "author_url": "http://",
+    "date": "2007-03-01T17:50:22",
+    "type": "comment",
+    "content_html": "<p>Thats cool…</p>\n<p>I am pretty happy that we have about 550 tests that run and pass on our application.</p>"
+  },
+  {
+    "id": 1411,
+    "parent": 0,
+    "author_name": "Ross Neilson",
+    "author_url": "http://",
+    "date": "2007-03-01T17:54:18",
+    "type": "comment",
+    "content_html": "<p>Is there any chance you might blog some examples of the second and third types of test? I have performed some integration testing with NHibernate before but never found a really good way of doing it.</p>\n<p>Like Matt, I am jealous too. Where I work we have around 200 unit tests, all written by myself. Hopefully my colleagues will catch on someday.</p>"
+  },
+  {
+    "id": 1412,
+    "parent": 0,
+    "author_name": "rlewallen",
+    "author_url": "http://www.codebetter.com/blogs/raymond.lewallen",
+    "date": "2007-03-01T18:10:27",
+    "type": "comment",
+    "content_html": "<p>Congrats!  Its a great feeling, isn’t it!</p>"
+  },
+  {
+    "id": 1413,
+    "parent": 0,
+    "author_name": "jdn",
+    "author_url": "http://www.e-Crescendo.com",
+    "date": "2007-03-01T19:05:05",
+    "type": "comment",
+    "content_html": "<p>How long does it take for the 1400 tests to run in a single pass?</p>"
+  },
+  {
+    "id": 1414,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-01T20:25:32",
+    "type": "comment",
+    "content_html": "<p>jdn,<br>\nIt takes about 1.5 minutes.</p>"
+  },
+  {
+    "id": 1415,
+    "parent": 0,
+    "author_name": "jdn",
+    "author_url": "http://www.e-Crescendo.com",
+    "date": "2007-03-01T21:11:19",
+    "type": "comment",
+    "content_html": "<p>Sweet.</p>"
+  },
+  {
+    "id": 1416,
+    "parent": 0,
+    "author_name": "Jason Meridth",
+    "author_url": "http://blog.jasonmeridth.com",
+    "date": "2007-03-02T03:59:37",
+    "type": "comment",
+    "content_html": "<p>We’ve just surpassed 5000 unit tests.  It takes about 5-6 minutes.  We are currently in the process of possibly migrating/archiving/setting a daily time a majority of the current unit tests to speed up the check-in process.  We currently require all developers to run the entire sweet before a check-in.  It’s pretty amazing.  This is from a 3 year project.</p>"
+  },
+  {
+    "id": 1417,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-02T12:48:40",
+    "type": "comment",
+    "content_html": "<p>Raymond,<br>\nIt’s a secure feeling, but we have much more testing we need to do.</p>\n<p>Ross,<br>\nThat’s a good idea, but it’s pretty involved.  I’ll give you the short of it:  We have NUnit data access tests that do our CRUD operations with our domain objects through our NHibernate mappings to our database (which is created at the beginning of the build).  In short this verifies the mappings are correct, the columns are correct, and that we have permissions to use the tables.</p>\n<p>Remember that with database testing, the database has to be in a known state:  so we delete all records from all tables at the beginning of each test and build up the data.  We use some helper methods to trash the data.  We never run these against a  shared database, only against the local developer database and one on the build server.</p>"
+  },
+  {
+    "id": 1418,
+    "parent": 0,
+    "author_name": "Vikas Kerni",
+    "author_url": "http://www.vikasnetdev.blogspot.com/",
+    "date": "2007-03-02T17:42:44",
+    "type": "comment",
+    "content_html": "<p>Wow.</p>\n<p>How are they organized ? Same project or different projects?</p>"
+  },
+  {
+    "id": 1419,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-04T23:51:37",
+    "type": "comment",
+    "content_html": "<p>We’ve found that organizing them according to fast/slow has worked well.  That has led us to a .unittests and .integrationtests project for each production project.  The unit tests projects usually reference Rhino Mocks, etc, and the integration tests projects reference structuremap since we are using that as our DI container.</p>"
+  }
+]

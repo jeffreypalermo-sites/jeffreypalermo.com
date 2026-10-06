@@ -1,0 +1,11 @@
+[
+  {
+    "id": 632,
+    "parent": 0,
+    "author_name": "Gary Williams",
+    "author_url": "http://achiveddeveloper.blogspot.com",
+    "date": "2006-01-27T21:09:30",
+    "type": "comment",
+    "content_html": "<p>True.  One caveat.  Don’t check in the ‘user’ files associated with projects and solutions.  This means you don’t override the indvidual user preferences while still keeping all the revelant relationships correct.  Also, make sure to use relative paths for *everything*.</p>"
+  }
+]

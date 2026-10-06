@@ -1,0 +1,75 @@
+---
+wp_id: 187
+title: Managing work running in the Threadpool – level 350
+slug: managing-work-running-in-the-threadpool-level-350
+permalink: /2005/03/managing-work-running-in-the-threadpool-level-350/
+date: 2005-03-03T09:57:00
+date_utc: 2005-03-03T09:57:00Z
+modified: 2005-03-03T09:57:00
+format: html
+excerpt: I recently solved a problem that the community might run into, so I think I’ll share my solution. I had a process (in my case a Windows service, but this concept applies to Console or WinForms apps as well) that dispatched work to the threadpool. There are different types of work, and each type should […]
+comments_open: true
+---
+<p>I recently solved a problem that the community might run into, so I think I’ll share my solution.&nbsp; I had a process (in my case a Windows service, but this concept applies to Console or WinForms apps as well) that dispatched work to the threadpool.&nbsp; There are different types of work, and each type should not have to wait for all of another type to finish, so I use the threadpool for concurrent execution (I have to wait for a database, so I actually do see performance gains), but if there is 3 hours worth of type A work to do, type B should not have to wait that 3 hours to begin.&nbsp; The situation worked fine until I needed to stop my service.&nbsp; When you stop a process, it stops.&nbsp; It doesn’t wait for catch and finally blocks to execute, either.&nbsp; If there was work in progress, that work was left in a corrupted state.&nbsp; That possibility is not acceptable for a production application.&nbsp; I need to be able to stop or wait for the work before I allow the service to complete stopping.&nbsp; My solution was that for each new work item that was started in the threadpool, I added that thread to an ArrayList, and when the work was finished, I removed it.&nbsp; When I needed to stop, I walked through each thread and called Abort() and Join().&nbsp; This threw a ThreadAbortException down that thread allowing my normal cleanup code to execute, and Join() waited a specified period of time for that thread to finish and exit, then control returned to the main thread.&nbsp; After all the threads were finished, I would finish stopping.&nbsp; In this way, I could maintain control over work being done in the threadpool.</p>
+<p>Here is a sample class that dispatches work (it makes the work run in its own AppDomain too).</p>
+<div><br>
+<p><span>&nbsp;&nbsp;&nbsp; </span><span>public</span><span> class</span><span> Controller</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; {</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span> ArrayList threads = </span><span>new</span><span> ArrayList();</span></p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span> Controller(){</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>// Just so we can see the activity.</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Trace.Listeners.Add(</span><span>new</span><span> TextWriterTraceListener(Console.Out));</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span> void</span><span> DoWork(){</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>try</span><span>{</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>// Three might be running at the same time.</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>for</span><span>(</span><span>int</span><span> i = 0; i &lt; 3; i++){</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ThreadPool.QueueUserWorkItem(</span><span>new</span><span> WaitCallback(Execute));</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Thread.Sleep(20000);</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Trace.WriteLine(threads.Count, </span><span>this</span><span>.ToString());</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span><span>finally</span><span>{</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>foreach</span><span>(Thread t </span><span>in</span><span> threads){</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; t.Abort();</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; t.Join();</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>private</span><span> void</span><span> Execute(</span><span>object</span><span> state){</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; AppDomainSetup setup = </span><span>null</span><span>;</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; AppDomain domain = </span><span>null</span><span>;</span></p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>try</span><span>{</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; threads.Add(Thread.CurrentThread);</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; setup = </span><span>new</span><span> AppDomainSetup();</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; setup.ApplicationBase = AppDomain.CurrentDomain.BaseDirectory;</span></p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; domain = AppDomain.CreateDomain(“Processor”, </span><span>null</span><span>, setup);</span></p><br>
+<br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Processor proc = (Processor)domain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, </span><span>typeof</span><span>(Processor).FullName);</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; proc.Process();</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span><span>finally</span><span>{</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; threads.Remove(Thread.CurrentThread);</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>if</span><span>(domain != </span><span>null</span><span>)</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; AppDomain.Unload(domain);</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; }</span></p></div><!--EndFragment-->
+<p>And here is my sample Processor class:</p>
+<div><br>
+<p><span>&nbsp;&nbsp;&nbsp; [Serializable()]</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; </span><span>public</span><span> class</span><span> Processor</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; {</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>public</span><span> void</span><span> Process(){</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>try</span><span>{</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Trace.WriteLine(“Beginning Processing”, </span><span>this</span><span>.ToString());</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>// Simulate a long-running process.</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; System.Threading.Thread.Sleep(20000);</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span><span>finally</span><span>{</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Trace.WriteLine(“Finished”, </span><span>this</span><span>.ToString());</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span>// Close out database record an other cleanup.</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span></p><br>
+<p><span>&nbsp;&nbsp;&nbsp; }</span></p></div>
+<p>This has solved my problem, and now when I sent work to the threadpool it’s not just a foreign country with no phones.&nbsp; I stay in control of those threads.&nbsp; The above code is a sample of the same concept I’m using.&nbsp; Feel free to use the sample. but it’s been simplified to protect the innocent, so make sure to fully test whatever you put into practice.</p>

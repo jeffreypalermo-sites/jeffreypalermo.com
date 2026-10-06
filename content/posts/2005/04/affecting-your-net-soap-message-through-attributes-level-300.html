@@ -1,0 +1,44 @@
+---
+wp_id: 219
+title: Affecting your .Net SOAP message through attributes – level 300
+slug: affecting-your-net-soap-message-through-attributes-level-300
+permalink: /2005/04/affecting-your-net-soap-message-through-attributes-level-300/
+date: 2005-04-21T13:53:00
+date_utc: 2005-04-21T13:53:00Z
+modified: 2005-04-21T13:53:00
+format: html
+excerpt: With the .Net implementation of web services, you can design the schema of a web service call without having to author WSDL by hand. I won’t discuss contract first here. I recognize that many are happy with the default .Net implementation of a webservice. It is possible to easily affect the Xml format of the […]
+comments_open: true
+---
+<p>With the .Net implementation of web services, you can design the schema of a web service call without having to author WSDL by hand.&nbsp; I won’t discuss contract first here.&nbsp; I recognize that many are happy with the default .Net implementation of a webservice.&nbsp; It is possible to easily affect the Xml format of the SOAP envelope, however.&nbsp; Mainly, you need to define the Xml structure of the SOAP envelope.&nbsp; By default, .Net makes nodes with your parameter names, like so:</p>
+<div><span>&nbsp;&nbsp;146</span>&nbsp;[WebMethod]<br><span>&nbsp;&nbsp;147</span>&nbsp;<span>public</span> <span>int</span> Foo(<span>string</span> firstParam, <span>string</span> secondParam) {<span>return</span> 0;}<br></div><pre>POST /webservicetest/movie.asmx HTTP/1.1<br>
+Host: localhost<br>
+Content-Type: text/xml; charset=utf-8<br>
+Content-Length: <strong>length</strong><br>
+SOAPAction: “http://palermo.cc/Foo”
+<p>&lt;?xml version=”1.0″ encoding=”utf-8″?&gt;<br>
+&lt;soap:Envelope xmlns:xsi=”http://www.w3.org/2001/XMLSchema-instance” xmlns:xsd=”http://www.w3.org/2001/XMLSchema” xmlns:soap=”http://schemas.xmlsoap.org/soap/envelope/”&gt;<br>
+  &lt;soap:Body&gt;<br>
+    &lt;Foo xmlns=”http://palermo.cc”&gt;<br>
+      &lt;firstParam&gt;<strong>string</strong>&lt;/firstParam&gt;<br>
+      &lt;secondParam&gt;<strong>string</strong>&lt;/secondParam&gt;<br>
+    &lt;/Foo&gt;<br>
+  &lt;/soap:Body&gt;<br>
+&lt;/soap:Envelope&gt;</p></pre><pre>HTTP/1.1 200 OK<br>
+Content-Type: text/xml; charset=utf-8<br>
+Content-Length: <strong>length</strong>
+<p>&lt;?xml version=”1.0″ encoding=”utf-8″?&gt;<br>
+&lt;soap:Envelope xmlns:xsi=”http://www.w3.org/2001/XMLSchema-instance” xmlns:xsd=”http://www.w3.org/2001/XMLSchema” xmlns:soap=”http://schemas.xmlsoap.org/soap/envelope/”&gt;<br>
+  &lt;soap:Body&gt;<br>
+    &lt;FooResponse xmlns=”http://palermo.cc”&gt;<br>
+      &lt;FooResult&gt;<strong>int</strong>&lt;/FooResult&gt;<br>
+    &lt;/FooResponse&gt;<br>
+  &lt;/soap:Body&gt;<br>
+&lt;/soap:Envelope&gt;</p><hr></pre>
+<p><!--EndFragment-->What if I don’t want to expose my naming conventions in my soap message?&nbsp;&nbsp; Moreover, I have specific names that I want for the Soap message.&nbsp; I can add XmlElement attributes to the parameters to customize the Soap message:</p>
+<div><span>&nbsp;&nbsp;148</span>&nbsp;[WebMethod]<br><span>&nbsp;&nbsp;149</span>&nbsp;<span>public</span> <span>int</span> Foo(<br><span>&nbsp;&nbsp;150</span>&nbsp;&nbsp;&nbsp;&nbsp; [XmlElement(“ProductCode”)] <span>string</span> firstParam, <br><span>&nbsp;&nbsp;151</span>&nbsp;&nbsp;&nbsp;&nbsp; [XmlElement(“Quantity”)] <span>string</span> secondParam) <br><span>&nbsp;&nbsp;152</span>&nbsp;{<span>return</span> 0;}<br></div>
+<p>Here is the part of the SOAP message that is changed:</p>
+<p>&lt;?xml version=”1.0″ encoding=”utf-8″?&gt;<br>&lt;soap:Envelope xmlns:xsi=”<a href="http://www.w3.org/2001/XMLSchema-instance&amp;#8221" rel="nofollow">http://www.w3.org/2001/XMLSchema-instance&amp;#8221</a>; xmlns:xsd=”<a href="http://www.w3.org/2001/XMLSchema&amp;#8221" rel="nofollow">http://www.w3.org/2001/XMLSchema&amp;#8221</a>; xmlns:soap=”<a href="http://schemas.xmlsoap.org/soap/envelope/”&amp;gt" rel="nofollow">http://schemas.xmlsoap.org/soap/envelope/”&amp;gt</a>;<br>&nbsp; &lt;soap:Body&gt;<br>&nbsp;&nbsp;&nbsp; &lt;Foo xmlns=”<a href="http://palermo.cc”&amp;gt" rel="nofollow">http://palermo.cc”&amp;gt</a>;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;ProductCode&gt;<strong>string</strong>&lt;/ProductCode&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Quantity&gt;<strong>string</strong>&lt;/Quantity&gt;<br>&nbsp;&nbsp;&nbsp; &lt;/Foo&gt;<br>&nbsp; &lt;/soap:Body&gt;<br>&lt;/soap:Envelope&gt;</p>
+<hr>
+
+<p>Because .Net uses the XmlSerializer for Soap-object conversion, the service Xml schemas can be completely customized.&nbsp; Another one of my favorite things is to return a object from a web service while ensuring the contract is explicit.&nbsp; On my object, I implement ISerializable and define my format.&nbsp; </p><!--EndFragment-->

@@ -1,0 +1,83 @@
+[
+  {
+    "id": 2412,
+    "parent": 0,
+    "author_name": "Victor Kornov",
+    "author_url": "http://victorkornov.ru",
+    "date": "2008-03-26T22:20:33",
+    "type": "comment",
+    "content_html": "<p>&gt;Strongly typed views don’t scale when the application complexity increases</p>\n<p>Care to elaborate?</p>"
+  },
+  {
+    "id": 2413,
+    "parent": 0,
+    "author_name": "Steve Sanderson",
+    "author_url": "http://blog.codeville.net",
+    "date": "2008-03-27T15:39:39",
+    "type": "comment",
+    "content_html": "<p>&gt; &gt;Strongly typed views don’t scale when the application complexity increases<br>\n&gt; Care to elaborate?<br>\nThey’ve been fine for me so far. What don’t you like about them?</p>\n<p>&gt; In my opinion, System.Web.Mvc.ViewData should inherit from Dictionary<br>\nWould be interested to know why. The current behavior supports more flexible late binding than would be possible with Dictionary. </p>"
+  },
+  {
+    "id": 2414,
+    "parent": 0,
+    "author_name": "Greg Young",
+    "author_url": "http://",
+    "date": "2008-03-27T15:45:08",
+    "type": "comment",
+    "content_html": "<p>    Assert.That(bag.Get(), Is.EqualTo(url));</p>\n<p>    Assert.That(bag.Get(typeof(Url)), Is.EqualTo(url));</p>\n<p>Can you explain why you use two asserts here?</p>\n<p>How about:</p>\n<p>Assert.IsTrue(bag.Get() == url);</p>\n<p>The code as presented seems really weird to me … are you worried that there may be an overriden comparison? Even if there is and it says the objects are the same when they are actually different shouldn’t you be honoring that?</p>"
+  },
+  {
+    "id": 2415,
+    "parent": 0,
+    "author_name": "Greg",
+    "author_url": "http://",
+    "date": "2008-03-27T16:46:39",
+    "type": "comment",
+    "content_html": "<p>oops … read it wrong … I was looking through the old tests which did the assert on equality and type … not this one …. my bad</p>"
+  },
+  {
+    "id": 2416,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-03-28T03:09:22",
+    "type": "comment",
+    "content_html": "<p>@Victor,<br>\nNo here.  Perhaps in another post.</p>"
+  },
+  {
+    "id": 2417,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-03-28T03:10:42",
+    "type": "comment",
+    "content_html": "<p>@Steve,<br>\n&gt;Would be interested to know why. The current behavior supports more flexible late binding than would be possible with Dictionary.</p>\n<p>Inheriting from Dictionary would not take away any of the current capabilities.  It would, however, add IEnumerable so we could explore the contents freely.</p>"
+  },
+  {
+    "id": 2418,
+    "parent": 0,
+    "author_name": "James Arendt",
+    "author_url": "http://jamesarendt.typepad.com",
+    "date": "2008-03-28T14:53:36",
+    "type": "comment",
+    "content_html": "<p>@Jeff:</p>\n<p>Both the generic and non-generic versions of the IDictionary interface inherit IEnumerable interfaces.</p>"
+  },
+  {
+    "id": 2419,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-03-28T15:17:34",
+    "type": "comment",
+    "content_html": "<p>@James,<br>\nThat is correct.  And that’s a main reason why System.Web.Mvc.ViewData should implement IDictionary.</p>"
+  },
+  {
+    "id": 2420,
+    "parent": 0,
+    "author_name": "James Arendt",
+    "author_url": "http://jamesarendt.typepad.com",
+    "date": "2008-03-28T18:21:36",
+    "type": "comment",
+    "content_html": "<p>For some reason, I had it in my head that ViewData already did implement IDictionary when I first read through your post.</p>\n<p>So, it did not make sense why inheriting from Dictionary would provide any benefit. But, ViewData does not implement any interfaces including IDictionary.</p>"
+  }
+]

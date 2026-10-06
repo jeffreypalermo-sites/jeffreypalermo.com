@@ -1,0 +1,137 @@
+[
+  {
+    "id": 2381,
+    "parent": 0,
+    "author_name": "Weex",
+    "author_url": "http://",
+    "date": "2008-03-12T00:02:42",
+    "type": "comment",
+    "content_html": "<p>The unit test should be doing black box testing on the object under test. – That’s something new \uD83D\uDE42 You should not couple tests with implementation, is that what you wanted to say? To test method’s contact, not it’s implementation.</p>"
+  },
+  {
+    "id": 2382,
+    "parent": 0,
+    "author_name": "Rob Kitson",
+    "author_url": "http://robkitson.net",
+    "date": "2008-03-12T00:02:59",
+    "type": "comment",
+    "content_html": "<p>Quick question… if you’re using a mock object framework and you are setting up your expectations in your tests, don’t your tests know a lot about the implementation?</p>"
+  },
+  {
+    "id": 2383,
+    "parent": 0,
+    "author_name": "Jimmy Bogard",
+    "author_url": "http://jimmybogard.lostechies.com",
+    "date": "2008-03-12T00:40:05",
+    "type": "comment",
+    "content_html": "<p>This would lead me to think that MVC controllers should be POCOs, infrastructure ignorant.</p>"
+  },
+  {
+    "id": 2384,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-03-12T01:29:19",
+    "type": "comment",
+    "content_html": "<p>@Weex,<br>\nIn a  good unit test, I ought to be able to rewrite class code in many ways as long as to the caller it has the same observable behavior.  That’s black box.  Only observable behavior is tested.  Inside the class, I shouldn’t have to mess with what methods an object calls on itself.</p>\n<p>You are correct in saying that you should not couple tests with the object implementation, only observable behavior.  In other words, black box.  Now, the black box is VERY small.  Just an object.</p>"
+  },
+  {
+    "id": 2385,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-03-12T01:31:16",
+    "type": "comment",
+    "content_html": "<p>@robkitson,<br>\nMy remarks don’t affect whether you are using a mock framework or not.</p>\n<p>The tests should set up expectations on the observable behavior.  Observable from the outside.  After the test is failing because the production code isn’t there yet, you can write whatever code satisfies the test.  You will obviously know about the implementation, but your unit test should know.  The unit test should only be concerned with observable behavior.</p>"
+  },
+  {
+    "id": 2386,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-03-12T01:32:58",
+    "type": "comment",
+    "content_html": "<p>@Jimmy,<br>\nI think a lot of classes should be infrastructure ignorant, but I don’t think MVC controllers will be, at least not if you are leveraging an infrastructure base class like Controller or SmartDispatchController in Monorail.  The testing method shouldn’t change based on what infrastructure you use.  The infrastructure should not stand in the way of clean testability.</p>"
+  },
+  {
+    "id": 2387,
+    "parent": 0,
+    "author_name": "hammett",
+    "author_url": "http://hammett.castleproject.org",
+    "date": "2008-03-12T03:27:58",
+    "type": "comment",
+    "content_html": "<p>Can you show a code snippet of what, in your opinion, is a clean controller test?</p>"
+  },
+  {
+    "id": 2388,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-03-12T03:33:23",
+    "type": "comment",
+    "content_html": "<p>@hammett,<br>\nNot on this comment thread because MVC frameworks are orthogonal to this post.  I recently posted a controller test for ASP.NET MVC, and I certainly defer to you regarding the Monorail testing given that I’ve only completed 1 Monorail project and am very ignorant of all the capabilities of the SmartDispatchController class. </p>"
+  },
+  {
+    "id": 2389,
+    "parent": 0,
+    "author_name": "Tom",
+    "author_url": "http://",
+    "date": "2008-03-12T03:55:40",
+    "type": "comment",
+    "content_html": "<p>I’ll bite…</p>\n<p>“Methods don’t have dependencies, and methods aren’t dependencies.  Objects are dependencies, and object have dependencies.”<br>\nIf object X has a dependency on object Y, what constitutes this dependency?  Is it not the method calls that object X makes on object Y?  Objects don’t have dependencies — TYPES have dependencies and they’re expressed through methods.</p>\n<p>“Objects are cohesive and present a contract of behavior so other objects know what behavior they can reliably leverage.”<br>\nObjects most certainly do NOT present a contract of behavior — types do.  Moreover, behavior is expressed through methods, not objects.</p>\n<p>“Because an object is cohesive, everything necessary to perform all its behavior can be passed into the object’s constructor at the beginning of the object’s life.  Then, that object can perform all of the operations”<br>\nThis line of thought seems to make method parameters sort of unnecessary, no?</p>\n<p>“In order to test a particular object, I might have to pass some fake objects (stubs, mocks, etc) into the constructor, but the object under test doesn’t care as long as the type is satisfied.”<br>\nExactly my point — a contract is expressed through TYPES not objects.</p>\n<p>“If I can’t test an object by passing in fakes to the constructor (and I can compromise sometimes by using setter injection), then the object is less than cohesive, and I should search the design of the object for an extra concern that is trying to get out.  Once I find the extra concern, I would separate the concern (separation of concerns) into its own object and have than as an explicit dependency by requiring it be passed into the constructor (dependency injection).”<br>\nNo. You would separate the concern into its own TYPE.  And most likely, you’d express that type’s contract through an interface so that you could mock it out for your tests.</p>\n<p>“Michael Feathers outlines this extract method and override testing technique in his book…”<br>\nNot really sure what any of the above has to do with the extract method and override refactoring?  You were just talking about dependency injection, which is basically a polar opposite of extract and override (with dependency injection, you pass the dependency in, whereas with override and refactor the type itself is responsible for creating an instance of the dependency).</p>\n<p>“The unit test should be doing black box testing on the object under test…”<br>\nDitto what Weex said.</p>"
+  },
+  {
+    "id": 2390,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-03-12T11:14:29",
+    "type": "comment",
+    "content_html": "<p>Tom,<br>\nIn C#, Java, yes, “Type” is more correct here.  I was trying to be general because I think this applies to other OO languages as well.  Some other OO languages are not statically typed.</p>"
+  },
+  {
+    "id": 2391,
+    "parent": 0,
+    "author_name": "Jeff Tucker",
+    "author_url": "http://agilology.blogspot.com/",
+    "date": "2008-03-12T18:51:15",
+    "type": "comment",
+    "content_html": "<p>I agree with you in principle and from a testing perspective, but what about a situation like Strategy?  In strategy, I would (usually) invoke the strategy through a method, and typically this is only one method on my object.  I may still inject the strategy interface through the constructor, but it’s still a dependency of the method itself as the rest of the object will function correctly without it.  I can test that the strategy is called by using a mock and I probably won’t use a mock to test the strategy itself (which I will test separately).  However, I still see this as being a dependency on a method in many cases (although I can think of several exceptions).  Your thoughts?  Also, could methods be dependencies in the case of delegates?  I think that the same argument could be made here.</p>"
+  },
+  {
+    "id": 2392,
+    "parent": 0,
+    "author_name": "Greg",
+    "author_url": "http://",
+    "date": "2008-03-13T04:18:03",
+    "type": "comment",
+    "content_html": "<p>weex hit it on the head but …</p>\n<p>methods don’t have dependencies? functional code I think changes this… </p>\n<p>Somebody has already mentioned the Strategy pattern but the first one that came to my mind was specification …</p>\n<p>object.Validate(IEnumerable&lt;Specification&gt;)</p>"
+  },
+  {
+    "id": 2393,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2008-03-13T13:38:27",
+    "type": "comment",
+    "content_html": "<p>Clarifying.  Yes,  method can have dependencies, and these are exposed via method arguments.  If a method needs an object in order to function properly, that object should be passed in to a method if it is not  a member of the class.</p>"
+  },
+  {
+    "id": 2394,
+    "parent": 0,
+    "author_name": "Tom",
+    "author_url": "http://",
+    "date": "2008-03-13T18:36:49",
+    "type": "comment",
+    "content_html": "<p>“If a method needs an object in order to function properly, that object should be passed in to a method if it is not  a member of the class.”</p>\n<p>Now there’s a revelation!</p>"
+  },
+  {
+    "id": 2395,
+    "parent": 0,
+    "author_name": "Colin Jack",
+    "author_url": "http://colinjack.blogspot.com/",
+    "date": "2008-03-18T10:42:32",
+    "type": "comment",
+    "content_html": "<p>“If I can’t test an object by passing in fakes to the constructor (and I can compromise sometimes by using setter injection), then the object is less than cohesive”</p>\n<p>Not sure I understand this, I think you are saying that a class is not cohesive if all its dependencies are not injected?</p>"
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "id": 2129,
+    "parent": 0,
+    "author_name": "Jakub",
+    "author_url": "http://www.coohya.com",
+    "date": "2007-11-10T19:44:16",
+    "type": "comment",
+    "content_html": "<p>Thank you for coming to Dallas Jeffrey. It was a great presentation! </p>"
+  },
+  {
+    "id": 2130,
+    "parent": 0,
+    "author_name": "Chak Bireddy",
+    "author_url": "http://",
+    "date": "2007-11-14T18:54:56",
+    "type": "comment",
+    "content_html": "<p>It was a nice presentation. Thanks for coming!</p>"
+  },
+  {
+    "id": 2131,
+    "parent": 0,
+    "author_name": "mattflo",
+    "author_url": "http://matt@mattflo.com",
+    "date": "2007-11-15T21:04:51",
+    "type": "comment",
+    "content_html": "<p>is the gcode repository online?  I am having trouble performing svnCheckout.</p>"
+  },
+  {
+    "id": 2132,
+    "parent": 0,
+    "author_name": "mattflo",
+    "author_url": "http://matt@mattflo.com",
+    "date": "2007-11-15T21:10:24",
+    "type": "comment",
+    "content_html": "<p>i get the following:<br>\nError: PROPFIND request failed on ‘/p/palermo’<br>\nError: PROPFIND of ‘/p/palermo’: could not connect to server (<a href=\"http://code.google.com\" rel=\"nofollow ugc\">http://code.google.com</a>) </p>"
+  },
+  {
+    "id": 2133,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-11-15T22:21:28",
+    "type": "comment",
+    "content_html": "<p>The first URL is a website, the home of my google code site.  If you want to check out the trunk, do:<br>\nsvn co <a href=\"http://palermo.googlecode.com/svn/nhibernatedemo/trunk\" rel=\"nofollow ugc\">http://palermo.googlecode.com/svn/nhibernatedemo/trunk</a></p>"
+  }
+]

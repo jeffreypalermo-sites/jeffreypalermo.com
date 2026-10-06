@@ -1,0 +1,21 @@
+---
+wp_id: 1211
+title: 'Coding forward: the opposite of coding backward'
+slug: coding-forward-the-opposite-of-coding-backward
+permalink: /2014/05/coding-forward-the-opposite-of-coding-backward/
+date: 2014-05-13T08:59:41
+date_utc: 2014-05-13T08:59:41Z
+modified: 2014-05-13T08:59:41
+format: html
+categories:
+- blog
+excerpt: I am a big advocate of coding forward. Coding forward is the style of coding used in Test-driven development. In TDD, we write a test as we would like the code to work. We even allow compile errors because we are modeling the API of the code the way we would like it to read […]
+comments_open: true
+---
+<p>I am a big advocate of coding forward.&nbsp; Coding forward is the style of coding used in Test-driven development.&nbsp; In TDD, we write a test as we would like the code to work.&nbsp; We even allow compile errors because we are modeling the API of the code the way we would like it to read – even before it exists.&nbsp; Then, we begin to fill in the holes, creating the methods that didn’t exist yet, and making them work right.</p>
+<p>I like to carry that into all coding, not just test-first coding.&nbsp; For instance, if I am in an MVC controller and I need to call a new method that I am imagining in my head, I like to just write the call to that method that doesn’t yet exist.&nbsp; For instance:</p>
+<p><a href="/wp-content/uploads/2018/07/coding-forward-the-opposite-of-coding-ba_7b94image_2.png"><img loading="lazy" decoding="async" title="image" style="border-top:0; border-right:0; background-image:none; border-bottom:0; padding-top:0; padding-left:0; border-left:0; display:inline; padding-right:0" border="0" alt="image" src="/wp-content/uploads/2018/07/coding-forward-the-opposite-of-coding-ba_7b94image_thumb.png" width="640" height="147"></a></p>
+<p>Here, I know I need to make my domain model to a strongly-typed view model for use in an MVC view.&nbsp; The method to do it doesn’t exist.&nbsp; </p>
+<p>A common style is to stop coding and then go create the mapping method and then come back.&nbsp; I find this to be cognitively disjointed and prone to the loss of train of thought.&nbsp; When I stop coding and jump down into the stack of methods &amp; classes that need to exists for a top-level solution to work, I have to make sure I keep track of my own “call stack” or development stack of items to come back to.&nbsp; If, instead, I continue coding forward to the end of the scenario, the compiler will remind me of the missing pieces because it won’t compile – or the page/function won’t run.&nbsp; Automated tests do this also because the test won’t pass until all necessary code is in place.</p>
+<p>I have noticed myself doing this, and I realized that it was distinctly a different style than many programmers.&nbsp; JetBrains ReSharper does help tremendously with this style because of the navigation features and code generation features.&nbsp; I’m not sure it would be as convenient without R#.&nbsp; Creating a new class and then flicking it to a new code file is just a couple of shortcut keys with R#, so it’s pretty frictionless to code forward.</p>
+<p>Happy coding (forward)</p>

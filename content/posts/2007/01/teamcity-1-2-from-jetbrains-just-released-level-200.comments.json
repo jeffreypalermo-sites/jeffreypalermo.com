@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1122,
+    "parent": 0,
+    "author_name": "Slava Imeshev",
+    "author_url": "http://www.viewtier.com",
+    "date": "2007-01-27T20:13:56",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>You might also check our Parabuild server. Parabuild has been around for awhile. It has reached version 3 now. Parabuild is not only a continuous integrations server but it is also a full-blown software build management server with security, build results publishing and nightly builds. It has user interface that allows controlling all aspects of the server configuration through the web. </p>\n<p>Regards,</p>\n<p>Slava Imeshev</p>"
+  },
+  {
+    "id": 1123,
+    "parent": 0,
+    "author_name": "Kirill Maximov",
+    "author_url": "http://www.jetbrains.net/confluence/display/TW",
+    "date": "2007-02-01T16:20:47",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>  I just want to notice that EAP version of TeamCity now supports remote run feature (running tests for local changes on the build agent without VCS commit). In the next EAP and in the next version of TeamCity we plan to provide delayed (pre-tested) commit feature for the Team System.<br>\n  TeamCity EAP is available from <a href=\"http://www.jetbrains.net/confluence/display/TW\" rel=\"nofollow ugc\">http://www.jetbrains.net/confluence/display/TW</a></p>\n<p> Kind regards,<br>\n KIR</p>"
+  }
+]

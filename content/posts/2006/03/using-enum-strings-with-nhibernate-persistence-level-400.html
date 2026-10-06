@@ -1,0 +1,26 @@
+---
+wp_id: 392
+title: Using enum strings with NHibernate persistence – level 400
+slug: using-enum-strings-with-nhibernate-persistence-level-400
+permalink: /2006/03/using-enum-strings-with-nhibernate-persistence-level-400/
+date: 2006-03-14T14:00:00
+date_utc: 2006-03-14T14:00:00Z
+modified: 2006-03-14T14:00:00
+format: html
+tags:
+- agile
+- coding-principles
+- data-access
+excerpt: One of the things that is not very obvious when using NHibernate is how to using Enumerations. If you merely map an enum with the hbm.xml, NHibernate will persist that class member as an int, which is the underlying type of an Enum value type. Even if you have your database table configured with a […]
+comments_open: true
+---
+<p>One of the things that is not very obvious when using NHibernate is how to using Enumerations.&nbsp; If you merely map an enum with the hbm.xml, NHibernate will persist that class member as an int, which is the underlying type of an Enum value type.&nbsp; Even if you have your database table configured with a string field, you’ll get an integer in your string field.</p>
+<p>To have NHibernate use the string representation of the enum for storing in the database, you need to use a special type class.&nbsp; Below is a simple example of using the EnumStringType that NHibernate provides.&nbsp; Consider the following enum that I want to use in my class (this is a very simplified example):</p>
+<p>&nbsp;&nbsp;&nbsp; public enum DeliveryStatus<br>&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Pending,<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Ready,<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Sent<br>&nbsp;&nbsp;&nbsp; }</p>
+<p>When mapping this in my class, NHibernate would persist 0, 1, and 2 in my database.&nbsp; What I actually want are the strings to be stored in my table (no comments about normalization, please).&nbsp; Here is a wierd thing you have to do to achieve this goal.&nbsp; Here is my mapping:<br>&lt;?xml version=”1.0″ encoding=”utf-8″ ?&gt; <br>&lt;hibernate-mapping xmlns=”urn:nhibernate-mapping-2.0″&gt;<br>&nbsp;&nbsp;&nbsp; &lt;class name=”Palermo.Shipping.Shipment, Palermo.Shipping” table=”Shipment”&gt;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;id name=”TrackingId” column=”TrackingId” type=”String” length=”30″ &gt; <br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;generator class=”assigned”/&gt; <br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/id&gt; <br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;property name=”DeliveryState” column=”DeliveryState” <br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; type=”Palermo.Shipping.DeliveryStatusType, Palermo.Shipping”/&gt;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; &lt;/class&gt;</p>
+<p>&lt;/hibernate-mapping&gt;</p>
+<p>Notice that I have a new type referenced for DeliveryState:&nbsp; DeliveryStatusType.&nbsp; This is what’s new.&nbsp; This type helps NHibernate map an enum string instead of the int.&nbsp; For this, I must define this type in my code:</p>
+<p>&nbsp;&nbsp;&nbsp; public class DeliveryStatusType : EnumStringType<br>&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; public DeliveryStatusType() : base(typeof (DeliveryStatus), 30)<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp; }</p>
+<p>Note that this is very simple, and the 30 specifies the max length of the enum string.&nbsp; I’d recommend setting this number the same as the length of your string field in your database.</p>
+<p>With these small steps, NHibernate will now map Pending, Ready, and Sent to the database field.&nbsp; Normal programmatic interaction is the same.&nbsp; NHibernate will take care of all the data access.&nbsp; Without the above solution, one might be tempted to use string constants, but I’d highly recommend using enums when the possible values are known.&nbsp; </p>
+<div class="itemAuthorStyle"><a href="http://www.realdn.net/msblog/PermaLink,guid,d7460db0-1696-4cea-8035-d50f80e36210.aspx">Gabriel Lozano-Moran agrees, and he posts some good principles surrounding it.</a> </div>

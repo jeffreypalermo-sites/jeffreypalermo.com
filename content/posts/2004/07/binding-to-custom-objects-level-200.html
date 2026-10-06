@@ -1,0 +1,49 @@
+---
+wp_id: 55
+title: Binding to custom objects – level 200
+slug: binding-to-custom-objects-level-200
+permalink: /2004/07/binding-to-custom-objects-level-200/
+date: 2004-07-29T08:53:00
+date_utc: 2004-07-29T08:53:00Z
+modified: 2004-07-29T08:53:00
+format: html
+excerpt: First of all, I rated this post as 200 instead of 300 because I believe that intermediate-level ASP.NET developers SHOULD know about and be using the following technique. When learning data-binding techniques, we see all the samples either bind a single value or bind a DataSet to a grid. It’s very common to put data […]
+comments_open: true
+---
+<p>First of all, I rated this post as 200 instead of 300 because I believe that intermediate-level ASP.NET developers SHOULD know about and be using the following technique. When learning data-binding techniques, we see all the samples either bind a single value or bind a DataSet to a grid. It’s very common to put data in a DataSet and bind it. I prefer to bind directly to a collection of custom objects. By creating a collection or array of custom objects (that contain the same data as the DataSet anyway) you benefit from being strongly-typed. You can bind to any property of your object that is a primitive type. For example, if you have: </p><pre>public class Person<br>
+ {<br>
+  private int m_id;<br>
+  public string FirstName;<br>
+  public string LastName;<br>
+  public int ID<br>
+  {<br>
+   get{ return m_id;}<br>
+  }<br>
+  public string FullName<br>
+  {<br>
+   get{ return FirstName + ” ” + LastName;}<br>
+  }<br>
+  public Person(int id, string firstName, string lastName)<br>
+  {<br>
+   m_id = id;<br>
+   FirstName = firstName;<br>
+   LastName = lastName;<br>
+  }<br>
+ }<br>
+</pre>
+<p><br>you can assemble a collection or array of Person objects and then bind:</p><pre>Person[] personList = new Person[5];<br>
+for(int i = 0; i &lt; 5; i++)<br>
+{<br>
+   personList[i] = new Person(1, “Jeffrey”, “Palermo”);<br>
+}
+<p>DataGrid1.DataSource = personList;<br>
+DataGrid1.DataBind();<br>
+</p></pre>
+<p>You can bind explicitly or let the grid auto-generate the columns.&nbsp; You will notice that only the public properties of the Person class were auto-bound:&nbsp; Even though we had two public fields, these were not automatically bound.&nbsp; So the public properties are automatically bound.&nbsp; I have taken advantage of this feature when binding objects that have custom objects as properties.&nbsp; For instance, if one of the properties of the Person class was “Parent” of type Person, then I would create a property called ParentFullName, and that property would be bind-able. </p>
+<p>Also, when binding to a DropDownList, you can write the following code:</p>
+<p>myDDL.DataSource = personList;<br>myDDL.DataTextField = “FullName”;<br>myDDL.DataValueField = “ID”;<br>myDDL.DataBind();</p>
+<p>In this way, you can avoid creating a DataSet with the same data as that in your custom objects.&nbsp; I prefer binding to object properties as opposed to a DataSet.&nbsp; I think it makes the code more readable and maintainable.</p>
+<p>Also, when I bind a list of objects to a DropDownList, I like to have a first entry that says “Select One”, or something similar.&nbsp; So, after the DataBind() method, I explicitly add a first item:</p>
+<p>myDDL.Items.Insert(0, new ListItem(. . .));</p>
+<p>Then I have a first item before all the rest.</p>
+<p>Finally, binding controls to custom objects is a very powerful feature of ASP.NET, and I think only binding to a DataSet is underusing this powerful feature.</p>

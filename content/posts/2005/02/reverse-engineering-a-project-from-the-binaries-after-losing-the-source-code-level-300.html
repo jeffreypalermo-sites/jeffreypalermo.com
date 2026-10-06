@@ -1,0 +1,14 @@
+---
+wp_id: 180
+title: Reverse engineering a project from the binaries after losing the source code – level 300
+slug: reverse-engineering-a-project-from-the-binaries-after-losing-the-source-code-level-300
+permalink: /2005/02/reverse-engineering-a-project-from-the-binaries-after-losing-the-source-code-level-300/
+date: 2005-02-20T08:11:00
+date_utc: 2005-02-20T08:11:00Z
+modified: 2005-02-20T08:11:00
+format: html
+excerpt: I just did this today, and it actually didn’t take long. I inherited a project, and the source code did not come with it. It’s a side project, not at my company, but I originally thought that I might have to start from scratch. Normally, I probably would have, but by using Reflector I was able […]
+comments_open: true
+---
+<p>I just did this today, and it actually didn’t take long.&nbsp; I inherited a project, and the source code did not come with it.&nbsp; It’s a side project, not at my company, but I originally thought that I might have to start from scratch.&nbsp; Normally, I probably would have, but by using <a href="http://www.aisto.com/roeder/dotnet/">Reflector</a>&nbsp;I was able to leverage many of the existing objects.&nbsp; The project is a web site with SQL Server behind it, and there are several controls that pull and display data from the website.&nbsp; After putting my new website framework in place (EZWeb), I made plugins (user controls that are dynamically loaded) to house the existing controls.&nbsp; I made a template (a user controls that works with my <a href="http://palermo.cc/MyToolDownloads/Default.aspx">master page controls</a>) to mimick the look of the original site.&nbsp; Then I added the individual controls to my plugins.&nbsp; Even when I received errors, I was able to use Reflector to drill down the call stack and figure out what was going wrong.&nbsp; Now, I have the site on my EZWeb framework while leveraging the existing code.&nbsp; It will be very easy to extend the site from here in the new direction, and I didn’t have to start from scratch.&nbsp; </p>
+<p>Scott, if you’re reading this, yes, it’s what you’re thinking of.</p>

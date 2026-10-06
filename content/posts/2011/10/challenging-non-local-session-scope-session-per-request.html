@@ -1,0 +1,74 @@
+---
+wp_id: 1179
+title: Challenging non-local session scope (session-per-request)
+slug: challenging-non-local-session-scope-session-per-request
+permalink: /2011/10/challenging-non-local-session-scope-session-per-request/
+date: 2011-10-17T08:12:27
+date_utc: 2011-10-17T08:12:27Z
+modified: 2011-10-17T08:12:27
+format: html
+categories:
+- blog
+excerpt: I posted the following on the nhusers mailing list, and Steve Bohlen was nice enough to weigh in. I was hoping to get broader feedback on this, so I’m posting it here. ====================================================== I want to challenge a presumed best practice with NHibernate. I’m challenging it honestly given my experience using it and helping many […]
+comments_open: true
+---
+<p>I posted the following on the <a href="https://groups.google.com/forum/#!topic/nhusers/isFSCcR9PVo">nhusers mailing list</a>, and <a href="http://unhandled-exceptions.com/blog/">Steve Bohlen</a> was nice enough to weigh in.&nbsp; I was hoping to get broader feedback on this, so I’m posting it here.&nbsp; </p>
+<p>======================================================</p>
+<p>I want to challenge a presumed best practice with NHibernate.&nbsp; I’m challenging it honestly given my experience using it and helping many clients use it as well.</p>
+<p>On the official NHibernate community website, <a href="http://nhforge.org/">nhforge.org</a>, there is an <a href="http://nhforge.org/blogs/nhibernate/archive/2011/03/03/effective-nhibernate-session-management-for-web-apps.aspx">article on session-per-request</a>.&nbsp; I have used this technique for most of the years I’ve used NHibernate.&nbsp; I have been able to use it effectively.&nbsp; But, I couldn’t get over the fact that all of our clients have problems with this and end up in situations where lazy-load queries happen at all layers of the application.</p>
+<p>My problem, then, is that this pattern, while technically sound and useful, introduces complexity that requires a deeper understanding of NHibernate to manage.&nbsp; Because of this, we have begun disposing of the session after each and every transaction.&nbsp; See here:</p>
+<pre class="csharpcode"><span class="kwrd">public</span> Employee GetByUserName(<span class="kwrd">string</span> userName)
+{
+    <span class="kwrd">using</span> (ISession session = DataContext.GetSession())
+    {
+        IQuery query =
+            session.CreateQuery(
+            <span class="str">"from Employee emp left join fetch emp.Roles where emp.UserName = :username"</span>);
+        query.SetParameter(<span class="str">"username"</span>, userName);
+        var match = query.UniqueResult&lt;Employee&gt;();
+        <span class="kwrd">return</span> match;
+    }
+}</pre>
+<p>.csharpcode, .csharpcode pre<br>
+{<br>
+	font-size: small;<br>
+	color: black;<br>
+	font-family: consolas, “Courier New”, courier, monospace;<br>
+	background-color: #ffffff;<br>
+	/*white-space: pre;*/<br>
+}<br>
+.csharpcode pre { margin: 0em; }<br>
+.csharpcode .rem { color: #008000; }<br>
+.csharpcode .kwrd { color: #0000ff; }<br>
+.csharpcode .str { color: #006080; }<br>
+.csharpcode .op { color: #0000c0; }<br>
+.csharpcode .preproc { color: #cc6633; }<br>
+.csharpcode .asp { background-color: #ffff00; }<br>
+.csharpcode .html { color: #800000; }<br>
+.csharpcode .attr { color: #ff0000; }<br>
+.csharpcode .alt<br>
+{<br>
+	background-color: #f4f4f4;<br>
+	width: 100%;<br>
+	margin: 0em;<br>
+}<br>
+.csharpcode .lnum { color: #606060; }</p>
+<p>Here, I get the employee, dispose of the session, and pass the object back.&nbsp; For each variation of loading, we have a different method that eager fetches the right level of association or collection.&nbsp; This way, the application has the data it needs, and there aren’t any lazy-load exceptions.</p>
+<p>This approach simplified the code in a few ways:</p>
+<ul>
+<li>Each query to the database is known, and there is a method for each </li>
+<li>All queries are executed while the call stack is in the data layer (no UI-level lazy loading) </li>
+<li><b>It forces the developer to think about each data scenario</b> </li>
+</ul>
+<p>In coaching and training other developers (we actually teach NHibernate in our <a href="http://www.headspring.com/services/developer-training">Agile Boot Camp</a> training class), we have come up with a simple message for how to think about NHibernate and other ORMs.</p>
+<ol>
+<li>When moving from stored procedures to an ORM, don’t forget what was good about sprocs (you had a list of every query that would be run against your database) </li>
+<li>Use an ORM for just Object to Relational Mapping.&nbsp; That is the core strength.&nbsp; The other features, like lazy-loading, can be useful, but they also add complexity </li>
+<li>Keep all your relationships and collections mapped as lazy, but don’t allow them to lazily-load </li>
+<li>Dispose of a session immediately after using it. </li>
+<li>Keep the NHibernate reference out of the your core library and behind data access interfaces. </li>
+</ol>
+<p>I’ll pause here because there is nothing wrong with session-per-request technically.&nbsp; I successfully used it on many projects.&nbsp; The problem is that it is complicated.&nbsp; I understand it just fine, but I’m also an NHibernate expert.&nbsp; Lots of other developers just want to use it and be done with it.&nbsp; They don’t want surprises.&nbsp; <b>Elevating the session past local scope up to a global variable</b> brings unintended consequences.&nbsp; When developing, I might dereference another collection on an object, and NHibernate happily runs another select statement against my database.&nbsp; As that developer, I don’t have profiler perpetually open to see this happen.&nbsp; There is absolutely no signal that I just put something undesirable in my application.&nbsp; Developers need fast feedback on what they are doing.&nbsp; If there was no session hanging around, the lazy-load invocation would throw and excepting right then.&nbsp; The developer would then go back and modify the query or decide that we need a new one.&nbsp; We have used session-per-transaction on two projects now, and it hasn’t led to any other difficulties, so I view it very favorably.</p>
+<p>A "best practice" should generally lead a developer to a desirable result.&nbsp; I think that here, the best practice needs to lead to simplicity, even while the "advanced" practice may still be session-per-request.</p>
+<p>I have not drawn a final conclusion, but given the bad effects I’ve seen from this, wouldn’t it be a simpler (better) practice to just dispose of the session immediately and create a few more explicit repository methods for different loading levels?&nbsp; </p>
+<p>I appreciate any discussion that arises from this.&nbsp; The best place would be on the <a href="https://groups.google.com/forum/#!topic/nhusers/isFSCcR9PVo">NHibernate Users mailing list</a>.</p>

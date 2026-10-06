@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1060,
+    "parent": 0,
+    "author_name": "Sam Smoot",
+    "author_url": "http://substantiality.net",
+    "date": "2006-11-16T16:20:27",
+    "type": "comment",
+    "content_html": "<p>…and He tasted the doughnuts, and spake “It is good”.</p>\n<p>I wonder if this means you’ll be able to start getting an overall feeling for the quality of the builds by how overweight your development team starts to get though? \uD83D\uDE09</p>\n<p>Fit developers == fit builds?</p>"
+  },
+  {
+    "id": 1061,
+    "parent": 0,
+    "author_name": "Jim Bolla",
+    "author_url": "http://",
+    "date": "2006-11-16T20:37:06",
+    "type": "comment",
+    "content_html": "<p>Nice. Our policy is a broken CruiseControl.NET build (and failed tests = failed build) means 25 cents to the pizza fund. Unfortunately our team has only put in enough cash to get pizza with the fund once since its inception at the beginning of the summer. I guess we’re too competent.</p>"
+  }
+]

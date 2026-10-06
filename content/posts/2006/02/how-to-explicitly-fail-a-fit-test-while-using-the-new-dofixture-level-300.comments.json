@@ -1,0 +1,38 @@
+[
+  {
+    "id": 658,
+    "parent": 0,
+    "author_name": "Liang",
+    "author_url": "http://",
+    "date": "2006-02-24T03:38:29",
+    "type": "comment",
+    "content_html": "<p>Jeffrey,</p>\n<p>It looks very interesting to me. Could you post a source project to help us catch up? </p>\n<p>Thanks!</p>"
+  },
+  {
+    "id": 659,
+    "parent": 0,
+    "author_name": "Steve Donie",
+    "author_url": "http://donie.endofinternet.org/",
+    "date": "2007-11-28T19:18:19",
+    "type": "comment",
+    "content_html": "<p>To do this in a Java-based DoFixture, the code looks like this:</p>\n<p><code><br>\n  @Override<br>\n  protected Object interpretCells(Parse cells, Fixture fixture) {<br>\n    currentCell = cells;<br>\n    return super.interpretCells(cells, fixture);<br>\n  }<br>\n</code></p>"
+  },
+  {
+    "id": 660,
+    "parent": 0,
+    "author_name": "Kenneth Kasajian",
+    "author_url": "http://kasajian.com",
+    "date": "2007-12-12T08:18:04",
+    "type": "comment",
+    "content_html": "<p>“PhraseFixture” — a better DoFixture()<br>\nThe Case for “PhraseFixture” — a better DoFixture() for use with FIT and FitNesse Acceptance Testing Framework.</p>\n<p>The powerful DoFixture() in FitLibrary simulates English like specification. The PhraseFixture proposal takes this to the next level.</p>\n<p>Please see article here:<br>\n<a href=\"http://codeproject.com/KB/library/PhraseFixture.aspx\" rel=\"nofollow ugc\">http://codeproject.com/KB/library/PhraseFixture.aspx</a></p>\n<p>I’d like to get some feedback.</p>"
+  },
+  {
+    "id": 661,
+    "parent": 0,
+    "author_name": "Kenneth Kasajian",
+    "author_url": "http://kasajian.com",
+    "date": "2007-12-13T01:49:15",
+    "type": "comment",
+    "content_html": "<p>Proposing something called “PhraseFixture” — a better DoFixture() for use with FIT and FitNesse Acceptance Testing Framework. </p>\n<p>The powerful DoFixture() in FitLibrary simulates English like specification. The PhraseFixture proposal takes this to the next level. </p>\n<p>Please see article here:<br>\n<a href=\"http://codeproject.com/KB/library/PhraseFixture.aspx\" rel=\"nofollow ugc\">http://codeproject.com/KB/library/PhraseFixture.aspx</a> </p>\n<p>I’d like to get some feedback.</p>"
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "id": 89,
+    "parent": 0,
+    "author_name": "Art",
+    "author_url": "http://",
+    "date": "2004-08-07T08:00:00",
+    "type": "comment",
+    "content_html": "<p>The GotDotNet download has a problem, it downloads as 0 bytes in size…</p>"
+  },
+  {
+    "id": 90,
+    "parent": 0,
+    "author_name": "Art",
+    "author_url": "http://",
+    "date": "2004-08-07T17:29:00",
+    "type": "comment",
+    "content_html": "<p>Never mind – I found it was Norton Internet Security interacting with GotDotNet. Turned off NIS and it worked fine.</p>"
+  }
+]

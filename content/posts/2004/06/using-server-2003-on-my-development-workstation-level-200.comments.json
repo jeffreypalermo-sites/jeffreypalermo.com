@@ -1,0 +1,47 @@
+[
+  {
+    "id": 91,
+    "parent": 0,
+    "author_name": "Andrew Whitten",
+    "author_url": "http://",
+    "date": "2004-06-15T23:37:00",
+    "type": "comment",
+    "content_html": "<p>I develop under XP at home at 2003 at work.</p>\n<p>Developing against 2003 makes me consider the new security and deployment considerations of IIS 6.<br>\nHowever if I just have a few things to fix in the evening, then using XP is fine.</p>"
+  },
+  {
+    "id": 92,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-08-20T14:18:00",
+    "type": "comment",
+    "content_html": "<p>Successfully using Server 2k3 on my development laptop – level 100</p>"
+  },
+  {
+    "id": 93,
+    "parent": 0,
+    "author_name": "Emil Damian",
+    "author_url": "http://",
+    "date": "2004-10-05T23:57:00",
+    "type": "comment",
+    "content_html": "<p>My new development workstation is in fact a server machine that came with Windows Server 2003 installed. Can you tell me if there are any advantages in using XP on this machine (Xeon 2.8 ghz, 1 gb ram) ?</p>"
+  },
+  {
+    "id": 94,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2004-10-06T05:58:00",
+    "type": "comment",
+    "content_html": "<p>I don’t have a clue!!  Server 2003 has the same kernal as XP, so I can’t see how XP would be any faster on that hardware.  </p>"
+  },
+  {
+    "id": 95,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://",
+    "date": "2005-05-20T14:16:00",
+    "type": "comment",
+    "content_html": "<p>Win Server 2003 as a development environment – level 200</p>"
+  }
+]

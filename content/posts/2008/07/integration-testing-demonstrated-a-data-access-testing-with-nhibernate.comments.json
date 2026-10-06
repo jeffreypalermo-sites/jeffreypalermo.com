@@ -1,0 +1,11 @@
+[
+  {
+    "id": 2498,
+    "parent": 0,
+    "author_name": "Tapio Kulmala",
+    "author_url": "http://",
+    "date": "2008-07-15T04:18:12",
+    "type": "comment",
+    "content_html": "<p>@Seth<br>\nStephen Bohlen has a nice way to initialize the db for integration tests. He uses NDBUnit. Check this screencast<br>\n <a href=\"http://www.summerofnhibernate.com/screencasts/Summer%20of%20Nhibernate%20Session%2003.avi\" rel=\"nofollow\">http://www.summerofnhibernate.com/…/Summer%20of%20N</a><br>\nI’m not sure, how this will scale to larger or more complicated databases. There might be also some performance issues.<br>\nTapio </p>"
+  }
+]

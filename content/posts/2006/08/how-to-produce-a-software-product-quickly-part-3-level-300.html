@@ -1,0 +1,60 @@
+---
+wp_id: 460
+title: How to produce a software product quickly, part 3 – level 300
+slug: how-to-produce-a-software-product-quickly-part-3-level-300
+permalink: /2006/08/how-to-produce-a-software-product-quickly-part-3-level-300/
+date: 2006-08-31T14:20:00
+date_utc: 2006-08-31T14:20:00Z
+modified: 2006-08-31T14:20:00
+format: html
+tags:
+- agile
+- managing
+- tools
+excerpt: 'In my first two installments of this series, I talked about: Eliminating Waste Dodging as much work as possible. These first two guidelines are very important. The first drives efficiency, and the second drives effectiveness. Even doing these first two well can leave a team spinning its wheels, however. If parts 1 and 2 are […]'
+comments_open: true
+---
+<p>In my first two installments of this series, I talked about:</p>
+<ul>
+<li><a href="/blogs/jeffrey.palermo/archive/2006/08/19/148451.aspx">Eliminating Waste</a></li>
+<li><a href="/blogs/jeffrey.palermo/archive/2006/08/23/148528.aspx">Dodging as much work as possible.</a></li>
+</ul>
+<p>These first two guidelines are very important.&nbsp; The first drives efficiency, and the second drives effectiveness.&nbsp; Even doing these first two well can leave a team spinning its wheels, however.&nbsp; If parts 1 and 2 are fully implemented, we are now certain that the team is focusing on the small portion of work that delivers great value.&nbsp; We are also sure that the team's time isn't being wasted with nonessential or repetitive tasks.&nbsp; What's next?</p>
+<h3>Part 3: Use Powerful Tools</h3>
+<p>A skilled craftsman needs good tools.&nbsp; First, the craftsman needs the correct tools.&nbsp; Second, the craftsman needs those tools to be powerful.&nbsp; A craftsman plowing along with inadequate tools is exerting more effort than necessary.&nbsp; Why use a hammer and nail when a nail-gun is available?&nbsp; Why use a screwdriver and wood screws instead of&nbsp;a power drill?</p>
+<p><strong>Workstation power</strong></p>
+<p>This is the most obvious, but sometimes neglected, tool for a software developer.&nbsp; Does it make sense to have a highly-paid professional on staff using a mediocre workstation?&nbsp; The programmer will spend time waiting on a machine.&nbsp; The answer, of course, is no.&nbsp; The newest member of my team came on board with a 3.4Ghz Pentium D (dual core) workstation.&nbsp; 1Ghz FSB, 10,000 RPM SATA drive, 2GB RAM.&nbsp; He had never seen Visual Studio 2005 install in 10 minutes.&nbsp; Compared to what I'm paying him, his workstation cost pennies.&nbsp; He spends less time waiting on compiles.&nbsp; The local build runs very fast as well.&nbsp; In my mind, it is well worth the cost.</p>
+<p><strong>IDE &amp; related tools</strong></p>
+<p>Many programmers with whom I talk use Visual Studio.&nbsp; Just Visual Studio.&nbsp; Some haven't been exposed to other tools for software development.&nbsp; First and foremost, Visual Studio is a pretty good solution/project linking and compiling package.&nbsp; It's pretty poor at helping the coding process, though.&nbsp; There are a few neat extras you can unlock through SHIFT+ALT+F10 in 2005, but they are sparse.&nbsp; Install Resharper into the IDE, and it comes alive.&nbsp; It does use more RAM, but RAM is cheap, and the boost it provides is more than worth it.&nbsp; Without Resharper, Visual Studio is just&nbsp;a glorified text editor that compiles.&nbsp; With Resharper, you know about compile errors on the fly, and unused code is grayed out, so you know it's safe for deletion.&nbsp; </p>
+<p><strong>Team tools</strong></p>
+<p>It's one thing to give an individual programmer the best tools money can buy.&nbsp; It's another to focus on the team tools.&nbsp; There are some tools that all members of the team depend on.&nbsp; Besides the network connection and the printer, I'm talking about a revision control system and a build server.&nbsp; It's important to have a quality revision control system.&nbsp; The team needs to be able to rely on the branching and merging capabilities as well as the commit transactions.&nbsp; My team uses Subversion.&nbsp; It has proven itself time and time again.&nbsp; </p>
+<p>The build server is another shared asset.&nbsp; It must be fast as well since every member of the team will have to wait on it at some point.&nbsp; The build server can either have the build script run on it manually, or a CI server can run the build when new code is checked in.&nbsp; Either way, the build needs to run fast, be configurable, and be reliable.&nbsp; My team uses CruiseControl.Net with NAnt and MSBuild.</p>
+<p><strong>Other general, programming and debugging tools</strong></p>
+<p>There are many tools that help with a single part of development.&nbsp; The IDE is the tool that stays open all day long, but other tools are just as critical for specialized tasks.&nbsp; There is no way I can list them all, but I'll give a run-down of the tools I use:</p>
+<ul>
+<li><a href="http://www.jetbrains.com/resharper/">Resharper</a> – productivity add-in for Visual Studio (refactoring, code generation, etc).</li>
+<li><a href="http://www.aisto.com/roeder/dotnet/">Lutz Roeder's Reflector</a> – disassemble the .Net Framework.&nbsp; It's better than documentation.</li>
+<li><a href="http://ccnet.thoughtworks.com/">CruiseControl.Net</a> – build server for .Net</li>
+<li><a href="http://www.realvnc.com/">RealVNC</a> – share the desktop.&nbsp; Good for pair programming or informal presentations.</li>
+<li><a href="http://www.rssbandit.org/">RssBandit</a> – Keep up with the programming industry through RSS news, blogs, etc.</li>
+<li><a href="http://gaim.sourceforge.net/">GAIM</a> – Universal IM client.&nbsp; Use to shoot over snippets of code, svn urls, etc to team members.&nbsp; Supports all IM services.</li>
+<li><a href="http://desktop.google.com/">Google Desktop</a> – Launch programming tools quickly without using the start menu.&nbsp; Find code files easily.</li>
+<li><a href="http://www.testdriven.net/">TestDriven.Net</a> – run/debug unit tests right from the code window.&nbsp; Integrates with NCover for code coverage metrics.</li>
+<li><a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=c16ae515-c8f4-47ef-a1e4-a8dcbacff8e3&amp;DisplayLang=en">Windows Server Admin Pak</a> – Remote desktop to many servers with the same MMC snap-in.</li>
+<li><a href="http://tortoisesvn.tigris.org/">TortoiseSVN</a> – Windows client for Subversion.</li>
+<li><a href="http://nant.sourceforge.net/">NAnt</a> – build scripting.&nbsp; In fact, you can script anything with XML using this.&nbsp; We even use it for zipping up files.</li>
+<li><a href="http://www.nunit.org/">NUnit</a> – unit testing framework.</li>
+<li><a href="http://structuremap.sourceforge.net/">StructureMap</a> – IoC container.&nbsp; Uses attributes for linking interfaces with implementations.&nbsp; Minimizes Xml configuration.</li>
+<li><a href="http://www.codeguru.com/code/legacy/dll/WhoSLockingKit.exe">Who's Locking</a> – find out what process has your precious assembly locked.</li>
+<li><a href="http://www.sysinternals.com/Utilities/DebugView.html">DebugView</a> – hook into the debug stream locally or on a remote server.</li>
+<li><a href="http://www.sysinternals.com/Utilities/Diskmon.html">DiskMon</a> – monitor what's going on on the disk.</li>
+<li><a href="http://www.sysinternals.com/Utilities/Regmon.html">RegMon</a> – see what keys are being read.</li>
+<li><a href="http://www.sysinternals.com/Utilities/Filemon.html">FileMon</a> – see what files are being read.</li>
+<li><a href="http://subversion.tigris.org/">Subversion</a> – fast becoming the standard for source control.</li>
+<li><a href="http://www.ethereal.com/">Ethereal</a> – monitor network traffic.&nbsp; Find out exactly when and how often your application is communicating over the network.</li>
+<li><a href="http://www.microsoft.com/windows/virtualpc/default.mspx">VirtualPC</a> or <a href="http://www.vmware.com/">VMWare</a> – test the software on all supported platforms.</li>
+<li><a href="http://weblogs.asp.net/nleghari/articles/27951.aspx">Visual XPath</a> – quickly create the correct xpath to get a node from an xml doc.</li>
+<li><a href="http://tools.osherove.com/Default.aspx?tabid=185">Regulator</a> – Hash out regular expressions quickly with this tool by Roy Osherove.</li>
+</ul>
+<p><strong>The list is never ending</strong></p>
+<p>Always be on the lookout for tools that will save time or speed you up.&nbsp; Tools are always improving.&nbsp; It's important to talk with other professionals from different companies to see what tools are helping them.&nbsp; Chances are that those tools can help you as well.</p>

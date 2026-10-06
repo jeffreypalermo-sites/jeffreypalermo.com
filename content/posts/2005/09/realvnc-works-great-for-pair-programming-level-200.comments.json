@@ -1,0 +1,29 @@
+[
+  {
+    "id": 455,
+    "parent": 0,
+    "author_name": "DavidLi",
+    "author_url": "http://",
+    "date": "2005-09-04T02:27:18",
+    "type": "comment",
+    "content_html": "<p>How does it work, I can see exactly what the other programmer is doing on his computer (from my computer)?</p>"
+  },
+  {
+    "id": 456,
+    "parent": 0,
+    "author_name": "Dennis van der Stelt",
+    "author_url": "http://www.bloggingabout.net/blogs/dennis/",
+    "date": "2005-09-05T12:32:41",
+    "type": "comment",
+    "content_html": "<p>Maybe you should try it out. The download is free.</p>\n<p>If you ask if you can see what the other programmer is doing on his computer… No, you cannot see what he’s doing ON his computer. But you CAN see exactly what’s on his screen, if that’s what you mean. So yes, if the other programmer moves his mouse (the cursor, not the actual hardware on his desk) you see it move as well.</p>"
+  },
+  {
+    "id": 457,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-09-05T16:43:06",
+    "type": "comment",
+    "content_html": "<p>David,<br>\nWith RealVNC (and many other free VNC-based apps), you see exactly what is on the other’s computer screen.  Your keyboard and mouse are also hooked up, so if you move the mouse, it moves.  It enables sharing or remote control over a computer.  In fact, one person could be typing, and the other could be moving the mouse, and it all works as expected.</p>\n<p>You can even hook up multiple clients to the same main machine for code reviews or meetings of any kind, but if you are pairing, then code reviews are continuous, but from time to time, a live visual meeting is necessary with remote folks.</p>"
+  }
+]

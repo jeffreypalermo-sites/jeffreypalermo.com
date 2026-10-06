@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1433,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.com/Blog",
+    "date": "2007-03-15T06:15:33",
+    "type": "comment",
+    "content_html": "<p>@Jeffery,<br>\nI am finding it hard to get publicly available information about EF.<br>\nCan you point me to some sources?</p>"
+  },
+  {
+    "id": 1434,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-15T06:34:35",
+    "type": "comment",
+    "content_html": "<p>Ayende,<br>\nHere one: <a href=\"http://www.thedatafarm.com/blog/2007/03/06/SortingOutLINQAndEntityFrameworkForDataAccess.aspx\" rel=\"nofollow ugc\">http://www.thedatafarm.com/blog/2007/03/06/SortingOutLINQAndEntityFrameworkForDataAccess.aspx</a></p>\n<p>You can use Linq to Entities in the March CTP here:<br>\n<a href=\"http://www.microsoft.com/downloads/details.aspx?familyid=cf76fcba-07af-47ac-8822-4ad346210670&amp;displaylang=en&amp;tm\" rel=\"nofollow ugc\">http://www.microsoft.com/downloads/details.aspx?familyid=cf76fcba-07af-47ac-8822-4ad346210670&amp;displaylang=en&amp;tm</a></p>\n<p>And some folks were having some problems with the samples, and here are some tips to get them working:<br>\n<a href=\"http://blogs.msdn.com/erickt/archive/2007/03/06/problems-with-the-linq-to-entities-101-samples-in-the-march-ctp.aspx\" rel=\"nofollow ugc\">http://blogs.msdn.com/erickt/archive/2007/03/06/problems-with-the-linq-to-entities-101-samples-in-the-march-ctp.aspx</a></p>"
+  },
+  {
+    "id": 1435,
+    "parent": 0,
+    "author_name": "Ayende Rahien",
+    "author_url": "http://www.ayende.,com/Blog/",
+    "date": "2007-03-15T09:27:54",
+    "type": "comment",
+    "content_html": "<p>I am sorry, I know all of that, and I already have the CTP.<br>\nWhat I am interested in is stuff beyond the very high level overview + maybe hello world.</p>"
+  },
+  {
+    "id": 1436,
+    "parent": 0,
+    "author_name": "sergiopereira",
+    "author_url": "http://",
+    "date": "2007-03-15T11:48:55",
+    "type": "comment",
+    "content_html": "<p>@Ayende, I’ve trying to get on top of that too and I have been collecting some links. Maybe you can find one that you haven’t seen yet over here: <a href=\"http://del.icio.us/sergiopereira/entityframework\" rel=\"nofollow ugc\">http://del.icio.us/sergiopereira/entityframework</a></p>"
+  },
+  {
+    "id": 1437,
+    "parent": 0,
+    "author_name": "Scott",
+    "author_url": "http://www.lazycoder.com",
+    "date": "2007-03-15T13:05:30",
+    "type": "comment",
+    "content_html": "<p>This is their second foray into this realm (remember ObjectSpaces?). It looks like the designer for this is different. My big question is: What’s the ROI look like vs. using NHibernate/WilsonORMapper/LLBGen/Gentle.net?</p>"
+  },
+  {
+    "id": 1438,
+    "parent": 0,
+    "author_name": "jpalermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2007-03-16T06:24:38",
+    "type": "comment",
+    "content_html": "<p>I don’t think there is any documentation yet, just the bits.  I spoke with the Entity Framework architects today, and the roadmap is actually quite bright, so I’m less concerned now.  I think they are on the right track, but it will take a while, so don’t expect to have your domain-centric O/R mapper in Orcas.  I’m not sure what I can disclose, but I’ll find out and blog an update.</p>"
+  },
+  {
+    "id": 1439,
+    "parent": 0,
+    "author_name": "Roger Jennings",
+    "author_url": "http://oakleafblog.blogspot.com",
+    "date": "2007-03-16T20:25:38",
+    "type": "comment",
+    "content_html": "<p>Pingback from <a href=\"http://oakleafblog.blogspot.com/2007/03/persistence-ignorance-is-bliss-but-is.html\" rel=\"nofollow ugc\">http://oakleafblog.blogspot.com/2007/03/persistence-ignorance-is-bliss-but-is.html</a></p>"
+  },
+  {
+    "id": 1440,
+    "parent": 0,
+    "author_name": "Angel Saenz-Badillos",
+    "author_url": "http://",
+    "date": "2007-03-19T22:45:30",
+    "type": "comment",
+    "content_html": "<p>Ayende,<br>\n“I am finding it hard to get publicly available information about EF”</p>\n<p>Interesting comment, I would like to know what you feel is missing from the EF message.  Our blog at <a href=\"http://blogs.msdn.com/adonet/default.aspx\" rel=\"nofollow ugc\">http://blogs.msdn.com/adonet/default.aspx</a> is fairly active, if you don’t see something that interests you feel free to post a comment there</p>"
+  },
+  {
+    "id": 1441,
+    "parent": 0,
+    "author_name": "ScottBellware",
+    "author_url": "http://www.bellware.net",
+    "date": "2007-03-22T03:12:47",
+    "type": "comment",
+    "content_html": "<p>&gt; it would require the domain assembly to carry around a reference to a data<br>\n&gt; access dependency</p>\n<p>Jeffrey,</p>\n<p>This isn’t really a problem unless you’ve got a constraint that doesn’t allow you to distribute the domain object component with the data access component, or a constraint that suggests that it’s inappropriate to do so.  Most web apps don’t have this constraint, but many distributed smart client apps would.</p>\n<p>Components are only units of distribution.  The only real force dictating their shapes is the app’s distribution model.</p>"
+  },
+  {
+    "id": 1442,
+    "parent": 0,
+    "author_name": "Colin Jack",
+    "author_url": "http://colinjack.blogspot.com/",
+    "date": "2007-05-22T07:32:01",
+    "type": "comment",
+    "content_html": "<p>Yikes. Deriving from a few interfaces isn’t the end of the world, not great but we could do it, but the properties bit is just awful. If its auto generated then it is not so bad but still….</p>"
+  }
+]

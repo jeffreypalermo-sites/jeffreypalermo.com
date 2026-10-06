@@ -1,0 +1,56 @@
+[
+  {
+    "id": 683,
+    "parent": 0,
+    "author_name": "Sam",
+    "author_url": "http://substantiality.net",
+    "date": "2006-03-11T17:26:53",
+    "type": "comment",
+    "content_html": "<p>Agreed.</p>\n<p>Two things though: Not all applications serve a transactional business need. Not that you implied this, just that some readers might say “this doesn’t apply to me, we only do reporting”. Most likely you still have transactional needs, eg: logging, authorization, etc. Even if you don’t, a domain model isn’t the opposite of reporting.</p>\n<p>By the same token though, if you’re just plunking data on a page, then in many cases a DataTable may just be the right thing for the job. It’s very important to understand that there is a conceptual model just the same, even if you choose not to implement it though. Ignoring that, and treating it with any less respect, will just lead to sloppy, difficult code down the line in my experience.</p>"
+  },
+  {
+    "id": 684,
+    "parent": 0,
+    "author_name": "-e",
+    "author_url": "http://weblog.pineforestsoft.com",
+    "date": "2006-03-11T19:53:53",
+    "type": "comment",
+    "content_html": "<p>Good points – but one thing I see all the time that I just couldn’t let pass – don’t use nvarchar for something that won’t every be in unicode, and ESPECIALLY, DO NOT use var* for any data that will have a fixed width, or vary only slightly. Var* datatypes have some overhead.</p>\n<p>Sorry, I’ve just been dealing with a poorly designed data model that I inherited, and that nvarchar(9) reallly struck a nerve…</p>"
+  },
+  {
+    "id": 685,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-03-12T07:21:24",
+    "type": "comment",
+    "content_html": "<p>Thanks Eric.  I’ve changed that to a char(9) field.</p>"
+  },
+  {
+    "id": 686,
+    "parent": 0,
+    "author_name": "Steve",
+    "author_url": "http://",
+    "date": "2006-03-13T09:31:51",
+    "type": "comment",
+    "content_html": "<p>Since your ficticious example is an app that only maintains socials then it makes sense.</p>\n<p>It doesn’t make sense in any real world app. The SSN would then be a member of the person or user object and I wouldn’t recommend creating a separate object for ssn as that would clearly be overkill because you could make your same argument for practically any column in any table– how about zip code for example (55555-2321).</p>"
+  },
+  {
+    "id": 687,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2006-03-13T12:40:44",
+    "type": "comment",
+    "content_html": "<p>Steve,<br>\nI agree with you about the Person object.  If I need to maintain a “Person”, then that would be a domain object, and ssn would be an attribute.  I had had a person entity, it would not be beneficial to pipe the data around in a DataTable with no encapsulation.  The Person object, in that case, would be protecting its own data.  My point was that every application has a natural domain model, no matter how simple the application is.</p>"
+  },
+  {
+    "id": 688,
+    "parent": 0,
+    "author_name": "Chris Donnan",
+    "author_url": "http://chrisdonnan.com/blog",
+    "date": "2006-03-14T18:28:37",
+    "type": "comment",
+    "content_html": "<p>I could not agree more. I spend so much time trying to help team members make implicit concepts explicit. Helping to sesh out the domain model is THE GOAL. The alternative is that you get the processing logic spread over and over again throughout the application to make cohesive the implicit idea that should be centralized in a domain object.</p>\n<p>-Chris</p>"
+  }
+]

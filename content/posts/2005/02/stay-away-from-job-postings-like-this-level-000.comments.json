@@ -1,0 +1,38 @@
+[
+  {
+    "id": 248,
+    "parent": 0,
+    "author_name": "Sahil Malik",
+    "author_url": "http://",
+    "date": "2005-02-19T10:14:00",
+    "type": "comment",
+    "content_html": "<p>DNJ must have god’s hand behind it. I had posted a rather fiery comment to this blog post, and I got the infamous SqlParameter error.</p>\n<p>Maybe god doesn’t want me to stuff up a chilli up such a recruiter’s butt afterall?</p>"
+  },
+  {
+    "id": 249,
+    "parent": 0,
+    "author_name": "Noah Coad [MS]",
+    "author_url": "http://",
+    "date": "2005-02-19T18:49:00",
+    "type": "comment",
+    "content_html": "<p>That is quite a list of skills required!  Reading through I thought it wasn’t too bad, until the pay!!! Holy cow, what a shocker!  You’ve _got_ to be kidding.</p>\n<p>Most MS GUI component devs from pre-.NET days have done OCX work (ex: in VB6), which is a class ActiveX DLL, but as you pointed out, both don’t have a good place (except for legacy support) in managed code.  The misjive between .ActiveX, Palm, OCX, and .NET is disconcerting, but understandable if having to support legacy environments (sorry Palm).</p>\n<p>You’ve nailed it on the head: \"This reeks of poor management and an environment of frustration.\"</p>"
+  },
+  {
+    "id": 250,
+    "parent": 0,
+    "author_name": "Scott Allen",
+    "author_url": "http://",
+    "date": "2005-02-19T20:07:00",
+    "type": "comment",
+    "content_html": "<p>At least they use source control … \uD83D\uDE42</p>"
+  },
+  {
+    "id": 251,
+    "parent": 0,
+    "author_name": "az",
+    "author_url": "http://",
+    "date": "2005-03-03T08:48:00",
+    "type": "comment",
+    "content_html": "<p>Omg that looks like a posing for my job. I do pretty much all that for about 29/hr (pre tax). i wish i could leave…</p>\n<p>\"This reeks of poor management and an environment of frustration.\"<br>\nYup.</p>"
+  }
+]

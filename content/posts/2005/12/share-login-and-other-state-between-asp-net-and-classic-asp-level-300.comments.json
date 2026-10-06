@@ -1,0 +1,38 @@
+[
+  {
+    "id": 605,
+    "parent": 0,
+    "author_name": "Oskar Austegard",
+    "author_url": "http://mo.notono.us",
+    "date": "2005-12-27T20:52:15",
+    "type": "comment",
+    "content_html": "<p>What about some sort of gateway/redirection page that would translate asp session to post/get variables to asp.net and back again?  Obviously you wouldn’t want to do that if you’re moving between the pages on a frequent basis, but if you have two portions of a website/app that do more intra- than inter-technology communication then that ought to work, right?</p>"
+  },
+  {
+    "id": 606,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-12-28T17:28:20",
+    "type": "comment",
+    "content_html": "<p>Oskar,<br>\nYes, that would technically work for a 1-time transfer of information.  There are plenty of things that would technically work, but many aren’t reasonable.  For instance, with your method, all information would be exposed over Http in clear text if you weren’t operating over SSL.  Second, it would turn every one of these requests into two HttpRequests because of the intermediate translating page.  In that case, it would be better to use ASMX because of the flexibility, and it would be just as slow.</p>\n<p>There are plenty of things that will work, but your solution should be picked based on the needs of the application.  I prefer not to slow down the application if there is an easy way not to, but then again, some applications don’t need to be fast (if they only have a handful of users).</p>"
+  },
+  {
+    "id": 607,
+    "parent": 0,
+    "author_name": "Oskar Austegard",
+    "author_url": "http://mo.notono.us",
+    "date": "2005-12-28T19:36:28",
+    "type": "comment",
+    "content_html": "<p>True enough – but it WOULD have the benefit of not having to rewrite any of the legacy code, except any page that might now “talk to” a new ASP.NET page rather than an old ASP page.</p>\n<p>How much (legacy) code would you need to change to implement a COM/COM+ solution?</p>"
+  },
+  {
+    "id": 608,
+    "parent": 0,
+    "author_name": "Jeffrey Palermo",
+    "author_url": "http://www.jeffreypalermo.com",
+    "date": "2005-12-29T03:21:40",
+    "type": "comment",
+    "content_html": "<p>Oskar,<br>\nYou would just need enough code to instantiate and call a method on the COM component.</p>"
+  }
+]
