@@ -44,7 +44,10 @@ There are no runtime calls to third-party systems in v1. The only external depen
 11 old posts, which the reader's browser loads.
 
 ## 3. Onion layers
-![Logical dependencies (C4 component view)](diagrams/logical-dependencies.png)_C4 component view rendered from [`diagrams/logical-dependencies.puml`](diagrams/logical-dependencies.puml) (PlantUML stdlib C4). Grey boxes are planned for build steps 2–6; green arrows are compile-time dependencies, which always point inward._
+
+![Logical dependencies (C4 component view)](diagrams/logical-dependencies.png)
+
+_C4 component view rendered from [`diagrams/logical-dependencies.puml`](diagrams/logical-dependencies.puml) (PlantUML stdlib C4). Grey boxes are planned for build steps 2–6; green arrows are compile-time dependencies, which always point inward._
 
 ```mermaid
 flowchart TB
