@@ -35,7 +35,7 @@ system delivered differently.
 | App, content, tests, `Dockerfile`, `build.yml` | This repository, `jeffreypalermo-sites/jeffreypalermo.com` |
 | Desired state: `system.json`, each environment's pinned version (`environments/<env>/versions.json`), infrastructure templates, Octopus configuration | The system repository `jeffreypalermo-sites/jpcom-system`, which the kit creates |
 | Releases, deployments, sign-off | Octopus Deploy, space `JeffreyPalermo - Sites`: project `jpcom-web` for the app, `jpcom-system` for the infrastructure |
-| Azure resources | Created by the kit's seed and by `jpcom-system`'s deployment stacks, in Central US |
+| Azure resources | Created by the kit's seed and by `jpcom-system`'s deployment stacks, in East US 2 |
 
 - **This repository builds; it does not deploy.** `.github/workflows/build.yml` runs the unit, integration and
   full-system tests, builds the image from the `Dockerfile` once per commit, and keeps it as the artifact
@@ -56,12 +56,16 @@ system delivered differently.
 - **One Container Apps environment for the whole system.** The seed creates `cae-jpcom` in `rg-jpcom-apps`. All
   three container apps run in it. Each app stays a resource of its own environment's stack, in its tier's resource
   group, with its tier's identity.
+- **It is an Azure Container Apps express environment, in East US 2** (decided 2026-10-06, while provisioning). A
+  standard environment could not be had: Central US reported no capacity and then never finished one, and that day
+  the subscription's standard limit read one environment per region and two in all, with three already in use.
+  Express has a quota of its own (200 per region).
 - **No database** (ADR-0002), so the system has no SQL server, no SQL secrets and no database runbooks.
 
 ## Consequences
 
-- **Production shares its runtime with nonprod.** A subscription allows two Container Apps environments per region,
-  and earlier demos use most of them. One shared environment takes one slot whatever the number of environments.
+- **Production shares its runtime with nonprod.** One shared environment takes one slot of the subscription's
+  quota whatever the number of environments.
   The cost is isolation: the apps can reach each other's internal addresses, and a platform incident in `cae-jpcom`
   touches every tier. This site is read-only, holds no secrets and has no database, so there's nothing for a nonprod
   app to reach. Revisit if the site gains runtime writes (ADR-0002's trigger) or an uptime commitment.
@@ -78,15 +82,22 @@ system delivered differently.
 - **Rollback is a redeployment.** Octopus redeploys the previous release, whose image is locked in the registry. It
   takes minutes, not the sub-minute traffic shift of ADR-0003.
 - **Scale to zero by default.** The kit's container apps run with a minimum of zero replicas, so the first request
-  after idle has a cold start. ADR-0003 wanted one warm replica in production, scaling out to three. The kit's
+  after idle has a cold start. (Express is built to start from zero faster than a standard environment; not yet
+  measured for this site.) ADR-0003 wanted one warm replica in production, scaling out to three. The kit's
   `alwaysOn` setting is not that: it pins exactly one replica (minimum 1, maximum 1), which suits a background
   service and removes scale-out. **Decided 2026-10-06: the site launches with scale to zero and does not set
   `alwaysOn`.** A minimum and maximum replica count per environment is asked of the kit (its issue #8); prod gets a
   warm replica before cutover when that exists.
 - **One stored secret exists, in the system repository:** the token Octopus uses to write the version pin. This
   repository still has none.
-- **Not provided by the kit yet:** the custom domain and managed certificate for `jeffreypalermo.com` on the prod
-  container app, and the DNS move. The apex A record will point at the static IP of `cae-jpcom`
-  (`system.json`, `azure.appEnvironment.staticIp`).
+- **An express environment takes no custom domain.** Its apps answer on their `azurecontainerapps.io` addresses
+  only, and it has no static IP for an apex A record. `jeffreypalermo.com` therefore cannot be bound to the prod
+  container app as ADR-0003 planned. Before the DNS move, prod needs one of: a front door in front of it (Azure
+  Front Door, a monthly fee, with the app trusting the forwarded host for its `www.` and `feeds.` redirects), or a
+  standard environment for prod once the quota allows one. **Open: reopen this before any DNS work.**
+- **Express also leaves out** Key Vault secret references, sidecars, multiple revisions and the platform's
+  OpenTelemetry agent. The site uses none of them: it has no secrets, one container, and exports telemetry itself
+  (build step 5).
+- **Not provided by the kit yet:** the DNS move, and whatever fronts prod with the custom domain.
 - **Changes to delivery are pull requests in two places:** app and content here, environments and infrastructure
   in `jpcom-system`. Template improvements come from the kit.
