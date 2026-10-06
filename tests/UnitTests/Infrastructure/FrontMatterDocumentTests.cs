@@ -1,11 +1,11 @@
-using JeffreyPalermo.Core.Content;
+using JeffreyPalermo.Infrastructure.Content;
 using JeffreyPalermo.Infrastructure.FrontMatter;
 
 namespace JeffreyPalermo.UnitTests.Infrastructure;
 
 public class FrontMatterDocumentTests
 {
-    private static readonly PostMetadata Sample = new()
+    private static readonly PostFrontMatter Sample = new()
     {
         WpId = 945,
         Title = "The Onion Architecture : part 1",
@@ -22,7 +22,7 @@ public class FrontMatterDocumentTests
     public void RoundTripsMetadataAndBody()
     {
         var text = FrontMatterDocument.Write(Sample, "<p>Hello</p>");
-        var (metadata, body) = FrontMatterDocument.Read<PostMetadata>(text);
+        var (metadata, body) = FrontMatterDocument.Read<PostFrontMatter>(text);
 
         Assert.Equivalent(Sample, metadata);
         Assert.Equal("<p>Hello</p>\n", body);
@@ -45,7 +45,7 @@ public class FrontMatterDocumentTests
     public void ReadsCrLfFiles()
     {
         var text = FrontMatterDocument.Write(Sample, "line1\nline2").Replace("\n", "\r\n", StringComparison.Ordinal);
-        var (metadata, body) = FrontMatterDocument.Read<PostMetadata>(text);
+        var (metadata, body) = FrontMatterDocument.Read<PostFrontMatter>(text);
 
         Assert.Equal(945, metadata.WpId);
         Assert.Equal("line1\nline2\n", body);
@@ -55,5 +55,5 @@ public class FrontMatterDocumentTests
     [InlineData("no front matter")]
     [InlineData("---\ntitle: x\nbody without closing fence")]
     public void RejectsMalformedDocuments(string text) =>
-        Assert.Throws<FormatException>(() => FrontMatterDocument.Read<PostMetadata>(text));
+        Assert.Throws<FormatException>(() => FrontMatterDocument.Read<PostFrontMatter>(text));
 }

@@ -1,5 +1,6 @@
 using System.Net;
 using JeffreyPalermo.Core.Urls;
+using JeffreyPalermo.Infrastructure.Urls;
 using JeffreyPalermo.Tools.UrlContract;
 
 namespace JeffreyPalermo.IntegrationTests;

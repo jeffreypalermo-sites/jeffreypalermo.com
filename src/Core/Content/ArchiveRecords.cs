@@ -10,7 +10,7 @@ public sealed record Comment(
     string Type,
     string ContentHtml);
 
-/// <summary>A WordPress media item. Its attachment page lives at <see cref="Permalink"/>.</summary>
+/// <summary>A WordPress media item. Its attachment page lives at <see cref="Permalink"/>, top-level or under its post.</summary>
 public sealed record Attachment(
     int Id,
     string Slug,
@@ -24,3 +24,14 @@ public sealed record Attachment(
 
 /// <summary>A category, tag, or author. Ids are kept so <c>?cat=</c>, <c>?tag_id=</c>, and <c>?author=</c> URLs can resolve.</summary>
 public sealed record Term(int Id, string Taxonomy, string Slug, string Name, int Count);
+
+/// <summary>A curated mapping for a legacy URL no rule can derive (Community Server <c>.aspx</c>, <c>/files/media/…</c>).</summary>
+public sealed record LegacyRedirect(string From, string To);
+
+public static class Taxonomies
+{
+    public const string Category = "category";
+    public const string Tag = "post_tag";
+    public const string Author = "author";
+    public const string PostFormat = "post_format";
+}

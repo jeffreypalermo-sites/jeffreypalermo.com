@@ -5,38 +5,50 @@ namespace JeffreyPalermo.Tools.WpMigrator;
 
 public sealed record MediaSummary(int Downloaded, int AlreadyPresent, IReadOnlyList<string> Missing);
 
-/// <summary>Copies every <c>/wp-content/uploads/</c> file named in the manifest into <c>content/uploads/</c>.</summary>
+/// <summary>
+/// Copies every file named in the uploads manifest into <c>content/uploads/</c>. A manifest line is either an
+/// on-site path (<c>/wp-content/uploads/2018/06/a.png</c>, fetched from the site) or
+/// <c>{local path}\t{absolute source URL}</c> for media localized from another host.
+/// </summary>
 public sealed class MediaDownloader(HttpClient http, ContentLayout layout, TimeSpan retryDelay)
 {
-    public async Task<MediaSummary> DownloadAsync(IEnumerable<string> uploadPaths, int parallelism = 4, CancellationToken cancellationToken = default)
+    public async Task<MediaSummary> DownloadAsync(IEnumerable<string> manifestLines, int parallelism = 4, CancellationToken cancellationToken = default)
     {
         var downloaded = 0;
         var present = 0;
         var missing = new System.Collections.Concurrent.ConcurrentBag<string>();
+        var entries = manifestLines
+            .Where(line => line.Length > 0)
+            .Select(line => line.Split('\t', 2))
+            .Select(parts => (Path: parts[0], Source: parts.Length == 2 ? new Uri(parts[1], UriKind.Absolute) : new Uri(parts[0], UriKind.Relative)))
+            .DistinctBy(e => e.Path, StringComparer.Ordinal);
 
         await Parallel.ForEachAsync(
-            uploadPaths.Distinct(StringComparer.Ordinal),
+            entries,
             new ParallelOptions { MaxDegreeOfParallelism = parallelism, CancellationToken = cancellationToken },
-            async (path, ct) =>
+            async (entry, ct) =>
             {
-                var target = layout.UploadFile(path);
+                var target = layout.UploadFile(entry.Path);
                 if (File.Exists(target))
                 {
                     Interlocked.Increment(ref present);
                     return;
                 }
 
-                using var response = await GetWithRetryAsync(new Uri(path, UriKind.Relative), ct).ConfigureAwait(false);
+                using var response = await GetWithRetryAsync(entry.Source, ct).ConfigureAwait(false);
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    missing.Add(path);
+                    missing.Add(entry.Path);
                     return;
                 }
 
                 response.EnsureSuccessStatusCode();
                 Directory.CreateDirectory(Path.GetDirectoryName(target)!);
-                var bytes = await response.Content.ReadAsByteArrayAsync(ct).ConfigureAwait(false);
-                await File.WriteAllBytesAsync(target, bytes, ct).ConfigureAwait(false);
+                await using (var file = File.Create(target))
+                {
+                    await response.Content.CopyToAsync(file, ct).ConfigureAwait(false);
+                }
+
                 Interlocked.Increment(ref downloaded);
             }).ConfigureAwait(false);
 

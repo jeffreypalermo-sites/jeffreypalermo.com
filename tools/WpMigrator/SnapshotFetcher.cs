@@ -1,3 +1,5 @@
+using JeffreyPalermo.Infrastructure.Content;
+
 namespace JeffreyPalermo.Tools.WpMigrator;
 
 /// <summary>Writes one <c>{resource}.json</c> per public REST collection into the raw snapshot directory.</summary>
@@ -20,7 +22,7 @@ public sealed class SnapshotFetcher(WordPressApiClient client)
 
             await File.WriteAllTextAsync(
                 Path.Join(rawDirectory, resource + ".json"),
-                items.ToJsonString(WordPressConverter.JsonOptions).ReplaceLineEndings("\n") + "\n",
+                items.ToJsonString(ContentJson.Options).ReplaceLineEndings("\n") + "\n",
                 cancellationToken).ConfigureAwait(false);
             counts[resource] = items.Count;
         }

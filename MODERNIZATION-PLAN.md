@@ -76,6 +76,8 @@ The same Onion-structured .NET 10 app and the same content-as-code repo. The dif
 
 ## 4. Recommended architecture (Option D)
 
+> **Superseded in detail by [docs/architecture](docs/architecture/README.md) and the [ADRs](docs/adr/README.md)** (2026-10-05): no database (git is the system of record), Blazor static SSR, Azure Container Apps in multiple revision mode, and legacy URL resolution in Core.
+
 ```
 jeffreypalermo.com  (public GitHub repo — the repo IS the showcase)
 ├── src/

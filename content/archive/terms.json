@@ -235,7 +235,7 @@
     "taxonomy": "author",
     "slug": "jeffreypalermo",
     "name": "Jeffrey Palermo",
-    "count": 0
+    "count": 966
   },
   {
     "id": 4,
@@ -243,5 +243,12 @@
     "slug": "christinamcfarling",
     "name": "Christina McFarling",
     "count": 0
+  },
+  {
+    "id": 1,
+    "taxonomy": "post_format",
+    "slug": "video",
+    "name": "Video",
+    "count": 2
   }
 ]

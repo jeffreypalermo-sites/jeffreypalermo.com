@@ -7,6 +7,7 @@ date: 2004-08-19T08:50:00
 date_utc: 2004-08-19T08:50:00Z
 modified: 2004-08-19T08:50:00
 format: html
+author: jeffreypalermo
 excerpt: 'Anders Norås’ posted an interesting article about the intent of code-behind. He says doing: <TITLE><%# GetResourceString(“PageTitle”) %></TITLE> is better than doing this: public class MyPage : System.Web.UI.Page { protected HtmlGenericControl Title; private void Page_Load(object sender, System.EventArgs e) { Title.InnerText=GetResourceString(“PageTitle”); }} On my team, there is much discussion about putting any function call int the aspx file whatsoever, […]'
 comments_open: true
 ---

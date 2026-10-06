@@ -16,6 +16,9 @@ public enum LegacyUrlClass
     Media,
     GraffitiBlogSlug,
     CommunityServer,
+
+    /// <summary>Graffiti-era <c>/files/…</c>: WordPress answers every one with the same 29-byte soft 404.</summary>
+    GraffitiFiles,
     QueryString,
     WordPressSystem,
     TopLevelSlug,
@@ -47,6 +50,7 @@ public static partial class LegacyUrlClassifier
         {
             _ when CommunityServer().IsMatch(path) => LegacyUrlClass.CommunityServer,
             _ when path.StartsWith("/blog/", StringComparison.OrdinalIgnoreCase) => LegacyUrlClass.GraffitiBlogSlug,
+            _ when path.StartsWith("/files/", StringComparison.OrdinalIgnoreCase) => LegacyUrlClass.GraffitiFiles,
             _ when path.StartsWith("/wp-content/", StringComparison.OrdinalIgnoreCase) => LegacyUrlClass.Media,
             _ when Sitemap().IsMatch(path) => LegacyUrlClass.Sitemap,
             _ when Feed().IsMatch(path) => LegacyUrlClass.Feed,
@@ -60,7 +64,8 @@ public static partial class LegacyUrlClassifier
         };
     }
 
-    [GeneratedRegex(@"^/(wp-admin|wp-includes|wp-login\.php|wp-json|xmlrpc\.php|wp-cron\.php|_static|jetpack|wp-signup\.php)(/|$)", RegexOptions.IgnoreCase)]
+    // WordPress internals, theme/plugin assets, and REST namespaces that bots probe without the /wp-json prefix.
+    [GeneratedRegex(@"^/(wp-admin|wp-includes|wp-login\.php|wp-json|xmlrpc\.php|wp-cron\.php|wp-signup\.php|wp-trackback\.php|wp-comments-post\.php|_static|wp-content/(?!uploads/)[^/]+)(/|$)|^/(jetpack|wp|wpcom|aioseo|akismet|redirection|oembed|wc|amp)/v\d+(\.\d+)?(/|$)", RegexOptions.IgnoreCase)]
     private static partial Regex WordPressSystem();
 
     [GeneratedRegex(@"\.aspx$|^/(blogs|photos)/jeffrey\.palermo/", RegexOptions.IgnoreCase)]

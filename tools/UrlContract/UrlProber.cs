@@ -1,5 +1,6 @@
 using System.Net;
 using JeffreyPalermo.Core.Urls;
+using JeffreyPalermo.Infrastructure.Urls;
 
 namespace JeffreyPalermo.Tools.UrlContract;
 
