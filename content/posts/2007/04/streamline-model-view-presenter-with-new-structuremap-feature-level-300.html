@@ -76,9 +76,9 @@ comments_open: true
 <p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;47</span>&nbsp;<span style="color:#2b91af">StructureMapConfiguration</span>.UseDefaultStructureMapConfigFile = <span style="color:blue">false</span>;</p>
 <p><span style="color:#2b91af">&nbsp;&nbsp;&nbsp;48</span> <span style="color:#2b91af">StructureMapConfiguration</span>.ScanAssemblies().IncludeTheCallingAssembly();</p>
 </div>
-<p>Now that you get the gist of it, I'm going to use StructureMap to enable the Model-View-Presenter pattern in a cleaner way with ASP.NET UserControls.&nbsp; First consider the following usage:<br><img decoding="async" src="https://i0.wp.com/farm1.static.flickr.com/216/460985825_4830c15926_o.jpg?w=776"> </p>
+<p>Now that you get the gist of it, I'm going to use StructureMap to enable the Model-View-Presenter pattern in a cleaner way with ASP.NET UserControls.&nbsp; First consider the following usage:<br><img decoding="async" src="/wp-content/uploads/external/farm1.static.flickr.com/216/460985825_4830c15926_o.jpg"> </p>
 <p>I have a page that has a complicated piece which has been delegated to a usercontrol-presenter pair.&nbsp; The page, of course, will embed this usercontrol in the appropriate place.&nbsp; Immediately you can spot the problem:&nbsp; The "Foo" view is responsible for creating the "Widget" view.&nbsp; Then the Widget view creates its presenter and uses it.&nbsp; This is too much responsibility for both views.&nbsp; </p>
-<p>Now consider an alternative:<br>&nbsp;<img decoding="async" src="https://i0.wp.com/farm1.static.flickr.com/169/461023121_334419f7bb_o.jpg?w=776"> </p>
+<p>Now consider an alternative:<br>&nbsp;<img decoding="async" src="/wp-content/uploads/external/farm1.static.flickr.com/169/461023121_334419f7bb_o.jpg"> </p>
 <p>Now notice that the FooPresenter is responsible for creating and using WidgetPresenter.&nbsp; WidgetPresenter, in return, uses StructureMap to service-locate its view, which implements IWidgetView.&nbsp; Because Widget.ascx.cs implements IWidgetView, this wiring works easily.&nbsp; The StructureMap change that made this possible is the following usage of the configuration.&nbsp; Here is the code:</p>
 
 <div style="background:white none repeat scroll 0 50%; color:black">

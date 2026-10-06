@@ -229,9 +229,10 @@ Why this fits:
   failure mode and monthly cost, and weaken the "one commit = one release" property.
 - **GitOps:** each image is a complete, immutable snapshot of code *and* content. Rollback restores both together.
 - **Media is content.** Uploads ship in the image and are served by ASP.NET Core static files with long cache
-  lifetimes. **Every image the site shows is self-hosted.** About 230 images in old posts are still hotlinked through
-  WordPress.com's Photon CDN or from third-party hosts, and 88 are already broken. Localizing them is migration work
-  (§12) that lets the content security policy say `img-src 'self'`.
+  lifetimes. **Every image the site shows is self-hosted.** The 222 images old posts loaded through WordPress.com's
+  Photon CDN or from third-party hosts are localized under `content/uploads/external/{host}/…` (§12): 155 were
+  recovered, and the 67 nobody has any more answer 404 locally instead of from a dead host. That lets the content
+  security policy say `img-src 'self'`. An integration test fails when a post refers to an image on another host.
 
 Runtime writes don't exist in v1. Read-only archived comments ship with their posts, and new comments are deferred
 (§13). The ADR sets the triggers for adding a store: the first runtime-write feature (newsletter signup, contact
@@ -473,8 +474,9 @@ Each step is one PR that meets the Definition of Done.
 
 | Finding | Count | Plan |
 |---|---|---|
-| Images in posts still loaded through WordPress.com Photon (`i0.wp.com/<external host>/…`) or hotlinked from third parties | ~230 | Download from Photon's cache now (it may be the only surviving copy), else the original host, else the Wayback Machine; store under `content/uploads/external/` and rewrite `src` |
-| Graffiti-era `/files/media/…` images (the live site returns a 29-byte soft 404) | 44 | Recover from the Wayback Machine; serve at the same paths via `legacy-map` |
+| Images in posts loaded through WordPress.com Photon (`i0.wp.com/<external host>/…`) or hotlinked from third parties | 222 | ✅ Localized 2026-10-06: `src` points at `/wp-content/uploads/external/{host}{path}`, fetched from Photon's cache, else the original host, else the Wayback Machine. 155 recovered; 67 are in `migration/uploads-manifest.missing.txt` (no source has them). `media` is re-runnable if a copy turns up |
+| Graffiti-era `/files/media/…` images (the live site returns a 29-byte soft 404) | 43 | ✅ 40 recovered from the Wayback Machine with the images above, under `uploads/external/jeffreypalermo.com/files/media/…`; posts point at them. Still open: redirecting the old `/files/media/…` URLs themselves to the recovered files via `legacy-map` |
+| Images with no file name to store them under (a tracking pixel, Google thumbnails and a map, `.aspx` image handlers, one on `localhost`) | 8 | Left as they are and pinned as reviewed leftovers in `FileSystemContentSourceTests`. Remove each from its post or replace it by hand |
 | VideoPress video hosted on `videos.files.wordpress.com` (Palermo Pamphlet 001, 76 MB) | 1 | ✅ Localized under `uploads/external/` in build step 1; large binaries are stored with Git LFS |
 | Unrendered `[podcast src=…]` shortcodes in old posts (already broken on the live site) | a few | Replace with the Libsyn embed or a link when the post pages are built |
 | Uploads already 404 on the live site (lost in the 2018 import) | 44 | Recover from the Wayback Machine; list in `migration/uploads-manifest.missing.txt` |

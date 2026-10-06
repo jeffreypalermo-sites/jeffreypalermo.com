@@ -3,12 +3,16 @@ using AngleSharp.Html.Parser;
 
 namespace JeffreyPalermo.Tools.WpMigrator;
 
-public sealed record CleanedHtml(string Html, IReadOnlySet<string> UploadPaths);
+/// <param name="Html">The cleaned markup.</param>
+/// <param name="UploadPaths">Every <c>/wp-content/uploads/</c> path the markup refers to.</param>
+/// <param name="ExternalImages">The upload paths that are copies of images on other hosts, with where to fetch each.</param>
+public sealed record CleanedHtml(string Html, IReadOnlySet<string> UploadPaths, IReadOnlyDictionary<string, IReadOnlyList<string>> ExternalImages);
 
 /// <summary>
 /// Normalizes 20 years of WordPress, Graffiti, and Word-pasted markup into clean HTML while keeping the content:
 /// unwraps <c>&lt;font&gt;</c>, drops Office (<c>o:p</c>) elements and <c>mso-*</c> styling, removes Jetpack
-/// <c>data-*</c>/<c>srcset</c> attributes, deletes empty spacer paragraphs, and rewrites links.
+/// <c>data-*</c>/<c>srcset</c> attributes, deletes empty spacer paragraphs, rewrites links, and points images hosted
+/// elsewhere at their local copies (<see cref="ExternalImage"/>).
 /// </summary>
 public sealed class HtmlCleaner(LinkRewriter links)
 {
@@ -46,9 +50,10 @@ public sealed class HtmlCleaner(LinkRewriter links)
         }
 
         var uploads = new HashSet<string>(StringComparer.Ordinal);
+        var externalImages = new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal);
         foreach (var element in root.QuerySelectorAll("*"))
         {
-            CleanAttributes(element, uploads);
+            CleanAttributes(element, uploads, externalImages);
         }
 
         foreach (var paragraph in root.QuerySelectorAll("p").Reverse().ToList())
@@ -67,10 +72,10 @@ public sealed class HtmlCleaner(LinkRewriter links)
             }
         }
 
-        return new CleanedHtml(root.InnerHtml.Trim(), uploads);
+        return new CleanedHtml(root.InnerHtml.Trim(), uploads, externalImages);
     }
 
-    private void CleanAttributes(IElement element, HashSet<string> uploads)
+    private void CleanAttributes(IElement element, HashSet<string> uploads, Dictionary<string, IReadOnlyList<string>> externalImages)
     {
         foreach (var attribute in element.Attributes.ToList())
         {
@@ -90,6 +95,12 @@ public sealed class HtmlCleaner(LinkRewriter links)
             }
 
             var rewritten = links.Rewrite(value);
+            if (urlAttribute == "src" && element.LocalName == "img" && ExternalImage.From(rewritten) is { } image)
+            {
+                rewritten = image.LocalPath;
+                externalImages.TryAdd(image.LocalPath, image.Sources);
+            }
+
             element.SetAttribute(urlAttribute, rewritten);
             if (rewritten.StartsWith(UploadsPrefix, StringComparison.OrdinalIgnoreCase))
             {

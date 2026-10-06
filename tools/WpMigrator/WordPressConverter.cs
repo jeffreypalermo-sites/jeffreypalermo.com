@@ -48,6 +48,20 @@ public sealed partial class WordPressConverter
 
         var cleaner = new HtmlCleaner(new LinkRewriter(permalinksBySlug));
         var uploads = new SortedSet<string>(StringComparer.Ordinal);
+
+        // Media hosted off-site is localized under uploads/external/, because it disappears with the WordPress.com
+        // account (VideoPress, images served through Photon) or with its host. The manifest records where to fetch
+        // each file from, best source first.
+        var externalSources = new SortedDictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal);
+        void TrackExternalImages(CleanedHtml html)
+        {
+            foreach (var (path, sources) in html.ExternalImages)
+            {
+                uploads.Add(path);
+                externalSources.TryAdd(path, sources);
+            }
+        }
+
         var commentsByPost = comments.GroupBy(c => Int(c, "post")).ToDictionary(g => g.Key, g => g.ToList());
         var commentCount = 0;
 
@@ -57,6 +71,7 @@ public sealed partial class WordPressConverter
             var permalink = PathOf(Str(post, "link"));
             var cleaned = cleaner.Clean(Rendered(post, "content"));
             uploads.UnionWith(cleaned.UploadPaths);
+            TrackExternalImages(cleaned);
 
             var metadata = new PostFrontMatter
             {
@@ -85,30 +100,32 @@ public sealed partial class WordPressConverter
                 var records = postComments
                     .OrderBy(c => Str(c, "date_gmt"), StringComparer.Ordinal)
                     .ThenBy(c => Int(c, "id"))
-                    .Select(c => new Comment(
-                        Int(c, "id"),
-                        Int(c, "parent"),
-                        WebUtility.HtmlDecode(Str(c, "author_name")),
-                        NullIfEmpty(Str(c, "author_url")),
-                        LocalDate(Str(c, "date")),
-                        Str(c, "type"),
-                        cleaner.Clean(Rendered(c, "content")).Html))
+                    .Select(c =>
+                    {
+                        var content = cleaner.Clean(Rendered(c, "content"));
+                        TrackExternalImages(content);
+                        return new Comment(
+                            Int(c, "id"),
+                            Int(c, "parent"),
+                            WebUtility.HtmlDecode(Str(c, "author_name")),
+                            NullIfEmpty(Str(c, "author_url")),
+                            LocalDate(Str(c, "date")),
+                            Str(c, "type"),
+                            content.Html);
+                    })
                     .ToList();
                 commentCount += records.Count;
                 await WriteJsonAsync(ContentLayout.CommentsFile(file), records, cancellationToken).ConfigureAwait(false);
             }
         }
 
-        // Media hosted off-site (e.g. VideoPress on videos.files.wordpress.com) is localized under uploads/external/,
-        // because it disappears with the WordPress.com account. The manifest records where to fetch it from.
-        var externalSources = new SortedDictionary<string, string>(StringComparer.Ordinal);
         var attachments = media.Select(m =>
         {
             var sourceUrl = Str(m, "source_url");
             var source = LocalMediaPath(sourceUrl);
             if (source != PathOf(sourceUrl))
             {
-                externalSources[source] = sourceUrl;
+                externalSources[source] = [sourceUrl];
             }
 
             uploads.Add(source);
@@ -146,7 +163,7 @@ public sealed partial class WordPressConverter
         await WriteJsonAsync(layout.TermsFile, terms, cancellationToken).ConfigureAwait(false);
 
         var uploadList = uploads.Where(u => u.StartsWith(UploadsPrefix, StringComparison.OrdinalIgnoreCase)).ToList();
-        var manifest = uploadList.Select(u => externalSources.TryGetValue(u, out var from) ? $"{u}\t{from}" : u);
+        var manifest = uploadList.Select(u => externalSources.TryGetValue(u, out var from) ? $"{u}\t{string.Join('\t', from)}" : u);
         await WriteTextAsync(uploadsManifestFile, string.Join('\n', manifest) + "\n", cancellationToken).ConfigureAwait(false);
 
         return new ConversionSummary(posts.Count, pages.Count, commentCount, attachments.Count, terms.Count, uploadList.Count);

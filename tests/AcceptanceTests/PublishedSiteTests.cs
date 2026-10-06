@@ -33,6 +33,7 @@ public sealed class PublishedSiteTests(PublishedSite site, ITestOutputHelper out
     [Theory]
     [InlineData("/favicon.ico", "image/x-icon")]
     [InlineData("/wp-content/uploads/2018/06/image257b0257d255b61255d1.png", "image/png")]
+    [InlineData("/wp-content/uploads/external/codebetter.com/jeffreypalermo/files/2015/08/image_4.png", "image/png")] // localized from another host
     [InlineData("/2008/07/the-onion-architecture-part-1/", "text/html")]
     [InlineData("/feed/", "application/rss+xml")]
     public async Task ThePublishedOutputServesPagesFilesAndFeeds(string path, string mediaType)

@@ -77,6 +77,40 @@ public class HtmlCleanerTests
     }
 
     [Fact]
+    public void PointsImagesOnOtherHostsAtTheirLocalCopiesAndRecordsWhereToFetchThem()
+    {
+        const string html =
+            "<p><img src=\"https://i0.wp.com/farm1.static.flickr.com/34/65_o.jpg?w=776\" alt=\"party\">" +
+            "<img src=\"https://i0.wp.com/farm1.static.flickr.com/34/65_o.jpg?resize=100%2C80\">" +
+            "<img src=\"http://weblogs.asp.net/grantri/aggbug/226386.aspx\"></p>";
+
+        var result = _cleaner.Clean(html);
+
+        const string local = "/wp-content/uploads/external/farm1.static.flickr.com/34/65_o.jpg";
+        Assert.Equal(
+            $"<p><img src=\"{local}\" alt=\"party\"><img src=\"{local}\"><img src=\"http://weblogs.asp.net/grantri/aggbug/226386.aspx\"></p>",
+            result.Html);
+        Assert.Equal([local], result.UploadPaths);
+        var sources = Assert.Single(result.ExternalImages);
+        Assert.Equal(local, sources.Key);
+        Assert.Equal("https://i0.wp.com/farm1.static.flickr.com/34/65_o.jpg", sources.Value[0]);
+    }
+
+    [Fact]
+    public void LeavesLinksAndEmbedsOnOtherHostsWhereTheyAre()
+    {
+        const string html =
+            "<a href=\"http://www.flickr.com/photos/x/65_o.jpg\">full size</a>" +
+            "<iframe src=\"https://www.youtube.com/embed/abc\"></iframe>";
+
+        var result = _cleaner.Clean(html);
+
+        Assert.Equal(html, result.Html);
+        Assert.Empty(result.ExternalImages);
+        Assert.Empty(result.UploadPaths);
+    }
+
+    [Fact]
     public void PreservesCodeBlocksVerbatim()
     {
         const string html = "<pre><code>if (a &lt; b) {\n    return;\n}</code></pre>";

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using JeffreyPalermo.Core.Content;
 using JeffreyPalermo.Infrastructure.Content;
 
@@ -34,6 +35,66 @@ public sealed class FileSystemContentSourceTests : IDisposable
         Assert.Contains("<a href=\"/2008/07/the-onion-architecture-part-2/\">part 2</a>", onion.HtmlBody, StringComparison.Ordinal);
         Assert.Equal("/about/", site.FindPage("/about/")?.Path);
         Assert.Equal("The Onion Architecture : part 1", site.FindAttachment("/the-onion-architecture-part-1-3/")?.Title);
+    }
+
+    /// <summary>
+    /// Every image the site shows is self-hosted (ADR-0002). These are the reviewed leftovers the migration cannot
+    /// store as an image file: a tracking pixel, generated thumbnails and maps without a file name, and one that only
+    /// ever existed on the author's machine. A new off-site image fails here until it is localized or reviewed.
+    /// </summary>
+    private static readonly string[] ReviewedOffSiteImages =
+    [
+        "http://codebetter.com/photos/jeffrey.palermo/images/147891/original.aspx",
+        "http://t0.gstatic.com/images",
+        "http://t3.gstatic.com/images",
+        "http://vstsmn.net/photos/images/images/86/secondarythumb.aspx",
+        "http://weblogs.asp.net/grantri/aggbug/226386.aspx",
+        "http://www.google.com/mapdata",
+        "https://encrypted-tbn1.gstatic.com/images",
+        "https://i0.wp.com/localhost/images/pwpbadge.jpg",
+    ];
+
+    private static readonly Regex ImageSource = new("<img\\b[^>]*?\\bsrc\\s*=\\s*\"(?<src>[^\"]+)\"", RegexOptions.IgnoreCase);
+
+    [Fact]
+    public async Task EveryImageInTheRepositoryContentIsSelfHostedExceptTheReviewedLeftovers()
+    {
+        var offSite = (await RepositoryImageSourcesAsync())
+            .Where(src => src.StartsWith("http", StringComparison.OrdinalIgnoreCase) || src.StartsWith("//", StringComparison.Ordinal))
+            .Select(src => src.Split('?')[0])
+            .Distinct()
+            .Order(StringComparer.Ordinal);
+
+        Assert.Equal(ReviewedOffSiteImages, offSite);
+    }
+
+    [Fact]
+    public async Task EverySelfHostedImageIsInTheRepositoryOrListedAsLost()
+    {
+        var root = RepositoryRoot();
+        var layout = new ContentLayout(Path.Join(root, "content"));
+        var lost = (await File.ReadAllLinesAsync(Path.Join(root, "migration", "uploads-manifest.missing.txt"))).ToHashSet(StringComparer.Ordinal);
+
+        var unaccounted = (await RepositoryImageSourcesAsync())
+            .Where(src => src.StartsWith("/wp-content/uploads/", StringComparison.OrdinalIgnoreCase))
+            .Select(src => src.Split('?', '#')[0])
+            .Distinct()
+            .Where(path => !lost.Contains(path) && !File.Exists(layout.UploadFile(path)))
+            .Order(StringComparer.Ordinal)
+            .ToList();
+
+        Assert.True(unaccounted.Count == 0, $"{unaccounted.Count} images are neither in content/uploads nor in uploads-manifest.missing.txt:\n{string.Join('\n', unaccounted)}");
+    }
+
+    private static async Task<List<string>> RepositoryImageSourcesAsync()
+    {
+        var site = await new FileSystemContentSource(new ContentLayout(Path.Join(RepositoryRoot(), "content")), "test").LoadAsync();
+        return site.Posts.Select(post => post.HtmlBody)
+            .Concat(site.Pages.Select(page => page.HtmlBody))
+            .Concat(site.Posts.SelectMany(post => post.Comments).Select(comment => comment.ContentHtml))
+            .SelectMany(html => ImageSource.Matches(html))
+            .Select(match => System.Net.WebUtility.HtmlDecode(match.Groups["src"].Value))
+            .ToList();
     }
 
     [Fact]
