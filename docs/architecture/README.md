@@ -5,6 +5,7 @@ _Architecture pass, 2026-10-05. Decisions are recorded as ADRs in [`docs/adr`](.
 This document designs the ASP.NET Core application that replaces the WordPress.com site (Option D in
 [MODERNIZATION-PLAN.md](../../MODERNIZATION-PLAN.md)). It covers the Onion Architecture layering, the data layer,
 how legacy URLs are preserved, the Azure deployment, the GitOps delivery pipeline, and the build sequence.
+Sections 8 and 9 were rewritten on 2026-10-06 for [ADR-0006](../adr/0006-deliver-through-the-demo-environment-kit.md).
 
 ## 1. Architectural drivers
 
@@ -14,8 +15,8 @@ how legacy URLs are preserved, the Azure deployment, the GitOps delivery pipelin
 | **Content is code** | Publishing a post = merging a PR | Git is the system of record ([ADR-0002](../adr/0002-git-is-the-system-of-record.md)) |
 | **Showcase** | A reader can understand the whole system from the repo | Onion layering enforced by tests; every decision has an ADR; infra and pipeline are in the repo |
 | **Performance** | Server time p95 < 50 ms for cached pages; no framework JavaScript | In-memory read model, output caching, Blazor static SSR with no client runtime |
-| **Cost** | < $25/month at launch | One Azure Container App, no database, no CDN until traffic justifies it |
-| **Operability** | Zero-downtime deploys; rollback < 1 minute; every legacy hit observable | Container Apps revisions with traffic shifting; OpenTelemetry metrics per URL rule |
+| **Cost** | < $25/month at launch | Container apps that scale to zero, no database, no CDN until traffic justifies it |
+| **Operability** | Zero-downtime deploys; rollback by redeploying the previous release; every legacy hit observable | Octopus releases promoted through tdd, uat and prod ([ADR-0006](../adr/0006-deliver-through-the-demo-environment-kit.md)); OpenTelemetry metrics per URL rule |
 | **Security** | No writable surface in v1 | No database, no admin UI, no secrets; managed identity only; strict headers |
 | **Testability** | Definition of Done: unit, integration, full-system tests per change | Core has no dependencies; adapters behind ports; Playwright drives the running container |
 
@@ -29,13 +30,17 @@ flowchart LR
         app[jeffreypalermo.com<br/>ASP.NET Core on Container Apps]
         ai[(Application Insights)]
     end
-    gh[GitHub repo<br/>content + code + infra]
-    actions[GitHub Actions]
+    gh[GitHub repo<br/>content + code]
+    actions[GitHub Actions<br/>Build, Release]
+    octo[Octopus Deploy]
+    sys[jpcom-system<br/>desired state + infrastructure]
     yt[YouTube embeds]
 
     reader -- HTTPS --> app
     author -- pull request --> gh
-    gh --> actions -- "OIDC: image + Bicep" --> app
+    gh --> actions -- "OIDC: image, release" --> octo
+    octo -- "pins the version" --> sys
+    octo -- "deploys tdd → uat → prod" --> app
     app -- OpenTelemetry --> ai
     reader -. iframes in 11 old posts .-> yt
 ```
@@ -83,7 +88,7 @@ ports. UI.Server is the composition root that wires them together. A unit test e
 | `tools/WpMigrator`, `tools/UrlContract` | outer | One-time migration and contract capture (exist today) | Infrastructure |
 | `tests/UnitTests` | outer | Core and Infrastructure in isolation, plus architecture rules | all |
 | `tests/IntegrationTests` | outer | Real `content/` tree, in-process HTTP pipeline, full contract replay | all |
-| `tests/AcceptanceTests` | outer | Playwright for .NET against the running container | UI.Server (for config only) |
+| `tests/AcceptanceTests` | outer | The published app and the container image over real HTTP; Playwright for .NET from build step 3 | tools/UrlContract (the contract verifier) |
 
 `UI.Server` keeps Jeffrey's Onion DevOps naming and leaves room for a `UI.Client` project if interactive islands
 are ever needed.
@@ -275,8 +280,8 @@ Rules, in precedence order (implemented in build step 2; every one has a unit te
 The WordPress-era behavior for case variants and query-string archives was to answer 200 at the alias. Answering a
 single 301 to the canonical URL is better for SEO, and the contract rules count it as preserved.
 
-**Verification:** the contract replay runs in-process in integration tests (all 9,337 rows, seconds) and over HTTP
-against each new revision before it receives traffic (§9).
+**Verification:** the contract replay runs in-process in integration tests (all 9,337 rows, seconds), over HTTP
+against the container image in every build, and against each environment after a deployment (§9).
 
 ## 7. UI.Server
 
@@ -303,7 +308,7 @@ flowchart LR
 | `/search` | `Search` |
 | `/feed/`, `/feed/atom/`, `/comments/feed/`, `/…/feed/` | minimal API feed endpoints (RSS 2.0 stays the default format readers already use) |
 | `/wp-sitemap.xml`, `/wp-sitemap-*.xml`, `/robots.txt` | minimal API endpoints. Search engines already know the WordPress sitemap names, so they're kept. |
-| `/healthz`, `/readyz` | liveness; readiness = content loaded |
+| `/_health/live`, `/_health/ready` | liveness; readiness = content loaded, answering `ready <version>`. `/_health/ready` is the health path every deployment verifies |
 
 ### Cross-cutting
 
@@ -318,45 +323,62 @@ flowchart LR
 - **Observability:** `Azure.Monitor.OpenTelemetry.AspNetCore` for traces, metrics, and logs. Custom
   `ActivitySource("JeffreyPalermo.Site")` around queries; metrics `site.legacy_url.resolutions{rule,result}` and
   `site.not_found{referrer_host}`. The 404 log is the feed for new `legacy-map` entries.
-- **Configuration:** no secrets in v1. Only the App Insights connection string, set as an environment variable from
-  Bicep, and the canonical host name.
+- **Configuration:** no secrets in v1. Only the App Insights connection string, set as an environment variable by
+  the system's `telemetry` capability, the canonical host name, and the version, which the image carries.
 
 ## 8. Azure deployment
 
-**Decision ([ADR-0003](../adr/0003-azure-container-apps.md)): Azure Container Apps (consumption), in multiple
-revision mode, with labels.**
+**Decisions: [ADR-0003](../adr/0003-azure-container-apps.md) (Azure Container Apps, consumption) and
+[ADR-0006](../adr/0006-deliver-through-the-demo-environment-kit.md) (the system `jpcom`, made with the
+demo-environment-kit, creates and owns every Azure resource).** This repository holds no infrastructure code. The
+templates and the desired state are in the system repository `jeffreypalermo-sites/jpcom-system`.
 
 ```mermaid
 flowchart TB
-    dns["Azure DNS: jeffreypalermo.com<br/>A @ → env IP · CNAME www, feeds → app<br/>MX → GoDaddy · SPF · DMARC · CAA digicert"]
-    subgraph rg["rg-jpcom-prod (South Central US)"]
-        acr[(Container Registry<br/>Basic, admin disabled)]
-        mi[Managed identity<br/>id-jpcom-web: AcrPull]
-        subgraph env["Container Apps environment (consumption)"]
-            app["ca-jpcom-web<br/>0.25 vCPU / 0.5 GiB · ingress :8080 · HTTPS only<br/>prod revision: min 1, max 3 · PR revisions: min 0"]
+    dns["Azure DNS: jeffreypalermo.com (planned, §11 step 8)<br/>A @ → environment IP · CNAME www, feeds → prod app<br/>MX → GoDaddy · SPF · DMARC"]
+    subgraph apps["rg-jpcom-apps (Central US)"]
+        subgraph env["cae-jpcom: the system's one Container Apps environment (consumption)"]
+            tdd["ca-jpcom-tdd-web"]
+            uat["ca-jpcom-uat-web"]
+            prod["ca-jpcom-prod-web"]
         end
-        law[(Log Analytics<br/>30-day retention, daily cap)]
-        ai[(Application Insights)]
     end
-    gha[GitHub Actions<br/>OIDC → id-jpcom-deploy] -- push image --> acr
-    gha -- Bicep + new revision --> app
-    app -- pull via mi --> acr
-    app --> ai --> law
-    dns --> app
+    subgraph nonprod["rg-jpcom-nonprod"]
+        acr[(Container Registry<br/>Basic, released tags locked)]
+        s1["stack-jpcom-tdd · stack-jpcom-uat<br/>deny settings"]
+        idn["id-jpcom-deploy-nonprod<br/>id-jpcom-acr-push · id-jpcom-plan"]
+    end
+    subgraph prodrg["rg-jpcom-prod"]
+        s2["stack-jpcom-prod<br/>deny settings"]
+        idp["id-jpcom-deploy-prod"]
+    end
+    gha[GitHub Actions: Release<br/>OIDC → id-jpcom-acr-push] -- push image --> acr
+    octo[Octopus Deploy<br/>OIDC → deploy identity of the tier] -- apply stack, update app --> s1
+    octo --> s2
+    s1 -. owns .-> tdd
+    s1 -. owns .-> uat
+    s2 -. owns .-> prod
+    tdd -- pull --> acr
+    uat -- pull --> acr
+    prod -- pull --> acr
+    dns -.-> prod
 ```
 
-| Resource | SKU / settings | Notes |
+| Resource | Settings | Notes |
 |---|---|---|
-| Container App | consumption; 0.25 vCPU, 0.5 GiB; production revision min 1 replica | Min 1 avoids cold starts on the first request. An idle replica bills at the reduced idle rate. |
-| Container Apps environment | consumption; static IP | The apex A record points here |
-| Container Registry | Basic | ~$5/mo. Pull via managed identity, so no registry password exists anywhere |
-| Log Analytics + App Insights | workspace-based, 30-day retention, daily ingestion cap | Container Apps requires the workspace anyway |
-| Azure DNS zone | public | Moves DNS off WordPress.com nameservers, keeps GoDaddy MX, fixes SPF, adds DMARC |
-| Managed certificates | free, per custom domain | Apex needs an A record to the environment IP; `www`/`feeds` need a CNAME **directly** to the app |
-| Deploy identity | user-assigned identity with GitHub OIDC federated credentials | Roles: AcrPush, Contributor on the resource group. No client secret |
+| Container Apps environment `cae-jpcom` | consumption; static IP; resource group `rg-jpcom-apps`; Central US | Created once by the kit's seed, not by an environment. One slot of the subscription's two per region. Prod shares this runtime with nonprod (ADR-0006) |
+| Container apps `ca-jpcom-<env>-web` | ingress on 8080; health path `/_health/ready`; scale to zero unless `alwaysOn` is set | One per environment: `tdd`, `uat`, `prod`. Each belongs to its environment's deployment stack, in its tier's resource group, and joins `cae-jpcom` |
+| Deployment stacks `stack-jpcom-<env>` | deny settings | Only the tier's deploy identity changes an environment's resources. A nightly what-if reports drift from `jpcom-system` |
+| Container Registry | Basic | Images `jpcom/web:<version>`. Pulled by each environment's runtime identity, so no registry password exists. A released tag is write- and delete-locked |
+| Identities | user-assigned, federated (GitHub OIDC, Octopus OIDC) | Push: `id-jpcom-acr-push`. Deploy: `id-jpcom-deploy-nonprod`, `id-jpcom-deploy-prod`. Read-only previews and drift: `id-jpcom-plan`. No client secret |
+| Log Analytics + App Insights | the system's `telemetry` capability, per environment | Sets `APPLICATIONINSIGHTS_CONNECTION_STRING` for the app's OpenTelemetry export (build step 5) |
+| Azure DNS zone, managed certificates | not in the kit yet | The apex needs an A record to the static IP of `cae-jpcom` plus a TXT `asuid` record; `www`/`feeds` need CNAMEs to the prod app. Moves DNS off WordPress.com nameservers, keeps GoDaddy MX, fixes SPF, adds DMARC |
 
-**Estimated cost:** about $10–20/month. That's ACR Basic, one mostly idle replica beyond the monthly free grant
-(180,000 vCPU-seconds, 360,000 GiB-seconds, 2M requests), small Log Analytics ingestion, and the DNS zone.
+There is no SQL server, no SQL secret and no database runbook: the system has no database (ADR-0002).
+
+**Cost:** the registry (Basic) is the one fixed charge. Three container apps that scale to zero run within the
+subscription's monthly free grant (180,000 vCPU-seconds, 360,000 GiB-seconds, 2M requests), which other systems in
+the subscription share. A warm production replica (`alwaysOn`) uses that grant all month.
 
 **Deferred: Azure Front Door.** Add it when traffic, WAF, or global latency justifies ~$35+/month. Because managed
 certificates require direct DNS to the app, adding Front Door later moves the certificates to Front Door. That
@@ -364,41 +386,66 @@ switch is planned for, not a surprise.
 
 ## 9. Delivery pipeline (GitOps)
 
-Git is the single source of truth for content, code, and infrastructure (Bicep). Every change reaches production
-through a PR. Deployment is push-based from GitHub Actions: Container Apps has no pull-based reconciler like Flux.
-Drift is caught by a scheduled `what-if`.
+Git is the single source of truth, in two repositories. This one holds content and code: every post and every code
+change is a pull request here. `jpcom-system` holds the desired state: `system.json`, the infrastructure templates,
+the Octopus configuration, and the version each environment runs (`environments/<env>/versions.json`). Octopus
+Deploy carries a release from one environment to the next and writes the pin, so `jpcom-system`'s `main` always says
+what runs where.
 
 ```mermaid
 flowchart LR
-    subgraph PR["Pull request"]
-        b1[build + unit + integration<br/>incl. in-process contract replay] --> c1[dotnet publish container<br/>tag = SHA] --> r1[revision, 0% traffic<br/>label pr-N] --> v1[Playwright + HTTP contract replay<br/>against label URL] --> cm[comment preview URL on PR]
+    subgraph PR["Pull request (this repository)"]
+        t1[unit + integration tests<br/>incl. in-process contract replay]
+        i1[image from the Dockerfile] --> f1[full-system tests:<br/>the container replays the URL contract]
+        t1 --> br[Build result]
+        f1 --> br
     end
     subgraph Main["Merge to master"]
-        b2[build + test] --> c2[image] --> r2[revision, 0% traffic<br/>label candidate] --> v2[contract replay + smoke<br/>against candidate URL] --> t[shift 100% traffic] --> keep[keep previous revision<br/>active 24h: instant rollback]
+        b2[Build: same jobs<br/>artifact container-image] --> rel[Release: push that image,<br/>lock the tag, create Octopus release]
     end
-    PR --> Main
-    nightly[[nightly: Bicep what-if drift check<br/>+ contract replay vs production]] -.-> Main
+    subgraph Octo["Octopus project jpcom-web"]
+        tdd[tdd: pin → update → verify] --> so1{{sign-off}} --> uat[uat: pin → update → verify] --> so2{{sign-off}} --> prod[prod: pin → update → verify]
+    end
+    PR --> Main --> Octo
+    Octo -- "versions.json" --> sys[(jpcom-system main)]
+    nightly[[nightly in jpcom-system:<br/>drift what-if + capability checks]] -.-> sys
 ```
+
+| Step | What happens | Where |
+|---|---|---|
+| Build | Unit and integration tests. The image is built once from the `Dockerfile`, run as a container, and must pass the full-system tests (all 9,337 contract URLs over HTTP) before it's kept as the artifact `container-image`. `Build result` is the required check | `.github/workflows/build.yml`, this repository |
+| Release | After a green Build of `master`: that image goes to the registry as `jpcom/web:<version>`, its tag is locked, and release `<version>` of `jpcom-web` is created. Nothing is rebuilt | `release.yml`, added by the kit when it adopts this repository |
+| Deploy | "Pin version" commits the version to `jpcom-system`, "Update deployable" puts the image on the environment's container app and waits for the new revision, "Verify deployable" checks `/_health/ready`. "Revert pin" runs when a step fails | Octopus project `jpcom-web` |
+| Promote | `tdd` deploys on its own. `uat` and `prod` each start with a sign-off | Octopus lifecycle |
+| Infrastructure | A pull request to `jpcom-system` runs `env-checks` and previews a what-if. A merge applies the Octopus configuration and releases `jpcom-system`, which applies and verifies each environment's stack through the same promotion | `jpcom-system` |
+
+The version is `MAJOR_VERSION.MINOR_VERSION.<run number>` from `build.yml`. The image carries it, and
+`/_health/ready` answers `ready <version>`, so any environment says which release it runs.
 
 | Onion DevOps Architecture stage | This site |
 |---|---|
-| Private build | `dotnet test JeffreyPalermo.slnx` (later `build.ps1`) |
-| Integration build | CI on every push: build, unit, integration, in-process contract replay, container image |
-| TDD environment | PR revision (label `pr-N`), scales to zero, torn down when the PR closes |
-| UAT | the `candidate` revision, verified at 0% traffic |
-| Production | traffic shift to `candidate`. Rollback = shift traffic back to the previous revision |
+| Private build | `dotnet test JeffreyPalermo.slnx` (needs Docker for the container tests) |
+| Integration build | `Build` on every push and pull request: unit, integration, full-system, container image |
+| TDD environment | `tdd`: every release of `master` deploys here on its own |
+| UAT | `uat`, after a sign-off |
+| Production | `prod`, after a sign-off. Rollback = redeploy the previous release, whose image is locked in the registry |
 
-**Container image:** built with the .NET SDK (`dotnet publish /t:PublishContainer`) on the chiseled, non-root
-`aspnet:10.0` base image, so there's no Dockerfile to maintain. `content/` is copied into the publish output.
+**Container image:** the `Dockerfile` at the root publishes `src/UI.Server` with the .NET SDK and copies `content/`
+beside it, on the chiseled, non-root `aspnet:10.0` base image. Large uploads are stored with Git LFS, so the image
+must be built from a checkout with LFS; the build fails if an upload is still a pointer.
+
+**After a deployment** Octopus verifies the health path. The URL contract is replayed against each environment's
+URL with `tools/UrlContract verify` ([tests/contract](../../tests/contract/README.md)). Today a person runs it;
+making it a step of the deployment is open work.
 
 ## 10. Testing strategy (Definition of Done)
 
 | Layer | What | Where it runs |
 |---|---|---|
-| **Unit** | `SiteContent` invariants and queries; every resolver rule (table-driven, one case per rule plus precedence conflicts); pagination; feed item selection; front matter and Markdown loading; **architecture rules** (Core references no project and no package; Infrastructure doesn't reference UI.Server) | every build |
+| **Unit** | The kit's contract in `build.yml` (`BuildWorkflowContractTests`); `SiteContent` invariants and queries; every resolver rule (table-driven, one case per rule plus precedence conflicts); pagination; feed item selection; front matter and Markdown loading; **architecture rules** (Core references no project and no package; Infrastructure doesn't reference UI.Server) | every build |
 | **Integration** | `FileSystemContentSource` over the **real `content/` tree**, which validates every PR's content; `WebApplicationFactory` tests: **full contract replay (9,337 rows)**, feed XML validity, sitemaps, headers/CSP, caching, health | every build |
-| **Full-system (acceptance)** | Playwright for .NET drives the **published container** running in CI: home, post with comments, archives, tag pages, search, feed link, 404 page, legacy redirects in a real browser. YouTube iframes are stubbed by Playwright request interception; there are no other third-party calls | every PR, then again against the PR revision URL |
-| **Post-deploy verification** | HTTP contract replay + smoke against the `candidate` revision URL before traffic shifts; nightly against production | pipeline |
+| **Full-system (acceptance)** | The published app as a process and the **container image built from the `Dockerfile`**, each over real HTTP: full contract replay, the version on the health path, uploads served as files (not Git LFS pointers), an unprivileged user on port 8080. From build step 3, Playwright for .NET drives the container in a real browser: home, post with comments, archives, tag pages, search, feed link, 404 page, legacy redirects. YouTube iframes are stubbed by Playwright request interception; there are no other third-party calls | every build; the image that passes is the image released |
+| **Post-deploy verification** | Octopus verifies `/_health/ready` after every deployment. `tools/UrlContract verify` replays the contract against each environment's URL | every deployment; the contract replay is run by hand for now (§9) |
 
 ## 11. Build sequence
 
@@ -413,8 +460,8 @@ Each step is one PR that meets the Definition of Done.
    first Playwright suite.
 4. **Feeds, sitemaps, robots.txt.**
 5. **Operability.** OpenTelemetry, health checks, security headers, output caching, ETags.
-6. **Infrastructure and pipeline.** Bicep, OIDC, container publish, PR revisions, candidate verification, traffic
-   shift, nightly drift and contract checks.
+6. **Delivery.** The `Dockerfile` and `build.yml` here; the system `jpcom` provisioned with the demo-environment-kit
+   (`tdd`, `uat`, `prod`); the contract replayed against each environment (ADR-0006).
 7. **Visual design.** Home page positioning (Chief Architect at Clear Measure, books, podcast, talks), typography,
    the Onion Architecture hub page.
 8. **Cutover runbook.** DNS move with MX/SPF/DMARC, TTL lowering, production contract replay, WordPress.com kept
@@ -437,10 +484,14 @@ Each step is one PR that meets the Definition of Done.
 Decided 2026-10-06 (recommendations approved):
 - **New comments: closed at launch.** The 2,708 archived comments are shown read-only. Revisit with data; giscus or a
   store-backed form (which triggers the database ADR) are the options.
-- **Azure region: South Central US.**
-- **Repository home:** `jeffreypalermo-sites/jeffreypalermo.com`.
+- **Azure region: Central US** (changed from South Central US, whose two Container Apps environment slots are in
+  use).
+- **Delivery:** the system `jpcom` of the demo-environment-kit, with one Container Apps environment for all three
+  environments ([ADR-0006](../adr/0006-deliver-through-the-demo-environment-kit.md)).
+- **Repository home:** `jeffreypalermo-sites/jeffreypalermo.com`, public.
 
 Open:
 - **Newsletter:** an external provider's embed vs our own signup endpoint (would trigger the database ADR).
 - **Search quality:** the in-memory index is enough for 966 posts. Azure AI Search arrives with "ask the archive".
-- **Public repo:** still private. Making it public is what makes it a showcase, and nothing in it is secret by design.
+- **A warm production replica:** the kit's apps scale to zero by default; `alwaysOn` in `jpcom-system` decides it.
+- **Contract replay after each deployment:** run by hand today; a deployment step is open work in the kit.

@@ -1,6 +1,8 @@
 # ADR-0003: Host on Azure Container Apps
 
-- **Status:** Accepted
+- **Status:** Accepted for hosting on Azure Container Apps. Its delivery and hosting details (one app in multiple
+  revision mode, PR revisions, the `candidate` revision, Bicep and deployment from this repository) are superseded
+  by [ADR-0006](0006-deliver-through-the-demo-environment-kit.md).
 - **Date:** 2026-10-05
 
 ## Context

@@ -1,6 +1,4 @@
 using System.Net;
-using JeffreyPalermo.Infrastructure.Urls;
-using JeffreyPalermo.Tools.UrlContract;
 using Xunit.Abstractions;
 
 namespace JeffreyPalermo.AcceptanceTests;
@@ -14,19 +12,9 @@ public sealed class PublishedSiteTests(PublishedSite site, ITestOutputHelper out
     [Fact]
     public async Task EveryLegacyUrlWorksOnThePublishedSite()
     {
-        var contract = Path.Join(PublishedSite.RepositoryRoot, "tests", "contract");
-        var entries = UrlContractFile.Read(await File.ReadAllTextAsync(Path.Join(contract, "url-contract.tsv")));
-        var deviations = UrlContractRules.ReadExceptions(await File.ReadAllTextAsync(Path.Join(contract, "exceptions.tsv")));
         using var client = site.Client();
 
-        var violations = await new UrlContractVerifier(client).VerifyAsync(entries, deviations, parallelism: 16);
-
-        foreach (var violation in violations.Take(50))
-        {
-            output.WriteLine(violation.ToString());
-        }
-
-        Assert.True(violations.Count == 0, $"{violations.Count} of {entries.Count} legacy URLs broke on the published site; see output.\n{site.Log}");
+        await UrlContractReplay.AssertEveryLegacyUrlWorksAsync(client, output, "on the published site", () => Task.FromResult(site.Log));
     }
 
     [Theory]

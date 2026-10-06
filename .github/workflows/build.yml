@@ -1,0 +1,126 @@
+# Build of jeffreypalermo.com (ADR-0006): the tests of every layer, and the container image, built once per commit and
+# kept as the artifact container-image. After a green Build of master, the system's release.yml (added by the
+# demo-environment-kit when it adopts this repository) pushes that same image to the system's registry and creates the
+# Octopus release; nothing is built a second time.
+#
+# The kit keeps this file instead of its generic Build because the image needs a checkout with Git LFS (the video under
+# content/uploads). What release.yml and the kit rely on, pinned by BuildWorkflowContractTests:
+#   - the name "Build";
+#   - MAJOR_VERSION and MINOR_VERSION below: the version is MAJOR_VERSION.MINOR_VERSION.<run number>;
+#   - the artifact container-image: container-image.tar.gz, a gzip of `docker save container-image:<version>`;
+#   - the job "Build result", which needs every other job and is the one required check.
+name: Build
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  MAJOR_VERSION: 1
+  MINOR_VERSION: 0
+
+jobs:
+  test:
+    name: Unit and integration tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6.0.1
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Compile
+        run: dotnet build JeffreyPalermo.slnx --configuration Release
+
+      - name: Unit tests
+        run: dotnet test tests/UnitTests --configuration Release --no-build --logger trx --results-directory TestResults
+
+      - name: Integration tests
+        run: dotnet test tests/IntegrationTests --configuration Release --no-build --logger trx --results-directory TestResults
+
+      - name: Upload the test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults
+
+  image:
+    name: Container image and full-system tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      # With LFS: without it the image would hold a pointer instead of the video, and the Dockerfile refuses to build.
+      - uses: actions/checkout@v6.0.1
+        with:
+          lfs: true
+
+      - name: Version
+        run: echo "VERSION=${MAJOR_VERSION}.${MINOR_VERSION}.${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
+
+      - name: Build the image
+        run: |
+          set -euo pipefail
+          docker build --file Dockerfile \
+            --build-arg "VERSION=${VERSION}" \
+            --label "org.opencontainers.image.version=${VERSION}" \
+            --label "org.opencontainers.image.revision=${GITHUB_SHA}" \
+            --label "org.opencontainers.image.source=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
+            --tag "container-image:${VERSION}" .
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      # The published app as a process, and the image just built as a container: the URL contract over real HTTP
+      # against both. JPCOM_IMAGE makes the container tests run this image, so what is tested is what is released.
+      - name: Full-system tests
+        env:
+          JPCOM_IMAGE: container-image:${{ env.VERSION }}
+        run: dotnet test tests/AcceptanceTests --configuration Release --logger trx --results-directory TestResults
+
+      - name: Upload the test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-full-system
+          path: TestResults
+
+      - name: Save the image
+        run: |
+          set -euo pipefail
+          docker save "container-image:${VERSION}" | gzip > container-image.tar.gz
+          echo "Image ${VERSION}: $(du -h container-image.tar.gz | cut -f1) compressed" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the image
+        uses: actions/upload-artifact@v4
+        with:
+          name: container-image
+          path: container-image.tar.gz
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
+
+  # The one check the master ruleset requires: it reports the outcome of every other job under a fixed name.
+  result:
+    name: Build result
+    needs: [test, image]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Every job succeeded
+        env:
+          TEST_RESULT: ${{ needs.test.result }}
+          IMAGE_RESULT: ${{ needs.image.result }}
+        run: |
+          echo "test: ${TEST_RESULT}"
+          echo "image: ${IMAGE_RESULT}"
+          test "${TEST_RESULT}" = "success"
+          test "${IMAGE_RESULT}" = "success"

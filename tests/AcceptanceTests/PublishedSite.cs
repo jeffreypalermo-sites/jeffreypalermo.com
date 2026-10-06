@@ -23,7 +23,7 @@ public sealed class PublishedSite : IAsyncLifetime
     {
         _publishDirectory = Directory.CreateTempSubdirectory("jpcom-publish-").FullName;
         var project = Path.Join(RepositoryRoot, "src", "UI.Server", "JeffreyPalermo.UI.Server.csproj");
-        await RunAsync("dotnet", $"publish \"{project}\" -c Release -o \"{_publishDirectory}\" --nologo -v q");
+        await Command.RunAsync("dotnet", "publish", project, "-c", "Release", "-o", _publishDirectory, "--nologo", "-v", "q");
 
         var port = FreePort();
         BaseAddress = new Uri($"http://127.0.0.1:{port}/");
@@ -123,19 +123,6 @@ public sealed class PublishedSite : IAsyncLifetime
             {
                 _log.AppendLine(line);
             }
-        }
-    }
-
-    private static async Task RunAsync(string file, string arguments)
-    {
-        using var process = Process.Start(new ProcessStartInfo(file, arguments) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false })
-            ?? throw new InvalidOperationException($"Could not start {file}.");
-        var output = process.StandardOutput.ReadToEndAsync();
-        var error = process.StandardError.ReadToEndAsync();
-        await process.WaitForExitAsync();
-        if (process.ExitCode != 0)
-        {
-            throw new InvalidOperationException($"{file} {arguments} failed ({process.ExitCode}):\n{await output}\n{await error}");
         }
     }
 
