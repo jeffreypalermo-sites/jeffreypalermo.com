@@ -35,6 +35,7 @@ public sealed record ArchiveFilter
                 Taxonomies.Category => post.CategorySlugs.Contains(TermSlug),
                 Taxonomies.Tag => post.TagSlugs.Contains(TermSlug),
                 Taxonomies.Author => post.AuthorSlug == TermSlug,
+                Taxonomies.PostFormat => post.PostFormat == TermSlug,
                 _ => false,
             };
     }

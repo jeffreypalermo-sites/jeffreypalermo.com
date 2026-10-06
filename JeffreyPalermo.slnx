@@ -6,7 +6,13 @@
   <Folder Name="/src/Infrastructure/">
     <Project Path="src/Infrastructure/JeffreyPalermo.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/src/UI.Server/">
+    <Project Path="src/UI.Server/JeffreyPalermo.UI.Server.csproj" />
+  </Folder>
   <Folder Name="/tests/" />
+  <Folder Name="/tests/AcceptanceTests/">
+    <Project Path="tests/AcceptanceTests/JeffreyPalermo.AcceptanceTests.csproj" />
+  </Folder>
   <Folder Name="/tests/IntegrationTests/">
     <Project Path="tests/IntegrationTests/JeffreyPalermo.IntegrationTests.csproj" />
   </Folder>

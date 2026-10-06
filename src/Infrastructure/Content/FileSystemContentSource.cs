@@ -82,6 +82,7 @@ public sealed class FileSystemContentSource(ContentLayout layout, string version
             AuthorSlug = frontMatter.Author ?? throw new FormatException("author is required"),
             CategorySlugs = frontMatter.Categories,
             TagSlugs = frontMatter.Tags,
+            PostFormat = frontMatter.PostFormat,
             FeaturedMediaId = frontMatter.FeaturedMediaId,
             CommentsOpen = frontMatter.CommentsOpen,
         };

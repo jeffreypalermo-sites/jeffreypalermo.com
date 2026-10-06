@@ -243,28 +243,34 @@ It returns one of:
 - `Redirect(location, rule)`: 301
 - `Rewrite(path, rule)`: served internally without changing the URL
 - `Gone(rule)`: 410
+- `NotFound(rule)`: 404, for legacy URLs known to be dead (e.g. WordPress soft-404s)
 
 Every non-pass-through result carries the **rule name** that fired. It's recorded as a metric dimension, so the
 data shows which legacy behaviors are still being used.
 
-Rules, in precedence order:
+Rules, in precedence order (implemented in build step 2; every one has a unit test):
 
 | # | Rule | Example | Result |
 |---|---|---|---|
-| 1 | `host-www` | `www.jeffreypalermo.com/x` | 301 → `https://jeffreypalermo.com/x` |
-| 2 | `host-feeds` | `feeds.jeffreypalermo.com/jeffreypalermo` | 301 → `/feed/` |
-| 3 | `wordpress-system` | `/wp-admin/`, `/wp-login.php`, `/xmlrpc.php`, `/wp-json/…` | 410 |
-| 4 | `query-route` (on `/` only) | `?p=945`, `?page_id=`, `?attachment_id=`, `?feed=rss2`, `?m=200807`, `?cat=`, `?tag=`, `?author=` | 301 → canonical |
-| 5 | `query-search` | `/?s=onion` | rewrite → `/search?q=onion` |
-| 6 | `canonical` | `/2008/07/the-onion-architecture-part-1/?utm_source=…` | pass through (tracking query ignored) |
-| 7 | `trailing-slash` | `/2008/07/the-onion-architecture-part-1` | 301 → with slash |
-| 8 | `case` | `/2008/07/The-Onion-Architecture-Part-1/` | 301 → canonical |
-| 9 | `legacy-map` | `/blogs/jeffrey.palermo/archive/2005/09/13/131914.aspx`, `/files/media/…` | 301 → mapped target (curated `content/archive/legacy-redirects.json`) |
-| 10 | `graffiti-slug` | `/blog/getting-started-with-the-asp.net-mvc-framework/` | normalized slug match, else **unique** prefix match (WordPress's guesser) → 301 |
-| 11 | `post-subpath` | `/…/slug/amp/`, `/…/slug/trackback/`, `/…/slug/2/`, `/…/slug/attachment/x/` | 301 → post or attachment page; `/…/slug/feed/` passes through to the comments feed |
-| 12 | `top-level-slug` | `/the-onion-architecture-part-1-3/`, `/about/` | pass through (attachment or page); a post slug → 301 to the post |
-| 13 | `media-query` | `/wp-content/uploads/a.png?w=300` | pass through (the static file ignores Photon resize params) |
-| — | none | anything else | pass through, then routing 404s; logged with referrer |
+| 1 | `host-www`, `host-feeds` | `www.jeffreypalermo.com/x`, `feeds.jeffreypalermo.com/jeffreypalermo` | 301 → `https://jeffreypalermo.com/x`, `/feed/` |
+| 2 | `wordpress-system` | `/wp-admin/`, `/xmlrpc.php`, `/wp-json/…`, `/wp-content/plugins/…`, `/_static/…`, `/jetpack/v4/…` | 410 |
+| 3 | `query-p`, `query-page-id`, `query-attachment-id`, `query-feed`, `query-cat`, `query-tag`, `query-author`, `query-m`, `query-year`, `query-paged` (on `/` only) | `/?p=945`, `/?attachment_id=28`, `/?feed=rss2` | 301 → canonical; 404 when the id doesn't exist |
+| 4 | `query-search` | `/?s=onion` | rewrite → `/search/?q=onion` (URL unchanged) |
+| 5 | `index-php` | `/index.php` | 301 → `/` |
+| 6 | `media` | `/wp-content/uploads/a.png?w=300` | pass through (static files ignore Photon resize params) |
+| 7 | `canonical` | posts, pages, attachments, archives, term archives, feeds, sitemaps | pass through (tracking query ignored) |
+| 8 | `trailing-slash` | `/2008/07/the-onion-architecture-part-1` | 301 → with slash (one hop, straight to the final URL) |
+| 9 | `case` | `/2008/07/The-Onion-Architecture-Part-1/` | 301 → canonical |
+| 10 | `legacy-map` | curated `content/archive/legacy-redirects.json` | 301 → mapped target |
+| 11 | `graffiti-files` | `/files/media/…` (WordPress soft-404s) | 404 unless mapped |
+| 12 | `page-one`, `sitemap-alias` | `/page/1/`, `/sitemap.xml` | 301 → `/`, `/wp-sitemap.xml` |
+| 13 | `graffiti-index`, `graffiti-feed`, `graffiti-slug`, `graffiti-archive` | `/blog/`, `/blog/?p=2`, `/blog/feed/`, `/blog/{slug}/`, `/archive/?year=2008&month=7` | 301 → `/`, `/page/2/`, `/feed/`, the post, `/2008/07/` |
+| 14 | `post-subpath`, `post-feed-alias` | `/…/slug/amp/`, `/…/slug/110/`, `/…/slug/feed/rss2/` | 301 → the post or its feed |
+| 15 | `term-subpath` | `/tag/onion-architecture/86` | 301 → the term archive |
+| 16 | `feed-alias` | `/feed/rss/`, `/feed/rdf/`, `/pwp/feed/` | 301 → `/feed/` |
+| 17 | `junk-root` | `/,` | 301 → `/` |
+| 18 | `slug-guess` | `/contact/`, `/pwp/{slug}/`, `/2008/07/the` | WordPress's 404 guesser: last segment as an exact slug, else a prefix of ≥ 3 characters; within the URL's month first; ties go to the oldest post |
+| — | `none` | anything else | pass through, then routing 404s |
 
 The WordPress-era behavior for case variants and query-string archives was to answer 200 at the alias. Answering a
 single 301 to the canonical URL is better for SEO, and the contract rules count it as preserved.
@@ -426,10 +432,15 @@ Each step is one PR that meets the Definition of Done.
 | Community Server `.aspx` URLs (already 404) | 64 in contract | Map to posts by title using Wayback captures, into `legacy-redirects.json` |
 | Graffiti `/blog/` slugs WordPress fails to guess | 63 | Prefix-match rule plus curated map entries |
 
-## 13. Open questions
+## 13. Decisions and open questions
 
-- **New comments:** giscus (GitHub Discussions), a store-backed form (triggers the database ADR), or comments
-  closed with the archive shown. Recommendation: closed at launch; revisit with data.
+Decided 2026-10-06 (recommendations approved):
+- **New comments: closed at launch.** The 2,708 archived comments are shown read-only. Revisit with data; giscus or a
+  store-backed form (which triggers the database ADR) are the options.
+- **Azure region: South Central US.**
+- **Repository home:** `jeffreypalermo-sites/jeffreypalermo.com`.
+
+Open:
 - **Newsletter:** an external provider's embed vs our own signup endpoint (would trigger the database ADR).
 - **Search quality:** the in-memory index is enough for 966 posts. Azure AI Search arrives with "ask the archive".
-- **Public repo:** making the repo public is what makes it a showcase. Nothing in it is secret by design.
+- **Public repo:** still private. Making it public is what makes it a showcase, and nothing in it is secret by design.

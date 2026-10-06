@@ -71,6 +71,7 @@ public sealed partial class WordPressConverter
                 Author = isPage ? null : authorSlugs[Int(post, "author")],
                 Categories = Ids(post, "categories").Select(id => categorySlugs[id]).ToList(),
                 Tags = Ids(post, "tags").Select(id => tagSlugs[id]).ToList(),
+                PostFormat = PostFormatOf(post),
                 Excerpt = isPage ? null : PlainText(Rendered(post, "excerpt")),
                 FeaturedMediaId = Int(post, "featured_media") is var featured and > 0 ? featured : null,
                 CommentsOpen = Str(post, "comment_status") == "open",
@@ -139,6 +140,8 @@ public sealed partial class WordPressConverter
         var terms = categories.Select(c => Term(c, Taxonomies.Category))
             .Concat(tags.Select(t => Term(t, Taxonomies.Tag)))
             .Concat(authorTerms.Select(a => a with { Count = postsByAuthor.GetValueOrDefault(a.Id) }))
+            .Concat(posts.Select(PostFormatOf).OfType<string>().CountBy(f => f).OrderBy(f => f.Key, StringComparer.Ordinal)
+                .Select((f, i) => new Term(i + 1, Taxonomies.PostFormat, f.Key, CultureInfo.InvariantCulture.TextInfo.ToTitleCase(f.Key), f.Value)))
             .ToList();
         await WriteJsonAsync(layout.TermsFile, terms, cancellationToken).ConfigureAwait(false);
 
@@ -148,6 +151,9 @@ public sealed partial class WordPressConverter
 
         return new ConversionSummary(posts.Count, pages.Count, commentCount, attachments.Count, terms.Count, uploadList.Count);
     }
+
+    // WordPress exposes formats only as a post field; the archive lives at /type/{format}/. Standard posts have none.
+    private static string? PostFormatOf(JsonNode post) => Str(post, "format") is { Length: > 0 } format && format != "standard" ? format : null;
 
     private static Term Term(JsonNode node, string taxonomy) =>
         new(Int(node, "id"), taxonomy, Str(node, "slug"), WebUtility.HtmlDecode(Str(node, "name")), Int(node, "count"));

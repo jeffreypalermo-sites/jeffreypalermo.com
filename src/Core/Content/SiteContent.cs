@@ -39,17 +39,17 @@ public sealed class SiteContent
         Attachments = attachments;
         Terms = terms;
 
-        _postsByPath = posts.ToDictionary(p => p.Permalink.Path, StringComparer.Ordinal);
-        _postsByPathIgnoreCase = posts.ToDictionary(p => p.Permalink.Path, StringComparer.OrdinalIgnoreCase);
+        _postsByPath = posts.ToDictionary(p => UrlPath.Decode(p.Permalink.Path), StringComparer.Ordinal);
+        _postsByPathIgnoreCase = posts.ToDictionary(p => UrlPath.Decode(p.Permalink.Path), StringComparer.OrdinalIgnoreCase);
         _postsByWpId = posts.Where(p => p.WpId is not null).ToDictionary(p => p.WpId!.Value);
         _postsByNormalizedSlug = posts.ToLookup(p => Slug.Normalize(p.Slug), StringComparer.Ordinal);
-        _pagesByPath = pages.ToDictionary(p => p.Path, StringComparer.OrdinalIgnoreCase);
+        _pagesByPath = pages.ToDictionary(p => UrlPath.Decode(p.Path), StringComparer.OrdinalIgnoreCase);
         _pagesByWpId = pages.Where(p => p.WpId is not null).ToDictionary(p => p.WpId!.Value);
-        _attachmentsByPath = attachments.ToDictionary(a => a.Permalink, StringComparer.OrdinalIgnoreCase);
+        _attachmentsByPath = attachments.ToDictionary(a => UrlPath.Decode(a.Permalink), StringComparer.OrdinalIgnoreCase);
         _attachmentsById = attachments.ToDictionary(a => a.Id);
         _termsBySlug = terms.ToDictionary(t => (t.Taxonomy, t.Slug));
         _termsById = terms.ToDictionary(t => (t.Taxonomy, t.Id));
-        _legacyRedirects = legacyRedirects.ToDictionary(r => r.From, r => r.To, StringComparer.OrdinalIgnoreCase);
+        _legacyRedirects = legacyRedirects.ToDictionary(r => UrlPath.Decode(r.From), r => r.To, StringComparer.OrdinalIgnoreCase);
     }
 
     /// <summary>Identifies this content snapshot (the git commit in production); used for ETags.</summary>
@@ -87,10 +87,11 @@ public sealed class SiteContent
         return new SiteContent(version, postList, pageList, attachmentList, termList, redirectList);
     }
 
-    public Post? FindPost(string path) => _postsByPath.GetValueOrDefault(path);
+    /// <summary>Exact permalink lookup. Percent-encoding is ignored (<c>%e5</c> = <c>%E5</c> = the raw character); letter case is not.</summary>
+    public Post? FindPost(string path) => _postsByPath.GetValueOrDefault(UrlPath.Decode(path));
 
     /// <summary>Case-insensitive lookup, for redirecting case variants to the canonical permalink.</summary>
-    public Post? FindPostIgnoreCase(string path) => _postsByPathIgnoreCase.GetValueOrDefault(path);
+    public Post? FindPostIgnoreCase(string path) => _postsByPathIgnoreCase.GetValueOrDefault(UrlPath.Decode(path));
 
     public Post? FindPostByWpId(int wpId) => _postsByWpId.GetValueOrDefault(wpId);
 
@@ -106,11 +107,13 @@ public sealed class SiteContent
             : [.. Posts.Where(p => Slug.Normalize(p.Slug).StartsWith(normalized, StringComparison.Ordinal))];
     }
 
-    public Page? FindPage(string path) => _pagesByPath.GetValueOrDefault(path);
+    /// <summary>Case-insensitive; compare the result's <see cref="Page.Path"/> to detect a non-canonical request.</summary>
+    public Page? FindPage(string path) => _pagesByPath.GetValueOrDefault(UrlPath.Decode(path));
 
     public Page? FindPageByWpId(int wpId) => _pagesByWpId.GetValueOrDefault(wpId);
 
-    public Attachment? FindAttachment(string path) => _attachmentsByPath.GetValueOrDefault(path);
+    /// <summary>Case-insensitive; compare the result's permalink to detect a non-canonical request.</summary>
+    public Attachment? FindAttachment(string path) => _attachmentsByPath.GetValueOrDefault(UrlPath.Decode(path));
 
     public Attachment? FindAttachmentById(int id) => _attachmentsById.GetValueOrDefault(id);
 
@@ -118,7 +121,7 @@ public sealed class SiteContent
 
     public Term? FindTermById(string taxonomy, int id) => _termsById.GetValueOrDefault((taxonomy, id));
 
-    public string? FindLegacyRedirect(string path) => _legacyRedirects.GetValueOrDefault(path);
+    public string? FindLegacyRedirect(string path) => _legacyRedirects.GetValueOrDefault(UrlPath.Decode(path));
 
     /// <summary>One page of visible posts matching the filter, newest first.</summary>
     public PagedList<Post> Published(DateTime utcNow, ArchiveFilter filter, int page)
@@ -137,7 +140,7 @@ public sealed class SiteContent
         void Duplicates<T, TKey>(IEnumerable<T> items, Func<T, TKey> key, IEqualityComparer<TKey>? comparer, Func<TKey, string> describe) =>
             errors.AddRange(items.GroupBy(key, comparer).Where(g => g.Count() > 1).Select(g => describe(g.Key)));
 
-        Duplicates(posts, p => p.Permalink.Path, StringComparer.OrdinalIgnoreCase, k => $"{k}: more than one post has this permalink (ignoring case)");
+        Duplicates(posts, p => UrlPath.Decode(p.Permalink.Path), StringComparer.OrdinalIgnoreCase, k => $"{k}: more than one post has this permalink (ignoring case)");
         Duplicates(
             posts.Where(p => p.WpId is not null).Select(p => p.WpId!.Value).Concat(pages.Where(p => p.WpId is not null).Select(p => p.WpId!.Value)),
             id => id,
@@ -152,9 +155,9 @@ public sealed class SiteContent
         Duplicates(redirects, r => r.From, StringComparer.OrdinalIgnoreCase, k => $"legacy redirect {k}: listed more than once");
 
         var termKeys = terms.Select(t => (t.Taxonomy, t.Slug)).ToHashSet();
-        var postPaths = posts.Select(p => p.Permalink.Path).ToHashSet(StringComparer.OrdinalIgnoreCase);
-        var pagePaths = pages.Select(p => p.Path).ToHashSet(StringComparer.OrdinalIgnoreCase);
-        var attachmentPaths = attachments.Select(a => a.Permalink).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var postPaths = posts.Select(p => UrlPath.Decode(p.Permalink.Path)).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var pagePaths = pages.Select(p => UrlPath.Decode(p.Path)).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var attachmentPaths = attachments.Select(a => UrlPath.Decode(a.Permalink)).ToHashSet(StringComparer.OrdinalIgnoreCase);
         var postAndPageIds = posts.Select(p => p.WpId).Concat(pages.Select(p => p.WpId)).OfType<int>().ToHashSet();
 
         foreach (var post in posts)
@@ -172,6 +175,11 @@ public sealed class SiteContent
 
             errors.AddRange(post.CategorySlugs.Where(s => !termKeys.Contains((Taxonomies.Category, s))).Select(s => $"{where}: unknown category '{s}'"));
             errors.AddRange(post.TagSlugs.Where(s => !termKeys.Contains((Taxonomies.Tag, s))).Select(s => $"{where}: unknown tag '{s}'"));
+            if (post.PostFormat is { } format && !termKeys.Contains((Taxonomies.PostFormat, format)))
+            {
+                errors.Add($"{where}: unknown post format '{format}'");
+            }
+
             if (!termKeys.Contains((Taxonomies.Author, post.AuthorSlug)))
             {
                 errors.Add($"{where}: unknown author '{post.AuthorSlug}'");
@@ -203,7 +211,7 @@ public sealed class SiteContent
                 errors.Add($"attachment {attachment.Id}: permalink '{attachment.Permalink}' must start and end with '/'");
             }
 
-            if (postPaths.Contains(attachment.Permalink) || pagePaths.Contains(attachment.Permalink))
+            if (postPaths.Contains(UrlPath.Decode(attachment.Permalink)) || pagePaths.Contains(UrlPath.Decode(attachment.Permalink)))
             {
                 errors.Add($"{attachment.Permalink}: attachment permalink collides with a post or page");
             }
@@ -221,14 +229,16 @@ public sealed class SiteContent
 
         foreach (var redirect in redirects)
         {
-            if (postPaths.Contains(redirect.From) || pagePaths.Contains(redirect.From) || attachmentPaths.Contains(redirect.From))
+            var from = UrlPath.Decode(redirect.From);
+            var to = UrlPath.Decode(redirect.To);
+            if (postPaths.Contains(from) || pagePaths.Contains(from) || attachmentPaths.Contains(from))
             {
                 errors.Add($"legacy redirect {redirect.From}: would shadow live content at the same path");
             }
 
-            var knownTarget = postPaths.Contains(redirect.To)
-                || pagePaths.Contains(redirect.To)
-                || attachmentPaths.Contains(redirect.To)
+            var knownTarget = postPaths.Contains(to)
+                || pagePaths.Contains(to)
+                || attachmentPaths.Contains(to)
                 || redirect.To.StartsWith(UploadsPrefix, StringComparison.OrdinalIgnoreCase);
             if (!knownTarget)
             {

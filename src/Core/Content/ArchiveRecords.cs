@@ -33,4 +33,5 @@ public static class Taxonomies
     public const string Category = "category";
     public const string Tag = "post_tag";
     public const string Author = "author";
+    public const string PostFormat = "post_format";
 }

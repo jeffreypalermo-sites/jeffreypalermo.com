@@ -14,10 +14,13 @@ impossible to reason about.
 ## Decision
 
 - Implement resolution as a pure function in Core: `LegacyUrlResolver.Resolve(UrlRequest, SiteContent) →
-  UrlResolution`, where `UrlResolution` is `PassThrough | Redirect(301) | Rewrite | Gone(410)`.
-- Rules are an ordered list with names: `host-www`, `host-feeds`, `wordpress-system`, `query-route`, `query-search`,
-  `canonical`, `trailing-slash`, `case`, `legacy-map`, `graffiti-slug`, `post-subpath`, `top-level-slug`,
-  `media-query`. The order is the precedence.
+  UrlResolution`, where `UrlResolution` is `PassThrough | Redirect(301) | Rewrite | Gone(410) | NotFound(404)`.
+- Rules are an ordered list with names (`host-www`, `wordpress-system`, `query-p`, `trailing-slash`, `case`,
+  `legacy-map`, `graffiti-slug`, `slug-guess`, …). The order is the precedence; the full table is in
+  [docs/architecture §6](../architecture/README.md).
+- WordPress's 404 guesser is reproduced deliberately: the last path segment as an exact slug, else a prefix of at
+  least 3 characters, within the URL's month first, with ties going to the oldest post. Where WordPress's choice was
+  arbitrary, the new answer is pinned in `tests/contract/exceptions.tsv` with a reason.
 - `LegacyUrlMiddleware` in UI.Server runs first and only translates the result into HTTP.
 - Curated mappings that rules can't derive (Community Server `.aspx`, `/files/media/…`) live in
   `content/archive/legacy-redirects.json`, validated by the `SiteContent` invariants.

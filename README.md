@@ -10,7 +10,8 @@ See [MODERNIZATION-PLAN.md](MODERNIZATION-PLAN.md) for the analysis, options con
 | Path | What |
 |---|---|
 | `src/Core` | Domain: content records, legacy URL classification, slug normalization. No dependencies. |
-| `src/Infrastructure` | Front matter (YAML) files, content layout on disk, URL contract file format. |
+| `src/Infrastructure` | Loads `content/` into the domain (front matter, Markdown, archives); URL contract file format. |
+| `src/UI.Server` | ASP.NET Core host: legacy-URL middleware, pages, feeds, sitemaps, composition root. |
 | `tools/WpMigrator` | One-time WordPress.com → git migration (re-runnable). |
 | `tools/UrlContract` | Captures how the live WordPress site answers every known URL. |
 | `content/` | Posts, pages, comments, archive metadata, and uploads. **Publishing = merging a PR.** |
@@ -40,6 +41,15 @@ dotnet run --project tools/UrlContract -- capture https://jeffreypalermo.com mig
 
 `migration/uploads-manifest.missing.txt` lists images that are already broken on the live site (lost in a 2018 import);
 they are candidates for recovery from the Wayback Machine.
+
+## Run the site locally
+
+```bash
+dotnet run --project src/UI.Server
+```
+
+The Development settings point `Site:ContentPath` at `../../content`. Build step 2 renders plain HTML; the designed
+Blazor pages arrive in step 3.
 
 ## Build and test
 

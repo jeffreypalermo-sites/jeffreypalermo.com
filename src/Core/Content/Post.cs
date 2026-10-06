@@ -23,6 +23,9 @@ public sealed record Post
     public required string AuthorSlug { get; init; }
     public IReadOnlyList<string> CategorySlugs { get; init; } = [];
     public IReadOnlyList<string> TagSlugs { get; init; } = [];
+
+    /// <summary>WordPress post format (e.g. <c>video</c>, archived at <c>/type/video/</c>); null for standard posts.</summary>
+    public string? PostFormat { get; init; }
     public IReadOnlyList<Comment> Comments { get; init; } = [];
     public int? FeaturedMediaId { get; init; }
     public bool CommentsOpen { get; init; }

@@ -24,6 +24,9 @@ public sealed record PostFrontMatter
     public string? Author { get; init; }
     public IReadOnlyList<string> Categories { get; init; } = [];
     public IReadOnlyList<string> Tags { get; init; } = [];
+
+    /// <summary>WordPress post format slug (e.g. <c>video</c>); omitted for standard posts.</summary>
+    public string? PostFormat { get; init; }
     public string? Excerpt { get; init; }
     public int? FeaturedMediaId { get; init; }
     public bool CommentsOpen { get; init; }

@@ -1,0 +1,15 @@
+# Reviewed deviations from WordPress. Each states the exact answer the new site gives instead, and why.
+# Columns: url (exactly as in url-contract.tsv), final_status, final_path ("-" = any), reason.
+url	final_status	final_path	reason
+/blog/	200	/	Graffiti blog index: WordPress guessed a random 2004 post; the home page is what the link meant.
+/blog/?p=2	200	/page/2/	Graffiti blog index page 2: WordPress guessed a random 2004 post; the paged home page is what the link meant.
+/blog/the-onion-architecture-part-1/[2	200	/2008/07/the-onion-architecture-part-1/	A mangled link to Onion part 1; WordPress guessed from the junk "[2" segment and landed on an unrelated 2007 post.
+/tag/onion-architecture/86	200	/tag/onion-architecture/	Junk after a tag archive; WordPress guessed a post, the tag archive is what the link meant.
+/blog/the	200	/2004/06/there-is-no-performance-different-between-code-behind-and-in-line-code-level-200/	Truncated fragment matching 19 posts; WordPress picked one arbitrarily, the oldest match is the documented tie-break.
+/blog/the-	200	/2004/06/there-is-no-performance-different-between-code-behind-and-in-line-code-level-200/	Truncated fragment matching 19 posts; WordPress picked one arbitrarily, the oldest match is the documented tie-break.
+/blogs/scott.bellware/	200	/2005/01/scott-bellware-does-it-again/	Another blogger's Community Server path; both candidates mention Scott Bellware, the oldest match is the documented tie-break.
+/1/	404	-	One-character fragment; WordPress guessed an unrelated post. Fragments under 3 characters are not guessed.
+/e	404	-	One-character fragment; WordPress guessed one of 29 matching posts arbitrarily. Fragments under 3 characters are not guessed.
+/f/	404	-	One-character fragment; WordPress guessed one of 17 matching posts arbitrarily. Fragments under 3 characters are not guessed.
+/blog/t	404	-	One-character fragment; WordPress guessed one of 88 matching posts arbitrarily. Fragments under 3 characters are not guessed.
+/blog/co	404	-	Two-character fragment; WordPress guessed one of 35 matching posts arbitrarily. Fragments under 3 characters are not guessed.
