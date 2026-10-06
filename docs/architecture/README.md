@@ -336,9 +336,9 @@ templates and the desired state are in the system repository `jeffreypalermo-sit
 
 ```mermaid
 flowchart TB
-    dns["Azure DNS: jeffreypalermo.com (planned, §11 step 8)<br/>A @ → environment IP · CNAME www, feeds → prod app<br/>MX → GoDaddy · SPF · DMARC"]
-    subgraph apps["rg-jpcom-apps (Central US)"]
-        subgraph env["cae-jpcom: the system's one Container Apps environment (consumption)"]
+    dns["Azure DNS: jeffreypalermo.com (planned, §11 step 8)<br/>the custom domain needs a front door or a standard environment (ADR-0006)<br/>MX → GoDaddy · SPF · DMARC"]
+    subgraph apps["rg-jpcom-apps (East US 2)"]
+        subgraph env["cae-jpcom: the system's one Container Apps environment (express)"]
             tdd["ca-jpcom-tdd-web"]
             uat["ca-jpcom-uat-web"]
             prod["ca-jpcom-prod-web"]
@@ -367,13 +367,13 @@ flowchart TB
 
 | Resource | Settings | Notes |
 |---|---|---|
-| Container Apps environment `cae-jpcom` | consumption; static IP; resource group `rg-jpcom-apps`; Central US | Created once by the kit's seed, not by an environment. One slot of the subscription's two per region. Prod shares this runtime with nonprod (ADR-0006) |
+| Container Apps environment `cae-jpcom` | Azure Container Apps express; no static IP; resource group `rg-jpcom-apps`; East US 2 | Created once by the kit's seed, not by an environment. Counts against the express quota (200 per region), not the standard one. Prod shares this runtime with nonprod (ADR-0006) |
 | Container apps `ca-jpcom-<env>-web` | ingress on 8080; health path `/_health/ready`; scale to zero (ADR-0006) | One per environment: `tdd`, `uat`, `prod`. Each belongs to its environment's deployment stack, in its tier's resource group, and joins `cae-jpcom` |
 | Deployment stacks `stack-jpcom-<env>` | deny settings | Only the tier's deploy identity changes an environment's resources. A nightly what-if reports drift from `jpcom-system` |
 | Container Registry | Basic | Images `jpcom/web:<version>`. Pulled by each environment's runtime identity, so no registry password exists. A released tag is write- and delete-locked |
 | Identities | user-assigned, federated (GitHub OIDC, Octopus OIDC) | Push: `id-jpcom-acr-push`. Deploy: `id-jpcom-deploy-nonprod`, `id-jpcom-deploy-prod`. Read-only previews and drift: `id-jpcom-plan`. No client secret |
 | Log Analytics + App Insights | the system's `telemetry` capability, per environment | Sets `APPLICATIONINSIGHTS_CONNECTION_STRING` for the app's OpenTelemetry export (build step 5) |
-| Azure DNS zone, managed certificates | not in the kit yet | The apex needs an A record to the static IP of `cae-jpcom` plus a TXT `asuid` record; `www`/`feeds` need CNAMEs to the prod app. Moves DNS off WordPress.com nameservers, keeps GoDaddy MX, fixes SPF, adds DMARC |
+| Azure DNS zone, custom domain | not in the kit yet; open (ADR-0006) | An express environment takes no custom domain or certificate, so `jeffreypalermo.com`, `www` and `feeds` can't be bound to the prod app. They need a front door in front of prod, or prod in a standard environment. The DNS move itself is unchanged: off WordPress.com nameservers, keep GoDaddy MX, fix SPF, add DMARC |
 
 There is no SQL server, no SQL secret and no database runbook: the system has no database (ADR-0002).
 
@@ -382,9 +382,9 @@ subscription's monthly free grant (180,000 vCPU-seconds, 360,000 GiB-seconds, 2M
 the subscription share. A warm production replica, once the kit can set one per environment, uses that grant all
 month.
 
-**Deferred: Azure Front Door.** Add it when traffic, WAF, or global latency justifies ~$35+/month. Because managed
-certificates require direct DNS to the app, adding Front Door later moves the certificates to Front Door. That
-switch is planned for, not a surprise.
+**Azure Front Door** was deferred until traffic, WAF, or global latency justified ~$35+/month. On an express
+environment it is now one of the two ways to serve the custom domain at all; the other is a standard environment
+for prod. That choice is open (ADR-0006) and comes before any DNS work.
 
 ## 9. Delivery pipeline (GitOps)
 
@@ -488,8 +488,9 @@ Each step is one PR that meets the Definition of Done.
 Decided 2026-10-06 (recommendations approved):
 - **New comments: closed at launch.** The 2,708 archived comments are shown read-only. Revisit with data; giscus or a
   store-backed form (which triggers the database ADR) are the options.
-- **Azure region: Central US** (changed from South Central US, whose two Container Apps environment slots are in
-  use).
+- **Azure region: East US 2, on an Azure Container Apps express environment.** Central US could not create a
+  standard environment on 2026-10-06 and the subscription's standard quota was used up, so the system runs on
+  express (ADR-0006).
 - **Delivery:** the system `jpcom` of the demo-environment-kit, with one Container Apps environment for all three
   environments ([ADR-0006](../adr/0006-deliver-through-the-demo-environment-kit.md)).
 - **Repository home:** `jeffreypalermo-sites/jeffreypalermo.com`, public.
@@ -497,6 +498,8 @@ Decided 2026-10-06 (recommendations approved):
 Open:
 - **Newsletter:** an external provider's embed vs our own signup endpoint (would trigger the database ADR).
 - **Search quality:** the in-memory index is enough for 966 posts. Azure AI Search arrives with "ask the archive".
+- **The custom domain for prod:** express takes none. A front door, or a standard environment for prod, before any
+  DNS work (ADR-0006).
 - **A warm production replica:** the site launches with scale to zero. The kit's `alwaysOn` pins exactly one
   replica, so a per-environment minimum is asked of the kit (ADR-0006).
 - **Contract replay as a step of each deployment:** it runs nightly today; the deployment step is open work in the
