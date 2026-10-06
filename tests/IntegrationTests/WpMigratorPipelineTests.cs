@@ -38,7 +38,7 @@ public sealed class WpMigratorPipelineTests : IDisposable
         Assert.Contains("/wp-json/wp/v2/posts?per_page=100&page=2&orderby=id&order=asc", handler.Requests);
 
         // convert: post file with front matter, cleaned body, and rewritten Graffiti-era link.
-        Assert.Equal(new ConversionSummary(2, 1, 2, 2, 3, 4), conversion);
+        Assert.Equal(new ConversionSummary(2, 1, 2, 2, 3, 6), conversion);
         var onion = Layout.PostFile("/2008/07/the-onion-architecture-part-1/", ContentFormat.Html);
         var (metadata, body) = FrontMatterDocument.Read<PostFrontMatter>(await File.ReadAllTextAsync(onion));
         Assert.Equal(945, metadata.WpId);
@@ -64,8 +64,8 @@ public sealed class WpMigratorPipelineTests : IDisposable
         Assert.Contains("\"slug\": \"onion-architecture\"", await File.ReadAllTextAsync(Layout.TermsFile), StringComparison.Ordinal);
 
         // media: downloaded (after one throttled retry), and a genuinely missing file is reported, not fatal.
-        Assert.Equal(3, media.Downloaded);
-        Assert.Equal(["/wp-content/uploads/2018/07/lost.net.png"], media.Missing);
+        Assert.Equal(4, media.Downloaded);
+        Assert.Equal(["/wp-content/uploads/2018/07/lost.net.png", "/wp-content/uploads/external/gone.test/a.png"], media.Missing);
         Assert.Equal([1, 2, 3], await File.ReadAllBytesAsync(Layout.UploadFile("/wp-content/uploads/2018/06/onion.png")));
 
         // off-site media (VideoPress) is localized under uploads/external/ and fetched from its original host.
@@ -73,6 +73,23 @@ public sealed class WpMigratorPipelineTests : IDisposable
         Assert.Contains($"\"source_path\": \"{video}\"", attachments, StringComparison.Ordinal);
         Assert.Contains($"{video}\thttps://videos.files.wordpress.com/HMwzTDe7/episode-001.mp4", await File.ReadAllLinesAsync(Manifest));
         Assert.Equal([9, 9], await File.ReadAllBytesAsync(Layout.UploadFile(video)));
+
+        // an image hotlinked through Photon is localized too: the post points at the local copy, and the manifest
+        // lists Photon, the original host and the Wayback Machine. Here Photon no longer has it (400) and the host
+        // answers with a page (a soft 404), so the copy comes from the Wayback Machine.
+        const string badge = "/wp-content/uploads/external/partywithpalermo.test/images/badge.jpg";
+        var partTwo = await File.ReadAllTextAsync(Layout.PostFile("/2008/07/the-onion-architecture-part-2/", ContentFormat.Html));
+        Assert.Contains($"<img src=\"{badge}\"><img src=\"/wp-content/uploads/external/gone.test/a.png\">", partTwo, StringComparison.Ordinal);
+        Assert.Contains(
+            $"{badge}\thttps://i0.wp.com/partywithpalermo.test/images/badge.jpg\thttp://partywithpalermo.test/images/badge.jpg\thttps://web.archive.org/web/2id_/http://partywithpalermo.test/images/badge.jpg",
+            await File.ReadAllLinesAsync(Manifest));
+        Assert.Equal([7, 7, 7], await File.ReadAllBytesAsync(Layout.UploadFile(badge)));
+        Assert.Equal(
+            ["/partywithpalermo.test/images/badge.jpg", "/images/badge.jpg", "/web/2id_/http://partywithpalermo.test/images/badge.jpg"],
+            handler.Requests.Where(request => request.Contains("badge.jpg", StringComparison.Ordinal)));
+
+        // an image nobody has any more (Photon 400, a host that no longer resolves, no capture) is reported missing.
+        Assert.False(File.Exists(Layout.UploadFile("/wp-content/uploads/external/gone.test/a.png")));
     }
 
     [Fact]
@@ -97,6 +114,20 @@ public sealed class WpMigratorPipelineTests : IDisposable
     {
         var path = request.RequestUri!.AbsolutePath;
         var query = request.RequestUri.Query;
+        switch (request.RequestUri.Host)
+        {
+            case "i0.wp.com":
+                return StubHttpHandler.Status(HttpStatusCode.BadRequest);
+            case "partywithpalermo.test":
+                return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("<html>Not found</html>", System.Text.Encoding.UTF8, "text/html") };
+            case "gone.test":
+                throw new HttpRequestException("Name or service not known (gone.test:80)");
+            case "web.archive.org" when path == "/web/2id_/http://partywithpalermo.test/images/badge.jpg":
+                return new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent([7, 7, 7]) { Headers = { ContentType = new("image/jpeg") } } };
+            case "web.archive.org":
+                return StubHttpHandler.Status(HttpStatusCode.NotFound);
+        }
+
         return path switch
         {
             "/wp-json/wp/v2/posts" when query.Contains("page=1&", StringComparison.Ordinal) => StubHttpHandler.Json(PostsPage1, totalPages: 2),
@@ -126,7 +157,8 @@ public sealed class WpMigratorPipelineTests : IDisposable
     private const string PostsPage2 = """
         [{"id":950,"type":"post","slug":"the-onion-architecture-part-2","link":"https://jeffreypalermo.test/2008/07/the-onion-architecture-part-2/",
           "date":"2008-07-30T08:14:37","date_gmt":"2008-07-30T13:14:37","modified":"2008-07-30T08:14:37",
-          "title":{"rendered":"The Onion Architecture : part 2"},"content":{"rendered":"<p>Part two.</p>"},
+          "title":{"rendered":"The Onion Architecture : part 2"},
+          "content":{"rendered":"<p>Part two.</p><p><img src=\"https://i0.wp.com/partywithpalermo.test/images/badge.jpg?w=776\"><img src=\"https://i0.wp.com/gone.test/a.png?w=10\"></p>"},
           "excerpt":{"rendered":""},"author":1,"categories":[1],"tags":[],"featured_media":0,"comment_status":"closed"}]
         """;
 

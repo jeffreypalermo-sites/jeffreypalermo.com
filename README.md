@@ -39,8 +39,13 @@ dotnet run --project tools/WpMigrator -- media https://jeffreypalermo.com conten
 dotnet run --project tools/UrlContract -- capture https://jeffreypalermo.com migration/raw tests/contract/url-contract.tsv
 ```
 
-`migration/uploads-manifest.missing.txt` lists images that are already broken on the live site (lost in a 2018 import);
-they are candidates for recovery from the Wayback Machine.
+`convert` also points every image a post loads from another host (most through WordPress.com's Photon CDN) at a local
+copy under `/wp-content/uploads/external/{host}{path}`. The manifest lists where `media` looks for each one, best
+source first: Photon's cache, the original host, then the Wayback Machine.
+
+`migration/uploads-manifest.missing.txt` lists the files no source has: 44 uploads already broken on the live site
+(lost in a 2018 import) and 67 images from hosts that are gone. `media` is re-runnable, so a file that turns up later
+is picked up by running it again.
 
 ## Run the site locally
 
