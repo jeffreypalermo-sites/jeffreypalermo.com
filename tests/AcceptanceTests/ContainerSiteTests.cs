@@ -129,6 +129,27 @@ public sealed partial class ContainerSiteTests(ContainerSite site, ITestOutputHe
         Assert.Contains($"FAIL {broken} (ready broken): the URL contract is broken", result.Output, StringComparison.Ordinal);
     }
 
+    /// <summary>The check the site's own <c>deploy/verify.ps1</c> runs after every deployment (ADR-0007).</summary>
+    [Fact]
+    public async Task TheDeploymentVerificationPassesForTheReleaseTheContainerRuns()
+    {
+        var result = await Command.TryRunAsync("pwsh", environment: null, "-NoProfile", "-File", TestSiteScript, "-BaseUrl", site.BaseAddress.ToString(), "-Version", site.Version, "-TimeoutSeconds", "60");
+
+        Assert.True(result.ExitCode == 0, $"{result.Output}\n{result.Error}");
+        Assert.Contains($"answers 'ready {site.Version}'", result.Output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task TheDeploymentVerificationFailsWhenAnotherReleaseIsRunning()
+    {
+        var result = await Command.TryRunAsync("pwsh", environment: null, "-NoProfile", "-File", TestSiteScript, "-BaseUrl", site.BaseAddress.ToString(), "-Version", "0.0.0-not-this-one", "-TimeoutSeconds", "1");
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Contains($"last: 200 'ready {site.Version}'", result.Output, StringComparison.Ordinal);
+    }
+
+    private static string TestSiteScript => Path.Join(PublishedSite.RepositoryRoot, "deploy", "test-site.ps1");
+
     private static string VerifyScript => Path.Join(PublishedSite.RepositoryRoot, "scripts", "verify-environments.sh");
 
     private static async Task ServeAsync(HttpListener listener, CancellationToken stop)

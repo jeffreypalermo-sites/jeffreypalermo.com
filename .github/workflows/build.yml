@@ -45,6 +45,13 @@ jobs:
       - name: Integration tests
         run: dotnet test tests/IntegrationTests --configuration Release --no-build --logger trx --results-directory TestResults
 
+      # The site's own infrastructure code (deploy/, ADR-0007) must compile without a warning before it is released.
+      - name: Compile the infrastructure code
+        run: |
+          set -euo pipefail
+          notices="$(az bicep build --file deploy/infra/main.bicep --stdout 2>&1 >/dev/null)"
+          if [ -n "$notices" ]; then echo "$notices"; exit 1; fi
+
       - name: Upload the test results
         if: always()
         uses: actions/upload-artifact@v7

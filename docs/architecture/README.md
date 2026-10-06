@@ -331,8 +331,10 @@ flowchart LR
 
 **Decisions: [ADR-0003](../adr/0003-azure-container-apps.md) (Azure Container Apps, consumption) and
 [ADR-0006](../adr/0006-deliver-through-the-demo-environment-kit.md) (the system `jpcom`, made with the
-demo-environment-kit, creates and owns every Azure resource).** This repository holds no infrastructure code. The
-templates and the desired state are in the system repository `jeffreypalermo-sites/jpcom-system`.
+demo-environment-kit, gives the pipeline, the identities and the registry) and
+[ADR-0007](../adr/0007-the-site-owns-its-runtime.md) (the site's own runtime is code in this repository).** The
+container app of each environment is `deploy/infra/main.bicep`, applied by `deploy/deploy.ps1`. The system repository
+`jeffreypalermo-sites/jpcom-system` holds the desired state: which release each environment runs.
 
 ```mermaid
 flowchart TB
@@ -368,7 +370,7 @@ flowchart TB
 | Resource | Settings | Notes |
 |---|---|---|
 | Container Apps environment `cae-jpcom` | Azure Container Apps express; no static IP; resource group `rg-jpcom-apps`; East US 2 | Created once by the kit's seed, not by an environment. Counts against the express quota (200 per region), not the standard one. Prod shares this runtime with nonprod (ADR-0006) |
-| Container apps `ca-jpcom-<env>-web` | ingress on 8080; health path `/_health/ready`; scale to zero (ADR-0006) | One per environment: `tdd`, `uat`, `prod`. Each belongs to its environment's deployment stack, in its tier's resource group, and joins `cae-jpcom` |
+| Container apps `ca-jpcom-<env>-web` | ingress on 8080; health path `/_health/ready`; scale to zero (ADR-0006) | One per environment: `tdd`, `uat`, `prod`. Each is this repository's `deploy/infra/main.bicep`, applied as the stack `stack-jpcom-<env>-web` in its tier's resource group by `deploy/deploy.ps1`, and joins `cae-jpcom` (ADR-0007) |
 | Deployment stacks `stack-jpcom-<env>` | deny settings | Only the tier's deploy identity changes an environment's resources. A nightly what-if reports drift from `jpcom-system` |
 | Container Registry | Basic | Images `jpcom/web:<version>`. Pulled by each environment's runtime identity, so no registry password exists. A released tag is write- and delete-locked |
 | Identities | user-assigned, federated (GitHub OIDC, Octopus OIDC) | Push: `id-jpcom-acr-push`. Deploy: `id-jpcom-deploy-nonprod`, `id-jpcom-deploy-prod`. Read-only previews and drift: `id-jpcom-plan`. No client secret |
@@ -416,8 +418,8 @@ flowchart LR
 | Step | What happens | Where |
 |---|---|---|
 | Build | Unit and integration tests. The image is built once from the `Dockerfile`, run as a container, and must pass the full-system tests (all 9,337 contract URLs over HTTP) before it's kept as the artifact `container-image`. `Build result` is the required check | `.github/workflows/build.yml`, this repository |
-| Release | After a green Build of `master`: that image goes to the registry as `jpcom/web:<version>`, its tag is locked, and release `<version>` of `jpcom-web` is created. Nothing is rebuilt | `release.yml`, added by the kit when it adopts this repository |
-| Deploy | "Pin version" commits the version to `jpcom-system`, "Update deployable" puts the image on the environment's container app and waits for the new revision, "Verify deployable" checks `/_health/ready`. "Revert pin" runs when a step fails | Octopus project `jpcom-web` |
+| Release | After a green Build of `master`: that image goes to the registry as `jpcom/web:<version>`, its tag is locked, the `deploy/` folder goes to the Octopus feed as the package `jpcom-web.<version>.zip`, and release `<version>` of `jpcom-web` is created. Nothing is rebuilt | `release.yml`, added by the kit when it adopts this repository |
+| Deploy | "Pin version" commits the version to `jpcom-system`, "Update deployable" runs this repository's `deploy/deploy.ps1` from the release's package (it applies the container app with the release's image), "Verify deployable" runs `deploy/verify.ps1` (`/_health/ready` must answer `ready <version>`). "Revert pin" runs when a step fails | Octopus project `jpcom-web`; the scripts are this repository's (ADR-0007) |
 | Promote | `tdd` deploys on its own. `uat` and `prod` each start with a sign-off | Octopus lifecycle |
 | Infrastructure | A pull request to `jpcom-system` runs `env-checks` and previews a what-if. A merge applies the Octopus configuration and releases `jpcom-system`, which applies and verifies each environment's stack through the same promotion | `jpcom-system` |
 
