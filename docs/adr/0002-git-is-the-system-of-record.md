@@ -25,7 +25,8 @@ are an archive, and there's no admin UI or signup form.
 - The build copies `content/` into the container image. At startup, `FileSystemContentSource` (Infrastructure) loads it
   into the immutable `SiteContent` aggregate (Core), which validates every invariant and refuses to start on invalid
   content. CI loads the same tree in an integration test, so invalid content fails the PR instead.
-- Media ships in the image and is served as static files. Every image the site shows is self-hosted, including
+- Media ships in the image and is served as static files. Large binaries (video, PDF, zip) are stored with Git LFS
+  so the repository stays fast to clone; the build checks them out like any other file. Every image the site shows is self-hosted, including
   images currently hotlinked from WordPress.com Photon or third-party hosts.
 - There's no database.
 

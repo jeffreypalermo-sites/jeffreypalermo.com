@@ -25,6 +25,10 @@ See [MODERNIZATION-PLAN.md](MODERNIZATION-PLAN.md) for the analysis, options con
 because 2004-era and Word-pasted markup does not survive Markdown conversion faithfully. New posts are Markdown.
 Comments live beside their post as `{slug}.comments.json` and keep their WordPress ids, so `#comment-{id}` links still work.
 
+Required front matter for a post: `title`, `slug`, `permalink` (`/yyyy/mm/slug/`, matching the file path and `date`),
+`date` (local), `date_utc`, and `author`. Content that breaks a rule fails the build with every problem listed
+(see `SiteContent` in `src/Core`). Large binaries under `content/uploads/` (video, PDF, zip) are stored with Git LFS.
+
 ## Migration (re-runnable)
 
 ```bash

@@ -7,6 +7,7 @@ date: 2004-11-12T00:26:00
 date_utc: 2004-11-12T00:26:00Z
 modified: 2004-11-12T00:26:00
 format: html
+author: jeffreypalermo
 excerpt: 'The CustomValidator control is really flexible. Here’s a quick example of validating that a checkbox is checked: <%@ Page language=”c#” Codebehind=”ValidateCheckbox.aspx.cs” AutoEventWireup=”false” Inherits=”WebApplication1.ValidateCheckbox” %><!DOCTYPE HTML PUBLIC “-//W3C//DTD HTML 4.0 Transitional//EN” ><HTML> <HEAD> function ValidateChecked(oSrc, args){ if(document.all[“”].checked == false){ alert(“Has to be checked.”); args.IsValid = false; } } </HEAD> <body> <form id=”Form1″ method=”post” runat=”server”> <asp:CustomValidator ClientValidationFunction=”ValidateChecked” Runat=”server” ID=”val” /> <asp:CheckBox ID=”chk” Runat=”server” /> <asp:Button ID=”btn” Runat=”server” Text=”Submit” /> </form> </body></HTML> And […]'
 comments_open: true
 ---
