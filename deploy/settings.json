@@ -1,0 +1,9 @@
+{
+  "containerAppsEnvironment": {
+    "resourceGroup": "rg-jpcom-apps",
+    "name": "cae-jpcom"
+  },
+  "pullIdentity": "id-jpcom-{environment}-app",
+  "port": 8080,
+  "healthPath": "/_health/ready"
+}

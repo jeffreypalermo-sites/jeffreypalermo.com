@@ -7,6 +7,7 @@
 | [0003](0003-azure-container-apps.md) | Host on Azure Container Apps | Accepted; delivery and hosting details superseded by 0006 |
 | [0004](0004-legacy-url-resolution-in-core.md) | Legacy URL resolution is domain logic, verified by the URL contract | Accepted |
 | [0005](0005-blazor-static-ssr.md) | Blazor static SSR, no client runtime | Accepted |
-| [0006](0006-deliver-through-the-demo-environment-kit.md) | Deliver through the demo-environment-kit GitOps system | Accepted |
+| [0006](0006-deliver-through-the-demo-environment-kit.md) | Deliver through the demo-environment-kit GitOps system | Accepted; who creates the site's runtime changed by 0007 |
+| [0007](0007-the-site-owns-its-runtime.md) | The site owns its runtime; the system gives it the pipeline | Accepted |
 
 The overall design is in [docs/architecture](../architecture/README.md).
