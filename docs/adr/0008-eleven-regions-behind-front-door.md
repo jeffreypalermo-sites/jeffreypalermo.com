@@ -61,5 +61,9 @@ made and carried out here, not in the delivery kit.
   deployment's validation counts an express environment against the subscription's limits for standard ones. They
   are therefore not part of the stack; a region removed from the settings leaves its empty environment behind
   until someone deletes it.
+- **A script the pipeline runs is run by the tests first.** The first deployment of this layout failed in `tdd`:
+  with no express environment yet, `deploy.ps1` read the count of an empty answer, on a line that only text-matching
+  tests had covered. `DeployScriptTests` and the `verify.ps1` tests now run both scripts with `tests/stubs/az` in
+  place of the Azure CLI. They prove the scripts' own logic; what Azure answers is still first seen in `tdd`.
 - **Not done here: the custom domain.** Production answers on its `azurefd.net` address. Binding
   `jeffreypalermo.com`, `www` and `feeds` to the Front Door endpoint, and the DNS move, wait for Jeffrey.

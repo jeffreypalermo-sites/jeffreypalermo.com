@@ -20,7 +20,11 @@
 param(
     [Parameter(Mandatory)] [string] $Environment,
     [Parameter(Mandatory)] [string] $Version,
-    [Parameter(Mandatory)] [string] $Context
+    [Parameter(Mandatory)] [string] $Context,
+    # How long a region may take to answer as the release, and how long the Front Door may. The pipeline passes
+    # neither.
+    [int] $TimeoutSeconds = 600,
+    [int] $FrontDoorTimeoutSeconds = 1800
 )
 
 Set-StrictMode -Version Latest
@@ -42,8 +46,8 @@ $testSite = Join-Path $PSScriptRoot 'test-site.ps1'
 $first = $true
 foreach ($region in $regions) {
     Write-Host "==> $($region.code) ($($region.location))"
-    if ($first) { & $testSite -BaseUrl $region.url -Version $Version }
-    else { & $testSite -BaseUrl $region.url -Version $Version -SkipContract }
+    if ($first) { & $testSite -BaseUrl $region.url -Version $Version -TimeoutSeconds $TimeoutSeconds }
+    else { & $testSite -BaseUrl $region.url -Version $Version -TimeoutSeconds $TimeoutSeconds -SkipContract }
     if ($LASTEXITCODE -ne 0) { exit 1 }
     $first = $false
 }
@@ -51,7 +55,7 @@ foreach ($region in $regions) {
 if ($frontDoorUrl) {
     Write-Host "==> Front Door"
     # Twice around the rotation, so no region still answers as an older release; up to 30 minutes for a new profile.
-    & $testSite -BaseUrl $frontDoorUrl -Version $Version -Consecutive ($regions.Count * 2) -TimeoutSeconds 1800
+    & $testSite -BaseUrl $frontDoorUrl -Version $Version -Consecutive ($regions.Count * 2) -TimeoutSeconds $FrontDoorTimeoutSeconds
     if ($LASTEXITCODE -ne 0) { exit 1 }
 }
 Write-Host "PASS $Environment runs release $Version in $($regions.Count) region(s)$(if ($frontDoorUrl) { " and through $frontDoorUrl" })"
