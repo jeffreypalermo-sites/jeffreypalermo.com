@@ -54,6 +54,9 @@ WordPress guesses are preserved on purpose through curated entries in `content/a
   ```
 
   It exits 1 on any violation.
+- **Every deployment:** the release's package carries the verifier and this contract; the site's `deploy/verify.ps1`
+  replays it against the environment right after `deploy.ps1`, and a violation fails the deployment
+  ([ADR-0007](../../docs/adr/0007-the-site-owns-its-runtime.md)).
 - **Every deployed environment, every night:** the workflow `Verify environments` runs
 
   ```bash

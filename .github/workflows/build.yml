@@ -112,6 +112,19 @@ jobs:
           name: test-results-full-system
           path: TestResults
 
+      # What the system's pipeline runs in every environment (ADR-0007): the deploy/ folder with the contract verifier
+      # and the URL contract of this commit beside it. Release pushes it as the package of the release.
+      - name: Assemble the deploy package
+        run: scripts/build-deploy-package.sh "$RUNNER_TEMP/deploy-package"
+
+      - name: Upload the deploy package
+        uses: actions/upload-artifact@v7
+        with:
+          name: deploy-package
+          path: ${{ runner.temp }}/deploy-package
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Save the image
         run: |
           set -euo pipefail

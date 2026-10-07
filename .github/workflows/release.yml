@@ -1,8 +1,10 @@
 # Release of an application that brings its own runtime (system.json hosting "own", principle 007; added by the
 # demo-environment skill). After a green Build of the default branch, it turns that build into a release candidate:
-#   - the package <slug>-<deployable>.<version>.zip in the Octopus built-in feed: the content of this repository's
-#     deploy/ folder, with deploy.ps1 and verify.ps1 at its root. The Octopus project runs them in every environment;
-#     what they deploy, and to what, is this application's own
+#   - the package <slug>-<deployable>.<version>.zip in the Octopus built-in feed, with deploy.ps1 and verify.ps1 at
+#     its root: the Build's artifact deploy-package when it kept one (the whole content of the package: for a
+#     package that needs more than the folder as committed, a compiled tool for example), otherwise the content of
+#     this repository's deploy/ folder. The Octopus project runs the two scripts in every environment; what they
+#     deploy, and to what, is this application's own
 #   - when the Build kept an image (artifact container-image): that image as <registry>/<slug>/<deployable>:<version>
 #     in the system's registry (Azure OIDC, id-<slug>-acr-push), its tag write-locked; not a second build
 #   - a release <version> of the Octopus project <slug>-<deployable>; its lifecycle deploys it to the first environment
@@ -54,34 +56,44 @@ jobs:
           if (-not $major -or -not $minor) { throw 'MAJOR_VERSION and MINOR_VERSION not found in build.yml' }
           "version=$major.$minor.${{ github.event.workflow_run.run_number }}" >> $env:GITHUB_OUTPUT
 
-      - name: Package the application's deploy and verify code
-        shell: pwsh
-        env:
-          PACKAGE_ID: ${{ vars.SYSTEM_SLUG }}-${{ vars.DEPLOYABLE_NAME }}
-          VERSION: ${{ steps.version.outputs.version }}
-        run: |
-          $ErrorActionPreference = 'Stop'
-          foreach ($entry in 'deploy.ps1', 'verify.ps1') {
-            if (-not (Test-Path -LiteralPath "deploy/$entry")) { throw "deploy/$entry is missing: the system runs it in every environment." }
-          }
-          New-Item -ItemType Directory -Path octopus-packages -Force | Out-Null
-          # The folder's content at the root of the zip, so deploy.ps1 and verify.ps1 are at the package's root.
-          Compress-Archive -Path (Get-ChildItem -LiteralPath ./deploy -Force).FullName `
-            -DestinationPath "./octopus-packages/$env:PACKAGE_ID.$env:VERSION.zip" -CompressionLevel Optimal
-
-      - name: Find the build's image
+      - name: Find the build's artifacts
         id: image
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          count=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts" \
-            --jq '[.artifacts[] | select(.name == "container-image")] | length')
-          if [ "$count" -gt 0 ]; then echo "found=true" >> "$GITHUB_OUTPUT"; else echo "found=false" >> "$GITHUB_OUTPUT"; fi
+          names=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts" --jq '[.artifacts[].name] | join(" ")')
+          case " $names " in *" container-image "*) echo "found=true" >> "$GITHUB_OUTPUT";; *) echo "found=false" >> "$GITHUB_OUTPUT";; esac
+          case " $names " in *" deploy-package "*) echo "package=true" >> "$GITHUB_OUTPUT";; *) echo "package=false" >> "$GITHUB_OUTPUT";; esac
+
+      - name: Download the build's deploy package
+        if: steps.image.outputs.package == 'true'
+        uses: actions/download-artifact@v8
+        with:
+          name: deploy-package
+          path: ./deploy-package
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Package the application's deploy and verify code
+        shell: pwsh
+        env:
+          PACKAGE_ID: ${{ vars.SYSTEM_SLUG }}-${{ vars.DEPLOYABLE_NAME }}
+          VERSION: ${{ steps.version.outputs.version }}
+          SOURCE: ${{ steps.image.outputs.package == 'true' && './deploy-package' || './deploy' }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($entry in 'deploy.ps1', 'verify.ps1') {
+            if (-not (Test-Path -LiteralPath (Join-Path $env:SOURCE $entry))) { throw "$env:SOURCE/$entry is missing: the system runs it in every environment." }
+          }
+          New-Item -ItemType Directory -Path octopus-packages -Force | Out-Null
+          # The folder's content at the root of the zip, so deploy.ps1 and verify.ps1 are at the package's root.
+          Compress-Archive -Path (Get-ChildItem -LiteralPath $env:SOURCE -Force).FullName `
+            -DestinationPath "./octopus-packages/$env:PACKAGE_ID.$env:VERSION.zip" -CompressionLevel Optimal
 
       - name: Download the build's image
         if: steps.image.outputs.found == 'true'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: container-image
           path: ./image

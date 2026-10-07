@@ -39,6 +39,10 @@ architecture. Every application has its own runtime architecture.
   which is also what an express environment needs: it keeps no registry setting between requests.
 - **The site answers for its own runtime checks.** The system's capability checks that inspected the container app
   skip for it. What replaces them is `verify.ps1` after every deployment and the nightly contract replay.
+- **Every deployment replays the URL contract.** The Build assembles the release's package
+  (`scripts/build-deploy-package.sh`): `deploy/` with the contract verifier and the contract of that commit beside
+  it. `verify.ps1` then checks the health path and replays all 9,337 URLs against the environment; a release that
+  breaks one fails its deployment there, the pin is reverted, and it is not promoted. ADR-0006 left this open.
 - **Still the system's, for now:** the registry, the identities, and the Container Apps environment `cae-jpcom`.
   `deploy/settings.json` names the environment; moving it under this repository is a later step.
 - **The switch itself costs a gap per environment.** The system's stack deletes the container app it created when
