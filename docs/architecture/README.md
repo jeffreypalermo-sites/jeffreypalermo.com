@@ -320,7 +320,7 @@ security headers and output caching are build step 5._
 | `/feed/`, `/feed/atom/`, `/comments/feed/`, `/…/feed/` | minimal API feed endpoints (RSS 2.0 stays the default format readers already use) |
 | `/wp-sitemap.xml`, `/wp-sitemap-*.xml`, `/robots.txt` | minimal API endpoints. Search engines already know the WordPress sitemap names, so they're kept. |
 | `/_assets/…` | the site's own stylesheet, fonts and portraits (`wwwroot/_assets`). The legacy URL rules pass every `/_…` path through |
-| `/_health/live`, `/_health/ready` | liveness; readiness = content loaded, answering `ready <version>`. `/_health/ready` is the health path every deployment verifies |
+| `/_health/live`, `/_health/ready`, `/_version` | liveness; readiness = content loaded, answering `ready <version>`. `/_health/ready` is the health path every deployment verifies. `/_version` answers `{"version":"<release>"}`. All three allow every origin and are never cached: the system's health dashboard reads them from the browser ([ADR-0011](../adr/0011-the-systems-dashboard-reads-the-site.md)) |
 
 ### Pages
 

@@ -49,8 +49,7 @@ app.UseStaticFiles();
 // Route only after static files: the catch-all page route would otherwise claim every upload.
 app.UseRouting();
 
-app.MapGet("/_health/live", () => Results.Text("ok"));
-app.MapGet("/_health/ready", (SiteContent content) => Results.Text($"ready {content.Version}"));
+app.MapHealthEndpoints();
 app.MapFeedEndpoints();
 app.MapSitemapEndpoints();
 app.MapContentEndpoints();

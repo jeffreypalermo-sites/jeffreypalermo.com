@@ -111,6 +111,52 @@ public sealed class SiteHttpTests(SiteFactory factory) : IClassFixture<SiteFacto
         Assert.Equal(mediaType, response.Content.Headers.ContentType?.MediaType);
     }
 
+    /// <summary>The system's health dashboard reads these from a page on another origin (ADR-0011).</summary>
+    [Theory]
+    [InlineData("/_health/live")]
+    [InlineData("/_health/ready")]
+    [InlineData("/_version")]
+    public async Task AHealthAnswerMayBeReadFromAnyOriginAndIsNeverCached(string path)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(path, UriKind.Relative));
+        request.Headers.Add("Origin", "https://dashboard.example");
+
+        using var response = await factory.ClientFor().SendAsync(request);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("*", Assert.Single(response.Headers.GetValues("Access-Control-Allow-Origin")));
+        Assert.False(response.Headers.Contains("Access-Control-Allow-Credentials"));
+        Assert.True(response.Headers.CacheControl!.NoStore);
+    }
+
+    [Fact]
+    public async Task TheVersionIsJsonTheDashboardReads()
+    {
+        using var response = await factory.ClientFor().GetAsync(new Uri("/_version", UriKind.Relative));
+        var ready = await factory.ClientFor().GetStringAsync(new Uri("/_health/ready", UriKind.Relative));
+
+        Assert.Equal("application/json", response.Content.Headers.ContentType!.MediaType);
+        using var json = System.Text.Json.JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        var version = Assert.Single(json.RootElement.EnumerateObject());
+        Assert.Equal("version", version.Name);
+        Assert.Equal(ready, $"ready {version.Value.GetString()}");
+    }
+
+    [Theory]
+    [InlineData("/")]
+    [InlineData("/2008/07/the-onion-architecture-part-1/")]
+    [InlineData("/feed/")]
+    public async Task OnlyTheHealthAnswersAllowOtherOrigins(string path)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(path, UriKind.Relative));
+        request.Headers.Add("Origin", "https://dashboard.example");
+
+        using var response = await factory.ClientFor().SendAsync(request);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.False(response.Headers.Contains("Access-Control-Allow-Origin"));
+    }
+
     [Fact]
     public async Task ReportsHealthAndTheContentVersion()
     {

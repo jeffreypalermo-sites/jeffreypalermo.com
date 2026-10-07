@@ -41,6 +41,16 @@ public sealed class Chromium : IAsyncLifetime
         _playwright?.Dispose();
     }
 
+    /// <summary>
+    /// A window that may ask any host, for a test about what a page on another origin can read. Every other test
+    /// uses <see cref="VisitAsync"/>, which refuses other hosts.
+    /// </summary>
+    public async Task<IBrowserContext> UnguardedWindowAsync()
+    {
+        var browser = _browser ?? throw new InvalidOperationException("The browser has not started.");
+        return await browser.NewContextAsync();
+    }
+
     /// <summary>A reader's visit to the site at <paramref name="site"/>, in a window of the given size.</summary>
     public async Task<Visit> VisitAsync(Uri site, int width = Visit.DesktopWidth)
     {
