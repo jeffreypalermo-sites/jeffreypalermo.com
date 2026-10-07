@@ -12,7 +12,7 @@ See [MODERNIZATION-PLAN.md](MODERNIZATION-PLAN.md) for the analysis, options con
 | `src/Core` | Domain: content records, legacy URL classification, slug normalization. No dependencies. |
 | `src/Infrastructure` | Loads `content/` into the domain (front matter, Markdown, archives); URL contract file format. |
 | `src/UI.Server` | ASP.NET Core host: legacy-URL middleware, pages, feeds, sitemaps, composition root. |
-| `tools/WpMigrator` | One-time WordPress.com → git migration (re-runnable). |
+| `tools/WpMigrator` | One-time WordPress.com → git migration. Done: the site is frozen ([ADR-0010](docs/adr/0010-the-wordpress-site-is-frozen.md)). |
 | `tools/UrlContract` | Captures how the live WordPress site answers every known URL. |
 | `content/` | Posts, pages, comments, archive metadata, and uploads. **Publishing = merging a PR.** |
 | `migration/raw/` | The WordPress REST snapshot that `content/` was generated from. |
@@ -32,7 +32,12 @@ Required front matter for a post: `title`, `slug`, `permalink` (`/yyyy/mm/slug/`
 `date` (local), `date_utc`, and `author`. Content that breaks a rule fails the build with every problem listed
 (see `SiteContent` in `src/Core`). Large binaries under `content/uploads/` (video, PDF, zip) are stored with Git LFS.
 
-## Migration (re-runnable)
+## Migration (done)
+
+The WordPress.com site was frozen on 2026-10-06 ([ADR-0010](docs/adr/0010-the-wordpress-site-is-frozen.md)): a post
+is added or changed by a commit to `content/` now. `convert` refuses the repository's `content/` (it would replace
+every post), and the workflow `WordPress drift` checks each night that the old site has not changed
+(`scripts/check-wordpress-drift.sh`). The commands that made `content/`, for the record:
 
 ```bash
 dotnet run --project tools/WpMigrator -- fetch https://jeffreypalermo.com migration/raw

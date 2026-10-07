@@ -13,6 +13,9 @@ public sealed class ContentLayout(string root)
     public string TermsFile => Path.Join(Root, "archive", "terms.json");
     public string LegacyRedirectsFile => Path.Join(Root, "archive", "legacy-redirects.json");
 
+    /// <summary>Present once the WordPress site is frozen: from then on this tree is edited in git (ADR-0010).</summary>
+    public string FreezeFile => Path.Join(Root, "archive", "wordpress-freeze.json");
+
     /// <summary><c>/2008/07/the-onion-architecture-part-1/</c> → <c>posts/2008/07/the-onion-architecture-part-1.html</c>.</summary>
     public string PostFile(string permalink, ContentFormat format)
     {

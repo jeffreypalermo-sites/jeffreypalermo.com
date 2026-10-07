@@ -2,7 +2,9 @@ using System.Text.Json;
 using JeffreyPalermo.Infrastructure.Content;
 using JeffreyPalermo.Tools.WpMigrator;
 
-// One-time WordPress.com → git migration. Each step is re-runnable and its output is committed:
+// One-time WordPress.com → git migration. It is done: the site was frozen on 2026-10-06 (ADR-0010) and content/ is
+// edited in git. convert refuses a content directory that holds the freeze record; the steps remain for looking at
+// a snapshot in another directory, and media for a file that turns up later.
 //   fetch   <site> <raw-dir>                         REST API snapshot → migration/raw/*.json
 //   convert <raw-dir> <content-dir> <manifest-file>  raw snapshot → content/ (posts, pages, comments, archive)
 //   media   <site> <content-dir> <manifest-file>     manifest → content/uploads/
@@ -28,7 +30,14 @@ switch (args[0])
 
     case "convert":
     {
-        var summary = await WordPressConverter.ConvertAsync(args[1], new ContentLayout(args[2]), args[3]);
+        var layout = new ContentLayout(args[2]);
+        if (WordPressConverter.Refusal(layout) is { } refusal)
+        {
+            Console.Error.WriteLine(refusal);
+            return 1;
+        }
+
+        var summary = await WordPressConverter.ConvertAsync(args[1], layout, args[3]);
         Console.WriteLine(JsonSerializer.Serialize(summary, ContentJson.Options));
         return 0;
     }

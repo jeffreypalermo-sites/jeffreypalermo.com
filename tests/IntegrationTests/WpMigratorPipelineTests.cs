@@ -92,6 +92,31 @@ public sealed class WpMigratorPipelineTests : IDisposable
         Assert.False(File.Exists(Layout.UploadFile("/wp-content/uploads/external/gone.test/a.png")));
     }
 
+    /// <summary>After the freeze, posts are edited in git: a conversion would undo those edits (ADR-0010).</summary>
+    [Fact]
+    public async Task ConvertRefusesAFrozenContentTreeAndLeavesItAsItIs()
+    {
+        using var http = new HttpClient(new StubHttpHandler(WordPress)) { BaseAddress = new Uri(Site) };
+        await new SnapshotFetcher(new WordPressApiClient(http)).FetchAsync(Raw);
+        var edited = Layout.PostFile("/2008/07/the-onion-architecture-part-1/", ContentFormat.Html);
+        Directory.CreateDirectory(Path.GetDirectoryName(edited)!);
+        await File.WriteAllTextAsync(edited, "edited in git");
+        Directory.CreateDirectory(Path.GetDirectoryName(Layout.FreezeFile)!);
+        await File.WriteAllTextAsync(Layout.FreezeFile, "{}");
+
+        var refused = await Assert.ThrowsAsync<InvalidOperationException>(() => WordPressConverter.ConvertAsync(Raw, Layout, Manifest));
+
+        Assert.Contains("is frozen", refused.Message, StringComparison.Ordinal);
+        Assert.Equal("edited in git", await File.ReadAllTextAsync(edited));
+        Assert.False(File.Exists(Manifest));
+    }
+
+    [Fact]
+    public void TheRepositorysContentIsFrozen()
+    {
+        Assert.NotNull(WordPressConverter.Refusal(new ContentLayout(TestPaths.Content)));
+    }
+
     [Fact]
     public async Task ConvertIsRepeatableAndRemovesContentThatNoLongerExists()
     {
