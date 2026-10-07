@@ -12,5 +12,6 @@
 | [0008](0008-eleven-regions-behind-front-door.md) | Eleven regions behind Azure Front Door, in rotation, each scaling to zero | Accepted |
 | [0009](0009-the-wordpress-look-and-navigation.md) | Keep the WordPress site's look and navigation; Razor components rendered from the existing routes | Accepted |
 | [0010](0010-the-wordpress-site-is-frozen.md) | The WordPress site is frozen; content is edited in git | Accepted |
+| [0011](0011-the-systems-dashboard-reads-the-site.md) | The system's health dashboard reads the site from the browser | Accepted |
 
 The overall design is in [docs/architecture](../architecture/README.md).
