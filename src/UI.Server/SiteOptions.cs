@@ -15,5 +15,11 @@ public sealed class SiteOptions
 
     public string SiteTitle { get; set; } = "Jeffrey Palermo";
 
+    /// <summary>
+    /// The ID of the Azure Front Door profile in front of the site, when there is one (its <c>X-Azure-FDID</c> header).
+    /// Requests that carry it are believed about the host the visitor asked for; empty: no request is.
+    /// </summary>
+    public string FrontDoorId { get; set; } = string.Empty;
+
     public Uri BaseUri => new($"https://{CanonicalHost}/");
 }

@@ -156,6 +156,8 @@ public sealed partial class ContainerSiteTests(ContainerSite site, ITestOutputHe
         try
         {
             await Command.RunAsync("bash", Path.Join(PublishedSite.RepositoryRoot, "scripts", "build-deploy-package.sh"), package);
+            // As the pipeline's worker gets it: a build artifact and a zip both drop the execute permission.
+            await Command.RunAsync("chmod", "-x", Path.Join(package, "bin", "JeffreyPalermo.Tools.UrlContract"));
 
             var result = await Command.TryRunAsync("pwsh", environment: null, "-NoProfile", "-File", Path.Join(package, "test-site.ps1"), "-BaseUrl", site.BaseAddress.ToString(), "-Version", site.Version, "-TimeoutSeconds", "60");
 
@@ -168,6 +170,16 @@ public sealed partial class ContainerSiteTests(ContainerSite site, ITestOutputHe
         {
             Directory.Delete(package, recursive: true);
         }
+    }
+
+    /// <summary>Behind a front door that rotates over regions, the check asks several times in a row (ADR-0008).</summary>
+    [Fact]
+    public async Task TheDeploymentVerificationCanAskSeveralTimesInARow()
+    {
+        var result = await Command.TryRunAsync("pwsh", environment: null, "-NoProfile", "-File", TestSiteScript, "-BaseUrl", site.BaseAddress.ToString(), "-Version", site.Version, "-Consecutive", "6", "-SkipContract", "-TimeoutSeconds", "60");
+
+        Assert.True(result.ExitCode == 0, $"{result.Output}\n{result.Error}");
+        Assert.Contains("6 times in a row", result.Output, StringComparison.Ordinal);
     }
 
     private static string TestSiteScript => Path.Join(PublishedSite.RepositoryRoot, "deploy", "test-site.ps1");

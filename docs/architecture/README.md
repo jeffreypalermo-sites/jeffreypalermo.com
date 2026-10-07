@@ -336,6 +336,11 @@ demo-environment-kit, gives the pipeline, the identities and the registry) and
 container app of each environment is `deploy/infra/main.bicep`, applied by `deploy/deploy.ps1`. The system repository
 `jeffreypalermo-sites/jpcom-system` holds the desired state: which release each environment runs.
 
+_Since [ADR-0008](../adr/0008-eleven-regions-behind-front-door.md) the diagram and table below describe one region
+of one environment. `tdd` runs in one region, `uat` in two and `prod` in eleven, each region with an express
+environment and a container app of its own (`cae-jpcom-<env>-<code>`, `ca-jpcom-<env>-web-<code>`); `uat` and `prod`
+have an Azure Front Door in front that rotates over their regions. `deploy/settings.json` lists the regions._
+
 ```mermaid
 flowchart TB
     dns["Azure DNS: jeffreypalermo.com (planned, §11 step 8)<br/>the custom domain needs a front door or a standard environment (ADR-0006)<br/>MX → GoDaddy · SPF · DMARC"]
@@ -501,7 +506,6 @@ Decided 2026-10-06 (recommendations approved):
 Open:
 - **Newsletter:** an external provider's embed vs our own signup endpoint (would trigger the database ADR).
 - **Search quality:** the in-memory index is enough for 966 posts. Azure AI Search arrives with "ask the archive".
-- **The custom domain for prod:** express takes none. A front door, or a standard environment for prod, before any
-  DNS work (ADR-0006).
+- **The custom domain for prod:** on the Front Door endpoint (ADR-0008); binding it and moving DNS wait for Jeffrey.
 - **A warm production replica:** the site launches with scale to zero. The kit's `alwaysOn` pins exactly one
   replica, so a per-environment minimum is asked of the kit (ADR-0006).

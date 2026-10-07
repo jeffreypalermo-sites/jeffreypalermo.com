@@ -45,12 +45,14 @@ jobs:
       - name: Integration tests
         run: dotnet test tests/IntegrationTests --configuration Release --no-build --logger trx --results-directory TestResults
 
-      # The site's own infrastructure code (deploy/, ADR-0007) must compile without a warning before it is released.
+      # The site's own infrastructure code (deploy/, ADR-0007) must compile without a diagnostic before it is released.
       - name: Compile the infrastructure code
         run: |
           set -euo pipefail
           notices="$(az bicep build --file deploy/infra/main.bicep --stdout 2>&1 >/dev/null)"
-          if [ -n "$notices" ]; then echo "$notices"; exit 1; fi
+          echo "$notices"
+          # A diagnostic of the template fails the Build; the CLI's own notices (a newer Bicep exists) do not.
+          if echo "$notices" | grep --quiet --extended-regexp ' : (Warning|Error) '; then exit 1; fi
 
       - name: Upload the test results
         if: always()

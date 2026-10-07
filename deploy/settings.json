@@ -1,9 +1,35 @@
 {
-  "containerAppsEnvironment": {
-    "resourceGroup": "rg-jpcom-apps",
-    "name": "cae-jpcom"
-  },
-  "pullIdentity": "id-jpcom-{environment}-app",
   "port": 8080,
-  "healthPath": "/_health/ready"
+  "pullIdentity": "id-{system}-{environment}-app",
+  "environments": {
+    "tdd": {
+      "frontDoor": false,
+      "regions": [
+        { "location": "eastus2", "code": "eus2" }
+      ]
+    },
+    "uat": {
+      "frontDoor": true,
+      "regions": [
+        { "location": "eastus2", "code": "eus2" },
+        { "location": "westeurope", "code": "weu" }
+      ]
+    },
+    "prod": {
+      "frontDoor": true,
+      "regions": [
+        { "location": "eastus2", "code": "eus2" },
+        { "location": "westus2", "code": "wus2" },
+        { "location": "brazilsouth", "code": "brs" },
+        { "location": "westeurope", "code": "weu" },
+        { "location": "uksouth", "code": "uks" },
+        { "location": "southafricanorth", "code": "zan" },
+        { "location": "uaenorth", "code": "uan" },
+        { "location": "centralindia", "code": "inc" },
+        { "location": "southeastasia", "code": "sea" },
+        { "location": "japaneast", "code": "jpe" },
+        { "location": "australiaeast", "code": "aue" }
+      ]
+    }
+  }
 }

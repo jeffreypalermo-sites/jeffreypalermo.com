@@ -43,7 +43,7 @@ architecture. Every application has its own runtime architecture.
   (`scripts/build-deploy-package.sh`): `deploy/` with the contract verifier and the contract of that commit beside
   it. `verify.ps1` then checks the health path and replays all 9,337 URLs against the environment; a release that
   breaks one fails its deployment there, the pin is reverted, and it is not promoted. ADR-0006 left this open.
-- **Still the system's, for now:** the registry, the identities, and the Container Apps environment `cae-jpcom`.
-  `deploy/settings.json` names the environment; moving it under this repository is a later step.
+- **Still the system's:** the registry and the identities. The Container Apps environments are this repository's
+  since [ADR-0008](0008-eleven-regions-behind-front-door.md): one per region, created by `deploy.ps1`.
 - **The switch itself costs a gap per environment.** The system's stack deletes the container app it created when
   the site leaves its template, and the site's next deployment creates it again under the same name and address.

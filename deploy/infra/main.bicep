@@ -1,6 +1,7 @@
-// The site's runtime in one environment (ADR-0007): one container app in the system's Container Apps environment,
-// running the image of one release. deploy.ps1 applies this file as the deployment stack stack-<system>-<env>-web
-// in the tier's resource group; the system repository creates nothing of it.
+// The site's runtime in one environment (ADR-0007, ADR-0008): one container app per region, each in a Container Apps
+// express environment of its own, running the image of one release; and, where the environment asks for it, an
+// Azure Front Door in front of them all. deploy.ps1 creates the express environments (a template deployment cannot,
+// see there) and applies this file as the deployment stack stack-<system>-<env>-web in the tier's resource group.
 targetScope = 'resourceGroup'
 
 @description('The system the site belongs to (jpcom).')
@@ -15,70 +16,175 @@ param version string
 @description('Login server of the system\'s registry, which holds <system>/web:<version>.')
 param registryServer string
 
-@description('Resource ID of the Container Apps environment the app runs in.')
-param managedEnvironmentId string
-
 @description('Resource ID of the identity that pulls the image; the system gave it AcrPull.')
 param pullIdentityId string
+
+@description('Where the site runs in this environment: { location, code, managedEnvironmentId } per region. The code is short and becomes part of the app\'s name.')
+param regions array
+
+@description('True: an Azure Front Door profile in front of every region of the environment.')
+param frontDoor bool = false
 
 @description('The port the container listens on (the Dockerfile sets ASPNETCORE_HTTP_PORTS).')
 param port int = 8080
 
-param location string = resourceGroup().location
+// Not the keys "environment" and "deployable": the system's own probe watches container apps that carry those.
+var tags = {
+  system: system
+  application: 'web'
+  stage: environmentName
+}
 
-resource app 'Microsoft.App/containerApps@2025-01-01' = {
-  name: 'ca-${system}-${environmentName}-web'
-  location: location
-  // Not the keys "environment" and "deployable": the system's own probe watches container apps that carry those.
-  tags: {
-    system: system
-    application: 'web'
-    stage: environmentName
-  }
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${pullIdentityId}': {}
-    }
+// Standard tier: a base fee per profile and month, whatever the number of regions behind it.
+resource profile 'Microsoft.Cdn/profiles@2024-02-01' = if (frontDoor) {
+  name: 'afd-${system}-${environmentName}'
+  location: 'global'
+  tags: tags
+  sku: {
+    name: 'Standard_AzureFrontDoor'
   }
   properties: {
-    environmentId: managedEnvironmentId
-    configuration: {
-      activeRevisionsMode: 'Single'
-      ingress: {
-        external: true
-        targetPort: port
-        // An express environment has no HTTP/2.
-        transport: 'http'
-        allowInsecure: false
-      }
-      // An express environment keeps no registry on the app: it must come with every request that names the image.
-      registries: [
-        {
-          server: registryServer
-          identity: pullIdentityId
-        }
-      ]
-    }
-    template: {
-      containers: [
-        {
-          name: 'web'
-          image: '${registryServer}/${system}/web:${version}'
-          resources: {
-            cpu: json('0.5')
-            memory: '1Gi'
-          }
-        }
-      ]
-      // Scale to zero when idle (ADR-0006); one replica is enough for the read-only site.
-      scale: {
-        minReplicas: 0
-        maxReplicas: 1
-      }
-    }
+    // A region that scaled to zero starts when its first request arrives: give it time before Front Door gives up.
+    originResponseTimeoutSeconds: 120
   }
 }
 
-output name string = app.name
-output url string = 'https://${app.properties.configuration.ingress.fqdn}'
+resource apps 'Microsoft.App/containerApps@2025-01-01' = [
+  for region in regions: {
+    name: 'ca-${system}-${environmentName}-web-${region.code}'
+    location: region.location
+    tags: union(tags, { region: region.code })
+    identity: {
+      type: 'UserAssigned'
+      userAssignedIdentities: {
+        '${pullIdentityId}': {}
+      }
+    }
+    properties: {
+      environmentId: region.managedEnvironmentId
+      configuration: {
+        activeRevisionsMode: 'Single'
+        ingress: {
+          external: true
+          targetPort: port
+          // An express environment has no HTTP/2.
+          transport: 'http'
+          allowInsecure: false
+        }
+        // An express environment keeps no registry on the app: it must come with every request that names the image.
+        registries: [
+          {
+            server: registryServer
+            identity: pullIdentityId
+          }
+        ]
+      }
+      template: {
+        containers: [
+          {
+            name: 'web'
+            image: '${registryServer}/${system}/web:${version}'
+            resources: {
+              cpu: json('0.5')
+              memory: '1Gi'
+            }
+            // Behind Front Door the app believes the forwarded host only from this profile (FrontDoorHostMiddleware).
+            env: frontDoor
+              ? [
+                  {
+                    name: 'Site__FrontDoorId'
+                    value: profile!.properties.frontDoorId
+                  }
+                ]
+              : []
+          }
+        ]
+        // Scale to zero when idle; one replica per region is enough for the read-only site.
+        scale: {
+          minReplicas: 0
+          maxReplicas: 1
+        }
+      }
+    }
+  }
+]
+
+resource endpoint 'Microsoft.Cdn/profiles/afdEndpoints@2024-02-01' = if (frontDoor) {
+  parent: profile
+  name: '${system}-${environmentName}'
+  location: 'global'
+  tags: tags
+  properties: {
+    enabledState: 'Enabled'
+  }
+}
+
+// Round robin over every region, and no health probes (ADR-0008).
+// - No health probe settings: Front Door sends no probes, so a region with no visitors scales to zero. It also means
+//   Front Door cannot take a failed region out by itself.
+// - Equal weights, and the widest latency tolerance: without probes Front Door has no latency to prefer a region by,
+//   and every region is in the rotation wherever the visitor is.
+resource originGroup 'Microsoft.Cdn/profiles/originGroups@2024-02-01' = if (frontDoor) {
+  parent: profile
+  name: 'web'
+  properties: {
+    loadBalancingSettings: {
+      sampleSize: 4
+      successfulSamplesRequired: 3
+      additionalLatencyInMilliseconds: 1000
+    }
+    sessionAffinityState: 'Disabled'
+  }
+}
+
+resource origins 'Microsoft.Cdn/profiles/originGroups/origins@2024-02-01' = [
+  for (region, i) in regions: if (frontDoor) {
+    parent: originGroup
+    name: region.code
+    properties: {
+      hostName: apps[i].properties.configuration.ingress.fqdn
+      // The container app answers to its own name only; the visitor's host travels in X-Forwarded-Host.
+      originHostHeader: apps[i].properties.configuration.ingress.fqdn
+      httpPort: 80
+      httpsPort: 443
+      priority: 1
+      weight: 1000
+      enabledState: 'Enabled'
+      enforceCertificateNameCheck: true
+    }
+  }
+]
+
+resource route 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = if (frontDoor) {
+  parent: endpoint
+  name: 'web'
+  dependsOn: [
+    origins
+  ]
+  properties: {
+    originGroup: {
+      id: originGroup.id
+    }
+    supportedProtocols: [
+      'Http'
+      'Https'
+    ]
+    patternsToMatch: [
+      '/*'
+    ]
+    forwardingProtocol: 'HttpsOnly'
+    httpsRedirect: 'Enabled'
+    linkToDefaultDomain: 'Enabled'
+    enabledState: 'Enabled'
+  }
+}
+
+output regions array = [
+  for (region, i) in regions: {
+    code: region.code
+    location: region.location
+    app: apps[i].name
+    url: 'https://${apps[i].properties.configuration.ingress.fqdn}'
+  }
+]
+output frontDoorUrl string = frontDoor ? 'https://${endpoint!.properties.hostName}' : ''

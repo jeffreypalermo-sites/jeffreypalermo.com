@@ -21,7 +21,12 @@
 param(
     [Parameter(Mandatory)] [string] $BaseUrl,
     [Parameter(Mandatory)] [string] $Version,
-    [int] $TimeoutSeconds = 600
+    [int] $TimeoutSeconds = 600,
+    # How many answers in a row must be right. Behind a front door that rotates over regions, more than one: each
+    # request may reach another region, and none may still run the release before.
+    [int] $Consecutive = 1,
+    # The health check only, also where the contract verifier is at hand.
+    [switch] $SkipContract
 )
 
 Set-StrictMode -Version Latest
@@ -32,29 +37,35 @@ $uri = "$($BaseUrl.TrimEnd('/'))/_health/ready"
 $expected = "ready $Version"
 $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
 $last = 'no answer yet'
+$right = 0
 while ($true) {
+    $matched = $false
     try {
-        $response = Invoke-WebRequest -Uri $uri -TimeoutSec 20 -SkipHttpErrorCheck
+        $response = Invoke-WebRequest -Uri $uri -TimeoutSec 60 -SkipHttpErrorCheck
         $last = "$($response.StatusCode) '$(([string] $response.Content).Trim())'"
-        if ($response.StatusCode -eq 200 -and ([string] $response.Content).Trim() -eq $expected) {
-            Write-Host "PASS $uri answers '$expected'"
-            break
-        }
+        $matched = $response.StatusCode -eq 200 -and ([string] $response.Content).Trim() -eq $expected
     }
     catch {
         $last = $_.Exception.Message
     }
+    $right = if ($matched) { $right + 1 } else { 0 }
+    if ($right -ge $Consecutive) {
+        Write-Host "PASS $uri answers '$expected'$(if ($Consecutive -gt 1) { " $Consecutive times in a row" })"
+        break
+    }
     if ((Get-Date) -ge $deadline) {
-        Write-Host "FAIL $uri did not answer '$expected' within $TimeoutSeconds seconds; last: $last"
+        Write-Host "FAIL $uri did not answer '$expected'$(if ($Consecutive -gt 1) { " $Consecutive times in a row" }) within $TimeoutSeconds seconds; last: $last"
         exit 1
     }
-    Start-Sleep -Seconds 5
+    if (-not $matched) { Start-Sleep -Seconds 5 }
 }
 
 $verifier = Join-Path $PSScriptRoot 'bin' 'JeffreyPalermo.Tools.UrlContract'
-if (-not (Test-Path -LiteralPath $verifier)) {
+if ($SkipContract -or -not (Test-Path -LiteralPath $verifier)) {
     exit 0
 }
+# The package reaches the pipeline as a build artifact and then a zip, and neither keeps a file's execute permission.
+if (-not $IsWindows) { chmod +x $verifier }
 # The verifier prints each violation and a summary line, and exits 1 on any violation.
 & $verifier verify "$($BaseUrl.TrimEnd('/'))/" (Join-Path $PSScriptRoot 'contract' 'url-contract.tsv') (Join-Path $PSScriptRoot 'contract' 'exceptions.tsv')
 if ($LASTEXITCODE -ne 0) {
