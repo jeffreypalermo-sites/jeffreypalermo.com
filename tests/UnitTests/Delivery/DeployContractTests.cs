@@ -106,6 +106,17 @@ public class DeployContractTests
         Assert.All(regions, region => Assert.True($"ca-jpcom-{environment}-web-{region.Code}".Length <= 32));
     }
 
+    [Theory]
+    [InlineData("tdd")]
+    [InlineData("uat")]
+    [InlineData("prod")]
+    public void NoEnvironmentNamesARegionAzureRefusesThisSubscription(string environment)
+    {
+        // West Europe "is currently not accepting new customers" (the first deployment to uat, 2026-10-06). Germany
+        // West Central stands in for it. scripts/test-regions.ps1 asks Azure before a region is added.
+        Assert.DoesNotContain(Regions(environment), region => region.Location == "westeurope");
+    }
+
     [Fact]
     public void FrontDoorRotatesOverEveryRegionAndSendsNoProbes()
     {

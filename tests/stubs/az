@@ -4,6 +4,8 @@
 #   calls.log                    one line per call
 #   environment-<name>           an express environment: line 1 its provisioning state, line 2 its mode
 #   environment-<name>.unread    present after a create: the next read finds nothing yet, as Azure does
+#   refused-locations            one location per line that refuses a new environment, as Azure does for a region
+#                                the subscription may not use
 #   stack-parameters.json        the parameters of the last "stack group create"
 #   stack-fails                  when present, "stack group create" fails with this text
 #   deployment-errors            what a container app reports when asked why it did not start
@@ -38,8 +40,16 @@ case "${1:-} ${2:-}" in
     case "$path" in
       */managedEnvironments/*)
         if [ "$method" = "put" ]; then
+          body="$(value --body "$@")"
+          location="$(sed --quiet 's/.*"location": *"\([^"]*\)".*/\1/p' "${body#@}" | head --lines=1)"
+          if [ -f "$state/refused-locations" ] && grep --quiet --line-regexp "$location" "$state/refused-locations"; then
+            echo "ERROR: Forbidden({\"error\":{\"code\":\"RequestDisallowedByAzure\",\"target\":\"$name\",\"message\":\"Resource '$name' was disallowed by Azure: The selected region is currently not accepting new customers: https://aka.ms/locationineligible.\"}})" >&2
+            exit 1
+          fi
           printf 'Succeeded\nExpress\n' > "$state/environment-$name"
           touch "$state/environment-$name.unread"
+        elif [ "$method" = "delete" ]; then
+          rm --force "$state/environment-$name" "$state/environment-$name.unread"
         elif [ -f "$state/environment-$name.unread" ]; then
           rm "$state/environment-$name.unread"
           echo "ERROR: (ResourceNotFound) $name was not found." >&2

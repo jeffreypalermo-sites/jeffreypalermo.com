@@ -19,8 +19,8 @@ made and carried out here, not in the delivery kit.
 | Environment | Regions | Front Door |
 |---|---|---|
 | `tdd` | 1: East US 2 | no |
-| `uat` | 2: East US 2, West Europe | yes |
-| `prod` | 11: East US 2, West US 2, Brazil South, West Europe, UK South, South Africa North, UAE North, Central India, Southeast Asia, Japan East, Australia East | yes |
+| `uat` | 2: East US 2, Germany West Central | yes |
+| `prod` | 11: East US 2, West US 2, Brazil South, Germany West Central, UK South, South Africa North, UAE North, Central India, Southeast Asia, Japan East, Australia East | yes |
 
 `deploy/settings.json` holds the table; adding or removing a region is a pull request.
 
@@ -61,6 +61,12 @@ made and carried out here, not in the delivery kit.
   deployment's validation counts an express environment against the subscription's limits for standard ones. They
   are therefore not part of the stack; a region removed from the settings leaves its empty environment behind
   until someone deletes it.
+- **A region must accept the subscription, and only a request tells.** The plan named West Europe. The first
+  deployment to `uat` failed on it: "The selected region is currently not accepting new customers". No quota shows
+  this (West Europe read 0 of 200). Germany West Central took its place, in `uat` and `prod`.
+  `scripts/test-regions.ps1` asks Azure about a region with an empty express environment that it deletes again;
+  on 2026-10-06 it found every other region of the plan open. `deploy.ps1` asks for every region before it applies
+  anything, and names each one Azure refuses.
 - **A script the pipeline runs is run by the tests first.** The first deployment of this layout failed in `tdd`:
   with no express environment yet, `deploy.ps1` read the count of an empty answer, on a line that only text-matching
   tests had covered. `DeployScriptTests` and the `verify.ps1` tests now run both scripts with `tests/stubs/az` in

@@ -14,14 +14,14 @@ public sealed partial class ContainerSiteTests
             { "outputs": {
                 "regions": { "value": [
                   { "code": "eus2", "location": "eastus2", "app": "ca-jpcom-uat-web-eus2", "url": "{{url}}" },
-                  { "code": "weu", "location": "westeurope", "app": "ca-jpcom-uat-web-weu", "url": "{{url}}" } ] },
+                  { "code": "gwc", "location": "germanywestcentral", "app": "ca-jpcom-uat-web-gwc", "url": "{{url}}" } ] },
                 "frontDoorUrl": { "value": "{{url}}" } } }
             """);
 
         Assert.True(result.ExitCode == 0, $"{result.Output}\n{result.Error}");
         Assert.Equal(string.Empty, result.Error);
         Assert.Contains("==> eus2 (eastus2)", result.Output, StringComparison.Ordinal);
-        Assert.Contains("==> weu (westeurope)", result.Output, StringComparison.Ordinal);
+        Assert.Contains("==> gwc (germanywestcentral)", result.Output, StringComparison.Ordinal);
         // Through the front door: twice around the rotation of two regions.
         Assert.Contains("4 times in a row", result.Output, StringComparison.Ordinal);
         Assert.Contains($"PASS uat runs release {site.Version} in 2 region(s) and through {url}", result.Output, StringComparison.Ordinal);
