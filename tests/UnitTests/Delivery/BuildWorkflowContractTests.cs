@@ -75,6 +75,20 @@ public class BuildWorkflowContractTests
     }
 
     [Fact]
+    public void TheBrowserIsInstalledBeforeTheFullSystemTestsDriveIt()
+    {
+        // The full-system tests open the container in Chromium (ADR-0009). A runner has no browser build of the
+        // Playwright version the tests use, and may lack its system libraries.
+        var steps = Build.Steps("image");
+        var names = steps.Select(step => Workflow.Scalar(step, "name")).ToList();
+        var installed = names.IndexOf("Install the browser for the full-system tests");
+        var tested = names.IndexOf("Full-system tests");
+
+        Assert.True(installed >= 0 && installed < tested, $"Expected install, then test; found: {string.Join(", ", names)}");
+        Assert.Contains("playwright.ps1 install --with-deps --only-shell chromium", Workflow.Run(steps[installed]), StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void EveryTestLayerRuns()
     {
         var commands = Build.Jobs().SelectMany(job => Build.Steps(job.Key)).Select(Workflow.Run).ToList();
