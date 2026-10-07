@@ -2,7 +2,8 @@ namespace JeffreyPalermo.AcceptanceTests;
 
 /// <summary>
 /// The system's health dashboard is a page on another origin whose code asks every node in the visitor's browser
-/// (ADR-0011). A browser hands such a page an answer only when the answer allows the page's origin.
+/// (ADR-0011), and the primary node of each environment for the facts of its build (ADR-0012). A browser hands
+/// such a page an answer only when the answer allows the page's origin.
 /// </summary>
 public sealed partial class SiteInABrowserTests
 {
@@ -10,6 +11,7 @@ public sealed partial class SiteInABrowserTests
     [InlineData("_health/ready")]
     [InlineData("_health/live")]
     [InlineData("_version")]
+    [InlineData("_build")]
     public async Task APageOnAnotherOriginCanReadAHealthAnswer(string path)
     {
         var answer = await FetchFromAnotherOriginAsync(path);

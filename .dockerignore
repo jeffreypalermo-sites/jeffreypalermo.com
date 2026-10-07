@@ -1,4 +1,5 @@
-# The image needs src/ and content/ only. content/uploads stays: the site serves it.
+# The image needs src/, content/ and, when the Build wrote it, build-facts.json. content/uploads stays: the site
+# serves it.
 .git
 .github
 **/bin

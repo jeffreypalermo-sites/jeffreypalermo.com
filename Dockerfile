@@ -32,6 +32,10 @@ WORKDIR /app
 COPY --from=build /app/publish ./
 # Site:ContentPath defaults to "content", relative to the content root /app.
 COPY --from=content /content/ ./content/
+# What the Build measured about this release, which the site answers at /_build (ADR-0012). The Build writes
+# build-facts.json beside this file before it builds the image. The pattern matches nothing when no build wrote the
+# file (docker build on a developer's machine), and the site then answers its version alone.
+COPY build-facts.jso[n] ./
 ENV ASPNETCORE_HTTP_PORTS=8080 \
     Site__Version=$VERSION
 EXPOSE 8080

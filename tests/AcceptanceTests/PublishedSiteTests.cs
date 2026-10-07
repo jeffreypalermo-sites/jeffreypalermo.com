@@ -30,6 +30,18 @@ public sealed class PublishedSiteTests(PublishedSite site, ITestOutputHelper out
         Assert.Equal(location, response.Headers.Location?.OriginalString);
     }
 
+    /// <summary>The published output holds no <c>build-facts.json</c>: only an image the Build made carries one (ADR-0012).</summary>
+    [Fact]
+    public async Task WithoutTheBuildsFactsThePublishedSiteAnswersItsVersion()
+    {
+        using var client = site.Client();
+        using var response = await client.GetAsync(new Uri("/_build", UriKind.Relative));
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("application/json", response.Content.Headers.ContentType?.MediaType);
+        Assert.Equal("""{"version":"acceptance"}""", await response.Content.ReadAsStringAsync());
+    }
+
     [Theory]
     [InlineData("/favicon.ico", "image/x-icon")]
     [InlineData("/wp-content/uploads/2018/06/image257b0257d255b61255d1.png", "image/png")]

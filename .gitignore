@@ -5,3 +5,4 @@ obj/
 TestResults/
 artifacts/
 .lfs-objects
+/build-facts.json

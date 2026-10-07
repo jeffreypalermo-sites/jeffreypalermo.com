@@ -4,9 +4,10 @@ namespace JeffreyPalermo.AcceptanceTests;
 
 /// <summary>
 /// Full-system fixture: the container image as it is delivered (ADR-0006). It builds the repository's
-/// <c>Dockerfile</c> and runs the image with <c>docker run</c>, with no settings beyond the image's own. The Build
-/// workflow names the image it already built in <see cref="ImageVariable"/>, so the image that passes these tests is
-/// the image that is released. Needs Docker; no third-party systems are involved.
+/// <c>Dockerfile</c> as the Build workflow does, the build's facts first (ADR-0012), and runs the image with
+/// <c>docker run</c>, with no settings beyond the image's own. The Build workflow names the image it already built
+/// in <see cref="ImageVariable"/>, so the image that passes these tests is the image that is released. Needs Docker;
+/// no third-party systems are involved.
 /// </summary>
 public sealed class ContainerSite : IAsyncLifetime
 {
@@ -33,7 +34,7 @@ public sealed class ContainerSite : IAsyncLifetime
         {
             Version = "acceptance";
             _builtImage = $"jpcom-acceptance:{Guid.NewGuid():N}";
-            await Command.RunAsync("docker", "build", "--build-arg", $"VERSION={Version}", "--tag", _builtImage, PublishedSite.RepositoryRoot);
+            await BuildAsync(_builtImage, Version);
             Image = _builtImage;
         }
         else
@@ -88,6 +89,29 @@ public sealed class ContainerSite : IAsyncLifetime
         if (_builtImage is not null)
         {
             await Command.RunAsync("docker", "image", "rm", "--force", _builtImage);
+        }
+    }
+
+    /// <summary>
+    /// The two steps of the Build workflow that make the image: <c>scripts/Write-BuildFacts.ps1</c> writes
+    /// <c>build-facts.json</c> beside the <c>Dockerfile</c>, which copies it into the image. Here without test
+    /// results (these tests are not the Build): the facts name the version, the commit and the code. The file is a
+    /// build output and is removed again.
+    /// </summary>
+    private static async Task BuildAsync(string image, string version)
+    {
+        var root = PublishedSite.RepositoryRoot;
+        var facts = Path.Join(root, "build-facts.json");
+        var noResults = Directory.CreateTempSubdirectory("jpcom-no-test-results-").FullName;
+        try
+        {
+            await Command.RunAsync("pwsh", "-NoProfile", "-File", Path.Join(root, "scripts", "Write-BuildFacts.ps1"), "-Version", version, "-ResultsPath", noResults, "-OutputPath", facts);
+            await Command.RunAsync("docker", "build", "--build-arg", $"VERSION={version}", "--tag", image, root);
+        }
+        finally
+        {
+            File.Delete(facts);
+            Directory.Delete(noResults);
         }
     }
 

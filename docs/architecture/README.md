@@ -321,6 +321,7 @@ security headers and output caching are build step 5._
 | `/wp-sitemap.xml`, `/wp-sitemap-*.xml`, `/robots.txt` | minimal API endpoints. Search engines already know the WordPress sitemap names, so they're kept. |
 | `/_assets/…` | the site's own stylesheet, fonts and portraits (`wwwroot/_assets`). The legacy URL rules pass every `/_…` path through |
 | `/_health/live`, `/_health/ready`, `/_version` | liveness; readiness = content loaded, answering `ready <version>`. `/_health/ready` is the health path every deployment verifies. `/_version` answers `{"version":"<release>"}`. All three allow every origin and are never cached: the system's health dashboard reads them from the browser ([ADR-0011](../adr/0011-the-systems-dashboard-reads-the-site.md)) |
+| `/_build` | the facts of the release's build, as JSON: version, commit, build run, lines of code by language, tests, coverage, complexity, CRAP. The answer is `build-facts.json`, which the Build wrote and the image carries; without a file about this release it is `{"version":"<release>"}`. Every origin is allowed and nothing is cached, as for the three above ([ADR-0012](../adr/0012-the-site-publishes-its-build-facts.md)) |
 
 ### Pages
 
@@ -431,7 +432,7 @@ what runs where.
 flowchart LR
     subgraph PR["Pull request (this repository)"]
         t1[unit + integration tests<br/>incl. in-process contract replay]
-        i1[image from the Dockerfile] --> f1[full-system tests:<br/>the container replays the URL contract]
+        t1 -- "results, coverage" --> i1[build facts, then the image<br/>from the Dockerfile] --> f1[full-system tests:<br/>the container replays the URL contract]
         t1 --> br[Build result]
         f1 --> br
     end
@@ -448,14 +449,15 @@ flowchart LR
 
 | Step | What happens | Where |
 |---|---|---|
-| Build | Unit and integration tests. The image is built once from the `Dockerfile`, run as a container, and must pass the full-system tests (all 9,337 contract URLs over HTTP) before it's kept as the artifact `container-image`. `Build result` is the required check | `.github/workflows/build.yml`, this repository |
+| Build | Unit and integration tests, with coverage. Then `scripts/Write-BuildFacts.ps1` writes `build-facts.json` from their results (ADR-0012), and the image is built once from the `Dockerfile`, which copies the file. The image is run as a container and must pass the full-system tests (all 9,337 contract URLs over HTTP) before it's kept as the artifact `container-image`. `Build result` is the required check | `.github/workflows/build.yml`, this repository |
 | Release | After a green Build of `master`: that image goes to the registry as `jpcom/web:<version>`, its tag is locked, the `deploy/` folder goes to the Octopus feed as the package `jpcom-web.<version>.zip`, and release `<version>` of `jpcom-web` is created. Nothing is rebuilt | `release.yml`, added by the kit when it adopts this repository |
 | Deploy | "Pin version" commits the version to `jpcom-system`, "Update deployable" runs this repository's `deploy/deploy.ps1` from the release's package (it applies the container app with the release's image), "Verify deployable" runs `deploy/verify.ps1` (`/_health/ready` must answer `ready <version>`). "Revert pin" runs when a step fails | Octopus project `jpcom-web`; the scripts are this repository's (ADR-0007) |
 | Promote | `tdd` deploys on its own. `uat` and `prod` each start with a sign-off | Octopus lifecycle |
 | Infrastructure | A pull request to `jpcom-system` runs `env-checks` and previews a what-if. A merge applies the Octopus configuration and releases `jpcom-system`, which applies and verifies each environment's stack through the same promotion | `jpcom-system` |
 
 The version is `MAJOR_VERSION.MINOR_VERSION.<run number>` from `build.yml`. The image carries it, and
-`/_health/ready` answers `ready <version>`, so any environment says which release it runs.
+`/_health/ready` answers `ready <version>`, so any environment says which release it runs. `/_build` says what that
+release was built from and what its Build measured (ADR-0012).
 
 | Onion DevOps Architecture stage | This site |
 |---|---|
@@ -479,9 +481,9 @@ catches is a change outside a deployment. While an environment fails, an issue l
 
 | Layer | What | Where it runs |
 |---|---|---|
-| **Unit** | The kit's contract in `build.yml` (`BuildWorkflowContractTests`); `SiteContent` invariants and queries; every resolver rule (table-driven, one case per rule plus precedence conflicts); pagination; feed item selection; front matter and Markdown loading; **architecture rules** (Core references no project and no package; Infrastructure doesn't reference UI.Server) | every build |
-| **Integration** | `FileSystemContentSource` over the **real `content/` tree**, which validates every PR's content; `WebApplicationFactory` tests: **full contract replay (9,337 rows)**, every kind of page in the site layout, **a crawl from `/` that reaches all 966 posts by the links the components write**, feed XML validity, sitemaps, headers/CSP, caching, health; **`deploy/deploy.ps1` run for real** with a stand-in for the Azure CLI (`tests/stubs/az`): a first deployment, a later one, and each way it stops, a region Azure refuses among them (`DeployScriptTests`); `scripts/test-regions.ps1` the same way (`RegionProbeScriptTests`) | every build |
-| **Full-system (acceptance)** | The published app as a process and the **container image built from the `Dockerfile`**, each over real HTTP: full contract replay, the version on the health path, uploads served as files (not Git LFS pointers), an unprivileged user on port 8080, `deploy/verify.ps1` against the container (regions, with and without a front door), and the nightly verification script against the container, a site that doesn't answer and a site that breaks the contract. Playwright for .NET drives the container in Chromium: the home page's look, a post opened from it, older and newer, previous and next, a month and a tag from the sidebar, search, the 404 page, a comment's anchor, a legacy redirect, a phone-sized screen, the keyboard. Requests to any other host (YouTube iframes in old posts) are refused by request interception, and the pages under test must make none | every build; the image that passes is the image released |
+| **Unit** | The kit's contract in `build.yml` (`BuildWorkflowContractTests`); how the Build's facts reach the image (`BuildFactsContractTests`) and which file `/_build` believes (`BuildFactsTests`); `SiteContent` invariants and queries; every resolver rule (table-driven, one case per rule plus precedence conflicts); pagination; feed item selection; front matter and Markdown loading; **architecture rules** (Core references no project and no package; Infrastructure doesn't reference UI.Server) | every build |
+| **Integration** | `FileSystemContentSource` over the **real `content/` tree**, which validates every PR's content; `WebApplicationFactory` tests: **full contract replay (9,337 rows)**, every kind of page in the site layout, **a crawl from `/` that reaches all 966 posts by the links the components write**, feed XML validity, sitemaps, headers/CSP, caching, health; **`deploy/deploy.ps1` run for real** with a stand-in for the Azure CLI (`tests/stubs/az`): a first deployment, a later one, and each way it stops, a region Azure refuses among them (`DeployScriptTests`); `scripts/test-regions.ps1` the same way (`RegionProbeScriptTests`); **`scripts/Write-BuildFacts.ps1` run for real** over a small tree git tracks, test results and the coverage of two runs, every number asserted, and with no inputs (`BuildFactsScriptTests`); `/_build` with the Build's file, without one and with the file of another release (`BuildFactsEndpointTests`) | every build |
+| **Full-system (acceptance)** | The published app as a process and the **container image built from the `Dockerfile`**, each over real HTTP: full contract replay, the version on the health path, `/_build` (from the image: the version, the commit and the lines of code, to any origin; from the published app: the version alone), uploads served as files (not Git LFS pointers), an unprivileged user on port 8080, `deploy/verify.ps1` against the container (regions, with and without a front door), and the nightly verification script against the container, a site that doesn't answer and a site that breaks the contract. Playwright for .NET drives the container in Chromium: the home page's look, a post opened from it, older and newer, previous and next, a month and a tag from the sidebar, search, the 404 page, a comment's anchor, a legacy redirect, a phone-sized screen, the keyboard, and a page on another origin reading `/_build` as the system's dashboard does. Requests to any other host (YouTube iframes in old posts) are refused by request interception, and the pages under test must make none | every build; the image that passes is the image released |
 | **Post-deploy verification** | The site's `verify.ps1` after every deployment: `/_health/ready` answers `ready <version>`, and the full contract replay passes against the environment. `Verify environments` replays the contract every night as well | every deployment, in tdd, uat and prod; every night (§9) |
 
 ## 11. Build sequence

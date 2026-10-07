@@ -25,6 +25,14 @@ builder.Services.AddSingleton<ISiteContentSource>(services =>
 builder.Services.AddSingleton(services => services.GetRequiredService<ISiteContentSource>().LoadAsync().GetAwaiter().GetResult());
 builder.Services.AddSingleton(services => new LegacyUrlResolver(services.GetRequiredService<IOptions<SiteOptions>>().Value.CanonicalHost));
 
+// What the Build measured about this release (ADR-0012), read once: the image never changes under a running process.
+builder.Services.AddSingleton(services =>
+{
+    var options = services.GetRequiredService<IOptions<SiteOptions>>().Value;
+    var environment = services.GetRequiredService<IWebHostEnvironment>();
+    return BuildFacts.Load(BuildFactsPath(options, environment), services.GetRequiredService<SiteContent>().Version);
+});
+
 // Pages are Razor components rendered once on the server from the minimal-API routes: no component endpoints are
 // mapped, so no client script and no interactive render mode exist (ADR-0005, ADR-0009).
 builder.Services.AddRazorComponents();
@@ -35,6 +43,15 @@ var app = builder.Build();
 var siteOptions = app.Services.GetRequiredService<IOptions<SiteOptions>>().Value;
 var site = app.Services.GetRequiredService<SiteContent>();
 Log.ContentLoaded(app.Logger, site.Version, site.Posts.Count, site.Attachments.Count);
+var buildFactsPath = BuildFactsPath(siteOptions, app.Environment);
+if (app.Services.GetRequiredService<BuildFacts>().Measured)
+{
+    Log.BuildFactsLoaded(app.Logger, site.Version);
+}
+else
+{
+    Log.NoBuildFacts(app.Logger, site.Version, buildFactsPath);
+}
 
 // Before the URL rules: they decide by the host the visitor asked for, which Front Door forwards.
 app.UseMiddleware<FrontDoorHostMiddleware>();
@@ -58,6 +75,9 @@ app.Run();
 
 static string ContentPath(SiteOptions options, IWebHostEnvironment environment) =>
     Path.GetFullPath(options.ContentPath, environment.ContentRootPath);
+
+static string BuildFactsPath(SiteOptions options, IWebHostEnvironment environment) =>
+    Path.GetFullPath(options.BuildFactsPath, environment.ContentRootPath);
 
 /// <summary>Entry point; public so WebApplicationFactory can host the app in integration tests.</summary>
 public partial class Program;

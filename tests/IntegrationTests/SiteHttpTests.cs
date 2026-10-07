@@ -116,6 +116,7 @@ public sealed class SiteHttpTests(SiteFactory factory) : IClassFixture<SiteFacto
     [InlineData("/_health/live")]
     [InlineData("/_health/ready")]
     [InlineData("/_version")]
+    [InlineData("/_build")]
     public async Task AHealthAnswerMayBeReadFromAnyOriginAndIsNeverCached(string path)
     {
         using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(path, UriKind.Relative));

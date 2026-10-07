@@ -4,9 +4,10 @@ namespace JeffreyPalermo.UI.Server.Endpoints;
 
 /// <summary>
 /// What the platform, the pipeline and the system's health dashboard ask of a running site: is the process up, has
-/// it loaded its content, which release is it. The dashboard is a page on another origin whose code reads the answers
-/// in the visitor's browser (ADR-0011), so each answer allows every origin. Nothing here is private and no
-/// credentials are involved. No answer may be kept by a cache: it is true only for the moment it was given.
+/// it loaded its content, which release is it, and what was that release built from (ADR-0012). The dashboard is a
+/// page on another origin whose code reads the answers in the visitor's browser (ADR-0011), so each answer allows
+/// every origin. Nothing here is private and no credentials are involved. No answer may be kept by a cache: it is
+/// true only for the moment it was given.
 /// </summary>
 internal static class HealthEndpoints
 {
@@ -23,6 +24,7 @@ internal static class HealthEndpoints
         health.MapGet("/_health/live", () => Results.Text("ok"));
         health.MapGet("/_health/ready", (SiteContent content) => Results.Text($"ready {content.Version}"));
         health.MapGet("/_version", (SiteContent content) => Results.Json(new VersionAnswer(content.Version)));
+        health.MapGet("/_build", (BuildFacts facts) => Results.Text(facts.Json, "application/json"));
     }
 
     /// <summary><c>{"version":"1.0.29"}</c>: the form the dashboard reads.</summary>

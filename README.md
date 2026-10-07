@@ -68,6 +68,7 @@ As the container that is delivered (needs Docker, and Git LFS for the video unde
 
 ```bash
 git lfs pull
+pwsh scripts/Write-BuildFacts.ps1   # optional: without build-facts.json, /_build answers the version alone
 docker build --tag jpcom .
 docker run --rm --publish 8080:8080 jpcom
 ```
@@ -84,13 +85,15 @@ The build treats warnings as errors.
 - **Unit tests:** URL classification and resolution, slug normalization, the domain's invariants and queries
   (previous and next post, archive months, terms in use, search, comment threads), how pages word things (dates,
   headings, titles, page addresses, the tag cloud), front matter round-trips, content layout, HTML cleaning, link
-  rewriting, contract file format, the Onion dependency rule, and the delivery system's contract in `build.yml`.
+  rewriting, contract file format, the Onion dependency rule, the delivery system's contract in `build.yml`, and
+  how the facts of a build reach the image and which file `/_build` believes.
 - **Integration tests:** the real `content/` tree loaded into the domain; the site in-process: every kind of page in
   the site layout, a crawl from `/` that must reach all 966 posts by following links, and a replay of all 9,337 URLs
   of `url-contract.tsv`; the fetch → convert → media pipeline and the URL prober against a stubbed WordPress HTTP
-  server and the real file system.
+  server and the real file system; the scripts run for real, `scripts/Write-BuildFacts.ps1` among them.
 - **Full-system tests** (`tests/AcceptanceTests`, need Docker): the published app as a real process, and the container
-  image built from the `Dockerfile` and run with `docker run`. Each replays the URL contract over real HTTP. A real
+  image built from the `Dockerfile` and run with `docker run`. Each replays the URL contract over real HTTP. The
+  image is built as the Build builds it, the facts of the build first, and must answer them at `/_build`. A real
   browser (Chromium, driven by Playwright for .NET) then reads the container's site as a reader would: home, a post,
   older and newer, the sidebar, search, a page that is not found, a phone-sized screen, the keyboard. Requests to any
   other host are refused and fail the test. Set `JPCOM_IMAGE` to test an image that is already built, as the Build
@@ -107,6 +110,8 @@ pwsh tests/AcceptanceTests/bin/Release/net10.0/playwright.ps1 install chromium
 ## Delivery
 
 `.github/workflows/build.yml` runs every test layer and keeps the tested image as the artifact `container-image`.
+The image carries the facts of its build, which the site answers at `/_build`: version, commit, lines of code,
+tests, coverage, complexity ([ADR-0012](docs/adr/0012-the-site-publishes-its-build-facts.md)).
 From there the system `jpcom` takes over: its Release pushes that image and creates an Octopus release, which is
 promoted through `tdd`, `uat` and `prod`. Every night `.github/workflows/verify-environments.yml` replays the URL
 contract against each environment (`scripts/verify-environments.sh`). See [ADR-0006](docs/adr/0006-deliver-through-the-demo-environment-kit.md)
