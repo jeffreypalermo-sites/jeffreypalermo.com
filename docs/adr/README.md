@@ -10,6 +10,7 @@
 | [0006](0006-deliver-through-the-demo-environment-kit.md) | Deliver through the demo-environment-kit GitOps system | Accepted; who creates the site's runtime changed by 0007 |
 | [0007](0007-the-site-owns-its-runtime.md) | The site owns its runtime; the system gives it the pipeline | Accepted |
 | [0008](0008-eleven-regions-behind-front-door.md) | Eleven regions behind Azure Front Door, in rotation, each scaling to zero | Accepted |
+| [0009](0009-the-wordpress-look-and-navigation.md) | Keep the WordPress site's look and navigation; Razor components rendered from the existing routes | Accepted |
 | [0010](0010-the-wordpress-site-is-frozen.md) | The WordPress site is frozen; content is edited in git | Accepted |
 
 The overall design is in [docs/architecture](../architecture/README.md).

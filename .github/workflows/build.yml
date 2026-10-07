@@ -100,6 +100,14 @@ jobs:
         with:
           global-json-file: global.json
 
+      # The full-system tests drive the container in Chromium (ADR-0009). Playwright's own script installs the
+      # browser build its version expects, with the system libraries a runner may lack.
+      - name: Install the browser for the full-system tests
+        run: |
+          set -euo pipefail
+          dotnet build tests/AcceptanceTests --configuration Release
+          pwsh tests/AcceptanceTests/bin/Release/net10.0/playwright.ps1 install --with-deps --only-shell chromium
+
       # The published app as a process, and the image just built as a container: the URL contract over real HTTP
       # against both. JPCOM_IMAGE makes the container tests run this image, so what is tested is what is released.
       - name: Full-system tests

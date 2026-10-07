@@ -11,7 +11,7 @@ See [MODERNIZATION-PLAN.md](MODERNIZATION-PLAN.md) for the analysis, options con
 |---|---|
 | `src/Core` | Domain: content records, legacy URL classification, slug normalization. No dependencies. |
 | `src/Infrastructure` | Loads `content/` into the domain (front matter, Markdown, archives); URL contract file format. |
-| `src/UI.Server` | ASP.NET Core host: legacy-URL middleware, pages, feeds, sitemaps, composition root. |
+| `src/UI.Server` | ASP.NET Core host: legacy-URL middleware, pages (Razor components in `Components/`, the stylesheet and fonts in `wwwroot/_assets/`), feeds, sitemaps, composition root. |
 | `tools/WpMigrator` | One-time WordPress.com → git migration. Done: the site is frozen ([ADR-0010](docs/adr/0010-the-wordpress-site-is-frozen.md)). |
 | `tools/UrlContract` | Captures how the live WordPress site answers every known URL. |
 | `content/` | Posts, pages, comments, archive metadata, and uploads. **Publishing = merging a PR.** |
@@ -60,8 +60,9 @@ is picked up by running it again.
 dotnet run --project src/UI.Server
 ```
 
-The Development settings point `Site:ContentPath` at `../../content`. Build step 2 renders plain HTML; the designed
-Blazor pages arrive in step 3.
+Then open <http://localhost:5062>. The Development settings point `Site:ContentPath` at `../../content`. The pages
+have the look and the navigation of the WordPress site ([ADR-0009](docs/adr/0009-the-wordpress-look-and-navigation.md)):
+Razor components rendered on the server, one stylesheet, no script.
 
 As the container that is delivered (needs Docker, and Git LFS for the video under `content/uploads`):
 
@@ -74,19 +75,34 @@ docker run --rm --publish 8080:8080 jpcom
 ## Build and test
 
 ```bash
-dotnet test JeffreyPalermo.slnx
+dotnet build JeffreyPalermo.slnx -c Release
+dotnet test JeffreyPalermo.slnx -c Release
 ```
 
-- **Unit tests:** URL classification and resolution, slug normalization, the domain's invariants and queries, front
-  matter round-trips, content layout, HTML cleaning, link rewriting, contract file format, the Onion dependency rule,
-  and the delivery system's contract in `build.yml`.
-- **Integration tests:** the real `content/` tree loaded into the domain; the site in-process, replaying all 9,337
-  URLs of `url-contract.tsv`; the fetch → convert → media pipeline and the URL prober against a stubbed WordPress
-  HTTP server and the real file system.
+The build treats warnings as errors.
+
+- **Unit tests:** URL classification and resolution, slug normalization, the domain's invariants and queries
+  (previous and next post, archive months, terms in use, search, comment threads), how pages word things (dates,
+  headings, titles, page addresses, the tag cloud), front matter round-trips, content layout, HTML cleaning, link
+  rewriting, contract file format, the Onion dependency rule, and the delivery system's contract in `build.yml`.
+- **Integration tests:** the real `content/` tree loaded into the domain; the site in-process: every kind of page in
+  the site layout, a crawl from `/` that must reach all 966 posts by following links, and a replay of all 9,337 URLs
+  of `url-contract.tsv`; the fetch → convert → media pipeline and the URL prober against a stubbed WordPress HTTP
+  server and the real file system.
 - **Full-system tests** (`tests/AcceptanceTests`, need Docker): the published app as a real process, and the container
-  image built from the `Dockerfile` and run with `docker run`. Each replays the URL contract over real HTTP. Set
-  `JPCOM_IMAGE` to test an image that is already built, as the Build workflow does. Playwright browser tests join
-  with the Blazor pages in build step 3.
+  image built from the `Dockerfile` and run with `docker run`. Each replays the URL contract over real HTTP. A real
+  browser (Chromium, driven by Playwright for .NET) then reads the container's site as a reader would: home, a post,
+  older and newer, the sidebar, search, a page that is not found, a phone-sized screen, the keyboard. Requests to any
+  other host are refused and fail the test. Set `JPCOM_IMAGE` to test an image that is already built, as the Build
+  workflow does.
+
+The browser tests use the Chromium build of their Playwright version (1.58: `chromium-1208` under
+`~/.cache/ms-playwright`). Where it is missing they download it once. To install it beforehand:
+
+```bash
+dotnet build tests/AcceptanceTests -c Release
+pwsh tests/AcceptanceTests/bin/Release/net10.0/playwright.ps1 install chromium
+```
 
 ## Delivery
 

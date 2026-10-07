@@ -16,6 +16,7 @@ public sealed class SiteContent
     private readonly Dictionary<string, Post> _postsByPath;
     private readonly Dictionary<string, Post> _postsByPathIgnoreCase;
     private readonly Dictionary<int, Post> _postsByWpId;
+    private readonly Dictionary<string, int> _positionsByPath;
     private readonly ILookup<string, Post> _postsByNormalizedSlug;
     private readonly Dictionary<string, Page> _pagesByPath;
     private readonly Dictionary<int, Page> _pagesByWpId;
@@ -42,6 +43,7 @@ public sealed class SiteContent
         _postsByPath = posts.ToDictionary(p => UrlPath.Decode(p.Permalink.Path), StringComparer.Ordinal);
         _postsByPathIgnoreCase = posts.ToDictionary(p => UrlPath.Decode(p.Permalink.Path), StringComparer.OrdinalIgnoreCase);
         _postsByWpId = posts.Where(p => p.WpId is not null).ToDictionary(p => p.WpId!.Value);
+        _positionsByPath = Posts.Select((post, position) => (post, position)).ToDictionary(x => UrlPath.Decode(x.post.Permalink.Path), x => x.position, StringComparer.Ordinal);
         _postsByNormalizedSlug = posts.ToLookup(p => Slug.Normalize(p.Slug), StringComparer.Ordinal);
         _pagesByPath = pages.ToDictionary(p => UrlPath.Decode(p.Path), StringComparer.OrdinalIgnoreCase);
         _pagesByWpId = pages.Where(p => p.WpId is not null).ToDictionary(p => p.WpId!.Value);
@@ -129,6 +131,65 @@ public sealed class SiteContent
         ArgumentNullException.ThrowIfNull(filter);
         ArgumentOutOfRangeException.ThrowIfLessThan(page, 1);
         var matching = Posts.Where(p => p.IsVisibleAt(utcNow) && filter.Matches(p)).ToList();
+        return new PagedList<Post>([.. matching.Skip((page - 1) * PageSize).Take(PageSize)], page, PageSize, matching.Count);
+    }
+
+    /// <summary>The visible posts published just before and just after the given post.</summary>
+    public PostNeighbors Neighbors(Post post, DateTime utcNow)
+    {
+        ArgumentNullException.ThrowIfNull(post);
+        if (!_positionsByPath.TryGetValue(UrlPath.Decode(post.Permalink.Path), out var position))
+        {
+            return new PostNeighbors(null, null);
+        }
+
+        // Posts are newest first, so the previous post comes later in the list.
+        return new PostNeighbors(
+            Posts.Skip(position + 1).FirstOrDefault(p => p.IsVisibleAt(utcNow)),
+            Posts.Take(position).LastOrDefault(p => p.IsVisibleAt(utcNow)));
+    }
+
+    /// <summary>Every month with a visible post, newest first, by local publish date like the date archives.</summary>
+    public IReadOnlyList<ArchiveMonth> ArchiveMonths(DateTime utcNow) =>
+        [.. Posts.Where(p => p.IsVisibleAt(utcNow))
+            .GroupBy(p => (p.Published.Year, p.Published.Month))
+            .OrderByDescending(g => g.Key)
+            .Select(g => new ArchiveMonth(g.Key.Year, g.Key.Month, g.Count()))];
+
+    /// <summary>The terms of a taxonomy that have visible posts, most used first, then by name.</summary>
+    public IReadOnlyList<TermUsage> TermsInUse(DateTime utcNow, string taxonomy)
+    {
+        List<Post> visible = [.. Posts.Where(p => p.IsVisibleAt(utcNow))];
+        return [.. Terms.Where(t => t.Taxonomy == taxonomy)
+            .Select(t => new TermUsage(t, visible.Count(ArchiveFilter.ForTerm(taxonomy, t.Slug).Matches)))
+            .Where(u => u.PostCount > 0)
+            .OrderByDescending(u => u.PostCount)
+            .ThenBy(u => u.Term.Name, StringComparer.OrdinalIgnoreCase)];
+    }
+
+    /// <summary>
+    /// One page of the visible posts that have every word of <paramref name="text"/> in the title or the body, ignoring
+    /// case. Ordered as WordPress ordered its search: the whole phrase in the title, then every word in the title, then
+    /// the rest; newest first within each. The body is matched as stored, markup included, as WordPress did.
+    /// </summary>
+    public PagedList<Post> Search(DateTime utcNow, string text, int page)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        ArgumentOutOfRangeException.ThrowIfLessThan(page, 1);
+        var words = text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
+        if (words.Length == 0)
+        {
+            return new PagedList<Post>([], page, PageSize, 0);
+        }
+
+        var phrase = string.Join(' ', words);
+        static bool Has(string content, string word) => content.Contains(word, StringComparison.OrdinalIgnoreCase);
+        int Rank(Post post) => Has(post.Title, phrase) ? 0 : words.All(w => Has(post.Title, w)) ? 1 : 2;
+
+        // Posts are already newest first and OrderBy is stable, so each rank keeps that order.
+        List<Post> matching = [.. Posts
+            .Where(p => p.IsVisibleAt(utcNow) && words.All(w => Has(p.Title, w) || Has(p.HtmlBody, w)))
+            .OrderBy(Rank)];
         return new PagedList<Post>([.. matching.Skip((page - 1) * PageSize).Take(PageSize)], page, PageSize, matching.Count);
     }
 

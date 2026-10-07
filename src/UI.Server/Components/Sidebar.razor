@@ -1,0 +1,56 @@
+@* The widgets of the WordPress sidebar, from the site's own content. The search box stands where the e-mail
+   subscription form was: the site has no subscription service, and the old site offered search only when a page was not found. *@
+@inject SiteNavigation Navigation
+@inject AuthorPortraits Portraits
+
+<section class="widget widget-feeds" aria-label="Feeds">
+    <ul>
+        <li><a href="@SiteUrls.Feed" title="Subscribe to posts">RSS - Posts</a></li>
+    </ul>
+</section>
+
+<section class="widget widget-search" aria-labelledby="widget-search-title">
+    <h2 class="widget-title" id="widget-search-title">Search</h2>
+    <SearchForm InputId="sidebar-search" />
+</section>
+
+@if (Navigation.Author(ProfileAuthor) is { } author)
+{
+    <section class="widget widget-profile" aria-labelledby="widget-profile-title">
+        @if (Portraits.Profile(author.Slug) is { } portrait)
+        {
+            <img class="profile-portrait" src="@portrait" alt="@author.Name" width="522" height="522" loading="lazy">
+        }
+        <h2 class="profile-name" id="widget-profile-title">@author.Name</h2>
+        <p><a href="/about/">View Full Profile <span aria-hidden="true">&rarr;</span><span class="screen-reader-text"> of @author.Name</span></a></p>
+    </section>
+}
+
+@if (Navigation.Tags.Count > 0)
+{
+    <section class="widget widget-tags" aria-labelledby="widget-tags-title">
+        <h2 class="widget-title" id="widget-tags-title">Tags</h2>
+        <div class="tagcloud">
+            @foreach (var tag in TagCloud.Build(Navigation.Tags))
+            {
+                <a href="@SiteUrls.Term(tag.Term)" style="font-size: @tag.FontSize" aria-label="@tag.Term.Name (@DisplayText.Count(tag.PostCount, "item", "items"))">@tag.Term.Name</a>
+                @(" ")
+            }
+        </div>
+    </section>
+}
+
+<nav class="widget widget-archives" aria-labelledby="widget-archives-title">
+    <h2 class="widget-title" id="widget-archives-title">Archives</h2>
+    <ul>
+        @foreach (var month in Navigation.Months)
+        {
+            <li><a href="@SiteUrls.Month(month.Year, month.Month)">@DisplayText.Month(month.Year, month.Month)</a></li>
+        }
+    </ul>
+</nav>
+
+@code {
+    /// <summary>The author the profile widget shows: the site is one person's blog.</summary>
+    private const string ProfileAuthor = "jeffreypalermo";
+}

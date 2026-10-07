@@ -47,6 +47,7 @@ public sealed partial class LegacyUrlResolver(string canonicalHost)
             return Media;
         }
 
+        // The site's own paths, which WordPress never had: health checks, and its stylesheet, fonts and pictures.
         if (path.StartsWith("/_", StringComparison.Ordinal))
         {
             return Canonical;

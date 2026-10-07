@@ -13,7 +13,11 @@ public sealed class SiteOptions
     /// <summary>Identifies the content snapshot (the git commit in CI), used for ETags and diagnostics.</summary>
     public string Version { get; set; } = "dev";
 
-    public string SiteTitle { get; set; } = "Jeffrey Palermo";
+    /// <summary>The name in the header, the document titles and the feeds, as the WordPress site had it.</summary>
+    public string SiteTitle { get; set; } = "Programming with Palermo";
+
+    /// <summary>The line under the site title.</summary>
+    public string Tagline { get; set; } = "Jeffrey Palermo, Microsoft MVP, Author, Speaker, Clear Measure Chief Architect, Azure DevOps Expert";
 
     /// <summary>
     /// The ID of the Azure Front Door profile in front of the site, when there is one (its <c>X-Azure-FDID</c> header).
