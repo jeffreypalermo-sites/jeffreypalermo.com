@@ -40,7 +40,7 @@ public sealed class DeployScriptTests : IDisposable
     public async Task ALaterDeploymentLeavesTheEnvironmentsAsTheyAre()
     {
         ExpressEnvironment("cae-jpcom-uat-eus2");
-        ExpressEnvironment("cae-jpcom-uat-weu");
+        ExpressEnvironment("cae-jpcom-uat-gwc");
 
         var result = await DeployAsync("uat");
 
@@ -56,6 +56,27 @@ public sealed class DeployScriptTests : IDisposable
         Assert.Contains("--name stack-jpcom-uat-web --resource-group rg-test", stack, StringComparison.Ordinal);
         Assert.Contains("--action-on-unmanage deleteResources", stack, StringComparison.Ordinal);
         Assert.Contains("--deny-settings-mode denyWriteAndDelete --deny-settings-excluded-principals principal-1", stack, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// The first deployment to uat: Azure refused West Europe for the subscription ("not accepting new customers").
+    /// Every region is asked, each refusal is named on a line of its own, and nothing is applied.
+    /// </summary>
+    [Fact]
+    public async Task RegionsAzureRefusesAreAllNamedAndNothingIsApplied()
+    {
+        File.WriteAllLines(Path.Join(_state, "refused-locations"), ["japaneast", "uksouth"]);
+
+        var result = await DeployAsync("prod");
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Contains("FAIL Azure refused the express environment of 2 of 11 region(s); nothing was deployed:", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  japaneast (jpe): ERROR: Forbidden(", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  uksouth (uks): ERROR: Forbidden(", result.Output, StringComparison.Ordinal);
+        Assert.Contains("not accepting new customers", result.Output, StringComparison.Ordinal);
+        Assert.Equal(11, Calls().Count(call => call.StartsWith("rest --method put", StringComparison.Ordinal)));
+        Assert.DoesNotContain(Calls(), call => call.StartsWith("stack group create", StringComparison.Ordinal));
     }
 
     [Fact]
