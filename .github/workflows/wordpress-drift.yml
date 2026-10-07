@@ -1,0 +1,60 @@
+# Nightly check that the frozen WordPress site has not changed (ADR-0010). content/ was taken from it and is edited
+# in git since 2026-10-06, so a post, page or comment that appears or changes there would be lost. While the site
+# differs from content/archive/wordpress-freeze.json, an issue labelled wordpress-drift stays open; the next clean
+# run closes it.
+#
+# Delete this workflow, the script and its tests when the WordPress.com site is closed.
+name: WordPress drift
+
+on:
+  schedule:
+    - cron: '41 7 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: wordpress-drift
+  cancel-in-progress: false
+
+jobs:
+  drift:
+    name: The WordPress site is as it was frozen
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6.0.1
+
+      - name: Compare the site with the freeze record
+        run: scripts/check-wordpress-drift.sh
+
+      - name: Open an issue while the site differs
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          gh label create wordpress-drift --repo "$GITHUB_REPOSITORY" --color D93F0B \
+            --description "The frozen WordPress site differs from the freeze record" --force
+          open="$(gh issue list --repo "$GITHUB_REPOSITORY" --label wordpress-drift --state open --json number --jq '.[0].number // empty')"
+          if [ -n "$open" ]; then
+            gh issue comment "$open" --repo "$GITHUB_REPOSITORY" --body "Still differs: $RUN_URL"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --label wordpress-drift \
+              --title "The WordPress site changed after the freeze" \
+              --body "The nightly comparison with content/archive/wordpress-freeze.json failed: $RUN_URL. The job summary says what differs. Carry the change over to content/ by hand (ADR-0010), then update the freeze record. This issue closes itself on the next clean run."
+          fi
+
+      - name: Close the issue after a clean run
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          for number in $(gh issue list --repo "$GITHUB_REPOSITORY" --label wordpress-drift --state open --json number --jq '.[].number'); do
+            gh issue close "$number" --repo "$GITHUB_REPOSITORY" --comment "The site matches the freeze record again: $RUN_URL"
+          done

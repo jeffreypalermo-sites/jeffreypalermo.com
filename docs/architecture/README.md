@@ -490,6 +490,7 @@ Each step is one PR that meets the Definition of Done.
 | Uploads already 404 on the live site (lost in the 2018 import) | 44 | Recover from the Wayback Machine; list in `migration/uploads-manifest.missing.txt` |
 | Community Server `.aspx` URLs (already 404) | 64 in contract | Map to posts by title using Wayback captures, into `legacy-redirects.json` |
 | Graffiti `/blog/` slugs WordPress fails to guess | 63 | Prefix-match rule plus curated map entries |
+| Content written on WordPress after the snapshot | 0 on 2026-10-06 | ✅ The site is frozen ([ADR-0010](../adr/0010-the-wordpress-site-is-frozen.md)): `convert` refuses `content/`, and `WordPress drift` compares the old site with `content/archive/wordpress-freeze.json` every night |
 
 ## 13. Decisions and open questions
 

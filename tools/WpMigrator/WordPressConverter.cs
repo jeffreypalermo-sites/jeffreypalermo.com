@@ -15,8 +15,23 @@ public sealed record ConversionSummary(int Posts, int Pages, int Comments, int A
 /// <summary>Turns the raw REST snapshot (<c>migration/raw/*.json</c>) into the repository's <c>content/</c> tree.</summary>
 public sealed partial class WordPressConverter
 {
+    /// <summary>
+    /// Why this content tree must not be converted into, or null when it may. Converting replaces every post and
+    /// page; once the WordPress site is frozen they are edited in git, and a conversion would undo those edits
+    /// without a word (ADR-0010).
+    /// </summary>
+    public static string? Refusal(ContentLayout layout) => File.Exists(layout.FreezeFile)
+        ? $"{layout.Root} is frozen ({layout.FreezeFile}): its posts and pages are edited in git now, and convert would replace them. " +
+          "To look at what a snapshot converts to, give convert another content directory."
+        : null;
+
     public static async Task<ConversionSummary> ConvertAsync(string rawDirectory, ContentLayout layout, string uploadsManifestFile, CancellationToken cancellationToken = default)
     {
+        if (Refusal(layout) is { } refusal)
+        {
+            throw new InvalidOperationException(refusal);
+        }
+
         var posts = await ReadRawAsync(rawDirectory, "posts", cancellationToken).ConfigureAwait(false);
         var pages = await ReadRawAsync(rawDirectory, "pages", cancellationToken).ConfigureAwait(false);
         var comments = await ReadRawAsync(rawDirectory, "comments", cancellationToken).ConfigureAwait(false);
