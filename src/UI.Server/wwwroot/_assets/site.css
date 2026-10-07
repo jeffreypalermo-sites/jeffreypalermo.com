@@ -1,0 +1,858 @@
+/*
+ * The look of jeffreypalermo.com as it was on WordPress.com (theme "P2 Breathe"), written for this site (ADR-0009).
+ * Sizes are in rem with 1rem = 10px, as the theme had them, so the page still follows the reader's font size.
+ * Colours: the theme's blue (#3498db) and grey (#888) are too faint for small text on white, so links and dates
+ * use darker shades of the same hues. Change them here.
+ */
+
+:root {
+  --page: #f1f1f1;
+  --panel: #fafafa;
+  --paper: #fff;
+  --text: #555;
+  --strong-text: #222;
+  --muted: #6b6b6b;
+  --link: #2672a4;
+  --link-hover: #1d5a82;
+  --accent: #2672a4;
+  --rule: #bbb;
+  --faint-rule: #ddd;
+  --serif: "Noto Serif", Georgia, "Times New Roman", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  --mono: Monaco, Consolas, "Andale Mono", "DejaVu Sans Mono", "Courier New", monospace;
+}
+
+/* Noto Serif, the theme's typeface, served by the site itself (SIL Open Font License 1.1, see fonts/OFL.txt). */
+@font-face {
+  font-family: "Noto Serif";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("fonts/noto-serif-latin.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Noto Serif";
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("fonts/noto-serif-latin-italic.woff2") format("woff2");
+}
+
+/* Base */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+  overflow-y: scroll;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+a:hover,
+a:active {
+  color: var(--link-hover);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--link-hover);
+  outline-offset: 2px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 400;
+}
+
+b,
+strong,
+dt,
+th {
+  font-weight: 600;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Shown to screen readers only; the skip link appears when it has the keyboard focus. */
+.screen-reader-text,
+.skip-link {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link:focus {
+  top: 5px;
+  left: 5px;
+  z-index: 100;
+  width: auto;
+  height: auto;
+  padding: 15px 23px 14px;
+  clip-path: none;
+  background: var(--page);
+  box-shadow: 0 0 2px 2px rgb(0 0 0 / 60%);
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+/* Layout: the main column on the left, the header and the sidebar in a quarter-width column on the right. */
+
+.site {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 25%;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "content header"
+    "content sidebar"
+    "footer footer";
+  column-gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px 40px;
+}
+
+.site-header {
+  grid-area: header;
+  background: var(--panel);
+}
+
+.content-area {
+  grid-area: content;
+  font-size: 1.3rem;
+}
+
+.content-area:focus {
+  outline: none;
+}
+
+.widget-area {
+  grid-area: sidebar;
+  font-size: 1.2rem;
+}
+
+.site-footer {
+  grid-area: footer;
+}
+
+/* Header */
+
+.site-branding {
+  padding: 12px;
+}
+
+.site-title {
+  margin: 0;
+  padding-bottom: 5px;
+  font-size: 2.2rem;
+  line-height: 1.5;
+}
+
+.site-title a {
+  color: #000;
+}
+
+.site-title a:hover {
+  color: var(--link);
+}
+
+.site-description {
+  margin: 5px 0 0;
+  color: var(--strong-text);
+  font-family: var(--sans);
+  font-size: 1.3rem;
+  font-weight: 300;
+}
+
+/* The menu runs across the top of the page, above both columns. */
+.site-menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  padding: 0 20px;
+  background: rgb(255 255 255 / 75%);
+  font-family: var(--sans);
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+.site-menu ul {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-menu a {
+  display: block;
+  padding: 8px 1.2em;
+  white-space: nowrap;
+}
+
+.site-menu a:hover,
+.site-menu a[aria-current="page"] {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Main column */
+
+.page-header {
+  margin: 0 15px;
+}
+
+.page-title {
+  margin: 0.4em 0 1.1em;
+  font-size: 2.86rem;
+  line-height: 1.1;
+}
+
+.single .content-area {
+  padding-top: 29px;
+}
+
+.post,
+.page {
+  margin: 0 0 30px;
+  padding: 5px;
+  background: var(--paper);
+}
+
+.entry-header {
+  margin-bottom: 20px;
+}
+
+.entry-meta {
+  font-size: 1.365rem;
+  font-weight: 700;
+  line-height: 36px;
+}
+
+.entry-meta .avatar {
+  float: left;
+  width: 36px;
+  height: 36px;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+.entry-author {
+  font-family: var(--sans);
+  font-size: 1.638rem;
+}
+
+.entry-date,
+.comment-date,
+.entry-terms {
+  color: var(--muted);
+  font-size: 0.8em;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.entry-date,
+.comment-date {
+  margin-left: 0.3em;
+  text-decoration: underline dotted var(--faint-rule);
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+.entry-terms {
+  margin-left: 46px;
+  padding-bottom: 0.9em;
+}
+
+.entry-terms + .entry-terms {
+  margin-top: -0.3em;
+}
+
+/* Beside their grey label these links need more than their colour to stand out. */
+.entry-terms a {
+  text-decoration: underline;
+}
+
+.entry-title {
+  clear: both;
+  margin: 0.4em 0;
+  font-size: 2.86rem;
+  line-height: 1.1;
+  overflow-wrap: break-word;
+}
+
+.entry-title a {
+  color: inherit;
+}
+
+.entry-title a:hover {
+  color: var(--link);
+}
+
+.entry-footer {
+  clear: both;
+  padding: 0.8em 0 0.4em;
+  color: var(--muted);
+  font-size: 1.2rem;
+}
+
+/*
+ * Post, page and comment bodies are twenty years of HTML written elsewhere: Word pastes, fixed-width tables, code
+ * with long lines, images of any size. Whatever does not fit scrolls inside its own box and never widens the page.
+ */
+.entry-content,
+.comment-content {
+  overflow-x: auto;
+  overflow-wrap: break-word;
+  font-size: 1.365rem;
+  line-height: 1.6;
+}
+
+.entry-content::after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.entry-content p,
+.comment-content p {
+  margin: 0 0 1.2em;
+}
+
+.entry-content p:empty {
+  margin: 0;
+}
+
+.entry-content a,
+.comment-content a {
+  text-decoration: underline;
+}
+
+.entry-content h1,
+.entry-content h2 {
+  margin: 0.4em 0 1.1em;
+  font-size: 2em;
+  line-height: 1.2;
+}
+
+.entry-content h3,
+.entry-content h4,
+.entry-content h5,
+.entry-content h6 {
+  margin: 20px 0;
+}
+
+.entry-content h3 {
+  font-size: 1.6em;
+  line-height: 1.4;
+}
+
+.entry-content h4 {
+  font-size: 1.4em;
+  line-height: 1.4;
+}
+
+.entry-content ul,
+.entry-content ol,
+.comment-content ul,
+.comment-content ol {
+  margin: 0 0 1.2em 25px;
+  padding: 0;
+}
+
+.entry-content li > ul,
+.entry-content li > ol {
+  margin-bottom: 0;
+}
+
+.entry-content dd {
+  margin: 0 1.2em 1.2em;
+}
+
+.entry-content blockquote,
+.comment-content blockquote {
+  margin: 0 0 1.2em;
+  padding: 1.2em 1.2em 0;
+  overflow: auto;
+  background: var(--page);
+  color: var(--strong-text);
+  font-style: italic;
+}
+
+.entry-content blockquote em,
+.comment-content blockquote em {
+  font-style: normal;
+}
+
+/* Old posts set "overflow: visible" on their code blocks in a style attribute; a long line scrolls in the block instead. */
+.entry-content pre,
+.comment-content pre {
+  max-width: 100%;
+  margin: 0 0 1.2em;
+  padding: 1.2em;
+  overflow: auto !important;
+  background: var(--page);
+  color: var(--strong-text);
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+
+.entry-content code,
+.entry-content kbd,
+.entry-content tt,
+.comment-content code {
+  font-family: var(--mono);
+  font-size: 0.8em;
+}
+
+.entry-content :not(pre) > code,
+.comment-content :not(pre) > code {
+  padding: 0.4em 0.65em;
+  border-radius: 3px;
+  background: var(--page);
+  color: var(--strong-text);
+}
+
+.entry-content hr {
+  height: 1px;
+  margin: 0 0 1.2em;
+  border: 0;
+  background: var(--faint-rule);
+}
+
+.entry-content table {
+  max-width: 100%;
+  margin: 0 0 1.2em;
+  border-top: 1px solid var(--faint-rule);
+  border-spacing: 0;
+}
+
+.entry-content td,
+.entry-content th {
+  padding: 1em;
+  border-bottom: 1px solid var(--page);
+  text-align: left;
+  vertical-align: top;
+}
+
+.entry-content td:first-child,
+.entry-content th:first-child {
+  padding-left: 0;
+}
+
+.entry-content td:last-child,
+.entry-content th:last-child {
+  padding-right: 0;
+}
+
+.entry-content .alignleft {
+  float: left;
+  margin-right: 1.5em;
+}
+
+.entry-content .alignright {
+  float: right;
+  margin-left: 1.5em;
+}
+
+.entry-content img[align="left"] {
+  margin: 20px 20px 20px 0;
+}
+
+.entry-content img[align="right"] {
+  margin: 20px 0 20px 20px;
+}
+
+.entry-content .aligncenter {
+  display: block;
+  clear: both;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.entry-content iframe,
+.entry-content embed,
+.entry-content object,
+.entry-content video {
+  max-width: 100%;
+}
+
+.entry-content video {
+  height: auto;
+}
+
+.entry-content .wp-caption {
+  max-width: 100%;
+  margin: 10px;
+  padding-top: 4px;
+  border: 1px solid var(--faint-rule);
+  background: var(--panel);
+  text-align: center;
+}
+
+.entry-content figure {
+  max-width: 100%;
+  margin: 0 0 1.2em;
+}
+
+/* Comments */
+
+.comments-area {
+  margin: 0;
+  padding: 20px 15px;
+  background: var(--paper);
+  font-size: 1.365rem;
+  line-height: 1.6;
+}
+
+.comment-list,
+.comment-list .children {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.comment-list .children {
+  padding-left: 1.5em;
+}
+
+.comment-meta {
+  margin-left: 45px;
+  font-size: 1.433rem;
+  font-weight: 700;
+  line-height: 1.8;
+}
+
+/* Commenters have no picture: the site asks no other service for one. */
+.comment-meta .avatar {
+  float: left;
+  width: 32px;
+  height: 32px;
+  margin: 5px 0 0 -42px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 38%, #fff 0 19%, transparent 20%),
+    radial-gradient(ellipse at 50% 108%, #fff 0 42%, transparent 43%),
+    #c3c4c7;
+}
+
+.comment-author {
+  display: inline-block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.comment-content {
+  margin-left: 45px;
+  padding-right: 1.6em;
+  font-size: 1.433rem;
+}
+
+.comment-content p {
+  margin: 1.2em 0;
+}
+
+.comment:target {
+  outline: 2px solid var(--faint-rule);
+  outline-offset: 4px;
+}
+
+.no-comments {
+  margin: 1.2em 0;
+}
+
+/* Older and newer */
+
+.post-navigation {
+  display: flex;
+  gap: 15px;
+  justify-content: space-between;
+  padding: 15px;
+  border-top: 1px solid var(--rule);
+}
+
+.single .post-navigation {
+  background: var(--paper);
+}
+
+.post-navigation div {
+  flex: 1 1 50%;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.nav-next {
+  text-align: right;
+}
+
+/* Sidebar */
+
+.widget {
+  margin: 0 0 20px;
+  padding: 1.2em;
+  background: var(--panel);
+}
+
+.widget-title {
+  margin: 0 0 0.4em;
+  font-size: 1.9em;
+  line-height: 1.4;
+}
+
+.widget ul {
+  margin: 0;
+  padding: 0;
+  font-size: 1.05em;
+  line-height: 1.6;
+  list-style: none;
+}
+
+.widget li {
+  padding: 5px 10px 5px 0;
+}
+
+.widget p {
+  margin: 0;
+  font-size: 1.05em;
+  line-height: 1.6;
+}
+
+.widget-profile .profile-portrait {
+  display: block;
+  width: 100%;
+}
+
+.profile-name {
+  margin: 1em 0 0.5em;
+  font-size: 1.4em;
+  line-height: 1.4;
+}
+
+.tagcloud a {
+  overflow-wrap: break-word;
+}
+
+/* Search */
+
+.search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+.search-form input {
+  flex: 0 1 165px;
+  min-width: 0;
+  padding: 5px;
+  border: 1px solid var(--faint-rule);
+  background: #fff;
+  color: var(--strong-text);
+  font-family: var(--serif);
+  font-size: 1.3rem;
+}
+
+.search-form button {
+  padding: 0.6em 1em 0.4em;
+  border: 1px solid #eee;
+  border-radius: 2px;
+  background: #eee;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 50%), inset 0 15px 17px rgb(255 255 255 / 50%), inset 0 -5px 12px rgb(0 0 0 / 5%);
+  color: rgb(0 0 0 / 80%);
+  font-family: var(--sans);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.widget-area .search-form input {
+  flex: 1 1 0;
+}
+
+.search-form button:hover {
+  border-color: #ccc;
+}
+
+/* Search results that found nothing, and the page for an address that leads nowhere. */
+
+.no-results,
+.not-found {
+  padding-bottom: 15px;
+}
+
+.no-results p {
+  font-size: 1.365rem;
+  line-height: 1.6;
+}
+
+.not-found .widget {
+  margin: 0 0 20px;
+  padding: 1.2em;
+  font-size: 1.3rem;
+}
+
+.not-found .search-form {
+  margin-bottom: 20px;
+}
+
+.not-found .widget-title {
+  margin: 20px 0;
+  font-size: 2.6rem;
+}
+
+.not-found .widget ul {
+  margin: 0 0 1.2em 25px;
+  list-style: disc;
+}
+
+.not-found .widget li {
+  padding: 0;
+}
+
+.not-found .widget p {
+  margin: 0 0 1.2em;
+}
+
+.not-found .widget .archive-years {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-left: 0;
+  list-style: none;
+}
+
+/* Footer */
+
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 20px;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 1px 20px;
+  border-top: 1px solid rgb(0 0 0 / 10%);
+  background: rgb(255 255 255 / 80%);
+  line-height: 25px;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+.site-info a {
+  color: #111;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.site-credits {
+  color: var(--muted);
+  font-size: 1.2rem;
+}
+
+/* Narrow screens: one column. Title, menu, posts, then the sidebar. */
+
+@media (max-width: 876px) {
+  .site {
+    display: block;
+    padding: 20px 20px 40px;
+  }
+
+  .site-header {
+    margin-bottom: 20px;
+    background: none;
+  }
+
+  .site-branding {
+    margin-bottom: 10px;
+    padding: 0;
+  }
+
+  .site-description {
+    margin-top: 0;
+    line-height: 1;
+  }
+
+  .site-menu {
+    position: static;
+  }
+
+  .site-menu ul {
+    display: block;
+  }
+
+  .site-menu a {
+    padding: 0.1em 0 0.1em 0.5em;
+    white-space: normal;
+  }
+
+  .widget-area {
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 550px) {
+  .entry-title {
+    font-size: 1.95rem;
+  }
+
+  .comments-area {
+    padding-left: 0;
+  }
+
+  .comment-list .children {
+    padding-left: 1em;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+
+  .site {
+    display: block;
+    padding: 0;
+  }
+
+  .site-header,
+  .widget-area,
+  .site-footer,
+  .post-navigation,
+  .search-form,
+  .skip-link {
+    display: none;
+  }
+}

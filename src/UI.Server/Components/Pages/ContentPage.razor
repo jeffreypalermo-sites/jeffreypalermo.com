@@ -1,0 +1,18 @@
+@* A standing page, such as About. *@
+@inject IOptions<SiteOptions> Options
+
+<SiteLayout Title="@DisplayText.Title(Model.Title, Options.Value.SiteTitle)" CanonicalPath="@Model.Path" BodyClass="page">
+    <header class="page-header">
+        <h1 class="page-title">@Model.Title</h1>
+    </header>
+    <article class="page">
+        <div class="entry-content">
+            @((MarkupString)Model.HtmlBody)
+        </div>
+    </article>
+</SiteLayout>
+
+@code {
+    [Parameter, EditorRequired]
+    public Page Model { get; set; } = null!;
+}

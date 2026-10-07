@@ -1,0 +1,74 @@
+@* The frame of every page: document head, header with the menu, main column, sidebar and footer (ADR-0009). *@
+@inject IOptions<SiteOptions> Options
+@inject SiteContent Site
+
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@Title</title>
+    @if (CanonicalPath is not null)
+    {
+        <link rel="canonical" href="@CanonicalPath">
+    }
+    @if (!Index)
+    {
+        <meta name="robots" content="noindex, follow">
+    }
+    <link rel="alternate" type="application/rss+xml" title="@Options.Value.SiteTitle » Feed" href="@SiteUrls.Feed">
+    <link rel="alternate" type="application/rss+xml" title="@Options.Value.SiteTitle » Comments Feed" href="/comments/feed/">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="@(SiteUrls.Assets)site.css?v=@Site.Version">
+</head>
+<body class="@BodyClass">
+    <a class="skip-link" href="#content">Skip to content</a>
+    <div class="site">
+        <header class="site-header">
+            <div class="site-branding">
+                <p class="site-title"><a href="@SiteUrls.Home" rel="home">@Options.Value.SiteTitle</a></p>
+                <p class="site-description">@Options.Value.Tagline</p>
+            </div>
+            <nav class="site-menu" aria-label="Main menu">
+                <ul>
+                    @foreach (var item in SiteMenu.Items)
+                    {
+                        <li><a href="@item.Href" aria-current="@(item.Href == CanonicalPath ? "page" : null)">@item.Text</a></li>
+                    }
+                </ul>
+            </nav>
+        </header>
+        <main id="content" class="content-area" tabindex="-1">
+            @ChildContent
+        </main>
+        <aside class="widget-area" aria-label="Sidebar">
+            <Sidebar />
+        </aside>
+        <footer class="site-footer">
+            <p class="site-info"><a href="@SiteUrls.Home" rel="home">@Options.Value.SiteTitle</a></p>
+            <p class="site-credits">Powered by ASP.NET Core.</p>
+        </footer>
+    </div>
+</body>
+</html>
+
+@code {
+    /// <summary>The document title.</summary>
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = string.Empty;
+
+    /// <summary>The page's own address; null for a page that has none (not found).</summary>
+    [Parameter]
+    public string? CanonicalPath { get; set; }
+
+    /// <summary>The kind of page, for the stylesheet.</summary>
+    [Parameter]
+    public string BodyClass { get; set; } = string.Empty;
+
+    /// <summary>False asks search engines to leave the page out (search results, not found).</summary>
+    [Parameter]
+    public bool Index { get; set; } = true;
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

@@ -1,0 +1,40 @@
+@* The pair of links under a page: older to the left, newer to the right, as the WordPress theme placed them. *@
+@if (PreviousHref is not null || NextHref is not null)
+{
+    <nav class="post-navigation" aria-label="@Label">
+        <div class="nav-previous">
+            @if (PreviousHref is not null)
+            {
+                <a href="@PreviousHref" rel="@(BetweenPosts ? "prev" : null)"><span aria-hidden="true">&larr;</span> @PreviousText</a>
+            }
+        </div>
+        <div class="nav-next">
+            @if (NextHref is not null)
+            {
+                <a href="@NextHref" rel="@(BetweenPosts ? "next" : null)">@NextText <span aria-hidden="true">&rarr;</span></a>
+            }
+        </div>
+    </nav>
+}
+
+@code {
+    /// <summary>What the links lead through, for assistive technology.</summary>
+    [Parameter, EditorRequired]
+    public string Label { get; set; } = string.Empty;
+
+    /// <summary>True when the links lead to single posts, which are each other's <c>prev</c> and <c>next</c>.</summary>
+    [Parameter]
+    public bool BetweenPosts { get; set; }
+
+    [Parameter]
+    public string? PreviousHref { get; set; }
+
+    [Parameter]
+    public string? PreviousText { get; set; } = "Older posts";
+
+    [Parameter]
+    public string? NextHref { get; set; }
+
+    [Parameter]
+    public string? NextText { get; set; } = "Newer posts";
+}

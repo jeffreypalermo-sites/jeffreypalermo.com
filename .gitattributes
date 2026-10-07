@@ -6,6 +6,7 @@
 *.ico binary
 *.pdf binary
 *.zip binary
+*.woff2 binary
 content/uploads/**/*.pdf filter=lfs diff=lfs merge=lfs -text
 content/uploads/**/*.mp4 filter=lfs diff=lfs merge=lfs -text
 content/uploads/**/*.mov filter=lfs diff=lfs merge=lfs -text

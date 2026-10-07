@@ -1,0 +1,16 @@
+@* A plain GET form: search works without script (ADR-0005). *@
+<form class="search-form" method="get" action="@SiteUrls.Search" role="search">
+    <label class="screen-reader-text" for="@InputId">Search</label>
+    <input type="search" id="@InputId" name="q" value="@Text" placeholder="Search …">
+    <button type="submit">Search</button>
+</form>
+
+@code {
+    /// <summary>The id of the text box; unique on the page, which can hold more than one search form.</summary>
+    [Parameter, EditorRequired]
+    public string InputId { get; set; } = string.Empty;
+
+    /// <summary>The text already searched for.</summary>
+    [Parameter]
+    public string? Text { get; set; }
+}

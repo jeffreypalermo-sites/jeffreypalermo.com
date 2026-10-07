@@ -16,8 +16,8 @@ public sealed class SiteHttpTests(SiteFactory factory) : IClassFixture<SiteFacto
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal("text/html", response.Content.Headers.ContentType?.MediaType);
-        Assert.Contains("<title>The Onion Architecture : part 1</title>", html, StringComparison.Ordinal);
-        Assert.Contains($"<link rel=\"canonical\" href=\"{Onion}\">", html, StringComparison.Ordinal);
+        Assert.Contains("<title>The Onion Architecture : part 1 | Programming with Palermo</title>", html, StringComparison.Ordinal);
+        Assert.Contains($"<link rel=\"canonical\" href=\"{Onion}\"", html, StringComparison.Ordinal);
         Assert.Contains("id=\"comment-", html, StringComparison.Ordinal);
     }
 

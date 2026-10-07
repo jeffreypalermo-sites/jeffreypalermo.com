@@ -86,9 +86,9 @@ ports. UI.Server is the composition root that wires them together. A unit test e
 | `src/Infrastructure` | outer | Load `content/` into the domain (YAML front matter, Markdig), in-memory search index, system clock, URL contract file format | Core, YamlDotNet, Markdig |
 | `src/UI.Server` | outer | Blazor static SSR pages, legacy-URL middleware, feeds, sitemaps, headers, caching, health, OpenTelemetry, DI composition | Core, Infrastructure |
 | `tools/WpMigrator`, `tools/UrlContract` | outer | One-time migration and contract capture (exist today) | Infrastructure |
-| `tests/UnitTests` | outer | Core and Infrastructure in isolation, plus architecture rules | all |
+| `tests/UnitTests` | outer | Core, Infrastructure and UI.Server's wording of pages in isolation, plus architecture rules | all |
 | `tests/IntegrationTests` | outer | Real `content/` tree, in-process HTTP pipeline, full contract replay | all |
-| `tests/AcceptanceTests` | outer | The published app and the container image over real HTTP; Playwright for .NET from build step 3 | tools/UrlContract (the contract verifier) |
+| `tests/AcceptanceTests` | outer | The published app and the container image over real HTTP; Playwright for .NET drives the container in Chromium | tools/UrlContract (the contract verifier) |
 
 `UI.Server` keeps Jeffrey's Onion DevOps naming and leaves room for a `UI.Client` project if interactive islands
 are ever needed.
@@ -290,26 +290,52 @@ against the container image in every build, and against each environment after a
 render modes and no `blazor.web.js`.** Pages are Razor components that render to plain HTML. The search form is a
 GET form. Interactive islands can be added later per component without changing the architecture.
 
+**Decision ([ADR-0009](../adr/0009-the-wordpress-look-and-navigation.md)): the pages keep the look and the navigation
+of the WordPress site, and the components are rendered from the minimal-API routes.** The routes of
+`ContentEndpoints` decide what a URL shows and with which status, as the URL contract proves them. Each returns a
+page component as its result (`RazorComponentResult<T>`). No component endpoints are mapped and no component has an
+`@page` route.
+
 ### Request pipeline
 
 ```mermaid
 flowchart LR
-    req[request] --> fh[ForwardedHeaders] --> sec[Security headers<br/>HSTS, CSP, X-Robots-Tag on preview hosts] --> legacy[LegacyUrlMiddleware<br/>ResolveUrlQuery] --> oc[OutputCache] --> sf[Static files<br/>/wp-content/uploads, /css] --> ep[Endpoints:<br/>Razor components, feeds, sitemaps, health] --> nf[404 page + log]
+    req[request] --> fh[ForwardedHeaders] --> sec[Security headers<br/>HSTS, CSP, X-Robots-Tag on preview hosts] --> legacy[LegacyUrlMiddleware<br/>ResolveUrlQuery] --> oc[OutputCache] --> sf[Static files<br/>/wp-content/uploads, /_assets] --> ep[Endpoints:<br/>Razor components, feeds, sitemaps, health] --> nf[404 page + log]
 ```
+
+_Built today: the Front Door host, the legacy URL middleware, static files and the endpoints. Forwarded headers,
+security headers and output caching are build step 5._
 
 ### Routes
 
 | Route | Component / endpoint |
 |---|---|
-| `/`, `/page/{n}/` | `Home` (positioning, featured series, recent posts) |
-| `/{year}/{month}/{slug}/` | `PostPage` (body, archived comments, era banner on posts > 5 years old, prev/next) |
-| `/{year}/`, `/{year}/{month}/`, `/{year}/{month}/{day}/` (+ `/page/{n}/`) | `DateArchive` |
-| `/tag/{slug}/`, `/category/{slug}/`, `/author/{slug}/` (+ `/page/{n}/`) | `TermArchive` |
-| `/{slug}/` | `PageOrAttachment` (About, 275 attachment pages) |
-| `/search` | `Search` |
+| `/`, `/page/{n}/` | `ListingPage`: "Recent Updates", ten whole posts, older and newer |
+| `/{year}/{month}/{slug}/` | `PostPage`: date, author, categories and tags, body, archived comments threaded at their `#comment-{id}` anchors, previous and next post |
+| `/{year}/`, `/{year}/{month}/`, `/{year}/{month}/{day}/` (+ `/page/{n}/`) | `ListingPage`: "Yearly", "Monthly" or "Daily Archives" |
+| `/tag/{slug}/`, `/category/{slug}/`, `/author/{slug}/`, `/type/{slug}/` (+ `/page/{n}/`) | `ListingPage`: "Tag", "Category" or "Author Archives" |
+| `/{slug}/`, `/{year}/{month}/{post}/{slug}/` | `ContentPage` (About) or `AttachmentPage` (275 attachment pages) |
+| `/search/?q=` (+ `&page={n}`), and `/?s=` rewritten to it | `ListingPage`: "Search Results for", excerpts; an empty search shows the form |
+| anything else, and legacy URLs known to be dead | `NotFoundPage` with status 404: search, recent posts, categories, years |
 | `/feed/`, `/feed/atom/`, `/comments/feed/`, `/…/feed/` | minimal API feed endpoints (RSS 2.0 stays the default format readers already use) |
 | `/wp-sitemap.xml`, `/wp-sitemap-*.xml`, `/robots.txt` | minimal API endpoints. Search engines already know the WordPress sitemap names, so they're kept. |
+| `/_assets/…` | the site's own stylesheet, fonts and portraits (`wwwroot/_assets`). The legacy URL rules pass every `/_…` path through |
 | `/_health/live`, `/_health/ready` | liveness; readiness = content loaded, answering `ready <version>`. `/_health/ready` is the health path every deployment verifies |
+
+### Pages
+
+| Part | Where | What |
+|---|---|---|
+| Layout | `Components/SiteLayout.razor`, `Sidebar.razor` | Document head, skip link, header (site title, tagline, the WordPress menu), main column, sidebar (feed, search, profile, tag cloud, every month), footer |
+| Pages | `Components/Pages/*.razor` | One component per kind of page, each rendered from one `Model` parameter |
+| Parts of pages | `PostArticle`, `CommentList`, `Pager`, `SearchForm` | A post as listed or alone; threaded comments; older/newer and previous/next; the GET search form |
+| Wording | `Presentation/` | Headings and titles (`Listings`), dates (`DisplayText`), addresses (`SiteUrls`), the tag cloud's sizes (`TagCloud`), the menu (`SiteMenu`). Plain classes with unit tests |
+| Per request | `Presentation/SiteNavigation` | The lists several components ask for (months, tags, categories), worked out once per request |
+| Look | `wwwroot/_assets/site.css` | One stylesheet reproducing the WordPress theme; Noto Serif from `wwwroot/_assets/fonts` (SIL OFL 1.1). One column below 877 pixels |
+
+What the pages navigate by is domain logic in Core: `SiteContent.Neighbors`, `ArchiveMonths`, `TermsInUse`, `Search`
+and `CommentThread`. Post, page and comment bodies are stored as clean HTML and written as they are; everything else
+is encoded by Razor.
 
 ### Cross-cutting
 
@@ -454,8 +480,8 @@ catches is a change outside a deployment. While an environment fails, an issue l
 | Layer | What | Where it runs |
 |---|---|---|
 | **Unit** | The kit's contract in `build.yml` (`BuildWorkflowContractTests`); `SiteContent` invariants and queries; every resolver rule (table-driven, one case per rule plus precedence conflicts); pagination; feed item selection; front matter and Markdown loading; **architecture rules** (Core references no project and no package; Infrastructure doesn't reference UI.Server) | every build |
-| **Integration** | `FileSystemContentSource` over the **real `content/` tree**, which validates every PR's content; `WebApplicationFactory` tests: **full contract replay (9,337 rows)**, feed XML validity, sitemaps, headers/CSP, caching, health | every build |
-| **Full-system (acceptance)** | The published app as a process and the **container image built from the `Dockerfile`**, each over real HTTP: full contract replay, the version on the health path, uploads served as files (not Git LFS pointers), an unprivileged user on port 8080, and the nightly verification script against the container, a site that doesn't answer and a site that breaks the contract. From build step 3, Playwright for .NET drives the container in a real browser: home, post with comments, archives, tag pages, search, feed link, 404 page, legacy redirects. YouTube iframes are stubbed by Playwright request interception; there are no other third-party calls | every build; the image that passes is the image released |
+| **Integration** | `FileSystemContentSource` over the **real `content/` tree**, which validates every PR's content; `WebApplicationFactory` tests: **full contract replay (9,337 rows)**, every kind of page in the site layout, **a crawl from `/` that reaches all 966 posts by the links the components write**, feed XML validity, sitemaps, headers/CSP, caching, health | every build |
+| **Full-system (acceptance)** | The published app as a process and the **container image built from the `Dockerfile`**, each over real HTTP: full contract replay, the version on the health path, uploads served as files (not Git LFS pointers), an unprivileged user on port 8080, and the nightly verification script against the container, a site that doesn't answer and a site that breaks the contract. Playwright for .NET drives the container in Chromium: the home page's look, a post opened from it, older and newer, previous and next, a month and a tag from the sidebar, search, the 404 page, a comment's anchor, a legacy redirect, a phone-sized screen, the keyboard. Requests to any other host (YouTube iframes in old posts) are refused by request interception, and the pages under test must make none | every build; the image that passes is the image released |
 | **Post-deploy verification** | The site's `verify.ps1` after every deployment: `/_health/ready` answers `ready <version>`, and the full contract replay passes against the environment. `Verify environments` replays the contract every night as well | every deployment, in tdd, uat and prod; every night (§9) |
 
 ## 11. Build sequence
@@ -468,13 +494,14 @@ Each step is one PR that meets the Definition of Done.
 2. **Legacy URL resolver, contract-first.** `LegacyUrlResolver` + rules; `UI.Server` skeleton with only the
    middleware and stub endpoints; in-process contract replay green **before** any page is designed.
 3. **Pages.** Layout, post page, home + pagination, date/term archives, pages and attachment pages, search, 404;
-   first Playwright suite.
+   first Playwright suite. Done with the look and the navigation of the WordPress site
+   ([ADR-0009](../adr/0009-the-wordpress-look-and-navigation.md)).
 4. **Feeds, sitemaps, robots.txt.**
 5. **Operability.** OpenTelemetry, health checks, security headers, output caching, ETags.
 6. **Delivery.** The `Dockerfile` and `build.yml` here; the system `jpcom` provisioned with the demo-environment-kit
    (`tdd`, `uat`, `prod`); the contract replayed against each environment (ADR-0006).
 7. **Visual design.** Home page positioning (Chief Architect at Clear Measure, books, podcast, talks), typography,
-   the Onion Architecture hub page.
+   the Onion Architecture hub page. Starts from the stylesheet of step 3.
 8. **Cutover runbook.** DNS move with MX/SPF/DMARC, TTL lowering, production contract replay, WordPress.com kept
    read-only for 30 days.
 

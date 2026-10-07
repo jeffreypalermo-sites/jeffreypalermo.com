@@ -1,0 +1,29 @@
+@* A post at its permalink: the post, its archived comments, and the posts published before and after it. *@
+@inject IOptions<SiteOptions> Options
+@inject SiteNavigation Navigation
+
+<SiteLayout Title="@DisplayText.Title(Model.Title, Options.Value.SiteTitle)" CanonicalPath="@Model.Permalink.Path" BodyClass="single">
+    <PostArticle Post="Model" Single="true" />
+
+    <section class="comments-area" id="comments" aria-labelledby="comments-title">
+        <h2 class="screen-reader-text" id="comments-title">@DisplayText.Count(Model.Comments.Count, "comment", "comments")</h2>
+        @if (Model.Comments.Count > 0)
+        {
+            <CommentList Comments="CommentThread.Build(Model.Comments)" />
+        }
+        <p class="no-comments">Comments are closed.</p>
+    </section>
+
+    <Pager Label="Posts before and after this one" BetweenPosts="true"
+           PreviousHref="@_neighbors.Previous?.Permalink.Path" PreviousText="@_neighbors.Previous?.Title"
+           NextHref="@_neighbors.Next?.Permalink.Path" NextText="@_neighbors.Next?.Title" />
+</SiteLayout>
+
+@code {
+    private PostNeighbors _neighbors = new(null, null);
+
+    [Parameter, EditorRequired]
+    public Post Model { get; set; } = null!;
+
+    protected override void OnParametersSet() => _neighbors = Navigation.Neighbors(Model);
+}

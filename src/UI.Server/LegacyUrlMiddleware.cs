@@ -1,6 +1,7 @@
 using System.Diagnostics.Metrics;
 using JeffreyPalermo.Core.Content;
 using JeffreyPalermo.Core.Urls;
+using JeffreyPalermo.UI.Server.Endpoints;
 using Microsoft.AspNetCore.Http.Features;
 
 namespace JeffreyPalermo.UI.Server;
@@ -33,7 +34,8 @@ public sealed class LegacyUrlMiddleware(RequestDelegate next, LegacyUrlResolver 
                 await Write(context, StatusCodes.Status410Gone, "Gone").ConfigureAwait(false);
                 return;
             case UrlResolution.NotFound:
-                await Write(context, StatusCodes.Status404NotFound, "Not found").ConfigureAwait(false);
+                // The same page a reader gets for any other address that leads nowhere.
+                await Pages.NotFound().ExecuteAsync(context).ConfigureAwait(false);
                 return;
             case UrlResolution.Rewrite rewrite:
                 context.Request.Path = rewrite.Path;

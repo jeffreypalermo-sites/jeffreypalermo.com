@@ -1,0 +1,51 @@
+@* Answered with status 404: ways back into the site, as the WordPress theme offered them. *@
+@inject IOptions<SiteOptions> Options
+@inject SiteNavigation Navigation
+
+<SiteLayout Title="@DisplayText.Title("Page not found", Options.Value.SiteTitle)" BodyClass="error404" Index="false">
+    <article class="post not-found">
+        <header class="entry-header">
+            <h1 class="entry-title">Oops! That page can&rsquo;t be found.</h1>
+        </header>
+        <div class="entry-content">
+            <p>It looks like nothing was found at this location. Maybe try one of the links below or a search?</p>
+            <SearchForm InputId="not-found-search" />
+
+            <section class="widget" aria-labelledby="not-found-recent">
+                <h2 class="widget-title" id="not-found-recent">Recent Posts</h2>
+                <ul>
+                    @foreach (var post in Navigation.RecentPosts(RecentPosts))
+                    {
+                        <li><a href="@post.Permalink.Path">@post.Title</a></li>
+                    }
+                </ul>
+            </section>
+
+            <section class="widget" aria-labelledby="not-found-categories">
+                <h2 class="widget-title" id="not-found-categories">Most Used Categories</h2>
+                <ul>
+                    @foreach (var category in Navigation.Categories.Take(MostUsedCategories))
+                    {
+                        <li><a href="@SiteUrls.Term(category.Term)">@category.Term.Name</a> (@category.PostCount)</li>
+                    }
+                </ul>
+            </section>
+
+            <section class="widget" aria-labelledby="not-found-archives">
+                <h2 class="widget-title" id="not-found-archives">Archives</h2>
+                <p>Try looking in the archives of a year, or of a month in the sidebar.</p>
+                <ul class="archive-years">
+                    @foreach (var year in Navigation.Months.Select(m => m.Year).Distinct())
+                    {
+                        <li><a href="@SiteUrls.Year(year)">@year</a></li>
+                    }
+                </ul>
+            </section>
+        </div>
+    </article>
+</SiteLayout>
+
+@code {
+    private const int RecentPosts = 5;
+    private const int MostUsedCategories = 10;
+}

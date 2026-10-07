@@ -1,0 +1,42 @@
+@* Home, date archives, term archives and search results: a heading and up to ten posts, newest first. *@
+<SiteLayout Title="@Model.Title" CanonicalPath="@Model.CanonicalPath" BodyClass="@Model.Kind" Index="@(!Model.IsSearch)">
+    <header class="page-header">
+        @if (Model.Subject is null)
+        {
+            <h1 class="page-title">@Model.Heading</h1>
+        }
+        else
+        {
+            <h1 class="page-title">@Model.Heading <span>@Model.Subject</span></h1>
+        }
+    </header>
+
+    @foreach (var post in Model.Posts.Items)
+    {
+        <PostArticle Post="post" Summary="Model.IsSearch" />
+    }
+
+    @if (Model.Posts.Items.Count == 0)
+    {
+        <article class="post no-results">
+            @if (Model.SearchText is { Length: > 0 })
+            {
+                <h2 class="entry-title">Nothing Found</h2>
+                <p>Sorry, but nothing matched your search terms. Please try again with some different keywords.</p>
+            }
+            else if (!Model.IsSearch)
+            {
+                <h2 class="entry-title">Nothing Found</h2>
+                <p>Nothing has been posted here yet. Perhaps searching can help.</p>
+            }
+            <SearchForm InputId="page-search" Text="@Model.SearchText" />
+        </article>
+    }
+
+    <Pager Label="Older and newer posts" PreviousHref="@Model.OlderHref" NextHref="@Model.NewerHref" />
+</SiteLayout>
+
+@code {
+    [Parameter, EditorRequired]
+    public Listing Model { get; set; } = null!;
+}

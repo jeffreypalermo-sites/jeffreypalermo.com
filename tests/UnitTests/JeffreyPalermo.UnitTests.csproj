@@ -23,6 +23,7 @@
     <ProjectReference Include="..\..\src\Infrastructure\JeffreyPalermo.Infrastructure.csproj" />
     <ProjectReference Include="..\..\tools\WpMigrator\JeffreyPalermo.Tools.WpMigrator.csproj" />
     <ProjectReference Include="..\..\tools\UrlContract\JeffreyPalermo.Tools.UrlContract.csproj" />
+    <ProjectReference Include="..\..\src\UI.Server\JeffreyPalermo.UI.Server.csproj" />
   </ItemGroup>
 
 </Project>

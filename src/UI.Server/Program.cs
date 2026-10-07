@@ -5,6 +5,7 @@ using JeffreyPalermo.Infrastructure;
 using JeffreyPalermo.Infrastructure.Content;
 using JeffreyPalermo.UI.Server;
 using JeffreyPalermo.UI.Server.Endpoints;
+using JeffreyPalermo.UI.Server.Presentation;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 
@@ -23,6 +24,12 @@ builder.Services.AddSingleton<ISiteContentSource>(services =>
 // The read model is immutable for the life of the process (ADR-0002); loading it fails fast on invalid content.
 builder.Services.AddSingleton(services => services.GetRequiredService<ISiteContentSource>().LoadAsync().GetAwaiter().GetResult());
 builder.Services.AddSingleton(services => new LegacyUrlResolver(services.GetRequiredService<IOptions<SiteOptions>>().Value.CanonicalHost));
+
+// Pages are Razor components rendered once on the server from the minimal-API routes: no component endpoints are
+// mapped, so no client script and no interactive render mode exist (ADR-0005, ADR-0009).
+builder.Services.AddRazorComponents();
+builder.Services.AddScoped<SiteNavigation>();
+builder.Services.AddSingleton<AuthorPortraits>();
 
 var app = builder.Build();
 var siteOptions = app.Services.GetRequiredService<IOptions<SiteOptions>>().Value;

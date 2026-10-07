@@ -1,0 +1,78 @@
+@* One post: who wrote it and when, its terms, its title and its body. Listings show the whole post and search results
+   its excerpt, as the WordPress theme did. *@
+@inject SiteNavigation Navigation
+@inject AuthorPortraits Portraits
+
+<article class="post" id="@(Post.WpId is { } id ? $"post-{id}" : null)">
+    <header class="entry-header">
+        <div class="entry-meta">
+            @if (Portraits.Avatar(Post.AuthorSlug) is { } avatar)
+            {
+                <img class="avatar" src="@avatar" alt="" width="36" height="36">
+            }
+            <a class="entry-author" href="@SiteUrls.Term(Taxonomies.Author, Post.AuthorSlug)" title="Posts by @AuthorName">@AuthorName</a>
+            <time class="entry-date" datetime="@DisplayText.Machine(Post.PublishedUtc)">@DisplayText.Moment(Post.Published)</time>
+            @if (Single && Post.CategorySlugs.Count > 0)
+            {
+                <div class="entry-terms entry-categories">
+                    Categories:
+                    @foreach (var slug in Post.CategorySlugs)
+                    {
+                        <a href="@SiteUrls.Term(Taxonomies.Category, slug)" rel="category tag">@(Navigation.Category(slug)?.Name ?? slug)</a>
+                        @(" ")
+                    }
+                </div>
+            }
+            @if (Post.TagSlugs.Count > 0)
+            {
+                <div class="entry-terms entry-tags">
+                    Tags:
+                    @foreach (var slug in Post.TagSlugs)
+                    {
+                        <a href="@SiteUrls.Term(Taxonomies.Tag, slug)" rel="tag">@(Navigation.Tag(slug)?.Name ?? slug) ( @Navigation.PostsTagged(slug) )</a>
+                        @(" ")
+                    }
+                </div>
+            }
+        </div>
+        @if (Single)
+        {
+            <h1 class="entry-title">@Post.Title</h1>
+        }
+        else
+        {
+            <h2 class="entry-title"><a href="@Post.Permalink.Path" rel="bookmark">@Post.Title</a></h2>
+        }
+    </header>
+    <div class="entry-content">
+        @if (Summary && Post.Excerpt is { Length: > 0 } excerpt)
+        {
+            <p>@excerpt</p>
+        }
+        else
+        {
+            @((MarkupString)Post.HtmlBody)
+        }
+    </div>
+    @if (!Single && Post.Comments.Count > 0)
+    {
+        <footer class="entry-footer">
+            <a href="@(Post.Permalink.Path)#comments">@DisplayText.Count(Post.Comments.Count, "comment", "comments")<span class="screen-reader-text"> on @Post.Title</span></a>
+        </footer>
+    }
+</article>
+
+@code {
+    [Parameter, EditorRequired]
+    public Post Post { get; set; } = null!;
+
+    /// <summary>True on the post's own page: the title is the page's heading and the categories are listed.</summary>
+    [Parameter]
+    public bool Single { get; set; }
+
+    /// <summary>True in search results: the excerpt stands in for the body.</summary>
+    [Parameter]
+    public bool Summary { get; set; }
+
+    private string AuthorName => Navigation.Author(Post.AuthorSlug)?.Name ?? Post.AuthorSlug;
+}

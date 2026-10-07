@@ -1,0 +1,38 @@
+@* The page WordPress gave every uploaded file: the file itself, its caption, and the post it was uploaded to. *@
+@inject IOptions<SiteOptions> Options
+@inject SiteNavigation Navigation
+
+<SiteLayout Title="@DisplayText.Title(Model.Title, Options.Value.SiteTitle)" CanonicalPath="@Model.Permalink" BodyClass="attachment">
+    <article class="post attachment">
+        <header class="entry-header">
+            <h1 class="entry-title">@Model.Title</h1>
+        </header>
+        <div class="entry-content">
+            @if (Model.MimeType?.StartsWith("image/", StringComparison.Ordinal) ?? true)
+            {
+                <p class="attachment-file"><a href="@Model.SourcePath"><img src="@Model.SourcePath" alt="@(Model.AltText ?? Model.Title)"></a></p>
+            }
+            else if (Model.MimeType.StartsWith("video/", StringComparison.Ordinal))
+            {
+                <p class="attachment-file"><video controls preload="metadata" src="@Model.SourcePath"></video></p>
+                <p><a href="@Model.SourcePath">Download @Model.Title</a></p>
+            }
+            else
+            {
+                <p class="attachment-file"><a href="@Model.SourcePath">Download @Model.Title</a></p>
+            }
+            @((MarkupString)(Model.CaptionHtml ?? string.Empty))
+        </div>
+        @if (Navigation.ParentOf(Model) is { } post)
+        {
+            <footer class="entry-footer">
+                Published in <a href="@post.Permalink.Path">@post.Title</a>
+            </footer>
+        }
+    </article>
+</SiteLayout>
+
+@code {
+    [Parameter, EditorRequired]
+    public Attachment Model { get; set; } = null!;
+}

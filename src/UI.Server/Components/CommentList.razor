@@ -1,0 +1,38 @@
+@* The archived comments of a post, threaded and read-only. Each keeps its WordPress id as its anchor (#comment-123). *@
+<ol class="@(Depth == 0 ? "comment-list" : "children")">
+    @foreach (var node in Comments)
+    {
+        <li>
+            <article class="comment" id="comment-@node.Comment.Id">
+                <footer class="comment-meta">
+                    <span class="avatar" aria-hidden="true"></span>
+                    @if (SiteUrls.External(node.Comment.AuthorUrl) is { } url)
+                    {
+                        <a class="comment-author" href="@url" rel="ugc external nofollow">@node.Comment.AuthorName</a>
+                    }
+                    else
+                    {
+                        <span class="comment-author">@node.Comment.AuthorName</span>
+                    }
+                    <time class="comment-date" datetime="@DisplayText.Machine(node.Comment.Date)">@DisplayText.Moment(node.Comment.Date)</time>
+                </footer>
+                <div class="comment-content">
+                    @((MarkupString)node.Comment.ContentHtml)
+                </div>
+            </article>
+            @if (node.Replies.Count > 0)
+            {
+                <CommentList Comments="node.Replies" Depth="Depth + 1" />
+            }
+        </li>
+    }
+</ol>
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<CommentNode> Comments { get; set; } = [];
+
+    /// <summary>0 for the comments on the post itself; replies are one deeper than what they answer.</summary>
+    [Parameter]
+    public int Depth { get; set; }
+}
