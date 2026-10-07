@@ -14,7 +14,8 @@
       1. makes sure every region has its Container Apps express environment, cae-<system>-<environment>-<code>.
          A template deployment cannot create one in this subscription: its validation counts an express environment
          against the limits of standard ones and refuses it, while the service accepts the request itself. So each is
-         created with one direct request, and left as it is when it exists;
+         created with one direct request, and left as it is when it exists. A region Azure refuses stops the
+         deployment before anything is applied, with every refused region named;
       2. applies infra/main.bicep as the deployment stack stack-<system>-<environment>-web in the tier's resource
          group: one container app per region running <registry>/<system>/web:<version>, and the Front Door. The
          stack denies changes by anyone but the deploy identity, and removes what leaves the template.
@@ -66,6 +67,7 @@ function Get-EnvironmentState {
     $PSNativeCommandUseErrorActionPreference = $true
     return @($state | Where-Object { $_ })
 }
+$refused = @()
 foreach ($region in $regions) {
     $found = @(Get-EnvironmentState -Id $region.managedEnvironmentId)
     if ($found.Count -ge 2 -and $found[1] -ne 'Express') {
@@ -76,10 +78,26 @@ foreach ($region in $regions) {
         $bodyFile = Join-Path ([IO.Path]::GetTempPath()) "express-$([Guid]::NewGuid().ToString('N')).json"
         @{ location = $region.location; tags = @{ system = $system; application = 'web'; stage = $Environment }; properties = @{ environmentMode = 'Express' } } |
             ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $bodyFile -Encoding utf8NoBOM
-        try { az rest --method put --url "https://management.azure.com$($region.managedEnvironmentId)?api-version=2026-07-01" --body "@$bodyFile" --output none }
-        finally { Remove-Item -LiteralPath $bodyFile -Force -ErrorAction SilentlyContinue }
-        Write-Host "Creating the express environment of $($region.location) ($($region.code))"
+        $PSNativeCommandUseErrorActionPreference = $false
+        $answer = az rest --method put --url "https://management.azure.com$($region.managedEnvironmentId)?api-version=2026-07-01" --body "@$bodyFile" --output none 2>&1
+        $accepted = $LASTEXITCODE -eq 0
+        $PSNativeCommandUseErrorActionPreference = $true
+        Remove-Item -LiteralPath $bodyFile -Force -ErrorAction SilentlyContinue
+        if ($accepted) {
+            Write-Host "Creating the express environment of $($region.location) ($($region.code))"
+        }
+        else {
+            $refused += "$($region.location) ($($region.code)): $((@($answer) | ForEach-Object { [string] $_ }) -join ' ')"
+        }
     }
+}
+# Azure may refuse a region for this subscription (West Europe did: "not accepting new customers"), and says so
+# only when asked to create something there. Every region is asked before this stops, so one run names them all.
+if ($refused.Count -gt 0) {
+    Write-Host "FAIL Azure refused the express environment of $($refused.Count) of $($regions.Count) region(s); nothing was deployed:"
+    $refused | ForEach-Object { Write-Host "  $_" }
+    Write-Host "  Take the region out of settings.json or put another in its place (scripts/test-regions.ps1 asks Azure which it accepts)."
+    exit 1
 }
 $deadline = (Get-Date).AddMinutes(20)
 $waiting = @($regions)

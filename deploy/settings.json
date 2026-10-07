@@ -12,7 +12,7 @@
       "frontDoor": true,
       "regions": [
         { "location": "eastus2", "code": "eus2" },
-        { "location": "westeurope", "code": "weu" }
+        { "location": "germanywestcentral", "code": "gwc" }
       ]
     },
     "prod": {
@@ -21,7 +21,7 @@
         { "location": "eastus2", "code": "eus2" },
         { "location": "westus2", "code": "wus2" },
         { "location": "brazilsouth", "code": "brs" },
-        { "location": "westeurope", "code": "weu" },
+        { "location": "germanywestcentral", "code": "gwc" },
         { "location": "uksouth", "code": "uks" },
         { "location": "southafricanorth", "code": "zan" },
         { "location": "uaenorth", "code": "uan" },
