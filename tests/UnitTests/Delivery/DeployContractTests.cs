@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using JeffreyPalermo.UnitTests.Architecture;
 
@@ -11,6 +12,14 @@ namespace JeffreyPalermo.UnitTests.Delivery;
 public class DeployContractTests
 {
     private static readonly string Root = DependencyRuleTests.RepositoryRoot();
+
+    private static JsonElement Settings() =>
+        JsonDocument.Parse(File.ReadAllText(Path.Join(Root, "deploy", "settings.json"))).RootElement;
+
+    private static List<(string Location, string Code)> Regions(string environment) =>
+        Settings().GetProperty("environments").GetProperty(environment).GetProperty("regions").EnumerateArray()
+            .Select(region => (region.GetProperty("location").GetString()!, region.GetProperty("code").GetString()!))
+            .ToList();
 
     [Theory]
     [InlineData("deploy.ps1")]
@@ -53,7 +62,7 @@ public class DeployContractTests
         // The system's "Apply environment" probes container apps tagged "environment" and "deployable"; this one is
         // the site's own and is verified by verify.ps1.
         var bicep = File.ReadAllText(Path.Join(Root, "deploy", "infra", "main.bicep"));
-        var tags = Regex.Match(bicep, @"tags:\s*\{(?<body>[^}]*)\}").Groups["body"].Value;
+        var tags = Regex.Match(bicep, @"var tags = \{(?<body>[^}]*)\}").Groups["body"].Value;
 
         Assert.NotEqual(string.Empty, tags);
         Assert.DoesNotMatch(@"(?m)^\s*(environment|deployable)\s*:", tags);
@@ -68,6 +77,54 @@ public class DeployContractTests
 
         Assert.Matches(@"registries:\s*\[\s*\{\s*server:\s*registryServer\s*identity:\s*pullIdentityId", bicep);
         Assert.Contains("image: '${registryServer}/${system}/web:${version}'", bicep, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void TddHasOneRegionUatTwoAndProdEleven()
+    {
+        // Jeffrey, 2026-10-06 (ADR-0008): one region to try a change, two to rehearse the rotation, eleven for visitors.
+        Assert.Single(Regions("tdd"));
+        Assert.Equal(2, Regions("uat").Count);
+        Assert.Equal(11, Regions("prod").Count);
+        Assert.False(Settings().GetProperty("environments").GetProperty("tdd").GetProperty("frontDoor").GetBoolean());
+        Assert.True(Settings().GetProperty("environments").GetProperty("uat").GetProperty("frontDoor").GetBoolean());
+        Assert.True(Settings().GetProperty("environments").GetProperty("prod").GetProperty("frontDoor").GetBoolean());
+    }
+
+    [Theory]
+    [InlineData("tdd")]
+    [InlineData("uat")]
+    [InlineData("prod")]
+    public void EveryRegionOfAnEnvironmentHasItsOwnShortCode(string environment)
+    {
+        // The code becomes part of the container app's name, which Azure limits to 32 characters.
+        var regions = Regions(environment);
+
+        Assert.Equal(regions.Count, regions.Select(region => region.Code).Distinct().Count());
+        Assert.Equal(regions.Count, regions.Select(region => region.Location).Distinct().Count());
+        Assert.All(regions, region => Assert.Matches("^[a-z0-9]{2,5}$", region.Code));
+        Assert.All(regions, region => Assert.True($"ca-jpcom-{environment}-web-{region.Code}".Length <= 32));
+    }
+
+    [Fact]
+    public void FrontDoorRotatesOverEveryRegionAndSendsNoProbes()
+    {
+        // ADR-0008: probes would keep every region awake (and billed); without them each scales to zero.
+        var bicep = File.ReadAllText(Path.Join(Root, "deploy", "infra", "main.bicep"));
+
+        Assert.DoesNotContain("healthProbeSettings", bicep, StringComparison.Ordinal);
+        Assert.Contains("additionalLatencyInMilliseconds: 1000", bicep, StringComparison.Ordinal);
+        Assert.Contains("weight: 1000", bicep, StringComparison.Ordinal);
+        Assert.Contains("priority: 1", bicep, StringComparison.Ordinal);
+        Assert.Contains("minReplicas: 0", bicep, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AnAppBehindFrontDoorIsToldWhichFrontDoorToBelieve()
+    {
+        var bicep = File.ReadAllText(Path.Join(Root, "deploy", "infra", "main.bicep"));
+
+        Assert.Matches(@"name:\s*'Site__FrontDoorId'\s*value:\s*profile!\.properties\.frontDoorId", bicep);
     }
 
     [Fact]

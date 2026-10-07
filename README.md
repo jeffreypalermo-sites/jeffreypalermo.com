@@ -19,7 +19,7 @@ See [MODERNIZATION-PLAN.md](MODERNIZATION-PLAN.md) for the analysis, options con
 | `tests/contract/url-contract.tsv` | The URL contract: every legacy URL and how it must answer. |
 | `tests/UnitTests`, `tests/IntegrationTests`, `tests/AcceptanceTests` | Automated tests (see below). |
 | `Dockerfile`, `.github/workflows/build.yml` | The container image and the Build that tests and keeps it. |
-| `deploy/` | The site's own runtime: its infrastructure code, and the `deploy.ps1` and `verify.ps1` the system's pipeline runs in tdd, uat and prod ([ADR-0007](docs/adr/0007-the-site-owns-its-runtime.md)). The pipeline itself belongs to the system repository `jpcom-system` ([ADR-0006](docs/adr/0006-deliver-through-the-demo-environment-kit.md)). |
+| `deploy/` | The site's own runtime: its infrastructure code, where it runs (`settings.json`: one region in tdd, two in uat, eleven in prod behind Azure Front Door, [ADR-0008](docs/adr/0008-eleven-regions-behind-front-door.md)), and the `deploy.ps1` and `verify.ps1` the system's pipeline runs in tdd, uat and prod ([ADR-0007](docs/adr/0007-the-site-owns-its-runtime.md)). The pipeline itself belongs to the system repository `jpcom-system` ([ADR-0006](docs/adr/0006-deliver-through-the-demo-environment-kit.md)). |
 | `docs/architecture`, `docs/adr` | Web app architecture and architecture decision records. |
 
 ## Content format

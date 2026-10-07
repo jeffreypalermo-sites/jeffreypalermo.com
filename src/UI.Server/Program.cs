@@ -29,6 +29,8 @@ var siteOptions = app.Services.GetRequiredService<IOptions<SiteOptions>>().Value
 var site = app.Services.GetRequiredService<SiteContent>();
 Log.ContentLoaded(app.Logger, site.Version, site.Posts.Count, site.Attachments.Count);
 
+// Before the URL rules: they decide by the host the visitor asked for, which Front Door forwards.
+app.UseMiddleware<FrontDoorHostMiddleware>();
 app.UseMiddleware<LegacyUrlMiddleware>();
 app.UseStaticFiles(new StaticFileOptions
 {
