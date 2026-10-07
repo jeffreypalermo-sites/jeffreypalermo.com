@@ -13,5 +13,6 @@
 | [0009](0009-the-wordpress-look-and-navigation.md) | Keep the WordPress site's look and navigation; Razor components rendered from the existing routes | Accepted |
 | [0010](0010-the-wordpress-site-is-frozen.md) | The WordPress site is frozen; content is edited in git | Accepted |
 | [0011](0011-the-systems-dashboard-reads-the-site.md) | The system's health dashboard reads the site from the browser | Accepted |
+| [0012](0012-the-site-publishes-its-build-facts.md) | The site publishes the facts of its build: the Build writes them, the image carries them, `/_build` answers them | Accepted |
 
 The overall design is in [docs/architecture](../architecture/README.md).

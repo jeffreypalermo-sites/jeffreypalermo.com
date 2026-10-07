@@ -13,6 +13,12 @@ public sealed class SiteOptions
     /// <summary>Identifies the content snapshot (the git commit in CI), used for ETags and diagnostics.</summary>
     public string Version { get; set; } = "dev";
 
+    /// <summary>
+    /// Path to the facts the Build wrote about this release, absolute or relative to the content root. The container
+    /// image ships the file beside the app; <c>/_build</c> answers it (ADR-0012).
+    /// </summary>
+    public string BuildFactsPath { get; set; } = "build-facts.json";
+
     /// <summary>The name in the header, the document titles and the feeds, as the WordPress site had it.</summary>
     public string SiteTitle { get; set; } = "Programming with Palermo";
 

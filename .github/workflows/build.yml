@@ -3,6 +3,9 @@
 # demo-environment-kit when it adopts this repository) pushes that same image to the system's registry and creates the
 # Octopus release; nothing is built a second time.
 #
+# The image carries what the Build measured (build-facts.json, ADR-0012), so it is built after the tests: job image
+# needs job test, reads its results and writes the facts before `docker build`. The site answers them at /_build.
+#
 # The kit keeps this file instead of its generic Build because the image needs the Git LFS files (the video under
 # content/uploads). What release.yml and the kit rely on, pinned by BuildWorkflowContractTests:
 #   - the name "Build";
@@ -29,6 +32,10 @@ jobs:
     name: Unit and integration tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      # coverlet.collector, in the format that keeps every branch path, so the two runs can be taken together
+      # (scripts/Write-BuildFacts.ps1). Generated code under obj/ is not the site's code.
+      COVERAGE: XPlat Code Coverage;Format=opencover;ExcludeByFile=**/obj/**
     steps:
       - uses: actions/checkout@v6.0.1
 
@@ -40,10 +47,10 @@ jobs:
         run: dotnet build JeffreyPalermo.slnx --configuration Release
 
       - name: Unit tests
-        run: dotnet test tests/UnitTests --configuration Release --no-build --logger trx --results-directory TestResults
+        run: dotnet test tests/UnitTests --configuration Release --no-build --logger trx --results-directory TestResults --collect "${COVERAGE}"
 
       - name: Integration tests
-        run: dotnet test tests/IntegrationTests --configuration Release --no-build --logger trx --results-directory TestResults
+        run: dotnet test tests/IntegrationTests --configuration Release --no-build --logger trx --results-directory TestResults --collect "${COVERAGE}"
 
       # The site's own infrastructure code (deploy/, ADR-0007) must compile without a diagnostic before it is released.
       - name: Compile the infrastructure code
@@ -63,6 +70,8 @@ jobs:
 
   image:
     name: Container image and full-system tests
+    # After the tests, not beside them: the image carries what they measured (ADR-0012).
+    needs: test
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -85,6 +94,18 @@ jobs:
 
       - name: Version
         run: echo "VERSION=${MAJOR_VERSION}.${MINOR_VERSION}.${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
+
+      # What this release was built from and what job test measured, written beside the Dockerfile, which copies it
+      # into the image. The results stay outside the checkout: TestResults is for the full-system tests below.
+      - name: Download the test results
+        uses: actions/download-artifact@v8
+        with:
+          name: test-results
+          path: ${{ runner.temp }}/test-results
+
+      - name: Write the build facts
+        shell: pwsh
+        run: ./scripts/Write-BuildFacts.ps1 -Version $env:VERSION -ResultsPath (Join-Path $env:RUNNER_TEMP test-results) -Require tests, coverage -OutputPath build-facts.json
 
       - name: Build the image
         run: |

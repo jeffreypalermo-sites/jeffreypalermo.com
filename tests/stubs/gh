@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# A stand-in for the GitHub CLI, for the tests that run scripts/Write-BuildFacts.ps1 -DownloadArtifacts
+# (BuildFactsScriptTests). It answers "gh run download" from the folder $GH_STUB_STATE and logs every call there:
+#   calls.log            one line per call
+#   artifacts/<name>/    the files of the artifact <name> of any run; without the folder the run has no such artifact
+set -euo pipefail
+
+state="${GH_STUB_STATE:?GH_STUB_STATE is the folder that holds what this stand-in knows}"
+printf '%s\n' "$*" >> "$state/calls.log"
+
+# The value that follows a flag.
+value() {
+  local flag="$1"
+  shift
+  while [ $# -gt 1 ]; do
+    if [ "$1" = "$flag" ]; then
+      printf '%s' "$2"
+      return
+    fi
+    shift
+  done
+}
+
+case "${1:-} ${2:-}" in
+  "run download")
+    name="$(value --name "$@")"
+    dir="$(value --dir "$@")"
+    if [ ! -d "$state/artifacts/$name" ]; then
+      echo "no artifact matches any of the names or patterns provided" >&2
+      exit 1
+    fi
+    mkdir -p "$dir"
+    cp -R "$state/artifacts/$name/." "$dir/"
+    ;;
+  *)
+    echo "gh stand-in: no answer for: $*" >&2
+    exit 2
+    ;;
+esac
