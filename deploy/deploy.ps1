@@ -49,22 +49,25 @@ $group = "/subscriptions/$subscription/resourceGroups/$resourceGroup"
 $pullIdentityName = ([string] $settings.pullIdentity).Replace('{system}', $system).Replace('{environment}', $Environment)
 
 # 1. The express environment of every region.
-$regions = foreach ($region in @($place.regions)) {
-    @{
-        location             = [string] $region.location
-        code                 = [string] $region.code
-        managedEnvironmentId = "$group/providers/Microsoft.App/managedEnvironments/cae-$system-$Environment-$($region.code)"
-    }
-}
+# Always a list: an environment with one region would otherwise be a single table, and its Count the table's keys.
+$regions = @(foreach ($region in @($place.regions)) {
+        @{
+            location             = [string] $region.location
+            code                 = [string] $region.code
+            managedEnvironmentId = "$group/providers/Microsoft.App/managedEnvironments/cae-$system-$Environment-$($region.code)"
+        }
+    })
+# The provisioning state and the mode of an environment; nothing when it does not exist or cannot be read yet.
+# A function gives its caller nothing at all for an empty list, so every caller wraps the call in @( ).
 function Get-EnvironmentState {
     param([string] $Id)
     $PSNativeCommandUseErrorActionPreference = $false
     $state = az rest --method get --url "https://management.azure.com${Id}?api-version=2026-07-01" --query '[properties.provisioningState, properties.environmentMode]' --output tsv 2>$null
     $PSNativeCommandUseErrorActionPreference = $true
-    return @($state)
+    return @($state | Where-Object { $_ })
 }
 foreach ($region in $regions) {
-    $found = Get-EnvironmentState -Id $region.managedEnvironmentId
+    $found = @(Get-EnvironmentState -Id $region.managedEnvironmentId)
     if ($found.Count -ge 2 -and $found[1] -ne 'Express') {
         Write-Host "FAIL $($region.managedEnvironmentId) exists and is not an express environment ($($found[1]))"
         exit 1
@@ -83,7 +86,7 @@ $waiting = @($regions)
 while ($waiting.Count -gt 0) {
     $waiting = @(foreach ($region in $waiting) {
             # Right after the request an environment may not be readable yet: no answer counts as "not yet".
-            $found = Get-EnvironmentState -Id $region.managedEnvironmentId
+            $found = @(Get-EnvironmentState -Id $region.managedEnvironmentId)
             $state = if ($found.Count -gt 0) { [string] $found[0] } else { '' }
             if ($state -in 'Failed', 'Canceled') {
                 Write-Host "FAIL the express environment of $($region.location) ended $state"

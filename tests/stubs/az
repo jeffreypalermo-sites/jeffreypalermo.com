@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# A stand-in for the Azure CLI, for the tests that run deploy/deploy.ps1 and deploy/verify.ps1 (DeployScriptTests).
+# It answers the few commands those scripts use from files in the folder $AZ_STUB_STATE, and logs every call there:
+#   calls.log                    one line per call
+#   environment-<name>           an express environment: line 1 its provisioning state, line 2 its mode
+#   environment-<name>.unread    present after a create: the next read finds nothing yet, as Azure does
+#   stack-parameters.json        the parameters of the last "stack group create"
+#   stack-fails                  when present, "stack group create" fails with this text
+#   deployment-errors            what a container app reports when asked why it did not start
+#   stack-show.json              the answer to "stack group show"
+set -euo pipefail
+
+state="${AZ_STUB_STATE:?AZ_STUB_STATE is the folder that holds what this stand-in knows}"
+printf '%s\n' "$*" >> "$state/calls.log"
+
+# The value that follows a flag.
+value() {
+  local flag="$1"
+  shift
+  while [ $# -gt 1 ]; do
+    if [ "$1" = "$flag" ]; then
+      printf '%s' "$2"
+      return
+    fi
+    shift
+  done
+}
+
+case "${1:-} ${2:-}" in
+  "account show")
+    echo "00000000-0000-0000-0000-000000000001"
+    ;;
+  "rest --method")
+    method="$(value --method "$@")"
+    url="$(value --url "$@")"
+    path="${url%%\?*}"
+    name="${path##*/}"
+    case "$path" in
+      */managedEnvironments/*)
+        if [ "$method" = "put" ]; then
+          printf 'Succeeded\nExpress\n' > "$state/environment-$name"
+          touch "$state/environment-$name.unread"
+        elif [ -f "$state/environment-$name.unread" ]; then
+          rm "$state/environment-$name.unread"
+          echo "ERROR: (ResourceNotFound) $name was not found." >&2
+          exit 3
+        elif [ -f "$state/environment-$name" ]; then
+          cat "$state/environment-$name"
+        else
+          echo "ERROR: (ResourceNotFound) $name was not found." >&2
+          exit 3
+        fi
+        ;;
+      */containerApps/*)
+        if [ -f "$state/deployment-errors" ]; then cat "$state/deployment-errors"; fi
+        ;;
+      *)
+        echo "ERROR: the stand-in does not know $path" >&2
+        exit 2
+        ;;
+    esac
+    ;;
+  "stack group")
+    case "${3:-}" in
+      create)
+        parameters="$(value --parameters "$@")"
+        cp "${parameters#@}" "$state/stack-parameters.json"
+        if [ -f "$state/stack-fails" ]; then
+          echo "ERROR: $(cat "$state/stack-fails")" >&2
+          exit 1
+        fi
+        echo "WARNING: a notice the Azure CLI writes on success" >&2
+        ;;
+      show)
+        cat "$state/stack-show.json"
+        ;;
+      *)
+        echo "ERROR: the stand-in does not know: $*" >&2
+        exit 2
+        ;;
+    esac
+    ;;
+  *)
+    echo "ERROR: the stand-in does not know: $*" >&2
+    exit 2
+    ;;
+esac
