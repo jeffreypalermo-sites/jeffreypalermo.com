@@ -438,10 +438,11 @@ The version is `MAJOR_VERSION.MINOR_VERSION.<run number>` from `build.yml`. The 
 beside it, on the chiseled, non-root `aspnet:10.0` base image. Large uploads are stored with Git LFS, so the image
 must be built from a checkout with LFS; the build fails if an upload is still a pointer.
 
-**After a deployment** Octopus verifies the health path. The workflow `Verify environments` replays the URL contract
-against every environment each night with `scripts/verify-environments.sh`
-([tests/contract](../../tests/contract/README.md)). While an environment fails, an issue labelled `url-contract`
-stays open; the next clean run closes it. Making the replay a step of the deployment is open work in the kit.
+**After a deployment** the site's own `verify.ps1` checks that `/_health/ready` answers as the release and replays
+the whole URL contract against the environment, with the verifier and the contract the release's package carries
+(ADR-0007). A violation fails the deployment and reverts the pin. The workflow `Verify environments` replays the
+contract against every environment each night as well ([tests/contract](../../tests/contract/README.md)): what it
+catches is a change outside a deployment. While an environment fails, an issue labelled `url-contract` stays open.
 
 ## 10. Testing strategy (Definition of Done)
 
@@ -450,7 +451,7 @@ stays open; the next clean run closes it. Making the replay a step of the deploy
 | **Unit** | The kit's contract in `build.yml` (`BuildWorkflowContractTests`); `SiteContent` invariants and queries; every resolver rule (table-driven, one case per rule plus precedence conflicts); pagination; feed item selection; front matter and Markdown loading; **architecture rules** (Core references no project and no package; Infrastructure doesn't reference UI.Server) | every build |
 | **Integration** | `FileSystemContentSource` over the **real `content/` tree**, which validates every PR's content; `WebApplicationFactory` tests: **full contract replay (9,337 rows)**, feed XML validity, sitemaps, headers/CSP, caching, health | every build |
 | **Full-system (acceptance)** | The published app as a process and the **container image built from the `Dockerfile`**, each over real HTTP: full contract replay, the version on the health path, uploads served as files (not Git LFS pointers), an unprivileged user on port 8080, and the nightly verification script against the container, a site that doesn't answer and a site that breaks the contract. From build step 3, Playwright for .NET drives the container in a real browser: home, post with comments, archives, tag pages, search, feed link, 404 page, legacy redirects. YouTube iframes are stubbed by Playwright request interception; there are no other third-party calls | every build; the image that passes is the image released |
-| **Post-deploy verification** | Octopus verifies `/_health/ready` after every deployment. `Verify environments` replays the contract against each environment's URL | every deployment; the contract replay every night (§9) |
+| **Post-deploy verification** | The site's `verify.ps1` after every deployment: `/_health/ready` answers `ready <version>`, and the full contract replay passes against the environment. `Verify environments` replays the contract every night as well | every deployment, in tdd, uat and prod; every night (§9) |
 
 ## 11. Build sequence
 
@@ -504,5 +505,3 @@ Open:
   DNS work (ADR-0006).
 - **A warm production replica:** the site launches with scale to zero. The kit's `alwaysOn` pins exactly one
   replica, so a per-environment minimum is asked of the kit (ADR-0006).
-- **Contract replay as a step of each deployment:** it runs nightly today; the deployment step is open work in the
-  kit.

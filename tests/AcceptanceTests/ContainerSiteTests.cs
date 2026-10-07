@@ -148,6 +148,28 @@ public sealed partial class ContainerSiteTests(ContainerSite site, ITestOutputHe
         Assert.Contains($"last: 200 'ready {site.Version}'", result.Output, StringComparison.Ordinal);
     }
 
+    /// <summary>What every deployment runs after ADR-0007: the packaged verification, with the contract verifier in it.</summary>
+    [Fact]
+    public async Task TheDeployPackageVerifiesTheReleaseAndReplaysTheContract()
+    {
+        var package = Directory.CreateTempSubdirectory("jpcom-deploy-package-").FullName;
+        try
+        {
+            await Command.RunAsync("bash", Path.Join(PublishedSite.RepositoryRoot, "scripts", "build-deploy-package.sh"), package);
+
+            var result = await Command.TryRunAsync("pwsh", environment: null, "-NoProfile", "-File", Path.Join(package, "test-site.ps1"), "-BaseUrl", site.BaseAddress.ToString(), "-Version", site.Version, "-TimeoutSeconds", "60");
+
+            Assert.True(result.ExitCode == 0, $"{result.Output}\n{result.Error}");
+            Assert.Contains("0 violations", result.Output, StringComparison.Ordinal);
+            Assert.Contains($"keeps the URL contract as release {site.Version}", result.Output, StringComparison.Ordinal);
+            Assert.True(File.Exists(Path.Join(package, "deploy.ps1")) && File.Exists(Path.Join(package, "verify.ps1")), "The package needs deploy.ps1 and verify.ps1 at its root.");
+        }
+        finally
+        {
+            Directory.Delete(package, recursive: true);
+        }
+    }
+
     private static string TestSiteScript => Path.Join(PublishedSite.RepositoryRoot, "deploy", "test-site.ps1");
 
     private static string VerifyScript => Path.Join(PublishedSite.RepositoryRoot, "scripts", "verify-environments.sh");

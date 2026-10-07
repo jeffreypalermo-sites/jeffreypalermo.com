@@ -8,8 +8,14 @@
 .DESCRIPTION
     Asks <BaseUrl>/_health/ready until it answers 200 with "ready <Version>": the site is up, has loaded its content,
     and is the release that was deployed, not the one before it. An environment that scaled to zero, or a new
-    revision that is still starting, answers late: the wait allows for that. Exit code 0 when it does, 1 when the
-    time is up. verify.ps1 uses it for a deployed environment; the full-system tests run it against the container.
+    revision that is still starting, answers late: the wait allows for that.
+
+    In the deploy package (scripts/build-deploy-package.sh) the contract verifier and the URL contract lie beside
+    this file, in bin/ and contract/. Then it also replays the whole URL contract against the site: a release that
+    breaks a legacy URL does not pass. In the repository, without them, the health check is the whole check.
+
+    Exit code 0 when everything asked passes, 1 otherwise. verify.ps1 uses it for a deployed environment; the
+    full-system tests run it against the container.
 #>
 [CmdletBinding()]
 param(
@@ -32,7 +38,7 @@ while ($true) {
         $last = "$($response.StatusCode) '$(([string] $response.Content).Trim())'"
         if ($response.StatusCode -eq 200 -and ([string] $response.Content).Trim() -eq $expected) {
             Write-Host "PASS $uri answers '$expected'"
-            exit 0
+            break
         }
     }
     catch {
@@ -44,3 +50,16 @@ while ($true) {
     }
     Start-Sleep -Seconds 5
 }
+
+$verifier = Join-Path $PSScriptRoot 'bin' 'JeffreyPalermo.Tools.UrlContract'
+if (-not (Test-Path -LiteralPath $verifier)) {
+    exit 0
+}
+# The verifier prints each violation and a summary line, and exits 1 on any violation.
+& $verifier verify "$($BaseUrl.TrimEnd('/'))/" (Join-Path $PSScriptRoot 'contract' 'url-contract.tsv') (Join-Path $PSScriptRoot 'contract' 'exceptions.tsv')
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "FAIL $BaseUrl breaks the URL contract as release $Version"
+    exit 1
+}
+Write-Host "PASS $BaseUrl keeps the URL contract as release $Version"
+exit 0

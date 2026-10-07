@@ -36,11 +36,13 @@ public class DeployContractTests
     }
 
     [Fact]
-    public void ThePackageIsTheDeployFolderAndIsNeverReplaced()
+    public void ThePackageIsTheOneTheBuildAssembledAndIsNeverReplaced()
     {
         var release = new Workflow("release.yml").Text;
 
-        Assert.Contains("Get-ChildItem -LiteralPath ./deploy -Force", release, StringComparison.Ordinal);
+        // The Build's artifact deploy-package is the content of the release's package (deploy/ alone without it).
+        Assert.Contains("name: deploy-package", release, StringComparison.Ordinal);
+        Assert.Contains("steps.image.outputs.package == 'true' && './deploy-package' || './deploy'", release, StringComparison.Ordinal);
         Assert.Contains("overwrite_mode: IgnoreIfExists", release, StringComparison.Ordinal);
         Assert.Contains("package_version: ${{ steps.version.outputs.version }}", release, StringComparison.Ordinal);
     }
@@ -66,6 +68,21 @@ public class DeployContractTests
 
         Assert.Matches(@"registries:\s*\[\s*\{\s*server:\s*registryServer\s*identity:\s*pullIdentityId", bicep);
         Assert.Contains("image: '${registryServer}/${system}/web:${version}'", bicep, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void TheBuildAssemblesThePackageOnlyAfterTheImagePassedItsTests()
+    {
+        // The package carries the contract verifier, so every deployment replays the URL contract (test-site.ps1).
+        var names = new Workflow("build.yml").Steps("image").Select(step => Workflow.Scalar(step, "name")).ToList();
+        var tested = names.IndexOf("Full-system tests");
+        var assembled = names.IndexOf("Assemble the deploy package");
+        var uploaded = names.IndexOf("Upload the deploy package");
+
+        Assert.True(tested >= 0 && tested < assembled && assembled < uploaded, $"Expected test, assemble, upload; found: {string.Join(", ", names)}");
+        var script = File.ReadAllText(Path.Join(Root, "scripts", "build-deploy-package.sh"));
+        Assert.Contains("--runtime linux-x64 --self-contained", script, StringComparison.Ordinal);
+        Assert.Contains("tests/contract/url-contract.tsv", script, StringComparison.Ordinal);
     }
 
     [Fact]
