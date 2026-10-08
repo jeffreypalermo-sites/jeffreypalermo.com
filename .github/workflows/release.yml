@@ -38,7 +38,7 @@ jobs:
     if: >-
       github.event.workflow_run.conclusion == 'success' &&
       (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment: release
     steps:
       - uses: actions/checkout@v6.0.1
@@ -100,7 +100,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
 
-      - uses: azure/login@v2
+      - uses: azure/login@v3
         if: steps.image.outputs.found == 'true'
         with:
           client-id: ${{ vars.AZURE_CLIENT_ID_ACR_PUSH }}
@@ -132,13 +132,13 @@ jobs:
 
       # A released package never changes either: the feed keeps the first upload of a version.
       - name: Push the package
-        uses: OctopusDeploy/push-package-action@v3
+        uses: OctopusDeploy/push-package-action@v4
         with:
           packages: octopus-packages/${{ vars.SYSTEM_SLUG }}-${{ vars.DEPLOYABLE_NAME }}.${{ steps.version.outputs.version }}.zip
           overwrite_mode: IgnoreIfExists
 
       - name: Create the release
-        uses: OctopusDeploy/create-release-action@v3
+        uses: OctopusDeploy/create-release-action@v4
         with:
           project: ${{ vars.SYSTEM_SLUG }}-${{ vars.DEPLOYABLE_NAME }}
           release_number: ${{ steps.version.outputs.version }}
