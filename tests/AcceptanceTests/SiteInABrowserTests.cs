@@ -223,6 +223,43 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
     }
 
     /// <summary>
+    /// The pictures old posts loaded from other hosts (a Community Server image handler, Google's thumbnails, a badge
+    /// that was only on the author's machine and reached the reader through WordPress.com's CDN) are files of the
+    /// site now. The first two posts have every file they show; the others also show pictures no source has any
+    /// more (<c>migration/uploads-manifest.missing.txt</c>), which the site itself answers with 404.
+    /// </summary>
+    [Theory]
+    [InlineData("/2007/06/resharper-2-5-3-0-hack-to-speed-up-ctrl-n-type-discovery/", "/wp-content/uploads/external/codebetter.com/photos/jeffrey.palermo/images/147891/original.aspx.jpg", true)]
+    [InlineData("/2011/02/advanced-net-developer-training-at-headspring/", "/wp-content/uploads/external/t0.gstatic.com/images/q-tbn-ANd9GcRv4NSSKSFQ4cNfckvF_NpQWD6yp0e9xykt2ZbG8nQRRYZBn_L7.png", true)]
+    [InlineData("/2009/09/debunking-the-duct-tape-programmer/", "/wp-content/uploads/external/t3.gstatic.com/images/q-tbn-aag7JQTSgFvXBM-http-www.amacnetworks.com.au-Images-PP.jpg", false)]
+    [InlineData("/2013/02/web-development-as-we-know-it-is-dead/", "/wp-content/uploads/external/encrypted-tbn1.gstatic.com/images/q-tbn-ANd9GcQEtt7EmlYCW5NgywHChsx1VY90HwjPumkWtmVtnVOuKJ1C3NN61g.jpg", false)]
+    [InlineData("/2008/03/rsvp-now-for-party-with-palermo-mvp-summit-2008-edition/", "/wp-content/uploads/external/www.partywithpalermo.com/images/pwpbadge.jpg", false)]
+    public async Task APostThatLoadedAPictureFromAnotherHostShowsTheSitesOwnCopy(string path, string picture, bool hasEveryFile)
+    {
+        await using var visit = await chromium.VisitAsync(site.BaseAddress);
+        var page = visit.Page;
+
+        var response = await page.GotoAsync(path);
+        var pictures = await visit.EvaluateAsync<int>(LoadEveryPicture);
+
+        Assert.Equal(200, response!.Status);
+        Assert.True(pictures > 0);
+        var copy = page.Locator($"main article.post .entry-content img[src='{picture}']");
+        await Assertions.Expect(copy).ToHaveCountAsync(1);
+        Assert.True(await copy.EvaluateAsync<bool>("picture => picture.complete && picture.naturalWidth > 0"), $"{picture} did not load.");
+        Assert.Empty(visit.OffSiteRequests);
+        if (hasEveryFile)
+        {
+            Assert.Empty(visit.FailedRequests);
+            Assert.True(await visit.EvaluateAsync<bool>("[...document.images].every(image => image.naturalWidth > 0)"), "A picture of the post did not load.");
+        }
+        else
+        {
+            Assert.All(visit.FailedRequests, failed => Assert.StartsWith("404 /wp-content/uploads/external/", failed, StringComparison.Ordinal));
+        }
+    }
+
+    /// <summary>
     /// This post showed <c>[iframe … src=”//html5-player.libsyn.com/…”]</c> as text. It has the browser's own player
     /// now, which asks the recording's host for nothing until the reader presses play, and a link to the file.
     /// </summary>

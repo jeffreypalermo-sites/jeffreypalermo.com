@@ -8,9 +8,12 @@ using JeffreyPalermo.Tools.WpMigrator;
 //   fetch   <site> <raw-dir>                         REST API snapshot → migration/raw/*.json
 //   convert <raw-dir> <content-dir> <manifest-file>  raw snapshot → content/ (posts, pages, comments, archive)
 //   media   <site> <content-dir> <manifest-file>     manifest → content/uploads/
-if (args.Length != 4 && !(args.Length == 3 && args[0] == "fetch"))
+// One command works on content/ as it is, frozen or not, and changes only addresses in it:
+//   localize <content-dir> <manifest-file>           images that bodies load from other hosts → content/uploads/external/
+var usable = args.Length == 4 ? args[0] != "localize" : args.Length == 3 && args[0] is "fetch" or "localize";
+if (!usable)
 {
-    Console.Error.WriteLine("usage: fetch <site> <raw-dir> | convert <raw-dir> <content-dir> <manifest> | media <site> <content-dir> <manifest>");
+    Console.Error.WriteLine("usage: fetch <site> <raw-dir> | convert <raw-dir> <content-dir> <manifest> | media <site> <content-dir> <manifest> | localize <content-dir> <manifest>");
     return 2;
 }
 
@@ -50,6 +53,17 @@ switch (args[0])
             .DownloadAsync(manifest.Where(l => l.Length > 0), parallelism: 2);
         Console.WriteLine($"downloaded {summary.Downloaded}, already present {summary.AlreadyPresent}, missing {summary.Missing.Count}");
         await File.WriteAllLinesAsync(Path.ChangeExtension(args[3], ".missing.txt"), summary.Missing);
+        return 0;
+    }
+
+    case "localize":
+    {
+        // Redirects are followed by the fetcher, one polite request at a time.
+        using var handler = new HttpClientHandler { AllowAutoRedirect = false };
+        using var http = new HttpClient(handler) { Timeout = TimeSpan.FromMinutes(2) };
+        var report = await new ContentLocalizer(new ExternalImageFetcher(http, TimeSpan.FromSeconds(2)), new ContentLayout(args[1])).LocalizeAsync();
+        await LocalizeCommand.AddToManifestAsync(args[2], report.ManifestLines);
+        Console.Write(LocalizeCommand.Describe(report));
         return 0;
     }
 
