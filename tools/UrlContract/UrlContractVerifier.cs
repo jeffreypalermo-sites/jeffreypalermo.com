@@ -110,13 +110,30 @@ public static class UrlContractRules
 /// <remarks>
 /// A replay is thousands of requests, through a Front Door among others. One connection that is reset must not
 /// end it: a request that got no answer is sent again, and a URL that never answers is a violation like any other.
+/// The same holds for an answer that is not the site's: a 502, 503 or 504 is what a gateway in front of the site
+/// (the Front Door, a Container App's ingress) says when it did not reach the app in time. Such a request is sent
+/// again too, and a URL a gateway never lets through is a violation, "server error". A 500 is the site's own answer
+/// and is never asked for twice.
 /// </remarks>
 public sealed class UrlContractVerifier(HttpClient http, TimeSpan? retryDelay = null)
 {
-    /// <summary>How often one request is sent before its URL counts as unanswered.</summary>
+    /// <summary>How often one request is sent before its URL counts as unanswered, or a gateway's error as its answer.</summary>
     public const int Attempts = 3;
 
     private readonly TimeSpan _retryDelay = retryDelay ?? TimeSpan.FromSeconds(2);
+    private int _sentAgain;
+
+    /// <summary>
+    /// How many requests of the replays so far were sent again, for no answer or a gateway's error. A replay that
+    /// passes with a number here passed at a second attempt: the caller says so, so that it is seen.
+    /// </summary>
+    public int SentAgain => Volatile.Read(ref _sentAgain);
+
+    /// <summary>The line a caller prints after a replay in which requests were sent again; null when none was.</summary>
+    public string? SentAgainNote => SentAgain == 0 ? null : $"NOTE {SentAgain} request(s) were sent again: no answer, or a gateway's 502, 503 or 504";
+
+    /// <summary>The answers of a gateway that did not reach the site in time, not the site's own.</summary>
+    public static bool IsGatewayError(int status) => status is 502 or 503 or 504;
 
     public async Task<IReadOnlyList<ContractViolation>> VerifyAsync(
         IEnumerable<UrlContractEntry> entries,
@@ -196,14 +213,23 @@ public sealed class UrlContractVerifier(HttpClient http, TimeSpan? retryDelay = 
     private static ContractViolation Unanswered(UrlContractEntry entry, Exception error) =>
         new(entry, new ObservedResponse(0, null, 0, entry.Url, 0), $"no answer after {Attempts} attempts: {error.Message}{(error.InnerException is { } inner ? $" {inner.Message}" : string.Empty)}");
 
-    /// <summary>One request, sent again after a pause when the connection failed or the answer did not come in time.</summary>
+    /// <summary>
+    /// One request, sent again after a pause when the connection failed, the answer did not come in time, or a
+    /// gateway answered that it did not reach the site. The last attempt's answer stands, whatever it is.
+    /// </summary>
     private async Task<HttpResponseMessage> GetAsync(Uri address, CancellationToken cancellationToken)
     {
         for (var attempt = 1; ; attempt++)
         {
             try
             {
-                return await http.GetAsync(address, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                var response = await http.GetAsync(address, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                if (attempt == Attempts || !IsGatewayError((int)response.StatusCode))
+                {
+                    return response;
+                }
+
+                response.Dispose();
             }
             catch (HttpRequestException) when (attempt < Attempts)
             {
@@ -212,6 +238,7 @@ public sealed class UrlContractVerifier(HttpClient http, TimeSpan? retryDelay = 
             {
             }
 
+            Interlocked.Increment(ref _sentAgain);
             await Task.Delay(_retryDelay * attempt, cancellationToken).ConfigureAwait(false);
         }
     }
