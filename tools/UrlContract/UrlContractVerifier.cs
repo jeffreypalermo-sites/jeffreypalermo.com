@@ -107,8 +107,17 @@ public static class UrlContractRules
 /// Replays the URL contract against a running site: in-process in integration tests, a real Kestrel process in
 /// acceptance tests, and each new Container Apps revision before it receives traffic.
 /// </summary>
-public sealed class UrlContractVerifier(HttpClient http)
+/// <remarks>
+/// A replay is thousands of requests, through a Front Door among others. One connection that is reset must not
+/// end it: a request that got no answer is sent again, and a URL that never answers is a violation like any other.
+/// </remarks>
+public sealed class UrlContractVerifier(HttpClient http, TimeSpan? retryDelay = null)
 {
+    /// <summary>How often one request is sent before its URL counts as unanswered.</summary>
+    public const int Attempts = 3;
+
+    private readonly TimeSpan _retryDelay = retryDelay ?? TimeSpan.FromSeconds(2);
+
     public async Task<IReadOnlyList<ContractViolation>> VerifyAsync(
         IEnumerable<UrlContractEntry> entries,
         IReadOnlyDictionary<string, ReviewedDeviation> exceptions,
@@ -122,7 +131,23 @@ public sealed class UrlContractVerifier(HttpClient http)
             new ParallelOptions { MaxDegreeOfParallelism = parallelism, CancellationToken = cancellationToken },
             async (entry, ct) =>
             {
-                var observed = await ObserveAsync(entry.Url, ct).ConfigureAwait(false);
+                ObservedResponse observed;
+                try
+                {
+                    observed = await ObserveAsync(entry.Url, ct).ConfigureAwait(false);
+                }
+                catch (HttpRequestException e)
+                {
+                    violations.Add(Unanswered(entry, e));
+                    return;
+                }
+                catch (TaskCanceledException e) when (!ct.IsCancellationRequested)
+                {
+                    // The HttpClient's own timeout, not a replay that was called off.
+                    violations.Add(Unanswered(entry, e));
+                    return;
+                }
+
                 if (UrlContractRules.Check(entry, observed, exceptions.GetValueOrDefault(entry.Url)) is { } reason)
                 {
                     violations.Add(new ContractViolation(entry, observed, reason));
@@ -144,7 +169,7 @@ public sealed class UrlContractVerifier(HttpClient http)
         string? firstLocation = null;
         for (var redirects = 0; ; redirects++)
         {
-            using var response = await http.GetAsync(current, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+            using var response = await GetAsync(current, cancellationToken).ConfigureAwait(false);
             var status = (int)response.StatusCode;
             var location = response.Headers.Location;
             firstStatus ??= status;
@@ -165,6 +190,29 @@ public sealed class UrlContractVerifier(HttpClient http)
             }
 
             current = next;
+        }
+    }
+
+    private static ContractViolation Unanswered(UrlContractEntry entry, Exception error) =>
+        new(entry, new ObservedResponse(0, null, 0, entry.Url, 0), $"no answer after {Attempts} attempts: {error.Message}{(error.InnerException is { } inner ? $" {inner.Message}" : string.Empty)}");
+
+    /// <summary>One request, sent again after a pause when the connection failed or the answer did not come in time.</summary>
+    private async Task<HttpResponseMessage> GetAsync(Uri address, CancellationToken cancellationToken)
+    {
+        for (var attempt = 1; ; attempt++)
+        {
+            try
+            {
+                return await http.GetAsync(address, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+            }
+            catch (HttpRequestException) when (attempt < Attempts)
+            {
+            }
+            catch (TaskCanceledException) when (attempt < Attempts && !cancellationToken.IsCancellationRequested)
+            {
+            }
+
+            await Task.Delay(_retryDelay * attempt, cancellationToken).ConfigureAwait(false);
         }
     }
 }
