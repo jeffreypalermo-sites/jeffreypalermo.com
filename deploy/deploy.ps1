@@ -11,7 +11,7 @@
 
     settings.json beside this file says where the site runs in each environment: its regions, whether an Azure
     Front Door stands in front of them (ADR-0008), and under which host names of its own the Front Door answers
-    (hostNames, ADR-0014; none yet). For the environment asked for, this script
+    (hostNames, ADR-0014; none in production yet). For the environment asked for, this script
       1. makes sure every region has its Container Apps express environment, cae-<system>-<environment>-<code>.
          A template deployment cannot create one in this subscription: its validation counts an express environment
          against the limits of standard ones and refuses it, while the service accepts the request itself. So each is
@@ -31,7 +31,10 @@
     certificate it manages. A name the site answers with its pages (the canonical host) gets a route like the
     endpoint's own, with the cache. www. and feeds. of the canonical host, which the site answers with a redirect,
     get a route without a cache. After the stack the script prints, for every host name, what DNS needs: the TXT
-    record that proves the name is the owner's, and where its address record points.
+    record that proves the name is the owner's, and where its address record points. A name that waits for its
+    records fails nothing: it is not purged, not verified, and the endpoint's own address serves as before. A token
+    is good for seven days. When the Front Door has given up on one (or wants a new one for a certificate it does
+    not renew by itself), the script asks it for a new token and prints that.
 
     The DNS zone (dnsZone, ADR-0016; production's only): the last step applies infra/dns-zone.bicep as a deployment
     stack of its own, stack-<system>-<environment>-dns. It is an Azure DNS zone with the records the domain had on
@@ -435,6 +438,53 @@ if (-not $endpointId -or -not $frontDoorUrl -or $apps.Count -eq 0) {
 # The host names (ADR-0014): what DNS needs for each, from what the Front Door says about its custom domains. Printed
 # at every deployment, and before the purge, so it is there whatever comes after. The script changes nothing in DNS.
 $customDomains = @(Get-StackOutput -Outputs $outputs -Name 'hostNames')
+
+# What the edge may keep for a host name is decided by what the name was before anything below changes it: a name
+# serves once its validation has passed (Approved), and still serves while its certificate waits to be renewed
+# (PendingRevalidation). Every other state is a name that waits for its records, or that the Front Door gave up on:
+# the edge keeps nothing for it, and Azure is not asked to purge it.
+$servingHostNames = @($customDomains |
+        Where-Object { [bool] $_.kept -and "$($_.validationState)" -in 'Approved', 'PendingRevalidation' } |
+        ForEach-Object { "$($_.hostName)" })
+
+# A token is good for seven days. After that the Front Door stops waiting (TimedOut), and a later deployment would
+# print a token nobody can use. And the certificate of a name at the top of a zone is not renewed by itself: 45 days
+# before it ends the Front Door wants the name proved again (PendingRevalidation), with a new token. In these states
+# the script asks for a new token, and reads the name again. A name with a CNAME renews by itself and is left alone.
+# Nothing here fails a deployment: a name that waits must not stop a release.
+foreach ($domain in $customDomains) {
+    $name = "$($domain.hostName)"
+    $state = "$($domain.validationState)"
+    $expires = $domain.validationExpires
+    $tooOld = $state -eq 'Pending' -and $expires -is [datetime] -and $expires.ToUniversalTime() -lt [datetime]::UtcNow
+    $renewal = $state -eq 'PendingRevalidation' -and $name.Split('.').Count -eq 2
+    if (-not ($state -in 'TimedOut', 'Rejected' -or $tooOld -or $renewal)) { continue }
+    $id = if ($domain.Contains('id')) { "$($domain.id)" } else { '' }
+    if (-not $id) { continue }
+
+    $asked = Invoke-Az -Arguments @('resource', 'invoke-action', '--action', 'refreshValidationToken', '--ids', $id, '--api-version', '2024-02-01', '--output', 'none')
+    if ($asked.ExitCode -ne 0) {
+        Write-Host "The Front Door gave no new token for $name (validation $state, exit code $($asked.ExitCode)); the next deployment asks again. Azure said:"
+        @($asked.Said) | ForEach-Object { Write-Host "  $_" }
+        # The old token proves nothing any more: it is not printed, and not written into a DNS zone.
+        $domain.validationToken = ''
+        continue
+    }
+    $read = Invoke-Az -Arguments @('rest', '--method', 'get', '--url', "https://management.azure.com${id}?api-version=2024-02-01", '--output', 'json')
+    $now = if ($read.ExitCode -eq 0 -and $read.Output) { ($read.Output | ConvertFrom-Json -AsHashtable).properties } else { $null }
+    $validation = if ($now -is [System.Collections.IDictionary] -and $now.Contains('validationProperties')) { $now['validationProperties'] } else { $null }
+    if ($validation -is [System.Collections.IDictionary] -and "$($validation['validationToken'])") {
+        Write-Host "The Front Door gave a new token for ${name}: its validation was $state."
+        $domain.validationState = "$($now['domainValidationState'])"
+        $domain.validationToken = "$($validation['validationToken'])"
+        $domain.validationExpires = $validation['expirationDate']
+    }
+    else {
+        Write-Host "The Front Door made a new token for $name (its validation was $state), but the token could not be read; the next deployment prints it."
+        $domain.validationToken = ''
+    }
+}
+
 if ($customDomains.Count -gt 0) {
     $endpointHost = ([Uri] $frontDoorUrl).Host
     Write-Host "Host names of ${Environment}: what DNS needs (docs/runbooks/dns-cutover.md). Nothing is changed in DNS by this deployment."
@@ -442,7 +492,7 @@ if ($customDomains.Count -gt 0) {
         $name = [string] $domain.hostName
         $state = [string] $domain.validationState
         Write-Host "  ${name}: validation $state; $(if ([bool] $domain.kept) { 'answered with pages, kept at the edge' } else { 'answered with a redirect, never kept at the edge' })"
-        if ($state -ne 'Approved') {
+        if ($state -ne 'Approved' -and "$($domain.validationToken)") {
             # ConvertFrom-Json turns a text that looks like a date into a date: written here in one fixed form.
             $expires = $domain.validationExpires
             $until = if ($expires -is [datetime]) { " (the token is valid until $($expires.ToUniversalTime().ToString('yyyy-MM-dd HH:mm', [cultureinfo]::InvariantCulture)) UTC)" }
@@ -472,11 +522,10 @@ foreach ($app in $apps) {
 }
 
 # Everything the endpoint keeps: a purge names the paths and the domains it is for. The endpoint's own name, and
-# every host name with pages whose validation has passed at some time. A name that is still Submitting or Pending
-# has never served, so the edge keeps nothing for it. The names that only redirect have a route without a cache.
-$domains = @(([Uri] $frontDoorUrl).Host) + @($customDomains |
-        Where-Object { [bool] $_.kept -and [string] $_.validationState -notin 'Submitting', 'Pending' } |
-        ForEach-Object { [string] $_.hostName })
+# every host name with pages that serves (worked out above, before any new token). A name that waits for its
+# records has never served, so the edge keeps nothing for it, and Azure is not asked about it. The names that only
+# redirect have a route without a cache.
+$domains = @(([Uri] $frontDoorUrl).Host) + @($servingHostNames)
 $purgeFile = Join-Path ([IO.Path]::GetTempPath()) "purge-$stack-$([Guid]::NewGuid().ToString('N')).json"
 @{ contentPaths = @('/*'); domains = @($domains) } | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $purgeFile -Encoding utf8NoBOM
 Write-Host "Emptying the Front Door's cache: /* of $($domains -join ', ')"

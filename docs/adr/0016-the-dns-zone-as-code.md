@@ -119,6 +119,31 @@ them at the registrar is the move, and a person's step.
 Listing the names only after the name servers changed would leave a gap: the address records would point at the
 Front Door from the same deployment that first shows it the tokens, and a certificate takes up to an hour.
 
+### The rehearsal in uat
+
+Before production's names: `uat` lists one throwaway host name, `uat.jeffreypalermo.com`. It has no zone; its two
+records are entered by a person at WordPress.com, as production's three TXT records will be.
+
+- **The deployment creates the custom domain, which waits (`Pending`), and prints the two records**: the TXT
+  record `_dnsauth.uat` with the token, and the CNAME record `uat` with the endpoint's name.
+- **A name that waits fails nothing.** The purge names only a name that serves: `Approved`, or
+  `PendingRevalidation`, as the stack reported it. `verify.ps1` asks no host name. The endpoint's own route is not
+  written in terms of host names, so the `azurefd.net` address serves as before (tested on the compiled template).
+- **A token is good for seven days**, after which the Front Door stops waiting (`TimedOut`). A later deployment
+  then asks the Front Door for a new token (`refreshValidationToken`), reads the name again and prints the new
+  one. It does the same for a token that is past its date, for `Rejected`, and for `PendingRevalidation` of a name
+  at the top of a zone, whose certificate is not renewed by itself: so the bare domain's renewal is a deployment
+  too, and the new token reaches the zone without a hand. If Azure refuses the new token, the deployment says so
+  and goes on; the old token is then neither printed nor written into the zone.
+- **When the two records exist, nothing more is asked of anyone**: the Front Door validates the name, issues its
+  certificate, and the route made with the custom domain serves it. The next deployment prints `Approved`, no TXT
+  line, and purges the name with the endpoint's own.
+- **Afterwards one line leaves the settings.** The site's stack deletes what leaves its template: the custom domain
+  and its route. The two records at WordPress.com are deleted by hand.
+
+A deployment in the minutes between a new token for a name that serves and its validation finds the name
+`Pending` and does not purge it. The next deployment does.
+
 ### What the deploy identity must be allowed to do
 
 | New in this change | Known? |
@@ -126,6 +151,7 @@ Front Door from the same deployment that first shows it the tokens, and a certif
 | A second deployment stack in the tier's resource group, with deny settings | Yes: it creates the site's stack there the same way |
 | `Microsoft.Network/dnsZones` and its record sets (A, CNAME, MX, TXT) in that resource group | The identity owns the group, so the right is there. **Not known: whether the subscription is registered for `Microsoft.Network`.** Registering is a right over the subscription, which the identity does not have. If it is not, the zone's stack fails with `MissingSubscriptionRegistration`, which is not tried again |
 | An alias record that names the Front Door endpoint | The endpoint is in the same group; reading it is enough |
+| The action `refreshValidationToken` on a custom domain (the rehearsal's part of this decision) | An action on a resource of the site's stack, like the purge, which the deploy identity is known to be let through for. The action itself has not been run |
 
 ## Consequences
 
@@ -153,3 +179,9 @@ Front Door from the same deployment that first shows it the tokens, and a certif
 | 5 | After it | Public DNS is untouched | `dig +noall +answer NS jeffreypalermo.com` | the three `wordpress.com` name servers |
 | 6 | When production lists the host names | The zone holds the alias and the tokens | `dig +noall +answer @<a name server of the zone> jeffreypalermo.com A`; `for name in _dnsauth _dnsauth.www _dnsauth.feeds; do dig +noall +answer @<the same> "$name.jeffreypalermo.com" TXT; done` | addresses of the Front Door; the three tokens the deployment printed |
 | 7 | A second production deployment | The stack is applied again without change, and the name servers are the same four | the deployment's log | the same four names |
+| 8 | The first deployment to `uat` with the rehearsal name | The custom domain is created and waits | the deployment's log | `uat.jeffreypalermo.com: validation Pending; answered with pages, kept at the edge`, a `TXT` line, a `CNAME` line, and `PASS the Front Door's cache is emptied` |
+| 9 | The same | The `azurefd.net` address of `uat` serves as before | `scripts/verify-environments.sh https://<uat endpoint>` | `PASS`, 0 violations |
+| 10 | After the two records are entered | Validation, certificate, the name served and kept | `az resource show --ids "<uat profile id>/customDomains/uat-jeffreypalermo-com" --api-version 2024-02-01 --query "properties.{validation:domainValidationState,deployed:deploymentStatus}" --output tsv`; `for i in 1 2; do curl -s -o /dev/null -D - https://uat.jeffreypalermo.com/ \| grep -iE '^(HTTP\|x-cache\|x-release)'; done` | `Approved`, `Succeeded` within an hour; 200, `TCP_MISS` then `TCP_HIT` |
+| 11 | The next deployment to `uat` | The purge takes the name | the deployment's log | `Emptying the Front Door's cache: /* of <uat endpoint>, uat.jeffreypalermo.com` |
+| 12 | If the records come after seven days | A new token is made by the deployment | the deployment's log | `The Front Door gave a new token for uat.jeffreypalermo.com: its validation was TimedOut.` and a `TXT` line with a new date |
+| 13 | After the rehearsal, the name out of the settings | The stack deletes the custom domain and its route | `az resource show --ids "<uat profile id>/customDomains/uat-jeffreypalermo-com" --api-version 2024-02-01` | not found |

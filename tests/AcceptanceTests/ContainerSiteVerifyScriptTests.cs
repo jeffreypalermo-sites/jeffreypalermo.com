@@ -29,6 +29,33 @@ public sealed partial class ContainerSiteTests
         Assert.Contains($"PASS uat runs release {site.Version} in 2 region(s) and through {url}", result.Output, StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// The rehearsal (ADR-0016): uat lists a host name whose custom domain waits for two records a person enters.
+    /// The verification asks the regions and the Front Door's own address, never a host name: a name that waits
+    /// cannot fail it.
+    /// </summary>
+    [Fact]
+    public async Task TheVerifyScriptPassesWhileAHostNameWaitsForItsRecords()
+    {
+        var url = site.BaseAddress.ToString();
+        var result = await VerifyAsync(site.Version, $$"""
+            { "outputs": {
+                "regions": { "value": [ { "code": "eus2", "location": "eastus2", "app": "ca-jpcom-uat-web-eus2", "url": "{{url}}" } ] },
+                "frontDoorUrl": { "value": "{{url}}" },
+                "frontDoorEndpointId": { "value": "/subscriptions/1/resourceGroups/rg-test/providers/Microsoft.Cdn/profiles/afd-jpcom-uat/afdEndpoints/jpcom-uat" },
+                "hostNames": { "value": [ {
+                  "hostName": "uat.jeffreypalermo.invalid", "id": "/subscriptions/1/customDomains/uat-jeffreypalermo-invalid", "kept": true,
+                  "validationState": "Pending", "validationRecord": "_dnsauth.uat.jeffreypalermo.invalid", "validationToken": "a-token",
+                  "validationExpires": "2026-10-15T06:00:00.0000000+00:00", "target": "jpcom-uat-abc123.z02.azurefd.net" } ] } } }
+            """);
+
+        Assert.True(result.ExitCode == 0, $"{result.Output}\n{result.Error}");
+        Assert.Equal(string.Empty, result.Error);
+        // A name that does not resolve was never asked: the script would have failed on it.
+        Assert.DoesNotContain("jeffreypalermo.invalid", result.Output, StringComparison.Ordinal);
+        Assert.Contains($"PASS uat runs release {site.Version} in 1 region(s) and through {url}", result.Output, StringComparison.Ordinal);
+    }
+
     /// <summary>The pipeline asks where the environment runs, for the system's health dashboard (ADR-0011).</summary>
     [Fact]
     public async Task TheVerifyScriptReportsTheNodesWhereThePipelineAsks()

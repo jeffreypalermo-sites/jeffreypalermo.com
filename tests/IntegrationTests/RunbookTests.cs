@@ -100,6 +100,26 @@ public sealed partial class RunbookTests
         Assert.Contains("name: replace(host, '.', '-')", File.ReadAllText(Path.Join(TestPaths.RepositoryRoot, "deploy", "infra", "custom-domains.bicep")), StringComparison.Ordinal);
     }
 
+    /// <summary>The rehearsal: the two records a person enters, named as the deployment to uat prints them.</summary>
+    [Fact]
+    public void TheRunbookNamesTheTwoRecordsOfTheRehearsal()
+    {
+        using var settings = System.Text.Json.JsonDocument.Parse(File.ReadAllText(Path.Join(TestPaths.RepositoryRoot, "deploy", "settings.json")));
+        var name = Assert.Single(settings.RootElement.GetProperty("environments").GetProperty("uat").GetProperty("hostNames").EnumerateArray()).GetString()!;
+        var rehearsal = Runbook[Runbook.IndexOf("## Rehearsal in uat", StringComparison.Ordinal)..Runbook.IndexOf("## Before the day", StringComparison.Ordinal)];
+
+        Assert.Equal("uat.jeffreypalermo.com", name);
+        Assert.Contains("| TXT | `_dnsauth.uat` | the token of the `TXT` line, without the quotes |", rehearsal, StringComparison.Ordinal);
+        Assert.Contains("| CNAME | `uat` | the `azurefd.net` name of the `CNAME` line |", rehearsal, StringComparison.Ordinal);
+        Assert.Contains($"    TXT    _dnsauth.{name}  \"<token>\" (the token is valid until <date> UTC)", rehearsal, StringComparison.Ordinal);
+        Assert.Contains($"    CNAME  {name}  <uat endpoint>", rehearsal, StringComparison.Ordinal);
+        Assert.Contains($"customDomains/{name.Replace('.', '-')}", rehearsal, StringComparison.Ordinal);
+        // What the deployment says when it makes a new token, as the script says it.
+        Assert.Contains($"The Front Door gave a new\ntoken for {name}", rehearsal, StringComparison.Ordinal);
+        Assert.Contains("Write-Host \"The Front Door gave a new token for ${name}: its validation was $state.\"", Deploy, StringComparison.Ordinal);
+        Assert.Contains("A token is good for seven days", rehearsal, StringComparison.Ordinal);
+    }
+
     /// <summary>Going back writes the three names as the inventory read them.</summary>
     [Fact]
     public void GoingBackGivesTheNamesTheValuesOfTheInventory()

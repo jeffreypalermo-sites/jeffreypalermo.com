@@ -117,6 +117,8 @@ resource redirectHostsRoute 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-
 output hostNames array = [
   for (host, i) in allHostNames: {
     hostName: host
+    // The custom domain itself: what deploy.ps1 asks for a new token when the old one is too old.
+    id: customDomains[i].id
     kept: i < length(hostNames)
     validationState: customDomains[i].properties.domainValidationState
     validationRecord: '_dnsauth.${host}'

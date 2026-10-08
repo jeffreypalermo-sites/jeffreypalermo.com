@@ -99,7 +99,7 @@ public partial class CacheContractTests
         var withoutFrontDoor = Deploy.IndexOf("if (-not $frontDoor) {", StringComparison.Ordinal);
         Assert.Matches(@"if \(-not \$frontDoor\) \{[^}]*exit 0\s*\}", Deploy);
         var regionsAsked = Deploy.IndexOf("& $testSite -BaseUrl ([string] $app.url) -Version $Version", StringComparison.Ordinal);
-        var purged = Deploy.IndexOf("'resource', 'invoke-action'", StringComparison.Ordinal);
+        var purged = Deploy.IndexOf("'--action', 'purge',", StringComparison.Ordinal);
 
         Assert.True(applied >= 0 && applied < withoutFrontDoor && withoutFrontDoor < regionsAsked && regionsAsked < purged,
             $"Expected: apply the stack ({applied}), stop without a Front Door ({withoutFrontDoor}), ask the regions ({regionsAsked}), purge ({purged}).");

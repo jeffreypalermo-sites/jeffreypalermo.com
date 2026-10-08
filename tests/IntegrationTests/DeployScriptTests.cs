@@ -424,15 +424,15 @@ public sealed class DeployScriptTests : IDisposable
     }
 
     /// <summary>
-    /// ADR-0014: today no environment has a host name, and the stack is asked for none. The lists are still lists:
-    /// PowerShell writes an empty one as nothing and a list of one as a text unless the script makes them lists.
+    /// ADR-0014: an environment without a host name asks the stack for none. The lists are still lists: PowerShell
+    /// writes an empty one as nothing and a list of one as a text unless the script makes them lists.
     /// </summary>
     [Theory]
     [InlineData("tdd")]
-    [InlineData("uat")]
+    [InlineData("prod")]
     public async Task WithoutHostNamesTheStackIsAskedForNoCustomDomain(string environment)
     {
-        UatBehindItsFrontDoor();
+        ProdBehindItsFrontDoor();
         ExpressEnvironment("cae-jpcom-tdd-eus2");
 
         var result = await DeployAsync(environment);
@@ -470,7 +470,7 @@ public sealed class DeployScriptTests : IDisposable
 
         Assert.Contains("Host names of uat: what DNS needs (docs/runbooks/dns-cutover.md). Nothing is changed in DNS by this deployment.", result.Output, StringComparison.Ordinal);
         Assert.Contains("  jeffreypalermo.com: validation Pending; answered with pages, kept at the edge", result.Output, StringComparison.Ordinal);
-        Assert.Contains("    TXT    _dnsauth.jeffreypalermo.com  \"token-for-the-apex\" (the token is valid until 2026-11-21 10:15 UTC)", result.Output, StringComparison.Ordinal);
+        Assert.Contains("    TXT    _dnsauth.jeffreypalermo.com  \"token-for-the-apex\" (the token is valid until 2126-11-21 10:15 UTC)", result.Output, StringComparison.Ordinal);
         Assert.Contains($"    ALIAS  jeffreypalermo.com  jpcom-uat-abc123.z02.azurefd.net  (the top of a zone takes no CNAME: an ALIAS or ANAME record, or an Azure DNS alias record to {EndpointId})", result.Output, StringComparison.Ordinal);
         Assert.Contains("  www.jeffreypalermo.com: validation Pending; answered with a redirect, never kept at the edge", result.Output, StringComparison.Ordinal);
         Assert.Contains("    TXT    _dnsauth.www.jeffreypalermo.com  \"token-for-www\"", result.Output, StringComparison.Ordinal);
@@ -513,14 +513,16 @@ public sealed class DeployScriptTests : IDisposable
     [Fact]
     public async Task AHostNameWhoseValidationIsDueAgainStillServesAndIsPurged()
     {
-        UatWithCustomDomains(Domain("jeffreypalermo.com", kept: true, "PendingRevalidation", token: "the-new-token"));
+        UatWithCustomDomains(Domain("jeffreypalermo.com", kept: true, "PendingRevalidation", token: "the-token-of-the-day"));
+        TheFrontDoorGivesANewToken("jeffreypalermo.com", "the-new-token");
         var folder = DeployFolderWithHostNames("uat", "jeffreypalermo.com");
 
         var result = await DeployAsync("uat", deployFolder: folder);
 
         Assert.True(result.ExitCode == 0, result.ToString());
         Assert.Equal(["jpcom-uat-abc123.z02.azurefd.net", "jeffreypalermo.com"], PurgedDomains());
-        Assert.Contains("  jeffreypalermo.com: validation PendingRevalidation; answered with pages, kept at the edge", result.Output, StringComparison.Ordinal);
+        // The script asked for the new token itself: the name waits for it to be seen, and serves all the while.
+        Assert.Contains("  jeffreypalermo.com: validation Pending; answered with pages, kept at the edge", result.Output, StringComparison.Ordinal);
         Assert.Contains("    TXT    _dnsauth.jeffreypalermo.com  \"the-new-token\"", result.Output, StringComparison.Ordinal);
     }
 
@@ -866,6 +868,224 @@ public sealed class DeployScriptTests : IDisposable
         Assert.Empty(Calls());
     }
 
+    /// <summary>
+    /// The rehearsal (ADR-0016): uat lists one throwaway name. Its custom domain waits for two records a person adds
+    /// at the DNS host of today, and the deployment prints both. Until they exist nothing else changes: the
+    /// deployment passes, and only the endpoint's own name is purged.
+    /// </summary>
+    [Fact]
+    public async Task TheRehearsalNameWaitsForItsTwoRecordsAndFailsNothing()
+    {
+        UatWithCustomDomains(Domain("uat.jeffreypalermo.com", kept: true, "Pending", token: "token-of-the-rehearsal"));
+
+        var result = await DeployAsync("uat");
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        // The settings of the repository list the name: the stack is asked for its custom domain, as a name with pages.
+        Assert.Equal(["uat.jeffreypalermo.com"], StackParameters().GetProperty("hostNames").GetProperty("value").EnumerateArray().Select(name => name.GetString()));
+        Assert.Equal(0, StackParameters().GetProperty("redirectHostNames").GetProperty("value").GetArrayLength());
+        Assert.Contains("behind Front Door, as uat.jeffreypalermo.com", result.Output, StringComparison.Ordinal);
+
+        // The two records, with their exact names.
+        Assert.Contains("  uat.jeffreypalermo.com: validation Pending; answered with pages, kept at the edge", result.Output, StringComparison.Ordinal);
+        Assert.Contains("    TXT    _dnsauth.uat.jeffreypalermo.com  \"token-of-the-rehearsal\" (the token is valid until 2126-11-21 10:15 UTC)", result.Output, StringComparison.Ordinal);
+        Assert.Contains("    CNAME  uat.jeffreypalermo.com  jpcom-uat-abc123.z02.azurefd.net", result.Output, StringComparison.Ordinal);
+
+        // A name that waits is not purged and gets no new token; uat has no DNS zone.
+        Assert.Equal(["jpcom-uat-abc123.z02.azurefd.net"], PurgedDomains());
+        Assert.Empty(NewTokensAskedFor());
+        Assert.DoesNotContain(Calls(), call => call.Contains("-dns", StringComparison.Ordinal));
+        Assert.EndsWith("PASS the Front Door's cache is emptied: readers get release 1.2.3", result.Output.TrimEnd(), StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// A token is good for seven days. When the two records were not there in time, the Front Door stops waiting. A
+    /// later deployment asks it for a new token and prints that one: it neither fails nor prints a token of no use.
+    /// </summary>
+    [Theory]
+    [InlineData("TimedOut")]
+    [InlineData("Rejected")]
+    public async Task ATokenTheFrontDoorGaveUpOnIsReplacedByANewOne(string state)
+    {
+        UatWithCustomDomains(Domain("uat.jeffreypalermo.com", kept: true, state, token: "the-token-of-last-week", expires: "2026-10-01T00:00:00.0000000+00:00"));
+        TheFrontDoorGivesANewToken("uat.jeffreypalermo.com", "the-new-token");
+
+        var result = await DeployAsync("uat");
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        var asked = Assert.Single(NewTokensAskedFor());
+        Assert.Equal($"resource invoke-action --action refreshValidationToken --ids {DomainId("uat.jeffreypalermo.com")} --api-version 2024-02-01 --output none", asked);
+        Assert.Contains($"The Front Door gave a new token for uat.jeffreypalermo.com: its validation was {state}.", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  uat.jeffreypalermo.com: validation Pending; answered with pages, kept at the edge", result.Output, StringComparison.Ordinal);
+        Assert.Contains("    TXT    _dnsauth.uat.jeffreypalermo.com  \"the-new-token\" (the token is valid until 2126-12-01 08:30 UTC)", result.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("the-token-of-last-week", result.Output, StringComparison.Ordinal);
+        // The name has never served: nothing is purged for it.
+        Assert.Equal(["jpcom-uat-abc123.z02.azurefd.net"], PurgedDomains());
+        // The new token was asked for after the stack and before the records are printed.
+        var calls = Calls().ToList();
+        Assert.True(calls.FindIndex(call => call.StartsWith("stack group show", StringComparison.Ordinal)) < calls.IndexOf(asked));
+        Assert.True(calls.IndexOf(asked) < calls.FindIndex(call => call.StartsWith("resource invoke-action --action purge", StringComparison.Ordinal)));
+    }
+
+    [Fact]
+    public async Task ATokenThatIsPastItsDateIsReplacedThoughTheNameStillSaysPending()
+    {
+        UatWithCustomDomains(Domain("uat.jeffreypalermo.com", kept: true, "Pending", token: "the-token-of-last-week", expires: "2026-10-01T00:00:00.0000000+00:00"));
+        TheFrontDoorGivesANewToken("uat.jeffreypalermo.com", "the-new-token");
+
+        var result = await DeployAsync("uat");
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Single(NewTokensAskedFor());
+        Assert.Contains("    TXT    _dnsauth.uat.jeffreypalermo.com  \"the-new-token\"", result.Output, StringComparison.Ordinal);
+    }
+
+    /// <summary>A name that waits must not stop a release, whatever Azure says about its token.</summary>
+    [Fact]
+    public async Task ANewTokenThatAzureRefusesDoesNotFailTheDeployment()
+    {
+        UatWithCustomDomains(Domain("uat.jeffreypalermo.com", kept: true, "TimedOut", token: "the-token-of-last-week", expires: "2026-10-01T00:00:00.0000000+00:00"));
+        File.WriteAllText(Path.Join(_state, "refresh-fails"), "(InternalServerError) The token could not be refreshed");
+
+        var result = await DeployAsync("uat");
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Single(NewTokensAskedFor());
+        Assert.Contains("The Front Door gave no new token for uat.jeffreypalermo.com (validation TimedOut, exit code 1); the next deployment asks again. Azure said:", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  ERROR: (InternalServerError) The token could not be refreshed", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  uat.jeffreypalermo.com: validation TimedOut; answered with pages, kept at the edge", result.Output, StringComparison.Ordinal);
+        // The old token proves nothing: it is not printed as a record to enter. Where the name points still is.
+        Assert.DoesNotContain("TXT ", result.Output, StringComparison.Ordinal);
+        Assert.Contains("    CNAME  uat.jeffreypalermo.com  jpcom-uat-abc123.z02.azurefd.net", result.Output, StringComparison.Ordinal);
+        Assert.Equal(["jpcom-uat-abc123.z02.azurefd.net"], PurgedDomains());
+        Assert.EndsWith("PASS the Front Door's cache is emptied: readers get release 1.2.3", result.Output.TrimEnd(), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ANewTokenThatCannotBeReadIsPrintedByTheNextDeployment()
+    {
+        UatWithCustomDomains(Domain("uat.jeffreypalermo.com", kept: true, "TimedOut", token: "the-token-of-last-week", expires: "2026-10-01T00:00:00.0000000+00:00"));
+
+        var result = await DeployAsync("uat");
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Contains("The Front Door made a new token for uat.jeffreypalermo.com (its validation was TimedOut), but the token could not be read; the next deployment prints it.", result.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("the-token-of-last-week", result.Output, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// When the two records exist: the Front Door validates the name and issues its certificate by itself. The next
+    /// deployment finds the name approved, prints no record to enter, and empties the edge for it too.
+    /// </summary>
+    [Fact]
+    public async Task OnceTheRehearsalNameIsApprovedItIsPurgedAndNeedsNothing()
+    {
+        UatWithCustomDomains(Domain("uat.jeffreypalermo.com", kept: true, "Approved", token: "token-of-the-rehearsal"));
+
+        var result = await DeployAsync("uat");
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Contains("  uat.jeffreypalermo.com: validation Approved; answered with pages, kept at the edge", result.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("TXT ", result.Output, StringComparison.Ordinal);
+        Assert.Equal(["jpcom-uat-abc123.z02.azurefd.net", "uat.jeffreypalermo.com"], PurgedDomains());
+        Assert.Contains("Emptying the Front Door's cache: /* of jpcom-uat-abc123.z02.azurefd.net, uat.jeffreypalermo.com", result.Output, StringComparison.Ordinal);
+        Assert.Empty(NewTokensAskedFor());
+    }
+
+    /// <summary>Only a name that serves is purged: every state in which a name waits, or was given up on, is left out.</summary>
+    [Theory]
+    [InlineData("Submitting", false)]
+    [InlineData("Pending", false)]
+    [InlineData("RefreshingValidationToken", false)]
+    [InlineData("InternalError", false)]
+    [InlineData("Approved", true)]
+    [InlineData("PendingRevalidation", true)]
+    public async Task ANameIsPurgedOnlyInAStateInWhichItServes(string state, bool purged)
+    {
+        UatWithCustomDomains(Domain("uat.jeffreypalermo.com", kept: true, state, token: "a-token"));
+
+        var result = await DeployAsync("uat");
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(purged, PurgedDomains().Contains("uat.jeffreypalermo.com"));
+        Assert.Contains("jpcom-uat-abc123.z02.azurefd.net", PurgedDomains());
+        // None of these is a state in which a new token is asked for: the rehearsal name has a CNAME.
+        Assert.Empty(NewTokensAskedFor());
+    }
+
+    /// <summary>
+    /// The certificate of the bare domain is not renewed by itself: the Front Door wants the name proved again, with a
+    /// new token. The deployment asks for it and writes it into the zone; the name serves all the while, and is purged.
+    /// </summary>
+    [Fact]
+    public async Task TheBareDomainsCertificateIsRenewedByADeployment()
+    {
+        ProdBehindItsFrontDoor(
+            Domain("jeffreypalermo.com", kept: true, "PendingRevalidation", token: "the-token-of-the-day"),
+            Domain("www.jeffreypalermo.com", kept: false, "PendingRevalidation", token: "the-token-of-www"));
+        TheFrontDoorGivesANewToken("jeffreypalermo.com", "the-token-for-the-new-certificate");
+        var folder = DeployFolderWithHostNames("prod", "jeffreypalermo.com", "www.jeffreypalermo.com");
+
+        var result = await DeployAsync("prod", deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        // Only the bare domain: www is a CNAME of the endpoint, and the Front Door renews it by itself.
+        Assert.Equal([$"resource invoke-action --action refreshValidationToken --ids {DomainId("jeffreypalermo.com")} --api-version 2024-02-01 --output none"], NewTokensAskedFor());
+        Assert.Contains("The Front Door gave a new token for jeffreypalermo.com: its validation was PendingRevalidation.", result.Output, StringComparison.Ordinal);
+        Assert.Contains("    TXT    _dnsauth.jeffreypalermo.com  \"the-token-for-the-new-certificate\"", result.Output, StringComparison.Ordinal);
+        // It served before the new token and serves after: its pages are purged.
+        Assert.Equal(["jpcom-prod-d8e7.z02.azurefd.net", "jeffreypalermo.com"], PurgedDomains());
+        // The zone gets the new token, and www's, which is still the one the Front Door holds.
+        Assert.Equal(["@", "www"], Texts(ZoneParameters(), "validationLabels"));
+        Assert.Equal(["the-token-for-the-new-certificate", "the-token-of-www"], Texts(ZoneParameters(), "validationTokens"));
+    }
+
+    /// <summary>A token Azure would not renew is not written into the zone: the record there stays as it is.</summary>
+    [Fact]
+    public async Task ATokenThatCouldNotBeRenewedIsNotWrittenIntoTheZone()
+    {
+        ProdBehindItsFrontDoor(Domain("jeffreypalermo.com", kept: true, "PendingRevalidation", token: "the-token-of-the-day"));
+        File.WriteAllText(Path.Join(_state, "refresh-fails"), "(Conflict) Another operation is in progress");
+        var folder = DeployFolderWithHostNames("prod", "jeffreypalermo.com");
+
+        var result = await DeployAsync("prod", deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(["@"], Texts(ZoneParameters(), "hostLabels"));
+        Assert.Empty(Texts(ZoneParameters(), "validationLabels"));
+        Assert.Empty(Texts(ZoneParameters(), "validationTokens"));
+        Assert.Equal(["jpcom-prod-d8e7.z02.azurefd.net", "jeffreypalermo.com"], PurgedDomains());
+    }
+
+    /// <summary>
+    /// After the rehearsal: one line leaves the settings. The stack is asked for no custom domain, and it is the stack
+    /// that deletes what leaves its template: the custom domain and its route go with the deployment.
+    /// </summary>
+    [Fact]
+    public async Task TheRehearsalNameIsRemovedByTakingItOutOfTheSettings()
+    {
+        UatBehindItsFrontDoor();
+        var folder = DeployFolderWithHostNames("uat");
+
+        var result = await DeployAsync("uat", deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Equal(0, StackParameters().GetProperty("hostNames").GetProperty("value").GetArrayLength());
+        Assert.Equal(0, StackParameters().GetProperty("redirectHostNames").GetProperty("value").GetArrayLength());
+        var stack = Assert.Single(Calls(), call => call.StartsWith("stack group create", StringComparison.Ordinal));
+        Assert.Contains("--action-on-unmanage deleteResources", stack, StringComparison.Ordinal);
+        Assert.DoesNotContain("Host names", result.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("uat.jeffreypalermo.com", result.Output, StringComparison.Ordinal);
+        Assert.Equal(["jpcom-uat-abc123.z02.azurefd.net"], PurgedDomains());
+    }
+
     [Fact]
     public async Task AnEnvironmentTheSettingsDoNotNameFails()
     {
@@ -971,12 +1191,26 @@ public sealed class DeployScriptTests : IDisposable
     }
 
     /// <summary>What the stack says about a host name's custom domain, as an item of its output <c>hostNames</c>.</summary>
-    private static string Domain(string hostName, bool kept, string state, string token = "") => $$"""
-        { "hostName": "{{hostName}}", "kept": {{(kept ? "true" : "false")}}, "validationState": "{{state}}",
+    private static string Domain(string hostName, bool kept, string state, string token = "", string expires = "2126-11-21T10:15:00.0000000+00:00") => $$"""
+        { "hostName": "{{hostName}}", "id": "{{DomainId(hostName)}}", "kept": {{(kept ? "true" : "false")}}, "validationState": "{{state}}",
           "validationRecord": "_dnsauth.{{hostName}}", "validationToken": "{{token}}",
-          "validationExpires": "{{(token.Length > 0 ? "2026-11-21T10:15:00.0000000+00:00" : string.Empty)}}",
+          "validationExpires": "{{(token.Length > 0 ? expires : string.Empty)}}",
           "target": "jpcom-uat-abc123.z02.azurefd.net" }
         """;
+
+    /// <summary>The resource ID of a host name's custom domain, named as the template names it.</summary>
+    private static string DomainId(string hostName) =>
+        $"/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/rg-test/providers/Microsoft.Cdn/profiles/afd-jpcom/customDomains/{hostName.Replace('.', '-')}";
+
+    /// <summary>What a read of a custom domain finds after a new token was asked for: the name waits again, with the new token.</summary>
+    private void TheFrontDoorGivesANewToken(string hostName, string token) =>
+        File.WriteAllText(Path.Join(_state, $"custom-domain-{hostName.Replace('.', '-')}.json"), $$"""
+            { "id": "{{DomainId(hostName)}}", "properties": { "hostName": "{{hostName}}", "domainValidationState": "Pending",
+              "validationProperties": { "validationToken": "{{token}}", "expirationDate": "2126-12-01T08:30:00.0000000+00:00" } } }
+            """);
+
+    private string[] NewTokensAskedFor() =>
+        [.. Calls().Where(call => call.StartsWith("resource invoke-action --action refreshValidationToken", StringComparison.Ordinal))];
 
     /// <summary>uat behind its Front Door, whose stack also names these custom domains.</summary>
     private void UatWithCustomDomains(params string[] domains)

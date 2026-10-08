@@ -11,7 +11,7 @@
     },
     "uat": {
       "frontDoor": true,
-      "hostNames": [],
+      "hostNames": ["uat.jeffreypalermo.com"],
       "regions": [
         { "location": "eastus2", "code": "eus2" },
         { "location": "germanywestcentral", "code": "gwc" }

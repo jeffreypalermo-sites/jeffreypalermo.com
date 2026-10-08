@@ -16,6 +16,8 @@
 #                                the same for a stack whose name ends in -dns: the DNS zone's own stack
 #   purge-body.json              the request of the last purge ("resource invoke-action --action purge")
 #   purge-fails, purge-fails-once   the same two for the purge
+#   custom-domain-<name>.json    a custom domain of the Front Door as a read finds it (after a new token was asked for)
+#   refresh-fails                when present, asking for a new validation token fails with this text
 set -euo pipefail
 
 state="${AZ_STUB_STATE:?AZ_STUB_STATE is the folder that holds what this stand-in knows}"
@@ -70,6 +72,15 @@ case "${1:-} ${2:-}" in
       */containerApps/*)
         if [ -f "$state/deployment-errors" ]; then cat "$state/deployment-errors"; fi
         ;;
+      */customDomains/*)
+        # A custom domain of the Front Door as it is now: after a new token was asked for, with the new token.
+        if [ -f "$state/custom-domain-$name.json" ]; then
+          cat "$state/custom-domain-$name.json"
+        else
+          echo "ERROR: (ResourceNotFound) $name was not found." >&2
+          exit 3
+        fi
+        ;;
       *)
         echo "ERROR: the stand-in does not know $path" >&2
         exit 2
@@ -108,6 +119,15 @@ case "${1:-} ${2:-}" in
     ;;
   "resource invoke-action")
     action="$(value --action "$@")"
+    if [ "$action" = "refreshValidationToken" ]; then
+      # A new validation token for a custom domain of the Front Door.
+      if [ -f "$state/refresh-fails" ]; then
+        echo "ERROR: $(cat "$state/refresh-fails")" >&2
+        exit 1
+      fi
+      echo "WARNING: a notice the Azure CLI writes on success" >&2
+      exit 0
+    fi
     if [ "$action" != "purge" ]; then
       echo "ERROR: the stand-in does not know the action $action" >&2
       exit 2
