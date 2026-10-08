@@ -11,7 +11,7 @@
 
     settings.json beside this file says where the site runs in each environment: its regions, whether an Azure
     Front Door stands in front of them (ADR-0008), and under which host names of its own the Front Door answers
-    (hostNames, ADR-0014; none in production yet). For the environment asked for, this script
+    (hostNames, ADR-0014; ADR-0018 gives uat and production one each). For the environment asked for, this script
       1. makes sure every region has its Container Apps express environment, cae-<system>-<environment>-<code>.
          A template deployment cannot create one in this subscription: its validation counts an express environment
          against the limits of standard ones and refuses it, while the service accepts the request itself. So each is

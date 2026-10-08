@@ -6,10 +6,10 @@ using JeffreyPalermo.UnitTests.Architecture;
 namespace JeffreyPalermo.UnitTests.Delivery;
 
 /// <summary>
-/// The custom domain is prepared and switched off (ADR-0014): the settings can list host names, the infrastructure
-/// code and <c>deploy.ps1</c> know what to do with them, and production lists none until the DNS of
-/// <c>jeffreypalermo.com</c> moves (<c>docs/runbooks/dns-cutover.md</c>). uat lists one throwaway name, to rehearse
-/// with (ADR-0016).
+/// The custom domain (ADR-0014): the settings can list host names, and the infrastructure code and
+/// <c>deploy.ps1</c> know what to do with them. uat and production each list a name of their own in
+/// <c>jeffreypalermo.ceo</c> (ADR-0018). Production lists no name of <c>jeffreypalermo.com</c> until that domain's
+/// DNS moves (<c>docs/runbooks/dns-cutover.md</c>).
 /// </summary>
 public class CustomDomainContractTests
 {
@@ -30,30 +30,37 @@ public class CustomDomainContractTests
             : [];
 
     /// <summary>
-    /// Which environment lists which host names. Production lists none until the DNS moves: the pull request that
-    /// prepares the day changes <c>settings.json</c> and the line for prod here together, to jeffreypalermo.com,
-    /// www.jeffreypalermo.com and feeds.jeffreypalermo.com. uat lists the one name of the rehearsal (ADR-0016), a
-    /// throwaway that leaves again, with its line here, when the rehearsal is over.
+    /// Which environment lists which host names. uat and production each have their own name in jeffreypalermo.ceo
+    /// (Jeffrey, 2026-10-08, ADR-0018). tdd has no Front Door to take one: its name there is a forwarding at the
+    /// domain's DNS host, not a host name of the site. The names of jeffreypalermo.com come with the DNS move: the
+    /// pull request that prepares the day adds jeffreypalermo.com, www.jeffreypalermo.com and
+    /// feeds.jeffreypalermo.com to <c>settings.json</c> and to the line for prod here together.
     /// </summary>
     [Theory]
     [InlineData("tdd")]
-    [InlineData("uat", "uat.jeffreypalermo.com")]
-    [InlineData("prod")]
+    [InlineData("uat", "uat.jeffreypalermo.ceo")]
+    [InlineData("prod", "www.jeffreypalermo.ceo")]
     public void EachEnvironmentListsTheHostNamesThatWereDecided(string environment, params string[] hostNames) =>
         Assert.Equal(hostNames, HostNames(environment));
 
-    /// <summary>The rehearsal's name is one the site answers with pages, not one it redirects, and it is not production's.</summary>
-    [Fact]
-    public void TheRehearsalNameIsNeitherProductionsNorARedirect()
+    /// <summary>
+    /// An environment's own name is one the site answers with pages, never one it redirects: www. of another domain
+    /// is not www. of the canonical host. It is no name of the domain whose DNS moves, and no two environments
+    /// share one.
+    /// </summary>
+    [Theory]
+    [InlineData("uat")]
+    [InlineData("prod")]
+    public void AnEnvironmentsOwnNameIsAnsweredWithPagesAndIsNoNameOfTheDomainThatMoves(string environment)
     {
-        var resolver = new LegacyUrlResolver(Settings().GetProperty("canonicalHost").GetString()!);
+        var canonical = Settings().GetProperty("canonicalHost").GetString()!;
+        var resolver = new LegacyUrlResolver(canonical);
+        var name = Assert.Single(HostNames(environment));
 
-        Assert.All(HostNames("uat"), name =>
-        {
-            Assert.EndsWith(".jeffreypalermo.com", name, StringComparison.Ordinal);
-            Assert.DoesNotContain(name, (string[])["jeffreypalermo.com", "www.jeffreypalermo.com", "feeds.jeffreypalermo.com"]);
-            Assert.False(LegacyUrlResolver.DecidedByHost(resolver.Resolve(new UrlRequest(name, "/"), Core.ContentBuilder.Site())));
-        });
+        Assert.EndsWith(".jeffreypalermo.ceo", name, StringComparison.Ordinal);
+        Assert.False(name == canonical || name.EndsWith($".{canonical}", StringComparison.Ordinal));
+        Assert.False(LegacyUrlResolver.DecidedByHost(resolver.Resolve(new UrlRequest(name, "/"), Core.ContentBuilder.Site())));
+        Assert.DoesNotContain(name, HostNames(environment == "uat" ? "prod" : "uat"));
     }
 
     /// <summary>

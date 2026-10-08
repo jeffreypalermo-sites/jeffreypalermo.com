@@ -15,7 +15,7 @@ Everything else is a deployment.
 
 | When | Who | Where | What |
 |---|---|---|---|
-| The rehearsal, first | Jeffrey | WordPress.com, the domain's DNS records | Two records: the TXT record `_dnsauth.uat` and the CNAME record `uat`. Their values are printed by every deployment to `uat` ([Rehearsal in uat](#rehearsal-in-uat)) |
+| The rehearsal, first | Jeffrey | GoDaddy, the DNS records of `jeffreypalermo.ceo` | Two records for uat's own name: the TXT record `_dnsauth.uat` and the CNAME record `uat`. Their values are printed by every deployment to `uat` ([Rehearsal in uat](#rehearsal-in-uat), [environment-host-names.md](environment-host-names.md)) |
 | Before the day | Jeffrey | WordPress.com, the domain's DNS records | Three TXT records: `_dnsauth`, `_dnsauth.www`, `_dnsauth.feeds`. Their values are printed by the production deployment that lists the host names ([Before the day](#before-the-day), step 5) |
 | The day | Jeffrey | GoDaddy, the domain's name servers | The zone's four name servers, printed by every production deployment ([The day](#the-day), step 2) |
 
@@ -28,8 +28,6 @@ Placeholders used below:
 | `<ns1>` … `<ns4>` | The zone's four name servers, like `ns1-04.azure-dns.com.` | the lines after `PASS stack-jpcom-prod-dns` in a production deployment |
 | `<zone id>` | The resource ID of the zone: `<production's resource group ID>/providers/Microsoft.Network/dnsZones/jeffreypalermo.com` | the stack `stack-jpcom-prod-dns`, output `zoneId` |
 | `<prod group>` | Production's resource group | the pipeline's context; the zone's ID names it |
-| `<uat endpoint>` | uat's Front Door address, an `azurefd.net` name | the `CNAME` line of a deployment to `uat` |
-| `<uat profile id>` | The resource ID of uat's Front Door profile `afd-jpcom-uat` | as for production, from uat's resource group |
 
 ## DNS today
 
@@ -135,73 +133,25 @@ for name in _dmarc _dnsauth _dnsauth.www _dnsauth.feeds; do dig +noall +answer @
 
 ## Rehearsal in uat
 
-Before production's names are touched, one throwaway name goes the whole way in `uat`: `uat.jeffreypalermo.com`.
-No custom domain of a Front Door had been made here before; this is where it is first seen.
-`deploy/settings.json` lists the name for `uat`, and every deployment to `uat` prints:
+Before production's names are touched, one name goes the whole way in `uat`. No custom domain of a Front Door had
+been made here before; this is where it is first seen.
 
-```text
-Host names of uat: what DNS needs (docs/runbooks/dns-cutover.md). Nothing is changed in DNS by this deployment.
-  uat.jeffreypalermo.com: validation Pending; answered with pages, kept at the edge
-    TXT    _dnsauth.uat.jeffreypalermo.com  "<token>" (the token is valid until <date> UTC)
-    CNAME  uat.jeffreypalermo.com  <uat endpoint>
-```
+**The rehearsal is uat's own name, `uat.jeffreypalermo.ceo`** ([ADR-0018](../adr/0018-the-environments-own-names.md)).
+It was first planned with a throwaway name of this domain, `uat.jeffreypalermo.com`, whose two records would have
+been entered at WordPress.com; they never were (2026-10-08), and the name left the settings. A name of
+`jeffreypalermo.ceo` shows the same things, its DNS is entered where Jeffrey enters it himself (GoDaddy), and it
+stays: nothing is taken out again before the day.
 
-**Jeffrey's part, two minutes.** The values are in the log of the last deployment to `uat` (Octopus, project
-`jpcom-web`, the step that updates the deployable). WordPress.com → Upgrades → Domains → `jeffreypalermo.com` →
-DNS records → Add a record, twice:
+How the name is made, what Jeffrey enters and how it is checked:
+[environment-host-names.md](environment-host-names.md). What the rehearsal has to show before the day:
 
-| Type | Name | Value |
-|---|---|---|
-| TXT | `_dnsauth.uat` | the token of the `TXT` line, without the quotes |
-| CNAME | `uat` | the `azurefd.net` name of the `CNAME` line |
+- the deployment to `uat` prints `uat.jeffreypalermo.ceo: validation Pending`, a `TXT` line and a `CNAME` line;
+- after the two records are entered, the custom domain says `Approved` and `Succeeded`, and
+  `https://uat.jeffreypalermo.ceo/` answers `200` with the release of `uat`, `x-cache: TCP_MISS` and then `TCP_HIT`;
+- the next deployment to `uat` prints `validation Approved`, no `TXT` line, and empties the edge for the name too.
 
-Check: both answer, and not with the wildcard's answer (`CNAME jeffreypalermo.com.` and the SPF text).
-
-```bash
-dig +noall +answer TXT _dnsauth.uat.jeffreypalermo.com
-dig +noall +answer uat.jeffreypalermo.com CNAME
-```
-
-**Until the two records exist, nothing else changes.** The custom domain waits (`Pending`). Deployments to `uat`
-and their verification pass as before; the name is not purged and not verified; the `azurefd.net` address of
-`uat` serves as before.
-
-**A token is good for seven days.** If the records come later, deploy to `uat` once more first (any release, or the
-same again): the deployment asks the Front Door for a new token by itself and prints it (`The Front Door gave a new
-token for uat.jeffreypalermo.com`). Enter that one.
-
-**When the two records exist, nothing more is asked of anyone.** The Front Door sees the TXT record and validates
-the name (minutes), issues the name's certificate (minutes to an hour), and the route that was made with the
-custom domain serves the name.
-
-Checks:
-
-```bash
-az resource show --ids "<uat profile id>/customDomains/uat-jeffreypalermo-com" --api-version 2024-02-01 \
-  --query "properties.{validation:domainValidationState,deployed:deploymentStatus}" --output tsv
-for i in 1 2; do curl -s -o /dev/null -D - https://uat.jeffreypalermo.com/ | grep -iE '^(HTTP|x-cache|x-release)'; done
-curl -s https://uat.jeffreypalermo.com/_health/ready
-```
-
-- The first: `Approved` and `Succeeded`.
-- The second: `200`, `x-release` the release of `uat`, `x-cache: TCP_MISS` and then `TCP_HIT`.
-- The third: `ready <release of uat>`.
-- The next deployment to `uat`: its log has `uat.jeffreypalermo.com: validation Approved`, no `TXT` line, and
-  `Emptying the Front Door's cache: /* of <uat endpoint>, uat.jeffreypalermo.com`.
-
-**After the rehearsal** the name goes again:
-
-1. A pull request takes the name out of `"uat"` in `deploy/settings.json` (`"hostNames": []`) and out of the test
-   that says which environment lists which host names (`CustomDomainContractTests`).
-
-   Check: the next deployment to `uat` prints no `Host names of uat`. Its stack deletes the custom domain and the
-   route that served it: `az resource show --ids "<uat profile id>/customDomains/uat-jeffreypalermo-com" --api-version 2024-02-01`
-   says the resource was not found.
-2. Jeffrey deletes the two records at WordPress.com.
-
-   Check: `dig +noall +answer uat.jeffreypalermo.com CNAME` gives the wildcard's answer again, `jeffreypalermo.com.`
-
-Do this before the day: after the move the zone answers for the domain, and it has no `uat` name.
+Two things the rehearsal does not show, because they are only true of this domain: a record entered at
+WordPress.com beside its wildcard ([Before the day](#before-the-day), step 5), and the zone's own records.
 
 ## Before the day
 

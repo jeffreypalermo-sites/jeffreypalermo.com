@@ -4,8 +4,8 @@ namespace JeffreyPalermo.IntegrationTests;
 
 /// <summary>
 /// The custom domain in <c>deploy/infra/main.bicep</c> (ADR-0014), on the template as the Bicep compiler writes it.
-/// The domain is prepared and switched off: no environment lists a host name. So the first thing to prove is that
-/// with no host name the template deploys what it deployed without this part, resource for resource.
+/// An environment that lists no host name must be as it was without this part. So the first thing to prove is that
+/// with no host name the template deploys what it deployed before, resource for resource.
 /// </summary>
 public sealed class CustomDomainTemplateTests
 {
@@ -189,21 +189,23 @@ public sealed class CustomDomainTemplateTests
     }
 
     /// <summary>
-    /// The rehearsal (ADR-0016), with the settings as they are: uat's one throwaway name gets a custom domain and
-    /// the route with the cache. Everything the endpoint's own address is made of is as it was: a name that waits
-    /// for its records changes nothing of what the azurefd.net address serves.
+    /// With the settings as they are (ADR-0018; for uat also the rehearsal of ADR-0016): an environment's one name of
+    /// its own gets a custom domain and the route with the cache. Everything the endpoint's own address is made of is
+    /// as it was: a name that waits for its records changes nothing of what the azurefd.net address serves.
     /// </summary>
-    [Fact]
-    public async Task TheRehearsalNameOfUatAddsOneDomainAndOneRouteAndLeavesTheEndpointsOwnRouteAsItIs()
+    [Theory]
+    [InlineData("uat", "uat.jeffreypalermo.ceo", 2)]
+    [InlineData("prod", "www.jeffreypalermo.ceo", 11)]
+    public async Task AnEnvironmentsOwnNameAddsOneDomainAndOneRouteAndLeavesTheEndpointsOwnRouteAsItIs(string environment, string name, int regions)
     {
         using var settings = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Join(TestPaths.RepositoryRoot, "deploy", "settings.json")));
-        var uat = settings.RootElement.GetProperty("environments").GetProperty("uat");
-        var names = uat.GetProperty("hostNames").EnumerateArray().Select(name => name.GetString()!).ToArray();
+        var place = settings.RootElement.GetProperty("environments").GetProperty(environment);
+        var names = place.GetProperty("hostNames").EnumerateArray().Select(listed => listed.GetString()!).ToArray();
         var compiled = await CompiledTemplate.CompileAsync();
-        var with = compiled.With(("frontDoor", uat.GetProperty("frontDoor").GetBoolean()), ("regions", Regions(uat.GetProperty("regions").GetArrayLength())), ("hostNames", Names(names)), ("redirectHostNames", Names()));
-        var without = compiled.With(("frontDoor", true), ("regions", Regions(2)), ("hostNames", Names()), ("redirectHostNames", Names()));
+        var with = compiled.With(("frontDoor", place.GetProperty("frontDoor").GetBoolean()), ("regions", Regions(place.GetProperty("regions").GetArrayLength())), ("hostNames", Names(names)), ("redirectHostNames", Names()));
+        var without = compiled.With(("frontDoor", true), ("regions", Regions(regions)), ("hostNames", Names()), ("redirectHostNames", Names()));
 
-        Assert.Equal(["uat.jeffreypalermo.com"], names);
+        Assert.Equal([name], names);
         var module = with.Module(TheModule(with));
         var instances = module.Resources.ToDictionary(CompiledTemplate.Kind, module.Instances);
         Assert.Equal(1, instances["customDomains *"]);
@@ -213,7 +215,7 @@ public sealed class CustomDomainTemplateTests
         // The same resources of before, as many of each, with and without the name; none is written in terms of it.
         var before = (CompiledTemplate template) => template.Resources.Where(resource => BeforeHostNames.Contains(CompiledTemplate.Kind(resource))).Select(template.Instances).ToList();
         Assert.Equal(before(without), before(with));
-        Assert.Equal([1, 2, 1, 1, 2, 1], before(with));
+        Assert.Equal([1, regions, 1, 1, regions, 1], before(with));
         var own = with.Resources.Single(resource => CompiledTemplate.Kind(resource) == "routes web");
         Assert.False(KnowsOfHostNames(own));
         Assert.Equal("Enabled", own.GetProperty("properties").GetProperty("linkToDefaultDomain").GetString());
