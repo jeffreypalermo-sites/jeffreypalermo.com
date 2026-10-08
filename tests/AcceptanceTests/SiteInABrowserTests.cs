@@ -16,6 +16,23 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
     private const string Onion2 = "/2008/07/the-onion-architecture-part-2/";
     private const string ManyComments = "/2007/09/sharepoint-is-not-a-good-development-platform/";
     private const string LongCodeLines = "/2008/12/viewdata-mechanics-and-segmentation-excerpt-from-asp-net-mvc-in-action/";
+    private const string PodcastEpisode = "/2018/09/donovan-brown-on-how-to-use-azure-devops-services-episode-002/";
+    private const string VideoEpisode = "/2018/10/palermo-pamphlet-launch-episode-001/";
+    private const string LocalVideo = "/wp-content/uploads/external/videos.files.wordpress.com/HMwzTDe7/palermo-pamphlet-001-10-10-2018.mp4";
+
+    // Shows every picture now, also the ones a browser fetches only when they scroll into view, and waits for each to
+    // load or fail. Answers how many pictures the page has.
+    private const string LoadEveryPicture = """
+        async () => {
+            const pictures = [...document.images];
+            pictures.forEach(picture => { picture.loading = 'eager'; });
+            await Promise.all(pictures.map(picture => picture.complete ? null : new Promise(done => {
+                picture.addEventListener('load', done);
+                picture.addEventListener('error', done);
+            })));
+            return pictures.length;
+        }
+        """;
 
     [Fact]
     public async Task TheHomePageHasTheSitesLook()
@@ -205,6 +222,74 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         await Assertions.Expect(visit.Page.GetByRole(AriaRole.Heading, new() { Level = 1 })).ToHaveTextAsync("Search Results for: onion");
     }
 
+    /// <summary>
+    /// This post showed <c>[iframe … src=”//html5-player.libsyn.com/…”]</c> as text. It has the browser's own player
+    /// now, which asks the recording's host for nothing until the reader presses play, and a link to the file.
+    /// </summary>
+    [Fact]
+    public async Task APodcastPostHasAPlayerThatAsksNothingOfItsHostUntilTheReaderPlays()
+    {
+        const string recording = "https://traffic.libsyn.com/secure/azuredevops/ADP_002-2.mp3";
+        await using var visit = await chromium.VisitAsync(site.BaseAddress);
+        var page = visit.Page;
+
+        var response = await page.GotoAsync(PodcastEpisode);
+        await visit.EvaluateAsync<int>(LoadEveryPicture);
+
+        Assert.Equal(200, response!.Status);
+        var body = page.Locator("main article.post .entry-content");
+        var player = body.Locator("audio");
+        await Assertions.Expect(player).ToHaveCountAsync(1);
+        await Assertions.Expect(player).ToBeVisibleAsync();
+        await Assertions.Expect(player).ToHaveAttributeAsync("src", recording);
+        Assert.True(await player.EvaluateAsync<bool>("audio => audio.controls && audio.preload === 'none' && !audio.autoplay && audio.readyState === 0 && audio.paused"), "The player did not wait for the reader.");
+        await Assertions.Expect(body.GetByRole(AriaRole.Link, new() { Name = "Download this episode" })).ToHaveAttributeAsync("href", recording);
+        await Assertions.Expect(body).ToContainTextAsync("(MP3, 45:24, 43.6 MB)");
+        await Assertions.Expect(body).Not.ToContainTextAsync("[iframe");
+        await Assertions.Expect(body.Locator("iframe, script")).ToHaveCountAsync(0);
+        Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
+    }
+
+    /// <summary>This post showed <c>[podcast src=”…”]</c> as text. Its video is a file of the site, played by the browser.</summary>
+    [Fact]
+    public async Task AVideoEpisodePlaysTheSitesOwnFileAndFetchesNoneOfItBeforeTheReaderPlays()
+    {
+        await using var visit = await chromium.VisitAsync(site.BaseAddress);
+        var page = visit.Page;
+        var recordings = new List<string>();
+        page.Request += (_, request) =>
+        {
+            if (request.Url.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+            {
+                lock (recordings)
+                {
+                    recordings.Add(request.Url);
+                }
+            }
+        };
+
+        var response = await page.GotoAsync(VideoEpisode);
+        await visit.EvaluateAsync<int>(LoadEveryPicture);
+
+        Assert.Equal(200, response!.Status);
+        var body = page.Locator("main article.post .entry-content");
+        var player = body.Locator("video");
+        await Assertions.Expect(player).ToHaveAttributeAsync("src", LocalVideo);
+        Assert.True(await player.EvaluateAsync<bool>("video => video.controls && video.preload === 'none' && video.readyState === 0"), "The player did not wait for the reader.");
+        await Assertions.Expect(body.GetByRole(AriaRole.Link, new() { Name = "Download this episode" })).ToHaveAttributeAsync("href", LocalVideo);
+        await Assertions.Expect(body).Not.ToContainTextAsync("[podcast");
+
+        // The player keeps the shape of the recording (1280 by 720) and stays inside the post.
+        var frame = (await player.BoundingBoxAsync())!;
+        var column = (await body.BoundingBoxAsync())!;
+        Assert.True(frame.Width > 300 && frame.Width <= column.Width, $"The player is {frame.Width} wide in a column of {column.Width}.");
+        Assert.Equal(frame.Width * 720 / 1280, frame.Height, tolerance: 1.0);
+        Assert.Empty(recordings);
+        Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
+    }
+
     [Fact]
     public async Task AnAddressThatLeadsNowhereShowsTheWayBack()
     {
@@ -284,6 +369,8 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
     [InlineData("/2009/05/the-fallacy-of-the-always-valid-entity/")]
     [InlineData("/page/20/")]
     [InlineData("/no-such-page-anywhere-at-all/")]
+    [InlineData(PodcastEpisode)]
+    [InlineData(VideoEpisode)]
     [InlineData("/search/?q=onion")]
     public async Task OnAPhoneThePageIsOneColumnAndNeverWiderThanTheScreen(string path)
     {

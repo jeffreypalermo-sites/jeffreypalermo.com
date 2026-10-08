@@ -251,6 +251,9 @@ public sealed class SiteContent
                 errors.Add($"{where}: unknown author '{post.AuthorSlug}'");
             }
 
+            errors.AddRange(Shortcodes.FindLiteral(post.HtmlBody).Select(shortcode => ShortcodeInBody(where, shortcode)));
+            errors.AddRange(Shortcodes.FindLiteral(post.Excerpt ?? string.Empty).Select(shortcode => ShortcodeInExcerpt(where, shortcode)));
+
             var commentIds = post.Comments.Select(c => c.Id).ToHashSet();
             errors.AddRange(post.Comments
                 .Where(c => c.Parent != 0 && !commentIds.Contains(c.Parent))
@@ -268,6 +271,9 @@ public sealed class SiteContent
             {
                 errors.Add($"{page.Path}: page path must start and end with '/'");
             }
+
+            errors.AddRange(Shortcodes.FindLiteral(page.HtmlBody).Select(shortcode => ShortcodeInBody(page.Path, shortcode)));
+            errors.AddRange(Shortcodes.FindLiteral(page.Excerpt ?? string.Empty).Select(shortcode => ShortcodeInExcerpt(page.Path, shortcode)));
         }
 
         foreach (var attachment in attachments)
@@ -314,6 +320,13 @@ public sealed class SiteContent
 
         return errors;
     }
+
+    // Comments are not checked: WordPress never rendered a shortcode in a comment, and the comments are an archive.
+    private static string ShortcodeInBody(string where, string shortcode) =>
+        $"{where}: the body shows the WordPress shortcode {shortcode} as text. Nothing renders shortcodes here: replace it with HTML, or put it inside <code> if it is a sample";
+
+    private static string ShortcodeInExcerpt(string where, string shortcode) =>
+        $"{where}: the excerpt shows the WordPress shortcode {shortcode} as text. Take it out of the excerpt";
 
     private static bool IsRootedDirectoryPath(string path) =>
         path.Length > 1 && path[0] == '/' && path[^1] == '/';

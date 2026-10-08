@@ -444,6 +444,48 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         Assert.Equal("/2018/10/palermo-pamphlet-launch-episode-001/", page.Href("main .entry-footer a"));
     }
 
+    /// <summary>
+    /// Nine posts showed a WordPress shortcode as text where a Libsyn player should have been. Each now has a player
+    /// of the browser's own, which asks for nothing until the reader presses play, and a link to the file.
+    /// </summary>
+    [Theory]
+    [InlineData("/2018/09/donovan-brown-on-how-to-use-azure-devops-services-episode-002/", "audio", "https://traffic.libsyn.com/secure/azuredevops/ADP_002-2.mp3", "(MP3, 45:24, 43.6 MB)")]
+    [InlineData("/2018/09/sam-guckenheimer-on-testing-data-collection-and-the-state-of-devops-report-episode-003/", "audio", "https://traffic.libsyn.com/secure/azuredevops/ADP_003-3.mp3", "(MP3, 41:53, 40.2 MB)")]
+    [InlineData("/2018/09/steven-murawski-on-infrastructure-as-code-episode-004/", "audio", "https://traffic.libsyn.com/secure/azuredevops/ADP_004-3.mp3", "(MP3, 41:44, 40.1 MB)")]
+    [InlineData("/2018/10/dave-mckinstry-on-integrating-azure-devops-and-the-culture-of-devops-episode-005/", "audio", "https://traffic.libsyn.com/secure/azuredevops/ADP_005-2.mp3", "(MP3, 34:39, 33.3 MB)")]
+    [InlineData("/2018/10/edward-thomson-on-all-things-git-libgit2-and-azure-devops-episode-006/", "audio", "https://traffic.libsyn.com/secure/azuredevops/ADP_006-2.mp3", "(MP3, 50:19, 48.3 MB)")]
+    [InlineData("/2018/10/lori-lamkin-microsofts-director-of-pm-on-shifting-to-azure-devops-episode-007/", "audio", "https://traffic.libsyn.com/secure/azuredevops/ADP_007.mp3", "(MP3, 37:49, 36.3 MB)")]
+    [InlineData("/2018/10/palermo-pamphlet-launch-episode-001/", "video", "/wp-content/uploads/external/videos.files.wordpress.com/HMwzTDe7/palermo-pamphlet-001-10-10-2018.mp4", "(MP4, 4:41, 76.3 MB)")]
+    [InlineData("/2018/10/palermo-pamphlet-002-state-machine-design/", "video", "https://web.archive.org/web/20181207080757id_/https://traffic.libsyn.com/secure/force-cdn/highwinds/palermopamphlet/Palermo_Pamphlet_002_10-15-2018-2.mp4", "(MP4, 7:31, 113.1 MB)")]
+    [InlineData("/2018/10/palermo-pamphlet-003-unboxing-of-the-azure-sphere-iot-system-on-a-chip-board/", "video", "https://web.archive.org/web/20190911190602id_/https://traffic.libsyn.com/secure/force-cdn/highwinds/palermopamphlet/Palermo_Pamphlet_003_2018-10-25_10-18-27.mp4", "(MP4, 6:36, 157.9 MB)")]
+    public async Task APostThatShowedAShortcodeHasAPlayerAndALinkToTheRecording(string path, string element, string file, string facts)
+    {
+        var page = await factory.ClientFor().GetPageAsync(path);
+        var body = page.QuerySelector("main article.post .entry-content")!;
+
+        var player = Assert.Single(body.QuerySelectorAll("audio, video"));
+        Assert.Equal((element, file, "none"), (player.LocalName, player.GetAttribute("src"), player.GetAttribute("preload")));
+        Assert.True(player.HasAttribute("controls") && !player.HasAttribute("autoplay") && !player.HasAttribute("poster"));
+        Assert.Equal(file, body.QuerySelector("p:first-child a")?.GetAttribute("href"));
+        Assert.Contains(facts, body.Text("p:first-child"), StringComparison.Ordinal);
+        Assert.DoesNotContain("[iframe", body.TextContent, StringComparison.Ordinal);
+        Assert.DoesNotContain("[podcast", body.TextContent, StringComparison.Ordinal);
+        Assert.Empty(body.QuerySelectorAll("iframe, script, object, embed"));
+    }
+
+    [Theory]
+    [InlineData("/search/?q=azure+devops+podcast+donovan")]
+    [InlineData("/2018/10/")]
+    [InlineData("/category/palermo-pamphlet/")]
+    public async Task NoListingShowsAShortcodeAsText(string path)
+    {
+        var page = await factory.ClientFor().GetPageAsync(path);
+
+        Assert.NotEmpty(page.QuerySelectorAll("main article.post"));
+        Assert.DoesNotContain("[iframe", page.QuerySelector("main")!.TextContent, StringComparison.Ordinal);
+        Assert.DoesNotContain("[podcast", page.QuerySelector("main")!.TextContent, StringComparison.Ordinal);
+    }
+
     /// <summary>Addresses that lead nowhere, whether routing or a legacy URL rule says so, get the same page with status 404.</summary>
     [Theory]
     [InlineData(NoSuchPage)]

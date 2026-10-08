@@ -176,7 +176,9 @@ classDiagram
 
 - **`SiteContent` is the aggregate root** of the read model. It's built once per process by
   `SiteContent.Create(...)`, which **enforces the content invariants**: unique permalinks, unique WordPress ids,
-  comment parents exist, terms referenced by posts exist, and legacy redirect targets exist. A violation throws
+  comment parents exist, terms referenced by posts exist, legacy redirect targets exist, and no body or excerpt of
+  a post or a page shows a WordPress shortcode as text (`Shortcodes`: nothing renders `[podcast src="…"]` here; a
+  sample inside `<pre>` or `<code>` is allowed, and comments are not checked). A violation throws
   `ContentValidationException` listing every error. Bad content fails the PR build, not production.
 - **Bodies arrive as HTML.** Markdown-to-HTML conversion is an Infrastructure concern done while loading, so Core
   never sees Markdown.
@@ -351,7 +353,9 @@ listed it.
 - **Security headers:** HSTS (the old site already sent `max-age=31536000`, so HTTPS must stay); CSP
   `default-src 'self'; img-src 'self' data:; frame-src https://www.youtube.com https://www.youtube-nocookie.com;
   style-src 'self' 'unsafe-inline'` (old posts use inline style attributes); `script-src 'self'` once the one post
-  with a script is reviewed. Also `X-Content-Type-Options`, `Referrer-Policy`, and `X-Robots-Tag: noindex` on every
+  with a script is reviewed. The policy must also name where recordings play from
+  (`media-src 'self' https://traffic.libsyn.com https://content.libsyn.com https://web.archive.org`, ADR-0013), and
+  the three images and two frames of the reviewed leftovers will be blocked unless they are removed or named. Also `X-Content-Type-Options`, `Referrer-Policy`, and `X-Robots-Tag: noindex` on every
   host except the canonical domain, so preview URLs never get indexed.
 - **Observability:** `Azure.Monitor.OpenTelemetry.AspNetCore` for traces, metrics, and logs. Custom
   `ActivitySource("JeffreyPalermo.Site")` around queries; metrics `site.legacy_url.resolutions{rule,result}` and

@@ -14,5 +14,6 @@
 | [0010](0010-the-wordpress-site-is-frozen.md) | The WordPress site is frozen; content is edited in git | Accepted |
 | [0011](0011-the-systems-dashboard-reads-the-site.md) | The system's health dashboard reads the site from the browser | Accepted |
 | [0012](0012-the-site-publishes-its-build-facts.md) | The site publishes the facts of its build: the Build writes them, the image carries them, `/_build` answers them | Accepted |
+| [0013](0013-recordings-wait-for-the-reader.md) | A recording is played by the browser's own player, which waits for the reader; a link to the file beside it | Accepted |
 
 The overall design is in [docs/architecture](../architecture/README.md).

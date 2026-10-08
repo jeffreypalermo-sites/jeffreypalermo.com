@@ -160,6 +160,37 @@ public sealed class FileSystemContentSourceTests : IDisposable
     }
 
     [Fact]
+    public async Task AShortcodeLeftAsTextFailsTheLoadAndASampleOfOneDoesNot()
+    {
+        await WriteAsync("posts/2026/10/hello-world.md", Post("/2026/10/hello-world/") + "Listen:\n\n[podcast src=\"https://example.com/episode.mp3\"]\n\nIn WordPress you would type `[gallery ids=\"1,2\"]`.\n");
+        await WriteAsync("posts/2026/10/second.html", Post("/2026/10/second/").Replace("author:", "excerpt: '[gallery] Pictures'\nauthor:", StringComparison.Ordinal) + "<p>Pictures</p>\n<pre>[gallery]</pre>\n");
+        await WriteAsync("pages/contact.html", Post("/contact/") + "<p>[contact-form]</p>\n");
+        await WriteTermsAsync();
+
+        var error = await Assert.ThrowsAsync<ContentValidationException>(Load);
+
+        Assert.Equal(
+            [
+                // As Markdown renders it: the quotation marks are entities in the HTML the rule reads.
+                "/2026/10/hello-world/: the body shows the WordPress shortcode [podcast src=&quot;https://example.com/episode.mp3&quot;] as text. Nothing renders shortcodes here: replace it with HTML, or put it inside <code> if it is a sample",
+                "/2026/10/second/: the excerpt shows the WordPress shortcode [gallery] as text. Take it out of the excerpt",
+                "/contact/: the body shows the WordPress shortcode [contact-form] as text. Nothing renders shortcodes here: replace it with HTML, or put it inside <code> if it is a sample",
+            ],
+            error.Errors);
+    }
+
+    [Fact]
+    public async Task NoPostOrPageOfTheRepositoryShowsAShortcodeAsText()
+    {
+        var site = await new FileSystemContentSource(new ContentLayout(Path.Join(RepositoryRoot(), "content")), "test").LoadAsync();
+
+        var literal = site.Posts.SelectMany(post => Shortcodes.FindLiteral(post.HtmlBody).Concat(Shortcodes.FindLiteral(post.Excerpt ?? string.Empty)).Select(shortcode => $"{post.Permalink.Path} {shortcode}"))
+            .Concat(site.Pages.SelectMany(page => Shortcodes.FindLiteral(page.HtmlBody).Select(shortcode => $"{page.Path} {shortcode}")));
+
+        Assert.Empty(literal);
+    }
+
+    [Fact]
     public async Task AnEmptyContentTreeIsAnEmptySite()
     {
         var site = await Load();

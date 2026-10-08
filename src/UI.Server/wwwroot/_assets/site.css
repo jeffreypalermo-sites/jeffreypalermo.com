@@ -505,7 +505,8 @@ img {
 .entry-content iframe,
 .entry-content embed,
 .entry-content object,
-.entry-content video {
+.entry-content video,
+.entry-content audio {
   max-width: 100%;
 }
 
