@@ -53,6 +53,16 @@ else
     Log.NoBuildFacts(app.Logger, site.Version, buildFactsPath);
 }
 
+// Outermost: every answer says what a cache may do with it and which release gave it (ADR-0013).
+app.UseMiddleware<CacheHeadersMiddleware>();
+
+// A request that fails is answered 500 with nothing in it, logged, and marked as never to be kept by a cache.
+// On a developer's machine the page that shows the exception answers instead.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler(failed => failed.Run(_ => Task.CompletedTask));
+}
+
 // Before the URL rules: they decide by the host the visitor asked for, which Front Door forwards.
 app.UseMiddleware<FrontDoorHostMiddleware>();
 app.UseMiddleware<LegacyUrlMiddleware>();

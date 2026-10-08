@@ -8,8 +8,12 @@
 #                                the subscription may not use
 #   stack-parameters.json        the parameters of the last "stack group create"
 #   stack-fails                  when present, "stack group create" fails with this text
+#   stack-fails-once             when present, "stack group create" fails with this text once: the file is removed,
+#                                and the next attempt succeeds, as Azure did after "managed identity bootstrap failed"
 #   deployment-errors            what a container app reports when asked why it did not start
 #   stack-show.json              the answer to "stack group show"
+#   purge-body.json              the request of the last purge ("resource invoke-action --action purge")
+#   purge-fails, purge-fails-once   the same two for the purge
 set -euo pipefail
 
 state="${AZ_STUB_STATE:?AZ_STUB_STATE is the folder that holds what this stand-in knows}"
@@ -75,6 +79,11 @@ case "${1:-} ${2:-}" in
       create)
         parameters="$(value --parameters "$@")"
         cp "${parameters#@}" "$state/stack-parameters.json"
+        if [ -f "$state/stack-fails-once" ]; then
+          echo "ERROR: $(cat "$state/stack-fails-once")" >&2
+          rm "$state/stack-fails-once"
+          exit 1
+        fi
         if [ -f "$state/stack-fails" ]; then
           echo "ERROR: $(cat "$state/stack-fails")" >&2
           exit 1
@@ -89,6 +98,25 @@ case "${1:-} ${2:-}" in
         exit 2
         ;;
     esac
+    ;;
+  "resource invoke-action")
+    action="$(value --action "$@")"
+    if [ "$action" != "purge" ]; then
+      echo "ERROR: the stand-in does not know the action $action" >&2
+      exit 2
+    fi
+    body="$(value --request-body "$@")"
+    cp "${body#@}" "$state/purge-body.json"
+    if [ -f "$state/purge-fails-once" ]; then
+      echo "ERROR: $(cat "$state/purge-fails-once")" >&2
+      rm "$state/purge-fails-once"
+      exit 1
+    fi
+    if [ -f "$state/purge-fails" ]; then
+      echo "ERROR: $(cat "$state/purge-fails")" >&2
+      exit 1
+    fi
+    echo "WARNING: a notice the Azure CLI writes on success" >&2
     ;;
   *)
     echo "ERROR: the stand-in does not know: $*" >&2

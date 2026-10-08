@@ -15,7 +15,7 @@ Sections 8 and 9 were rewritten on 2026-10-06 for [ADR-0006](../adr/0006-deliver
 | **Content is code** | Publishing a post = merging a PR | Git is the system of record ([ADR-0002](../adr/0002-git-is-the-system-of-record.md)) |
 | **Showcase** | A reader can understand the whole system from the repo | Onion layering enforced by tests; every decision has an ADR; infra and pipeline are in the repo |
 | **Performance** | Server time p95 < 50 ms for cached pages; no framework JavaScript | In-memory read model, output caching, Blazor static SSR with no client runtime |
-| **Cost** | < $25/month at launch | Container apps that scale to zero, no database, no CDN until traffic justifies it |
+| **Cost** | < $25/month at launch | Container apps that scale to zero, no database. Since [ADR-0008](../adr/0008-eleven-regions-behind-front-door.md) an Azure Front Door stands in front of `uat` and `prod` (a base fee per profile), and since [ADR-0013](../adr/0013-the-front-door-keeps-the-sites-answers.md) it keeps the site's answers at its edge |
 | **Operability** | Zero-downtime deploys; rollback by redeploying the previous release; every legacy hit observable | Octopus releases promoted through tdd, uat and prod ([ADR-0006](../adr/0006-deliver-through-the-demo-environment-kit.md)); OpenTelemetry metrics per URL rule |
 | **Security** | No writable surface in v1 | No database, no admin UI, no secrets; managed identity only; strict headers |
 | **Testability** | Definition of Done: unit, integration, full-system tests per change | Core has no dependencies; adapters behind ports; Playwright drives the running container |
@@ -300,11 +300,12 @@ page component as its result (`RazorComponentResult<T>`). No component endpoints
 
 ```mermaid
 flowchart LR
-    req[request] --> fh[ForwardedHeaders] --> sec[Security headers<br/>HSTS, CSP, X-Robots-Tag on preview hosts] --> legacy[LegacyUrlMiddleware<br/>ResolveUrlQuery] --> oc[OutputCache] --> sf[Static files<br/>/wp-content/uploads, /_assets] --> ep[Endpoints:<br/>Razor components, feeds, sitemaps, health] --> nf[404 page + log]
+    req[request] --> ch[CacheHeadersMiddleware<br/>Cache-Control, X-Release] --> fh[FrontDoorHostMiddleware<br/>the visitor's host] --> sec[Security headers<br/>HSTS, CSP, X-Robots-Tag on preview hosts] --> legacy[LegacyUrlMiddleware<br/>ResolveUrlQuery] --> sf[Static files<br/>/wp-content/uploads, /_assets] --> ep[Endpoints:<br/>Razor components, feeds, sitemaps, health] --> nf[404 page + log]
 ```
 
-_Built today: the Front Door host, the legacy URL middleware, static files and the endpoints. Forwarded headers,
-security headers and output caching are build step 5._
+_Built today: the cache headers ([ADR-0013](../adr/0013-the-front-door-keeps-the-sites-answers.md)), the Front Door
+host, the legacy URL middleware, static files and the endpoints. Security headers are build step 5. The site keeps
+no rendered page in memory: the Front Door's edge is the cache._
 
 ### Routes
 
@@ -340,9 +341,14 @@ is encoded by Razor.
 
 ### Cross-cutting
 
-- **Caching:** the read model is immutable per process, so output caching keyed by path (and page number) is safe
-  with long in-memory lifetimes. Responses carry `ETag` = content version (the git SHA). `Cache-Control`: HTML
-  `public, max-age=600, stale-while-revalidate=86400`; uploads `public, max-age=2592000`; feeds 15 minutes.
+- **Caching ([ADR-0013](../adr/0013-the-front-door-keeps-the-sites-answers.md)):** the Front Door's edge keeps the
+  site's answers, and every answer says for how long (`CachePolicy`, set by `CacheHeadersMiddleware`). Pages,
+  listings, feeds, sitemaps, the site's own files, redirects, 404 and 410: `public, max-age=300, s-maxage=604800`,
+  five minutes in a browser and seven days at the edge. Uploads: `public, max-age=2592000, s-maxage=604800`. A
+  redirect the host decided (`www.`, `feeds.`): `private, max-age=300`. Health, version, build and every error:
+  `no-store`. No lifetime reaches past the date of a post that is still to come. A deployment empties the edge
+  (`deploy/deploy.ps1`), so the longest a reader sees an old page is the browser's five minutes. Every answer
+  names its release in `X-Release`. Pages are sent whole, with their length, so the edge can compress them.
 - **Security headers:** HSTS (the old site already sent `max-age=31536000`, so HTTPS must stay); CSP
   `default-src 'self'; img-src 'self' data:; frame-src https://www.youtube.com https://www.youtube-nocookie.com;
   style-src 'self' 'unsafe-inline'` (old posts use inline style attributes); `script-src 'self'` once the one post
@@ -366,7 +372,9 @@ container app of each environment is `deploy/infra/main.bicep`, applied by `depl
 _Since [ADR-0008](../adr/0008-eleven-regions-behind-front-door.md) the diagram and table below describe one region
 of one environment. `tdd` runs in one region, `uat` in two and `prod` in eleven, each region with an express
 environment and a container app of its own (`cae-jpcom-<env>-<code>`, `ca-jpcom-<env>-web-<code>`); `uat` and `prod`
-have an Azure Front Door in front that rotates over their regions. `deploy/settings.json` lists the regions._
+have an Azure Front Door in front that rotates over their regions. `deploy/settings.json` lists the regions. The
+Front Door's route keeps what the site allows at its edge, by address and query string, and compresses text; every
+deployment empties it ([ADR-0013](../adr/0013-the-front-door-keeps-the-sites-answers.md))._
 
 ```mermaid
 flowchart TB
@@ -451,7 +459,7 @@ flowchart LR
 |---|---|---|
 | Build | Unit and integration tests, with coverage. Then `scripts/Write-BuildFacts.ps1` writes `build-facts.json` from their results (ADR-0012), and the image is built once from the `Dockerfile`, which copies the file. The image is run as a container and must pass the full-system tests (all 9,337 contract URLs over HTTP) before it's kept as the artifact `container-image`. `Build result` is the required check | `.github/workflows/build.yml`, this repository |
 | Release | After a green Build of `master`: that image goes to the registry as `jpcom/web:<version>`, its tag is locked, the `deploy/` folder goes to the Octopus feed as the package `jpcom-web.<version>.zip`, and release `<version>` of `jpcom-web` is created. Nothing is rebuilt | `release.yml`, added by the kit when it adopts this repository |
-| Deploy | "Pin version" commits the version to `jpcom-system`, "Update deployable" runs this repository's `deploy/deploy.ps1` from the release's package (it applies the container app with the release's image), "Verify deployable" runs `deploy/verify.ps1` (`/_health/ready` must answer `ready <version>`). "Revert pin" runs when a step fails | Octopus project `jpcom-web`; the scripts are this repository's (ADR-0007) |
+| Deploy | "Pin version" commits the version to `jpcom-system`, "Update deployable" runs this repository's `deploy/deploy.ps1` from the release's package (it applies the container app with the release's image; behind a Front Door it then waits until every region answers as the release and empties the Front Door's cache; a stack apply or a purge that fails is run once more after 60 seconds, unless the error is one no attempt changes, ADR-0013), "Verify deployable" runs `deploy/verify.ps1` (`/_health/ready` must answer `ready <version>`, and the home page must name the release). "Revert pin" runs when a step fails | Octopus project `jpcom-web`; the scripts are this repository's (ADR-0007) |
 | Promote | `tdd` deploys on its own. `uat` and `prod` each start with a sign-off | Octopus lifecycle |
 | Infrastructure | A pull request to `jpcom-system` runs `env-checks` and previews a what-if. A merge applies the Octopus configuration and releases `jpcom-system`, which applies and verifies each environment's stack through the same promotion | `jpcom-system` |
 
@@ -471,9 +479,10 @@ release was built from and what its Build measured (ADR-0012).
 beside it, on the chiseled, non-root `aspnet:10.0` base image. Large uploads are stored with Git LFS, so the image
 must be built from a checkout with LFS; the build fails if an upload is still a pointer.
 
-**After a deployment** the site's own `verify.ps1` checks that `/_health/ready` answers as the release and replays
-the whole URL contract against the environment, with the verifier and the contract the release's package carries
-(ADR-0007). A violation fails the deployment and reverts the pin. The workflow `Verify environments` replays the
+**After a deployment** the site's own `verify.ps1` checks that `/_health/ready` answers as the release, that the
+home page names the release in `X-Release` (through the Front Door: its cache holds no page of the release before,
+ADR-0013), and replays the whole URL contract against the environment, with the verifier and the contract the
+release's package carries (ADR-0007). A violation fails the deployment and reverts the pin. The workflow `Verify environments` replays the
 contract against every environment each night as well ([tests/contract](../../tests/contract/README.md)): what it
 catches is a change outside a deployment. While an environment fails, an issue labelled `url-contract` stays open.
 
@@ -481,10 +490,10 @@ catches is a change outside a deployment. While an environment fails, an issue l
 
 | Layer | What | Where it runs |
 |---|---|---|
-| **Unit** | The kit's contract in `build.yml` (`BuildWorkflowContractTests`); how the Build's facts reach the image (`BuildFactsContractTests`) and which file `/_build` believes (`BuildFactsTests`); `SiteContent` invariants and queries; every resolver rule (table-driven, one case per rule plus precedence conflicts); pagination; feed item selection; front matter and Markdown loading; **architecture rules** (Core references no project and no package; Infrastructure doesn't reference UI.Server) | every build |
-| **Integration** | `FileSystemContentSource` over the **real `content/` tree**, which validates every PR's content; `WebApplicationFactory` tests: **full contract replay (9,337 rows)**, every kind of page in the site layout, **a crawl from `/` that reaches all 966 posts by the links the components write**, feed XML validity, sitemaps, headers/CSP, caching, health; **`deploy/deploy.ps1` run for real** with a stand-in for the Azure CLI (`tests/stubs/az`): a first deployment, a later one, and each way it stops, a region Azure refuses among them (`DeployScriptTests`); `scripts/test-regions.ps1` the same way (`RegionProbeScriptTests`); **`scripts/Write-BuildFacts.ps1` run for real** over a small tree git tracks, test results and the coverage of two runs, every number asserted, and with no inputs (`BuildFactsScriptTests`); `/_build` with the Build's file, without one and with the file of another release (`BuildFactsEndpointTests`) | every build |
-| **Full-system (acceptance)** | The published app as a process and the **container image built from the `Dockerfile`**, each over real HTTP: full contract replay, the version on the health path, `/_build` (from the image: the version, the commit and the lines of code, to any origin; from the published app: the version alone), uploads served as files (not Git LFS pointers), an unprivileged user on port 8080, `deploy/verify.ps1` against the container (regions, with and without a front door), and the nightly verification script against the container, a site that doesn't answer and a site that breaks the contract. Playwright for .NET drives the container in Chromium: the home page's look, a post opened from it, older and newer, previous and next, a month and a tag from the sidebar, search, the 404 page, a comment's anchor, a legacy redirect, a phone-sized screen, the keyboard, and a page on another origin reading `/_build` as the system's dashboard does. Requests to any other host (YouTube iframes in old posts) are refused by request interception, and the pages under test must make none | every build; the image that passes is the image released |
-| **Post-deploy verification** | The site's `verify.ps1` after every deployment: `/_health/ready` answers `ready <version>`, and the full contract replay passes against the environment. `Verify environments` replays the contract every night as well | every deployment, in tdd, uat and prod; every night (§9) |
+| **Unit** | The kit's contract in `build.yml` (`BuildWorkflowContractTests`); how the Build's facts reach the image (`BuildFactsContractTests`) and which file `/_build` believes (`BuildFactsTests`); what each kind of answer says to the caches (`CachePolicyTests`), the next date the site changes by itself, and what the route keeps and how `deploy.ps1` empties it (`CacheContractTests`); `SiteContent` invariants and queries; every resolver rule (table-driven, one case per rule plus precedence conflicts); pagination; feed item selection; front matter and Markdown loading; **architecture rules** (Core references no project and no package; Infrastructure doesn't reference UI.Server) | every build |
+| **Integration** | `FileSystemContentSource` over the **real `content/` tree**, which validates every PR's content; `WebApplicationFactory` tests: **full contract replay (9,337 rows)**, every kind of page in the site layout, **a crawl from `/` that reaches all 966 posts by the links the components write**, feed XML validity, sitemaps, health; **the `Cache-Control` of every kind of answer**, the release in `X-Release`, pages with their length, a failing request and a post still to come (`CacheHeadersTests`); **`deploy/deploy.ps1` run for real** with a stand-in for the Azure CLI (`tests/stubs/az`) and a stand-in for the regions (`StandInSite`): a first deployment, a later one, and each way it stops, a region Azure refuses among them; a stack that fails once and is applied once more, one that fails twice, one that is not tried again; the purge only behind a Front Door, only after the stack and after every region answers as the release (`DeployScriptTests`); `deploy/test-site.ps1` against an answer a cache gave and a page kept from the release before (`TestSiteScriptTests`); `scripts/test-regions.ps1` the same way (`RegionProbeScriptTests`); **`scripts/Write-BuildFacts.ps1` run for real** over a small tree git tracks, test results and the coverage of two runs, every number asserted, and with no inputs (`BuildFactsScriptTests`); `/_build` with the Build's file, without one and with the file of another release (`BuildFactsEndpointTests`) | every build |
+| **Full-system (acceptance)** | The published app as a process and the **container image built from the `Dockerfile`**, each over real HTTP: full contract replay, the version on the health path, `/_build` (from the image: the version, the commit and the lines of code, to any origin; from the published app: the version alone), uploads served as files (not Git LFS pointers), an unprivileged user on port 8080, the `Cache-Control` of each kind of answer with health, version and build never kept, pages with their length and uncompressed (`ContainerSiteCacheTests`), `deploy/verify.ps1` against the container (regions, with and without a front door), and the nightly verification script against the container, a site that doesn't answer and a site that breaks the contract. Playwright for .NET drives the container in Chromium: the home page's look, a post opened from it, older and newer, previous and next, a month and a tag from the sidebar, search, the 404 page, a comment's anchor, a legacy redirect, a phone-sized screen, the keyboard, and a page on another origin reading `/_build` as the system's dashboard does. Requests to any other host (YouTube iframes in old posts) are refused by request interception, and the pages under test must make none | every build; the image that passes is the image released |
+| **Post-deploy verification** | The site's `verify.ps1` after every deployment: `/_health/ready` answers `ready <version>`, the home page names the release, also through the Front Door's cache, and the full contract replay passes against the environment. What only a real Front Door shows is a list of ten checks in ADR-0013, to run in `uat`. `Verify environments` replays the contract every night as well | every deployment, in tdd, uat and prod; every night (§9) |
 
 ## 11. Build sequence
 
