@@ -1,13 +1,15 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.Json;
+using JeffreyPalermo.Infrastructure.Urls;
 
 namespace JeffreyPalermo.IntegrationTests;
 
 /// <summary>
 /// <c>scripts/Write-BuildFacts.ps1</c> run for real (ADR-0012), against a small tree that git tracks, two test
-/// results and the coverage of two runs, all written here so every number can be worked out by hand. The Build runs
-/// the script before it builds the image, and the site answers its output at <c>/_build</c>.
+/// results, the coverage of two runs, a URL contract and the log of a compile, all written here so every number can
+/// be worked out by hand. The Build runs the script before it builds the image, and the site answers its output at
+/// <c>/_build</c>.
 /// </summary>
 public sealed class BuildFactsScriptTests : IDisposable
 {
@@ -52,10 +54,11 @@ public sealed class BuildFactsScriptTests : IDisposable
             code.GetProperty("languages").EnumerateArray().Select(language => (language.GetProperty("name").GetString()!, language.GetProperty("lines").GetInt64(), language.GetProperty("files").GetInt32())));
 
         // Unit: 3 passed, 1 skipped. Integration: 2 passed, 1 failed. A third assembly that names no layer: 1 passed.
+        // The tree holds no URL contract, so it declares no acceptance check, and no full-system test ran.
         var tests = root.GetProperty("tests");
         Assert.Equal(3, tests.GetProperty("unit").GetInt32());
         Assert.Equal(2, tests.GetProperty("integration").GetInt32());
-        Assert.Equal(JsonValueKind.Null, tests.GetProperty("acceptance").ValueKind);
+        Assert.All((string[])["acceptance", "fullSystem", "acceptanceIs"], name => Assert.Equal(JsonValueKind.Null, tests.GetProperty(name).ValueKind));
         Assert.Equal((6, 1, 1), (tests.GetProperty("passed").GetInt32(), tests.GetProperty("failed").GetInt32(), tests.GetProperty("skipped").GetInt32()));
 
         // Plain: 2 lines, both covered by the first run. Choose: 4 lines, 3 covered (20 and 21 by the first run, 20
@@ -79,6 +82,7 @@ public sealed class BuildFactsScriptTests : IDisposable
         Assert.Equal(30.0, crap.GetProperty("threshold").GetDouble());
         Assert.Equal(1, crap.GetProperty("overThreshold").GetInt32());
 
+        // No log of a compile among the results: what it found is not known, and no zero is written.
         Assert.Equal(JsonValueKind.Null, root.GetProperty("analysis").ValueKind);
         Assert.Contains("version 1.2.3; commit 0a1b2c3; 27 lines of code in 11 files; 6 tests passed, 1 failed, 1 skipped", result.Output, StringComparison.Ordinal);
     }
@@ -132,9 +136,10 @@ public sealed class BuildFactsScriptTests : IDisposable
     [Fact]
     public async Task TheFactsHaveTheNamesAndTypesTheDashboardReads()
     {
-        await TrackedTreeAsync();
+        await TrackedTreeAsync(Contract(rows: 5), BuildSettings);
         TestResults(Results);
         Coverage(Results);
+        CompileLog(Results, warnings: 0, errors: 0, "Site", "Site.Tests");
 
         var result = await WriteAsync(GitHub, "-Version", "1.2.3", "-Commit", Commit, "-RunId", "77", "-ResultsPath", Results, "-RepositoryRoot", Tree);
 
@@ -165,8 +170,13 @@ public sealed class BuildFactsScriptTests : IDisposable
             Assert.True(language.GetProperty("files").TryGetInt32(out _));
         });
 
-        var tests = Section(root, "tests", "unit", "integration", "acceptance", "passed", "failed", "skipped");
-        Assert.All((string[])["unit", "integration"], name => Assert.True(tests.GetProperty(name).TryGetInt32(out _)));
+        // The dashboard and the fleet read unit, integration and acceptance, each a number. What follows them is for
+        // a person: the parser takes the names it knows and leaves the rest.
+        var tests = Section(root, "tests", "unit", "integration", "acceptance", "passed", "failed", "skipped", "fullSystem", "acceptanceIs");
+        Assert.All((string[])["unit", "integration", "acceptance", "passed", "failed", "skipped"], name => Assert.True(tests.GetProperty(name).TryGetInt32(out _), name));
+        Assert.Equal(JsonValueKind.Null, tests.GetProperty("fullSystem").ValueKind);
+        var acceptanceIs = Section(tests, "acceptanceIs", "kind", "counted", "run", "result");
+        Assert.All(acceptanceIs.EnumerateObject(), part => Assert.Equal(JsonValueKind.String, part.Value.ValueKind));
 
         var coverage = Section(root, "coverage", "linePercent", "branchPercent", "lines", "linesCovered", "branches", "branchesCovered");
         Assert.All((string[])["linePercent", "branchPercent"], name => Assert.True(coverage.GetProperty(name).TryGetDouble(out _)));
@@ -179,8 +189,207 @@ public sealed class BuildFactsScriptTests : IDisposable
         Assert.All((string[])["max", "threshold"], name => Assert.True(crap.GetProperty(name).TryGetDouble(out _)));
         Assert.True(crap.GetProperty("overThreshold").TryGetInt32(out _));
 
-        // The dashboard reads analysis.qodanaProblems. This Build runs no static analysis, so the section is null.
-        Assert.Equal(JsonValueKind.Null, root.GetProperty("analysis").ValueKind);
+        // The fleet asks only that analysis is there. The dashboard reads analysis.qodanaProblems, a count this Build
+        // does not make: no Qodana runs, so the name is not used.
+        var analysis = Section(root, "analysis", "tool", "analysisLevel", "warningsAsErrors", "problems", "projects", "suppressions", "suppressed");
+        Assert.All((string[])["tool", "analysisLevel"], name => Assert.Equal(JsonValueKind.String, analysis.GetProperty(name).ValueKind));
+        Assert.Equal(JsonValueKind.True, analysis.GetProperty("warningsAsErrors").ValueKind);
+        Assert.All((string[])["problems", "projects", "suppressions"], name => Assert.True(analysis.GetProperty(name).TryGetInt32(out _), name));
+        var suppressed = Section(analysis, "suppressed", "noWarn", "warningsNotAsErrors", "pragmaWarningDisable", "suppressMessage", "editorconfigNone", "analyzersOff");
+        Assert.All(suppressed.EnumerateObject(), kind => Assert.True(kind.Value.TryGetInt32(out _), kind.Name));
+    }
+
+    /// <summary>
+    /// Acceptance is what a release must pass in the first environment: the URLs of the contract, one check each
+    /// (ADR-0012). <c>deploy/verify.ps1</c> replays every row; a reviewed exception changes the answer a URL must
+    /// give, not whether it is asked.
+    /// </summary>
+    [Fact]
+    public async Task TheAcceptanceLevelIsTheUrlsOfTheContractAndIsSaidToBeDeclared()
+    {
+        await TrackedTreeAsync(Contract(rows: 5), Exceptions(rows: 2));
+        TestResults(Results);
+
+        var result = await WriteAsync(NoGitHub, "-ResultsPath", Results, "-RepositoryRoot", Tree);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        using var facts = Facts();
+        var tests = facts.RootElement.GetProperty("tests");
+        Assert.Equal((3, 2, 5), (tests.GetProperty("unit").GetInt32(), tests.GetProperty("integration").GetInt32(), tests.GetProperty("acceptance").GetInt32()));
+        var acceptanceIs = tests.GetProperty("acceptanceIs");
+        Assert.Equal("declared", acceptanceIs.GetProperty("kind").GetString());
+        Assert.Equal("the URLs of tests/contract/url-contract.tsv, one check each", acceptanceIs.GetProperty("counted").GetString());
+        Assert.Equal("by deploy/verify.ps1 against the first environment, after the Build. A release that fails one goes no further", acceptanceIs.GetProperty("run").GetString());
+        Assert.Equal("not known when these facts are written", acceptanceIs.GetProperty("result").GetString());
+
+        // Results are of tests that ran: the five declared checks are in none of them.
+        Assert.Equal((6, 1, 1), (tests.GetProperty("passed").GetInt32(), tests.GetProperty("failed").GetInt32(), tests.GetProperty("skipped").GetInt32()));
+        Assert.Contains("6 tests passed, 1 failed, 1 skipped; 5 acceptance checks declared", result.Output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task AContractWithoutTestResultsDeclaresItsChecksAndClaimsNoResult()
+    {
+        await TrackedTreeAsync(Contract(rows: 3));
+
+        var result = await WriteAsync(NoGitHub, "-ResultsPath", Path.Join(_work, "nothing"), "-RepositoryRoot", Tree);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        using var facts = Facts();
+        var tests = facts.RootElement.GetProperty("tests");
+        Assert.Equal(3, tests.GetProperty("acceptance").GetInt32());
+        Assert.All(
+            (string[])["unit", "integration", "passed", "failed", "skipped", "fullSystem"],
+            name => Assert.True(tests.GetProperty(name).ValueKind == JsonValueKind.Null, $"{name} is {tests.GetProperty(name)}, not null."));
+        Assert.DoesNotContain("tests passed", result.Output, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// The project AcceptanceTests holds the full-system tests: they run against the image, before a release, and
+    /// are a fourth count beside the three levels. Their results are at hand only after the image is built.
+    /// </summary>
+    [Fact]
+    public async Task TheFullSystemTestsAreCountedApartFromTheAcceptanceLevel()
+    {
+        await TrackedTreeAsync(Contract(rows: 5));
+        TestResults(Results);
+        File.WriteAllText(Path.Join(Results, "full-system.trx"), Trx("jeffreypalermo.acceptancetests.dll", "Passed", "Passed", "Failed"));
+
+        var result = await WriteAsync(NoGitHub, "-ResultsPath", Results, "-RepositoryRoot", Tree);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        using var facts = Facts();
+        var tests = facts.RootElement.GetProperty("tests");
+        Assert.Equal(2, tests.GetProperty("fullSystem").GetInt32());
+        Assert.Equal(5, tests.GetProperty("acceptance").GetInt32());
+        Assert.Equal((3, 2), (tests.GetProperty("unit").GetInt32(), tests.GetProperty("integration").GetInt32()));
+
+        // Each test that ran is counted once: 6 as before, and 2 more passed and 1 more failed.
+        Assert.Equal((8, 2, 1), (tests.GetProperty("passed").GetInt32(), tests.GetProperty("failed").GetInt32(), tests.GetProperty("skipped").GetInt32()));
+    }
+
+    /// <summary>
+    /// The analysis is the compile's own (ADR-0012): what its log counted, how the build is set, and what the files
+    /// git tracks switch off. The log is of a compile that failed, as MSBuild writes it: 1 warning and 3 errors.
+    /// </summary>
+    [Fact]
+    public async Task TheAnalysisIsWhatTheCompileFoundAndWhatTheCodeSwitchesOff()
+    {
+        await TrackedTreeAsync([BuildSettings, .. Suppressions]);
+        File.WriteAllText(Path.Join(Tree, "src", "Later.cs"), "#pragma warning disable CA1822\n// Written after git add: git does not track it.\n");
+        CompileLog(Results, warnings: 1, errors: 3, "Site", "Site.Tests");
+
+        var result = await WriteAsync(NoGitHub, "-ResultsPath", Results, "-RepositoryRoot", Tree);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        using var facts = Facts();
+        var analysis = facts.RootElement.GetProperty("analysis");
+        Assert.Equal(".NET analyzers", analysis.GetProperty("tool").GetString());
+        Assert.Equal("latest-recommended", analysis.GetProperty("analysisLevel").GetString());
+        Assert.True(analysis.GetProperty("warningsAsErrors").GetBoolean());
+        Assert.Equal(4, analysis.GetProperty("problems").GetInt32());
+        Assert.Equal(2, analysis.GetProperty("projects").GetInt32());
+
+        // NoWarn: CS1591 and CA1707 in App.csproj (not the list so far, not the one in a comment) and NU1701 on a
+        // package. WarningsNotAsErrors: CA2000. #pragma: CA1822 and CA1062 in one directive, one directive that names
+        // no rule, and one in a Razor file; a restore, a string and a comment are none. SuppressMessage: on a
+        // member, on the assembly, and for trimming. Severity none: one rule and one category; a warning and a
+        // comment are none. Analyzers off: in one project; the one that sets them on is none. Not counted: content/,
+        // and the file git does not track.
+        var suppressed = analysis.GetProperty("suppressed");
+        Assert.Equal(3, suppressed.GetProperty("noWarn").GetInt32());
+        Assert.Equal(1, suppressed.GetProperty("warningsNotAsErrors").GetInt32());
+        Assert.Equal(4, suppressed.GetProperty("pragmaWarningDisable").GetInt32());
+        Assert.Equal(3, suppressed.GetProperty("suppressMessage").GetInt32());
+        Assert.Equal(2, suppressed.GetProperty("editorconfigNone").GetInt32());
+        Assert.Equal(1, suppressed.GetProperty("analyzersOff").GetInt32());
+        Assert.Equal(14, analysis.GetProperty("suppressions").GetInt32());
+        Assert.Contains("4 problems in the compile of 2 projects, 14 suppressions", result.Output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ACompileThatFoundNothingInCodeThatSwitchesNothingOffIsAZeroAndAZero()
+    {
+        await TrackedTreeAsync(BuildSettings);
+        CompileLog(Results, warnings: 0, errors: 0, "Site");
+
+        var result = await WriteAsync(NoGitHub, "-ResultsPath", Results, "-RepositoryRoot", Tree);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        using var facts = Facts();
+        var analysis = facts.RootElement.GetProperty("analysis");
+        Assert.Equal((0, 1, 0), (analysis.GetProperty("problems").GetInt32(), analysis.GetProperty("projects").GetInt32(), analysis.GetProperty("suppressions").GetInt32()));
+        Assert.True(analysis.GetProperty("warningsAsErrors").GetBoolean());
+    }
+
+    [Theory]
+    [InlineData("<Project><PropertyGroup><AnalysisLevel>latest</AnalysisLevel></PropertyGroup></Project>", "<Project />", "latest")]
+    [InlineData("<Project><PropertyGroup><TreatWarningsAsErrors>true</TreatWarningsAsErrors></PropertyGroup></Project>", "<Project><PropertyGroup><TreatWarningsAsErrors>false</TreatWarningsAsErrors></PropertyGroup></Project>", null)]
+    public async Task WarningsAreErrorsOnlyWhenTheBuildSaysSoAndNoProjectSaysOtherwise(string build, string project, string? level)
+    {
+        await TrackedTreeAsync(("Directory.Build.props", build), ("tests/Loose.csproj", project));
+        CompileLog(Results, warnings: 0, errors: 0, "Site");
+
+        var result = await WriteAsync(NoGitHub, "-ResultsPath", Results, "-RepositoryRoot", Tree);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        using var facts = Facts();
+        var analysis = facts.RootElement.GetProperty("analysis");
+        Assert.False(analysis.GetProperty("warningsAsErrors").GetBoolean());
+        Assert.Equal(level, analysis.GetProperty("analysisLevel").GetString());
+    }
+
+    [Fact]
+    public async Task ACompileLogWithoutItsCountIsNoAnalysis()
+    {
+        // A compile that was cut short: the assemblies so far, and no count of warnings and errors at the end.
+        await TrackedTreeAsync(BuildSettings);
+        Directory.CreateDirectory(Results);
+        File.WriteAllText(Path.Join(Results, "compile.msbuild.log"), "  Site -> /work/src/bin/Release/net10.0/Site.dll\n");
+
+        var result = await WriteAsync(NoGitHub, "-ResultsPath", Results, "-RepositoryRoot", Tree);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Contains("compile.msbuild.log does not end with its count of warnings and errors: no analysis is reported.", result.Output, StringComparison.Ordinal);
+        using var facts = Facts();
+        Assert.Equal(JsonValueKind.Null, facts.RootElement.GetProperty("analysis").ValueKind);
+    }
+
+    /// <summary>What the Build requires before it builds the image: the three levels, the coverage and the analysis.</summary>
+    [Theory]
+    [InlineData(true, true, true, null)]
+    [InlineData(false, true, true, "tests.acceptance")]
+    [InlineData(true, false, true, "analysis")]
+    [InlineData(true, true, false, "tests.unit, tests.integration, coverage")]
+    public async Task ALevelOfTestsOrAnAnalysisTheBuildRequiresMustBeThere(bool contract, bool log, bool results, string? lacking)
+    {
+        (string Path, string Text)[] tree = contract ? [Contract(rows: 5), BuildSettings] : [BuildSettings];
+        await TrackedTreeAsync(tree);
+        Directory.CreateDirectory(Results);
+        if (results)
+        {
+            TestResults(Results);
+            Coverage(Results);
+        }
+
+        if (log)
+        {
+            CompileLog(Results, warnings: 0, errors: 0, "Site");
+        }
+
+        var result = await WriteAsync(NoGitHub, "-ResultsPath", Results, "-RepositoryRoot", Tree, "-Require", "tests.unit,tests.integration,tests.acceptance,coverage,analysis");
+
+        if (lacking is null)
+        {
+            Assert.True(result.ExitCode == 0, result.ToString());
+            Assert.True(File.Exists(Output));
+            return;
+        }
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Contains($"FAIL the build facts lack {lacking}: nothing to measure ", result.Output, StringComparison.Ordinal);
+        Assert.False(File.Exists(Output), "Facts that lack a required part must not be written.");
     }
 
     [Fact]
@@ -215,6 +424,7 @@ public sealed class BuildFactsScriptTests : IDisposable
         var state = Path.Join(_work, "gh");
         TestResults(Path.Join(state, "artifacts", "test-results"));
         Coverage(Path.Join(state, "artifacts", "test-results"));
+        CompileLog(Path.Join(state, "artifacts", "test-results"), warnings: 0, errors: 0, "Site");
         Directory.CreateDirectory(Path.Join(state, "artifacts", "test-results-full-system"));
         File.WriteAllText(Path.Join(state, "artifacts", "test-results-full-system", "full-system.trx"), Trx("jeffreypalermo.acceptancetests.dll", "Passed", "Passed"));
 
@@ -228,8 +438,11 @@ public sealed class BuildFactsScriptTests : IDisposable
         Assert.All(calls, call => Assert.EndsWith(" --repo owner/site", call, StringComparison.Ordinal));
         using var facts = Facts();
         var tests = facts.RootElement.GetProperty("tests");
-        Assert.Equal((3, 2, 2), (tests.GetProperty("unit").GetInt32(), tests.GetProperty("integration").GetInt32(), tests.GetProperty("acceptance").GetInt32()));
+        Assert.Equal((3, 2, 2), (tests.GetProperty("unit").GetInt32(), tests.GetProperty("integration").GetInt32(), tests.GetProperty("fullSystem").GetInt32()));
         Assert.Equal(50.0, facts.RootElement.GetProperty("coverage").GetProperty("linePercent").GetDouble());
+
+        // The log of the compile is in the artifact of the unit and integration tests, where the Build puts it.
+        Assert.Equal(0, facts.RootElement.GetProperty("analysis").GetProperty("problems").GetInt32());
 
         // What was downloaded is gone again.
         var downloadedTo = calls[0].Split(" --dir ")[1].Split(" --repo ")[0];
@@ -286,6 +499,32 @@ public sealed class BuildFactsScriptTests : IDisposable
         Assert.InRange(languages["JSON"].GetProperty("files").GetInt32(), 1, 50);
     }
 
+    /// <summary>
+    /// What the fleet reads of this repository's facts (FLEET-014 of the demo-environment-kit), over this repository
+    /// itself: the acceptance level is every URL the verifier reads from the contract, and the analysis is the build
+    /// as <c>Directory.Build.props</c> sets it. The log stands in for the compile of the Build.
+    /// </summary>
+    [Fact]
+    public async Task ThisRepositoryDeclaresItsAcceptanceChecksAndSwitchesNoRuleOff()
+    {
+        CompileLog(Results, warnings: 0, errors: 0, "JeffreyPalermo.UI.Server");
+
+        var result = await WriteAsync(NoGitHub, "-Version", "1.0.41", "-ResultsPath", Results);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        using var facts = Facts();
+        var contract = UrlContractFile.Read(File.ReadAllText(Path.Join(TestPaths.RepositoryRoot, "tests", "contract", "url-contract.tsv")));
+        Assert.Equal(9337, contract.Count);
+        Assert.Equal(contract.Count, facts.RootElement.GetProperty("tests").GetProperty("acceptance").GetInt32());
+
+        var analysis = facts.RootElement.GetProperty("analysis");
+        Assert.Equal("latest-recommended", analysis.GetProperty("analysisLevel").GetString());
+        Assert.True(analysis.GetProperty("warningsAsErrors").GetBoolean());
+
+        // A rule that is switched off is a decision. Whoever adds one changes this number with it, in the same change.
+        Assert.True(analysis.GetProperty("suppressions").GetInt32() == 0, $"The code switches off: {analysis.GetProperty("suppressed")}");
+    }
+
     private static readonly KeyValuePair<string, string>[] NoGitHub = [];
 
     private static readonly KeyValuePair<string, string>[] GitHub =
@@ -305,8 +544,66 @@ public sealed class BuildFactsScriptTests : IDisposable
         return section;
     }
 
-    /// <summary>A small repository: files of every language that counts, and of every kind that does not.</summary>
-    private async Task TrackedTreeAsync()
+    /// <summary>The build as this repository sets it: a warning is an error, and the analyzers' level.</summary>
+    private static readonly (string Path, string Text) BuildSettings =
+        ("Directory.Build.props", "<Project>\n  <PropertyGroup>\n    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>\n    <AnalysisLevel>latest-recommended</AnalysisLevel>\n  </PropertyGroup>\n</Project>\n");
+
+    /// <summary>
+    /// Every way the script counts of switching a rule off, each beside something that looks like one and is not.
+    /// No line here starts as a line of code does, so the facts of this repository do not count this file.
+    /// </summary>
+    private static readonly (string Path, string Text)[] Suppressions =
+    [
+        ("src/Site.csproj", "<Project Sdk=\"Microsoft.NET.Sdk\">\n  <PropertyGroup>\n    <NoWarn>$(NoWarn);CS1591; CA1707</NoWarn>\n    <!-- <NoWarn>CA9999</NoWarn> -->\n    <WarningsNotAsErrors>CA2000</WarningsNotAsErrors>\n  </PropertyGroup>\n  <ItemGroup>\n    <PackageReference Include=\"Old\" Version=\"1.0.0\" NoWarn=\"NU1701\" />\n  </ItemGroup>\n</Project>\n"),
+        ("src/Quiet.cs", "namespace App;\n\n#pragma warning disable CA1822, CA1062 // two rules, and why\npublic class Quiet\n{\n    #pragma warning disable\n    [SuppressMessage(\"Design\", \"CA1054\", Justification = \"As the caller has it\")]\n    public string Text => \"#pragma warning disable CA0000\";\n    #pragma warning restore\n    // #pragma warning disable CA0001\n    [UnconditionalSuppressMessage(\"Trimming\", \"IL2026\")]\n    public void Keep() { }\n}\n"),
+        ("src/GlobalSuppressions.cs", "using System.Diagnostics.CodeAnalysis;\n\n[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage(\"Naming\", \"CA1707\", Scope = \"module\")]\n"),
+        ("src/Quiet.razor", "@code {\n#pragma warning disable CS0618\n}\n"),
+        ("tests/Site.Tests.csproj", "<Project Sdk=\"Microsoft.NET.Sdk\">\n  <PropertyGroup>\n    <EnableNETAnalyzers>false</EnableNETAnalyzers>\n    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>\n  </PropertyGroup>\n</Project>\n"),
+        (".editorconfig", "root = true\n\n[*.cs]\ndotnet_diagnostic.CA1000.severity = none\ndotnet_diagnostic.CA2000.severity = warning\n# dotnet_diagnostic.CA3000.severity = none\ndotnet_analyzer_diagnostic.category-Style.severity = none\n"),
+        ("content/posts/attached.cs", "#pragma warning disable CA1822\n// A post's attachment, not the site's code.\n"),
+    ];
+
+    /// <summary>A URL contract as <c>tools/UrlContract</c> writes it: a heading, then one URL per line.</summary>
+    private static (string Path, string Text) Contract(int rows) =>
+        ("tests/contract/url-contract.tsv", "url\tclass\tstatus\tlocation\tfinal_status\tfinal_url\n" + string.Concat(Enumerable.Range(1, rows).Select(row => $"/post-{row}/\tTopLevelSlug\t200\t\t200\t/post-{row}/\n")));
+
+    /// <summary>Reviewed exceptions for the first URLs of <see cref="Contract"/>: comments, a heading, a line each.</summary>
+    private static (string Path, string Text) Exceptions(int rows) =>
+        ("tests/contract/exceptions.tsv", "# Reviewed deviations.\nurl\tfinal_status\tfinal_path\treason\n" + string.Concat(Enumerable.Range(1, rows).Select(row => $"/post-{row}/\t404\t-\tReviewed.\n")));
+
+    /// <summary>
+    /// The log of a compile as <c>dotnet build -flp:LogFile=...;Verbosity=minimal;Summary</c> writes it: an assembly
+    /// per project, each diagnostic once where it was found and once more under the outcome, and the count.
+    /// </summary>
+    private static void CompileLog(string folder, int warnings, int errors, params string[] projects)
+    {
+        var found = Enumerable.Range(1, warnings).Select(n => $"/work/src/A.cs({n},5): warning CS0618: 'Old' is obsolete [/work/src/Site.csproj]")
+            .Concat(Enumerable.Range(1, errors).Select(n => $"/work/src/A.cs({n},17): error CA1822: Member 'M{n}' does not access instance data and can be marked as static [/work/src/Site.csproj]"))
+            .ToList();
+        string[] lines =
+        [
+            "  Determining projects to restore...",
+            "  All projects are up-to-date for restore.",
+            .. found,
+            .. projects.Select(project => $"  {project} -> /work/src/{project}/bin/Release/net10.0/{project}.dll"),
+            string.Empty,
+            errors == 0 ? "Build succeeded." : "Build FAILED.",
+            string.Empty,
+            .. found,
+            $"    {warnings} Warning(s)",
+            $"    {errors} Error(s)",
+            string.Empty,
+            "Time Elapsed 00:00:21.48",
+        ];
+        Directory.CreateDirectory(folder);
+        File.WriteAllText(Path.Join(folder, "compile.msbuild.log"), string.Join('\n', lines) + "\n");
+    }
+
+    /// <summary>
+    /// A small repository: files of every language that counts, and of every kind that does not, and whatever a test
+    /// adds before git takes them.
+    /// </summary>
+    private async Task TrackedTreeAsync(params (string Path, string Text)[] more)
     {
         var files = new Dictionary<string, string>
         {
@@ -327,7 +624,7 @@ public sealed class BuildFactsScriptTests : IDisposable
             ["content/posts/sample.cs"] = "// A post's attachment, not the site's code.\n",
             ["migration/raw/dump.json"] = "{\n  \"posts\": []\n}\n",
         };
-        foreach (var (path, text) in files)
+        foreach (var (path, text) in files.Select(file => (file.Key, file.Value)).Concat(more))
         {
             Directory.CreateDirectory(Path.GetDirectoryName(Path.Join(Tree, path))!);
             File.WriteAllText(Path.Join(Tree, path), text);
