@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace JeffreyPalermo.IntegrationTests;
 
@@ -422,6 +423,203 @@ public sealed class DeployScriptTests : IDisposable
         Assert.DoesNotContain(Calls(), call => call.StartsWith("resource invoke-action", StringComparison.Ordinal));
     }
 
+    /// <summary>
+    /// ADR-0014: today no environment has a host name, and the stack is asked for none. The lists are still lists:
+    /// PowerShell writes an empty one as nothing and a list of one as a text unless the script makes them lists.
+    /// </summary>
+    [Theory]
+    [InlineData("tdd")]
+    [InlineData("uat")]
+    public async Task WithoutHostNamesTheStackIsAskedForNoCustomDomain(string environment)
+    {
+        UatBehindItsFrontDoor();
+        ExpressEnvironment("cae-jpcom-tdd-eus2");
+
+        var result = await DeployAsync(environment);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Equal(JsonValueKind.Array, StackParameters().GetProperty("hostNames").GetProperty("value").ValueKind);
+        Assert.Equal(0, StackParameters().GetProperty("hostNames").GetProperty("value").GetArrayLength());
+        Assert.Equal(JsonValueKind.Array, StackParameters().GetProperty("redirectHostNames").GetProperty("value").ValueKind);
+        Assert.Equal(0, StackParameters().GetProperty("redirectHostNames").GetProperty("value").GetArrayLength());
+        Assert.DoesNotContain("Host names", result.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("_dnsauth", result.Output, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// The day of the DNS move: the three names are in the settings and nothing is in DNS yet. The canonical host
+    /// gets the route with the cache, www. and feeds. the one without, and the script prints what DNS needs.
+    /// </summary>
+    [Fact]
+    public async Task TheHostNamesOfTheDayAreSortedByHowTheSiteAnswersThemAndTheirDnsRecordsArePrinted()
+    {
+        UatWithCustomDomains(
+            Domain("jeffreypalermo.com", kept: true, "Pending", token: "token-for-the-apex"),
+            Domain("www.jeffreypalermo.com", kept: false, "Pending", token: "token-for-www"),
+            Domain("feeds.jeffreypalermo.com", kept: false, "Submitting"));
+        var folder = DeployFolderWithHostNames("uat", "www.jeffreypalermo.com", "jeffreypalermo.com", "feeds.jeffreypalermo.com");
+
+        var result = await DeployAsync("uat", deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Equal(["jeffreypalermo.com"], StackParameters().GetProperty("hostNames").GetProperty("value").EnumerateArray().Select(name => name.GetString()));
+        Assert.Equal(["www.jeffreypalermo.com", "feeds.jeffreypalermo.com"], StackParameters().GetProperty("redirectHostNames").GetProperty("value").EnumerateArray().Select(name => name.GetString()));
+        Assert.Contains("behind Front Door, as www.jeffreypalermo.com, jeffreypalermo.com, feeds.jeffreypalermo.com", result.Output, StringComparison.Ordinal);
+
+        Assert.Contains("Host names of uat: what DNS needs (docs/runbooks/dns-cutover.md). Nothing is changed in DNS by this deployment.", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  jeffreypalermo.com: validation Pending; answered with pages, kept at the edge", result.Output, StringComparison.Ordinal);
+        Assert.Contains("    TXT    _dnsauth.jeffreypalermo.com  \"token-for-the-apex\" (the token is valid until 2026-11-21 10:15 UTC)", result.Output, StringComparison.Ordinal);
+        Assert.Contains($"    ALIAS  jeffreypalermo.com  jpcom-uat-abc123.z02.azurefd.net  (the top of a zone takes no CNAME: an ALIAS or ANAME record, or an Azure DNS alias record to {EndpointId})", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  www.jeffreypalermo.com: validation Pending; answered with a redirect, never kept at the edge", result.Output, StringComparison.Ordinal);
+        Assert.Contains("    TXT    _dnsauth.www.jeffreypalermo.com  \"token-for-www\"", result.Output, StringComparison.Ordinal);
+        Assert.Contains("    CNAME  www.jeffreypalermo.com  jpcom-uat-abc123.z02.azurefd.net", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  feeds.jeffreypalermo.com: validation Submitting; answered with a redirect, never kept at the edge", result.Output, StringComparison.Ordinal);
+        Assert.Contains("    CNAME  feeds.jeffreypalermo.com  jpcom-uat-abc123.z02.azurefd.net", result.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("ALIAS  www.", result.Output, StringComparison.Ordinal);
+
+        // Nothing has served under a name that is not validated yet: only the endpoint's own name is purged.
+        Assert.Equal(["jpcom-uat-abc123.z02.azurefd.net"], PurgedDomains());
+        // The records are printed before the regions are asked and the cache is emptied, whatever comes after.
+        Assert.True(result.Output.IndexOf("Host names of uat", StringComparison.Ordinal) < result.Output.IndexOf("/_health/ready answers", StringComparison.Ordinal), result.Output);
+    }
+
+    /// <summary>After the day: the names are validated and serve. The canonical host's pages are purged with the endpoint's.</summary>
+    [Fact]
+    public async Task AValidatedHostNameWithPagesIsPurgedAndNeedsNoTxtRecordAnyMore()
+    {
+        UatWithCustomDomains(
+            Domain("jeffreypalermo.com", kept: true, "Approved"),
+            Domain("www.jeffreypalermo.com", kept: false, "Approved"),
+            Domain("feeds.jeffreypalermo.com", kept: false, "Approved"));
+        var folder = DeployFolderWithHostNames("uat", "jeffreypalermo.com", "www.jeffreypalermo.com", "feeds.jeffreypalermo.com");
+
+        var result = await DeployAsync("uat", deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Equal(["jpcom-uat-abc123.z02.azurefd.net", "jeffreypalermo.com"], PurgedDomains());
+        Assert.Contains("Emptying the Front Door's cache: /* of jpcom-uat-abc123.z02.azurefd.net, jeffreypalermo.com", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  jeffreypalermo.com: validation Approved; answered with pages, kept at the edge", result.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("TXT ", result.Output, StringComparison.Ordinal);
+        Assert.Contains("    ALIAS  jeffreypalermo.com  jpcom-uat-abc123.z02.azurefd.net", result.Output, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// The certificate of a name at the top of a zone is not renewed by itself: 45 days before it ends the validation
+    /// is asked for again, while the name still serves. Its pages are purged, and the TXT record is printed again.
+    /// </summary>
+    [Fact]
+    public async Task AHostNameWhoseValidationIsDueAgainStillServesAndIsPurged()
+    {
+        UatWithCustomDomains(Domain("jeffreypalermo.com", kept: true, "PendingRevalidation", token: "the-new-token"));
+        var folder = DeployFolderWithHostNames("uat", "jeffreypalermo.com");
+
+        var result = await DeployAsync("uat", deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(["jpcom-uat-abc123.z02.azurefd.net", "jeffreypalermo.com"], PurgedDomains());
+        Assert.Contains("  jeffreypalermo.com: validation PendingRevalidation; answered with pages, kept at the edge", result.Output, StringComparison.Ordinal);
+        Assert.Contains("    TXT    _dnsauth.jeffreypalermo.com  \"the-new-token\"", result.Output, StringComparison.Ordinal);
+    }
+
+    /// <summary>A list of one name must reach the template as a list, and a name of another shape as a name with pages.</summary>
+    [Fact]
+    public async Task OneHostNameIsStillAListAndANameThatIsNotARedirectHasPages()
+    {
+        UatWithCustomDomains(Domain("uat.jeffreypalermo.com", kept: true, "Pending", token: "t"));
+        var folder = DeployFolderWithHostNames("uat", "UAT.JeffreyPalermo.com ");
+
+        var result = await DeployAsync("uat", deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        var names = StackParameters().GetProperty("hostNames").GetProperty("value");
+        Assert.Equal(JsonValueKind.Array, names.ValueKind);
+        Assert.Equal(["uat.jeffreypalermo.com"], names.EnumerateArray().Select(name => name.GetString()));
+        Assert.Equal(JsonValueKind.Array, StackParameters().GetProperty("redirectHostNames").GetProperty("value").ValueKind);
+        Assert.Equal(0, StackParameters().GetProperty("redirectHostNames").GetProperty("value").GetArrayLength());
+        // Three labels: under a zone, so a CNAME.
+        Assert.Contains("    CNAME  uat.jeffreypalermo.com  jpcom-uat-abc123.z02.azurefd.net", result.Output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task HostNamesForAnEnvironmentWithoutAFrontDoorStopTheDeploymentBeforeAzureIsAsked()
+    {
+        var folder = DeployFolderWithHostNames("tdd", "tdd.jeffreypalermo.com");
+
+        var result = await DeployAsync("tdd", deployFolder: folder);
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Contains("FAIL the host names of 'tdd' in settings.json cannot be deployed; nothing was deployed:", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  'tdd' has no Front Door, and only a Front Door takes a host name", result.Output, StringComparison.Ordinal);
+        Assert.Empty(Calls());
+    }
+
+    [Theory]
+    [InlineData("https://jeffreypalermo.com", "'https://jeffreypalermo.com' is not a host name")]
+    [InlineData("jeffreypalermo.com/", "'jeffreypalermo.com/' is not a host name")]
+    [InlineData("*.jeffreypalermo.com", "'*.jeffreypalermo.com' is not a host name")]
+    [InlineData("jeffreypalermo", "'jeffreypalermo' is not a host name")]
+    [InlineData("www jeffreypalermo.com", "'www jeffreypalermo.com' is not a host name")]
+    [InlineData("-www.jeffreypalermo.com", "'-www.jeffreypalermo.com' is not a host name")]
+    [InlineData("jeffreypalermo.com.", "'jeffreypalermo.com.' is not a host name")]
+    [InlineData("", "'' is not a host name")]
+    public async Task ATextThatIsNotAHostNameStopsTheDeploymentBeforeAzureIsAsked(string name, string problem)
+    {
+        var folder = DeployFolderWithHostNames("uat", "jeffreypalermo.com", name);
+
+        var result = await DeployAsync("uat", deployFolder: folder);
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Contains($"  {problem}", result.Output, StringComparison.Ordinal);
+        Assert.Empty(Calls());
+    }
+
+    [Fact]
+    public async Task AHostNameListedTwiceStopsTheDeployment()
+    {
+        var folder = DeployFolderWithHostNames("uat", "jeffreypalermo.com", "www.jeffreypalermo.com", "WWW.jeffreypalermo.com");
+
+        var result = await DeployAsync("uat", deployFolder: folder);
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Contains("  'www.jeffreypalermo.com' is listed 2 times", result.Output, StringComparison.Ordinal);
+        Assert.Empty(Calls());
+    }
+
+    /// <summary>www. is answered with a redirect to the canonical host. Bound without it, the redirect leads nowhere.</summary>
+    [Theory]
+    [InlineData("www.jeffreypalermo.com")]
+    [InlineData("feeds.jeffreypalermo.com")]
+    public async Task AHostNameThatRedirectsNeedsTheCanonicalHostBesideIt(string name)
+    {
+        var folder = DeployFolderWithHostNames("uat", name);
+
+        var result = await DeployAsync("uat", deployFolder: folder);
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Contains($"  '{name}' is answered with a redirect to jeffreypalermo.com, which is not listed", result.Output, StringComparison.Ordinal);
+        Assert.Empty(Calls());
+    }
+
+    [Fact]
+    public async Task EveryProblemWithTheHostNamesIsNamedAtOnce()
+    {
+        var folder = DeployFolderWithHostNames("tdd", "www.jeffreypalermo.com", "not a name");
+
+        var result = await DeployAsync("tdd", deployFolder: folder);
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Contains("has no Front Door", result.Output, StringComparison.Ordinal);
+        Assert.Contains("'not a name' is not a host name", result.Output, StringComparison.Ordinal);
+        Assert.Contains("'www.jeffreypalermo.com' is answered with a redirect to jeffreypalermo.com, which is not listed", result.Output, StringComparison.Ordinal);
+        Assert.Empty(Calls());
+    }
+
     [Fact]
     public async Task AnEnvironmentTheSettingsDoNotNameFails()
     {
@@ -462,7 +660,50 @@ public sealed class DeployScriptTests : IDisposable
         JsonDocument.Parse(File.ReadAllText(Path.Join(_state, "stack-parameters.json"))).RootElement.GetProperty("parameters");
 
     /// <summary>Runs deploy.ps1 as the system's pipeline does, with the stand-in first on the path.</summary>
-    private async Task<ScriptResult> DeployAsync(string environment, int retryPauseSeconds = 0, int timeoutSeconds = 60)
+    /// <summary>
+    /// The <c>deploy/</c> folder as the release's package carries it, with host names for one environment: what the
+    /// repository will hold on the day of the DNS move (ADR-0014). Today its settings name none.
+    /// </summary>
+    private string DeployFolderWithHostNames(string environment, params string[] hostNames)
+    {
+        var folder = Path.Join(_state, "deploy");
+        Directory.CreateDirectory(Path.Join(folder, "infra"));
+        var source = Path.Join(TestPaths.RepositoryRoot, "deploy");
+        foreach (var file in (string[])["deploy.ps1", "test-site.ps1", "settings.json", Path.Join("infra", "main.bicep"), Path.Join("infra", "custom-domains.bicep")])
+        {
+            File.Copy(Path.Join(source, file), Path.Join(folder, file), overwrite: true);
+        }
+
+        var settings = JsonNode.Parse(File.ReadAllText(Path.Join(folder, "settings.json")))!;
+        settings["environments"]![environment]!["hostNames"] = new JsonArray([.. hostNames.Select(name => JsonValue.Create(name))]);
+        File.WriteAllText(Path.Join(folder, "settings.json"), settings.ToJsonString());
+        return folder;
+    }
+
+    /// <summary>What the stack says about a host name's custom domain, as an item of its output <c>hostNames</c>.</summary>
+    private static string Domain(string hostName, bool kept, string state, string token = "") => $$"""
+        { "hostName": "{{hostName}}", "kept": {{(kept ? "true" : "false")}}, "validationState": "{{state}}",
+          "validationRecord": "_dnsauth.{{hostName}}", "validationToken": "{{token}}",
+          "validationExpires": "{{(token.Length > 0 ? "2026-11-21T10:15:00.0000000+00:00" : string.Empty)}}",
+          "target": "jpcom-uat-abc123.z02.azurefd.net" }
+        """;
+
+    /// <summary>uat behind its Front Door, whose stack also names these custom domains.</summary>
+    private void UatWithCustomDomains(params string[] domains)
+    {
+        UatBehindItsFrontDoor();
+        var stack = JsonNode.Parse(File.ReadAllText(Path.Join(_state, "stack-show.json")))!;
+        stack["outputs"]!["hostNames"] = new JsonObject { ["value"] = new JsonArray([.. domains.Select(domain => JsonNode.Parse(domain))]) };
+        File.WriteAllText(Path.Join(_state, "stack-show.json"), stack.ToJsonString());
+    }
+
+    private string[] PurgedDomains()
+    {
+        using var purge = JsonDocument.Parse(File.ReadAllText(Path.Join(_state, "purge-body.json")));
+        return [.. purge.RootElement.GetProperty("domains").EnumerateArray().Select(domain => domain.GetString()!)];
+    }
+
+    private async Task<ScriptResult> DeployAsync(string environment, int retryPauseSeconds = 0, int timeoutSeconds = 60, string? deployFolder = null)
     {
         var context = Path.Join(_state, "context.json");
         await File.WriteAllTextAsync(context, """
@@ -474,7 +715,7 @@ public sealed class DeployScriptTests : IDisposable
             """);
 
         var start = new ProcessStartInfo("pwsh") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
-        foreach (var argument in (string[])["-NoProfile", "-NonInteractive", "-File", Path.Join(TestPaths.RepositoryRoot, "deploy", "deploy.ps1"), "-Environment", environment, "-Version", "1.2.3", "-Context", context, "-RetryPauseSeconds", $"{retryPauseSeconds}", "-TimeoutSeconds", $"{timeoutSeconds}"])
+        foreach (var argument in (string[])["-NoProfile", "-NonInteractive", "-File", Path.Join(deployFolder ?? Path.Join(TestPaths.RepositoryRoot, "deploy"), "deploy.ps1"), "-Environment", environment, "-Version", "1.2.3", "-Context", context, "-RetryPauseSeconds", $"{retryPauseSeconds}", "-TimeoutSeconds", $"{timeoutSeconds}"])
         {
             start.ArgumentList.Add(argument);
         }

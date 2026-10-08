@@ -1,6 +1,7 @@
 {
   "port": 8080,
   "pullIdentity": "id-{system}-{environment}-app",
+  "canonicalHost": "jeffreypalermo.com",
   "environments": {
     "tdd": {
       "frontDoor": false,
@@ -10,6 +11,7 @@
     },
     "uat": {
       "frontDoor": true,
+      "hostNames": [],
       "regions": [
         { "location": "eastus2", "code": "eus2" },
         { "location": "germanywestcentral", "code": "gwc" }
@@ -17,6 +19,7 @@
     },
     "prod": {
       "frontDoor": true,
+      "hostNames": [],
       "regions": [
         { "location": "eastus2", "code": "eus2" },
         { "location": "westus2", "code": "wus2" },

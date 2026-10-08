@@ -92,6 +92,7 @@ cache after every deployment.**
 
   The other direction, a kept page given to a reader of `www.`, cannot happen while `www.` is not bound. Whoever
   binds it must not rely on the key of the cache: the documentation does not say that the host is part of it.
+  [ADR-0014](0014-the-custom-domain-prepared.md) gives `www.` and `feeds.` a route without a cache.
 
 ### A deployment empties the cache (`deploy/deploy.ps1`)
 

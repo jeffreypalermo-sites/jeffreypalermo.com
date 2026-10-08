@@ -9,8 +9,9 @@
     The system's pipeline runs this in every environment, signed in to Azure as the tier's deploy identity (ADR-0007;
     the contract is the demo-environment-kit's "An application that brings its own runtime").
 
-    settings.json beside this file says where the site runs in each environment: its regions, and whether an Azure
-    Front Door stands in front of them (ADR-0008). For the environment asked for, this script
+    settings.json beside this file says where the site runs in each environment: its regions, whether an Azure
+    Front Door stands in front of them (ADR-0008), and under which host names of its own the Front Door answers
+    (hostNames, ADR-0014; none yet). For the environment asked for, this script
       1. makes sure every region has its Container Apps express environment, cae-<system>-<environment>-<code>.
          A template deployment cannot create one in this subscription: its validation counts an express environment
          against the limits of standard ones and refuses it, while the service accepts the request itself. So each is
@@ -23,6 +24,12 @@
          without this a reader would get pages of the release before. First every region must answer as the
          release at its own address: emptied sooner, the edge could fill again from a region that still runs the
          release before. Then the script asks Azure to purge everything and waits until Azure reports it done.
+
+    Host names (ADR-0014, docs/runbooks/dns-cutover.md): each gets a custom domain of the Front Door with a
+    certificate it manages. A name the site answers with its pages (the canonical host) gets a route like the
+    endpoint's own, with the cache. www. and feeds. of the canonical host, which the site answers with a redirect,
+    get a route without a cache. After the stack the script prints, for every host name, what DNS needs: the TXT
+    record that proves the name is the owner's, and where its address record points. Nothing changes in DNS here.
 
     A step against Azure that fails is run once more after a pause: the platform fails by itself at times (the first
     production deployment of the regions: "(500 InternalError): managed identity bootstrap failed"; hours later the
@@ -56,6 +63,43 @@ if (-not $settings.environments.ContainsKey($Environment)) {
     exit 1
 }
 $place = $settings.environments[$Environment]
+
+# The host names of the environment (ADR-0014). Checked before anything is asked of Azure.
+# Always a list: none, one name and several all come out of settings.json differently.
+$hostNames = @(@(if ($place.ContainsKey('hostNames')) { $place['hostNames'] }) | ForEach-Object { ([string] $_).Trim().ToLowerInvariant() })
+$canonicalHost = if ($settings.ContainsKey('canonicalHost')) { ([string] $settings['canonicalHost']).ToLowerInvariant() } else { '' }
+# The site answers these two with a redirect to the canonical host (the rules host-www and host-feeds).
+$redirectHosts = @(if ($canonicalHost) { "www.$canonicalHost"; "feeds.$canonicalHost" })
+if ($hostNames.Count -gt 0) {
+    $problems = @()
+    if (-not [bool] $place.frontDoor) {
+        $problems += "'$Environment' has no Front Door, and only a Front Door takes a host name"
+    }
+    if (-not $canonicalHost) {
+        $problems += 'settings.json names no canonicalHost, so it cannot be told which host names the site answers with a redirect'
+    }
+    foreach ($name in $hostNames) {
+        # A full DNS name in lower case: labels of letters, digits and hyphens. No wildcard, no scheme, no path.
+        if ($name -cnotmatch '^(?=.{4,253}$)([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$') {
+            $problems += "'$name' is not a host name"
+        }
+    }
+    foreach ($repeated in @($hostNames | Group-Object | Where-Object { $_.Count -gt 1 })) {
+        $problems += "'$($repeated.Name)' is listed $($repeated.Count) times"
+    }
+    foreach ($name in @($hostNames | Where-Object { $_ -in $redirectHosts })) {
+        if ($canonicalHost -notin $hostNames) {
+            $problems += "'$name' is answered with a redirect to $canonicalHost, which is not listed"
+        }
+    }
+    if ($problems.Count -gt 0) {
+        Write-Host "FAIL the host names of '$Environment' in settings.json cannot be deployed; nothing was deployed:"
+        @($problems | Select-Object -Unique) | ForEach-Object { Write-Host "  $_" }
+        exit 1
+    }
+}
+$pageHostNames = @($hostNames | Where-Object { $_ -notin $redirectHosts })
+$redirectHostNames = @($hostNames | Where-Object { $_ -in $redirectHosts })
 $system = [string] $facts.system
 $resourceGroup = [string] $facts.resourceGroup
 $subscription = ([string] (az account show --query id --output tsv)).Trim()
@@ -216,20 +260,23 @@ function Write-Failure {
 # 2. The apps, and the Front Door, as one stack.
 $stack = "stack-$system-$Environment-web"
 $frontDoor = [bool] $place.frontDoor
-Write-Host "Applying $stack in ${resourceGroup}: $($regions.Count) region(s) run $($facts.registryServer)/$system/web:$Version$(if ($frontDoor) { ', behind Front Door' })"
+Write-Host "Applying $stack in ${resourceGroup}: $($regions.Count) region(s) run $($facts.registryServer)/$system/web:$Version$(if ($frontDoor) { ', behind Front Door' })$(if ($hostNames.Count -gt 0) { ", as $($hostNames -join ', ')" })"
 $parametersFile = Join-Path ([IO.Path]::GetTempPath()) "parameters-$stack-$([Guid]::NewGuid().ToString('N')).json"
 @{
     '$schema'      = 'https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#'
     contentVersion = '1.0.0.0'
     parameters     = @{
-        system          = @{ value = $system }
-        environmentName = @{ value = $Environment }
-        version         = @{ value = $Version }
-        registryServer  = @{ value = [string] $facts.registryServer }
-        pullIdentityId  = @{ value = "$group/providers/Microsoft.ManagedIdentity/userAssignedIdentities/$pullIdentityName" }
-        regions         = @{ value = @($regions) }
-        frontDoor       = @{ value = $frontDoor }
-        port            = @{ value = [int] $settings.port }
+        system            = @{ value = $system }
+        environmentName   = @{ value = $Environment }
+        version           = @{ value = $Version }
+        registryServer    = @{ value = [string] $facts.registryServer }
+        pullIdentityId    = @{ value = "$group/providers/Microsoft.ManagedIdentity/userAssignedIdentities/$pullIdentityName" }
+        regions           = @{ value = @($regions) }
+        frontDoor         = @{ value = $frontDoor }
+        port              = @{ value = [int] $settings.port }
+        # Wrapped again where they are used: a list of one would otherwise be written as a text, and none as null.
+        hostNames         = @{ value = @($pageHostNames) }
+        redirectHostNames = @{ value = @($redirectHostNames) }
     }
 } | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $parametersFile -Encoding utf8NoBOM
 
@@ -284,6 +331,34 @@ if (-not $endpointId -or -not $frontDoorUrl -or $apps.Count -eq 0) {
     exit 1
 }
 
+# The host names (ADR-0014): what DNS needs for each, from what the Front Door says about its custom domains. Printed
+# at every deployment, and before the purge, so it is there whatever comes after. The script changes nothing in DNS.
+$customDomains = @(Get-StackOutput -Outputs $outputs -Name 'hostNames')
+if ($customDomains.Count -gt 0) {
+    $endpointHost = ([Uri] $frontDoorUrl).Host
+    Write-Host "Host names of ${Environment}: what DNS needs (docs/runbooks/dns-cutover.md). Nothing is changed in DNS by this deployment."
+    foreach ($domain in $customDomains) {
+        $name = [string] $domain.hostName
+        $state = [string] $domain.validationState
+        Write-Host "  ${name}: validation $state; $(if ([bool] $domain.kept) { 'answered with pages, kept at the edge' } else { 'answered with a redirect, never kept at the edge' })"
+        if ($state -ne 'Approved') {
+            # ConvertFrom-Json turns a text that looks like a date into a date: written here in one fixed form.
+            $expires = $domain.validationExpires
+            $until = if ($expires -is [datetime]) { " (the token is valid until $($expires.ToUniversalTime().ToString('yyyy-MM-dd HH:mm', [cultureinfo]::InvariantCulture)) UTC)" }
+            elseif ([string] $expires) { " (the token is valid until $expires)" }
+            else { '' }
+            Write-Host "    TXT    $($domain.validationRecord)  `"$($domain.validationToken)`"$until"
+        }
+        # A name of two labels is taken for the top of its zone, where DNS allows no CNAME.
+        if ($name.Split('.').Count -eq 2) {
+            Write-Host "    ALIAS  $name  $($domain.target)  (the top of a zone takes no CNAME: an ALIAS or ANAME record, or an Azure DNS alias record to $endpointId)"
+        }
+        else {
+            Write-Host "    CNAME  $name  $($domain.target)"
+        }
+    }
+}
+
 # Every region first, at its own address. The stack is applied before every region has started the new revision,
 # and a region that still runs the release before would fill the emptied edge with its pages again.
 $testSite = Join-Path $PSScriptRoot 'test-site.ps1'
@@ -295,8 +370,12 @@ foreach ($app in $apps) {
     }
 }
 
-# Everything the endpoint keeps under its own host name: a purge names the paths and the domains it is for.
-$domains = @(([Uri] $frontDoorUrl).Host)
+# Everything the endpoint keeps: a purge names the paths and the domains it is for. The endpoint's own name, and
+# every host name with pages whose validation has passed at some time. A name that is still Submitting or Pending
+# has never served, so the edge keeps nothing for it. The names that only redirect have a route without a cache.
+$domains = @(([Uri] $frontDoorUrl).Host) + @($customDomains |
+        Where-Object { [bool] $_.kept -and [string] $_.validationState -notin 'Submitting', 'Pending' } |
+        ForEach-Object { [string] $_.hostName })
 $purgeFile = Join-Path ([IO.Path]::GetTempPath()) "purge-$stack-$([Guid]::NewGuid().ToString('N')).json"
 @{ contentPaths = @('/*'); domains = @($domains) } | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $purgeFile -Encoding utf8NoBOM
 Write-Host "Emptying the Front Door's cache: /* of $($domains -join ', ')"
