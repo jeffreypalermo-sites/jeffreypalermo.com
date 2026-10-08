@@ -620,6 +620,252 @@ public sealed class DeployScriptTests : IDisposable
         Assert.Empty(Calls());
     }
 
+    /// <summary>
+    /// ADR-0016: production's DNS zone, created and not delegated. It is the last step, and a stack of its own that
+    /// detaches what leaves it and lets nobody but the deploy identity delete what it holds: the site's stack deletes
+    /// what leaves its template, and a zone with the mail records must not go because a line was removed.
+    /// </summary>
+    [Fact]
+    public async Task ProductionsDnsZoneIsAppliedLastAsAStackOfItsOwnThatNeverDeletes()
+    {
+        ProdBehindItsFrontDoor();
+
+        var result = await DeployAsync("prod");
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        var calls = Calls().Where(call => !call.StartsWith("rest ", StringComparison.Ordinal) && !call.StartsWith("account ", StringComparison.Ordinal)).Select(WithoutTemporaryFiles).ToList();
+        Assert.Equal(5, calls.Count);
+        Assert.StartsWith("stack group create --name stack-jpcom-prod-web ", calls[0], StringComparison.Ordinal);
+        Assert.StartsWith("stack group show --name stack-jpcom-prod-web ", calls[1], StringComparison.Ordinal);
+        Assert.StartsWith("resource invoke-action --action purge ", calls[2], StringComparison.Ordinal);
+        Assert.StartsWith("stack group create --name stack-jpcom-prod-dns --resource-group rg-test --template-file ", calls[3], StringComparison.Ordinal);
+        Assert.Contains($"{Path.Join("infra", "dns-zone.bicep")} --parameters @file --action-on-unmanage detachAll --deny-settings-mode denyDelete --deny-settings-excluded-principals principal-1 --yes --output none", calls[3], StringComparison.Ordinal);
+        Assert.StartsWith("stack group show --name stack-jpcom-prod-dns --resource-group rg-test", calls[4], StringComparison.Ordinal);
+
+        // The site's stack is as it was: it deletes what leaves its template, and the zone is not in it.
+        Assert.Contains($"{Path.Join("infra", "main.bicep")} --parameters @file --action-on-unmanage deleteResources --deny-settings-mode denyWriteAndDelete", calls[0], StringComparison.Ordinal);
+        Assert.DoesNotContain("deleteResources", calls[3], StringComparison.Ordinal);
+        Assert.DoesNotContain("deleteAll", calls[3], StringComparison.Ordinal);
+
+        // No host name yet: the zone is asked for the records of 2026-10-08 only.
+        var zone = ZoneParameters();
+        Assert.Equal("jeffreypalermo.com", zone.GetProperty("zoneName").GetProperty("value").GetString());
+        Assert.Equal("prod", zone.GetProperty("environmentName").GetProperty("value").GetString());
+        Assert.Empty(Texts(zone, "hostLabels"));
+        Assert.Empty(Texts(zone, "validationLabels"));
+        Assert.Empty(Texts(zone, "validationTokens"));
+
+        // The name servers, and whose step it is to enter them.
+        Assert.Contains("Applying stack-jpcom-prod-dns in rg-test: the DNS zone jeffreypalermo.com", result.Output, StringComparison.Ordinal);
+        Assert.Contains("PASS stack-jpcom-prod-dns: the zone jeffreypalermo.com holds its records. Its name servers:", result.Output, StringComparison.Ordinal);
+        Assert.All(NameServers, server => Assert.Contains($"\n  {server}\n", result.Output, StringComparison.Ordinal));
+        Assert.EndsWith("  Entering these at the registrar is the move, and a person's step (docs/runbooks/dns-cutover.md). Until then the zone's records are only prepared: nobody asks this zone.", result.Output.TrimEnd(), StringComparison.Ordinal);
+        Assert.True(result.Output.IndexOf("PASS the Front Door's cache is emptied", StringComparison.Ordinal) < result.Output.IndexOf("Applying stack-jpcom-prod-dns", StringComparison.Ordinal), result.Output);
+    }
+
+    /// <summary>
+    /// The day's names in production: the zone gives each to the Front Door, and gives the Front Door's tokens back
+    /// as TXT records. Nobody copies a token by hand into this zone.
+    /// </summary>
+    [Fact]
+    public async Task TheZoneIsGivenTheHostNamesAndTheFrontDoorsTokens()
+    {
+        ProdBehindItsFrontDoor(
+            Domain("jeffreypalermo.com", kept: true, "Pending", token: "token-for-the-apex"),
+            Domain("www.jeffreypalermo.com", kept: false, "Approved", token: "token-for-www"),
+            Domain("feeds.jeffreypalermo.com", kept: false, "Submitting"));
+        var folder = DeployFolderWithHostNames("prod", "jeffreypalermo.com", "www.jeffreypalermo.com", "feeds.jeffreypalermo.com");
+
+        var result = await DeployAsync("prod", deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        var zone = ZoneParameters();
+        Assert.Equal(["@", "www", "feeds"], Texts(zone, "hostLabels"));
+        Assert.Equal(ProdEndpointId, zone.GetProperty("frontDoorEndpointId").GetProperty("value").GetString());
+        Assert.Equal("jpcom-prod-d8e7.z02.azurefd.net", zone.GetProperty("frontDoorHostName").GetProperty("value").GetString());
+        // A token for every name that has one, in the same order; feeds has none yet and gets its record next time.
+        Assert.Equal(["@", "www"], Texts(zone, "validationLabels"));
+        Assert.Equal(["token-for-the-apex", "token-for-www"], Texts(zone, "validationTokens"));
+        Assert.Contains("the DNS zone jeffreypalermo.com, with jeffreypalermo.com, www.jeffreypalermo.com, feeds.jeffreypalermo.com answered by the Front Door", result.Output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task OneHostNameInTheZoneIsStillAListOfOne()
+    {
+        ProdBehindItsFrontDoor(Domain("jeffreypalermo.com", kept: true, "Pending", token: "token-for-the-apex"));
+        var folder = DeployFolderWithHostNames("prod", "jeffreypalermo.com");
+
+        var result = await DeployAsync("prod", deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(["@"], Texts(ZoneParameters(), "hostLabels"));
+        Assert.Equal(["@"], Texts(ZoneParameters(), "validationLabels"));
+        Assert.Equal(["token-for-the-apex"], Texts(ZoneParameters(), "validationTokens"));
+    }
+
+    /// <summary>A host name of another domain has no record in this zone, and neither has a name that only ends alike.</summary>
+    [Fact]
+    public async Task AHostNameOutsideTheZoneHasNoRecordInIt()
+    {
+        ProdBehindItsFrontDoor(
+            Domain("www.jeffreypalermo.com", kept: false, "Pending", token: "token-for-www"),
+            Domain("jeffreypalermo.com", kept: true, "Pending", token: "token-for-the-apex"),
+            Domain("notjeffreypalermo.com", kept: true, "Pending", token: "token-for-another-domain"),
+            Domain("site.example.org", kept: true, "Pending", token: "token-for-a-third"));
+        var folder = DeployFolderWithHostNames("prod", "www.jeffreypalermo.com", "jeffreypalermo.com", "notjeffreypalermo.com", "site.example.org");
+
+        var result = await DeployAsync("prod", deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(["www", "@"], Texts(ZoneParameters(), "hostLabels"));
+        Assert.Equal(["token-for-www", "token-for-the-apex"], Texts(ZoneParameters(), "validationTokens"));
+    }
+
+    /// <summary>Only production's settings name a zone: nothing about DNS is asked of Azure anywhere else.</summary>
+    [Theory]
+    [InlineData("tdd")]
+    [InlineData("uat")]
+    public async Task AnEnvironmentWhoseSettingsNameNoZoneHasNone(string environment)
+    {
+        UatBehindItsFrontDoor();
+        ExpressEnvironment("cae-jpcom-tdd-eus2");
+
+        var result = await DeployAsync(environment);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.DoesNotContain(Calls(), call => call.Contains("-dns", StringComparison.Ordinal));
+        Assert.DoesNotContain("zone", result.Output, StringComparison.OrdinalIgnoreCase);
+        Assert.False(File.Exists(Path.Join(_state, "dns-parameters.json")));
+    }
+
+    /// <summary>
+    /// Taking the line out of the settings deletes nothing: the script then asks nothing about the zone's stack, and
+    /// the site's stack never held the zone.
+    /// </summary>
+    [Fact]
+    public async Task AZoneThatLeavesTheSettingsIsLeftAlone()
+    {
+        ProdBehindItsFrontDoor();
+        var folder = DeployFolderWith(settings => ((JsonObject)settings["environments"]!["prod"]!).Remove("dnsZone"));
+
+        var result = await DeployAsync("prod", deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.DoesNotContain(Calls(), call => call.Contains("-dns", StringComparison.Ordinal));
+        Assert.DoesNotContain(Calls(), call => call.Contains("delete", StringComparison.OrdinalIgnoreCase) && !call.Contains("--action-on-unmanage deleteResources --deny-settings-mode denyWriteAndDelete", StringComparison.Ordinal));
+        Assert.EndsWith("PASS the Front Door's cache is emptied: readers get release 1.2.3", result.Output.TrimEnd(), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task AZoneForAnEnvironmentWithoutAFrontDoorHoldsTheRecordsOfTheInventoryOnly()
+    {
+        ExpressEnvironment("cae-jpcom-tdd-eus2");
+        ProdBehindItsFrontDoor();
+        var folder = DeployFolderWith(settings => settings["environments"]!["tdd"]!["dnsZone"] = "example.org");
+
+        var result = await DeployAsync("tdd", deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Equal("example.org", ZoneParameters().GetProperty("zoneName").GetProperty("value").GetString());
+        Assert.Empty(Texts(ZoneParameters(), "hostLabels"));
+        Assert.Equal(string.Empty, ZoneParameters().GetProperty("frontDoorEndpointId").GetProperty("value").GetString());
+        Assert.DoesNotContain(Calls(), call => call.StartsWith("resource invoke-action", StringComparison.Ordinal));
+        Assert.Contains("PASS stack-jpcom-tdd-dns: the zone example.org holds its records", result.Output, StringComparison.Ordinal);
+    }
+
+    /// <summary>The zone is applied once more after a failure of the platform, as the site's stack is.</summary>
+    [Fact]
+    public async Task AZoneThatFailsOnceIsAppliedOnceMore()
+    {
+        ProdBehindItsFrontDoor();
+        File.WriteAllText(Path.Join(_state, "dns-fails-once"), PlatformError);
+
+        var result = await DeployAsync("prod");
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Equal(2, Calls().Count(call => call.StartsWith("stack group create --name stack-jpcom-prod-dns", StringComparison.Ordinal)));
+        Assert.Single(Calls(), call => call.StartsWith("stack group create --name stack-jpcom-prod-web", StringComparison.Ordinal));
+        Assert.Contains("PASS stack-jpcom-prod-dns: the zone jeffreypalermo.com holds its records (at the second attempt). Its name servers:", result.Output, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// The zone is the last step: when Azure fails it, the site already runs the release and readers get it. The
+    /// deployment fails and says that only the zone is not as the settings say.
+    /// </summary>
+    [Fact]
+    public async Task AZoneThatFailsTwiceFailsTheDeploymentAfterTheSiteIsReleased()
+    {
+        ProdBehindItsFrontDoor();
+        File.WriteAllText(Path.Join(_state, "dns-fails"), PlatformError);
+
+        var result = await DeployAsync("prod");
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Contains("PASS stack-jpcom-prod-web: release 1.2.3", result.Output, StringComparison.Ordinal);
+        Assert.Contains("PASS the Front Door's cache is emptied: readers get release 1.2.3", result.Output, StringComparison.Ordinal);
+        Assert.Contains("FAIL stack-jpcom-prod-dns was not applied, in two attempts 0 seconds apart.", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  The site runs release 1.2.3, and readers get it. Only the DNS zone jeffreypalermo.com is not as the settings say.", result.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("Its name servers", result.Output, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Azure can refuse a kind of resource for a subscription, and only a request tells: the DNS provider that is
+    /// not registered, a policy. That is refused again, so it is not tried again.
+    /// </summary>
+    [Theory]
+    [InlineData("(MissingSubscriptionRegistration) The subscription is not registered to use namespace 'Microsoft.Network'.", "MissingSubscriptionRegistration")]
+    [InlineData("(RequestDisallowedByPolicy) Resource 'jeffreypalermo.com' was disallowed by policy.", "RequestDisallowedByPolicy")]
+    public async Task AZoneAzureRefusesIsNotAppliedAgain(string said, string error)
+    {
+        ProdBehindItsFrontDoor();
+        File.WriteAllText(Path.Join(_state, "dns-fails"), said);
+
+        var result = await DeployAsync("prod", retryPauseSeconds: 60);
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Single(Calls(), call => call.StartsWith("stack group create --name stack-jpcom-prod-dns", StringComparison.Ordinal));
+        Assert.Contains($"FAIL stack-jpcom-prod-dns was not applied (exit code 1). Not tried again: no second attempt changes {error}.", result.Output, StringComparison.Ordinal);
+        Assert.Contains("PASS the Front Door's cache is emptied", result.Output, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("""{ "outputs": { "nameServers": { "value": [] } } }""")]
+    [InlineData("""{ "outputs": { } }""")]
+    [InlineData("""{ "outputs": null }""")]
+    public async Task AZoneThatDoesNotSayItsNameServersFailsTheDeployment(string shown)
+    {
+        ProdBehindItsFrontDoor();
+        File.WriteAllText(Path.Join(_state, "dns-show.json"), shown);
+
+        var result = await DeployAsync("prod");
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Contains("FAIL stack-jpcom-prod-dns is applied, but it does not say which name servers the zone jeffreypalermo.com has", result.Output, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("https://jeffreypalermo.com")]
+    [InlineData("jeffreypalermo")]
+    [InlineData("*.jeffreypalermo.com")]
+    [InlineData("jeffreypalermo.com.")]
+    public async Task ATextThatIsNotADomainNameForTheZoneStopsTheDeploymentBeforeAzureIsAsked(string zone)
+    {
+        var folder = DeployFolderWith(settings => settings["environments"]!["prod"]!["dnsZone"] = zone);
+
+        var result = await DeployAsync("prod", deployFolder: folder);
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Contains($"FAIL the DNS zone of 'prod' in settings.json, '{zone}', is not a domain name; nothing was deployed", result.Output, StringComparison.Ordinal);
+        Assert.Empty(Calls());
+    }
+
     [Fact]
     public async Task AnEnvironmentTheSettingsDoNotNameFails()
     {
@@ -664,20 +910,64 @@ public sealed class DeployScriptTests : IDisposable
     /// The <c>deploy/</c> folder as the release's package carries it, with host names for one environment: what the
     /// repository will hold on the day of the DNS move (ADR-0014). Today its settings name none.
     /// </summary>
-    private string DeployFolderWithHostNames(string environment, params string[] hostNames)
+    private string DeployFolderWithHostNames(string environment, params string[] hostNames) =>
+        DeployFolderWith(settings => settings["environments"]![environment]!["hostNames"] = new JsonArray([.. hostNames.Select(name => JsonValue.Create(name))]));
+
+    /// <summary>The <c>deploy/</c> folder as the release's package carries it, with its settings changed for a test.</summary>
+    private string DeployFolderWith(Action<JsonNode> change)
     {
         var folder = Path.Join(_state, "deploy");
-        Directory.CreateDirectory(Path.Join(folder, "infra"));
         var source = Path.Join(TestPaths.RepositoryRoot, "deploy");
-        foreach (var file in (string[])["deploy.ps1", "test-site.ps1", "settings.json", Path.Join("infra", "main.bicep"), Path.Join("infra", "custom-domains.bicep")])
+        foreach (var file in Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories))
         {
-            File.Copy(Path.Join(source, file), Path.Join(folder, file), overwrite: true);
+            var copy = Path.Join(folder, Path.GetRelativePath(source, file));
+            Directory.CreateDirectory(Path.GetDirectoryName(copy)!);
+            File.Copy(file, copy, overwrite: true);
         }
 
         var settings = JsonNode.Parse(File.ReadAllText(Path.Join(folder, "settings.json")))!;
-        settings["environments"]![environment]!["hostNames"] = new JsonArray([.. hostNames.Select(name => JsonValue.Create(name))]);
+        change(settings);
         File.WriteAllText(Path.Join(folder, "settings.json"), settings.ToJsonString());
         return folder;
+    }
+
+    private const string ProdEndpointId = "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/rg-test/providers/Microsoft.Cdn/profiles/afd-jpcom-prod/afdEndpoints/jpcom-prod";
+
+    private static readonly string[] NameServers = ["ns1-04.azure-dns.com.", "ns2-04.azure-dns.net.", "ns3-04.azure-dns.org.", "ns4-04.azure-dns.info."];
+
+    /// <summary>
+    /// prod as it is after an earlier deployment: its eleven regions, a stack that names one of them (the stand-in),
+    /// the Front Door and these custom domains, and a DNS zone that has its four name servers.
+    /// </summary>
+    private void ProdBehindItsFrontDoor(params string[] domains)
+    {
+        foreach (var code in (string[])["eus2", "wus2", "brs", "gwc", "uks", "zan", "uan", "inc", "sea", "jpe", "aue"])
+        {
+            ExpressEnvironment($"cae-jpcom-prod-{code}");
+        }
+
+        File.WriteAllText(Path.Join(_state, "stack-show.json"), $$"""
+            { "outputs": {
+                "regions": { "value": [ { "code": "eus2", "location": "eastus2", "app": "ca-jpcom-prod-web-eus2", "url": "{{_region.Url}}" } ] },
+                "frontDoorUrl": { "value": "https://jpcom-prod-d8e7.z02.azurefd.net" },
+                "frontDoorEndpointId": { "value": "{{ProdEndpointId}}" },
+                "hostNames": { "value": [ {{string.Join(',', domains).Replace("jpcom-uat-abc123.z02.azurefd.net", "jpcom-prod-d8e7.z02.azurefd.net", StringComparison.Ordinal)}} ] } } }
+            """);
+        File.WriteAllText(Path.Join(_state, "dns-show.json"), $$"""
+            { "outputs": {
+                "nameServers": { "value": [ {{string.Join(", ", NameServers.Select(server => $"\"{server}\""))}} ] },
+                "zoneId": { "value": "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/rg-test/providers/Microsoft.Network/dnsZones/jeffreypalermo.com" } } }
+            """);
+    }
+
+    private JsonElement ZoneParameters() =>
+        JsonDocument.Parse(File.ReadAllText(Path.Join(_state, "dns-parameters.json"))).RootElement.GetProperty("parameters");
+
+    private static string[] Texts(JsonElement parameters, string name)
+    {
+        var value = parameters.GetProperty(name).GetProperty("value");
+        Assert.Equal(JsonValueKind.Array, value.ValueKind);
+        return [.. value.EnumerateArray().Select(item => item.GetString()!)];
     }
 
     /// <summary>What the stack says about a host name's custom domain, as an item of its output <c>hostNames</c>.</summary>
