@@ -11,6 +11,43 @@ public sealed record ArchiveMonth(int Year, int Month, int PostCount);
 /// <summary>A term and how many visible posts carry it.</summary>
 public sealed record TermUsage(Term Term, int PostCount);
 
+/// <summary>
+/// One entry of a list that holds posts and pages alike: what a search finds. Exactly one of <see cref="Post"/> and
+/// <see cref="Page"/> is set.
+/// </summary>
+public sealed record Entry
+{
+    private Entry(Post? post, Page? page)
+    {
+        Post = post;
+        Page = page;
+    }
+
+    public Post? Post { get; }
+
+    public Page? Page { get; }
+
+    public string Title => Post?.Title ?? Page!.Title;
+
+    /// <summary>The address of the post or the page.</summary>
+    public string Path => Post?.Permalink.Path ?? Page!.Path;
+
+    /// <summary>What a list orders by, newest first; null for a page without a date.</summary>
+    public DateTime? PublishedUtc => Post?.PublishedUtc ?? Page!.PublishedUtc;
+
+    public static Entry Of(Post post)
+    {
+        ArgumentNullException.ThrowIfNull(post);
+        return new(post, null);
+    }
+
+    public static Entry Of(Page page)
+    {
+        ArgumentNullException.ThrowIfNull(page);
+        return new(null, page);
+    }
+}
+
 /// <summary>A comment with the replies to it.</summary>
 public sealed record CommentNode(Comment Comment, IReadOnlyList<CommentNode> Replies);
 

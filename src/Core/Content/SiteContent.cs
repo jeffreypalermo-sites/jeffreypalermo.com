@@ -189,29 +189,34 @@ public sealed class SiteContent
     }
 
     /// <summary>
-    /// One page of the visible posts that have every word of <paramref name="text"/> in the title or the body, ignoring
-    /// case. Ordered as WordPress ordered its search: the whole phrase in the title, then every word in the title, then
-    /// the rest; newest first within each. The body is matched as stored, markup included, as WordPress did.
+    /// One page of the visible posts and the pages that have every word of <paramref name="text"/> in the title or the
+    /// body, ignoring case. Ordered as WordPress ordered its search: the whole phrase in the title, then every word in
+    /// the title, then the rest; newest first within each, a page taking its place among the posts by the day it was
+    /// published (a page without a date comes last). The body is matched as stored, markup included, as WordPress did.
     /// </summary>
-    public PagedList<Post> Search(DateTime utcNow, string text, int page)
+    public PagedList<Entry> Search(DateTime utcNow, string text, int page)
     {
         ArgumentNullException.ThrowIfNull(text);
         ArgumentOutOfRangeException.ThrowIfLessThan(page, 1);
         var words = text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
         if (words.Length == 0)
         {
-            return new PagedList<Post>([], page, PageSize, 0);
+            return new PagedList<Entry>([], page, PageSize, 0);
         }
 
         var phrase = string.Join(' ', words);
         static bool Has(string content, string word) => content.Contains(word, StringComparison.OrdinalIgnoreCase);
-        int Rank(Post post) => Has(post.Title, phrase) ? 0 : words.All(w => Has(post.Title, w)) ? 1 : 2;
+        bool Matches(string title, string body) => words.All(w => Has(title, w) || Has(body, w));
+        int Rank(Entry entry) => Has(entry.Title, phrase) ? 0 : words.All(w => Has(entry.Title, w)) ? 1 : 2;
 
-        // Posts are already newest first and OrderBy is stable, so each rank keeps that order.
-        List<Post> matching = [.. Posts
-            .Where(p => p.IsVisibleAt(utcNow) && words.All(w => Has(p.Title, w) || Has(p.HtmlBody, w)))
-            .OrderBy(Rank)];
-        return new PagedList<Post>([.. matching.Skip((page - 1) * PageSize).Take(PageSize)], page, PageSize, matching.Count);
+        // Posts are already newest first and the ordering is stable, so posts of one instant keep their order.
+        List<Entry> matching = [.. Posts
+            .Where(p => p.IsVisibleAt(utcNow) && Matches(p.Title, p.HtmlBody))
+            .Select(Entry.Of)
+            .Concat(Pages.Where(p => Matches(p.Title, p.HtmlBody)).Select(Entry.Of))
+            .OrderBy(Rank)
+            .ThenByDescending(entry => entry.PublishedUtc ?? DateTime.MinValue)];
+        return new PagedList<Entry>([.. matching.Skip((page - 1) * PageSize).Take(PageSize)], page, PageSize, matching.Count);
     }
 
     private static List<string> Validate(
@@ -267,6 +272,9 @@ public sealed class SiteContent
                 errors.Add($"{where}: unknown author '{post.AuthorSlug}'");
             }
 
+            errors.AddRange(Shortcodes.FindLiteral(post.HtmlBody).Select(shortcode => ShortcodeInBody(where, shortcode)));
+            errors.AddRange(Shortcodes.FindLiteral(post.Excerpt ?? string.Empty).Select(shortcode => ShortcodeInExcerpt(where, shortcode)));
+
             var commentIds = post.Comments.Select(c => c.Id).ToHashSet();
             errors.AddRange(post.Comments
                 .Where(c => c.Parent != 0 && !commentIds.Contains(c.Parent))
@@ -284,6 +292,9 @@ public sealed class SiteContent
             {
                 errors.Add($"{page.Path}: page path must start and end with '/'");
             }
+
+            errors.AddRange(Shortcodes.FindLiteral(page.HtmlBody).Select(shortcode => ShortcodeInBody(page.Path, shortcode)));
+            errors.AddRange(Shortcodes.FindLiteral(page.Excerpt ?? string.Empty).Select(shortcode => ShortcodeInExcerpt(page.Path, shortcode)));
         }
 
         foreach (var attachment in attachments)
@@ -330,6 +341,13 @@ public sealed class SiteContent
 
         return errors;
     }
+
+    // Comments are not checked: WordPress never rendered a shortcode in a comment, and the comments are an archive.
+    private static string ShortcodeInBody(string where, string shortcode) =>
+        $"{where}: the body shows the WordPress shortcode {shortcode} as text. Nothing renders shortcodes here: replace it with HTML, or put it inside <code> if it is a sample";
+
+    private static string ShortcodeInExcerpt(string where, string shortcode) =>
+        $"{where}: the excerpt shows the WordPress shortcode {shortcode} as text. Take it out of the excerpt";
 
     private static bool IsRootedDirectoryPath(string path) =>
         path.Length > 1 && path[0] == '/' && path[^1] == '/';

@@ -9,6 +9,9 @@ internal sealed class StubHttpHandler(Func<HttpRequestMessage, HttpResponseMessa
 {
     public ConcurrentQueue<string> Requests { get; } = new();
 
+    /// <summary>Every request with its host, for tests that ask more than one.</summary>
+    public ConcurrentQueue<string> Addresses { get; } = new();
+
     public static HttpResponseMessage Json(string json, int? totalPages = null)
     {
         var response = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(json, Encoding.UTF8, "application/json") };
@@ -32,6 +35,7 @@ internal sealed class StubHttpHandler(Func<HttpRequestMessage, HttpResponseMessa
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         Requests.Enqueue(request.RequestUri!.PathAndQuery);
+        Addresses.Enqueue(request.RequestUri.AbsoluteUri);
         return Task.FromResult(respond(request));
     }
 }

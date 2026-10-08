@@ -64,8 +64,8 @@ internal static class ContentEndpoints
         {
             var text = string.Join(' ', (q ?? string.Empty).Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
             var number = int.TryParse(page, NumberStyles.None, CultureInfo.InvariantCulture, out var asked) && asked > 1 ? asked : 1;
-            var posts = site.Search(clock.UtcNow, text, number);
-            return number > 1 && posts.Items.Count == 0 ? Pages.NotFound() : Pages.Render<ListingPage>(Listings.Search(options.Value, text, posts));
+            var found = site.Search(clock.UtcNow, text, number);
+            return number > 1 && found.Items.Count == 0 ? Pages.NotFound() : Pages.Render<ListingPage>(Listings.Search(options.Value, text, found));
         });
 
         // Pages (/about/) and attachment pages (/slug/ or /yyyy/mm/post/slug/) have no fixed shape.

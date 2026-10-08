@@ -12,7 +12,7 @@ See [MODERNIZATION-PLAN.md](MODERNIZATION-PLAN.md) for the analysis, options con
 | `src/Core` | Domain: content records, legacy URL classification, slug normalization. No dependencies. |
 | `src/Infrastructure` | Loads `content/` into the domain (front matter, Markdown, archives); URL contract file format. |
 | `src/UI.Server` | ASP.NET Core host: legacy-URL middleware, pages (Razor components in `Components/`, the stylesheet and fonts in `wwwroot/_assets/`), feeds, sitemaps, composition root. |
-| `tools/WpMigrator` | One-time WordPress.com → git migration. Done: the site is frozen ([ADR-0010](docs/adr/0010-the-wordpress-site-is-frozen.md)). |
+| `tools/WpMigrator` | One-time WordPress.com → git migration. Done: the site is frozen ([ADR-0010](docs/adr/0010-the-wordpress-site-is-frozen.md)). Its `localize` command still works on `content/` as it is. |
 | `tools/UrlContract` | Captures how the live WordPress site answers every known URL. |
 | `content/` | Posts, pages, comments, archive metadata, and uploads. **Publishing = merging a PR.** |
 | `migration/raw/` | The WordPress REST snapshot that `content/` was generated from. |
@@ -31,6 +31,15 @@ Comments live beside their post as `{slug}.comments.json` and keep their WordPre
 Required front matter for a post: `title`, `slug`, `permalink` (`/yyyy/mm/slug/`, matching the file path and `date`),
 `date` (local), `date_utc`, and `author`. Content that breaks a rule fails the build with every problem listed
 (see `SiteContent` in `src/Core`). Large binaries under `content/uploads/` (video, PDF, zip) are stored with Git LFS.
+
+Two rules are about what a body holds:
+
+- **No WordPress shortcode as text.** Nothing renders `[podcast src="…"]` or `[gallery]` here, so a reader would see
+  it as typed. Write HTML instead; a sample of a shortcode goes inside `<code>` or `<pre>` (`Shortcodes` in `src/Core`).
+- **Nothing loaded from another host**, except the reviewed leftovers `FileSystemContentSourceTests` lists with
+  their reasons. A picture on another host is copied into the repository by `localize` (below). A recording is
+  played by `<audio controls preload="none">` or `<video controls preload="none">`, which asks its host for nothing
+  until the reader presses play ([ADR-0015](docs/adr/0015-recordings-wait-for-the-reader.md)).
 
 ## Migration (done)
 
@@ -53,6 +62,24 @@ source first: Photon's cache, the original host, then the Wayback Machine.
 `migration/uploads-manifest.missing.txt` lists the files no source has: 44 uploads already broken on the live site
 (lost in a 2018 import) and 67 images from hosts that are gone. `media` is re-runnable, so a file that turns up later
 is picked up by running it again.
+
+One command works on `content/` as it is, frozen or not, and changes nothing in it but addresses:
+
+```bash
+dotnet run --project tools/WpMigrator -- localize content migration/uploads-manifest.txt
+```
+
+`localize` finds what post, page and comment bodies load from other hosts (`img`, `srcset`, `source`, CSS `url()`,
+`link`, `script`, frames, recordings). It fetches each image into `content/uploads/external/{host}{path}`, points
+the body at the copy and adds the file to the manifest. An address without an image file name
+(`original.aspx`, `images?q=tbn:…`) is named after its path and query and takes the extension of the file that came.
+It looks where `media` looks, and then asks the Wayback Machine's index for the newest capture that was an image,
+because the newest capture of a dead address is the page that says so. It asks each host once every two seconds
+with a browser's User-Agent. What it cannot copy (a frame, an image no source has) it leaves and prints with the
+reason. On 2026-10-07 it found 20: 8 images and 12 frames. It fetched 4 images (2 from their host, 2 from the
+Wayback Machine), 41,634 bytes in all. One more, a badge that only ever existed on the author's machine, was
+pointed by hand at the identical file already in the repository. 3 images and the 12 frames stay; the test that
+pins them says why. A second run fetches nothing it already has and changes no file.
 
 ## Run the site locally
 
@@ -83,24 +110,26 @@ dotnet test JeffreyPalermo.slnx -c Release
 The build treats warnings as errors.
 
 - **Unit tests:** URL classification and resolution, slug normalization, the domain's invariants and queries
-  (previous and next post, archive months, terms in use, search, comment threads), how pages word things (dates,
+  (previous and next post, archive months, terms in use, search over posts and pages, comment threads), which bracketed text is a shortcode, how pages word things (dates,
   headings, titles, page addresses, the tag cloud), front matter round-trips, content layout, HTML cleaning, link
-  rewriting, contract file format, the Onion dependency rule, the delivery system's contract in `build.yml`,
+  rewriting, what a body loads from another host and where its copy is kept, contract file format, the Onion dependency rule, the delivery system's contract in `build.yml`,
   how the facts of a build reach the image and which file `/_build` believes, and what each kind of answer says
   to the caches.
 - **Integration tests:** the real `content/` tree loaded into the domain; the site in-process: every kind of page in
   the site layout, a crawl from `/` that must reach all 966 posts by following links, and a replay of all 9,337 URLs
   of `url-contract.tsv`; the fetch → convert → media pipeline and the URL prober against a stubbed WordPress HTTP
-  server and the real file system; the `Cache-Control` of every kind of answer; the scripts run for real,
+  server and the real file system; `localize` against stand-ins for Photon, the hosts and the Wayback Machine,
+  writing to a temp content tree; the `Cache-Control` of every kind of answer; the scripts run for real,
   `scripts/Write-BuildFacts.ps1` and `deploy/deploy.ps1` (against a stand-in for the Azure CLI) among them.
 - **Full-system tests** (`tests/AcceptanceTests`, need Docker): the published app as a real process, and the container
   image built from the `Dockerfile` and run with `docker run`. Each replays the URL contract over real HTTP. The
   image is built as the Build builds it, the facts of the build first, and must answer them at `/_build`. It must
   tell the caches how long to keep each kind of answer, and never to keep health, version or build. A real
   browser (Chromium, driven by Playwright for .NET) then reads the container's site as a reader would: home, a post,
-  older and newer, the sidebar, search, a page that is not found, a phone-sized screen, the keyboard. Requests to any
-  other host are refused and fail the test. Set `JPCOM_IMAGE` to test an image that is already built, as the Build
-  workflow does.
+  older and newer, the sidebar, search (which finds the About page too), posts whose pictures came from other
+  hosts, a podcast post and a video post whose players wait for the reader, a page that is not found, a phone-sized
+  screen, the keyboard. Requests to any other host are refused and fail the test. Set `JPCOM_IMAGE` to test an image
+  that is already built, as the Build workflow does.
 
 The browser tests use the Chromium build of their Playwright version (1.58: `chromium-1208` under
 `~/.cache/ms-playwright`). Where it is missing they download it once. To install it beforehand:

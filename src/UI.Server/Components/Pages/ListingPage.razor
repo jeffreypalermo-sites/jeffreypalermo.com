@@ -1,4 +1,5 @@
-@* Home, date archives, term archives and search results: a heading and up to ten posts, newest first. *@
+@* Home, date archives, term archives and search results: a heading and up to ten posts, newest first. A search finds
+   pages as well. *@
 <SiteLayout Title="@Model.Title" CanonicalPath="@Model.CanonicalPath" BodyClass="@Model.Kind" Index="@(!Model.IsSearch)">
     <header class="page-header">
         @if (Model.Subject is null)
@@ -11,12 +12,19 @@
         }
     </header>
 
-    @foreach (var post in Model.Posts.Items)
+    @foreach (var entry in Model.Entries.Items)
     {
-        <PostArticle Post="post" Summary="Model.IsSearch" />
+        if (entry.Post is { } post)
+        {
+            <PostArticle Post="post" Summary="Model.IsSearch" />
+        }
+        else if (entry.Page is { } found)
+        {
+            <PageArticle Model="found" />
+        }
     }
 
-    @if (Model.Posts.Items.Count == 0)
+    @if (Model.Entries.Items.Count == 0)
     {
         <article class="post no-results">
             @if (Model.SearchText is { Length: > 0 })

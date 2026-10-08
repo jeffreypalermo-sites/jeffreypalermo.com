@@ -15,5 +15,6 @@
 | [0011](0011-the-systems-dashboard-reads-the-site.md) | The system's health dashboard reads the site from the browser | Accepted |
 | [0012](0012-the-site-publishes-its-build-facts.md) | The site publishes the facts of its build: the Build writes them, the image carries them, `/_build` answers them | Accepted |
 | [0013](0013-the-front-door-keeps-the-sites-answers.md) | The Front Door keeps the site's answers at its edge (a browser 5 minutes, the edge 7 days); a deployment empties it; a failed step against Azure is run once more | Accepted |
+| [0015](0015-recordings-wait-for-the-reader.md) | A recording is played by the browser's own player, which waits for the reader; a link to the file beside it | Accepted |
 
 The overall design is in [docs/architecture](../architecture/README.md).
