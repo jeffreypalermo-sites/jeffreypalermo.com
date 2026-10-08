@@ -79,8 +79,9 @@ because the newest capture of a dead address is the page that says so. It asks e
 with a browser's User-Agent. What it cannot copy (a frame, an image no source has) it leaves and prints with the
 reason. On 2026-10-07 it found 20: 8 images and 12 frames. It fetched 4 images (2 from their host, 2 from the
 Wayback Machine), 41,634 bytes in all. One more, a badge that only ever existed on the author's machine, was
-pointed by hand at the identical file already in the repository. 3 images and the 12 frames stay; the test that
-pins them says why. A second run fetches nothing it already has and changes no file.
+pointed by hand at the identical file already in the repository. 3 images and 11 of the 12 frames stay; the test
+that pins them says why. The twelfth frame was Libsyn's player in episode 001 of the podcast, which has the
+browser's own player since 2026-10-08. A second run fetches nothing it already has and changes no file.
 
 ## Run the site locally
 
@@ -130,7 +131,7 @@ The build treats warnings as errors.
   tell the caches how long to keep each kind of answer, and never to keep health, version or build. A real
   browser (Chromium, driven by Playwright for .NET) then reads the container's site as a reader would: home, a post,
   older and newer, the sidebar, search (which finds the About page too), posts whose pictures came from other
-  hosts, a podcast post and a video post whose players wait for the reader, a page that is not found, a phone-sized
+  hosts, two podcast posts and a video post whose players wait for the reader, a page that is not found, a phone-sized
   screen, the keyboard. Requests to any other host are refused and fail the test. Set `JPCOM_IMAGE` to test an image
   that is already built, as the Build workflow does.
 

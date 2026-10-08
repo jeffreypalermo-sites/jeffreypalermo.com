@@ -288,6 +288,34 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         Assert.Empty(visit.FailedRequests);
     }
 
+    /// <summary>
+    /// Episode 001 of the podcast is the one post where WordPress had rendered the Libsyn player, as a frame that
+    /// asked Libsyn for a page with every view. It has the same player as the other episodes now (ADR-0015).
+    /// </summary>
+    [Fact]
+    public async Task TheFirstPodcastEpisodeHasThePlayerOfTheOthersAndNoFrame()
+    {
+        const string recording = "https://traffic.libsyn.com/secure/azuredevops/ADO_001_Final.mp3";
+        await using var visit = await chromium.VisitAsync(site.BaseAddress);
+        var page = visit.Page;
+
+        var response = await page.GotoAsync("/2018/09/buck-hodges-on-the-introduction-to-azure-devops-services-episode-001/");
+        await visit.EvaluateAsync<int>(LoadEveryPicture);
+
+        Assert.Equal(200, response!.Status);
+        var body = page.Locator("main article.post .entry-content");
+        var player = body.Locator("audio");
+        await Assertions.Expect(player).ToHaveCountAsync(1);
+        await Assertions.Expect(player).ToBeVisibleAsync();
+        await Assertions.Expect(player).ToHaveAttributeAsync("src", recording);
+        Assert.True(await player.EvaluateAsync<bool>("audio => audio.controls && audio.preload === 'none' && !audio.autoplay && audio.readyState === 0 && audio.paused"), "The player did not wait for the reader.");
+        await Assertions.Expect(body.GetByRole(AriaRole.Link, new() { Name = "Download this episode" })).ToHaveAttributeAsync("href", recording);
+        await Assertions.Expect(body).ToContainTextAsync("(MP3, 43:12, 42.2 MB)");
+        await Assertions.Expect(body.Locator("iframe, script")).ToHaveCountAsync(0);
+        Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
+    }
+
     /// <summary>This post showed <c>[podcast src=”…”]</c> as text. Its video is a file of the site, played by the browser.</summary>
     [Fact]
     public async Task AVideoEpisodePlaysTheSitesOwnFileAndFetchesNoneOfItBeforeTheReaderPlays()

@@ -56,5 +56,7 @@ Checked on 2026-10-07, one request each:
 - The content security policy (architecture §7, build step 5) must allow the hosts recordings play from:
   `media-src 'self' https://traffic.libsyn.com https://content.libsyn.com https://web.archive.org`. Libsyn answers
   `traffic.libsyn.com` with a redirect to `content.libsyn.com`.
-- Episode 001 of the podcast is the one post where WordPress rendered the Libsyn frame. It still has the frame and
-  is on the reviewed list of what bodies load from other hosts. The same markup would replace it.
+- Episode 001 of the podcast is the one post where WordPress rendered the Libsyn frame. Since 2026-10-08 it has the
+  same markup as the others: `ADO_001_Final.mp3` on Libsyn (43:12, 42.2 MB), which answers as the six others do.
+  No post has Libsyn's player in a frame any more, and the reviewed list of what bodies load from other hosts no
+  longer names it.

@@ -51,7 +51,6 @@ public sealed class FileSystemContentSourceTests : IDisposable
     /// </summary>
     private static readonly (SubresourceKind Kind, string Address, string Why)[] ReviewedOffSiteSubresources =
     [
-        (SubresourceKind.Frame, "//html5-player.libsyn.com/embed/episode/id/7018689/height/100/width/480/thumbnail/yes/render-playlist/no/theme/custom/tdest_id/800580/custom-color/0072be", AVideoFrame),
         (SubresourceKind.Image, "http://vstsmn.net/photos/images/images/86/secondarythumb.aspx", "no source has it: the host belongs to someone else now and answers with a page; the Wayback Machine has no capture"),
         (SubresourceKind.Image, "http://weblogs.asp.net/grantri/aggbug/226386.aspx", "no source has it: the view counter of another blog; the host answers 404 and the Wayback Machine's one capture is a page"),
         (SubresourceKind.Image, "http://www.google.com/mapdata", "no source has it: a map Google drew on request; the host answers 404 and the Wayback Machine has no capture"),
@@ -83,9 +82,11 @@ public sealed class FileSystemContentSourceTests : IDisposable
         Assert.Equal(ReviewedOffSiteSubresources.Select(reviewed => (reviewed.Kind, reviewed.Address)), offSite);
         Assert.All(ReviewedOffSiteSubresources, reviewed => Assert.False(string.IsNullOrWhiteSpace(reviewed.Why), $"{reviewed.Address} has no reason."));
 
-        // Three images and twelve frames. Nothing a page shows comes through WordPress.com's image CDN, which stops
+        // Three images and eleven frames: ten videos on YouTube and one on Vimeo. No post has Libsyn's player in a
+        // frame any more (ADR-0015). Nothing a page shows comes through WordPress.com's image CDN, which stops
         // serving this site's pictures when the WordPress.com account is closed.
-        Assert.Equal((3, 12), (offSite.Count(s => s.Kind == SubresourceKind.Image), offSite.Count(s => s.Kind == SubresourceKind.Frame)));
+        Assert.Equal((3, 11), (offSite.Count(s => s.Kind == SubresourceKind.Image), offSite.Count(s => s.Kind == SubresourceKind.Frame)));
+        Assert.DoesNotContain(offSite, subresource => subresource.Address.Contains("libsyn", StringComparison.OrdinalIgnoreCase));
         Assert.DoesNotContain(offSite, subresource => subresource.Address.Contains(".wp.com/", StringComparison.OrdinalIgnoreCase));
     }
 
