@@ -14,12 +14,15 @@ public sealed partial class RunbookTests
 
     private static readonly string Deploy = File.ReadAllText(Path.Join(TestPaths.RepositoryRoot, "deploy", "deploy.ps1"));
 
+    /// <summary><c>docs/runbooks/environment-host-names.md</c>: the environments' own names in jeffreypalermo.ceo (ADR-0018).</summary>
+    private static readonly string HostNames = File.ReadAllText(Path.Join(TestPaths.RepositoryRoot, "docs", "runbooks", "environment-host-names.md"));
+
     /// <summary>The command blocks of the runbook, each without the list indentation it stands in.</summary>
     public static TheoryData<int, string> CommandBlocks()
     {
         var blocks = new TheoryData<int, string>();
         var number = 0;
-        foreach (Match block in BashBlock().Matches(Runbook))
+        foreach (Match block in BashBlock().Matches(Runbook).Concat(BashBlock().Matches(HostNames)))
         {
             var indent = block.Groups["indent"].Value;
             var lines = block.Groups["body"].Value.Split('\n').Select(line => line.StartsWith(indent, StringComparison.Ordinal) ? line[indent.Length..] : line);
@@ -56,12 +59,15 @@ public sealed partial class RunbookTests
     [Fact]
     public void EveryPlaceholderInACommandIsExplained()
     {
-        var used = BashBlock().Matches(Runbook).SelectMany(block => Placeholder().Matches(block.Groups["body"].Value)).Select(match => match.Value).Distinct().ToList();
+        Assert.All((string[])[Runbook, HostNames], runbook =>
+        {
+            var used = BashBlock().Matches(runbook).SelectMany(block => Placeholder().Matches(block.Groups["body"].Value)).Select(match => match.Value).Distinct().ToList();
 
-        Assert.NotEmpty(used);
-        Assert.All(used, placeholder => Assert.True(
-            Runbook.Contains($"| `{placeholder}`", StringComparison.Ordinal) || (placeholder == "<ns1>" && Runbook.Contains("| `<ns1>` … `<ns4>`", StringComparison.Ordinal)),
-            $"The runbook uses {placeholder} in a command and does not say what it is."));
+            Assert.NotEmpty(used);
+            Assert.All(used, placeholder => Assert.True(
+                runbook.Contains($"| `{placeholder}`", StringComparison.Ordinal) || (placeholder == "<ns1>" && runbook.Contains("| `<ns1>` … `<ns4>`", StringComparison.Ordinal)),
+                $"The runbook uses {placeholder} in a command and does not say what it is."));
+        });
     }
 
     /// <summary>The runbook's table of today's DNS is the inventory: every value that was read is in it.</summary>
@@ -100,24 +106,59 @@ public sealed partial class RunbookTests
         Assert.Contains("name: replace(host, '.', '-')", File.ReadAllText(Path.Join(TestPaths.RepositoryRoot, "deploy", "infra", "custom-domains.bicep")), StringComparison.Ordinal);
     }
 
-    /// <summary>The rehearsal: the two records a person enters, named as the deployment to uat prints them.</summary>
-    [Fact]
-    public void TheRunbookNamesTheTwoRecordsOfTheRehearsal()
+    /// <summary>
+    /// The environments' own names (ADR-0018; uat's is the rehearsal of the move): for each name the settings list,
+    /// the two records a person enters, named as the deployment prints them.
+    /// </summary>
+    [Theory]
+    [InlineData("uat", "uat.jeffreypalermo.ceo", "uat")]
+    [InlineData("prod", "www.jeffreypalermo.ceo", "www")]
+    public void TheHostNamesRunbookNamesTheTwoRecordsOfEachName(string environment, string hostName, string label)
     {
         using var settings = System.Text.Json.JsonDocument.Parse(File.ReadAllText(Path.Join(TestPaths.RepositoryRoot, "deploy", "settings.json")));
-        var name = Assert.Single(settings.RootElement.GetProperty("environments").GetProperty("uat").GetProperty("hostNames").EnumerateArray()).GetString()!;
+        var name = Assert.Single(settings.RootElement.GetProperty("environments").GetProperty(environment).GetProperty("hostNames").EnumerateArray()).GetString()!;
+
+        Assert.Equal(hostName, name);
+        Assert.Contains($"| TXT | `_dnsauth.{label}` | the token of", HostNames, StringComparison.Ordinal);
+        Assert.Contains($"| CNAME | `{label}` | `jpcom-{environment}-", HostNames, StringComparison.Ordinal);
+        Assert.Contains($"Host names of {environment}: what DNS needs (docs/runbooks/dns-cutover.md). Nothing is changed in DNS by this deployment.", HostNames, StringComparison.Ordinal);
+        Assert.Contains($"  {name}: validation Pending; answered with pages, kept at the edge", HostNames, StringComparison.Ordinal);
+        Assert.Contains($"    TXT    _dnsauth.{name}  \"<token>\" (the token is valid until <date> UTC)", HostNames, StringComparison.Ordinal);
+        Assert.Contains($"    CNAME  {name}  jpcom-{environment}-", HostNames, StringComparison.Ordinal);
+        // A custom domain's name in Azure is its host name with hyphens for dots, as the template names it.
+        Assert.Contains($"customDomains/{name.Replace('.', '-')}", HostNames, StringComparison.Ordinal);
+    }
+
+    /// <summary>What the runbook says about a token and a new one is what the script says.</summary>
+    [Fact]
+    public void TheHostNamesRunbookSaysHowLongATokenLastsAndWhoMakesANewOne()
+    {
+        Assert.Contains("A token is good for seven days", HostNames, StringComparison.Ordinal);
+        Assert.Contains("The Front Door gave a new\ntoken for uat.jeffreypalermo.ceo", HostNames, StringComparison.Ordinal);
+        Assert.Contains("Write-Host \"The Front Door gave a new token for ${name}: its validation was $state.\"", Deploy, StringComparison.Ordinal);
+    }
+
+    /// <summary>The rehearsal of the move is uat's own name: the move's runbook says so and leads to the other.</summary>
+    [Fact]
+    public void TheRehearsalOfTheMoveIsUatsOwnName()
+    {
         var rehearsal = Runbook[Runbook.IndexOf("## Rehearsal in uat", StringComparison.Ordinal)..Runbook.IndexOf("## Before the day", StringComparison.Ordinal)];
 
-        Assert.Equal("uat.jeffreypalermo.com", name);
-        Assert.Contains("| TXT | `_dnsauth.uat` | the token of the `TXT` line, without the quotes |", rehearsal, StringComparison.Ordinal);
-        Assert.Contains("| CNAME | `uat` | the `azurefd.net` name of the `CNAME` line |", rehearsal, StringComparison.Ordinal);
-        Assert.Contains($"    TXT    _dnsauth.{name}  \"<token>\" (the token is valid until <date> UTC)", rehearsal, StringComparison.Ordinal);
-        Assert.Contains($"    CNAME  {name}  <uat endpoint>", rehearsal, StringComparison.Ordinal);
-        Assert.Contains($"customDomains/{name.Replace('.', '-')}", rehearsal, StringComparison.Ordinal);
-        // What the deployment says when it makes a new token, as the script says it.
-        Assert.Contains($"The Front Door gave a new\ntoken for {name}", rehearsal, StringComparison.Ordinal);
-        Assert.Contains("Write-Host \"The Front Door gave a new token for ${name}: its validation was $state.\"", Deploy, StringComparison.Ordinal);
-        Assert.Contains("A token is good for seven days", rehearsal, StringComparison.Ordinal);
+        Assert.Contains("`uat.jeffreypalermo.ceo`", rehearsal, StringComparison.Ordinal);
+        Assert.Contains("[environment-host-names.md](environment-host-names.md)", rehearsal, StringComparison.Ordinal);
+        Assert.True(File.Exists(Path.Join(TestPaths.RepositoryRoot, "docs", "adr", "0018-the-environments-own-names.md")));
+    }
+
+    /// <summary>tdd has no Front Door: its name is a forwarding, and no host name of the settings.</summary>
+    [Fact]
+    public void TddsNameIsAForwardingAndNotAHostNameOfTheSettings()
+    {
+        using var settings = System.Text.Json.JsonDocument.Parse(File.ReadAllText(Path.Join(TestPaths.RepositoryRoot, "deploy", "settings.json")));
+        var tdd = settings.RootElement.GetProperty("environments").GetProperty("tdd");
+
+        Assert.False(tdd.GetProperty("frontDoor").GetBoolean());
+        Assert.False(tdd.TryGetProperty("hostNames", out _));
+        Assert.Contains("| Subdomain `tdd` | `https://", HostNames, StringComparison.Ordinal);
     }
 
     /// <summary>Going back writes the three names as the inventory read them.</summary>

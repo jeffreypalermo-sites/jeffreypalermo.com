@@ -11,7 +11,7 @@
     },
     "uat": {
       "frontDoor": true,
-      "hostNames": ["uat.jeffreypalermo.com"],
+      "hostNames": ["uat.jeffreypalermo.ceo"],
       "regions": [
         { "location": "eastus2", "code": "eus2" },
         { "location": "germanywestcentral", "code": "gwc" }
@@ -19,7 +19,7 @@
     },
     "prod": {
       "frontDoor": true,
-      "hostNames": [],
+      "hostNames": ["www.jeffreypalermo.ceo"],
       "dnsZone": "jeffreypalermo.com",
       "regions": [
         { "location": "eastus2", "code": "eus2" },

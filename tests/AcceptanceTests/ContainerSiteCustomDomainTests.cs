@@ -26,6 +26,8 @@ public sealed partial class ContainerSiteTests
             using var feeds = await AskAsync(client, "feeds.jeffreypalermo.com", "/jeffreypalermo");
             using var endpoint = await AskAsync(client, "jpcom-prod-d8e7htexeqewe0hr.z02.azurefd.net", "/2008/07/the-onion-architecture-part-1/");
             using var stranger = await AskAsync(client, "www.jeffreypalermo.com", "/2008/07/the-onion-architecture-part-1/", frontDoorId: "99999999-0000-0000-0000-000000000000");
+            using var productionsOwn = await AskAsync(client, "www.jeffreypalermo.ceo", "/2008/07/the-onion-architecture-part-1/");
+            using var uatsOwn = await AskAsync(client, "uat.jeffreypalermo.ceo", "/2008/07/the-onion-architecture-part-1/");
 
             Assert.Equal(HttpStatusCode.OK, canonical.StatusCode);
             Assert.Equal("public, max-age=300, s-maxage=604800", Assert.Single(canonical.Headers.NonValidated["Cache-Control"]));
@@ -39,6 +41,13 @@ public sealed partial class ContainerSiteTests
             Assert.Equal(HttpStatusCode.OK, endpoint.StatusCode);
             // A forwarded host is believed from this site's Front Door only.
             Assert.Equal(HttpStatusCode.OK, stranger.StatusCode);
+            // The environments' own names in jeffreypalermo.ceo (ADR-0018) are answered with the pages and kept at
+            // the edge: www. of another domain is not the www. the site redirects.
+            Assert.All((HttpResponseMessage[])[productionsOwn, uatsOwn], own =>
+            {
+                Assert.Equal(HttpStatusCode.OK, own.StatusCode);
+                Assert.Equal("public, max-age=300, s-maxage=604800", Assert.Single(own.Headers.NonValidated["Cache-Control"]));
+            });
         }
         finally
         {

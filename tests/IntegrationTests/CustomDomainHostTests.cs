@@ -59,6 +59,50 @@ public sealed class CustomDomainHostTests : IClassFixture<SiteFactory>, IDisposa
         Assert.Equal(Kept, CacheControl(response));
     }
 
+    /// <summary>Every host name the settings list for an environment, with the environment that lists it.</summary>
+    public static TheoryData<string, string> ListedHostNames()
+    {
+        using var settings = JsonDocument.Parse(File.ReadAllText(Path.Join(TestPaths.RepositoryRoot, "deploy", "settings.json")));
+        var listed = new TheoryData<string, string>();
+        foreach (var environment in settings.RootElement.GetProperty("environments").EnumerateObject())
+        {
+            foreach (var name in environment.Value.TryGetProperty("hostNames", out var names) ? names.EnumerateArray().Select(name => name.GetString()!).ToArray() : [])
+            {
+                listed.Add(environment.Name, name);
+            }
+        }
+
+        return listed;
+    }
+
+    [Fact]
+    public void TheSettingsListAnOwnNameForUatAndForProduction() =>
+        Assert.Equal([("uat", "uat.jeffreypalermo.ceo"), ("prod", "www.jeffreypalermo.ceo")], ListedHostNames().Select(row => ((string)row[0], (string)row[1])));
+
+    /// <summary>
+    /// An environment's own name (ADR-0018) is answered with the pages and kept at the edge, as deploy.ps1 routes it:
+    /// www. of another domain is not the www. the site redirects.
+    /// </summary>
+    [Theory]
+    [MemberData(nameof(ListedHostNames))]
+    public async Task AnEnvironmentsOwnNameIsServedWithThePagesAndKeptAtTheEdge(string environment, string hostName)
+    {
+        using var home = await AskAsync(hostName, "/");
+        using var post = await AskAsync(hostName, Onion);
+        using var feed = await AskAsync(hostName, "/feed/");
+
+        Assert.All((HttpResponseMessage[])[home, post, feed], response =>
+        {
+            Assert.True(response.StatusCode == HttpStatusCode.OK, $"{environment}'s {hostName} answered {(int)response.StatusCode} for {response.RequestMessage?.RequestUri}.");
+            Assert.Equal(Kept, CacheControl(response));
+        });
+        Assert.Equal("text/html", post.Content.Headers.ContentType?.MediaType);
+        // The feed's links lead to the canonical host, whichever name the reader came by.
+        var links = XDocument.Parse(await feed.Content.ReadAsStringAsync()).Descendants("link").Select(link => link.Value).ToList();
+        Assert.NotEmpty(links);
+        Assert.All(links, link => Assert.StartsWith($"https://{CanonicalHost()}/", link, StringComparison.Ordinal));
+    }
+
     [Theory]
     [InlineData(Onion, Onion)]
     [InlineData("/", "/")]

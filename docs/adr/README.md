@@ -15,10 +15,11 @@
 | [0011](0011-the-systems-dashboard-reads-the-site.md) | The system's health dashboard reads the site from the browser | Accepted |
 | [0012](0012-the-site-publishes-its-build-facts.md) | The site publishes the facts of its build: the Build writes them, the image carries them, `/_build` answers them | Accepted |
 | [0013](0013-the-front-door-keeps-the-sites-answers.md) | The Front Door keeps the site's answers at its edge (a browser 5 minutes, the edge 7 days); a deployment empties it; a failed step against Azure is run once more | Accepted |
-| [0014](0014-the-custom-domain-prepared.md) | The custom domain is prepared and switched off: host names per environment in the settings (none in production yet), a custom domain and a managed certificate for each, `www.` and `feeds.` on a route without a cache; the DNS move is a runbook | Accepted |
+| [0014](0014-the-custom-domain-prepared.md) | The custom domain is prepared and switched off: host names per environment in the settings (no name of `jeffreypalermo.com` in production yet), a custom domain and a managed certificate for each, `www.` and `feeds.` on a route without a cache; the DNS move is a runbook | Accepted |
 | [0015](0015-recordings-wait-for-the-reader.md) | A recording is played by the browser's own player, which waits for the reader; a link to the file beside it | Accepted |
 | [0016](0016-the-dns-zone-as-code.md) | The domain's DNS is an Azure DNS zone, as code: every record of the inventory, an alias of the Front Door at the top, a stack of its own that never deletes; created before it is delegated, and delegated by a person | Accepted |
 | [0017](0017-a-picture-leads-to-a-file-or-the-post-says-it-is-gone.md) | A picture on this site leads to a file, or the load fails; the uploads listed as lost are the exception; `recover` finds what the Wayback Machine has, and a picture no source has gives way to a note | Accepted |
+| [0018](0018-the-environments-own-names.md) | Every environment has a name of its own in `jeffreypalermo.ceo`: `www.` for production and `uat.` as custom domains of their Front Doors, `tdd.` as a forwarding at GoDaddy; uat's name is the rehearsal of the DNS move | Accepted |
 
 The overall design is in [docs/architecture](../architecture/README.md). The one runbook is
 [docs/runbooks/dns-cutover.md](../runbooks/dns-cutover.md): moving `jeffreypalermo.com` to the new site.
