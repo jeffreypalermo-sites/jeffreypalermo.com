@@ -7,8 +7,9 @@ namespace JeffreyPalermo.UnitTests.Delivery;
 
 /// <summary>
 /// The custom domain is prepared and switched off (ADR-0014): the settings can list host names, the infrastructure
-/// code and <c>deploy.ps1</c> know what to do with them, and no environment lists one until the DNS of
-/// <c>jeffreypalermo.com</c> moves (<c>docs/runbooks/dns-cutover.md</c>).
+/// code and <c>deploy.ps1</c> know what to do with them, and production lists none until the DNS of
+/// <c>jeffreypalermo.com</c> moves (<c>docs/runbooks/dns-cutover.md</c>). uat lists one throwaway name, to rehearse
+/// with (ADR-0016).
 /// </summary>
 public class CustomDomainContractTests
 {
@@ -29,15 +30,52 @@ public class CustomDomainContractTests
             : [];
 
     /// <summary>
-    /// Nothing is bound before the DNS move. The pull request of that day changes <c>settings.json</c> and the last
-    /// line here together: prod then lists jeffreypalermo.com, www.jeffreypalermo.com and feeds.jeffreypalermo.com.
+    /// Which environment lists which host names. Production lists none until the DNS moves: the pull request that
+    /// prepares the day changes <c>settings.json</c> and the line for prod here together, to jeffreypalermo.com,
+    /// www.jeffreypalermo.com and feeds.jeffreypalermo.com. uat lists the one name of the rehearsal (ADR-0016), a
+    /// throwaway that leaves again, with its line here, when the rehearsal is over.
     /// </summary>
     [Theory]
     [InlineData("tdd")]
-    [InlineData("uat")]
+    [InlineData("uat", "uat.jeffreypalermo.com")]
     [InlineData("prod")]
-    public void NoEnvironmentHasAHostNameUntilTheDnsMoves(string environment) =>
-        Assert.Empty(HostNames(environment));
+    public void EachEnvironmentListsTheHostNamesThatWereDecided(string environment, params string[] hostNames) =>
+        Assert.Equal(hostNames, HostNames(environment));
+
+    /// <summary>The rehearsal's name is one the site answers with pages, not one it redirects, and it is not production's.</summary>
+    [Fact]
+    public void TheRehearsalNameIsNeitherProductionsNorARedirect()
+    {
+        var resolver = new LegacyUrlResolver(Settings().GetProperty("canonicalHost").GetString()!);
+
+        Assert.All(HostNames("uat"), name =>
+        {
+            Assert.EndsWith(".jeffreypalermo.com", name, StringComparison.Ordinal);
+            Assert.DoesNotContain(name, (string[])["jeffreypalermo.com", "www.jeffreypalermo.com", "feeds.jeffreypalermo.com"]);
+            Assert.False(LegacyUrlResolver.DecidedByHost(resolver.Resolve(new UrlRequest(name, "/"), Core.ContentBuilder.Site())));
+        });
+    }
+
+    /// <summary>
+    /// A name that waits for its records must fail nothing. The script purges only a name that serves, and asks for
+    /// a new token where the old one is of no use, without ever failing for it.
+    /// </summary>
+    [Fact]
+    public void ANameThatWaitsIsNotPurgedAndItsTokenIsRenewedWithoutFailing()
+    {
+        Assert.Contains("Where-Object { [bool] $_.kept -and \"$($_.validationState)\" -in 'Approved', 'PendingRevalidation' }", Deploy, StringComparison.Ordinal);
+        Assert.Contains("$domains = @(([Uri] $frontDoorUrl).Host) + @($servingHostNames)", Deploy, StringComparison.Ordinal);
+        Assert.Contains("'resource', 'invoke-action', '--action', 'refreshValidationToken', '--ids', $id, '--api-version', '2024-02-01'", Deploy, StringComparison.Ordinal);
+        Assert.Contains("if (-not ($state -in 'TimedOut', 'Rejected' -or $tooOld -or $renewal)) { continue }", Deploy, StringComparison.Ordinal);
+
+        // Between the stack's outputs and the purge, the script leaves in one way only: a region that does not run
+        // the release. Nothing about a host name ends a deployment.
+        var from = Deploy.IndexOf("$servingHostNames = @(", StringComparison.Ordinal);
+        var to = Deploy.IndexOf("$purgeFile =", StringComparison.Ordinal);
+        Assert.True(from >= 0 && from < to);
+        Assert.Equal(1, Deploy[from..to].Split("exit 1").Length - 1);
+        Assert.Contains("does not run release $Version; the Front Door's cache was not emptied", Deploy[from..to], StringComparison.Ordinal);
+    }
 
     [Theory]
     [InlineData("tdd")]

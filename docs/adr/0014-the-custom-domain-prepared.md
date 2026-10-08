@@ -69,8 +69,9 @@ day.**
   deployment: the validation state, the TXT record (`_dnsauth.<name>` and its token, while the state is not
   `Approved`), and where the name's address record points (the endpoint's `azurefd.net` name: a CNAME, or for a
   name at the top of its zone an ALIAS, ANAME or Azure DNS alias record).
-- **The purge names the endpoint's own domain and every name with pages that has served**: every state but
-  `Submitting` and `Pending`. A name that is not validated yet has kept nothing.
+- **The purge names the endpoint's own domain and every name with pages that serves**: `Approved`, or
+  `PendingRevalidation`. A name that waits for its records has kept nothing, and Azure is not asked about it
+  (narrowed with the rehearsal, [ADR-0016](0016-the-dns-zone-as-code.md)).
 - **The site needs no change for the custom domain.** The Front Door forwards the visitor's host, and the app
   believes it from its own Front Door (ADR-0008). Tests now run it under each of the three names: in-process,
   with one URL in ten of the contract under the canonical host, and in the container.

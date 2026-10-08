@@ -188,6 +188,40 @@ public sealed class CustomDomainTemplateTests
         Assert.Equal("[concat(parameters('hostNames'), parameters('redirectHostNames'))]", module.Root.GetProperty("variables").GetProperty("allHostNames").GetString());
     }
 
+    /// <summary>
+    /// The rehearsal (ADR-0016), with the settings as they are: uat's one throwaway name gets a custom domain and
+    /// the route with the cache. Everything the endpoint's own address is made of is as it was: a name that waits
+    /// for its records changes nothing of what the azurefd.net address serves.
+    /// </summary>
+    [Fact]
+    public async Task TheRehearsalNameOfUatAddsOneDomainAndOneRouteAndLeavesTheEndpointsOwnRouteAsItIs()
+    {
+        using var settings = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Join(TestPaths.RepositoryRoot, "deploy", "settings.json")));
+        var uat = settings.RootElement.GetProperty("environments").GetProperty("uat");
+        var names = uat.GetProperty("hostNames").EnumerateArray().Select(name => name.GetString()!).ToArray();
+        var compiled = await CompiledTemplate.CompileAsync();
+        var with = compiled.With(("frontDoor", uat.GetProperty("frontDoor").GetBoolean()), ("regions", Regions(uat.GetProperty("regions").GetArrayLength())), ("hostNames", Names(names)), ("redirectHostNames", Names()));
+        var without = compiled.With(("frontDoor", true), ("regions", Regions(2)), ("hostNames", Names()), ("redirectHostNames", Names()));
+
+        Assert.Equal(["uat.jeffreypalermo.com"], names);
+        var module = with.Module(TheModule(with));
+        var instances = module.Resources.ToDictionary(CompiledTemplate.Kind, module.Instances);
+        Assert.Equal(1, instances["customDomains *"]);
+        Assert.Equal(1, instances["routes web-hosts"]);
+        Assert.Equal(0, instances["routes web-redirects"]);
+
+        // The same resources of before, as many of each, with and without the name; none is written in terms of it.
+        var before = (CompiledTemplate template) => template.Resources.Where(resource => BeforeHostNames.Contains(CompiledTemplate.Kind(resource))).Select(template.Instances).ToList();
+        Assert.Equal(before(without), before(with));
+        Assert.Equal([1, 2, 1, 1, 2, 1], before(with));
+        var own = with.Resources.Single(resource => CompiledTemplate.Kind(resource) == "routes web");
+        Assert.False(KnowsOfHostNames(own));
+        Assert.Equal("Enabled", own.GetProperty("properties").GetProperty("linkToDefaultDomain").GetString());
+
+        // Taken out of the settings again, the module is not deployed: the stack deletes what it held.
+        Assert.Equal(0, without.Instances(TheModule(without)));
+    }
+
     [Fact]
     public async Task EveryHostNameGetsACertificateTheFrontDoorManages()
     {
@@ -208,7 +242,7 @@ public sealed class CustomDomainTemplateTests
         var item = template.Module(TheModule(template)).Root.GetProperty("outputs").GetProperty("hostNames").GetProperty("copy").GetProperty("input");
 
         Assert.Equal(
-            ["hostName", "kept", "validationState", "validationRecord", "validationToken", "validationExpires", "target"],
+            ["hostName", "id", "kept", "validationState", "validationRecord", "validationToken", "validationExpires", "target"],
             item.EnumerateObject().Select(property => property.Name));
         Assert.Equal("[format('_dnsauth.{0}', variables('allHostNames')[copyIndex()])]", item.GetProperty("validationRecord").GetString());
         Assert.Equal("[less(copyIndex(), length(parameters('hostNames')))]", item.GetProperty("kept").GetString());
