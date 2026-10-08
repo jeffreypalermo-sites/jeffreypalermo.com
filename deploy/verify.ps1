@@ -72,12 +72,14 @@ if ($frontDoorUrl) {
 $nodesFile = if ($facts.PSObject.Properties['nodesFile']) { [string] $facts.nodesFile } else { '' }
 if ($nodesFile) {
     [ordered] @{
-        frontDoor   = if ($frontDoorUrl) { $frontDoorUrl.TrimEnd('/') } else { $null }
-        healthPath  = '/_health/ready'
-        alivePath   = '/_health/live'
-        versionPath = '/_version'
+        frontDoor    = if ($frontDoorUrl) { $frontDoorUrl.TrimEnd('/') } else { $null }
+        healthPath   = '/_health/ready'
+        alivePath    = '/_health/live'
+        versionPath  = '/_version'
+        # The system's hourly health report would wake every region that has scaled to zero (ADR-0008): it stays away.
+        healthReport = $false
         # Every region serves in the rotation: none is a standby.
-        nodes       = @($regions | ForEach-Object {
+        nodes        = @($regions | ForEach-Object {
                 [ordered] @{ name = [string] $_.app; region = [string] $_.location; role = 'primary'; url = ([string] $_.url).TrimEnd('/') }
             })
     } | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $nodesFile -Encoding utf8NoBOM
