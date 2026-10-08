@@ -53,6 +53,8 @@ public sealed partial class ContainerSiteTests
             Assert.Equal("/_health/ready", root.GetProperty("healthPath").GetString());
             Assert.Equal("/_health/live", root.GetProperty("alivePath").GetString());
             Assert.Equal("/_version", root.GetProperty("versionPath").GetString());
+            // The regions scale to zero: the system's hourly health report does not ask them (ADR-0011).
+            Assert.Equal(System.Text.Json.JsonValueKind.False, root.GetProperty("healthReport").ValueKind);
             var nodes = root.GetProperty("nodes").EnumerateArray().ToList();
             Assert.Equal(["ca-jpcom-uat-web-eus2", "ca-jpcom-uat-web-gwc"], nodes.Select(node => node.GetProperty("name").GetString()));
             Assert.Equal(["eastus2", "germanywestcentral"], nodes.Select(node => node.GetProperty("region").GetString()));

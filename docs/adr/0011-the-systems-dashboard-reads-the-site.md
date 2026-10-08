@@ -26,6 +26,10 @@ client on the internet sees. It needs two things from an application:
   for health, liveness and version. The pipeline records the file in the system repository
   (`environments/<env>/nodes.json`), and the dashboard's deployment builds its page from those records.
 - **Every region has the role `primary`.** The Front Door rotates over all of them; none is a standby.
+- **The hourly health report does not ask the nodes.** The report records `"healthReport": false`. The system's
+  health report runs every hour, with nobody looking, and would otherwise ask every recorded node and so wake
+  every region that has scaled to zero (ADR-0008). It still reports the releases and the deployments; a person who
+  wants to see the nodes opens the dashboard.
 - **`/_health/live`, `/_health/ready` and the new `/_version` allow every origin**
   (`Access-Control-Allow-Origin: *`) and are never cached (`Cache-Control: no-store`). `/_version` answers
   `{"version":"<release>"}`, the form the dashboard reads. No other address of the site allows another origin.
