@@ -445,10 +445,12 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
     }
 
     /// <summary>
-    /// Nine posts showed a WordPress shortcode as text where a Libsyn player should have been. Each now has a player
-    /// of the browser's own, which asks for nothing until the reader presses play, and a link to the file.
+    /// Nine posts showed a WordPress shortcode as text where a Libsyn player should have been, and episode 001 of the
+    /// podcast had Libsyn's player in a frame. Each now has a player of the browser's own, which asks for nothing
+    /// until the reader presses play, and a link to the file.
     /// </summary>
     [Theory]
+    [InlineData("/2018/09/buck-hodges-on-the-introduction-to-azure-devops-services-episode-001/", "audio", "https://traffic.libsyn.com/secure/azuredevops/ADO_001_Final.mp3", "(MP3, 43:12, 42.2 MB)")]
     [InlineData("/2018/09/donovan-brown-on-how-to-use-azure-devops-services-episode-002/", "audio", "https://traffic.libsyn.com/secure/azuredevops/ADP_002-2.mp3", "(MP3, 45:24, 43.6 MB)")]
     [InlineData("/2018/09/sam-guckenheimer-on-testing-data-collection-and-the-state-of-devops-report-episode-003/", "audio", "https://traffic.libsyn.com/secure/azuredevops/ADP_003-3.mp3", "(MP3, 41:53, 40.2 MB)")]
     [InlineData("/2018/09/steven-murawski-on-infrastructure-as-code-episode-004/", "audio", "https://traffic.libsyn.com/secure/azuredevops/ADP_004-3.mp3", "(MP3, 41:44, 40.1 MB)")]
@@ -458,7 +460,7 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
     [InlineData("/2018/10/palermo-pamphlet-launch-episode-001/", "video", "/wp-content/uploads/external/videos.files.wordpress.com/HMwzTDe7/palermo-pamphlet-001-10-10-2018.mp4", "(MP4, 4:41, 76.3 MB)")]
     [InlineData("/2018/10/palermo-pamphlet-002-state-machine-design/", "video", "https://web.archive.org/web/20181207080757id_/https://traffic.libsyn.com/secure/force-cdn/highwinds/palermopamphlet/Palermo_Pamphlet_002_10-15-2018-2.mp4", "(MP4, 7:31, 113.1 MB)")]
     [InlineData("/2018/10/palermo-pamphlet-003-unboxing-of-the-azure-sphere-iot-system-on-a-chip-board/", "video", "https://web.archive.org/web/20190911190602id_/https://traffic.libsyn.com/secure/force-cdn/highwinds/palermopamphlet/Palermo_Pamphlet_003_2018-10-25_10-18-27.mp4", "(MP4, 6:36, 157.9 MB)")]
-    public async Task APostThatShowedAShortcodeHasAPlayerAndALinkToTheRecording(string path, string element, string file, string facts)
+    public async Task APostWithARecordingHasAPlayerAndALinkToTheRecording(string path, string element, string file, string facts)
     {
         var page = await factory.ClientFor().GetPageAsync(path);
         var body = page.QuerySelector("main article.post .entry-content")!;

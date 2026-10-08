@@ -288,6 +288,162 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         Assert.Empty(visit.FailedRequests);
     }
 
+    private const string LiveWriter = "/wp-content/uploads/external/jeffreypalermo.com/files/media/image/Windows-Live-Writer/";
+
+    /// <summary>A post and the address its picture link has now.</summary>
+    public static TheoryData<string, string> PictureLinksThatLedToTheImageCdn => new()
+    {
+        // The full-size picture came from the Wayback Machine: WordPress.com's image CDN no longer had it.
+        { "/2013/07/gotomeeting-works-great-ndash-until-you-add-video-conferencing/", LiveWriter + "GoToMeeting-works-greatuntil-you-add-vid_8C14/GoToMeeting%20with%20video.png" },
+        // The repository had the full-size picture already.
+        { "/2015/08/code-the-town/", "/wp-content/uploads/external/codebetter.com/jeffreypalermo/files/2015/08/image_4.png" },
+        // No source has the full-size picture: the link leads to the picture the post shows.
+        { "/2011/05/growing-a-professional-services-company-my-experience-critical-drivers-metrics-and-business-intelligence/", LiveWriter + "d066af3fb6f3_8D6C/CropperCapture%5B27%5D_thumb.png" },
+    };
+
+    /// <summary>A post, how many of its pictures the Wayback Machine had, and how many no source has.</summary>
+    public static TheoryData<string, int, int> PostsWithPicturesFromEarlierPlatforms => new()
+    {
+        // Community Server's gallery on codebetter.com, 2006: seventeen screenshots.
+        { "/2006/08/breadandbutterresharper/", 17, 0 },
+        // DotNetJunkies, 2005: two photographs.
+        { "/2005/02/eating-at-rudys-after-a-talk-with-brad-abrams-level-000/", 2, 0 },
+        // Captured in another size only: 425 by 319 points, and the gallery's thumbnail.
+        { "/2005/11/attending-innotech-a-local-austin-conference-level-000/", 1, 0 },
+        { "/2005/10/the-mondays-show-comes-to-austin-level-999/", 1, 0 },
+        // No source has these: a note stands where each picture stood.
+        { "/2005/06/tech-ed-2005-day-1-opening-keynote/", 0, 2 },
+        { "/2004/04/a-completely-automated-web-siteapplication-framework/", 0, 1 },
+    };
+
+    /// <summary>A post and one of its pictures that the migration had listed as lost.</summary>
+    public static TheoryData<string, string> PostsWithARecoveredUpload => new()
+    {
+        // Ten sponsors' logos of a party's site that is gone.
+        { "/2008/05/call-for-party-with-palermo-rsvps-reserve-your-spot-now-for-the-tech-ed-party/", "/wp-content/uploads/external/teched2008.partywithpalermo.com/images/headspring300.jpg" },
+        { "/2008/07/making-it-easy-to-replace-nhibernate-in-five-years/", "/wp-content/uploads/external/upload.wikimedia.org/wikipedia/en/4/45/DiffusionOfInnovation.png" },
+        { "/2005/03/general-application-architecture-diagram-level-300/", "/wp-content/uploads/external/dotnetjunkies.com/WebLog/images/dotnetjunkies_com/jpalermo/2354/o_GeneralApplicationArchitecture.png" },
+        { "/2009/02/cropper-now-works-on-vista-x64-new-release-posted-today/", "/wp-content/uploads/external/jeffreypalermo.com/files/media/image/WindowsLiveWriter/CroppernowworksonVistax64newreleaseposte_C03B/CropperCapture%5B5%5D%5B9%5D.jpg" },
+    };
+
+    /// <summary>
+    /// Episode 001 of the podcast is the one post where WordPress had rendered the Libsyn player, as a frame that
+    /// asked Libsyn for a page with every view. It has the same player as the other episodes now (ADR-0015).
+    /// </summary>
+    [Fact]
+    public async Task TheFirstPodcastEpisodeHasThePlayerOfTheOthersAndNoFrame()
+    {
+        const string recording = "https://traffic.libsyn.com/secure/azuredevops/ADO_001_Final.mp3";
+        await using var visit = await chromium.VisitAsync(site.BaseAddress);
+        var page = visit.Page;
+
+        var response = await page.GotoAsync("/2018/09/buck-hodges-on-the-introduction-to-azure-devops-services-episode-001/");
+        await visit.EvaluateAsync<int>(LoadEveryPicture);
+
+        Assert.Equal(200, response!.Status);
+        var body = page.Locator("main article.post .entry-content");
+        var player = body.Locator("audio");
+        await Assertions.Expect(player).ToHaveCountAsync(1);
+        await Assertions.Expect(player).ToBeVisibleAsync();
+        await Assertions.Expect(player).ToHaveAttributeAsync("src", recording);
+        Assert.True(await player.EvaluateAsync<bool>("audio => audio.controls && audio.preload === 'none' && !audio.autoplay && audio.readyState === 0 && audio.paused"), "The player did not wait for the reader.");
+        await Assertions.Expect(body.GetByRole(AriaRole.Link, new() { Name = "Download this episode" })).ToHaveAttributeAsync("href", recording);
+        await Assertions.Expect(body).ToContainTextAsync("(MP3, 43:12, 42.2 MB)");
+        await Assertions.Expect(body.Locator("iframe, script")).ToHaveCountAsync(0);
+        Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
+    }
+
+    /// <summary>
+    /// The full-size picture a reader gets by clicking a picture was a link to WordPress.com's image CDN in eleven
+    /// posts, which stops serving this site's pictures when the WordPress.com account is closed. The link leads to a
+    /// file of the site now: the full-size picture where a source still had it, the picture the post shows where
+    /// none had. A click stays on the site.
+    /// </summary>
+    [Theory]
+    [MemberData(nameof(PictureLinksThatLedToTheImageCdn))]
+    public async Task AClickOnAPictureThatLedToWordPressComsImageCdnStaysOnTheSite(string path, string fullSize)
+    {
+        await using var visit = await chromium.VisitAsync(site.BaseAddress);
+        var page = visit.Page;
+
+        var response = await page.GotoAsync(path);
+        await visit.EvaluateAsync<int>(LoadEveryPicture);
+
+        Assert.Equal(200, response!.Status);
+        var body = page.Locator("main article.post .entry-content");
+        await Assertions.Expect(body.Locator("a[href*='.wp.com/']")).ToHaveCountAsync(0);
+        var link = body.Locator($"a[href='{fullSize}']").First;
+        var picture = link.Locator("img");
+        await Assertions.Expect(picture).ToHaveCountAsync(1);
+        Assert.True(await picture.EvaluateAsync<bool>("picture => picture.complete && picture.naturalWidth > 0"), "The picture around which the link stands did not load.");
+        Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
+
+        await picture.ClickAsync();
+        // The address as it is written, escapes and all: a pattern, because Playwright reads a plain address anew.
+        await Assertions.Expect(page).ToHaveURLAsync(new Regex(Regex.Escape(fullSize) + "$"));
+
+        // The browser shows the file itself: a document that is one picture, which loaded.
+        Assert.True(await visit.EvaluateAsync<bool>("document.images.length === 1 && document.images[0].naturalWidth > 0 && document.contentType.startsWith('image/')"), $"{fullSize} is not shown as a picture.");
+        Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
+    }
+
+    /// <summary>
+    /// These posts showed pictures from the blog's earlier platforms by addresses WordPress never had a file for, so
+    /// every one was a broken picture. What the Wayback Machine has is a file of the site now. What no source has is
+    /// gone from the post, and a note stands where the picture stood. No request of the page fails.
+    /// </summary>
+    [Theory]
+    [MemberData(nameof(PostsWithPicturesFromEarlierPlatforms))]
+    public async Task APostWithPicturesFromAnEarlierPlatformShowsTheRecoveredOnesAndSaysWhichAreGone(string path, int recovered, int gone)
+    {
+        await using var visit = await chromium.VisitAsync(site.BaseAddress);
+        var page = visit.Page;
+
+        var response = await page.GotoAsync(path);
+        await visit.EvaluateAsync<int>(LoadEveryPicture);
+
+        Assert.Equal(200, response!.Status);
+        var body = page.Locator("main article.post .entry-content");
+        await Assertions.Expect(body.Locator("img[src^='/wp-content/uploads/external/codebetter.com/'], img[src^='/wp-content/uploads/external/dotnetjunkies.com/']")).ToHaveCountAsync(recovered);
+        await Assertions.Expect(body.Locator("em.picture-lost")).ToHaveCountAsync(gone);
+        if (gone > 0)
+        {
+            await Assertions.Expect(body.Locator("em.picture-lost").First).ToBeVisibleAsync();
+            await Assertions.Expect(body.Locator("em.picture-lost").First).ToContainTextAsync("[Picture no longer available");
+        }
+
+        await Assertions.Expect(body.Locator("img[src^='/photos/'], img[src^='/WebLog/'], img:not([src^='/'])")).ToHaveCountAsync(0);
+        Assert.True(await visit.EvaluateAsync<bool>("[...document.images].every(image => image.complete && image.naturalWidth > 0)"), "A picture of the post did not load.");
+        Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
+    }
+
+    /// <summary>
+    /// The first migration listed these pictures as lost: it asked the Wayback Machine for its newest capture, which
+    /// was the page saying the picture was gone. The index had an older capture that is the picture. It is a file of
+    /// the site now, where the post already pointed.
+    /// </summary>
+    [Theory]
+    [MemberData(nameof(PostsWithARecoveredUpload))]
+    public async Task APictureThatWasListedAsLostIsShownAgain(string path, string picture)
+    {
+        await using var visit = await chromium.VisitAsync(site.BaseAddress);
+        var page = visit.Page;
+
+        var response = await page.GotoAsync(path);
+        await visit.EvaluateAsync<int>(LoadEveryPicture);
+
+        Assert.Equal(200, response!.Status);
+        var shown = page.Locator($"main article.post .entry-content img[src='{picture}']").First;
+        Assert.True(await shown.EvaluateAsync<bool>("picture => picture.complete && picture.naturalWidth > 0"), $"{picture} did not load.");
+        Assert.True(await visit.EvaluateAsync<bool>("[...document.images].every(image => image.complete && image.naturalWidth > 0)"), "A picture of the post did not load.");
+        Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
+    }
+
     /// <summary>This post showed <c>[podcast src=”…”]</c> as text. Its video is a file of the site, played by the browser.</summary>
     [Fact]
     public async Task AVideoEpisodePlaysTheSitesOwnFileAndFetchesNoneOfItBeforeTheReaderPlays()
