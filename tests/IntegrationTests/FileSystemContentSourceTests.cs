@@ -90,6 +90,34 @@ public sealed class FileSystemContentSourceTests : IDisposable
         Assert.DoesNotContain(offSite, subresource => subresource.Address.Contains(".wp.com/", StringComparison.OrdinalIgnoreCase));
     }
 
+    /// <summary>
+    /// A link to a picture on another host is no request of the page, so the list above does not see it. It breaks
+    /// all the same when its host stops serving the picture, as WordPress.com's image CDN will. <c>WpMigrator
+    /// recover</c> points each at the site's own file. These stay, each with its reason; a new one fails here until
+    /// <c>recover</c> has run or the link is reviewed.
+    /// </summary>
+    private static readonly (string Address, string Why)[] ReviewedLinksToPicturesOnOtherHosts =
+    [
+        ("http://aggielanddnug.org/Content/images/gscmap.gif", "a link in words to a map on a host that is gone: no source has it (the host does not answer, the Wayback Machine has no capture); it leads nowhere, as any link to a page that is gone"),
+    ];
+
+    [Fact]
+    public async Task NoLinkOfTheRepositoryContentLeadsToAPictureOnAnotherHostExceptTheReviewedOnes()
+    {
+        var links = (await RepositoryBodiesAsync())
+            .SelectMany(PictureLinks.Find)
+            .Where(link => link.Host.Length > 0 && ExternalImage.From(link.Address) is not null)
+            .Select(link => link.Address)
+            .Distinct()
+            .Order(StringComparer.Ordinal)
+            .ToList();
+
+        Assert.Equal(ReviewedLinksToPicturesOnOtherHosts.Select(reviewed => reviewed.Address), links);
+        Assert.All(ReviewedLinksToPicturesOnOtherHosts, reviewed => Assert.False(string.IsNullOrWhiteSpace(reviewed.Why), $"{reviewed.Address} has no reason."));
+        // No click leads to WordPress.com's image CDN: 17 links in 11 posts did until 2026-10-08.
+        Assert.DoesNotContain(links, link => link.Contains(".wp.com/", StringComparison.OrdinalIgnoreCase));
+    }
+
     private const string NoHomeHasIt = "no source has it: the Wayback Machine has no image for it under any earlier home of the blog (dotnetjunkies.com, codebetter.com, jeffreypalermo.com)";
 
     /// <summary>

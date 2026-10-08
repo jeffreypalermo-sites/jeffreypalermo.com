@@ -288,6 +288,19 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         Assert.Empty(visit.FailedRequests);
     }
 
+    private const string LiveWriter = "/wp-content/uploads/external/jeffreypalermo.com/files/media/image/Windows-Live-Writer/";
+
+    /// <summary>A post and the address its picture link has now.</summary>
+    public static TheoryData<string, string> PictureLinksThatLedToTheImageCdn => new()
+    {
+        // The full-size picture came from the Wayback Machine: WordPress.com's image CDN no longer had it.
+        { "/2013/07/gotomeeting-works-great-ndash-until-you-add-video-conferencing/", LiveWriter + "GoToMeeting-works-greatuntil-you-add-vid_8C14/GoToMeeting%20with%20video.png" },
+        // The repository had the full-size picture already.
+        { "/2015/08/code-the-town/", "/wp-content/uploads/external/codebetter.com/jeffreypalermo/files/2015/08/image_4.png" },
+        // No source has the full-size picture: the link leads to the picture the post shows.
+        { "/2011/05/growing-a-professional-services-company-my-experience-critical-drivers-metrics-and-business-intelligence/", LiveWriter + "d066af3fb6f3_8D6C/CropperCapture%5B27%5D_thumb.png" },
+    };
+
     /// <summary>A post, how many of its pictures the Wayback Machine had, and how many no source has.</summary>
     public static TheoryData<string, int, int> PostsWithPicturesFromEarlierPlatforms => new()
     {
@@ -327,6 +340,42 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         await Assertions.Expect(body.GetByRole(AriaRole.Link, new() { Name = "Download this episode" })).ToHaveAttributeAsync("href", recording);
         await Assertions.Expect(body).ToContainTextAsync("(MP3, 43:12, 42.2 MB)");
         await Assertions.Expect(body.Locator("iframe, script")).ToHaveCountAsync(0);
+        Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
+    }
+
+    /// <summary>
+    /// The full-size picture a reader gets by clicking a picture was a link to WordPress.com's image CDN in eleven
+    /// posts, which stops serving this site's pictures when the WordPress.com account is closed. The link leads to a
+    /// file of the site now: the full-size picture where a source still had it, the picture the post shows where
+    /// none had. A click stays on the site.
+    /// </summary>
+    [Theory]
+    [MemberData(nameof(PictureLinksThatLedToTheImageCdn))]
+    public async Task AClickOnAPictureThatLedToWordPressComsImageCdnStaysOnTheSite(string path, string fullSize)
+    {
+        await using var visit = await chromium.VisitAsync(site.BaseAddress);
+        var page = visit.Page;
+
+        var response = await page.GotoAsync(path);
+        await visit.EvaluateAsync<int>(LoadEveryPicture);
+
+        Assert.Equal(200, response!.Status);
+        var body = page.Locator("main article.post .entry-content");
+        await Assertions.Expect(body.Locator("a[href*='.wp.com/']")).ToHaveCountAsync(0);
+        var link = body.Locator($"a[href='{fullSize}']").First;
+        var picture = link.Locator("img");
+        await Assertions.Expect(picture).ToHaveCountAsync(1);
+        Assert.True(await picture.EvaluateAsync<bool>("picture => picture.complete && picture.naturalWidth > 0"), "The picture around which the link stands did not load.");
+        Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
+
+        await picture.ClickAsync();
+        // The address as it is written, escapes and all: a pattern, because Playwright reads a plain address anew.
+        await Assertions.Expect(page).ToHaveURLAsync(new Regex(Regex.Escape(fullSize) + "$"));
+
+        // The browser shows the file itself: a document that is one picture, which loaded.
+        Assert.True(await visit.EvaluateAsync<bool>("document.images.length === 1 && document.images[0].naturalWidth > 0 && document.contentType.startsWith('image/')"), $"{fullSize} is not shown as a picture.");
         Assert.Empty(visit.OffSiteRequests);
         Assert.Empty(visit.FailedRequests);
     }
