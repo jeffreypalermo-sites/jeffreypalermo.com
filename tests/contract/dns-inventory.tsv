@@ -1,0 +1,26 @@
+# The DNS records of jeffreypalermo.com as its name servers (ns1, ns2, ns3.wordpress.com) answered on 2026-10-08 at
+# 01:32 UTC: every name that was asked for and answered. See README.md beside this file.
+# Columns: name (in the zone; @ is the zone's own name, * every other name), type, ttl, value, zone, note.
+# zone says what the Azure DNS zone of deploy/infra/dns-zone.bicep does with the record (ADR-0016):
+#   kept     the zone holds it exactly: mail and what proves mail
+#   site     one of the site's three names: the zone holds it as it is here until the name is a host name of the
+#            site, and then gives the name to the Front Door
+#   own      the DNS host's own record of the zone; the new host writes its own
+#   dropped  not carried over, for the reason in the note
+name	type	ttl	value	zone	note
+@	NS	3600	ns1.wordpress.com.	own	the delegation: Azure DNS writes the zone's own name servers
+@	NS	3600	ns2.wordpress.com.	own	the delegation
+@	NS	3600	ns3.wordpress.com.	own	the delegation
+@	SOA	3600	ns1.wordpress.com. hostmaster.wordpress.com. 2005071858 14400 7200 604800 300	own	the DNS host's own
+@	A	300	192.0.78.168	site	WordPress.com; an alias of the Front Door endpoint once the name is a host name
+@	A	300	192.0.78.213	site	WordPress.com
+@	MX	3600	0 smtp.secureserver.net.	kept	mail goes to GoDaddy
+@	MX	3600	10 mailstore1.secureserver.net.	kept	mail goes to GoDaddy
+@	TXT	3600	v=spf1 include:_spf.wpcloud.com ~all	kept	SPF, as it is
+_dmarc	TXT	3600	v=DMARC1;p=none;	kept	DMARC
+wpcloud1._domainkey	CNAME	3600	wpcloud1._domainkey.wpcloud.com.	kept	DKIM of the mail WordPress.com sends for the site
+wpcloud2._domainkey	CNAME	3600	wpcloud2._domainkey.wpcloud.com.	kept	DKIM of the mail WordPress.com sends for the site
+_domainconnect	TXT	3600	public-api.wordpress.com/rest/v1.3/domain-connect	dropped	says that WordPress.com hosts the zone's DNS, which is no longer true in another zone
+www	CNAME	3600	jeffreypalermo.com.	site	a CNAME of the Front Door endpoint once the name is a host name
+feeds	CNAME	3600	1i4ygfi.feedproxy.ghs.google.com.	site	FeedBurner's old proxy, which answers 404; a CNAME of the Front Door endpoint once the name is a host name
+*	CNAME	3600	jeffreypalermo.com.	dropped	the wildcard: it would send every unknown name to a Front Door that does not know it

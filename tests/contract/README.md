@@ -68,3 +68,19 @@ WordPress guesses are preserved on purpose through curated entries in `content/a
   exits 1 if any failed; an issue labelled `url-contract` stays open until the next clean run
   ([ADR-0006](../../docs/adr/0006-deliver-through-the-demo-environment-kit.md)). Run the same script by hand after
   a deployment.
+
+# DNS inventory
+
+`dns-inventory.tsv` records what the name servers of `jeffreypalermo.com` (WordPress.com's) answered on 2026-10-08
+at 01:32 UTC, before the domain moves: every name that was asked for and answered. A zone cannot be listed from
+outside, so a record nobody asked for is not in it: compare it with the record list in WordPress.com's DNS editor
+before the move ([the runbook](../../docs/runbooks/dns-cutover.md)).
+
+The column `zone` says what the Azure DNS zone of `deploy/infra/dns-zone.bicep` does with each record
+([ADR-0016](../../docs/adr/0016-the-dns-zone-as-code.md)): `kept` exactly (mail, SPF, DMARC, DKIM), `site` (the
+three names of the site, as they are until each is a host name of the site), `own` (the DNS host's own NS and SOA)
+or `dropped`, with the reason.
+
+`DnsZoneTemplateTests` compiles the zone's template and holds it equal to this file: every `kept` and `site` record
+is in the zone with its value, nothing else is, and no `dropped` record is. A record cannot leave the zone, or
+enter it, without this file changing too.

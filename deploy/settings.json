@@ -20,6 +20,7 @@
     "prod": {
       "frontDoor": true,
       "hostNames": [],
+      "dnsZone": "jeffreypalermo.com",
       "regions": [
         { "location": "eastus2", "code": "eus2" },
         { "location": "westus2", "code": "wus2" },

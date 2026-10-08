@@ -5,10 +5,11 @@ using System.Text.Json;
 namespace JeffreyPalermo.IntegrationTests;
 
 /// <summary>
-/// <c>deploy/infra/main.bicep</c> compiled for real with <c>az bicep build</c> (a local compile: it reaches no Azure),
-/// and enough of Azure Resource Manager's template language to say which resources a set of parameters deploys:
-/// each resource's <c>condition</c> and the <c>count</c> of its copy loop. A function this does not know fails the
-/// test that meets it, so a condition can never be passed over unread.
+/// A Bicep file of <c>deploy/infra</c> compiled for real with <c>az bicep build</c> (a local compile: it reaches no
+/// Azure), and enough of Azure Resource Manager's template language to say what a set of parameters deploys: each
+/// resource's <c>condition</c>, the <c>count</c> of its copy loop, and, for <see cref="Deploy"/>, its name and its
+/// properties worked out. A function this does not know fails the test that meets it, so nothing is passed over
+/// unread.
 /// </summary>
 internal sealed class CompiledTemplate
 {
@@ -19,13 +20,17 @@ internal sealed class CompiledTemplate
     private readonly CompiledTemplate? _outer;
     private readonly JsonElement _given;
 
-    private CompiledTemplate(JsonElement template, string diagnostics, Dictionary<string, object?> parameters, CompiledTemplate? outer = null, JsonElement given = default)
+    /// <summary>Which turn of a resource's copy loop is being worked out; null outside a loop.</summary>
+    private readonly long? _copyIndex;
+
+    private CompiledTemplate(JsonElement template, string diagnostics, Dictionary<string, object?> parameters, CompiledTemplate? outer = null, JsonElement given = default, long? copyIndex = null)
     {
         _template = template;
         Diagnostics = diagnostics;
         _parameters = parameters;
         _outer = outer;
         _given = given;
+        _copyIndex = copyIndex;
     }
 
     /// <summary>What the compiler wrote beside the template: its warnings and errors, and the CLI's notices.</summary>
@@ -33,15 +38,16 @@ internal sealed class CompiledTemplate
 
     public JsonElement Root => _template;
 
-    private static readonly Lazy<Task<CompiledTemplate>> Compiled = new(CompileOnceAsync);
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, Lazy<Task<CompiledTemplate>>> Compiled = new(StringComparer.Ordinal);
 
-    /// <summary>The template, compiled once for all the tests that read it.</summary>
-    public static Task<CompiledTemplate> CompileAsync() => Compiled.Value;
+    /// <summary>A template of <c>deploy/infra</c>, compiled once for all the tests that read it. The site's by default.</summary>
+    public static Task<CompiledTemplate> CompileAsync(string file = "main.bicep") =>
+        Compiled.GetOrAdd(file, name => new Lazy<Task<CompiledTemplate>>(() => CompileOnceAsync(name))).Value;
 
-    private static async Task<CompiledTemplate> CompileOnceAsync()
+    private static async Task<CompiledTemplate> CompileOnceAsync(string file)
     {
         var start = new ProcessStartInfo("az") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
-        foreach (var argument in (string[])["bicep", "build", "--file", Path.Join(TestPaths.RepositoryRoot, "deploy", "infra", "main.bicep"), "--stdout"])
+        foreach (var argument in (string[])["bicep", "build", "--file", Path.Join(TestPaths.RepositoryRoot, "deploy", "infra", file), "--stdout"])
         {
             start.ArgumentList.Add(argument);
         }
@@ -74,6 +80,38 @@ internal sealed class CompiledTemplate
     /// </summary>
     public CompiledTemplate Module(JsonElement deployment) =>
         new(deployment.GetProperty("properties").GetProperty("template"), Diagnostics, [], this, deployment.GetProperty("properties").GetProperty("parameters"));
+
+    /// <summary>One resource as the parameters deploy it: its type, its name and its properties, every expression worked out.</summary>
+    public sealed record Deployed(string Type, string Name, Dictionary<string, object?> Properties);
+
+    /// <summary>
+    /// Everything the parameters deploy: each resource whose condition holds, once, or once for every turn of its
+    /// copy loop (the condition is then asked for every turn).
+    /// </summary>
+    public List<Deployed> Deploy()
+    {
+        var deployed = new List<Deployed>();
+        foreach (var resource in Resources)
+        {
+            var turns = resource.TryGetProperty("copy", out var copy) ? (long)Evaluate(copy.GetProperty("count"))! : (long?)null;
+            for (var turn = 0L; turn < (turns ?? 1); turn++)
+            {
+                var one = turns is null ? this : new CompiledTemplate(_template, Diagnostics, _parameters, _outer, _given, turn);
+                if (resource.TryGetProperty("condition", out var condition) && !(bool)one.Evaluate(condition)!)
+                {
+                    continue;
+                }
+
+                var properties = resource.TryGetProperty("properties", out var given) ? one.Evaluate(given) : null;
+                deployed.Add(new Deployed(
+                    resource.GetProperty("type").GetString()!,
+                    (string)one.Evaluate(resource.GetProperty("name"))!,
+                    properties as Dictionary<string, object?> ?? []));
+            }
+        }
+
+        return deployed;
+    }
 
     /// <summary>How many of a resource the parameters deploy: none when its condition is false, else its copy count, else one.</summary>
     public int Instances(JsonElement resource)
@@ -110,6 +148,9 @@ internal sealed class CompiledTemplate
                 return value.GetInt64();
             case JsonValueKind.Array:
                 return value.EnumerateArray().Select(Evaluate).ToList();
+            case JsonValueKind.Object:
+                Assert.False(value.TryGetProperty("copy", out _), $"A loop inside a resource's properties is not worked out by this test: {value}");
+                return value.EnumerateObject().ToDictionary(property => property.Name, property => Evaluate(property.Value), StringComparer.Ordinal);
             case JsonValueKind.String:
                 var text = value.GetString()!;
                 if (!text.StartsWith('[') || text.StartsWith("[[", StringComparison.Ordinal))
@@ -170,6 +211,37 @@ internal sealed class CompiledTemplate
         }
 
         position++;
+        var result = Call(function, arguments, text);
+
+        // What follows a call: an item of a list ([0]) or a property of an object (.name).
+        while (text[position] is '[' or '.')
+        {
+            if (text[position] == '.')
+            {
+                var from = ++position;
+                while (char.IsAsciiLetterOrDigit(text[position]))
+                {
+                    position++;
+                }
+
+                result = ((Dictionary<string, object?>)result!)[text[from..position]];
+            }
+            else
+            {
+                position++;
+                var index = Expression(text, ref position);
+                SkipSpaces(text, ref position);
+                Assert.True(text[position] == ']', $"Expected ] at {position} in {text}");
+                position++;
+                result = index is string key ? ((Dictionary<string, object?>)result!)[key] : ((List<object?>)result!)[checked((int)(long)index!)];
+            }
+        }
+
+        return result;
+    }
+
+    private object? Call(string function, List<object?> arguments, string text)
+    {
         return function switch
         {
             "parameters" => Parameter((string)arguments[0]!),
@@ -182,6 +254,19 @@ internal sealed class CompiledTemplate
             "length" => arguments[0] is string t ? t.Length : (long)((List<object?>)arguments[0]!).Count,
             "concat" => arguments.SelectMany(argument => (List<object?>)argument!).ToList(),
             "createArray" => arguments,
+            "createObject" => Enumerable.Range(0, arguments.Count / 2).ToDictionary(pair => (string)arguments[pair * 2]!, pair => arguments[(pair * 2) + 1], StringComparer.Ordinal),
+            "equals" => Equals(arguments[0], arguments[1]),
+            "contains" => arguments[0] switch
+            {
+                List<object?> list => list.Contains(arguments[1]),
+                string within => within.Contains((string)arguments[1]!, StringComparison.Ordinal),
+                Dictionary<string, object?> named => named.ContainsKey((string)arguments[1]!),
+                _ => throw new NotSupportedException($"contains() of {arguments[0]} is not worked out: {text}"),
+            },
+            "format" => string.Format(CultureInfo.InvariantCulture, (string)arguments[0]!, [.. arguments.Skip(1)]),
+            "add" => (long)arguments[0]! + (long)arguments[1]!,
+            "less" => (long)arguments[0]! < (long)arguments[1]!,
+            "copyIndex" => _copyIndex ?? throw new InvalidOperationException($"copyIndex() outside a copy loop: {text}"),
             _ => throw new NotSupportedException($"The function '{function}' is not known to this test: {text}"),
         };
     }
