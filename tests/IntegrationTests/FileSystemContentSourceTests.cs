@@ -172,9 +172,9 @@ public sealed class FileSystemContentSourceTests : IDisposable
     /// <list type="bullet">
     /// <item>44 uploads under <c>/wp-content/uploads/2018/07/</c>: lost in the 2018 import into WordPress.com. The
     /// WordPress site itself answered 404 for each, and the manifest names no other source.</item>
-    /// <item>67 pictures of other hosts, under <c>/wp-content/uploads/external/</c>: no source had them when the
-    /// content was migrated. Photon's cache and the hosts did not, and the Wayback Machine's newest capture of
-    /// each was no picture.</item>
+    /// <item>36 pictures of other hosts, under <c>/wp-content/uploads/external/</c>: no source has them. Photon's cache
+    /// and the hosts do not; the Wayback Machine never captured 33, and its captures of 3 are pages. They were 67
+    /// until <c>recover</c> found 31 on 2026-10-08.</item>
     /// </list>
     /// The site reads the list in <c>content/archive/lost-uploads.json</c>; <c>media</c> and <c>recover</c> write it
     /// there and beside the manifest. Both say the same, name no file that is there, and name nothing no body points at.
@@ -196,7 +196,7 @@ public sealed class FileSystemContentSourceTests : IDisposable
         Assert.All(lost, path => Assert.False(File.Exists(layout.UploadFile(path)), $"{path} is listed as lost and is there."));
         Assert.All(lost, path => Assert.True(pointedAt.Contains(Uri.UnescapeDataString(path)), $"{path} is listed as lost and no body points at it."));
         Assert.Equal(
-            (44, 67),
+            (44, 36),
             (lost.Count(path => !path.StartsWith("/wp-content/uploads/external/", StringComparison.Ordinal)), lost.Count(path => path.StartsWith("/wp-content/uploads/external/", StringComparison.Ordinal))));
     }
 

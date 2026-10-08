@@ -316,6 +316,16 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         { "/2004/04/a-completely-automated-web-siteapplication-framework/", 0, 1 },
     };
 
+    /// <summary>A post and one of its pictures that the migration had listed as lost.</summary>
+    public static TheoryData<string, string> PostsWithARecoveredUpload => new()
+    {
+        // Ten sponsors' logos of a party's site that is gone.
+        { "/2008/05/call-for-party-with-palermo-rsvps-reserve-your-spot-now-for-the-tech-ed-party/", "/wp-content/uploads/external/teched2008.partywithpalermo.com/images/headspring300.jpg" },
+        { "/2008/07/making-it-easy-to-replace-nhibernate-in-five-years/", "/wp-content/uploads/external/upload.wikimedia.org/wikipedia/en/4/45/DiffusionOfInnovation.png" },
+        { "/2005/03/general-application-architecture-diagram-level-300/", "/wp-content/uploads/external/dotnetjunkies.com/WebLog/images/dotnetjunkies_com/jpalermo/2354/o_GeneralApplicationArchitecture.png" },
+        { "/2009/02/cropper-now-works-on-vista-x64-new-release-posted-today/", "/wp-content/uploads/external/jeffreypalermo.com/files/media/image/WindowsLiveWriter/CroppernowworksonVistax64newreleaseposte_C03B/CropperCapture%5B5%5D%5B9%5D.jpg" },
+    };
+
     /// <summary>
     /// Episode 001 of the podcast is the one post where WordPress had rendered the Libsyn player, as a frame that
     /// asked Libsyn for a page with every view. It has the same player as the other episodes now (ADR-0015).
@@ -406,6 +416,29 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         }
 
         await Assertions.Expect(body.Locator("img[src^='/photos/'], img[src^='/WebLog/'], img:not([src^='/'])")).ToHaveCountAsync(0);
+        Assert.True(await visit.EvaluateAsync<bool>("[...document.images].every(image => image.complete && image.naturalWidth > 0)"), "A picture of the post did not load.");
+        Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
+    }
+
+    /// <summary>
+    /// The first migration listed these pictures as lost: it asked the Wayback Machine for its newest capture, which
+    /// was the page saying the picture was gone. The index had an older capture that is the picture. It is a file of
+    /// the site now, where the post already pointed.
+    /// </summary>
+    [Theory]
+    [MemberData(nameof(PostsWithARecoveredUpload))]
+    public async Task APictureThatWasListedAsLostIsShownAgain(string path, string picture)
+    {
+        await using var visit = await chromium.VisitAsync(site.BaseAddress);
+        var page = visit.Page;
+
+        var response = await page.GotoAsync(path);
+        await visit.EvaluateAsync<int>(LoadEveryPicture);
+
+        Assert.Equal(200, response!.Status);
+        var shown = page.Locator($"main article.post .entry-content img[src='{picture}']").First;
+        Assert.True(await shown.EvaluateAsync<bool>("picture => picture.complete && picture.naturalWidth > 0"), $"{picture} did not load.");
         Assert.True(await visit.EvaluateAsync<bool>("[...document.images].every(image => image.complete && image.naturalWidth > 0)"), "A picture of the post did not load.");
         Assert.Empty(visit.OffSiteRequests);
         Assert.Empty(visit.FailedRequests);
