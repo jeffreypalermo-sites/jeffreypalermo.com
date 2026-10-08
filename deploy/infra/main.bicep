@@ -28,6 +28,12 @@ param frontDoor bool = false
 @description('The port the container listens on (the Dockerfile sets ASPNETCORE_HTTP_PORTS).')
 param port int = 8080
 
+@description('Host names of the environment that the site answers with its pages: the canonical host (ADR-0014). None: the Front Door has no custom domain.')
+param hostNames array = []
+
+@description('Host names that the site answers with a redirect to the canonical host: www. and feeds. of it.')
+param redirectHostNames array = []
+
 // What the Front Door compresses for a reader whose browser accepts it (ADR-0013): the site's text. Pictures, fonts
 // and video are compressed already. An answer is compressed only when it is between 1 KB and 8 MB and came from the
 // app with its length; the app sends its pages that way.
@@ -207,6 +213,29 @@ resource route 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = if (fro
   }
 }
 
+// The custom domain (ADR-0014): everything a host name needs is in custom-domains.bicep, and is deployed only when
+// the environment's settings list a host name. With none, the condition is false, nothing of that file exists, and
+// this template deploys what it deployed without it (CustomDomainTemplateTests proves it on the compiled template).
+// A custom domain needs the Front Door; deploy.ps1 refuses host names for an environment without one.
+var customDomain = frontDoor && !empty(concat(hostNames, redirectHostNames))
+
+module customDomains 'custom-domains.bicep' = if (customDomain) {
+  // Environments of one tier share a resource group: the deployment's name is the environment's own.
+  name: 'custom-domains-${environmentName}'
+  dependsOn: [
+    origins
+    route
+  ]
+  params: {
+    profileName: profile!.name
+    endpointName: endpoint!.name
+    originGroupName: originGroup!.name
+    hostNames: hostNames
+    redirectHostNames: redirectHostNames
+    routeCache: routeCache
+  }
+}
+
 output regions array = [
   for (region, i) in regions: {
     code: region.code
@@ -218,3 +247,6 @@ output regions array = [
 output frontDoorUrl string = frontDoor ? 'https://${endpoint!.properties.hostName}' : ''
 // What deploy.ps1 empties after a deployment: the cache of this endpoint.
 output frontDoorEndpointId string = frontDoor ? endpoint!.id : ''
+// What DNS needs for every host name, which deploy.ps1 prints: the TXT record that proves the name is the owner's
+// (while the validation has not passed), and where the name's address record points. No host name: an empty list.
+output hostNames array = customDomain ? customDomains!.outputs.hostNames : []

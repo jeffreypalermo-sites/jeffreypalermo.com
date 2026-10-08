@@ -15,5 +15,7 @@
 | [0011](0011-the-systems-dashboard-reads-the-site.md) | The system's health dashboard reads the site from the browser | Accepted |
 | [0012](0012-the-site-publishes-its-build-facts.md) | The site publishes the facts of its build: the Build writes them, the image carries them, `/_build` answers them | Accepted |
 | [0013](0013-the-front-door-keeps-the-sites-answers.md) | The Front Door keeps the site's answers at its edge (a browser 5 minutes, the edge 7 days); a deployment empties it; a failed step against Azure is run once more | Accepted |
+| [0014](0014-the-custom-domain-prepared.md) | The custom domain is prepared and switched off: host names per environment in the settings (none yet), a custom domain and a managed certificate for each, `www.` and `feeds.` on a route without a cache; the DNS move is a runbook | Accepted |
 
-The overall design is in [docs/architecture](../architecture/README.md).
+The overall design is in [docs/architecture](../architecture/README.md). The one runbook is
+[docs/runbooks/dns-cutover.md](../runbooks/dns-cutover.md): moving `jeffreypalermo.com` to the new site.
