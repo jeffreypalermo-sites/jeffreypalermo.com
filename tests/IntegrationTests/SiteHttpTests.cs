@@ -1,5 +1,7 @@
 using System.Net;
 using System.Xml.Linq;
+using JeffreyPalermo.Core.Content;
+using JeffreyPalermo.Infrastructure.Content;
 
 namespace JeffreyPalermo.IntegrationTests;
 
@@ -109,6 +111,43 @@ public sealed class SiteHttpTests(SiteFactory factory) : IClassFixture<SiteFacto
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(mediaType, response.Content.Headers.ContentType?.MediaType);
+    }
+
+    /// <summary>
+    /// The content rule about pictures knows what the site serves: every picture a body of the repository shows or
+    /// links to by an address on this site is asked of the site itself. What the rule calls a file is answered as a
+    /// picture, and what it lists as lost is answered 404. No body has a picture of a third kind.
+    /// </summary>
+    [Fact]
+    public async Task TheSiteAnswersEveryPictureOfEveryBodyWithAFileExceptTheOnesListedAsLost()
+    {
+        var layout = new ContentLayout(TestPaths.Content);
+        var site = await new FileSystemContentSource(layout, "test").LoadAsync();
+        var lost = (await File.ReadAllLinesAsync(Path.Join(TestPaths.RepositoryRoot, "migration", "uploads-manifest.missing.txt"))).Where(line => line.Length > 0).ToList();
+        var files = new SiteFiles(layout.UploadPaths(), lost);
+        var pictures = site.Posts.Select(post => post.HtmlBody)
+            .Concat(site.Pages.Select(page => page.HtmlBody))
+            .Concat(site.Posts.SelectMany(post => post.Comments).Select(comment => comment.ContentHtml))
+            .SelectMany(SitePictures.Find)
+            .DistinctBy(picture => picture.Address)
+            .ToList();
+        var client = factory.ClientFor();
+
+        var wrong = new List<string>();
+        foreach (var picture in pictures)
+        {
+            var expectAFile = !SitePictures.LeadsNowhere(picture, files, site.FindLegacyRedirect);
+            Assert.True(expectAFile || (picture.Path is { } path && files.IsListedAsLost(path)), $"{picture.Address} leads nowhere and is not listed as lost.");
+            using var response = await client.GetAsync(new Uri(picture.Address, UriKind.Relative));
+            var isAPicture = response.StatusCode == HttpStatusCode.OK && response.Content.Headers.ContentType?.MediaType?.StartsWith("image/", StringComparison.Ordinal) == true;
+            if (expectAFile ? !isAPicture : response.StatusCode != HttpStatusCode.NotFound)
+            {
+                wrong.Add($"{(int)response.StatusCode} {response.Content.Headers.ContentType?.MediaType} {picture.Address}");
+            }
+        }
+
+        Assert.True(pictures.Count > 400, $"Only {pictures.Count} pictures were found.");
+        Assert.True(wrong.Count == 0, $"The site does not answer {wrong.Count} pictures as the content rule expects:\n{string.Join('\n', wrong)}");
     }
 
     /// <summary>The system's health dashboard reads these from a page on another origin (ADR-0011).</summary>

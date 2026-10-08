@@ -277,7 +277,7 @@ public static partial class ExternalSubresources
         && ExternalSubresource.HostOf(address).Length > 0;
 
     /// <summary>The attributes of a tag, each with its value and where the value stands in the whole markup. One without a value has an empty one.</summary>
-    private static Dictionary<string, Written> Attributes(Match tag)
+    internal static Dictionary<string, Written> Attributes(Match tag)
     {
         var attributes = new Dictionary<string, Written>(StringComparer.OrdinalIgnoreCase);
         var written = tag.Groups["attributes"];
@@ -294,7 +294,7 @@ public static partial class ExternalSubresources
 
     // A comment, a closing tag, or an opening tag with its attributes. Quoted values may hold a '>'.
     [GeneratedRegex(@"<!--.*?-->|</(?<closed>[A-Za-z][A-Za-z0-9]*)\s*>|<(?<name>[A-Za-z][A-Za-z0-9:]*)(?<attributes>(?:[^>""']|""[^""]*""|'[^']*')*)>", RegexOptions.Singleline)]
-    private static partial Regex Markup();
+    internal static partial Regex Markup();
 
     [GeneratedRegex(@"(?<name>[^\s""'=<>/]+)(?:\s*=\s*(?:""(?<value>[^""]*)""|'(?<value>[^']*)'|(?<value>[^\s""'>]+)))?", RegexOptions.Singleline)]
     private static partial Regex Attribute();
@@ -312,5 +312,5 @@ public static partial class ExternalSubresources
     private static partial Regex MarkdownPicture();
 
     /// <summary>A piece of the markup as it is written, and where it stands.</summary>
-    private readonly record struct Written(string Text, int Index);
+    internal readonly record struct Written(string Text, int Index);
 }

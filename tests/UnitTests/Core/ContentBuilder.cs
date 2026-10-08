@@ -33,6 +33,7 @@ internal static class ContentBuilder
         IEnumerable<Page>? pages = null,
         IEnumerable<Attachment>? attachments = null,
         IEnumerable<Term>? terms = null,
-        IEnumerable<LegacyRedirect>? redirects = null) =>
-        SiteContent.Create("test", posts ?? [], pages ?? [], attachments ?? [], terms ?? [Author, Blog, Onion], redirects);
+        IEnumerable<LegacyRedirect>? redirects = null,
+        SiteFiles? files = null) =>
+        SiteContent.Create("test", posts ?? [], pages ?? [], attachments ?? [], terms ?? [Author, Blog, Onion], redirects, files);
 }

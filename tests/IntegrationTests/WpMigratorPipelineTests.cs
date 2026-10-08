@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using JeffreyPalermo.Core.Content;
 using JeffreyPalermo.Infrastructure.Content;
 using JeffreyPalermo.Infrastructure.FrontMatter;
 using JeffreyPalermo.Tools.WpMigrator;
@@ -90,6 +91,15 @@ public sealed class WpMigratorPipelineTests : IDisposable
 
         // an image nobody has any more (Photon 400, a host that no longer resolves, no capture) is reported missing.
         Assert.False(File.Exists(Layout.UploadFile("/wp-content/uploads/external/gone.test/a.png")));
+
+        // The site refuses a picture that leads nowhere. The media command lists what is missing beside the manifest
+        // and in the content tree, where the site reads which pictures it is known not to have; then the tree loads.
+        var refused = await Assert.ThrowsAsync<ContentValidationException>(() => new FileSystemContentSource(Layout, "test").LoadAsync());
+        Assert.All(refused.Errors, error => Assert.Contains("leads nowhere on this site", error, StringComparison.Ordinal));
+        await RecoverCommand.WriteLostAsync(Manifest, Layout, media.Missing);
+        Assert.Equal(media.Missing, await File.ReadAllLinesAsync(RecoverCommand.LostFile(Manifest)));
+        Assert.Equal(media.Missing, JsonSerializer.Deserialize<List<string>>(await File.ReadAllTextAsync(Layout.LostUploadsFile)));
+        Assert.Equal(2, (await new FileSystemContentSource(Layout, "test").LoadAsync()).Posts.Count);
     }
 
     /// <summary>After the freeze, posts are edited in git: a conversion would undo those edits (ADR-0010).</summary>

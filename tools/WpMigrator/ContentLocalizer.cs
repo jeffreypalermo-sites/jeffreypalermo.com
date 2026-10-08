@@ -1,7 +1,3 @@
-using System.Text;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using JeffreyPalermo.Core.Content;
 using JeffreyPalermo.Infrastructure.Content;
 
 namespace JeffreyPalermo.Tools.WpMigrator;
@@ -41,27 +37,31 @@ public sealed record LocalizeReport(IReadOnlyList<LocalizeOutcome> Outcomes, int
 /// run on the frozen tree, where <c>convert</c> must not (ADR-0010). What cannot be copied is left and reported with
 /// the reason: a frame, a script, an image no source has. Running it again fetches nothing it already has.
 /// </summary>
-public sealed partial class ContentLocalizer(ExternalImageFetcher fetcher, ContentLayout layout)
+public sealed class ContentLocalizer(ExternalImageFetcher fetcher, ContentLayout layout)
 {
     private static readonly string[] ImageExtensions = [".jpg", ".png", ".gif", ".webp", ".bmp", ".ico", ".svg"];
-
-    private static readonly UTF8Encoding Utf8 = new(encoderShouldEmitUTF8Identifier: false);
 
     private readonly Dictionary<string, Resolution> _resolved = new(StringComparer.Ordinal);
 
     public async Task<LocalizeReport> LocalizeAsync(CancellationToken cancellationToken = default)
     {
         var outcomes = new List<LocalizeOutcome>();
-        var changed = 0;
-        foreach (var file in Files(layout.PostsDirectory).Concat(Files(layout.PagesDirectory)))
-        {
-            var isComments = file.EndsWith(".comments.json", StringComparison.OrdinalIgnoreCase);
-            var wrote = isComments
-                ? await LocalizeCommentsAsync(file, outcomes, cancellationToken).ConfigureAwait(false)
-                : await LocalizeBodyAsync(file, outcomes, cancellationToken).ConfigureAwait(false);
-            changed += wrote ? 1 : 0;
-        }
+        var changed = await ContentBodies.RewriteAsync(
+            layout,
+            async body =>
+            {
+                var found = body.IsMarkdown ? ExternalSubresources.FindInMarkdown(body.Text) : ExternalSubresources.Find(body.Text);
+                if (body.CanBeWritten)
+                {
+                    return await ResolveAndRewriteAsync(body.Name, body.Text, found, outcomes, cancellationToken).ConfigureAwait(false);
+                }
 
+                outcomes.AddRange(found.Select(s => new LocalizeOutcome(
+                    body.Name, s, null, null, null,
+                    s.Kind == SubresourceKind.Image ? "the comments file is not written the way this tool writes it; change the address by hand" : WhyNotCopied(s.Kind))));
+                return body.Text;
+            },
+            cancellationToken).ConfigureAwait(false);
         return new LocalizeReport(outcomes, changed);
     }
 
@@ -74,90 +74,6 @@ public sealed partial class ContentLocalizer(ExternalImageFetcher fetcher, Conte
         SubresourceKind.Media => "sound and video are not copied by this command: a recording is large and is stored with Git LFS by hand",
         _ => "it is not an image",
     };
-
-    private static IEnumerable<string> Files(string directory) =>
-        Directory.Exists(directory)
-            ? Directory.EnumerateFiles(directory, "*.*", SearchOption.AllDirectories)
-                .Where(f => f.EndsWith(".html", StringComparison.OrdinalIgnoreCase)
-                    || f.EndsWith(".md", StringComparison.OrdinalIgnoreCase)
-                    || f.EndsWith(".comments.json", StringComparison.OrdinalIgnoreCase))
-                .Order(StringComparer.Ordinal)
-            : [];
-
-    // A post or a page: front matter, then the body. Only the body is read, and only its addresses are written.
-    private async Task<bool> LocalizeBodyAsync(string file, List<LocalizeOutcome> outcomes, CancellationToken cancellationToken)
-    {
-        var text = await File.ReadAllTextAsync(file, Utf8, cancellationToken).ConfigureAwait(false);
-        var frontMatter = FrontMatter().Match(text);
-        if (!frontMatter.Success)
-        {
-            return false;
-        }
-
-        var body = text[frontMatter.Length..];
-        var found = file.EndsWith(".md", StringComparison.OrdinalIgnoreCase) ? ExternalSubresources.FindInMarkdown(body) : ExternalSubresources.Find(body);
-        var rewritten = await ResolveAndRewriteAsync(Relative(file), body, found, outcomes, cancellationToken).ConfigureAwait(false);
-        if (rewritten == body)
-        {
-            return false;
-        }
-
-        await File.WriteAllTextAsync(file, string.Concat(text.AsSpan(0, frontMatter.Length), rewritten), Utf8, cancellationToken).ConfigureAwait(false);
-        return true;
-    }
-
-    // The comments of a post. The file is written again only when writing it unchanged would give the same bytes, so
-    // that a change shows nothing but the addresses.
-    private async Task<bool> LocalizeCommentsAsync(string file, List<LocalizeOutcome> outcomes, CancellationToken cancellationToken)
-    {
-        var text = await File.ReadAllTextAsync(file, Utf8, cancellationToken).ConfigureAwait(false);
-        List<Comment>? comments;
-        try
-        {
-            comments = JsonSerializer.Deserialize<List<Comment>>(text, ContentJson.Options);
-        }
-        catch (JsonException)
-        {
-            // The loader reports a file it cannot read; there is nothing to localize in it.
-            return false;
-        }
-
-        if (comments is null || comments.Count == 0)
-        {
-            return false;
-        }
-
-        var writable = Written(comments) == text;
-        var changed = false;
-        for (var i = 0; i < comments.Count; i++)
-        {
-            var name = $"{Relative(file)}#comment-{comments[i].Id}";
-            var found = ExternalSubresources.Find(comments[i].ContentHtml);
-            if (!writable)
-            {
-                outcomes.AddRange(found.Select(s => new LocalizeOutcome(
-                    name, s, null, null, null,
-                    s.Kind == SubresourceKind.Image ? "the comments file is not written the way this tool writes it; change the address by hand" : WhyNotCopied(s.Kind))));
-                continue;
-            }
-
-            var rewritten = await ResolveAndRewriteAsync(name, comments[i].ContentHtml, found, outcomes, cancellationToken).ConfigureAwait(false);
-            if (rewritten != comments[i].ContentHtml)
-            {
-                comments[i] = comments[i] with { ContentHtml = rewritten };
-                changed = true;
-            }
-        }
-
-        if (changed)
-        {
-            await File.WriteAllTextAsync(file, Written(comments), Utf8, cancellationToken).ConfigureAwait(false);
-        }
-
-        return changed;
-    }
-
-    private static string Written(List<Comment> comments) => JsonSerializer.Serialize(comments, ContentJson.Options).ReplaceLineEndings("\n") + "\n";
 
     private async Task<string> ResolveAndRewriteAsync(string name, string body, IReadOnlyList<ExternalSubresource> found, List<LocalizeOutcome> outcomes, CancellationToken cancellationToken)
     {
@@ -236,11 +152,6 @@ public sealed partial class ContentLocalizer(ExternalImageFetcher fetcher, Conte
         await File.WriteAllBytesAsync(target, image.Bytes, cancellationToken).ConfigureAwait(false);
         return new Resolution(localPath, image.Source, image.From, null);
     }
-
-    private string Relative(string file) => Path.GetRelativePath(layout.Root, file).Replace('\\', '/');
-
-    [GeneratedRegex(@"\A---\r?\n.*?\r?\n---\r?\n", RegexOptions.Singleline)]
-    private static partial Regex FrontMatter();
 
     private sealed record Resolution(string? LocalPath, ImageSource? Source, string? From, string? Left)
     {
