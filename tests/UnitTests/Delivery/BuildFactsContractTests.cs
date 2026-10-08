@@ -5,7 +5,7 @@ using YamlDotNet.RepresentationModel;
 namespace JeffreyPalermo.UnitTests.Delivery;
 
 /// <summary>
-/// How the Build's facts reach the running site (ADR-0012): the tests measure, the image job writes
+/// How the Build's facts reach the running site (ADR-0012): the compile and the tests measure, the image job writes
 /// <c>build-facts.json</c> from their results before it builds the image, and the <c>Dockerfile</c> copies the file
 /// beside the app. The Build cannot be run here, so each link of that chain is pinned.
 /// </summary>
@@ -77,8 +77,69 @@ public class BuildFactsContractTests
         Assert.Contains(" -ResultsPath (Join-Path $env:RUNNER_TEMP test-results) ", run, StringComparison.Ordinal);
         Assert.EndsWith(" -OutputPath build-facts.json", run, StringComparison.Ordinal);
 
-        // A release whose facts lack what the tests measured is not built: the wait for job test would buy nothing.
-        Assert.Contains(" -Require tests, coverage ", run, StringComparison.Ordinal);
+        // A release whose facts lack what job test measured is not built: the wait for it would buy nothing. Named one
+        // by one: tests at three levels, the coverage, and the static analysis.
+        Assert.Contains(" -Require tests.unit, tests.integration, tests.acceptance, coverage, analysis ", run, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void TheCompileWritesItsLogWhereTheArtifactIsTakenFrom()
+    {
+        // The compile is the static analysis. Its log is the evidence of what it found: it goes with the test
+        // results, where the script looks for *.msbuild.log. Summary makes MSBuild end the log with its count.
+        var steps = Build.Steps("test");
+        var compiled = steps.FindIndex(step => Workflow.Scalar(step, "name") == "Compile");
+        var uploaded = steps.FindIndex(step => Workflow.With(step, "name") == "test-results");
+
+        Assert.True(compiled >= 0 && compiled < uploaded, "Expected the compile, then the upload of the artifact test-results.");
+        Assert.Equal(
+            "dotnet build JeffreyPalermo.slnx --configuration Release \"-flp:LogFile=TestResults/compile.msbuild.log;Verbosity=minimal;Summary\"",
+            Workflow.Run(steps[compiled]));
+        Assert.Equal("TestResults", Workflow.With(steps[uploaded], "path"));
+        Assert.Contains("-Filter '*.msbuild.log'", Script(), StringComparison.Ordinal);
+
+        // No step compiles the solution a second time for the tests: what they ran is what the log is about.
+        Assert.All(
+            steps.Where(step => Workflow.Run(step).StartsWith("dotnet test ", StringComparison.Ordinal)),
+            step => Assert.Contains(" --no-build ", Workflow.Run(step), StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void TheBuildIsSetAsTheAnalysisSaysItIs()
+    {
+        // The facts read both values from Directory.Build.props, which holds for every project, and count what the
+        // project files switch off. What a command line sets the script cannot see: no step that compiles may set
+        // any of it, or the compile's zero would mean something else than the facts say.
+        var settings = File.ReadAllText(Path.Join(Root, "Directory.Build.props"));
+        Assert.Contains("<TreatWarningsAsErrors>true</TreatWarningsAsErrors>", settings, StringComparison.Ordinal);
+        Assert.Contains("<AnalysisLevel>latest-recommended</AnalysisLevel>", settings, StringComparison.Ordinal);
+
+        string[] switches = ["TreatWarningsAsErrors", "NoWarn", "WarningsNotAsErrors", "AnalysisLevel", "RunAnalyzers", "EnableNETAnalyzers", "warnaserror", "nowarn"];
+        var compiling = Directory.EnumerateFiles(Workflow.Directory, "*.yml").Append(Path.Join(Root, "Dockerfile")).Append(Path.Join(Root, "scripts", "build-deploy-package.sh"));
+        Assert.All(compiling, file => Assert.All(switches, name => Assert.DoesNotContain(name, File.ReadAllText(file), StringComparison.OrdinalIgnoreCase)));
+    }
+
+    [Fact]
+    public void TheAcceptanceLevelCountsTheContractEveryDeploymentReplays()
+    {
+        // tests.acceptance is declared: the script counts the URLs of one file. That file is the one the deploy
+        // package carries, test-site.ps1 hands to the verifier, and verify.ps1 has replayed against the first region
+        // of every environment, the first environment among them.
+        const string contract = "tests/contract/url-contract.tsv";
+        Assert.Contains($"$contract = '{contract}'", Script(), StringComparison.Ordinal);
+        Assert.Contains($"cp \"$root/{contract}\" \"$root/tests/contract/exceptions.tsv\" \"$out/contract/\"", File.ReadAllText(Path.Join(Root, "scripts", "build-deploy-package.sh")), StringComparison.Ordinal);
+        Assert.Contains(
+            "& $verifier verify \"$($BaseUrl.TrimEnd('/'))/\" (Join-Path $PSScriptRoot 'contract' 'url-contract.tsv') (Join-Path $PSScriptRoot 'contract' 'exceptions.tsv')",
+            File.ReadAllText(Path.Join(Root, "deploy", "test-site.ps1")),
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "if ($first) { & $testSite -BaseUrl $region.url -Version $Version -TimeoutSeconds $TimeoutSeconds }",
+            File.ReadAllText(Path.Join(Root, "deploy", "verify.ps1")),
+            StringComparison.Ordinal);
+
+        // The verifier asks every URL of the file and lets a reviewed exception change only the answer it expects.
+        var verifier = File.ReadAllText(Path.Join(Root, "tools", "UrlContract", "UrlContractVerifier.cs"));
+        Assert.Contains("UrlContractRules.Check(entry, observed, exceptions.GetValueOrDefault(entry.Url))", verifier, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -122,12 +183,27 @@ public class BuildFactsContractTests
     }
 
     [Fact]
-    public void NoStaticAnalysisIsClaimed()
+    public void TheAnalysisIsTheCompilesOwnAndNoOtherToolIsClaimed()
     {
-        // The dashboard reads analysis.qodanaProblems. No workflow runs Qodana, so the facts must not name a count.
+        // The dashboard reads analysis.qodanaProblems. No workflow runs Qodana, so the facts must not use that name:
+        // the count they carry is of the compile, under the tool's own name.
         Assert.All(Directory.EnumerateFiles(Workflow.Directory, "*.yml"), file => Assert.DoesNotContain("qodana", File.ReadAllText(file), StringComparison.OrdinalIgnoreCase));
+        Assert.DoesNotMatch(new Regex("qodana", RegexOptions.IgnoreCase), Script());
+        Assert.Matches(@"(?m)^\s*tool\s*=\s*'\.NET analyzers'$", Script());
+
+        // Null until a compile's log says what it found: the section starts as nothing and no zero is written down.
         Assert.Matches(@"(?m)^\s*analysis\s*=\s*\$null$", Script());
-        Assert.DoesNotMatch(new Regex("qodanaProblems"), Script());
+        Assert.Matches(@"(?m)^\s*problems\s*=\s*\$compile\.problems$", Script());
+    }
+
+    [Fact]
+    public void TheFullSystemTestsAreNotCalledTheAcceptanceLevel()
+    {
+        // The project AcceptanceTests runs against the image in the Build, before a release. Its results are counted
+        // as fullSystem; acceptance is what the first environment is asked.
+        Assert.Contains("fullSystem = 'acceptancetests.dll'", Script(), StringComparison.Ordinal);
+        Assert.DoesNotContain("acceptance = 'acceptancetests.dll'", Script(), StringComparison.Ordinal);
+        Assert.Matches(@"(?m)^\s*acceptance\s*=\s*\$Declared$", Script());
     }
 
     private static string Script() => File.ReadAllText(Path.Join(Root, "scripts", "Write-BuildFacts.ps1"));

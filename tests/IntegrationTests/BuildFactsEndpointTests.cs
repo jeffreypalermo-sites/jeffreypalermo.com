@@ -16,8 +16,8 @@ public sealed class BuildFactsEndpointTests(SiteFactory factory) : IClassFixture
           "version": "1.0.41",
           "commit": "0a1b2c3d4e5f60718293a4b5c6d7e8f901234567",
           "code": { "linesOfCode": 10184, "files": 146, "languages": [ { "name": "C#", "lines": 7549, "files": 103 } ] },
-          "tests": { "unit": 384, "integration": 156, "acceptance": null },
-          "analysis": null
+          "tests": { "unit": 384, "integration": 156, "acceptance": 9337, "fullSystem": null, "acceptanceIs": { "kind": "declared" } },
+          "analysis": { "tool": ".NET analyzers", "warningsAsErrors": true, "problems": 0, "suppressions": 0 }
         }
         """;
 

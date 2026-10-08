@@ -1,6 +1,7 @@
 # ADR-0014: The custom domain is prepared and switched off
 
-- **Status:** Accepted
+- **Status:** Accepted. The choice it left to Jeffrey, the top of the zone, is taken: option A, in
+  [ADR-0016](0016-the-dns-zone-as-code.md)
 - **Date:** 2026-10-08
 - **Carries out** what [ADR-0008](0008-eleven-regions-behind-front-door.md) left for later ("Not done here: the
   custom domain"), up to the point where DNS changes. The DNS move itself waits for Jeffrey.

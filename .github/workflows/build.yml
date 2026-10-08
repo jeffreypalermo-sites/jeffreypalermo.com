@@ -43,8 +43,10 @@ jobs:
         with:
           global-json-file: global.json
 
+      # The compile is the static analysis: the .NET analyzers run in it and a warning is an error
+      # (Directory.Build.props). Its log goes with the test results, and the facts count what it found (ADR-0012).
       - name: Compile
-        run: dotnet build JeffreyPalermo.slnx --configuration Release
+        run: dotnet build JeffreyPalermo.slnx --configuration Release "-flp:LogFile=TestResults/compile.msbuild.log;Verbosity=minimal;Summary"
 
       - name: Unit tests
         run: dotnet test tests/UnitTests --configuration Release --no-build --logger trx --results-directory TestResults --collect "${COVERAGE}"
@@ -56,7 +58,8 @@ jobs:
       - name: Compile the infrastructure code
         run: |
           set -euo pipefail
-          notices="$(az bicep build --file deploy/infra/main.bicep --stdout 2>&1 >/dev/null)"
+          # The site's template, with the module it deploys for host names, and the DNS zone's (ADR-0016).
+          notices="$(az bicep build --file deploy/infra/main.bicep --stdout 2>&1 >/dev/null; az bicep build --file deploy/infra/dns-zone.bicep --stdout 2>&1 >/dev/null)"
           echo "$notices"
           # A diagnostic of the template fails the Build; the CLI's own notices (a newer Bicep exists) do not.
           if echo "$notices" | grep --quiet --extended-regexp ' : (Warning|Error) '; then exit 1; fi
@@ -97,6 +100,8 @@ jobs:
 
       # What this release was built from and what job test measured, written beside the Dockerfile, which copies it
       # into the image. The results stay outside the checkout: TestResults is for the full-system tests below.
+      # A release without tests at three levels and an analysis is not built. The acceptance level is declared: the
+      # URL contract, which the pipeline replays against the first environment after this Build.
       - name: Download the test results
         uses: actions/download-artifact@v8
         with:
@@ -105,7 +110,7 @@ jobs:
 
       - name: Write the build facts
         shell: pwsh
-        run: ./scripts/Write-BuildFacts.ps1 -Version $env:VERSION -ResultsPath (Join-Path $env:RUNNER_TEMP test-results) -Require tests, coverage -OutputPath build-facts.json
+        run: ./scripts/Write-BuildFacts.ps1 -Version $env:VERSION -ResultsPath (Join-Path $env:RUNNER_TEMP test-results) -Require tests.unit, tests.integration, tests.acceptance, coverage, analysis -OutputPath build-facts.json
 
       - name: Build the image
         run: |
