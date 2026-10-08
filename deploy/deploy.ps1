@@ -18,7 +18,16 @@
          deployment before anything is applied, with every refused region named;
       2. applies infra/main.bicep as the deployment stack stack-<system>-<environment>-web in the tier's resource
          group: one container app per region running <registry>/<system>/web:<version>, and the Front Door. The
-         stack denies changes by anyone but the deploy identity, and removes what leaves the template.
+         stack denies changes by anyone but the deploy identity, and removes what leaves the template;
+      3. where there is a Front Door, empties its cache (ADR-0013). The edge keeps the site's answers for days, so
+         without this a reader would get pages of the release before. First every region must answer as the
+         release at its own address: emptied sooner, the edge could fill again from a region that still runs the
+         release before. Then the script asks Azure to purge everything and waits until Azure reports it done.
+
+    A step against Azure that fails is run once more after a pause: the platform fails by itself at times (the first
+    production deployment of the regions: "(500 InternalError): managed identity bootstrap failed"; hours later the
+    same deployment passed). It is not run again when the error says the request itself is wrong or not allowed,
+    which no second attempt changes. When the second attempt fails too, what Azure said both times is shown.
 
     -Context is a JSON file from the pipeline: system, resourceGroup, registryServer and deployPrincipalId are read.
     Exit code 0 on success. Nothing is written to standard error on success: the Azure CLI's own notices are kept
@@ -28,7 +37,11 @@
 param(
     [Parameter(Mandatory)] [string] $Environment,
     [Parameter(Mandatory)] [string] $Version,
-    [Parameter(Mandatory)] [string] $Context
+    [Parameter(Mandatory)] [string] $Context,
+    # How long to wait before the second attempt at a step Azure failed, and how long a region may take to answer as
+    # the release before the Front Door's cache is emptied. The pipeline passes neither.
+    [int] $RetryPauseSeconds = 60,
+    [int] $TimeoutSeconds = 600
 )
 
 Set-StrictMode -Version Latest
@@ -122,6 +135,84 @@ while ($waiting.Count -gt 0) {
 }
 Write-Host "PASS express environments: $(@($regions | ForEach-Object { $_.code }) -join ', ')"
 
+# Runs the Azure CLI and keeps what it says. Nothing of it reaches this script's standard error: the CLI writes
+# notices there also when it succeeds.
+function Invoke-Az {
+    param([Parameter(Mandatory)] [string[]] $Arguments)
+    $saidFile = Join-Path ([IO.Path]::GetTempPath()) "az-$([Guid]::NewGuid().ToString('N')).log"
+    $PSNativeCommandUseErrorActionPreference = $false
+    $output = az @Arguments 2>$saidFile
+    $exitCode = $LASTEXITCODE
+    $PSNativeCommandUseErrorActionPreference = $true
+    $said = @(if (Test-Path -LiteralPath $saidFile) { Get-Content -LiteralPath $saidFile })
+    Remove-Item -LiteralPath $saidFile -Force -ErrorAction SilentlyContinue
+    return [pscustomobject] @{
+        ExitCode = $exitCode
+        Output   = (@($output) | ForEach-Object { [string] $_ }) -join "`n"
+        # What the CLI wrote to standard error: its notices, and its error when it failed.
+        Said     = [string[]] @($said | ForEach-Object { [string] $_ })
+    }
+}
+
+# The errors of Azure Resource Manager that no second attempt changes: the template or the request is wrong, or Azure
+# does not allow it. Every other failure may be the platform's own, and is tried once more.
+$errorsNoAttemptChanges = @(
+    'InvalidTemplate', 'InvalidTemplateDeployment', 'InvalidDeploymentParameterValue', 'InvalidRequestContent',
+    'RequestDisallowedByPolicy', 'RequestDisallowedByAzure', 'LocationNotAvailableForResourceType',
+    'NoRegisteredProviderFound', 'MissingSubscriptionRegistration'
+)
+# The first such error in what the CLI said; an empty text when there is none.
+function Find-ErrorNoAttemptChanges {
+    param([string[]] $Said)
+    $text = @($Said) -join "`n"
+    foreach ($code in $errorsNoAttemptChanges) {
+        # The code as a word of its own: "InvalidTemplate" is not found in "InvalidTemplateDeployment".
+        if ($text -cmatch "(?<![A-Za-z])$code(?![A-Za-z])") { return $code }
+    }
+    # The Bicep file does not compile.
+    if ($text -cmatch 'Error BCP\d+') { return $Matches[0] }
+    return ''
+}
+
+# Runs a step against Azure. When it fails, and the error is not one that no attempt changes, waits and runs it once
+# more. Gives every attempt back, so a failure can show what Azure said each time.
+function Invoke-AzOnceMore {
+    param([Parameter(Mandatory)] [string] $What, [Parameter(Mandatory)] [string[]] $Arguments)
+    $attempts = @(Invoke-Az -Arguments $Arguments)
+    $hopeless = ''
+    if ($attempts[0].ExitCode -ne 0) {
+        $hopeless = Find-ErrorNoAttemptChanges -Said $attempts[0].Said
+        if (-not $hopeless) {
+            Write-Host "$What failed (exit code $($attempts[0].ExitCode)). Azure said:"
+            @($attempts[0].Said) | ForEach-Object { Write-Host "  $_" }
+            Write-Host "Trying once more in $RetryPauseSeconds seconds: the platform fails by itself at times."
+            Start-Sleep -Seconds $RetryPauseSeconds
+            $attempts += @(Invoke-Az -Arguments $Arguments)
+        }
+    }
+    return [pscustomobject] @{
+        Succeeded             = $attempts[-1].ExitCode -eq 0
+        Attempts              = $attempts
+        ErrorNoAttemptChanges = $hopeless
+    }
+}
+
+# Says why a step failed: one attempt that could not succeed, or two attempts with what Azure said each time.
+function Write-Failure {
+    param([Parameter(Mandatory)] [string] $What, [Parameter(Mandatory)] $Result)
+    $attempts = @($Result.Attempts)
+    if ($attempts.Count -eq 1) {
+        Write-Host "FAIL $What (exit code $($attempts[0].ExitCode)). Not tried again: no second attempt changes $($Result.ErrorNoAttemptChanges)."
+        @($attempts[0].Said) | ForEach-Object { Write-Host "  $_" }
+        return
+    }
+    Write-Host "FAIL $What, in two attempts $RetryPauseSeconds seconds apart."
+    Write-Host "  First attempt (exit code $($attempts[0].ExitCode)):"
+    @($attempts[0].Said) | ForEach-Object { Write-Host "    $_" }
+    Write-Host "  Second attempt (exit code $($attempts[1].ExitCode)):"
+    @($attempts[1].Said) | ForEach-Object { Write-Host "    $_" }
+}
+
 # 2. The apps, and the Front Door, as one stack.
 $stack = "stack-$system-$Environment-web"
 $frontDoor = [bool] $place.frontDoor
@@ -142,25 +233,22 @@ $parametersFile = Join-Path ([IO.Path]::GetTempPath()) "parameters-$stack-$([Gui
     }
 } | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $parametersFile -Encoding utf8NoBOM
 
-$notices = Join-Path ([IO.Path]::GetTempPath()) "deploy-$stack-$([Guid]::NewGuid().ToString('N')).log"
-$PSNativeCommandUseErrorActionPreference = $false
-az stack group create `
-    --name $stack `
-    --resource-group $resourceGroup `
-    --template-file (Join-Path $PSScriptRoot 'infra' 'main.bicep') `
-    --parameters "@$parametersFile" `
-    --action-on-unmanage deleteResources `
-    --deny-settings-mode denyWriteAndDelete `
-    --deny-settings-excluded-principals $facts.deployPrincipalId `
-    --yes `
-    --output none 2>$notices
-$exitCode = $LASTEXITCODE
-$PSNativeCommandUseErrorActionPreference = $true
+$applied = Invoke-AzOnceMore -What "Applying $stack" -Arguments @(
+    'stack', 'group', 'create',
+    '--name', $stack,
+    '--resource-group', $resourceGroup,
+    '--template-file', (Join-Path $PSScriptRoot 'infra' 'main.bicep'),
+    '--parameters', "@$parametersFile",
+    '--action-on-unmanage', 'deleteResources',
+    '--deny-settings-mode', 'denyWriteAndDelete',
+    '--deny-settings-excluded-principals', [string] $facts.deployPrincipalId,
+    '--yes',
+    '--output', 'none'
+)
 Remove-Item -LiteralPath $parametersFile -Force -ErrorAction SilentlyContinue
 
-if ($exitCode -ne 0) {
-    Write-Host "FAIL $stack was not applied (exit code $exitCode):"
-    Get-Content -LiteralPath $notices | ForEach-Object { Write-Host "  $_" }
+if (-not $applied.Succeeded) {
+    Write-Failure -What "$stack was not applied" -Result $applied
     # An express environment says why an app could not start in the app's deploymentErrors.
     foreach ($region in $regions) {
         $app = "ca-$system-$Environment-web-$($region.code)"
@@ -169,8 +257,64 @@ if ($exitCode -ne 0) {
         $PSNativeCommandUseErrorActionPreference = $true
         if ($errors) { Write-Host "  $app reports: $errors" }
     }
-    Remove-Item -LiteralPath $notices -Force -ErrorAction SilentlyContinue
     exit 1
 }
-Remove-Item -LiteralPath $notices -Force -ErrorAction SilentlyContinue
-Write-Host "PASS ${stack}: release $Version in $(@($regions | ForEach-Object { $_.code }) -join ', ')"
+Write-Host "PASS ${stack}: release $Version in $(@($regions | ForEach-Object { $_.code }) -join ', ')$(if (@($applied.Attempts).Count -gt 1) { ', at the second attempt' })"
+if (-not $frontDoor) { exit 0 }
+
+# 3. The Front Door's cache (ADR-0013).
+# One value of the stack's outputs; nothing when the stack does not have it. A list comes back as its items, so a
+# caller that expects a list wraps the call in @( ).
+function Get-StackOutput {
+    param($Outputs, [Parameter(Mandatory)] [string] $Name)
+    if ($Outputs -is [System.Collections.IDictionary] -and $Outputs.Contains($Name)) { return $Outputs[$Name].value }
+}
+$shown = Invoke-Az -Arguments @('stack', 'group', 'show', '--name', $stack, '--resource-group', $resourceGroup, '--output', 'json')
+if ($shown.ExitCode -ne 0) {
+    Write-Host "FAIL the outputs of $stack could not be read (exit code $($shown.ExitCode)); the Front Door's cache was not emptied:"
+    @($shown.Said) | ForEach-Object { Write-Host "  $_" }
+    exit 1
+}
+$outputs = ($shown.Output | ConvertFrom-Json -AsHashtable).outputs
+$endpointId = [string] (Get-StackOutput -Outputs $outputs -Name 'frontDoorEndpointId')
+$frontDoorUrl = [string] (Get-StackOutput -Outputs $outputs -Name 'frontDoorUrl')
+$apps = @(Get-StackOutput -Outputs $outputs -Name 'regions')
+if (-not $endpointId -or -not $frontDoorUrl -or $apps.Count -eq 0) {
+    Write-Host "FAIL $stack does not name its regions and its Front Door endpoint; the Front Door's cache was not emptied"
+    exit 1
+}
+
+# Every region first, at its own address. The stack is applied before every region has started the new revision,
+# and a region that still runs the release before would fill the emptied edge with its pages again.
+$testSite = Join-Path $PSScriptRoot 'test-site.ps1'
+foreach ($app in $apps) {
+    & $testSite -BaseUrl ([string] $app.url) -Version $Version -TimeoutSeconds $TimeoutSeconds -SkipContract
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "FAIL $($app.code) does not run release $Version; the Front Door's cache was not emptied"
+        exit 1
+    }
+}
+
+# Everything the endpoint keeps under its own host name: a purge names the paths and the domains it is for.
+$domains = @(([Uri] $frontDoorUrl).Host)
+$purgeFile = Join-Path ([IO.Path]::GetTempPath()) "purge-$stack-$([Guid]::NewGuid().ToString('N')).json"
+@{ contentPaths = @('/*'); domains = @($domains) } | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $purgeFile -Encoding utf8NoBOM
+Write-Host "Emptying the Front Door's cache: /* of $($domains -join ', ')"
+# "az afd endpoint purge" is not part of the Azure CLI itself (it comes with an extension the worker may not have).
+# This is the same request, and the CLI waits until Azure reports the purge done.
+$purged = Invoke-AzOnceMore -What "Emptying the Front Door's cache" -Arguments @(
+    'resource', 'invoke-action',
+    '--action', 'purge',
+    '--ids', $endpointId,
+    '--api-version', '2024-02-01',
+    '--request-body', "@$purgeFile",
+    '--output', 'none'
+)
+Remove-Item -LiteralPath $purgeFile -Force -ErrorAction SilentlyContinue
+if (-not $purged.Succeeded) {
+    Write-Failure -What "The Front Door's cache was not emptied" -Result $purged
+    Write-Host "  Every region runs release $Version, but the edge may still give what it kept of the release before, for up to seven days."
+    Write-Host "  Run the deployment again."
+    exit 1
+}
+Write-Host "PASS the Front Door's cache is emptied: readers get release $Version$(if (@($purged.Attempts).Count -gt 1) { ' (at the second attempt)' })"

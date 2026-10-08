@@ -24,6 +24,8 @@ public sealed partial class ContainerSiteTests
         Assert.Contains("==> gwc (germanywestcentral)", result.Output, StringComparison.Ordinal);
         // Through the front door: twice around the rotation of two regions.
         Assert.Contains("4 times in a row", result.Output, StringComparison.Ordinal);
+        // Each region and the front door gave a page of the release (ADR-0013): once per region, once through the door.
+        Assert.Equal(3, result.Output.Split($"PASS {url} is a page of release {site.Version}").Length - 1);
         Assert.Contains($"PASS uat runs release {site.Version} in 2 region(s) and through {url}", result.Output, StringComparison.Ordinal);
     }
 

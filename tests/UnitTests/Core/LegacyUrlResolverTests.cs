@@ -161,6 +161,19 @@ public class LegacyUrlResolverTests
             new UrlResolution.Redirect("https://jeffreypalermo.com/feed/", "host-feeds"),
             _resolver.Resolve(new UrlRequest("feeds.jeffreypalermo.com", "/jeffreypalermo"), _site));
 
+    /// <summary>A cache that serves several hosts must not keep what only one of them is answered (ADR-0013).</summary>
+    [Fact]
+    public void OnlyTheHostRulesDecideByTheHost()
+    {
+        Assert.True(LegacyUrlResolver.DecidedByHost(_resolver.Resolve(new UrlRequest("www.jeffreypalermo.com", Onion1), _site)));
+        Assert.True(LegacyUrlResolver.DecidedByHost(_resolver.Resolve(new UrlRequest("feeds.jeffreypalermo.com", "/jeffreypalermo"), _site)));
+        Assert.False(LegacyUrlResolver.DecidedByHost(Resolve(Onion1)));
+        Assert.False(LegacyUrlResolver.DecidedByHost(Resolve("/2008/07/the-onion-architecture-part-1")));
+        Assert.False(LegacyUrlResolver.DecidedByHost(Resolve("/wp-admin/")));
+        Assert.False(LegacyUrlResolver.DecidedByHost(Resolve("/?p=999999")));
+        Assert.False(LegacyUrlResolver.DecidedByHost(_resolver.Resolve(new UrlRequest("jpcom-prod-d8e7htexeqewe0hr.z02.azurefd.net", Onion1), _site)));
+    }
+
     [Fact]
     public void LeavesOtherHostsAloneSoPreviewRevisionsWork() =>
         Assert.Equal(

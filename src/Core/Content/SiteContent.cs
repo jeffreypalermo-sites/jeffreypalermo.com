@@ -134,6 +134,27 @@ public sealed class SiteContent
         return new PagedList<Post>([.. matching.Skip((page - 1) * PageSize).Take(PageSize)], page, PageSize, matching.Count);
     }
 
+    /// <summary>
+    /// The next moment the site answers differently without a new release: when the next post that is dated in the
+    /// future becomes visible. Null when no post is. Every other change to what the site serves is a deployment.
+    /// </summary>
+    public DateTime? NextChange(DateTime utcNow)
+    {
+        DateTime? next = null;
+        foreach (var post in Posts)
+        {
+            // Newest first: once a post is visible, every later one in the list is too.
+            if (post.IsVisibleAt(utcNow))
+            {
+                break;
+            }
+
+            next = post.PublishedUtc;
+        }
+
+        return next;
+    }
+
     /// <summary>The visible posts published just before and just after the given post.</summary>
     public PostNeighbors Neighbors(Post post, DateTime utcNow)
     {

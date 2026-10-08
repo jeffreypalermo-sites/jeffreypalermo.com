@@ -25,6 +25,33 @@ public class SiteContentQueryTests
             ["scheduled", "getting-started-with-the-asp-net-mvc-framework", "the-onion-architecture-part-2", "the-onion-architecture-part-1"],
             _site.Posts.Select(p => p.Slug));
 
+    /// <summary>The one change to what the site serves that no deployment makes (ADR-0013).</summary>
+    [Fact]
+    public void TheNextChangeIsTheDateOfTheNextPostThatIsNotVisibleYet()
+    {
+        var scheduled = _site.Posts.Single(p => p.Slug == "scheduled").PublishedUtc;
+
+        Assert.Equal(scheduled, _site.NextChange(Now));
+        Assert.Equal(scheduled, _site.NextChange(scheduled.AddTicks(-1)));
+        Assert.Null(_site.NextChange(scheduled));
+        Assert.Null(_site.NextChange(scheduled.AddDays(1)));
+    }
+
+    [Fact]
+    public void TheNextChangeIsTheEarliestOfSeveralPostsToCome()
+    {
+        var site = Site(posts:
+        [
+            Post("later", new DateTime(2027, 3, 1)),
+            Post("sooner", new DateTime(2027, 1, 1)),
+            Post("published", new DateTime(2020, 1, 1)),
+        ]);
+
+        Assert.Equal(site.Posts.Single(p => p.Slug == "sooner").PublishedUtc, site.NextChange(Now));
+        Assert.Equal(site.Posts.Single(p => p.Slug == "later").PublishedUtc, site.NextChange(new DateTime(2027, 2, 1, 0, 0, 0, DateTimeKind.Utc)));
+        Assert.Null(Site().NextChange(Now));
+    }
+
     [Fact]
     public void FindsPostsByExactPermalinkOnly()
     {

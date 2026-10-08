@@ -9,11 +9,15 @@
     The system's pipeline runs this after deploy.ps1, in every environment, signed in to Azure as the tier's deploy
     identity (ADR-0007; the contract is the demo-environment-kit's "An application that brings its own runtime").
     From the outputs of the site's stack it checks, with test-site.ps1:
-      - every region's app directly: /_health/ready answers as the release;
+      - every region's app directly: /_health/ready answers as the release, and the home page is the release's;
       - the URL contract against the first region's app;
       - with a Front Door (ADR-0008): its address answers as the release several times in a row, so every region
         in the rotation was asked, and then the whole URL contract through it. A new or changed Front Door takes
         some minutes to serve: the wait allows for that.
+        The Front Door keeps the site's pages in its cache (ADR-0013), which deploy.ps1 emptied after it applied the
+        release. The health answer is never kept, so it still comes from the regions; one that a cache gave does
+        not count. The home page through the Front Door must name the release: while the edge that answers still
+        holds the page of the release before, the check waits, and fails when the wait is over.
     Exit code 0: the environment runs the release, in every region and through its front door.
 
     When the context names a nodesFile, the script then writes there what the environment runs on: every region's

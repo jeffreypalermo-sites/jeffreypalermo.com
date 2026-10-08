@@ -1,4 +1,4 @@
-# ADR-0013: A recording is played by the browser's own player, which waits for the reader
+# ADR-0015: A recording is played by the browser's own player, which waits for the reader
 
 - **Status:** Accepted
 - **Date:** 2026-10-07

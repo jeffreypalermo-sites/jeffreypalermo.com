@@ -28,6 +28,33 @@ param frontDoor bool = false
 @description('The port the container listens on (the Dockerfile sets ASPNETCORE_HTTP_PORTS).')
 param port int = 8080
 
+// What the Front Door compresses for a reader whose browser accepts it (ADR-0013): the site's text. Pictures, fonts
+// and video are compressed already. An answer is compressed only when it is between 1 KB and 8 MB and came from the
+// app with its length; the app sends its pages that way.
+var compressedContentTypes = [
+  'text/html'
+  'text/css'
+  'text/plain'
+  'application/rss+xml'
+  'application/atom+xml'
+  'application/xml'
+  'application/json'
+  'image/svg+xml'
+]
+
+// What a route of the Front Door keeps at the edge (ADR-0013). The edge keeps what the app allows it to keep, for as
+// long as the app says: the app sends Cache-Control with every answer, and "no-store" with the health, version and
+// build answers. No rule here overrides it. deploy.ps1 empties the cache after every deployment.
+var routeCache = {
+  // The query string is part of the address: /?p=123 is a post, /?s=onion a search, /search/?q=onion&page=2 its
+  // second page. Each is kept by itself.
+  queryStringCachingBehavior: 'UseQueryString'
+  compressionSettings: {
+    isCompressionEnabled: true
+    contentTypesToCompress: compressedContentTypes
+  }
+}
+
 // Not the keys "environment" and "deployable": the system's own probe watches container apps that carry those.
 var tags = {
   system: system
@@ -176,6 +203,7 @@ resource route 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = if (fro
     httpsRedirect: 'Enabled'
     linkToDefaultDomain: 'Enabled'
     enabledState: 'Enabled'
+    cacheConfiguration: routeCache
   }
 }
 
@@ -188,3 +216,5 @@ output regions array = [
   }
 ]
 output frontDoorUrl string = frontDoor ? 'https://${endpoint!.properties.hostName}' : ''
+// What deploy.ps1 empties after a deployment: the cache of this endpoint.
+output frontDoorEndpointId string = frontDoor ? endpoint!.id : ''

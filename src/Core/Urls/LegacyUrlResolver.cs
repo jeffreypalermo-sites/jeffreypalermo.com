@@ -13,10 +13,26 @@ public sealed partial class LegacyUrlResolver(string canonicalHost)
     /// <summary>Shortest slug fragment worth guessing from; WordPress guessed from single letters, which only finds noise.</summary>
     public const int MinimumGuessLength = 3;
 
+    /// <summary>The rule that sends <c>www.</c> to the canonical host.</summary>
+    public const string HostWwwRule = "host-www";
+
+    /// <summary>The rule that sends <c>feeds.</c> to the canonical host's feed.</summary>
+    public const string HostFeedsRule = "host-feeds";
+
     private static readonly UrlResolution Home = new UrlResolution.PassThrough("home");
     private static readonly UrlResolution Canonical = new UrlResolution.PassThrough("canonical");
     private static readonly UrlResolution Media = new UrlResolution.PassThrough("media");
     private static readonly UrlResolution Unknown = new UrlResolution.PassThrough("none");
+
+    /// <summary>
+    /// True when the host the visitor asked for decided the answer, not the address alone. The same address on another
+    /// host is answered differently, so a cache that serves several hosts must not keep such an answer (ADR-0013).
+    /// </summary>
+    public static bool DecidedByHost(UrlResolution resolution)
+    {
+        ArgumentNullException.ThrowIfNull(resolution);
+        return resolution.Rule is HostWwwRule or HostFeedsRule;
+    }
 
     public UrlResolution Resolve(UrlRequest request, SiteContent site)
     {
@@ -81,11 +97,11 @@ public sealed partial class LegacyUrlResolver(string canonicalHost)
         var host = request.Host.ToLowerInvariant();
         if (host == "www." + canonicalHost)
         {
-            return new UrlResolution.Redirect($"https://{canonicalHost}{request.PathAndQuery}", "host-www");
+            return new UrlResolution.Redirect($"https://{canonicalHost}{request.PathAndQuery}", HostWwwRule);
         }
 
         return host == "feeds." + canonicalHost
-            ? new UrlResolution.Redirect($"https://{canonicalHost}/feed/", "host-feeds")
+            ? new UrlResolution.Redirect($"https://{canonicalHost}/feed/", HostFeedsRule)
             : null;
     }
 

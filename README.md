@@ -19,7 +19,7 @@ See [MODERNIZATION-PLAN.md](MODERNIZATION-PLAN.md) for the analysis, options con
 | `tests/contract/url-contract.tsv` | The URL contract: every legacy URL and how it must answer. |
 | `tests/UnitTests`, `tests/IntegrationTests`, `tests/AcceptanceTests` | Automated tests (see below). |
 | `Dockerfile`, `.github/workflows/build.yml` | The container image and the Build that tests and keeps it. |
-| `deploy/` | The site's own runtime: its infrastructure code, where it runs (`settings.json`: one region in tdd, two in uat, eleven in prod behind Azure Front Door, [ADR-0008](docs/adr/0008-eleven-regions-behind-front-door.md)), and the `deploy.ps1` and `verify.ps1` the system's pipeline runs in tdd, uat and prod ([ADR-0007](docs/adr/0007-the-site-owns-its-runtime.md)). The pipeline itself belongs to the system repository `jpcom-system` ([ADR-0006](docs/adr/0006-deliver-through-the-demo-environment-kit.md)). |
+| `deploy/` | The site's own runtime: its infrastructure code, where it runs (`settings.json`: one region in tdd, two in uat, eleven in prod behind Azure Front Door, [ADR-0008](docs/adr/0008-eleven-regions-behind-front-door.md)), and the `deploy.ps1` and `verify.ps1` the system's pipeline runs in tdd, uat and prod ([ADR-0007](docs/adr/0007-the-site-owns-its-runtime.md)). The Front Door keeps the site's answers at its edge, and `deploy.ps1` empties it after every deployment ([ADR-0013](docs/adr/0013-the-front-door-keeps-the-sites-answers.md)). The pipeline itself belongs to the system repository `jpcom-system` ([ADR-0006](docs/adr/0006-deliver-through-the-demo-environment-kit.md)). |
 | `docs/architecture`, `docs/adr` | Web app architecture and architecture decision records. |
 
 ## Content format
@@ -39,7 +39,7 @@ Two rules are about what a body holds:
 - **Nothing loaded from another host**, except the reviewed leftovers `FileSystemContentSourceTests` lists with
   their reasons. A picture on another host is copied into the repository by `localize` (below). A recording is
   played by `<audio controls preload="none">` or `<video controls preload="none">`, which asks its host for nothing
-  until the reader presses play ([ADR-0013](docs/adr/0013-recordings-wait-for-the-reader.md)).
+  until the reader presses play ([ADR-0015](docs/adr/0015-recordings-wait-for-the-reader.md)).
 
 ## Migration (done)
 
@@ -110,19 +110,21 @@ dotnet test JeffreyPalermo.slnx -c Release
 The build treats warnings as errors.
 
 - **Unit tests:** URL classification and resolution, slug normalization, the domain's invariants and queries
-  (previous and next post, archive months, terms in use, search over posts and pages, comment threads), which
-  bracketed text is a shortcode, how pages word things (dates, headings, titles, page addresses, the tag cloud),
-  front matter round-trips, content layout, HTML cleaning, link rewriting, what a body loads from another host and
-  where its copy is kept, contract file format, the Onion dependency rule, the delivery system's contract in
-  `build.yml`, and how the facts of a build reach the image and which file `/_build` believes.
+  (previous and next post, archive months, terms in use, search over posts and pages, comment threads), which bracketed text is a shortcode, how pages word things (dates,
+  headings, titles, page addresses, the tag cloud), front matter round-trips, content layout, HTML cleaning, link
+  rewriting, what a body loads from another host and where its copy is kept, contract file format, the Onion dependency rule, the delivery system's contract in `build.yml`,
+  how the facts of a build reach the image and which file `/_build` believes, and what each kind of answer says
+  to the caches.
 - **Integration tests:** the real `content/` tree loaded into the domain; the site in-process: every kind of page in
   the site layout, a crawl from `/` that must reach all 966 posts by following links, and a replay of all 9,337 URLs
   of `url-contract.tsv`; the fetch → convert → media pipeline and the URL prober against a stubbed WordPress HTTP
   server and the real file system; `localize` against stand-ins for Photon, the hosts and the Wayback Machine,
-  writing to a temp content tree; the scripts run for real, `scripts/Write-BuildFacts.ps1` among them.
+  writing to a temp content tree; the `Cache-Control` of every kind of answer; the scripts run for real,
+  `scripts/Write-BuildFacts.ps1` and `deploy/deploy.ps1` (against a stand-in for the Azure CLI) among them.
 - **Full-system tests** (`tests/AcceptanceTests`, need Docker): the published app as a real process, and the container
   image built from the `Dockerfile` and run with `docker run`. Each replays the URL contract over real HTTP. The
-  image is built as the Build builds it, the facts of the build first, and must answer them at `/_build`. A real
+  image is built as the Build builds it, the facts of the build first, and must answer them at `/_build`. It must
+  tell the caches how long to keep each kind of answer, and never to keep health, version or build. A real
   browser (Chromium, driven by Playwright for .NET) then reads the container's site as a reader would: home, a post,
   older and newer, the sidebar, search (which finds the About page too), posts whose pictures came from other
   hosts, a podcast post and a video post whose players wait for the reader, a page that is not found, a phone-sized
