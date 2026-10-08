@@ -3,7 +3,7 @@ using static JeffreyPalermo.UnitTests.Core.ContentBuilder;
 
 namespace JeffreyPalermo.UnitTests.Core;
 
-/// <summary>The queries the pages navigate by: previous/next, the archive months, the terms in use, and search.</summary>
+/// <summary>The queries the pages navigate by: previous/next, the archive months, the terms in use, and search over posts and pages.</summary>
 public class SiteContentNavigationTests
 {
     private static readonly DateTime Now = new(2026, 10, 6, 0, 0, 0, DateTimeKind.Utc);
@@ -39,6 +39,13 @@ public class SiteContentNavigationTests
     {
         Title = "Onion Architecture, twenty years on",
         TagSlugs = ["onion-architecture"],
+    };
+
+    private static readonly Page About = Page("about") with
+    {
+        Title = "About Jeffrey Palermo",
+        HtmlBody = "<p>I serve as the Chief Architect of Clear Measure. I wrote about the <em>Onion</em> Architecture.</p>",
+        PublishedUtc = new DateTime(2018, 7, 4, 19, 44, 36, DateTimeKind.Utc),
     };
 
     private readonly SiteContent _site = Site(posts: [Part1, Part2, Mvc, Party, Scheduled]);
@@ -121,16 +128,14 @@ public class SiteContentNavigationTests
     [Fact]
     public void SearchFindsEveryWordInTheTitleOrTheBodyIgnoringCase()
     {
-        Assert.Equal(new HashSet<Post> { Part1, Part2, Mvc }, _site.Search(Now, "ONION  architecture ", 1).Items.ToHashSet());
-        Assert.Equal([Party.Slug], _site.Search(Now, "seattle", 1).Items.Select(p => p.Slug));
+        Assert.Equal(new HashSet<Post?> { Part1, Part2, Mvc }, _site.Search(Now, "ONION  architecture ", 1).Items.Select(e => e.Post).ToHashSet());
+        Assert.Equal([Party.Slug], Found(_site, "seattle"));
         Assert.Empty(_site.Search(Now, "onion seattle", 1).Items);
     }
 
     [Fact]
     public void SearchListsTitleMatchesBeforeANewerPostThatOnlyMentionsTheWords() =>
-        Assert.Equal(
-            [Part2.Slug, Part1.Slug, Mvc.Slug],
-            _site.Search(Now, "onion architecture", 1).Items.Select(p => p.Slug));
+        Assert.Equal([Part2.Slug, Part1.Slug, Mvc.Slug], Found(_site, "onion architecture"));
 
     [Fact]
     public void SearchRanksTheWholePhraseInATitleAboveItsWordsApart()
@@ -138,14 +143,14 @@ public class SiteContentNavigationTests
         var apart = Post("architecture-of-an-onion", new DateTime(2009, 1, 1)) with { Title = "Architecture of an onion" };
         var site = Site(posts: [Part1, apart, Mvc]);
 
-        Assert.Equal([Part1.Slug, apart.Slug, Mvc.Slug], site.Search(Now, "onion architecture", 1).Items.Select(p => p.Slug));
+        Assert.Equal([Part1.Slug, apart.Slug, Mvc.Slug], Found(site, "onion architecture"));
     }
 
     [Fact]
     public void SearchHidesScheduledPostsUntilTheirTime()
     {
-        Assert.DoesNotContain(Scheduled, _site.Search(Now, "onion", 1).Items);
-        Assert.Equal(Scheduled.Slug, _site.Search(AfterTheScheduledPost, "onion", 1).Items[0].Slug);
+        Assert.DoesNotContain(Scheduled, _site.Search(Now, "onion", 1).Items.Select(e => e.Post));
+        Assert.Equal(Scheduled.Slug, _site.Search(AfterTheScheduledPost, "onion", 1).Items[0].Post?.Slug);
     }
 
     [Theory]
@@ -162,7 +167,81 @@ public class SiteContentNavigationTests
         var page3 = site.Search(Now, "onion", 3);
 
         Assert.Equal((3, 23, 3, false), (page3.Items.Count, page3.TotalItems, page3.TotalPages, page3.HasNext));
-        Assert.Equal("onion-23", site.Search(Now, "onion", 1).Items[0].Slug);
+        Assert.Equal("onion-23", site.Search(Now, "onion", 1).Items[0].Post?.Slug);
         Assert.Throws<ArgumentOutOfRangeException>(() => site.Search(Now, "onion", 0));
     }
+
+    [Fact]
+    public void SearchFindsAPageByItsBodyAndByItsTitle()
+    {
+        var site = Site(posts: [Part1, Party], pages: [About]);
+
+        var byBody = Assert.Single(site.Search(Now, "CHIEF architect", 1).Items);
+        Assert.Same(About, byBody.Page);
+        Assert.Null(byBody.Post);
+        Assert.Equal(("About Jeffrey Palermo", "/about/", About.PublishedUtc), (byBody.Title, byBody.Path, byBody.PublishedUtc));
+        Assert.Equal(["/about/"], Found(site, "about jeffrey"));
+        Assert.Empty(site.Search(Now, "chief seattle", 1).Items);
+    }
+
+    /// <summary>WordPress listed the About page (July 2018) between the posts of November 2018 and January 2014.</summary>
+    [Fact]
+    public void APageTakesItsPlaceAmongThePostsByTheDayItWasPublished()
+    {
+        var newer = Post("my-current-favorite-private-build-script", new DateTime(2018, 11, 1)) with { HtmlBody = "<p>onion</p>" };
+        var older = Post("aliasql", new DateTime(2014, 1, 7)) with { HtmlBody = "<p>onion</p>" };
+        var site = Site(posts: [older, Part1, newer], pages: [About]);
+
+        Assert.Equal([Part1.Slug, newer.Slug, "/about/", older.Slug], Found(site, "onion"));
+    }
+
+    [Fact]
+    public void APageWithTheWordsInItsTitleComesBeforeANewerPostThatOnlyMentionsThem()
+    {
+        var hub = Page("onion-architecture") with { Title = "Onion Architecture", PublishedUtc = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc) };
+        var site = Site(posts: [Part1, Mvc], pages: [hub, About]);
+
+        Assert.Equal([Part1.Slug, "/onion-architecture/", "/about/", Mvc.Slug], Found(site, "onion architecture"));
+    }
+
+    [Fact]
+    public void APageWithoutADateComesLastAmongItsEquals()
+    {
+        var undated = Page("colophon") with { HtmlBody = "<p>Built like an onion.</p>" };
+        var site = Site(posts: [Mvc, Party with { HtmlBody = "<p>onion</p>" }], pages: [undated]);
+
+        Assert.Equal([Mvc.Slug, Party.Slug, "/colophon/"], Found(site, "onion"));
+    }
+
+    [Fact]
+    public void SearchCountsPagesInItsPaging()
+    {
+        var site = Site(
+            posts: Enumerable.Range(1, 10).Select(i => Post($"onion-{i}", new DateTime(2005, 1, 1).AddDays(i))),
+            pages: [About]);
+
+        var first = site.Search(Now, "onion", 1);
+        var second = site.Search(Now, "onion", 2);
+
+        Assert.Equal((10, 11, 2, true), (first.Items.Count, first.TotalItems, first.TotalPages, first.HasNext));
+        Assert.All(first.Items, entry => Assert.NotNull(entry.Post));
+        Assert.Same(About, Assert.Single(second.Items).Page);
+    }
+
+    [Fact]
+    public void APagedListKeepsItsPlaceWhenItsItemsAreMapped()
+    {
+        var posts = new PagedList<Post>([Part1, Part2], 2, 10, 12);
+
+        var entries = posts.Select(Entry.Of);
+
+        Assert.Equal((2, 10, 12, true, false), (entries.Page, entries.PageSize, entries.TotalItems, entries.HasPrevious, entries.HasNext));
+        Assert.Equal([Part1, Part2], entries.Items.Select(e => e.Post));
+        Assert.All(entries.Items, e => Assert.Null(e.Page));
+        Assert.Equal((Part1.Title, Part1.Permalink.Path, Part1.PublishedUtc), (entries.Items[0].Title, entries.Items[0].Path, entries.Items[0].PublishedUtc));
+    }
+
+    /// <summary>What a search lists, in order: a post by its slug, a page by its path.</summary>
+    private static IEnumerable<string> Found(SiteContent site, string text) =>
+        site.Search(Now, text, 1).Items.Select(e => e.Post?.Slug ?? e.Page!.Path);
 }

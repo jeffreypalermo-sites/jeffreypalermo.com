@@ -46,4 +46,11 @@ public sealed record PagedList<T>(IReadOnlyList<T> Items, int Page, int PageSize
     public int TotalPages => (TotalItems + PageSize - 1) / PageSize;
     public bool HasPrevious => Page > 1;
     public bool HasNext => Page < TotalPages;
+
+    /// <summary>The same page of the same list, with each item mapped.</summary>
+    public PagedList<TResult> Select<TResult>(Func<T, TResult> map)
+    {
+        ArgumentNullException.ThrowIfNull(map);
+        return new([.. Items.Select(map)], Page, PageSize, TotalItems);
+    }
 }

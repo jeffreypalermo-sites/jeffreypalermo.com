@@ -1,0 +1,22 @@
+@* A page among search results: its title, linked, and its excerpt. A page has no author, date or terms to show. *@
+
+<article class="page" id="@(Model.WpId is { } id ? $"post-{id}" : null)">
+    <header class="entry-header">
+        <h2 class="entry-title"><a href="@Model.Path" rel="bookmark">@Model.Title</a></h2>
+    </header>
+    <div class="entry-content">
+        @if (Model.Excerpt is { Length: > 0 } excerpt)
+        {
+            <p>@excerpt</p>
+        }
+        else
+        {
+            @((MarkupString)Model.HtmlBody)
+        }
+    </div>
+</article>
+
+@code {
+    [Parameter, EditorRequired]
+    public Page Model { get; set; } = null!;
+}

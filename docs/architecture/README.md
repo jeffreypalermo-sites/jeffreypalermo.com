@@ -42,11 +42,14 @@ flowchart LR
     octo -- "pins the version" --> sys
     octo -- "deploys tdd → uat → prod" --> app
     app -- OpenTelemetry --> ai
-    reader -. iframes in 11 old posts .-> yt
+    reader -. frames in 10 old posts .-> yt
 ```
 
-There are no runtime calls to third-party systems in v1. The only external dependency is the YouTube iframes in
-11 old posts, which the reader's browser loads.
+There are no runtime calls to third-party systems in v1. What a reader's browser still asks other hosts for is
+listed, with the reason for each, in `FileSystemContentSourceTests` (§12): the YouTube frames of 10 old posts, one
+Libsyn player frame, one Vimeo frame in a reader's comment, and 3 images no source has any more. A recording that a
+post plays (8 posts, [ADR-0015](../adr/0015-recordings-wait-for-the-reader.md)) is fetched from its host only when
+the reader presses play.
 
 ## 3. Onion layers
 
@@ -176,7 +179,9 @@ classDiagram
 
 - **`SiteContent` is the aggregate root** of the read model. It's built once per process by
   `SiteContent.Create(...)`, which **enforces the content invariants**: unique permalinks, unique WordPress ids,
-  comment parents exist, terms referenced by posts exist, and legacy redirect targets exist. A violation throws
+  comment parents exist, terms referenced by posts exist, legacy redirect targets exist, and no body or excerpt of
+  a post or a page shows a WordPress shortcode as text (`Shortcodes`: nothing renders `[podcast src="…"]` here; a
+  sample inside `<pre>` or `<code>` is allowed, and comments are not checked). A violation throws
   `ContentValidationException` listing every error. Bad content fails the PR build, not production.
 - **Bodies arrive as HTML.** Markdown-to-HTML conversion is an Infrastructure concern done while loading, so Core
   never sees Markdown.
@@ -200,7 +205,7 @@ and wraps each call in an OpenTelemetry `Activity`, which gives uniform tracing 
 | `PageBySlugQuery`, `AttachmentBySlugQuery` | page / attachment with parent post | `/about/`, attachment pages |
 | `FeedQuery(scope)` | feed items (site, comments, post comments, term) | feed endpoints |
 | `SitemapQuery` | URL entries with last-modified dates | `wp-sitemap*.xml` |
-| `SearchQuery(text, page)` | ranked summaries via `IPostSearch` | `/search`, `/?s=` |
+| `SearchQuery(text, page)` | ranked summaries of posts and pages via `IPostSearch` | `/search`, `/?s=` |
 | `ResolveUrlQuery(UrlRequest)` | `UrlResolution` | legacy-URL middleware |
 
 ### Ports
@@ -231,8 +236,10 @@ Why this fits:
 - **Media is content.** Uploads ship in the image and are served by ASP.NET Core static files with long cache
   lifetimes. **Every image the site shows is self-hosted.** The 222 images old posts loaded through WordPress.com's
   Photon CDN or from third-party hosts are localized under `content/uploads/external/{host}/…` (§12): 155 were
-  recovered, and the 67 nobody has any more answer 404 locally instead of from a dead host. That lets the content
-  security policy say `img-src 'self'`. An integration test fails when a post refers to an image on another host.
+  recovered, and the 67 nobody has any more answer 404 locally instead of from a dead host. Of the 8 the migration
+  could not name, 5 are local since 2026-10-07 and 3 stay on their hosts, which no longer have them (§12). No image
+  comes through WordPress.com's CDN any more. An integration test fails when a body loads anything from another
+  host that is not on its reviewed list.
 
 Runtime writes don't exist in v1. Read-only archived comments ship with their posts, and new comments are deferred
 (§13). The ADR sets the triggers for adding a store: the first runtime-write feature (newsletter signup, contact
@@ -316,7 +323,7 @@ no rendered page in memory: the Front Door's edge is the cache._
 | `/{year}/`, `/{year}/{month}/`, `/{year}/{month}/{day}/` (+ `/page/{n}/`) | `ListingPage`: "Yearly", "Monthly" or "Daily Archives" |
 | `/tag/{slug}/`, `/category/{slug}/`, `/author/{slug}/`, `/type/{slug}/` (+ `/page/{n}/`) | `ListingPage`: "Tag", "Category" or "Author Archives" |
 | `/{slug}/`, `/{year}/{month}/{post}/{slug}/` | `ContentPage` (About) or `AttachmentPage` (275 attachment pages) |
-| `/search/?q=` (+ `&page={n}`), and `/?s=` rewritten to it | `ListingPage`: "Search Results for", excerpts; an empty search shows the form |
+| `/search/?q=` (+ `&page={n}`), and `/?s=` rewritten to it | `ListingPage`: "Search Results for", excerpts of the posts and the pages found; an empty search shows the form |
 | anything else, and legacy URLs known to be dead | `NotFoundPage` with status 404: search, recent posts, categories, years |
 | `/feed/`, `/feed/atom/`, `/comments/feed/`, `/…/feed/` | minimal API feed endpoints (RSS 2.0 stays the default format readers already use) |
 | `/wp-sitemap.xml`, `/wp-sitemap-*.xml`, `/robots.txt` | minimal API endpoints. Search engines already know the WordPress sitemap names, so they're kept. |
@@ -330,7 +337,7 @@ no rendered page in memory: the Front Door's edge is the cache._
 |---|---|---|
 | Layout | `Components/SiteLayout.razor`, `Sidebar.razor` | Document head, skip link, header (site title, tagline, the WordPress menu), main column, sidebar (feed, search, profile, tag cloud, every month), footer |
 | Pages | `Components/Pages/*.razor` | One component per kind of page, each rendered from one `Model` parameter |
-| Parts of pages | `PostArticle`, `CommentList`, `Pager`, `SearchForm` | A post as listed or alone; threaded comments; older/newer and previous/next; the GET search form |
+| Parts of pages | `PostArticle`, `PageArticle`, `CommentList`, `Pager`, `SearchForm` | A post as listed or alone; a page among search results (its title and excerpt: a page has no author, date or terms to show); threaded comments; older/newer and previous/next; the GET search form |
 | Wording | `Presentation/` | Headings and titles (`Listings`), dates (`DisplayText`), addresses (`SiteUrls`), the tag cloud's sizes (`TagCloud`), the menu (`SiteMenu`). Plain classes with unit tests |
 | Per request | `Presentation/SiteNavigation` | The lists several components ask for (months, tags, categories), worked out once per request |
 | Look | `wwwroot/_assets/site.css` | One stylesheet reproducing the WordPress theme; Noto Serif from `wwwroot/_assets/fonts` (SIL OFL 1.1). One column below 877 pixels |
@@ -338,6 +345,11 @@ no rendered page in memory: the Front Door's edge is the cache._
 What the pages navigate by is domain logic in Core: `SiteContent.Neighbors`, `ArchiveMonths`, `TermsInUse`, `Search`
 and `CommentThread`. Post, page and comment bodies are stored as clean HTML and written as they are; everything else
 is encoded by Razor.
+
+`Search` finds posts and pages, as WordPress did: every word in the title or the body. The whole phrase in a title
+comes first, then every word in a title, then the rest, newest first within each. A page takes its place among the
+posts by the day it was published, so a search for "onion" lists the About page (July 2018) eighth, where WordPress
+listed it.
 
 ### Cross-cutting
 
@@ -352,7 +364,9 @@ is encoded by Razor.
 - **Security headers:** HSTS (the old site already sent `max-age=31536000`, so HTTPS must stay); CSP
   `default-src 'self'; img-src 'self' data:; frame-src https://www.youtube.com https://www.youtube-nocookie.com;
   style-src 'self' 'unsafe-inline'` (old posts use inline style attributes); `script-src 'self'` once the one post
-  with a script is reviewed. Also `X-Content-Type-Options`, `Referrer-Policy`, and `X-Robots-Tag: noindex` on every
+  with a script is reviewed. The policy must also name where recordings play from
+  (`media-src 'self' https://traffic.libsyn.com https://content.libsyn.com https://web.archive.org`, ADR-0015), and
+  the three images and two frames of the reviewed leftovers will be blocked unless they are removed or named. Also `X-Content-Type-Options`, `Referrer-Policy`, and `X-Robots-Tag: noindex` on every
   host except the canonical domain, so preview URLs never get indexed.
 - **Observability:** `Azure.Monitor.OpenTelemetry.AspNetCore` for traces, metrics, and logs. Custom
   `ActivitySource("JeffreyPalermo.Site")` around queries; metrics `site.legacy_url.resolutions{rule,result}` and
@@ -489,9 +503,9 @@ catches is a change outside a deployment. While an environment fails, an issue l
 
 | Layer | What | Where it runs |
 |---|---|---|
-| **Unit** | The kit's contract in `build.yml` (`BuildWorkflowContractTests`); how the Build's facts reach the image (`BuildFactsContractTests`) and which file `/_build` believes (`BuildFactsTests`); what each kind of answer says to the caches (`CachePolicyTests`), the next date the site changes by itself, and what the route keeps and how `deploy.ps1` empties it (`CacheContractTests`); that no environment lists a host name yet and that the settings' canonical host is the site's (`CustomDomainContractTests`); `SiteContent` invariants and queries; every resolver rule (table-driven, one case per rule plus precedence conflicts); pagination; feed item selection; front matter and Markdown loading; **architecture rules** (Core references no project and no package; Infrastructure doesn't reference UI.Server) | every build |
-| **Integration** | `FileSystemContentSource` over the **real `content/` tree**, which validates every PR's content; `WebApplicationFactory` tests: **full contract replay (9,337 rows)**, every kind of page in the site layout, **a crawl from `/` that reaches all 966 posts by the links the components write**, feed XML validity, sitemaps, health; **the `Cache-Control` of every kind of answer**, the release in `X-Release`, pages with their length, a failing request and a post still to come (`CacheHeadersTests`); **`deploy/deploy.ps1` run for real** with a stand-in for the Azure CLI (`tests/stubs/az`) and a stand-in for the regions (`StandInSite`): a first deployment, a later one, and each way it stops, a region Azure refuses among them; a stack that fails once and is applied once more, one that fails twice, one that is not tried again; the purge only behind a Front Door, only after the stack and after every region answers as the release (`DeployScriptTests`); `deploy/test-site.ps1` against an answer a cache gave and a page kept from the release before (`TestSiteScriptTests`); **the Bicep file compiled for real**, and what it deploys for no host name (what it deployed before) and for the names of the day (`CustomDomainTemplateTests`); the site under each of its host names through the Front Door, with one URL in ten of the contract (`CustomDomainHostTests`); `deploy.ps1` with host names in the settings: how they are sorted, the DNS records it prints, which names it purges, and what it refuses; `scripts/test-regions.ps1` the same way (`RegionProbeScriptTests`); **`scripts/Write-BuildFacts.ps1` run for real** over a small tree git tracks, test results and the coverage of two runs, every number asserted, and with no inputs (`BuildFactsScriptTests`); `/_build` with the Build's file, without one and with the file of another release (`BuildFactsEndpointTests`) | every build |
-| **Full-system (acceptance)** | The published app as a process and the **container image built from the `Dockerfile`**, each over real HTTP: full contract replay, the version on the health path, `/_build` (from the image: the version, the commit and the lines of code, to any origin; from the published app: the version alone), uploads served as files (not Git LFS pointers), an unprivileged user on port 8080, the `Cache-Control` of each kind of answer with health, version and build never kept, pages with their length and uncompressed (`ContainerSiteCacheTests`), a second container set up as behind a Front Door that serves the canonical host and redirects `www.` and `feeds.` (`ContainerSiteCustomDomainTests`), `deploy/verify.ps1` against the container (regions, with and without a front door), and the nightly verification script against the container, a site that doesn't answer and a site that breaks the contract. Playwright for .NET drives the container in Chromium: the home page's look, a post opened from it, older and newer, previous and next, a month and a tag from the sidebar, search, the 404 page, a comment's anchor, a legacy redirect, a phone-sized screen, the keyboard, and a page on another origin reading `/_build` as the system's dashboard does. Requests to any other host (YouTube iframes in old posts) are refused by request interception, and the pages under test must make none | every build; the image that passes is the image released |
+| **Unit** | The kit's contract in `build.yml` (`BuildWorkflowContractTests`); how the Build's facts reach the image (`BuildFactsContractTests`) and which file `/_build` believes (`BuildFactsTests`); what each kind of answer says to the caches (`CachePolicyTests`), the next date the site changes by itself, and what the route keeps and how `deploy.ps1` empties it (`CacheContractTests`); that no environment lists a host name yet and that the settings' canonical host is the site's (`CustomDomainContractTests`); `SiteContent` invariants and queries, search over posts and pages among them; which bracketed text is a shortcode (`ShortcodesTests`); what a body loads from another host, where each address stands and where its copy is kept (`ExternalSubresourcesTests`, `ExternalImageTests`); every resolver rule (table-driven, one case per rule plus precedence conflicts); pagination; feed item selection; front matter and Markdown loading; **architecture rules** (Core references no project and no package; Infrastructure doesn't reference UI.Server) | every build |
+| **Integration** | `FileSystemContentSource` over the **real `content/` tree**, which validates every PR's content: its invariants, no shortcode as text, and nothing loaded from another host but the reviewed leftovers; `WpMigrator localize` against stand-ins for Photon, the hosts and the Wayback Machine, writing to a temp content tree: found, fetched from each source, left with a reason, rewritten, and a second run that changes nothing (`ContentLocalizerTests`); `WebApplicationFactory` tests: **full contract replay (9,337 rows)**, every kind of page in the site layout, **a crawl from `/` that reaches all 966 posts by the links the components write**, feed XML validity, sitemaps, health; **the `Cache-Control` of every kind of answer**, the release in `X-Release`, pages with their length, a failing request and a post still to come (`CacheHeadersTests`); **`deploy/deploy.ps1` run for real** with a stand-in for the Azure CLI (`tests/stubs/az`) and a stand-in for the regions (`StandInSite`): a first deployment, a later one, and each way it stops, a region Azure refuses among them; a stack that fails once and is applied once more, one that fails twice, one that is not tried again; the purge only behind a Front Door, only after the stack and after every region answers as the release (`DeployScriptTests`); `deploy/test-site.ps1` against an answer a cache gave and a page kept from the release before (`TestSiteScriptTests`); **the Bicep file compiled for real**, and what it deploys for no host name (what it deployed before) and for the names of the day (`CustomDomainTemplateTests`); the site under each of its host names through the Front Door, with one URL in ten of the contract (`CustomDomainHostTests`); `deploy.ps1` with host names in the settings: how they are sorted, the DNS records it prints, which names it purges, and what it refuses; `scripts/test-regions.ps1` the same way (`RegionProbeScriptTests`); **`scripts/Write-BuildFacts.ps1` run for real** over a small tree git tracks, test results and the coverage of two runs, every number asserted, and with no inputs (`BuildFactsScriptTests`); `/_build` with the Build's file, without one and with the file of another release (`BuildFactsEndpointTests`) | every build |
+| **Full-system (acceptance)** | The published app as a process and the **container image built from the `Dockerfile`**, each over real HTTP: full contract replay, the version on the health path, `/_build` (from the image: the version, the commit and the lines of code, to any origin; from the published app: the version alone), uploads served as files (not Git LFS pointers), an unprivileged user on port 8080, the `Cache-Control` of each kind of answer with health, version and build never kept, pages with their length and uncompressed (`ContainerSiteCacheTests`), a second container set up as behind a Front Door that serves the canonical host and redirects `www.` and `feeds.` (`ContainerSiteCustomDomainTests`), `deploy/verify.ps1` against the container (regions, with and without a front door), and the nightly verification script against the container, a site that doesn't answer and a site that breaks the contract. Playwright for .NET drives the container in Chromium: the home page's look, a post opened from it, older and newer, previous and next, a month and a tag from the sidebar, search (posts, and the About page), five posts whose pictures came from other hosts, a podcast post and a video post whose players fetch nothing before the reader plays, the 404 page, a comment's anchor, a legacy redirect, a phone-sized screen, the keyboard, and a page on another origin reading `/_build` as the system's dashboard does. Requests to any other host (YouTube iframes in old posts) are refused by request interception, and the pages under test must make none | every build; the image that passes is the image released |
 | **Post-deploy verification** | The site's `verify.ps1` after every deployment: `/_health/ready` answers `ready <version>`, the home page names the release, also through the Front Door's cache, and the full contract replay passes against the environment. What only a real Front Door shows is a list of ten checks in ADR-0013, to run in `uat`. `Verify environments` replays the contract every night as well | every deployment, in tdd, uat and prod; every night (§9) |
 
 ## 11. Build sequence
@@ -522,9 +536,11 @@ Each step is one PR that meets the Definition of Done.
 |---|---|---|
 | Images in posts loaded through WordPress.com Photon (`i0.wp.com/<external host>/…`) or hotlinked from third parties | 222 | ✅ Localized 2026-10-06: `src` points at `/wp-content/uploads/external/{host}{path}`, fetched from Photon's cache, else the original host, else the Wayback Machine. 155 recovered; 67 are in `migration/uploads-manifest.missing.txt` (no source has them). `media` is re-runnable if a copy turns up |
 | Graffiti-era `/files/media/…` images (the live site returns a 29-byte soft 404) | 43 | ✅ 40 recovered from the Wayback Machine with the images above, under `uploads/external/jeffreypalermo.com/files/media/…`; posts point at them. Still open: redirecting the old `/files/media/…` URLs themselves to the recovered files via `legacy-map` |
-| Images with no file name to store them under (a tracking pixel, Google thumbnails and a map, `.aspx` image handlers, one on `localhost`) | 8 | Left as they are and pinned as reviewed leftovers in `FileSystemContentSourceTests`. Remove each from its post or replace it by hand |
+| Images with no file name to store them under (a tracking pixel, Google thumbnails and a map, `.aspx` image handlers, one on `localhost`) | 8 | ✅ 2026-10-07: `WpMigrator localize` works on the frozen `content/` and names such a copy after its path and query, with the extension of the file that came. It fetched 4 (41,634 bytes): 2 Google thumbnails from their host, and a third thumbnail and the Community Server image from the Wayback Machine, found through its index because its newest capture of each is a 404 page. The badge on `localhost`, which the post asked `i0.wp.com` for, was pointed by hand at the identical file already under `uploads/external/www.partywithpalermo.com/`. 3 stay on their hosts and are pinned with their reasons in `FileSystemContentSourceTests`: another blog's view counter (`weblogs.asp.net`), a Google map (`www.google.com/mapdata`) and a thumbnail on `vstsmn.net`, a host that is someone else's now. No source has them. Remove each from its post by hand |
+| Frames in bodies (`localize` found them; a frame cannot be copied) | 12 | Pinned with the images above: 10 YouTube videos, 1 Libsyn player (episode 001 of the podcast, the one post where WordPress rendered the player), 1 Vimeo video in a reader's comment. Each asks its host when the post is shown |
+| Links around pictures that still lead to `i0.wp.com` (a reader's click, not a request of the page) | 17 in 11 posts | Open. They break when WordPress.com stops serving the pictures. 3 have the full-size file under `uploads/external/` already |
 | VideoPress video hosted on `videos.files.wordpress.com` (Palermo Pamphlet 001, 76 MB) | 1 | ✅ Localized under `uploads/external/` in build step 1; large binaries are stored with Git LFS |
-| Unrendered `[podcast src=…]` shortcodes in old posts (already broken on the live site) | a few | Replace with the Libsyn embed or a link when the post pages are built |
+| Unrendered `[podcast src=…]` and `[iframe …]` shortcodes in old posts (already broken on the live site) | 9 posts | ✅ 2026-10-07: each is a player of the browser's own that waits for the reader, and a link to the file ([ADR-0015](../adr/0015-recordings-wait-for-the-reader.md)). Episodes 002 to 007 of The Azure DevOps Podcast play their MP3 from Libsyn. Palermo Pamphlet 001 plays the video the repository already had. Libsyn no longer has the videos of Palermo Pamphlet 002 and 003; they play from the Wayback Machine's copies. The shortcode is gone from the 9 excerpts too. A shortcode as text fails the content validation from now on (§4) |
 | Uploads already 404 on the live site (lost in the 2018 import) | 44 | Recover from the Wayback Machine; list in `migration/uploads-manifest.missing.txt` |
 | Community Server `.aspx` URLs (already 404) | 64 in contract | Map to posts by title using Wayback captures, into `legacy-redirects.json` |
 | Graffiti `/blog/` slugs WordPress fails to guess | 63 | Prefix-match rule plus curated map entries |
