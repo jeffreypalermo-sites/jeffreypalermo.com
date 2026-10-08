@@ -56,7 +56,11 @@ WordPress guesses are preserved on purpose through curated entries in `content/a
   It exits 1 on any violation. A request that gets no answer (a connection that is reset, an answer that does not
   come within 60 seconds) is sent three times, with a pause between; a URL that never answers is listed as a
   violation, "no answer after 3 attempts", and the replay goes on. A replay is thousands of requests through a
-  Front Door, and one reset connection once ended a deployment whose site was fine (uat, 2026-10-08).
+  Front Door, and one reset connection once ended a deployment whose site was fine (uat, 2026-10-08). An answer
+  of 502, 503 or 504 is a gateway's, not the site's (the Front Door or a Container App's ingress did not reach the
+  app in time): such a request is sent three times too, and only an error that stays is the violation "server
+  error". Two 504s in 9,337 requests failed a deployment the same day. A 500 is the site's own and is never asked
+  for twice. Whenever a request was sent again, the last lines say how many: `NOTE 2 request(s) were sent again`.
 - **Every deployment:** the release's package carries the verifier and this contract; the site's `deploy/verify.ps1`
   replays it against the environment right after `deploy.ps1`, and a violation fails the deployment
   ([ADR-0007](../../docs/adr/0007-the-site-owns-its-runtime.md)).
