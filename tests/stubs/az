@@ -12,6 +12,8 @@
 #                                and the next attempt succeeds, as Azure did after "managed identity bootstrap failed"
 #   deployment-errors            what a container app reports when asked why it did not start
 #   stack-show.json              the answer to "stack group show"
+#   dns-parameters.json, dns-show.json, dns-fails, dns-fails-once
+#                                the same for a stack whose name ends in -dns: the DNS zone's own stack
 #   purge-body.json              the request of the last purge ("resource invoke-action --action purge")
 #   purge-fails, purge-fails-once   the same two for the purge
 set -euo pipefail
@@ -77,21 +79,26 @@ case "${1:-} ${2:-}" in
   "stack group")
     case "${3:-}" in
       create)
+        # The site's stack, or the DNS zone's own (its name ends in -dns): each has its files.
+        kind="stack"
+        case "$(value --name "$@")" in *-dns) kind="dns" ;; esac
         parameters="$(value --parameters "$@")"
-        cp "${parameters#@}" "$state/stack-parameters.json"
-        if [ -f "$state/stack-fails-once" ]; then
-          echo "ERROR: $(cat "$state/stack-fails-once")" >&2
-          rm "$state/stack-fails-once"
+        cp "${parameters#@}" "$state/$kind-parameters.json"
+        if [ -f "$state/$kind-fails-once" ]; then
+          echo "ERROR: $(cat "$state/$kind-fails-once")" >&2
+          rm "$state/$kind-fails-once"
           exit 1
         fi
-        if [ -f "$state/stack-fails" ]; then
-          echo "ERROR: $(cat "$state/stack-fails")" >&2
+        if [ -f "$state/$kind-fails" ]; then
+          echo "ERROR: $(cat "$state/$kind-fails")" >&2
           exit 1
         fi
         echo "WARNING: a notice the Azure CLI writes on success" >&2
         ;;
       show)
-        cat "$state/stack-show.json"
+        kind="stack"
+        case "$(value --name "$@")" in *-dns) kind="dns" ;; esac
+        cat "$state/$kind-show.json"
         ;;
       *)
         echo "ERROR: the stand-in does not know: $*" >&2

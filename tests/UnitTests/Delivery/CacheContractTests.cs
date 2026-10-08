@@ -94,8 +94,10 @@ public partial class CacheContractTests
     [Fact]
     public void TheCacheIsEmptiedAfterTheStackAndAfterEveryRegionAnswersAndOnlyBehindAFrontDoor()
     {
-        var applied = Deploy.IndexOf("'stack', 'group', 'create'", StringComparison.Ordinal);
-        var withoutFrontDoor = Deploy.IndexOf("if (-not $frontDoor) { exit 0 }", StringComparison.Ordinal);
+        // The site's stack: the DNS zone has a stack of its own, applied after all of this (ADR-0016).
+        var applied = Deploy.IndexOf("$applied = Invoke-AzOnceMore -What \"Applying $stack\"", StringComparison.Ordinal);
+        var withoutFrontDoor = Deploy.IndexOf("if (-not $frontDoor) {", StringComparison.Ordinal);
+        Assert.Matches(@"if \(-not \$frontDoor\) \{[^}]*exit 0\s*\}", Deploy);
         var regionsAsked = Deploy.IndexOf("& $testSite -BaseUrl ([string] $app.url) -Version $Version", StringComparison.Ordinal);
         var purged = Deploy.IndexOf("'resource', 'invoke-action'", StringComparison.Ordinal);
 

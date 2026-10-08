@@ -23,13 +23,24 @@
       3. where there is a Front Door, empties its cache (ADR-0013). The edge keeps the site's answers for days, so
          without this a reader would get pages of the release before. First every region must answer as the
          release at its own address: emptied sooner, the edge could fill again from a region that still runs the
-         release before. Then the script asks Azure to purge everything and waits until Azure reports it done.
+         release before. Then the script asks Azure to purge everything and waits until Azure reports it done;
+      4. where the environment's settings name a DNS zone, applies it (below). Last, so that the site runs the
+         release and readers get it whatever Azure says about the zone.
 
     Host names (ADR-0014, docs/runbooks/dns-cutover.md): each gets a custom domain of the Front Door with a
     certificate it manages. A name the site answers with its pages (the canonical host) gets a route like the
     endpoint's own, with the cache. www. and feeds. of the canonical host, which the site answers with a redirect,
     get a route without a cache. After the stack the script prints, for every host name, what DNS needs: the TXT
-    record that proves the name is the owner's, and where its address record points. Nothing changes in DNS here.
+    record that proves the name is the owner's, and where its address record points.
+
+    The DNS zone (dnsZone, ADR-0016; production's only): the last step applies infra/dns-zone.bicep as a deployment
+    stack of its own, stack-<system>-<environment>-dns. It is an Azure DNS zone with the records the domain had on
+    2026-10-08 that must survive (mail first), and, for every host name in the zone, the records the Front Door
+    needs: the address record and the _dnsauth TXT record with the token the Front Door gave. That stack detaches
+    what leaves its template instead of deleting it, and lets nobody but the deploy identity delete what it holds:
+    a zone with the mail records must not go because a line was removed. The script prints the zone's name
+    servers. Entering them at the registrar is the move, and a person's step; until then nobody asks the zone, and
+    nothing here changes what the public DNS answers.
 
     A step against Azure that fails is run once more after a pause: the platform fails by itself at times (the first
     production deployment of the regions: "(500 InternalError): managed identity bootstrap failed"; hours later the
@@ -100,6 +111,13 @@ if ($hostNames.Count -gt 0) {
 }
 $pageHostNames = @($hostNames | Where-Object { $_ -notin $redirectHosts })
 $redirectHostNames = @($hostNames | Where-Object { $_ -in $redirectHosts })
+
+# The DNS zone of the environment, when its settings name one (ADR-0016). Checked before anything is asked of Azure.
+$dnsZone = if ($place.ContainsKey('dnsZone')) { "$($place['dnsZone'])".Trim().ToLowerInvariant() } else { '' }
+if ($dnsZone -and $dnsZone -cnotmatch '^(?=.{4,253}$)([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$') {
+    Write-Host "FAIL the DNS zone of '$Environment' in settings.json, '$dnsZone', is not a domain name; nothing was deployed"
+    exit 1
+}
 $system = [string] $facts.system
 $resourceGroup = [string] $facts.resourceGroup
 $subscription = ([string] (az account show --query id --output tsv)).Trim()
@@ -257,6 +275,91 @@ function Write-Failure {
     @($attempts[1].Said) | ForEach-Object { Write-Host "    $_" }
 }
 
+# One value of a stack's outputs; nothing when the stack does not have it. A list comes back as its items, so a
+# caller that expects a list wraps the call in @( ).
+function Get-StackOutput {
+    param($Outputs, [Parameter(Mandatory)] [string] $Name)
+    if ($Outputs -is [System.Collections.IDictionary] -and $Outputs.Contains($Name)) { return $Outputs[$Name].value }
+}
+
+# The DNS zone (ADR-0016): the last step of a deployment, so that the site runs the release and readers get it
+# whatever Azure says about the zone. Nothing when the environment's settings name no zone.
+function Publish-DnsZone {
+    param(
+        # What the site's stack says about its custom domains; none without host names or without a Front Door.
+        [object[]] $CustomDomains = @(),
+        [string] $EndpointId = '',
+        [string] $EndpointHost = ''
+    )
+    if (-not $dnsZone) { return }
+
+    # The host names that are in the zone, each as its name there: "@" for the zone's own name.
+    $inZone = @(@($CustomDomains) | Where-Object { "$($_.hostName)" -eq $dnsZone -or "$($_.hostName)".EndsWith(".$dnsZone") })
+    $hostLabels = @($inZone | ForEach-Object {
+            $name = "$($_.hostName)"
+            if ($name -eq $dnsZone) { '@' } else { $name.Substring(0, $name.Length - $dnsZone.Length - 1) }
+        })
+    # A name the Front Door has given no token for yet gets its TXT record at the next deployment.
+    $validated = @($inZone | Where-Object { "$($_.validationToken)" })
+    $validationLabels = @($validated | ForEach-Object {
+            $name = "$($_.hostName)"
+            if ($name -eq $dnsZone) { '@' } else { $name.Substring(0, $name.Length - $dnsZone.Length - 1) }
+        })
+    $validationTokens = @($validated | ForEach-Object { "$($_.validationToken)" })
+
+    $dnsStack = "stack-$system-$Environment-dns"
+    Write-Host "Applying $dnsStack in ${resourceGroup}: the DNS zone $dnsZone$(if ($inZone.Count -gt 0) { ", with $(@($inZone | ForEach-Object { "$($_.hostName)" }) -join ', ') answered by the Front Door" })"
+    $zoneParametersFile = Join-Path ([IO.Path]::GetTempPath()) "parameters-$dnsStack-$([Guid]::NewGuid().ToString('N')).json"
+    @{
+        '$schema'      = 'https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#'
+        contentVersion = '1.0.0.0'
+        parameters     = @{
+            zoneName            = @{ value = $dnsZone }
+            system              = @{ value = $system }
+            environmentName     = @{ value = $Environment }
+            # Lists, whatever they hold: none would otherwise be written as null, and one name as a text.
+            hostLabels          = @{ value = @($hostLabels) }
+            frontDoorEndpointId = @{ value = $EndpointId }
+            frontDoorHostName   = @{ value = $EndpointHost }
+            validationLabels    = @{ value = @($validationLabels) }
+            validationTokens    = @{ value = @($validationTokens) }
+        }
+    } | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $zoneParametersFile -Encoding utf8NoBOM
+
+    # Not as the site's stack: what leaves this template is detached, not deleted, and what it holds can be changed
+    # but not deleted by anyone but the deploy identity. A zone that holds the mail records must not go because a
+    # line was removed, here or in settings.json.
+    $zoneApplied = Invoke-AzOnceMore -What "Applying $dnsStack" -Arguments @(
+        'stack', 'group', 'create',
+        '--name', $dnsStack,
+        '--resource-group', $resourceGroup,
+        '--template-file', (Join-Path $PSScriptRoot 'infra' 'dns-zone.bicep'),
+        '--parameters', "@$zoneParametersFile",
+        '--action-on-unmanage', 'detachAll',
+        '--deny-settings-mode', 'denyDelete',
+        '--deny-settings-excluded-principals', [string] $facts.deployPrincipalId,
+        '--yes',
+        '--output', 'none'
+    )
+    Remove-Item -LiteralPath $zoneParametersFile -Force -ErrorAction SilentlyContinue
+    if (-not $zoneApplied.Succeeded) {
+        Write-Failure -What "$dnsStack was not applied" -Result $zoneApplied
+        Write-Host "  The site runs release $Version, and readers get it. Only the DNS zone $dnsZone is not as the settings say."
+        exit 1
+    }
+
+    $zoneShown = Invoke-Az -Arguments @('stack', 'group', 'show', '--name', $dnsStack, '--resource-group', $resourceGroup, '--output', 'json')
+    $nameServers = @(if ($zoneShown.ExitCode -eq 0) { Get-StackOutput -Outputs ($zoneShown.Output | ConvertFrom-Json -AsHashtable).outputs -Name 'nameServers' })
+    if ($nameServers.Count -eq 0) {
+        Write-Host "FAIL $dnsStack is applied, but it does not say which name servers the zone $dnsZone has:"
+        @($zoneShown.Said) | ForEach-Object { Write-Host "  $_" }
+        exit 1
+    }
+    Write-Host "PASS ${dnsStack}: the zone $dnsZone holds its records$(if (@($zoneApplied.Attempts).Count -gt 1) { ' (at the second attempt)' }). Its name servers:"
+    $nameServers | ForEach-Object { Write-Host "  $_" }
+    Write-Host "  Entering these at the registrar is the move, and a person's step (docs/runbooks/dns-cutover.md). Until then the zone's records are only prepared: nobody asks this zone."
+}
+
 # 2. The apps, and the Front Door, as one stack.
 $stack = "stack-$system-$Environment-web"
 $frontDoor = [bool] $place.frontDoor
@@ -307,15 +410,13 @@ if (-not $applied.Succeeded) {
     exit 1
 }
 Write-Host "PASS ${stack}: release $Version in $(@($regions | ForEach-Object { $_.code }) -join ', ')$(if (@($applied.Attempts).Count -gt 1) { ', at the second attempt' })"
-if (-not $frontDoor) { exit 0 }
+if (-not $frontDoor) {
+    # 4, without 3: no Front Door, so no cache to empty and no host name. The zone, where the settings name one.
+    Publish-DnsZone
+    exit 0
+}
 
 # 3. The Front Door's cache (ADR-0013).
-# One value of the stack's outputs; nothing when the stack does not have it. A list comes back as its items, so a
-# caller that expects a list wraps the call in @( ).
-function Get-StackOutput {
-    param($Outputs, [Parameter(Mandatory)] [string] $Name)
-    if ($Outputs -is [System.Collections.IDictionary] -and $Outputs.Contains($Name)) { return $Outputs[$Name].value }
-}
 $shown = Invoke-Az -Arguments @('stack', 'group', 'show', '--name', $stack, '--resource-group', $resourceGroup, '--output', 'json')
 if ($shown.ExitCode -ne 0) {
     Write-Host "FAIL the outputs of $stack could not be read (exit code $($shown.ExitCode)); the Front Door's cache was not emptied:"
@@ -397,3 +498,6 @@ if (-not $purged.Succeeded) {
     exit 1
 }
 Write-Host "PASS the Front Door's cache is emptied: readers get release $Version$(if (@($purged.Attempts).Count -gt 1) { ' (at the second attempt)' })"
+
+# 4. The DNS zone (ADR-0016), where the settings name one.
+Publish-DnsZone -CustomDomains @($customDomains) -EndpointId $endpointId -EndpointHost ([Uri] $frontDoorUrl).Host
