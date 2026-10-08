@@ -51,9 +51,11 @@ internal sealed class StandInSite : IDisposable
     public void Dispose()
     {
         _stop.Cancel();
-        _listener.Stop();
-        _serving.GetAwaiter().GetResult();
+        // Close, and nothing before it: Stop gives the port back, and Close after Stop asks for the port once more to
+        // take its prefix away. A test running beside this one that got the port in between made that fail with
+        // "Address already in use" (Build 56, 2026-10-08).
         _listener.Close();
+        _serving.GetAwaiter().GetResult();
         _stop.Dispose();
     }
 

@@ -126,7 +126,8 @@ public sealed class WordPressDriftScriptTests : IDisposable
         await process.WaitForExitAsync();
 
         await stop.CancelAsync();
-        listener.Stop();
+        // Close, not Stop: a listener that was stopped asks for its port again when it is disposed (see StandInSite).
+        listener.Close();
         await serving;
         return new ScriptResult(process.ExitCode, await output, await error, requests);
     }
