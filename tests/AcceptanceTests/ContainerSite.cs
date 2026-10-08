@@ -17,6 +17,12 @@ public sealed class ContainerSite : IAsyncLifetime
     /// <summary>The port the image listens on, which the kit's deployable is configured with.</summary>
     public const int ContainerPort = 8080;
 
+    /// <summary>
+    /// What <c>build.yml</c> requires of the facts before it builds the image, as <c>-File</c> passes a list. Not the
+    /// coverage: these tests are not the Build, and what stands in for its results holds none.
+    /// </summary>
+    private const string RequiredOfTheFacts = "tests.unit,tests.integration,tests.acceptance,analysis";
+
     private string? _builtImage;
     private string? _container;
 
@@ -94,25 +100,62 @@ public sealed class ContainerSite : IAsyncLifetime
 
     /// <summary>
     /// The two steps of the Build workflow that make the image: <c>scripts/Write-BuildFacts.ps1</c> writes
-    /// <c>build-facts.json</c> beside the <c>Dockerfile</c>, which copies it into the image. Here without test
-    /// results (these tests are not the Build): the facts name the version, the commit and the code. The file is a
-    /// build output and is removed again.
+    /// <c>build-facts.json</c> beside the <c>Dockerfile</c>, which copies it into the image. The script runs with
+    /// what the Build requires of it, so facts that lack a level of tests or the analysis build no image here
+    /// either. These tests are not the Build: what its first job hands over is stood in for
+    /// (<see cref="StandInResults"/>). The version, the commit, the code and the acceptance checks the release
+    /// declares are this repository's own. The file is a build output and is removed again.
     /// </summary>
     private static async Task BuildAsync(string image, string version)
     {
         var root = PublishedSite.RepositoryRoot;
         var facts = Path.Join(root, "build-facts.json");
-        var noResults = Directory.CreateTempSubdirectory("jpcom-no-test-results-").FullName;
+        var results = Directory.CreateTempSubdirectory("jpcom-stand-in-results-").FullName;
         try
         {
-            await Command.RunAsync("pwsh", "-NoProfile", "-File", Path.Join(root, "scripts", "Write-BuildFacts.ps1"), "-Version", version, "-ResultsPath", noResults, "-OutputPath", facts);
+            StandInResults(results);
+            await Command.RunAsync(
+                "pwsh", "-NoProfile", "-File", Path.Join(root, "scripts", "Write-BuildFacts.ps1"),
+                "-Version", version, "-ResultsPath", results, "-Require", RequiredOfTheFacts, "-OutputPath", facts);
             await Command.RunAsync("docker", "build", "--build-arg", $"VERSION={version}", "--tag", image, root);
         }
         finally
         {
             File.Delete(facts);
-            Directory.Delete(noResults);
+            Directory.Delete(results, recursive: true);
         }
+    }
+
+    /// <summary>
+    /// What job <c>test</c> of the Build hands to job <c>image</c>, stood in for: the results of one unit test and of
+    /// one integration test that passed, and the log of a compile that found nothing.
+    /// </summary>
+    private static void StandInResults(string folder)
+    {
+        foreach (var layer in (string[])["UnitTests", "IntegrationTests"])
+        {
+            File.WriteAllText(Path.Join(folder, $"{layer}.trx"), $"""
+                <?xml version="1.0" encoding="utf-8"?>
+                <TestRun id="1" name="stand-in" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+                  <Results>
+                    <UnitTestResult testId="1" testName="StandIn" outcome="Passed" />
+                  </Results>
+                  <TestDefinitions>
+                    <UnitTest name="StandIn" storage="/stand-in/tests/{layer}/bin/release/net10.0/jeffreypalermo.{layer.ToLowerInvariant()}.dll" id="1" />
+                  </TestDefinitions>
+                </TestRun>
+                """);
+        }
+
+        File.WriteAllText(Path.Join(folder, "compile.msbuild.log"), """
+              JeffreyPalermo.UI.Server -> /stand-in/src/UI.Server/bin/Release/net10.0/JeffreyPalermo.UI.Server.dll
+
+            Build succeeded.
+                0 Warning(s)
+                0 Error(s)
+
+            Time Elapsed 00:00:01.00
+            """);
     }
 
     /// <summary>A client that does not follow redirects.</summary>
