@@ -75,7 +75,7 @@ public class ListingsTests
     [Fact]
     public void SearchResultsKeepTheSearchTextInEveryPageAddress()
     {
-        var listing = Listings.Search(Options, "onion & c#", Page(2, 25));
+        var listing = Listings.Search(Options, "onion & c#", Page(2, 25).Select(Entry.Of));
 
         Assert.Equal(("Search Results for:", "onion & c#", $"onion & c# | Search Results | {Site} | Page 2"), (listing.Heading, listing.Subject, listing.Title));
         Assert.Equal("/search/?q=onion%20%26%20c%23&page=2", listing.CanonicalPath);
@@ -84,9 +84,31 @@ public class ListingsTests
     }
 
     [Fact]
+    public void SearchResultsListPostsAndPagesInTheOrderTheyWereFound()
+    {
+        var post = ContentBuilder.Post("a-post", new DateTime(2008, 7, 29));
+        var page = ContentBuilder.Page("about");
+        var found = new PagedList<Entry>([Entry.Of(post), Entry.Of(page)], 1, SiteContent.PageSize, 2);
+
+        var listing = Listings.Search(Options, "onion", found);
+
+        Assert.Equal([post.Permalink.Path, "/about/"], listing.Entries.Items.Select(entry => entry.Path));
+        Assert.Equal((null, null), (listing.OlderHref, listing.NewerHref));
+    }
+
+    [Fact]
+    public void AnArchiveListsItsPostsAsEntries()
+    {
+        var listing = Listings.Home(Options, Page(1, 25));
+
+        Assert.Equal("a-post", Assert.Single(listing.Entries.Items).Post?.Slug);
+        Assert.Equal((1, 25), (listing.Entries.Page, listing.Entries.TotalItems));
+    }
+
+    [Fact]
     public void AnEmptySearchIsTheSearchPage()
     {
-        var listing = Listings.Search(Options, string.Empty, new PagedList<Post>([], 1, SiteContent.PageSize, 0));
+        var listing = Listings.Search(Options, string.Empty, new PagedList<Entry>([], 1, SiteContent.PageSize, 0));
 
         Assert.Equal(("Search", null, $"Search | {Site}", "/search/"), (listing.Heading, listing.Subject, listing.Title, listing.CanonicalPath));
         Assert.True(listing.IsSearch);

@@ -33,7 +33,10 @@ public sealed class FileSystemContentSourceTests : IDisposable
         Assert.Same(onion, site.FindPostByWpId(945));
         Assert.Contains("onion-architecture", onion.TagSlugs);
         Assert.Contains("<a href=\"/2008/07/the-onion-architecture-part-2/\">part 2</a>", onion.HtmlBody, StringComparison.Ordinal);
-        Assert.Equal("/about/", site.FindPage("/about/")?.Path);
+        var about = site.FindPage("/about/");
+        Assert.Equal("/about/", about?.Path);
+        Assert.Equal(new DateTime(2018, 7, 4, 19, 44, 36, DateTimeKind.Utc), about?.PublishedUtc);
+        Assert.StartsWith("I first started working in custom software as a programmer in 1997.", about?.Excerpt, StringComparison.Ordinal);
         Assert.Equal("The Onion Architecture : part 1", site.FindAttachment("/the-onion-architecture-part-1-3/")?.Title);
     }
 
@@ -110,6 +113,20 @@ public sealed class FileSystemContentSourceTests : IDisposable
         Assert.Equal("<h1 id=\"hello\">Hello</h1>\n<p>Some <em>Markdown</em> with <span>inline HTML</span>.</p>", post.HtmlBody);
         Assert.Equal(new DateTime(2026, 10, 5, 14, 0, 0, DateTimeKind.Utc), post.PublishedUtc);
         Assert.Equal("Reader", Assert.Single(post.Comments).AuthorName);
+    }
+
+    [Fact]
+    public async Task LoadsAPageWithTheDayItWasPublishedAndItsExcerpt()
+    {
+        await WriteAsync("pages/about.html", Post("/about/").Replace("author: jeffreypalermo\n", "excerpt: Who writes here\n", StringComparison.Ordinal) + "<p>About</p>\n");
+        await WriteAsync("pages/colophon.md", Post("/colophon/").Replace("date_utc: 2026-10-05T14:00:00Z\nauthor: jeffreypalermo\n", string.Empty, StringComparison.Ordinal) + "Built *here*.\n");
+
+        var site = await Load();
+
+        var about = site.FindPage("/about/")!;
+        Assert.Equal((new DateTime(2026, 10, 5, 14, 0, 0, DateTimeKind.Utc), "Who writes here", "<p>About</p>"), (about.PublishedUtc, about.Excerpt, about.HtmlBody));
+        var colophon = site.FindPage("/colophon/")!;
+        Assert.Equal((null, null, "<p>Built <em>here</em>.</p>"), (colophon.PublishedUtc, colophon.Excerpt, colophon.HtmlBody));
     }
 
     [Fact]

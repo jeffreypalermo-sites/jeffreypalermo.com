@@ -200,7 +200,7 @@ and wraps each call in an OpenTelemetry `Activity`, which gives uniform tracing 
 | `PageBySlugQuery`, `AttachmentBySlugQuery` | page / attachment with parent post | `/about/`, attachment pages |
 | `FeedQuery(scope)` | feed items (site, comments, post comments, term) | feed endpoints |
 | `SitemapQuery` | URL entries with last-modified dates | `wp-sitemap*.xml` |
-| `SearchQuery(text, page)` | ranked summaries via `IPostSearch` | `/search`, `/?s=` |
+| `SearchQuery(text, page)` | ranked summaries of posts and pages via `IPostSearch` | `/search`, `/?s=` |
 | `ResolveUrlQuery(UrlRequest)` | `UrlResolution` | legacy-URL middleware |
 
 ### Ports
@@ -315,7 +315,7 @@ security headers and output caching are build step 5._
 | `/{year}/`, `/{year}/{month}/`, `/{year}/{month}/{day}/` (+ `/page/{n}/`) | `ListingPage`: "Yearly", "Monthly" or "Daily Archives" |
 | `/tag/{slug}/`, `/category/{slug}/`, `/author/{slug}/`, `/type/{slug}/` (+ `/page/{n}/`) | `ListingPage`: "Tag", "Category" or "Author Archives" |
 | `/{slug}/`, `/{year}/{month}/{post}/{slug}/` | `ContentPage` (About) or `AttachmentPage` (275 attachment pages) |
-| `/search/?q=` (+ `&page={n}`), and `/?s=` rewritten to it | `ListingPage`: "Search Results for", excerpts; an empty search shows the form |
+| `/search/?q=` (+ `&page={n}`), and `/?s=` rewritten to it | `ListingPage`: "Search Results for", excerpts of the posts and the pages found; an empty search shows the form |
 | anything else, and legacy URLs known to be dead | `NotFoundPage` with status 404: search, recent posts, categories, years |
 | `/feed/`, `/feed/atom/`, `/comments/feed/`, `/…/feed/` | minimal API feed endpoints (RSS 2.0 stays the default format readers already use) |
 | `/wp-sitemap.xml`, `/wp-sitemap-*.xml`, `/robots.txt` | minimal API endpoints. Search engines already know the WordPress sitemap names, so they're kept. |
@@ -329,7 +329,7 @@ security headers and output caching are build step 5._
 |---|---|---|
 | Layout | `Components/SiteLayout.razor`, `Sidebar.razor` | Document head, skip link, header (site title, tagline, the WordPress menu), main column, sidebar (feed, search, profile, tag cloud, every month), footer |
 | Pages | `Components/Pages/*.razor` | One component per kind of page, each rendered from one `Model` parameter |
-| Parts of pages | `PostArticle`, `CommentList`, `Pager`, `SearchForm` | A post as listed or alone; threaded comments; older/newer and previous/next; the GET search form |
+| Parts of pages | `PostArticle`, `PageArticle`, `CommentList`, `Pager`, `SearchForm` | A post as listed or alone; a page among search results (its title and excerpt: a page has no author, date or terms to show); threaded comments; older/newer and previous/next; the GET search form |
 | Wording | `Presentation/` | Headings and titles (`Listings`), dates (`DisplayText`), addresses (`SiteUrls`), the tag cloud's sizes (`TagCloud`), the menu (`SiteMenu`). Plain classes with unit tests |
 | Per request | `Presentation/SiteNavigation` | The lists several components ask for (months, tags, categories), worked out once per request |
 | Look | `wwwroot/_assets/site.css` | One stylesheet reproducing the WordPress theme; Noto Serif from `wwwroot/_assets/fonts` (SIL OFL 1.1). One column below 877 pixels |
@@ -337,6 +337,11 @@ security headers and output caching are build step 5._
 What the pages navigate by is domain logic in Core: `SiteContent.Neighbors`, `ArchiveMonths`, `TermsInUse`, `Search`
 and `CommentThread`. Post, page and comment bodies are stored as clean HTML and written as they are; everything else
 is encoded by Razor.
+
+`Search` finds posts and pages, as WordPress did: every word in the title or the body. The whole phrase in a title
+comes first, then every word in a title, then the rest, newest first within each. A page takes its place among the
+posts by the day it was published, so a search for "onion" lists the About page (July 2018) eighth, where WordPress
+listed it.
 
 ### Cross-cutting
 

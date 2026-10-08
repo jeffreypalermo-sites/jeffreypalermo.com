@@ -312,7 +312,9 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         Assert.Equal("Search Results for: onion architecture", page.Text("h1.page-title"));
         Assert.Equal($"onion architecture | Search Results | {SiteTitle}", page.Title);
         Assert.Equal("noindex, follow", page.QuerySelector("meta[name=robots]")?.GetAttribute("content"));
-        Assert.Equal(10, posts.Length);
+        // Ten to a page: nine posts and the About page, which has both words too.
+        Assert.Equal(9, posts.Length);
+        Assert.Equal("/about/", Assert.Single(page.QuerySelectorAll("main article.page")).Href("h2.entry-title a"));
         Assert.Equal(
             ["/2013/08/onion-architecture-part-4-after-four-years/", "/2013/07/onion-architecture-for-distributed-systems-at-austin-code-camp-2013/", "/2008/08/the-onion-architecture-part-3/", "/2008/07/the-onion-architecture-part-2/", Onion],
             posts.Take(5).Select(post => post.Href("h2.entry-title a")));
@@ -320,6 +322,54 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         Assert.StartsWith("This is part 1.", excerpt, StringComparison.Ordinal);
         Assert.EndsWith("[…]", excerpt, StringComparison.Ordinal);
         Assert.Empty(posts[4].QuerySelectorAll(".entry-content img"));
+    }
+
+    /// <summary>
+    /// The first page WordPress listed for "onion", in its order: the posts with the word in their title, then the
+    /// rest newest first, the About page (July 2018) among them. A page shows its title and its excerpt, and no
+    /// author, date or terms: it has none.
+    /// </summary>
+    [Theory]
+    [InlineData("/search/?q=onion")]
+    [InlineData("/?s=onion")]
+    public async Task SearchFindsTheAboutPageWhereWordPressListedIt(string path)
+    {
+        var page = await factory.ClientFor().GetPageAsync(path);
+        var found = page.QuerySelectorAll("main article.post, main article.page");
+
+        Assert.Equal(
+            [
+                "/2013/08/onion-architecture-part-4-after-four-years/",
+                "/2013/07/onion-architecture-for-distributed-systems-at-austin-code-camp-2013/",
+                "/2008/08/the-onion-architecture-part-3/",
+                "/2008/07/the-onion-architecture-part-2/",
+                Onion,
+                "/2020/01/net-devops-for-azure/",
+                "/2018/11/my-current-favorite-private-build-script/",
+                "/about/",
+                "/2014/01/aliasql-the-new-name-in-automated-database-change-management/",
+                "/2008/11/the-myth-of-self-organizing-teams/",
+            ],
+            found.Select(article => article.Href("h2.entry-title a")));
+        var about = found[7];
+        Assert.Equal(("page", "post-1303"), (about.ClassName, about.Id));
+        Assert.Equal("About Jeffrey Palermo", about.Text("h2.entry-title"));
+        Assert.Equal("bookmark", about.QuerySelector("h2.entry-title a")?.GetAttribute("rel"));
+        var excerpt = about.Text(".entry-content");
+        Assert.StartsWith("I first started working in custom software as a programmer in 1997.", excerpt, StringComparison.Ordinal);
+        Assert.EndsWith("[…]", excerpt, StringComparison.Ordinal);
+        Assert.Empty(about.QuerySelectorAll(".entry-meta, .entry-author, time, .entry-terms, .entry-footer, .entry-content img, .entry-content a"));
+        Assert.Equal(9, page.QuerySelectorAll("main article.post").Length);
+    }
+
+    [Fact]
+    public async Task ASearchForThePagesOwnTitleListsThePageFirst()
+    {
+        var page = await factory.ClientFor().GetPageAsync("/search/?q=about+jeffrey+palermo");
+
+        var first = page.QuerySelector("main article")!;
+        Assert.Equal(("page", "/about/"), (first.ClassName, first.Href("h2.entry-title a")));
+        Assert.Single(page.QuerySelectorAll("main article.page"));
     }
 
     [Fact]

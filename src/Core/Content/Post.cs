@@ -45,7 +45,14 @@ public sealed record Page
 
     public required string Title { get; init; }
     public required string HtmlBody { get; init; }
+
+    /// <summary>When the page was first published, in UTC. A search lists the page among the posts by it; null for a page without a date.</summary>
+    public DateTime? PublishedUtc { get; init; }
+
     public DateTime? Modified { get; init; }
+
+    /// <summary>What a list shows in place of the body, as for a post; null when the page has none.</summary>
+    public string? Excerpt { get; init; }
 
     public string Slug => Path.Trim('/');
 }

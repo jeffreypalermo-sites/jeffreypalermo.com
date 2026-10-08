@@ -151,11 +151,46 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
 
         await visit.ArrivesAtAsync("/search/?q=onion+architecture");
         await Assertions.Expect(page.GetByRole(AriaRole.Heading, new() { Level = 1 })).ToHaveTextAsync("Search Results for: onion architecture");
-        await Assertions.Expect(page.Locator("main article.post")).ToHaveCountAsync(10);
+        // Ten to a page: nine posts and the About page, which has both words too.
+        await Assertions.Expect(page.Locator("main article")).ToHaveCountAsync(10);
+        await Assertions.Expect(page.Locator("main article.post")).ToHaveCountAsync(9);
         await page.Locator("main").GetByRole(AriaRole.Link, new() { Name = "The Onion Architecture : part 1", Exact = true }).ClickAsync();
         await visit.ArrivesAtAsync(Onion1);
         await Assertions.Expect(page.GetByRole(AriaRole.Heading, new() { Level = 1 })).ToHaveTextAsync("The Onion Architecture : part 1");
         Assert.Empty(visit.OffSiteRequests);
+    }
+
+    /// <summary>WordPress's search found pages too: "onion" listed the About page among the posts.</summary>
+    [Fact]
+    public async Task SearchFindsTheAboutPage()
+    {
+        await using var visit = await chromium.VisitAsync(site.BaseAddress);
+        var page = visit.Page;
+        await page.GotoAsync("/");
+        var box = page.Locator("aside").GetByRole(AriaRole.Searchbox, new() { Name = "Search" });
+
+        await box.FillAsync("onion");
+        await box.PressAsync("Enter");
+
+        await visit.ArrivesAtAsync("/search/?q=onion");
+        var about = page.Locator("main article.page");
+        await Assertions.Expect(about).ToHaveCountAsync(1);
+        await Assertions.Expect(about.Locator(".entry-content")).ToContainTextAsync("I first started working in custom software as a programmer in 1997.");
+        await Assertions.Expect(about.Locator(".entry-meta, time, img")).ToHaveCountAsync(0);
+
+        // It looks like the posts around it: a white box as wide as theirs, its title a heading of the same size.
+        var post = page.Locator("main article.post").First;
+        await Assertions.Expect(about).ToHaveCSSAsync("background-color", "rgb(255, 255, 255)");
+        Assert.Equal((await post.BoundingBoxAsync())!.Width, (await about.BoundingBoxAsync())!.Width);
+        Assert.Equal(
+            await post.Locator("h2.entry-title").EvaluateAsync<string>("heading => getComputedStyle(heading).fontSize"),
+            await about.Locator("h2.entry-title").EvaluateAsync<string>("heading => getComputedStyle(heading).fontSize"));
+
+        await about.GetByRole(AriaRole.Link, new() { Name = "About Jeffrey Palermo" }).ClickAsync();
+        await visit.ArrivesAtAsync("/about/");
+        await Assertions.Expect(page.GetByRole(AriaRole.Heading, new() { Level = 1 })).ToHaveTextAsync("About Jeffrey Palermo");
+        Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
     }
 
     [Fact]
@@ -249,6 +284,7 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
     [InlineData("/2009/05/the-fallacy-of-the-always-valid-entity/")]
     [InlineData("/page/20/")]
     [InlineData("/no-such-page-anywhere-at-all/")]
+    [InlineData("/search/?q=onion")]
     public async Task OnAPhoneThePageIsOneColumnAndNeverWiderThanTheScreen(string path)
     {
         await using var visit = await chromium.VisitAsync(site.BaseAddress, Visit.PhoneWidth);

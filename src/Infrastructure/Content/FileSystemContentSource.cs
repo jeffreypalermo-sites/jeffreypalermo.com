@@ -94,7 +94,9 @@ public sealed class FileSystemContentSource(ContentLayout layout, string version
         Path = frontMatter.Permalink,
         Title = frontMatter.Title,
         HtmlBody = html,
+        PublishedUtc = frontMatter.DateUtc,
         Modified = frontMatter.Modified,
+        Excerpt = frontMatter.Excerpt,
     };
 
     private async Task<T?> TryLoadAsync<T>(string file, List<string> errors, Func<PostFrontMatter, string, T> map, CancellationToken cancellationToken)
