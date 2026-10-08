@@ -123,7 +123,8 @@ public sealed partial class ContainerSiteTests(ContainerSite site, ITestOutputHe
         var result = await Command.TryRunAsync("bash", environment: null, VerifyScript, broken);
 
         await stop.CancelAsync();
-        listener.Stop();
+        // Close, not Stop: a listener that was stopped asks for its port again when it is disposed (see StandInSite).
+        listener.Close();
         await serving;
         Assert.Equal(1, result.ExitCode);
         Assert.Contains($"FAIL {broken} (ready broken): the URL contract is broken", result.Output, StringComparison.Ordinal);
