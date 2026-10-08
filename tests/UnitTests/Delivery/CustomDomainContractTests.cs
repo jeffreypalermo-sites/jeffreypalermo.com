@@ -8,8 +8,8 @@ namespace JeffreyPalermo.UnitTests.Delivery;
 /// <summary>
 /// The custom domain (ADR-0014): the settings can list host names, and the infrastructure code and
 /// <c>deploy.ps1</c> know what to do with them. uat and production each list a name of their own in
-/// <c>jeffreypalermo.ceo</c> (ADR-0018). Production lists no name of <c>jeffreypalermo.com</c> until that domain's
-/// DNS moves (<c>docs/runbooks/dns-cutover.md</c>).
+/// <c>jeffreypalermo.ceo</c> (ADR-0018). Production also lists the three names of <c>jeffreypalermo.com</c>, whose
+/// DNS moves by <c>docs/runbooks/dns-cutover.md</c>.
 /// </summary>
 public class CustomDomainContractTests
 {
@@ -32,14 +32,14 @@ public class CustomDomainContractTests
     /// <summary>
     /// Which environment lists which host names. uat and production each have their own name in jeffreypalermo.ceo
     /// (Jeffrey, 2026-10-08, ADR-0018). tdd has no Front Door to take one: its name there is a forwarding at the
-    /// domain's DNS host, not a host name of the site. The names of jeffreypalermo.com come with the DNS move: the
-    /// pull request that prepares the day adds jeffreypalermo.com, www.jeffreypalermo.com and
-    /// feeds.jeffreypalermo.com to <c>settings.json</c> and to the line for prod here together.
+    /// domain's DNS host, not a host name of the site. Production also lists the three names the DNS move gives to
+    /// the site (<c>docs/runbooks/dns-cutover.md</c>, "Before the day", step 4). Going back before the day takes those
+    /// three out of the line for prod here and out of <c>settings.json</c> together.
     /// </summary>
     [Theory]
     [InlineData("tdd")]
     [InlineData("uat", "uat.jeffreypalermo.ceo")]
-    [InlineData("prod", "www.jeffreypalermo.ceo")]
+    [InlineData("prod", "jeffreypalermo.com", "www.jeffreypalermo.com", "feeds.jeffreypalermo.com", "www.jeffreypalermo.ceo")]
     public void EachEnvironmentListsTheHostNamesThatWereDecided(string environment, params string[] hostNames) =>
         Assert.Equal(hostNames, HostNames(environment));
 
@@ -55,12 +55,31 @@ public class CustomDomainContractTests
     {
         var canonical = Settings().GetProperty("canonicalHost").GetString()!;
         var resolver = new LegacyUrlResolver(canonical);
-        var name = Assert.Single(HostNames(environment));
+        var name = Assert.Single(HostNames(environment), listed => !(listed == canonical || listed.EndsWith($".{canonical}", StringComparison.Ordinal)));
 
         Assert.EndsWith(".jeffreypalermo.ceo", name, StringComparison.Ordinal);
-        Assert.False(name == canonical || name.EndsWith($".{canonical}", StringComparison.Ordinal));
         Assert.False(LegacyUrlResolver.DecidedByHost(resolver.Resolve(new UrlRequest(name, "/"), Core.ContentBuilder.Site())));
         Assert.DoesNotContain(name, HostNames(environment == "uat" ? "prod" : "uat"));
+    }
+
+    /// <summary>
+    /// Production's names of the domain that moves are the canonical host, which the site answers with pages, and
+    /// exactly the names the site redirects to it. No other environment lists a name of that domain.
+    /// </summary>
+    [Fact]
+    public void ProductionListsTheCanonicalHostAndEveryNameTheSiteRedirectsToIt()
+    {
+        var canonical = Settings().GetProperty("canonicalHost").GetString()!;
+        var resolver = new LegacyUrlResolver(canonical);
+        var site = Core.ContentBuilder.Site();
+        bool OfTheDomain(string name) => name == canonical || name.EndsWith($".{canonical}", StringComparison.Ordinal);
+        var names = HostNames("prod").Where(OfTheDomain).ToList();
+
+        Assert.Equal([canonical, $"www.{canonical}", $"feeds.{canonical}"], names);
+        Assert.Equal(canonical, Settings().GetProperty("environments").GetProperty("prod").GetProperty("dnsZone").GetString());
+        Assert.False(LegacyUrlResolver.DecidedByHost(resolver.Resolve(new UrlRequest(names[0], "/"), site)));
+        Assert.All(names.Skip(1), name => Assert.True(LegacyUrlResolver.DecidedByHost(resolver.Resolve(new UrlRequest(name, "/"), site))));
+        Assert.DoesNotContain(HostNames("uat").Concat(HostNames("tdd")), OfTheDomain);
     }
 
     /// <summary>

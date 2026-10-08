@@ -31,8 +31,8 @@ there is no wildcard). He decided on 2026-10-08 to give every environment a name
   production's DNS zone holds `jeffreypalermo.com` and gives a name of another domain no record (tested).
 - **uat's name is the rehearsal of ADR-0016**, and it stays. Nothing is taken out of the settings again before
   the day of the move.
-- **The names of `jeffreypalermo.com` are not part of this.** Production lists them with the pull request that
-  prepares the day, beside `www.jeffreypalermo.ceo`.
+- **The names of `jeffreypalermo.com` are not part of this.** Production lists them since the pull request that
+  prepared the day, beside `www.jeffreypalermo.ceo`.
 
 ## Options that were not taken
 

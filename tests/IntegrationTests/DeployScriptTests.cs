@@ -626,15 +626,16 @@ public sealed class DeployScriptTests : IDisposable
     /// <summary>
     /// ADR-0016: production's DNS zone, created and not delegated. It is the last step, and a stack of its own that
     /// detaches what leaves it and lets nobody but the deploy identity delete what it holds: the site's stack deletes
-    /// what leaves its template, and a zone with the mail records must not go because a line was removed. With the
-    /// settings as they are: production's one host name is of another domain (ADR-0018), which this zone does not hold.
+    /// what leaves its template, and a zone with the mail records must not go because a line was removed. Here with
+    /// production's own name alone, which is of another domain (ADR-0018) and which this zone does not hold: what
+    /// production deployed before the names of the move were listed, and what going back deploys.
     /// </summary>
     [Fact]
     public async Task ProductionsDnsZoneIsAppliedLastAsAStackOfItsOwnThatNeverDeletes()
     {
         ProdBehindItsFrontDoor(Domain("www.jeffreypalermo.ceo", kept: true, "Pending", token: "token-for-www-ceo"));
 
-        var result = await DeployAsync("prod");
+        var result = await DeployAsync("prod", deployFolder: DeployFolderWithHostNames("prod", "www.jeffreypalermo.ceo"));
 
         Assert.True(result.ExitCode == 0, result.ToString());
         Assert.Equal(string.Empty, result.Error);
@@ -664,7 +665,7 @@ public sealed class DeployScriptTests : IDisposable
         Assert.Equal(["jpcom-prod-d8e7.z02.azurefd.net"], PurgedDomains());
         Assert.Empty(NewTokensAskedFor());
 
-        // No name of the zone's domain is listed yet: the zone is asked for the records of 2026-10-08 only.
+        // No name of the zone's domain is listed: the zone is asked for the records of 2026-10-08 only.
         var zone = ZoneParameters();
         Assert.Equal("jeffreypalermo.com", zone.GetProperty("zoneName").GetProperty("value").GetString());
         Assert.Equal("prod", zone.GetProperty("environmentName").GetProperty("value").GetString());
@@ -681,22 +682,40 @@ public sealed class DeployScriptTests : IDisposable
     }
 
     /// <summary>
-    /// The day's names in production: the zone gives each to the Front Door, and gives the Front Door's tokens back
-    /// as TXT records. Nobody copies a token by hand into this zone.
+    /// Production with the settings as they are: the three names of the move beside its own. The site's stack is
+    /// asked for the bare domain and production's own name as names with pages, and for www. and feeds. as names that
+    /// redirect, and the records DNS needs are printed. The zone gives each of its names to the Front Door, and gives
+    /// the Front Door's tokens back as TXT records: nobody copies a token by hand into this zone. The name of the
+    /// other domain has no record in it. A name that waits is not purged; one that serves is.
     /// </summary>
     [Fact]
     public async Task TheZoneIsGivenTheHostNamesAndTheFrontDoorsTokens()
     {
         ProdBehindItsFrontDoor(
             Domain("jeffreypalermo.com", kept: true, "Pending", token: "token-for-the-apex"),
+            Domain("www.jeffreypalermo.ceo", kept: true, "Approved", token: "token-for-www-ceo"),
             Domain("www.jeffreypalermo.com", kept: false, "Approved", token: "token-for-www"),
             Domain("feeds.jeffreypalermo.com", kept: false, "Submitting"));
-        var folder = DeployFolderWithHostNames("prod", "jeffreypalermo.com", "www.jeffreypalermo.com", "feeds.jeffreypalermo.com");
 
-        var result = await DeployAsync("prod", deployFolder: folder);
+        var result = await DeployAsync("prod");
 
         Assert.True(result.ExitCode == 0, result.ToString());
         Assert.Equal(string.Empty, result.Error);
+        Assert.Equal(["jeffreypalermo.com", "www.jeffreypalermo.ceo"], Texts(StackParameters(), "hostNames"));
+        Assert.Equal(["www.jeffreypalermo.com", "feeds.jeffreypalermo.com"], Texts(StackParameters(), "redirectHostNames"));
+        Assert.Contains("11 region(s) run registry.example/jpcom/web:1.2.3, behind Front Door, as jeffreypalermo.com, www.jeffreypalermo.com, feeds.jeffreypalermo.com, www.jeffreypalermo.ceo", result.Output, StringComparison.Ordinal);
+        Assert.Contains("Host names of prod: what DNS needs (docs/runbooks/dns-cutover.md). Nothing is changed in DNS by this deployment.", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  jeffreypalermo.com: validation Pending; answered with pages, kept at the edge", result.Output, StringComparison.Ordinal);
+        Assert.Contains("    TXT    _dnsauth.jeffreypalermo.com  \"token-for-the-apex\" (the token is valid until 2126-11-21 10:15 UTC)", result.Output, StringComparison.Ordinal);
+        Assert.Contains($"    ALIAS  jeffreypalermo.com  jpcom-prod-d8e7.z02.azurefd.net  (the top of a zone takes no CNAME: an ALIAS or ANAME record, or an Azure DNS alias record to {ProdEndpointId})", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  www.jeffreypalermo.com: validation Approved; answered with a redirect, never kept at the edge", result.Output, StringComparison.Ordinal);
+        Assert.Contains("    CNAME  www.jeffreypalermo.com  jpcom-prod-d8e7.z02.azurefd.net", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  feeds.jeffreypalermo.com: validation Submitting; answered with a redirect, never kept at the edge", result.Output, StringComparison.Ordinal);
+        Assert.Contains("    CNAME  feeds.jeffreypalermo.com  jpcom-prod-d8e7.z02.azurefd.net", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  www.jeffreypalermo.ceo: validation Approved; answered with pages, kept at the edge", result.Output, StringComparison.Ordinal);
+        // The bare domain waits and www. keeps nothing: the endpoint's own name and production's own are purged.
+        Assert.Equal(["jpcom-prod-d8e7.z02.azurefd.net", "www.jeffreypalermo.ceo"], PurgedDomains());
+        Assert.Empty(NewTokensAskedFor());
         var zone = ZoneParameters();
         Assert.Equal(["@", "www", "feeds"], Texts(zone, "hostLabels"));
         Assert.Equal(ProdEndpointId, zone.GetProperty("frontDoorEndpointId").GetProperty("value").GetString());
