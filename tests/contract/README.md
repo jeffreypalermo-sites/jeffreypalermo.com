@@ -53,7 +53,10 @@ WordPress guesses are preserved on purpose through curated entries in `content/a
   dotnet run --project tools/UrlContract -- verify https://<host>/ tests/contract/url-contract.tsv tests/contract/exceptions.tsv
   ```
 
-  It exits 1 on any violation.
+  It exits 1 on any violation. A request that gets no answer (a connection that is reset, an answer that does not
+  come within 60 seconds) is sent three times, with a pause between; a URL that never answers is listed as a
+  violation, "no answer after 3 attempts", and the replay goes on. A replay is thousands of requests through a
+  Front Door, and one reset connection once ended a deployment whose site was fine (uat, 2026-10-08).
 - **Every deployment:** the release's package carries the verifier and this contract; the site's `deploy/verify.ps1`
   replays it against the environment right after `deploy.ps1`, and a violation fails the deployment
   ([ADR-0007](../../docs/adr/0007-the-site-owns-its-runtime.md)).
