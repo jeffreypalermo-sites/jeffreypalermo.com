@@ -58,7 +58,50 @@ public class SiteContentInvariantTests
         { "/about/: the body shows the WordPress shortcode [contact-form] as text", () => Site(pages: [Page("about") with { HtmlBody = "<p>[contact-form]</p>" }]) },
         { "/about/: the excerpt shows the WordPress shortcode [youtube https://youtu.be/abc] as text", () => Site(pages: [Page("about") with { Excerpt = "[youtube https://youtu.be/abc]" }]) },
         { "listed more than once", () => Site(redirects: [new LegacyRedirect("/a.aspx", "/wp-content/uploads/a.png"), new LegacyRedirect("/A.aspx", "/wp-content/uploads/a.png")]) },
+        { "/2008/07/a/: the picture /photos/1/original.aspx leads nowhere on this site", () => Site(posts: [Post("a", July2008) with { HtmlBody = "<p><img src=\"/photos/1/original.aspx\"></p>" }], files: Uploads) },
+        { "/2008/07/a/: the picture images/blank.gif leads nowhere on this site", () => Site(posts: [Post("a", July2008) with { HtmlBody = "<p><img src=\"images/blank.gif\"></p>" }], files: Uploads) },
+        { "/2008/07/a/: the link to the picture /wp-content/uploads/2018/06/big.png leads nowhere on this site", () => Site(posts: [Post("a", July2008) with { HtmlBody = "<p><a href=\"/wp-content/uploads/2018/06/big.png\">big</a></p>" }], files: Uploads) },
+        { "/2008/07/a/ comment 4: the picture /wp-content/uploads/2018/06/Onion.png leads nowhere on this site", () => Site(posts: [Post("a", July2008) with { Comments = [Comment(4) with { ContentHtml = "<img src=\"/wp-content/uploads/2018/06/Onion.png\">" }] }], files: Uploads) },
+        { "/about/: the picture /wp-content/uploads/2018/06/portrait.jpg leads nowhere on this site", () => Site(pages: [Page("about") with { HtmlBody = "<img src=\"/wp-content/uploads/2018/06/portrait.jpg\">" }], files: Uploads) },
+        { "/2008/07/a/: the picture /files/gone.png leads nowhere on this site", () => Site(posts: [Post("a", July2008) with { HtmlBody = "<img src=\"/files/gone.png\">" }], redirects: [new LegacyRedirect("/files/gone.png", "/wp-content/uploads/2018/06/gone.png")], files: Uploads) },
     };
+
+    private static readonly SiteFiles Uploads = new(["/wp-content/uploads/2018/06/onion.png"], ["/wp-content/uploads/2018/07/lost.png"]);
+
+    [Fact]
+    public void APictureOnThisSiteMustLeadToAFileOrBeListedAsLost()
+    {
+        var body = "<p><a href=\"/wp-content/uploads/2018/06/onion.png\"><img src=\"/wp-content/uploads/2018/06/onion.png?w=300\"></a>"
+            + "<img src=\"/wp-content/uploads/2018/07/lost.png\"><img src=\"/files/onion.png\"><img src=\"/_assets/portraits/jeffreypalermo.jpg\">"
+            + "<img src=\"https://example.com/elsewhere.png\"><a href=\"/photos/1/original.aspx\">a page, for all its address says</a></p>";
+
+        var site = Site(
+            posts: [Post("a", July2008) with { HtmlBody = body, Comments = [Comment(1) with { ContentHtml = body }] }],
+            pages: [Page("about") with { HtmlBody = body }],
+            redirects: [new LegacyRedirect("/files/onion.png", "/wp-content/uploads/2018/06/onion.png")],
+            files: Uploads);
+
+        Assert.Single(site.Posts);
+    }
+
+    [Fact]
+    public void ThePicturesAreNotCheckedWhenTheFilesAreNotKnown() =>
+        Assert.Single(Site(posts: [Post("a", July2008) with { HtmlBody = "<p><img src=\"/photos/1/original.aspx\"></p>" }]).Posts);
+
+    [Fact]
+    public void ThePictureErrorSaysWhatToDo()
+    {
+        var error = Assert.Throws<ContentValidationException>(() => Site(
+            posts: [Post("a", July2008) with { HtmlBody = "<a href=\"/big.JPG\"><img src=\"/small.aspx?w=1&amp;h=2\"></a>" }],
+            files: Uploads));
+
+        Assert.Equal(
+            [
+                "/2008/07/a/: the link to the picture /big.JPG leads nowhere on this site. Put the file under content/uploads, point at a file that is there, or take it out of the body",
+                "/2008/07/a/: the picture /small.aspx?w=1&h=2 leads nowhere on this site. Put the file under content/uploads, point at a file that is there, or take it out of the body",
+            ],
+            error.Errors);
+    }
 
     [Fact]
     public void AShortcodeIsAllowedAsASampleAndInAComment()

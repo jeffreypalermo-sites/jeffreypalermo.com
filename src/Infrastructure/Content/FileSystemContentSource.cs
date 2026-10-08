@@ -10,7 +10,8 @@ namespace JeffreyPalermo.Infrastructure.Content;
 /// <summary>
 /// Loads <c>content/</c> into the <see cref="SiteContent"/> aggregate: front matter files for posts and pages
 /// (<c>.html</c> as-is, <c>.md</c> rendered by Markdig), comments beside each post, and the archive JSON files.
-/// File-level problems and domain invariant violations are all reported together.
+/// File-level problems and domain invariant violations are all reported together. It also tells the domain which
+/// files <c>uploads/</c> holds and which are listed as lost, so that a picture that leads nowhere fails the load.
 /// </summary>
 public sealed class FileSystemContentSource(ContentLayout layout, string version) : ISiteContentSource
 {
@@ -44,13 +45,14 @@ public sealed class FileSystemContentSource(ContentLayout layout, string version
         var attachments = await ReadJsonAsync<List<Attachment>>(layout.AttachmentsFile, errors, cancellationToken).ConfigureAwait(false) ?? [];
         var terms = await ReadJsonAsync<List<Term>>(layout.TermsFile, errors, cancellationToken).ConfigureAwait(false) ?? [];
         var redirects = await ReadJsonAsync<List<LegacyRedirect>>(layout.LegacyRedirectsFile, errors, cancellationToken).ConfigureAwait(false) ?? [];
+        var lostUploads = await ReadJsonAsync<List<string>>(layout.LostUploadsFile, errors, cancellationToken).ConfigureAwait(false) ?? [];
 
         if (errors.Count > 0)
         {
             throw new ContentValidationException(errors);
         }
 
-        return SiteContent.Create(version, posts, pages, attachments, terms, redirects);
+        return SiteContent.Create(version, posts, pages, attachments, terms, redirects, new SiteFiles(layout.UploadPaths(), lostUploads));
     }
 
     private static IEnumerable<string> ContentFiles(string directory) =>

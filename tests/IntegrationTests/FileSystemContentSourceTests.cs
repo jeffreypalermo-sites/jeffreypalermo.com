@@ -90,6 +90,88 @@ public sealed class FileSystemContentSourceTests : IDisposable
         Assert.DoesNotContain(offSite, subresource => subresource.Address.Contains(".wp.com/", StringComparison.OrdinalIgnoreCase));
     }
 
+    private const string NoHomeHasIt = "no source has it: the Wayback Machine has no image for it under any earlier home of the blog (dotnetjunkies.com, codebetter.com, jeffreypalermo.com)";
+
+    /// <summary>
+    /// The pictures no source has, which <c>WpMigrator recover</c> took out of their posts on 2026-10-08. Each stood at
+    /// an address on this site that WordPress never had a file for: a picture of the blog's earlier platforms. A
+    /// note stands where the picture stood, <c>[Picture no longer available]</c>, with its alternative text when it
+    /// had one; a picture that was decoration (<c>alt=""</c>) is gone without a note. Should a file turn up, put it
+    /// under <c>content/uploads</c> and the picture back into its post by hand.
+    /// </summary>
+    private static readonly (string Post, string Address, bool Note, string Why)[] PicturesNoSourceHas =
+    [
+        ("/2004/04/a-completely-automated-web-siteapplication-framework/", "/WebLog/images/dotnetjunkies_com/jpalermo/1009/r_EZWebScreenshot.jpg", true, NoHomeHasIt),
+        ("/2005/04/great-vs-add-in-for-doing-tdd-testrunner-from-mailframe-net-level-200/", "/WebLog/images/dotnetjunkies_com/jpalermo/1009/r_TestRunner.jpg", true, NoHomeHasIt),
+        ("/2005/06/tech-ed-2005-day-1-opening-keynote/", "/WebLog/images/dotnetjunkies_com/jpalermo/2497/o_SteveBallmer1_web.JPG", true, NoHomeHasIt),
+        ("/2005/06/tech-ed-2005-day-1-opening-keynote/", "/WebLog/images/dotnetjunkies_com/jpalermo/2497/o_SteveBallmer2_web.JPG", true, NoHomeHasIt),
+        ("/2005/06/tech-ed-2005-day-1-smart-client-architecture/", "/WebLog/images/dotnetjunkies_com/jpalermo/2497/o_RockyBilly_web.jpg", true, NoHomeHasIt),
+        ("/2005/06/tech-ed-2005-day-2-attacking-the-bean-bag-chairs/", "/WebLog/images/dotnetjunkies_com/jpalermo/2497/o_ScottJumpsOnBeanBags_web.jpg", true, NoHomeHasIt),
+        ("/2005/06/tech-ed-2005-day-2-data-access-for-business-objects-with-nhibernate/", "/WebLog/images/dotnetjunkies_com/jpalermo/2497/o_ScottBellwareNHibernate_web.jpg", true, NoHomeHasIt),
+        ("/2005/06/tech-ed-2005-day-2-early-afternoon/", "/WebLog/images/dotnetjunkies_com/jpalermo/2497/o_SWFromHotel_Small.JPG", true, NoHomeHasIt),
+        ("/2005/06/tech-ed-2005-day-2-evening/", "/WebLog/images/dotnetjunkies_com/jpalermo/2497/o_PartyWithPalermoGeekDinner.JPG", true, NoHomeHasIt),
+        ("/2005/06/tech-ed-2005-day-2-late-night-geek-talk/", "/WebLog/images/dotnetjunkies_com/jpalermo/2497/o_LateNightFoodCrew_web.jpg", true, NoHomeHasIt),
+        ("/2005/06/tech-ed-2005-day-2-net-rocks-founders/", "/WebLog/images/dotnetjunkies_com/jpalermo/2497/o_DotNetRocksCrew_web.JPG", true, NoHomeHasIt),
+        ("/2005/06/tech-ed-2005-day-3-riding-a-segway/", "/WebLog/images/dotnetjunkies_com/jpalermo/2497/r_JeffreyOnSegway_web.JPG", true, NoHomeHasIt),
+        ("/2005/06/tech-ed-2005-day-3/", "/WebLog/images/dotnetjunkies_com/jpalermo/2497/o_OrlandoView.JPG", true, NoHomeHasIt),
+        ("/2008/08/software-quality-isn-t-optional/", "images/blank.gif", false, "no source has it: its address is relative, so no host ever had it at an address that can be known"),
+    ];
+
+    [Fact]
+    public async Task APictureNoSourceHasIsGoneFromItsPostAndANoteSaysSo()
+    {
+        var site = await new FileSystemContentSource(new ContentLayout(Path.Join(RepositoryRoot(), "content")), "test").LoadAsync();
+        static int Notes(string html) => Regex.Count(html, "<em class=\"picture-lost\">\\[Picture no longer available(: [^\\]<]+)?\\]</em>");
+
+        foreach (var post in PicturesNoSourceHas.GroupBy(gone => gone.Post))
+        {
+            var body = site.FindPost(post.Key)?.HtmlBody;
+            Assert.True(body is not null, $"{post.Key} is not a post.");
+            Assert.All(post, gone => Assert.DoesNotContain($"\"{gone.Address}\"", body, StringComparison.Ordinal));
+            Assert.True(post.Count(gone => gone.Note) == Notes(body), $"{post.Key} has {Notes(body)} notes for {post.Count(gone => gone.Note)} pictures that are gone.");
+        }
+
+        Assert.All(PicturesNoSourceHas, gone => Assert.False(string.IsNullOrWhiteSpace(gone.Why), $"{gone.Address} has no reason."));
+        // No other body has such a note, and no note stands in a comment.
+        Assert.Equal(PicturesNoSourceHas.Count(gone => gone.Note), site.Posts.Sum(post => Notes(post.HtmlBody)) + site.Pages.Sum(page => Notes(page.HtmlBody)));
+        Assert.DoesNotContain(site.Posts.SelectMany(post => post.Comments), comment => comment.ContentHtml.Contains("picture-lost", StringComparison.Ordinal));
+    }
+
+    /// <summary>
+    /// A picture a body shows or links to by an address on this site leads to a file, or the load fails (the rule is
+    /// <c>SitePictures</c> in Core). The exceptions are the uploads listed as lost, which bodies keep pointing at so
+    /// that a file that turns up is shown again. There are two kinds, each with its reason:
+    /// <list type="bullet">
+    /// <item>44 uploads under <c>/wp-content/uploads/2018/07/</c>: lost in the 2018 import into WordPress.com. The
+    /// WordPress site itself answered 404 for each, and the manifest names no other source.</item>
+    /// <item>67 pictures of other hosts, under <c>/wp-content/uploads/external/</c>: no source had them when the
+    /// content was migrated. Photon's cache and the hosts did not, and the Wayback Machine's newest capture of
+    /// each was no picture.</item>
+    /// </list>
+    /// The site reads the list in <c>content/archive/lost-uploads.json</c>; <c>media</c> and <c>recover</c> write it
+    /// there and beside the manifest. Both say the same, name no file that is there, and name nothing no body points at.
+    /// </summary>
+    [Fact]
+    public async Task TheUploadsListedAsLostAreTheOnesBodiesPointAtThatHaveNoFile()
+    {
+        var root = RepositoryRoot();
+        var layout = new ContentLayout(Path.Join(root, "content"));
+        var lost = (await File.ReadAllLinesAsync(Path.Join(root, "migration", "uploads-manifest.missing.txt"))).Where(line => line.Length > 0).ToList();
+        var listedForTheSite = System.Text.Json.JsonSerializer.Deserialize<List<string>>(await File.ReadAllTextAsync(layout.LostUploadsFile));
+        var pointedAt = (await RepositoryBodiesAsync())
+            .SelectMany(SitePictures.Find)
+            .Select(picture => picture.Path)
+            .OfType<string>()
+            .ToHashSet(StringComparer.Ordinal);
+
+        Assert.Equal(lost, listedForTheSite);
+        Assert.All(lost, path => Assert.False(File.Exists(layout.UploadFile(path)), $"{path} is listed as lost and is there."));
+        Assert.All(lost, path => Assert.True(pointedAt.Contains(Uri.UnescapeDataString(path)), $"{path} is listed as lost and no body points at it."));
+        Assert.Equal(
+            (44, 67),
+            (lost.Count(path => !path.StartsWith("/wp-content/uploads/external/", StringComparison.Ordinal)), lost.Count(path => path.StartsWith("/wp-content/uploads/external/", StringComparison.Ordinal))));
+    }
+
     [Fact]
     public async Task EverySelfHostedImageIsInTheRepositoryOrListedAsLost()
     {
@@ -199,6 +281,54 @@ public sealed class FileSystemContentSourceTests : IDisposable
                 "/contact/: the body shows the WordPress shortcode [contact-form] as text. Nothing renders shortcodes here: replace it with HTML, or put it inside <code> if it is a sample",
             ],
             error.Errors);
+    }
+
+    [Fact]
+    public async Task APictureOnThisSiteThatLeadsNowhereFailsTheLoadUnlessItIsListedAsLost()
+    {
+        await WriteAsync(
+            "posts/2026/10/hello-world.md",
+            Post("/2026/10/hello-world/") + "![There](/wp-content/uploads/2026/10/there%20it%20is.png) ![Gone](/wp-content/uploads/2026/10/gone.png)\n\n"
+            + "<img src=\"/photos/1/original.aspx\"> <a href=\"/wp-content/uploads/2026/10/There%20it%20is.PNG\">another letter case</a> ![Lost](/wp-content/uploads/2018/07/lost.png)\n");
+        await WriteAsync("posts/2026/10/hello-world.comments.json", """[{ "id": 1, "parent": 0, "author_name": "Reader", "date": "2026-10-05T10:00:00", "type": "comment", "content_html": "<p><img src=\"images/blank.gif\"></p>" }]""");
+        await WriteAsync("pages/about.html", Post("/about/") + "<p><img src=\"/wp-content/uploads/2026/10/there%20it%20is.png?w=300\"><img src=\"/files/old.png\"><img src=\"/files/older.png\"><img src=\"https://example.com/elsewhere.png\"></p>\n");
+        await WriteAsync("uploads/2026/10/there it is.png", "a picture");
+        await WriteAsync("archive/lost-uploads.json", """["/wp-content/uploads/2018/07/lost.png"]""");
+        await WriteAsync("archive/legacy-redirects.json", """[{ "from": "/files/old.png", "to": "/wp-content/uploads/2026/10/there%20it%20is.png" }, { "from": "/files/older.png", "to": "/wp-content/uploads/2026/10/gone.png" }]""");
+        await WriteTermsAsync();
+
+        var error = await Assert.ThrowsAsync<ContentValidationException>(Load);
+
+        const string whatToDo = " leads nowhere on this site. Put the file under content/uploads, point at a file that is there, or take it out of the body";
+        Assert.Equal(
+            [
+                "/2026/10/hello-world/: the picture /wp-content/uploads/2026/10/gone.png" + whatToDo,
+                "/2026/10/hello-world/: the picture /photos/1/original.aspx" + whatToDo,
+                "/2026/10/hello-world/: the link to the picture /wp-content/uploads/2026/10/There%20it%20is.PNG" + whatToDo,
+                "/2026/10/hello-world/ comment 1: the picture images/blank.gif" + whatToDo,
+                "/about/: the picture /files/older.png" + whatToDo,
+            ],
+            error.Errors);
+
+        // With the files in place, or the pictures taken out, the same tree loads.
+        await WriteAsync("uploads/2026/10/gone.png", "found again");
+        await WriteAsync("uploads/2026/10/There it is.PNG", "the other one");
+        await WriteAsync("uploads/photos/1/original.aspx.jpg", "recovered");
+        var post = await File.ReadAllTextAsync(Path.Join(_root, "posts/2026/10/hello-world.md"));
+        await WriteAsync("posts/2026/10/hello-world.md", post.Replace("/photos/1/original.aspx", "/wp-content/uploads/photos/1/original.aspx.jpg", StringComparison.Ordinal));
+        await WriteAsync("posts/2026/10/hello-world.comments.json", "[]");
+
+        Assert.Single((await Load()).Posts);
+    }
+
+    [Fact]
+    public async Task AListOfLostUploadsThatCannotBeReadIsReportedWithItsPath()
+    {
+        await WriteAsync("archive/lost-uploads.json", "/wp-content/uploads/2018/07/lost.png\n");
+
+        var error = await Assert.ThrowsAsync<ContentValidationException>(Load);
+
+        Assert.StartsWith("archive/lost-uploads.json: ", Assert.Single(error.Errors), StringComparison.Ordinal);
     }
 
     [Fact]

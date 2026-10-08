@@ -13,6 +13,12 @@ public sealed class ContentLayout(string root)
     public string TermsFile => Path.Join(Root, "archive", "terms.json");
     public string LegacyRedirectsFile => Path.Join(Root, "archive", "legacy-redirects.json");
 
+    /// <summary>
+    /// The uploads bodies point at that no source has any more, as a JSON list of their addresses. A picture on this
+    /// site that leads nowhere fails the load unless it is listed here.
+    /// </summary>
+    public string LostUploadsFile => Path.Join(Root, "archive", "lost-uploads.json");
+
     /// <summary>Present once the WordPress site is frozen: from then on this tree is edited in git (ADR-0010).</summary>
     public string FreezeFile => Path.Join(Root, "archive", "wordpress-freeze.json");
 
@@ -50,6 +56,13 @@ public sealed class ContentLayout(string root)
 
         return Path.Join([UploadsDirectory, .. segments]);
     }
+
+    /// <summary>Every file under <c>uploads/</c> by the address the site serves it at: <c>/wp-content/uploads/2018/06/a.png</c>.</summary>
+    public IEnumerable<string> UploadPaths() =>
+        Directory.Exists(UploadsDirectory)
+            ? Directory.EnumerateFiles(UploadsDirectory, "*", SearchOption.AllDirectories)
+                .Select(file => "/wp-content/uploads/" + Path.GetRelativePath(UploadsDirectory, file).Replace('\\', '/'))
+            : [];
 
     private static string[] Segments(string permalink) =>
         permalink.Split('/', StringSplitOptions.RemoveEmptyEntries);

@@ -64,6 +64,17 @@ public sealed class SiteContent
     public IReadOnlyList<Attachment> Attachments { get; }
     public IReadOnlyList<Term> Terms { get; }
 
+    /// <param name="version">Identifies this content snapshot.</param>
+    /// <param name="posts">Every post.</param>
+    /// <param name="pages">Every page.</param>
+    /// <param name="attachments">Every WordPress media item.</param>
+    /// <param name="terms">Every category, tag, author and post format.</param>
+    /// <param name="legacyRedirects">The curated legacy redirects.</param>
+    /// <param name="files">
+    /// The files the site has. When given, a picture that a body shows or links to by an address on this site must
+    /// lead to one of them (<see cref="SitePictures"/>), or be an upload listed as lost. Null when the files are not
+    /// known: the pictures are not checked then.
+    /// </param>
     /// <exception cref="ContentValidationException">Any invariant is violated; lists every violation.</exception>
     public static SiteContent Create(
         string version,
@@ -71,7 +82,8 @@ public sealed class SiteContent
         IEnumerable<Page> pages,
         IEnumerable<Attachment> attachments,
         IEnumerable<Term> terms,
-        IEnumerable<LegacyRedirect>? legacyRedirects = null)
+        IEnumerable<LegacyRedirect>? legacyRedirects = null,
+        SiteFiles? files = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(version);
         List<Post> postList = [.. posts];
@@ -80,7 +92,7 @@ public sealed class SiteContent
         List<Term> termList = [.. terms];
         List<LegacyRedirect> redirectList = [.. legacyRedirects ?? []];
 
-        var errors = Validate(postList, pageList, attachmentList, termList, redirectList);
+        var errors = Validate(postList, pageList, attachmentList, termList, redirectList, files);
         if (errors.Count > 0)
         {
             throw new ContentValidationException(errors);
@@ -220,9 +232,27 @@ public sealed class SiteContent
     }
 
     private static List<string> Validate(
-        List<Post> posts, List<Page> pages, List<Attachment> attachments, List<Term> terms, List<LegacyRedirect> redirects)
+        List<Post> posts, List<Page> pages, List<Attachment> attachments, List<Term> terms, List<LegacyRedirect> redirects, SiteFiles? files)
     {
         var errors = new List<string>();
+
+        // Where a curated redirect sends a path. The first of two for one path counts; the second is reported below.
+        var redirectTargets = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var redirect in redirects)
+        {
+            redirectTargets.TryAdd(UrlPath.Decode(redirect.From), redirect.To);
+        }
+
+        void Pictures(string where, string html)
+        {
+            if (files is not null)
+            {
+                errors.AddRange(SitePictures.Find(html)
+                    .Where(picture => SitePictures.LeadsNowhere(picture, files, redirectTargets.GetValueOrDefault)
+                        && !(picture.Path is { } path && files.IsListedAsLost(path)))
+                    .Select(picture => PictureLeadsNowhere(where, picture)));
+            }
+        }
 
         void Duplicates<T, TKey>(IEnumerable<T> items, Func<T, TKey> key, IEqualityComparer<TKey>? comparer, Func<TKey, string> describe) =>
             errors.AddRange(items.GroupBy(key, comparer).Where(g => g.Count() > 1).Select(g => describe(g.Key)));
@@ -274,6 +304,11 @@ public sealed class SiteContent
 
             errors.AddRange(Shortcodes.FindLiteral(post.HtmlBody).Select(shortcode => ShortcodeInBody(where, shortcode)));
             errors.AddRange(Shortcodes.FindLiteral(post.Excerpt ?? string.Empty).Select(shortcode => ShortcodeInExcerpt(where, shortcode)));
+            Pictures(where, post.HtmlBody);
+            foreach (var comment in post.Comments)
+            {
+                Pictures($"{where} comment {comment.Id}", comment.ContentHtml);
+            }
 
             var commentIds = post.Comments.Select(c => c.Id).ToHashSet();
             errors.AddRange(post.Comments
@@ -295,6 +330,7 @@ public sealed class SiteContent
 
             errors.AddRange(Shortcodes.FindLiteral(page.HtmlBody).Select(shortcode => ShortcodeInBody(page.Path, shortcode)));
             errors.AddRange(Shortcodes.FindLiteral(page.Excerpt ?? string.Empty).Select(shortcode => ShortcodeInExcerpt(page.Path, shortcode)));
+            Pictures(page.Path, page.HtmlBody);
         }
 
         foreach (var attachment in attachments)
@@ -348,6 +384,10 @@ public sealed class SiteContent
 
     private static string ShortcodeInExcerpt(string where, string shortcode) =>
         $"{where}: the excerpt shows the WordPress shortcode {shortcode} as text. Take it out of the excerpt";
+
+    private static string PictureLeadsNowhere(string where, SitePicture picture) =>
+        $"{where}: the {(picture.IsLink ? "link to the picture" : "picture")} {picture.Address} leads nowhere on this site. "
+        + "Put the file under content/uploads, point at a file that is there, or take it out of the body";
 
     private static bool IsRootedDirectoryPath(string path) =>
         path.Length > 1 && path[0] == '/' && path[^1] == '/';

@@ -288,6 +288,21 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         Assert.Empty(visit.FailedRequests);
     }
 
+    /// <summary>A post, how many of its pictures the Wayback Machine had, and how many no source has.</summary>
+    public static TheoryData<string, int, int> PostsWithPicturesFromEarlierPlatforms => new()
+    {
+        // Community Server's gallery on codebetter.com, 2006: seventeen screenshots.
+        { "/2006/08/breadandbutterresharper/", 17, 0 },
+        // DotNetJunkies, 2005: two photographs.
+        { "/2005/02/eating-at-rudys-after-a-talk-with-brad-abrams-level-000/", 2, 0 },
+        // Captured in another size only: 425 by 319 points, and the gallery's thumbnail.
+        { "/2005/11/attending-innotech-a-local-austin-conference-level-000/", 1, 0 },
+        { "/2005/10/the-mondays-show-comes-to-austin-level-999/", 1, 0 },
+        // No source has these: a note stands where each picture stood.
+        { "/2005/06/tech-ed-2005-day-1-opening-keynote/", 0, 2 },
+        { "/2004/04/a-completely-automated-web-siteapplication-framework/", 0, 1 },
+    };
+
     /// <summary>
     /// Episode 001 of the podcast is the one post where WordPress had rendered the Libsyn player, as a frame that
     /// asked Libsyn for a page with every view. It has the same player as the other episodes now (ADR-0015).
@@ -312,6 +327,37 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         await Assertions.Expect(body.GetByRole(AriaRole.Link, new() { Name = "Download this episode" })).ToHaveAttributeAsync("href", recording);
         await Assertions.Expect(body).ToContainTextAsync("(MP3, 43:12, 42.2 MB)");
         await Assertions.Expect(body.Locator("iframe, script")).ToHaveCountAsync(0);
+        Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
+    }
+
+    /// <summary>
+    /// These posts showed pictures from the blog's earlier platforms by addresses WordPress never had a file for, so
+    /// every one was a broken picture. What the Wayback Machine has is a file of the site now. What no source has is
+    /// gone from the post, and a note stands where the picture stood. No request of the page fails.
+    /// </summary>
+    [Theory]
+    [MemberData(nameof(PostsWithPicturesFromEarlierPlatforms))]
+    public async Task APostWithPicturesFromAnEarlierPlatformShowsTheRecoveredOnesAndSaysWhichAreGone(string path, int recovered, int gone)
+    {
+        await using var visit = await chromium.VisitAsync(site.BaseAddress);
+        var page = visit.Page;
+
+        var response = await page.GotoAsync(path);
+        await visit.EvaluateAsync<int>(LoadEveryPicture);
+
+        Assert.Equal(200, response!.Status);
+        var body = page.Locator("main article.post .entry-content");
+        await Assertions.Expect(body.Locator("img[src^='/wp-content/uploads/external/codebetter.com/'], img[src^='/wp-content/uploads/external/dotnetjunkies.com/']")).ToHaveCountAsync(recovered);
+        await Assertions.Expect(body.Locator("em.picture-lost")).ToHaveCountAsync(gone);
+        if (gone > 0)
+        {
+            await Assertions.Expect(body.Locator("em.picture-lost").First).ToBeVisibleAsync();
+            await Assertions.Expect(body.Locator("em.picture-lost").First).ToContainTextAsync("[Picture no longer available");
+        }
+
+        await Assertions.Expect(body.Locator("img[src^='/photos/'], img[src^='/WebLog/'], img:not([src^='/'])")).ToHaveCountAsync(0);
+        Assert.True(await visit.EvaluateAsync<bool>("[...document.images].every(image => image.complete && image.naturalWidth > 0)"), "A picture of the post did not load.");
         Assert.Empty(visit.OffSiteRequests);
         Assert.Empty(visit.FailedRequests);
     }

@@ -8,12 +8,14 @@ using JeffreyPalermo.Tools.WpMigrator;
 //   fetch   <site> <raw-dir>                         REST API snapshot → migration/raw/*.json
 //   convert <raw-dir> <content-dir> <manifest-file>  raw snapshot → content/ (posts, pages, comments, archive)
 //   media   <site> <content-dir> <manifest-file>     manifest → content/uploads/
-// One command works on content/ as it is, frozen or not, and changes only addresses in it:
+// Two commands work on content/ as it is, frozen or not, and change only addresses in it, or a picture that is gone:
 //   localize <content-dir> <manifest-file>           images that bodies load from other hosts → content/uploads/external/
-var usable = args.Length == 4 ? args[0] != "localize" : args.Length == 3 && args[0] is "fetch" or "localize";
+//   recover  <content-dir> <manifest-file>           pictures a reader can no longer reach: links to pictures on other
+//                                                    hosts, pictures on this site that lead nowhere, uploads listed as lost
+var usable = args.Length == 4 ? args[0] is not ("localize" or "recover") : args.Length == 3 && args[0] is "fetch" or "localize" or "recover";
 if (!usable)
 {
-    Console.Error.WriteLine("usage: fetch <site> <raw-dir> | convert <raw-dir> <content-dir> <manifest> | media <site> <content-dir> <manifest> | localize <content-dir> <manifest>");
+    Console.Error.WriteLine("usage: fetch <site> <raw-dir> | convert <raw-dir> <content-dir> <manifest> | media <site> <content-dir> <manifest> | localize <content-dir> <manifest> | recover <content-dir> <manifest>");
     return 2;
 }
 
@@ -49,10 +51,12 @@ switch (args[0])
     {
         using var http = CreateClient(args[1]);
         var manifest = await File.ReadAllLinesAsync(args[3]);
-        var summary = await new MediaDownloader(http, new ContentLayout(args[2]), TimeSpan.FromSeconds(3))
+        var layout = new ContentLayout(args[2]);
+        var summary = await new MediaDownloader(http, layout, TimeSpan.FromSeconds(3))
             .DownloadAsync(manifest.Where(l => l.Length > 0), parallelism: 2);
         Console.WriteLine($"downloaded {summary.Downloaded}, already present {summary.AlreadyPresent}, missing {summary.Missing.Count}");
-        await File.WriteAllLinesAsync(Path.ChangeExtension(args[3], ".missing.txt"), summary.Missing);
+        // Beside the manifest, and in the content tree, where the site reads which pictures it is known not to have.
+        await RecoverCommand.WriteLostAsync(args[3], layout, summary.Missing);
         return 0;
     }
 
@@ -64,6 +68,25 @@ switch (args[0])
         var report = await new ContentLocalizer(new ExternalImageFetcher(http, TimeSpan.FromSeconds(2)), new ContentLayout(args[1])).LocalizeAsync();
         await LocalizeCommand.AddToManifestAsync(args[2], report.ManifestLines);
         Console.Write(LocalizeCommand.Describe(report));
+        return 0;
+    }
+
+    case "recover":
+    {
+        // Redirects are followed by the fetcher, one polite request at a time.
+        using var handler = new HttpClientHandler { AllowAutoRedirect = false };
+        using var http = new HttpClient(handler) { Timeout = TimeSpan.FromMinutes(4) };
+        var layout = new ContentLayout(args[1]);
+        var manifest = File.Exists(args[2]) ? await File.ReadAllLinesAsync(args[2]) : [];
+        var recovery = new PictureRecovery(new ExternalImageFetcher(http, TimeSpan.FromSeconds(2)), layout, RecoverCommand.EarlierHomes)
+        {
+            Progress = Console.Error.WriteLine,
+        };
+        var report = await recovery.RecoverAsync(manifest, await RecoverCommand.ReadLostAsync(args[2]));
+        await LocalizeCommand.AddToManifestAsync(args[2], report.ManifestLines);
+        await RecoverCommand.AddSourcesToManifestAsync(args[2], report.ManifestSources);
+        await RecoverCommand.WriteLostAsync(args[2], layout, report.StillLost);
+        Console.Write(RecoverCommand.Describe(report));
         return 0;
     }
 

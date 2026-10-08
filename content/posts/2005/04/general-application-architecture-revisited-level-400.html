@@ -12,7 +12,7 @@ excerpt: 'I’ve reviewed my architecture diagram, and the revised one is as fol
 comments_open: true
 ---
 <p>I’ve reviewed my architecture diagram, and the revised one is as follows:</p>
-<p><img src="/photos/jeffrey.palermo/images/129620/original.aspx"></p>
+<p><img src="/wp-content/uploads/external/codebetter.com/photos/jeffrey.palermo/images/129620/original.aspx.png"></p>
 <p>Although it may seem like a straight-forward diagram, I had to create a prototype, and the diagram just doesn’t do justice to the implementation.&nbsp; There are things that are hard to communicate using just these ovals and boxes.&nbsp; Make sure to download and try out my sample solution.&nbsp; It has a WinForms app ready to run.</p>
 <p>I’ve made a VS solution as a sample implementation of this diagram.&nbsp; You can <a href="http://palermo.cc/MyToolDownloads/Files/MVPWithRepository2.zip">download it here.</a>&nbsp; In it, the UI uses the M-V-P pattern, I use the Strategy pattern for my Data Provider, and my Repository objects are Factories.&nbsp; I can’t include all the source in this blog post, so I’ll just include the key pieces:</p>
 <p>The following is a snippet from my WinForms class.&nbsp; Notice how I delegate key events to my Presenter class.&nbsp; This class implements the IContactView interface(included in my source code), so the presenter can control the view.</p>
