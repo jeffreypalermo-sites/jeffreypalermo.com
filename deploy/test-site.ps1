@@ -8,7 +8,13 @@
 .DESCRIPTION
     Asks <BaseUrl>/_health/ready until it answers 200 with "ready <Version>": the site is up, has loaded its content,
     and is the release that was deployed, not the one before it. An environment that scaled to zero, or a new
-    revision that is still starting, answers late: the wait allows for that.
+    revision that is still starting, answers late: the wait allows for that. The answer must come from the site: one
+    that a cache gave (X-Cache names a hit) does not count, because it says nothing about what runs now (ADR-0013).
+
+    Then asks for the home page until the answer names the release in X-Release, which the site sends with every
+    answer. Through a Front Door this is the check that its cache holds no page of the release before: a page kept
+    from before the deployment names the old release. The cache is emptied by deploy.ps1; if the edge that answers
+    is not empty yet, this waits until it is.
 
     In the deploy package (scripts/build-deploy-package.sh) the contract verifier and the URL contract lie beside
     this file, in bin/ and contract/. Then it also replays the whole URL contract against the site: a release that
@@ -33,6 +39,13 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
+# One header of an answer, as text; empty when the answer does not carry it.
+function Get-Header {
+    param($Response, [string] $Name)
+    if (-not $Response.Headers.ContainsKey($Name)) { return '' }
+    return (@($Response.Headers[$Name]) | ForEach-Object { [string] $_ }) -join ', '
+}
+
 $uri = "$($BaseUrl.TrimEnd('/'))/_health/ready"
 $expected = "ready $Version"
 $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
@@ -44,6 +57,13 @@ while ($true) {
         $response = Invoke-WebRequest -Uri $uri -TimeoutSec 60 -SkipHttpErrorCheck
         $last = "$($response.StatusCode) '$(([string] $response.Content).Trim())'"
         $matched = $response.StatusCode -eq 200 -and ([string] $response.Content).Trim() -eq $expected
+        # The site says "no-store" with this answer. A cache that gave it anyway would repeat one region's answer
+        # for every request, and the rotation over the regions would not be checked at all.
+        $cache = Get-Header -Response $response -Name 'X-Cache'
+        if ($cache -match 'HIT') {
+            $last = "$last from a cache (X-Cache: $cache)"
+            $matched = $false
+        }
     }
     catch {
         $last = $_.Exception.Message
@@ -58,6 +78,34 @@ while ($true) {
         exit 1
     }
     if (-not $matched) { Start-Sleep -Seconds 5 }
+}
+
+# The home page is one a cache keeps. Whoever answers, the page must be this release's.
+$page = "$($BaseUrl.TrimEnd('/'))/"
+$deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+$last = 'no answer yet'
+$cache = ''
+while ($true) {
+    $matched = $false
+    try {
+        $response = Invoke-WebRequest -Uri $page -TimeoutSec 60 -SkipHttpErrorCheck
+        $release = Get-Header -Response $response -Name 'X-Release'
+        $cache = Get-Header -Response $response -Name 'X-Cache'
+        $last = "$($response.StatusCode), X-Release '$release'$(if ($cache) { ", X-Cache '$cache'" })"
+        $matched = $response.StatusCode -eq 200 -and $release -eq $Version
+    }
+    catch {
+        $last = $_.Exception.Message
+    }
+    if ($matched) {
+        Write-Host "PASS $page is a page of release $Version$(if ($cache) { " (X-Cache: $cache)" })"
+        break
+    }
+    if ((Get-Date) -ge $deadline) {
+        Write-Host "FAIL $page was not a page of release $Version within $TimeoutSeconds seconds; last: $last"
+        exit 1
+    }
+    Start-Sleep -Seconds 5
 }
 
 $verifier = Join-Path $PSScriptRoot 'bin' 'JeffreyPalermo.Tools.UrlContract'
