@@ -7,6 +7,7 @@ date_utc: 2019-01-28T09:30:00Z
 format: markdown
 author: jeffreypalermo
 categories:
+- ai-devops-podcast
 - azure-devops-podcast
 - devops
 - podcast

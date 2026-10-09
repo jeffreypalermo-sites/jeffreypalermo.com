@@ -87,7 +87,7 @@ public sealed class SiteHttpTests(SiteFactory factory) : IClassFixture<SiteFacto
         XNamespace ns = "http://www.sitemaps.org/schemas/sitemap/0.9";
         var locations = xml.Descendants(ns + "loc").Select(l => l.Value).ToList();
 
-        Assert.Equal(1384, locations.Count);
+        Assert.Equal(1385, locations.Count);
         Assert.Contains("https://jeffreypalermo.com" + Onion, locations);
     }
 
@@ -97,7 +97,7 @@ public sealed class SiteHttpTests(SiteFactory factory) : IClassFixture<SiteFacto
         var xml = XDocument.Parse(await factory.ClientFor().GetStringAsync(new Uri("/feed/", UriKind.Relative)));
 
         Assert.Equal(10, xml.Descendants("item").Count());
-        Assert.Equal("https://jeffreypalermo.com/2026/10/sam-nasr-ai-transformation-episode-422/", xml.Descendants("item").First().Element("link")!.Value);
+        Assert.Equal("https://jeffreypalermo.com/2026/10/the-five-pillars-leadership-for-effective-custom-software/", xml.Descendants("item").First().Element("link")!.Value);
     }
 
     [Theory]

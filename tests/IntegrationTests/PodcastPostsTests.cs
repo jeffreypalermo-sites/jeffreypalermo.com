@@ -236,11 +236,13 @@ public sealed class PodcastPostsTests : IDisposable
         foreach (var episode in catalog)
         {
             var post = site.FindPost(episode.Permalink)!;
-            var show = episode.Number >= PodcastShow.FirstAiDevOpsEpisode ? "ai-devops-podcast" : "azure-devops-podcast";
-            Assert.Equal([show, "devops", "podcast"], post.CategorySlugs);
+            // Every episode is under the show's present name, so that its listing is the whole show (ADR-0021). The
+            // ones published as the Azure DevOps Podcast, up to 368, keep that category too.
+            Assert.Equal(episode.Number < 369 ? ["ai-devops-podcast", "azure-devops-podcast", "devops", "podcast"] : ["ai-devops-podcast", "devops", "podcast"], post.CategorySlugs);
             Assert.Equal("jeffreypalermo", post.AuthorSlug);
-            // The show gives its episodes no keywords, and the site does not tag people: no tags.
-            Assert.Empty(post.TagSlugs);
+            // The show gives its episodes no keywords, and the site does not tag people: no tags. The one episode
+            // that is about a book of Jeffrey's, 35, is among the posts about his books.
+            Assert.Equal(episode.Number == 35 ? ["books"] : [], post.TagSlugs);
             if (episode.AlreadyAPost != true)
             {
                 Assert.False(string.IsNullOrWhiteSpace(post.Excerpt), $"Episode {episode.Number} has no excerpt.");
@@ -248,13 +250,14 @@ public sealed class PodcastPostsTests : IDisposable
         }
 
         Assert.Equal("AI DevOps Podcast", site.FindTerm(Taxonomies.Category, "ai-devops-podcast")?.Name);
-        Assert.Equal(369, catalog.First(episode => site.FindPost(episode.Permalink)!.CategorySlugs.Contains("ai-devops-podcast")).Number);
+        Assert.Equal(catalog.Select(episode => episode.Permalink).Order(StringComparer.Ordinal), site.Posts.Where(post => post.CategorySlugs.Contains("ai-devops-podcast")).Select(post => post.Permalink.Path).Order(StringComparer.Ordinal));
+        Assert.Equal(Enumerable.Range(1, 368), catalog.Where(episode => site.FindPost(episode.Permalink)!.CategorySlugs.Contains("azure-devops-podcast")).Select(episode => episode.Number));
         foreach (var slug in new[] { "ai-devops-podcast", "azure-devops-podcast", "devops", "podcast" })
         {
             Assert.Equal(site.Posts.Count(post => post.CategorySlugs.Contains(slug)), site.FindTerm(Taxonomies.Category, slug)!.Count);
         }
 
-        Assert.Equal((53, 369, 422), (site.FindTerm(Taxonomies.Category, "ai-devops-podcast")!.Count, site.FindTerm(Taxonomies.Category, "azure-devops-podcast")!.Count, site.FindTerm(Taxonomies.Category, "podcast")!.Count));
+        Assert.Equal((421, 369, 422), (site.FindTerm(Taxonomies.Category, "ai-devops-podcast")!.Count, site.FindTerm(Taxonomies.Category, "azure-devops-podcast")!.Count, site.FindTerm(Taxonomies.Category, "podcast")!.Count));
         Assert.Equal(site.Posts.Count, site.FindTerm(Taxonomies.Author, "jeffreypalermo")!.Count);
     }
 
@@ -453,12 +456,12 @@ public sealed class PodcastPostsTests : IDisposable
         Assert.Empty(ExternalSubresources.Find(newest.HtmlBody));
         var eighth = site.FindPost("/2018/10/damian-brady-on-devops-episode-008/")!;
         Assert.Equal((new DateTime(2018, 10, 28, 23, 30, 0), new DateTime(2018, 10, 29, 4, 30, 0, DateTimeKind.Utc)), (eighth.Published, eighth.PublishedUtc));
-        Assert.Equal(["azure-devops-podcast", "devops", "podcast"], eighth.CategorySlugs);
+        Assert.Equal(["ai-devops-podcast", "devops", "podcast"], eighth.CategorySlugs);
         Assert.DoesNotContain("youtube", eighth.HtmlBody, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("<iframe", eighth.HtmlBody, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("<a href=\"http://aidevopspodcast.clear-measure.com/damian-brady-episode-008\">This episode on the AI DevOps Podcast site</a>", eighth.HtmlBody, StringComparison.Ordinal);
         Assert.Equal(
-            [("azure-devops-podcast", 1), ("devops", 3), ("podcast", 3), ("ai-devops-podcast", 1)],
+            [("azure-devops-podcast", 0), ("devops", 3), ("podcast", 3), ("ai-devops-podcast", 2)],
             site.Terms.Where(term => term.Taxonomy == Taxonomies.Category).Select(term => (term.Slug, term.Count)));
         Assert.Equal((643871101, "AI DevOps Podcast"), (site.FindTerm(Taxonomies.Category, "ai-devops-podcast")!.Id, site.FindTerm(Taxonomies.Category, "ai-devops-podcast")!.Name));
         Assert.Equal((1, 3), (site.FindTerm(Taxonomies.Tag, "agile")!.Count, site.FindTerm(Taxonomies.Author, "jeffreypalermo")!.Count));

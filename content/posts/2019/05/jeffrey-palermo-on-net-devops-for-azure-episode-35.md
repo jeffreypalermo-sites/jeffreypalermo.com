@@ -7,9 +7,12 @@ date_utc: 2019-05-06T08:00:00Z
 format: markdown
 author: jeffreypalermo
 categories:
+- ai-devops-podcast
 - azure-devops-podcast
 - devops
 - podcast
+tags:
+- books
 excerpt: This week is a special solo-edition episode with your host, Jeffrey Palermo! Recently, Jeffrey published his fourth book, .NET DevOps for Azure, on April 26th, 2019. This book has been a long-time coming for Jeffrey and his hopes for it are to address some really big issues in the current industry. Almost fifteen years ago, […]
 comments_open: false
 ---

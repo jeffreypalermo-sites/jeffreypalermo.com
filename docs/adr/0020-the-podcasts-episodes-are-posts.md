@@ -69,12 +69,13 @@ its name.
 - **An episode the site already had a post for is not added again.** The seven WordPress posts are listed in the
   catalog and keep their dates, their texts and their addresses. By hand they got the show's category and the
   link to their video; the command put the frame first in each, as in the others.
-- **Categories:** `Podcast` and `DevOps`, as the seven posts had them, and the show's name at the time:
-  `Azure DevOps Podcast`, a category the site had, up to episode 368, and `AI DevOps Podcast`, a new one, from
-  369. The show saved 352 of its episodes again on 2025-09-23 and 2025-09-25, and 369 (2025-09-29) is the first
-  episode after that: the feed says no more about the day the name changed. **No tags:** the show gives its
-  episodes no keywords, and the site tags subjects, not people. A keyword that is the name of a tag of the site
-  becomes that tag.
+- **Categories:** `Podcast` and `DevOps`, as the seven posts had them, and `AI DevOps Podcast`, the show's
+  present name, on every episode, so that its listing is the whole show
+  ([ADR-0021](0021-the-menu-leads-to-the-podcast-and-the-books.md), which replaced the first rule the same day:
+  one category by the name the show had when the episode was published). Episodes 1 to 368 also keep
+  `Azure DevOps Podcast`, a category the site had. **No tags:** the show gives its episodes no keywords, and the
+  site tags subjects, not people. A keyword that is the name of a tag of the site becomes that tag. Episode 35,
+  about Jeffrey's book, has the tag `Books`.
 - **No artwork.** The show has one picture for all episodes, 3,000 points wide.
 
 ## Options for the video

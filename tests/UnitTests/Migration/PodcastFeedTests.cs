@@ -91,14 +91,6 @@ public class PodcastFeedTests
         Assert.Equal(slug, PodcastShow.Slug(title));
 
     [Theory]
-    [InlineData(1, "azure-devops-podcast")]
-    [InlineData(368, "azure-devops-podcast")]
-    [InlineData(369, "ai-devops-podcast")]
-    [InlineData(422, "ai-devops-podcast")]
-    public void AnEpisodeIsInTheCategoryOfTheNameTheShowHadThen(int number, string category) =>
-        Assert.Equal(category, PodcastShow.ShowCategory(number));
-
-    [Theory]
     [InlineData("Sam Nasr: AI Transformation - Episode 422", 422)]
     [InlineData("Buck Hodges on the introduction to Azure DevOps Services – Episode 001", 1)]
     [InlineData("Ted Neward on the 'Ops' Side of DevOps - Episode 30 ", 30)]
