@@ -9,7 +9,8 @@ namespace JeffreyPalermo.IntegrationTests;
 /// <summary>
 /// The podcast's episodes as posts. First the repository's own content against its catalog
 /// (<c>content/archive/podcast-episodes.json</c>): every episode has one post, dated as the show published it, with
-/// the player that waits for the reader and nothing loaded from another host. Then the <c>podcast</c> command on a
+/// the player that waits for the reader, the frame of its video, which waits too, and nothing loaded from another
+/// host. Then the <c>podcast</c> command on a
 /// content tree in a temp directory: what it writes, what it leaves alone, and that a second run changes nothing.
 /// </summary>
 public sealed class PodcastPostsTests : IDisposable
@@ -108,9 +109,84 @@ public sealed class PodcastPostsTests : IDisposable
             Assert.Equal(episode.Audio, Assert.Single(document.QuerySelectorAll("a"), link => link.TextContent == "Download this episode").GetAttribute("href"));
 
             Assert.Empty(ExternalSubresources.Find(body));
-            Assert.Empty(document.QuerySelectorAll("script, iframe, frame, img, object, embed, link, style, video, source"));
+            Assert.Empty(document.QuerySelectorAll("script, frame, img, object, embed, link, style, video, source, iframe[src]"));
             Assert.Empty(Shortcodes.FindLiteral(body));
         }
+    }
+
+    /// <summary>
+    /// Jeffrey, 2026-10-09: "I want each podcast post to have a YouTube video embedded at top of post". The embed
+    /// waits for the reader as the audio player does (ADR-0020): the frame is exactly what <see cref="VideoFrames"/>
+    /// writes for the episode's own video, first in the body, with a poster that is a file of this site.
+    /// </summary>
+    [Fact]
+    public async Task AnEpisodeWithAVideoHasItsFrameFirstInTheBodyAndTheFrameWaitsForTheReader()
+    {
+        var (site, catalog) = await RepositoryAsync();
+        var uploads = Path.Join(RepositoryRoot(), "content", "uploads");
+        var parser = new HtmlParser();
+
+        foreach (var episode in catalog)
+        {
+            var body = site.FindPost(episode.Permalink)!.HtmlBody;
+            var frames = parser.ParseDocument(body).QuerySelectorAll("iframe");
+            if (VideoFrames.IdOf(episode.Video) is not { } id)
+            {
+                // No video that is certainly the episode's: the recording alone, as before.
+                Assert.Empty(frames);
+                Assert.Empty(VideoFrames.Find(body));
+                continue;
+            }
+
+            Assert.StartsWith(VideoFrames.Write(id, episode.Title, poster: true), body, StringComparison.Ordinal);
+            Assert.Equal([id], VideoFrames.Find(body));
+            var frame = Assert.Single(frames);
+            Assert.False(frame.HasAttribute("src"), $"Episode {episode.Number}: the frame has an address of its own.");
+            Assert.Equal((episode.Title, "lazy"), (frame.GetAttribute("title"), frame.GetAttribute("loading")));
+
+            // The frame's document: one link, to the player of this video on the host without cookies, around one
+            // picture, which is a file of the site. No script and nothing else with an address.
+            var inside = parser.ParseDocument(frame.GetAttribute("srcdoc")!);
+            Assert.Equal($"https://www.youtube-nocookie.com/embed/{id}?autoplay=1", Assert.Single(inside.QuerySelectorAll("[href]")).GetAttribute("href"));
+            var poster = Assert.Single(inside.QuerySelectorAll("[src]"));
+            Assert.Equal(("img", $"/wp-content/uploads/podcast/{id}.jpg", "a"), (poster.LocalName, poster.GetAttribute("src"), poster.ParentElement?.LocalName));
+            Assert.Empty(inside.QuerySelectorAll("script, iframe, frame, object, embed, link, video, audio, source, form, meta"));
+            Assert.Empty(ExternalSubresources.Find(frame.GetAttribute("srcdoc")!));
+
+            var file = new FileInfo(Path.Join(uploads, "podcast", id + ".jpg"));
+            Assert.True(file.Exists, $"Episode {episode.Number}: the poster {file.Name} is not a file of the site.");
+            Assert.InRange(file.Length, 2_000, 40_000);
+            using var picture = file.OpenRead();
+            Assert.Equal([0xFF, 0xD8, 0xFF], new[] { picture.ReadByte(), picture.ReadByte(), picture.ReadByte() });
+        }
+
+        // A poster for each of the 401 videos and no other file: 7 MB, none of it in Git LFS.
+        var posters = new DirectoryInfo(Path.Join(uploads, "podcast")).GetFiles();
+        Assert.Equal(catalog.Select(episode => VideoFrames.IdOf(episode.Video)).OfType<string>().Order(StringComparer.Ordinal), posters.Select(poster => Path.GetFileNameWithoutExtension(poster.Name)).Order(StringComparer.Ordinal));
+        Assert.All(posters, poster => Assert.Equal(".jpg", poster.Extension));
+        Assert.InRange(posters.Sum(poster => poster.Length), 4_000_000, 13_000_000);
+    }
+
+    /// <summary>
+    /// What "nothing loaded from another host" allows of frames, exactly: a frame with an address is another host's
+    /// page and stays one of the reviewed leftovers of <c>FileSystemContentSourceTests</c>. A frame without one is
+    /// an episode's video as <see cref="VideoFrames"/> writes it, in that episode's post, and nothing else.
+    /// </summary>
+    [Fact]
+    public async Task TheOnlyFramesWithoutAnAddressAreTheEpisodesVideos()
+    {
+        var (site, catalog) = await RepositoryAsync();
+        var parser = new HtmlParser();
+        var episodes = catalog.Where(episode => episode.Video is not null).ToDictionary(episode => episode.Permalink, StringComparer.Ordinal);
+        int FramesWithoutAnAddress(string html) => html.Contains("<iframe", StringComparison.OrdinalIgnoreCase) ? parser.ParseDocument(html).QuerySelectorAll("iframe:not([src]), iframe[srcdoc], frame:not([src])").Length : 0;
+
+        Assert.All(site.Posts, post => Assert.Equal(episodes.ContainsKey(post.Permalink.Path) ? 1 : 0, FramesWithoutAnAddress(post.HtmlBody)));
+        Assert.All(site.Posts, post => Assert.Equal(episodes.ContainsKey(post.Permalink.Path) ? 1 : 0, VideoFrames.Find(post.HtmlBody).Count));
+        Assert.All(site.Pages, page => Assert.Equal(0, FramesWithoutAnAddress(page.HtmlBody)));
+        Assert.All(site.Posts.SelectMany(post => post.Comments), comment => Assert.Equal(0, FramesWithoutAnAddress(comment.ContentHtml)));
+        Assert.Equal(401, episodes.Count);
+        // No body names YouTube's player in an address the page itself asks for.
+        Assert.DoesNotContain(site.Posts.SelectMany(post => ExternalSubresources.Find(post.HtmlBody)), asked => asked.Host.Contains("youtube-nocookie", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -306,8 +382,18 @@ public sealed class PodcastPostsTests : IDisposable
     {
         await SeedAsync();
         PodcastVideo[] videos = [new("rABMYlE2DG0", "Sam Nasr: AI Transformation - Episode 422", new DateTime(2026, 10, 5, 11, 0, 25, DateTimeKind.Utc))];
+        var postersAskedFor = new List<string>();
 
-        var report = await PodcastPosts.AddAsync(Feed(Newest, Eighth, Second), videos, Layout);
+        var report = await PodcastPosts.AddAsync(Feed(Newest, Eighth, Second), videos, Layout, (id, _) =>
+        {
+            postersAskedFor.Add(id);
+            return Task.FromResult<byte[]?>(Jpeg);
+        });
+
+        Assert.Equal(["rABMYlE2DG0"], postersAskedFor);
+        Assert.Equal([422], report.FramesAdded.Select(episode => episode.Number));
+        Assert.Empty(report.PostersNotFetched);
+        Assert.Equal(Jpeg, await File.ReadAllBytesAsync(Path.Join(_root, "uploads/podcast/rABMYlE2DG0.jpg")));
 
         Assert.Equal([8, 422], report.Added.Select(episode => episode.Number));
         Assert.Equal([2], report.AlreadyPosts.Select(episode => episode.Number));
@@ -321,6 +407,7 @@ public sealed class PodcastPostsTests : IDisposable
                 "posts/2018/09/donovan-brown-on-how-to-use-azure-devops-services-episode-002.html",
                 "posts/2018/10/damian-brady-on-devops-episode-008.md",
                 "posts/2026/10/sam-nasr-ai-transformation-episode-422.md",
+                "uploads/podcast/rABMYlE2DG0.jpg",
             ],
             files.Keys);
         Assert.Equal(SecondOnWordPress, files["posts/2018/09/donovan-brown-on-how-to-use-azure-devops-services-episode-002.html"]);
@@ -343,6 +430,8 @@ public sealed class PodcastPostsTests : IDisposable
             excerpt: Sam is a trainer. Blog - https://samnasr.blogspot.com/ [1:02] About
             comments_open: false
             ---
+            {{Frame}}
+
             Sam is a **trainer**.
 
             Blog - <https://samnasr.blogspot.com/>\
@@ -354,15 +443,19 @@ public sealed class PodcastPostsTests : IDisposable
 
             [This episode on the AI DevOps Podcast site](http://aidevopspodcast.clear-measure.com/sam-nasr-ai-transformation-episode-422)
 
-            """.ReplaceLineEndings("\n"),
+            """.ReplaceLineEndings("\n").Replace("{{Frame}}", VideoFrames.Write("rABMYlE2DG0", "Sam Nasr: AI Transformation - Episode 422", poster: true), StringComparison.Ordinal),
             files["posts/2026/10/sam-nasr-ai-transformation-episode-422.md"]);
 
         // The tree is content the site loads: the posts, the category of the show's new name, and the counts.
         var site = await new FileSystemContentSource(Layout, "test").LoadAsync();
+        var newest = site.FindPost("/2026/10/sam-nasr-ai-transformation-episode-422/")!;
+        Assert.StartsWith(VideoFrames.Write("rABMYlE2DG0", "Sam Nasr: AI Transformation - Episode 422", poster: true) + "\n<p>Sam is a <strong>trainer</strong>.</p>", newest.HtmlBody, StringComparison.Ordinal);
+        Assert.Empty(ExternalSubresources.Find(newest.HtmlBody));
         var eighth = site.FindPost("/2018/10/damian-brady-on-devops-episode-008/")!;
         Assert.Equal((new DateTime(2018, 10, 28, 23, 30, 0), new DateTime(2018, 10, 29, 4, 30, 0, DateTimeKind.Utc)), (eighth.Published, eighth.PublishedUtc));
         Assert.Equal(["azure-devops-podcast", "devops", "podcast"], eighth.CategorySlugs);
         Assert.DoesNotContain("youtube", eighth.HtmlBody, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("<iframe", eighth.HtmlBody, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("<a href=\"http://aidevopspodcast.clear-measure.com/damian-brady-episode-008\">This episode on the AI DevOps Podcast site</a>", eighth.HtmlBody, StringComparison.Ordinal);
         Assert.Equal(
             [("azure-devops-podcast", 1), ("devops", 3), ("podcast", 3), ("ai-devops-podcast", 1)],
@@ -419,7 +512,12 @@ public sealed class PodcastPostsTests : IDisposable
         var report = await PodcastPosts.AddAsync(Feed(Newest, Second), videos, Layout);
 
         Assert.Equal([422], report.VideosAdded.Select(episode => episode.Number));
+        // With the link comes the frame, first in the body. No poster could be had here: the frame is navy, and the
+        // report names the episode.
+        Assert.Equal([422], report.FramesAdded.Select(episode => episode.Number));
+        Assert.Equal(["episode 422: https://www.youtube.com/watch?v=rABMYlE2DG0"], report.PostersNotFetched);
         var files = await FilesAsync();
+        Assert.Contains("\ncomments_open: false\n---\n" + VideoFrames.Write("rABMYlE2DG0", "Sam Nasr: AI Transformation - Episode 422", poster: false) + "\n\nSam is a **trainer**.\n", files["posts/2026/10/sam-nasr-ai-transformation-episode-422.md"], StringComparison.Ordinal);
         Assert.EndsWith(
             " MB)</p>\n\n[Watch this episode on YouTube](https://www.youtube.com/watch?v=rABMYlE2DG0)\n\n[This episode on the AI DevOps Podcast site](http://aidevopspodcast.clear-measure.com/sam-nasr-ai-transformation-episode-422)\n",
             files["posts/2026/10/sam-nasr-ai-transformation-episode-422.md"],
@@ -432,7 +530,7 @@ public sealed class PodcastPostsTests : IDisposable
         var catalog = JsonSerializer.Deserialize<List<CatalogEpisode>>(files["archive/podcast-episodes.json"], ContentJson.Options)!;
         Assert.Equal([null, "https://www.youtube.com/watch?v=rABMYlE2DG0"], catalog.Select(episode => episode.Video));
 
-        // Once a person has added it, the catalog records it, and nothing else changes.
+        // Once a person has added the link, the catalog records it and the post gets the frame, first in its body.
         await WriteAsync(
             "posts/2018/09/donovan-brown-on-how-to-use-azure-devops-services-episode-002.html",
             SecondOnWordPress.Replace("</audio>", "</audio><br><a href=\"https://www.youtube.com/watch?v=5FgflWCJVhs\">Watch this episode on YouTube</a>", StringComparison.Ordinal));
@@ -441,9 +539,17 @@ public sealed class PodcastPostsTests : IDisposable
         var third = await PodcastPosts.AddAsync(Feed(Newest, Second), videos, Layout);
 
         Assert.Equal([2], third.VideosAdded.Select(episode => episode.Number));
+        Assert.Equal([2], third.FramesAdded.Select(episode => episode.Number));
         Assert.Empty(third.Problems);
         var after = await FilesAsync();
-        Assert.Equal(before.Where(file => file.Key != "archive/podcast-episodes.json"), after.Where(file => file.Key != "archive/podcast-episodes.json"));
+        const string wordPressPost = "posts/2018/09/donovan-brown-on-how-to-use-azure-devops-services-episode-002.html";
+        Assert.Equal(
+            before[wordPressPost].Replace("\n---\n<p><audio", "\n---\n" + VideoFrames.Write("5FgflWCJVhs", "Donovan Brown on How to Use Azure DevOps Services - Episode 002", poster: false) + "\n<p><audio", StringComparison.Ordinal),
+            after[wordPressPost]);
+        Assert.Equal(
+            before.Where(file => file.Key is not ("archive/podcast-episodes.json" or wordPressPost)),
+            after.Where(file => file.Key is not ("archive/podcast-episodes.json" or wordPressPost)));
+        Assert.Equal(3, (await new FileSystemContentSource(Layout, "test").LoadAsync()).Posts.Sum(post => VideoFrames.Find(post.HtmlBody).Count) + 1);
         Assert.Contains("\"video\": \"https://www.youtube.com/watch?v=5FgflWCJVhs\"", after["archive/podcast-episodes.json"], StringComparison.Ordinal);
         Assert.Equal(after, await RunAgainAsync(Feed(Newest, Second), videos));
     }
@@ -473,6 +579,38 @@ public sealed class PodcastPostsTests : IDisposable
         Assert.Contains("\nvideos not matched 1\n  episode 8 ", described, StringComparison.Ordinal);
         Assert.Contains("\nproblems 1\n  episode 422: ", described, StringComparison.Ordinal);
     }
+
+    [Fact]
+    public async Task APosterThatIsThereIsNotAskedForAgainAndAFrameIsWrittenOnce()
+    {
+        await SeedAsync();
+        PodcastVideo[] videos = [new("rABMYlE2DG0", "Sam Nasr: AI Transformation - Episode 422", null)];
+        var asked = 0;
+        Task<byte[]?> Poster(string id, CancellationToken cancellationToken)
+        {
+            asked++;
+            return Task.FromResult<byte[]?>(Jpeg);
+        }
+
+        await PodcastPosts.AddAsync(Feed(Newest), videos, Layout, Poster);
+        var before = await FilesAsync();
+        var second = await PodcastPosts.AddAsync(Feed(Newest), videos, Layout, Poster);
+
+        Assert.Equal((1, 0, 0), (asked, second.FramesAdded.Count, second.Problems.Count));
+        Assert.Equal(before, await FilesAsync());
+
+        // A post that lost its frame gets it again, with the poster that is there.
+        const string post = "posts/2026/10/sam-nasr-ai-transformation-episode-422.md";
+        var frame = VideoFrames.Write("rABMYlE2DG0", "Sam Nasr: AI Transformation - Episode 422", poster: true);
+        await WriteAsync(post, before[post].Replace(frame + "\n\n", string.Empty, StringComparison.Ordinal));
+        var third = await PodcastPosts.AddAsync(Feed(Newest), videos, Layout, Poster);
+
+        Assert.Equal((1, 1), (asked, third.FramesAdded.Count));
+        Assert.Equal(before, await FilesAsync());
+        Assert.Contains("\nvideo frames added to posts 1\nposters that could not be fetched 0\n", PodcastPosts.Describe(third), StringComparison.Ordinal);
+    }
+
+    private static readonly byte[] Jpeg = [0xFF, 0xD8, 0xFF, 0xE0, 1, 2, 3];
 
     private async Task<Dictionary<string, string>> RunAgainAsync(PodcastFeedContent feed, IReadOnlyList<PodcastVideo> videos)
     {

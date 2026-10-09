@@ -39,7 +39,8 @@ Three rules are about what a body holds:
 - **No WordPress shortcode as text.** Nothing renders `[podcast src="…"]` or `[gallery]` here, so a reader would see
   it as typed. Write HTML instead; a sample of a shortcode goes inside `<code>` or `<pre>` (`Shortcodes` in `src/Core`).
 - **Nothing loaded from another host**, except the reviewed leftovers `FileSystemContentSourceTests` lists with
-  their reasons. A picture on another host is copied into the repository by `localize` (below). A recording is
+  their reasons. A frame without an address is allowed in one form only: an episode's video as `VideoFrames`
+  writes it, which loads nothing until the reader presses play ([ADR-0020](docs/adr/0020-the-podcasts-episodes-are-posts.md)). A picture on another host is copied into the repository by `localize` (below). A recording is
   played by `<audio controls preload="none">` or `<video controls preload="none">`, which asks its host for nothing
   until the reader presses play ([ADR-0015](docs/adr/0015-recordings-wait-for-the-reader.md)).
 - **No picture on this site that leads nowhere.** A picture a body shows (`img`) or links to (an `a` whose address
@@ -150,14 +151,18 @@ dotnet run --project tools/WpMigrator -- podcast http://feed.azuredevops.show/rs
 
 `podcast` reads the show's feed, which holds every episode since the first of September 2018, with one request.
 For each episode that `content/archive/podcast-episodes.json` (the catalog) does not list, it writes
-`content/posts/{yyyy}/{mm}/{slug}.md`: the show's own notes as Markdown, the browser's player with a link to the
-recording, a link to the episode's video on YouTube when the list of videos has exactly one with the episode's
-number and title, and a link to the episode's page on the show's site. The list of videos is the show's playlist
+`content/posts/{yyyy}/{mm}/{slug}.md`: the episode's video in a frame that waits for the reader, the show's own
+notes as Markdown, the browser's player with a link to the recording, a link to the video on YouTube, and a link
+to the episode's page on the show's site. An episode has a video when the list of videos has exactly one with its
+number and title. The frame asks YouTube for nothing until the reader presses play: its document is in the page
+itself (`srcdoc`), the video's picture inside a link to YouTube's player (`VideoFrames`). The picture is fetched
+once from YouTube's picture host into `content/uploads/podcast/{id}.jpg`, and made 640 by 360 by ImageMagick
+(`magick` or `convert`) when the machine has it. The list of videos is the show's playlist
 (the first line above; without it no video is linked) or the channel's Atom feed. It adds the episode to the
 catalog and counts the categories anew. An episode the site had a post for already (001 to 007, written on
 WordPress in 2018) is listed in the catalog and its post is left alone. A post is written once: from then on it is
-edited in git, and a second run changes no file. The one thing a later run adds to a post it wrote is the link to
-a video that has turned up since. It prints what it found, per year, and what a person should look at: a video it
+edited in git, and a second run changes no file. What a later run adds to a post is a video that has turned up
+since: the link, in a post it wrote, and the frame at the top of any post of the catalog that has the link. It prints what it found, per year, and what a person should look at: a video it
 could not match for certain (the channel has some twice), an address that was taken. It exits 1 when it could not
 do something it should have.
 
@@ -224,7 +229,8 @@ The build treats warnings as errors.
   older and newer, the index, search (which finds the About page too), posts whose pictures came from other
   hosts or from the blog's earlier platforms, a click on a picture that used to lead to WordPress.com's image CDN,
   podcast posts and a video post whose players wait for the reader, an episode with its notes, its player and
-  the link to its video, the podcast's category, a page that is not found, a phone-sized
+  the link to its video, an episode's video waiting in its frame until play is pressed by mouse or keyboard, ten
+  such frames on a listing, the podcast's category, a page that is not found, a phone-sized
   screen (one column, search above the posts, code that scrolls in its own block), the keyboard and its focus ring,
   the contrast of every piece of text, Home, About and search on the first screen, and that nothing on a page moves
   or sticks. Requests to any other host are refused and fail the test. Set `JPCOM_IMAGE` to test an image

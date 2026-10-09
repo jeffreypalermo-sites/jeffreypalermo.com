@@ -576,11 +576,14 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         var player = Assert.Single(body.QuerySelectorAll("audio, video"));
         Assert.Equal((element, file, "none"), (player.LocalName, player.GetAttribute("src"), player.GetAttribute("preload")));
         Assert.True(player.HasAttribute("controls") && !player.HasAttribute("autoplay") && !player.HasAttribute("poster"));
-        Assert.Equal(file, body.QuerySelector("p:first-child a")?.GetAttribute("href"));
-        Assert.Contains(facts, body.Text("p:first-child"), StringComparison.Ordinal);
+        // The player's paragraph is first, or second where an episode's video stands before it (ADR-0020).
+        var first = body.QuerySelector(":scope > p")!;
+        Assert.Equal(file, first.QuerySelector("a")?.GetAttribute("href"));
+        Assert.Contains(facts, first.TextContent, StringComparison.Ordinal);
+        Assert.Same(first, body.QuerySelector(":scope > div.episode-video")?.NextElementSibling ?? body.FirstElementChild);
         Assert.DoesNotContain("[iframe", body.TextContent, StringComparison.Ordinal);
         Assert.DoesNotContain("[podcast", body.TextContent, StringComparison.Ordinal);
-        Assert.Empty(body.QuerySelectorAll("iframe, script, object, embed"));
+        Assert.Empty(body.QuerySelectorAll("iframe[src], script, object, embed"));
     }
 
     [Theory]

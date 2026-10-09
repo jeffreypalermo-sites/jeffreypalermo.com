@@ -49,6 +49,8 @@ public sealed record PodcastReport(
     int AlreadyInCatalog,
     IReadOnlyList<CatalogEpisode> VideosAdded,
     IReadOnlyList<string> VideosNotMatched,
+    IReadOnlyList<CatalogEpisode> FramesAdded,
+    IReadOnlyList<string> PostersNotFetched,
     IReadOnlyList<string> Problems,
     int BlocksKeptAsHtml,
     IReadOnlyList<string> Removed);
@@ -222,8 +224,9 @@ public static class PodcastVideos
 /// <summary>
 /// The <c>podcast</c> command: a post for every episode of the show that the site has none for, and the catalog of
 /// episodes and their posts. It writes a post once and never again: from then on the post is edited in git
-/// (ADR-0010), and a second run changes no file. The one thing it adds to a post it wrote is the link to the
-/// episode's video, when the channel has one that the post does not lead to yet.
+/// (ADR-0010), and a second run changes no file. What it adds to a post later is the episode's video, when the
+/// channel has one that the post does not lead to yet: the link, in a post it wrote, and the frame at the top of
+/// any post that has the link (<see cref="VideoFrames"/>).
 /// </summary>
 public static partial class PodcastPosts
 {
@@ -240,7 +243,16 @@ public static partial class PodcastPosts
         return EndsWithEpisodeNumber().Match(title) is { Success: true } match ? int.Parse(match.Groups["number"].ValueSpan, CultureInfo.InvariantCulture) : null;
     }
 
-    public static async Task<PodcastReport> AddAsync(PodcastFeedContent feed, IReadOnlyList<PodcastVideo> videos, ContentLayout layout, CancellationToken cancellationToken = default)
+    /// <param name="poster">
+    /// Gives the poster of a video, by its id, as a JPEG of 16 to 9; null when it cannot be had. Asked once for each
+    /// video whose frame is written and whose poster is not under <c>uploads/podcast</c> yet.
+    /// </param>
+    public static async Task<PodcastReport> AddAsync(
+        PodcastFeedContent feed,
+        IReadOnlyList<PodcastVideo> videos,
+        ContentLayout layout,
+        Func<string, CancellationToken, Task<byte[]?>>? poster = null,
+        CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(feed);
         ArgumentNullException.ThrowIfNull(videos);
@@ -362,13 +374,33 @@ public static partial class PodcastPosts
             added.Add(added1);
         }
 
+        // The frame at the top of every post that leads to its video: the new posts, and the ones written before.
+        var framesAdded = new List<CatalogEpisode>();
+        var postersNotFetched = new List<string>();
+        foreach (var episode in catalog.Values.Where(episode => episode.Video is not null).OrderBy(episode => episode.Number))
+        {
+            switch (await AddFrameToPostAsync(episode, layout, poster, cancellationToken).ConfigureAwait(false))
+            {
+                case FrameOutcome.Added:
+                    framesAdded.Add(episode);
+                    break;
+                case FrameOutcome.AddedWithoutPoster:
+                    framesAdded.Add(episode);
+                    postersNotFetched.Add($"episode {episode.Number}: {episode.Video}");
+                    break;
+                case FrameOutcome.NoPost:
+                    problems.Add($"episode {episode.Number}: {episode.Permalink} is in the catalog and is not a post");
+                    break;
+            }
+        }
+
         await WriteIfChangedAsync(catalogFile, JsonSerializer.Serialize(catalog.Values.OrderBy(episode => episode.Number), ContentJson.Options) + "\n", cancellationToken).ConfigureAwait(false);
         if (added.Count > 0)
         {
             await WriteIfChangedAsync(layout.TermsFile, JsonSerializer.Serialize(TermsWithThePodcast(terms, posts), ContentJson.Options) + "\n", cancellationToken).ConfigureAwait(false);
         }
 
-        return new PodcastReport(feed.ShowTitle, feed.Episodes, feed.NotEpisodes, added, alreadyPosts, alreadyInCatalog, videosAdded, videosNotMatched, problems, keptAsHtml, removed);
+        return new PodcastReport(feed.ShowTitle, feed.Episodes, feed.NotEpisodes, added, alreadyPosts, alreadyInCatalog, videosAdded, videosNotMatched, framesAdded, postersNotFetched, problems, keptAsHtml, removed);
     }
 
     /// <summary>What the command prints: the counts, then a line for each thing a person should look at.</summary>
@@ -410,6 +442,13 @@ public static partial class PodcastPosts
         foreach (var video in report.VideosNotMatched)
         {
             Line($"  {video}");
+        }
+
+        Line($"video frames added to posts {report.FramesAdded.Count}");
+        Line($"posters that could not be fetched {report.PostersNotFetched.Count}");
+        foreach (var missing in report.PostersNotFetched)
+        {
+            Line($"  {missing}");
         }
 
         Line($"problems {report.Problems.Count}");
@@ -477,6 +516,52 @@ public static partial class PodcastPosts
 
         await File.WriteAllTextAsync(file, text.Insert(at, "\n" + VideoLine(video.Address) + "\n"), cancellationToken).ConfigureAwait(false);
         return null;
+    }
+
+    private enum FrameOutcome
+    {
+        AlreadyThere,
+        Added,
+        AddedWithoutPoster,
+        NoPost,
+    }
+
+    /// <summary>
+    /// Puts the frame of the episode's video first in the body of its post, Markdown or HTML, and its poster under
+    /// <c>uploads/podcast</c>. A post that has the frame is left as it is.
+    /// </summary>
+    private static async Task<FrameOutcome> AddFrameToPostAsync(CatalogEpisode episode, ContentLayout layout, Func<string, CancellationToken, Task<byte[]?>>? poster, CancellationToken cancellationToken)
+    {
+        if (VideoFrames.IdOf(episode.Video) is not { } id)
+        {
+            return FrameOutcome.AlreadyThere;
+        }
+
+        var file = new[] { layout.PostFile(episode.Permalink, ContentFormat.Markdown), layout.PostFile(episode.Permalink, ContentFormat.Html) }.FirstOrDefault(File.Exists);
+        if (file is null)
+        {
+            return FrameOutcome.NoPost;
+        }
+
+        var text = (await File.ReadAllTextAsync(file, cancellationToken).ConfigureAwait(false)).ReplaceLineEndings("\n");
+        if (VideoFrames.Find(text).Contains(id))
+        {
+            return FrameOutcome.AlreadyThere;
+        }
+
+        var posterFile = layout.UploadFile(VideoFrames.Poster(id));
+        if (!File.Exists(posterFile) && poster is not null && await poster(id, cancellationToken).ConfigureAwait(false) is { Length: > 0 } picture)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(posterFile)!);
+            await File.WriteAllBytesAsync(posterFile, picture, cancellationToken).ConfigureAwait(false);
+        }
+
+        var hasPoster = File.Exists(posterFile);
+        const string fence = "\n---\n";
+        var body = text.IndexOf(fence, StringComparison.Ordinal) + fence.Length;
+        var frame = VideoFrames.Write(id, episode.Title, hasPoster) + (file.EndsWith(".md", StringComparison.OrdinalIgnoreCase) ? "\n\n" : "\n");
+        await File.WriteAllTextAsync(file, text.Insert(body, frame), cancellationToken).ConfigureAwait(false);
+        return hasPoster ? FrameOutcome.Added : FrameOutcome.AddedWithoutPoster;
     }
 
     /// <summary>

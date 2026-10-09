@@ -388,7 +388,7 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         await Assertions.Expect(body.GetByRole(AriaRole.Link, new() { Name = "Download this episode" })).ToHaveAttributeAsync("href", recording);
         await Assertions.Expect(body).ToContainTextAsync("(MP3, 45:24, 43.6 MB)");
         await Assertions.Expect(body).Not.ToContainTextAsync("[iframe");
-        await Assertions.Expect(body.Locator("iframe, script")).ToHaveCountAsync(0);
+        await Assertions.Expect(body.Locator("iframe[src], script")).ToHaveCountAsync(0);
         Assert.Empty(visit.OffSiteRequests);
         Assert.Empty(visit.FailedRequests);
     }
@@ -422,7 +422,7 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         await Assertions.Expect(body).ToContainTextAsync("(MP3, 29:15, 42.2 MB)");
         await Assertions.Expect(body.GetByRole(AriaRole.Link, new() { Name = "Watch this episode on YouTube" })).ToHaveAttributeAsync("href", "https://www.youtube.com/watch?v=rABMYlE2DG0");
         await Assertions.Expect(body.GetByRole(AriaRole.Link, new() { Name = "This episode on the AI DevOps Podcast site" })).ToHaveAttributeAsync("href", "http://aidevopspodcast.clear-measure.com/sam-nasr-ai-transformation-episode-422");
-        await Assertions.Expect(body.Locator("iframe, script, img, video")).ToHaveCountAsync(0);
+        await Assertions.Expect(body.Locator("iframe[src], script, img, video")).ToHaveCountAsync(0);
         Assert.Empty(visit.OffSiteRequests);
         Assert.Empty(visit.FailedRequests);
 
@@ -434,6 +434,124 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         await Assertions.Expect(page.Locator("main article.post .entry-title a").First).ToHaveTextAsync("Sam Nasr: AI Transformation - Episode 422");
         await Assertions.Expect(page.Locator("main article.post audio")).ToHaveCountAsync(10);
         Assert.True(await visit.EvaluateAsync<bool>("[...document.querySelectorAll('audio')].every(audio => audio.preload === 'none' && audio.readyState === 0)"), "A player of the listing did not wait for the reader.");
+        Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
+    }
+
+    /// <summary>
+    /// "I want each podcast post to have a YouTube video embedded at top of post" (Jeffrey, 2026-10-09). The video
+    /// is a frame first in the post, 16 to 9, whose document is in the page itself: the site's own poster and a
+    /// play mark inside a link. Nothing is asked of YouTube until the reader presses it, by mouse or by keyboard;
+    /// then the frame, and not the window, goes to YouTube's player for that one video (ADR-0020). The browser of
+    /// these tests refuses every other host, so the test holds that the frame was sent there and to nowhere else.
+    /// </summary>
+    [Theory]
+    [InlineData(NewestEpisode, "rABMYlE2DG0", "Sam Nasr: AI Transformation - Episode 422", Visit.DesktopWidth, true)]
+    [InlineData(NewestEpisode, "rABMYlE2DG0", "Sam Nasr: AI Transformation - Episode 422", Visit.PhoneWidth, false)]
+    // A post written on WordPress in 2018, in HTML.
+    [InlineData(PodcastEpisode, "5FgflWCJVhs", "Donovan Brown on How to Use Azure DevOps Services - Episode 002", Visit.DesktopWidth, false)]
+    public async Task AnEpisodesVideoWaitsInItsFrameUntilTheReaderPressesPlay(string path, string video, string title, int width, bool byKeyboard)
+    {
+        var player = $"https://www.youtube-nocookie.com/embed/{video}?autoplay=1";
+        await using var visit = await chromium.VisitAsync(site.BaseAddress, width);
+        var page = visit.Page;
+
+        await page.GotoAsync(path);
+
+        var frame = page.Locator("main article.post .entry-content iframe");
+        await Assertions.Expect(frame).ToHaveCountAsync(1);
+        await Assertions.Expect(frame).ToBeVisibleAsync();
+        await Assertions.Expect(frame).ToHaveAttributeAsync("title", title);
+        Assert.Null(await frame.GetAttributeAsync("src"));
+        Assert.True(await visit.EvaluateAsync<bool>("document.querySelector('main article.post .entry-content').firstElementChild.matches('div.episode-video') && document.querySelector('div.episode-video').firstElementChild.matches('iframe')"), "The video is not first in the post.");
+        var box = (await frame.BoundingBoxAsync())!;
+        var column = (await page.Locator("main article.post .entry-content > div.episode-video").BoundingBoxAsync())!;
+        Assert.InRange(box.Width / box.Height, 1.76, 1.79);
+        Assert.True(Math.Abs(box.Width - column.Width) < 1 && box.Width <= width && box.Width >= 0.85 * Math.Min(width, 760), $"The frame is {box.Width} wide in a column of {column.Width} on a screen of {width}.");
+        Assert.True(await visit.EvaluateAsync<bool>("document.documentElement.scrollWidth <= document.documentElement.clientWidth"), "The page is wider than the screen.");
+
+        // The frame's own document: the poster, a file of the site, filling the frame, and the play mark, in a link.
+        var inside = page.FrameLocator("main article.post .entry-content iframe");
+        var play = inside.GetByRole(AriaRole.Link, new() { Name = $"Play the video: {title}" });
+        await Assertions.Expect(play).ToBeVisibleAsync();
+        await Assertions.Expect(play).ToHaveAttributeAsync("href", player);
+        await Assertions.Expect(inside.Locator("img")).ToHaveAttributeAsync("src", $"/wp-content/uploads/podcast/{video}.jpg");
+        Assert.True(await inside.Locator("img").EvaluateAsync<bool>("img => img.decode().then(() => img.naturalWidth >= 320 && Math.abs(img.naturalWidth / img.naturalHeight - 16 / 9) < 0.01)"), "The poster did not load, or is not 16 to 9.");
+        Assert.True(await inside.Locator("img").EvaluateAsync<bool>("img => Math.abs(img.getBoundingClientRect().width - innerWidth) < 1 && Math.abs(img.getBoundingClientRect().height - innerHeight) < 1"), "The poster does not fill the frame.");
+        await Assertions.Expect(inside.Locator("span")).ToHaveCSSAsync("background-color", Yellow);
+        await Assertions.Expect(inside.Locator("script, iframe, video, audio, link")).ToHaveCountAsync(0);
+        Assert.Empty(await inside.Locator("html").EvaluateAsync<string[]>(WhatMovesOrSticks));
+
+        // Until the reader acts, the page has asked no other host for anything.
+        Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
+
+        if (byKeyboard)
+        {
+            // The keyboard goes into the frame and reaches the link, which shows a ring; Enter presses it.
+            var reached = false;
+            for (var presses = 0; presses < 60 && !reached; presses++)
+            {
+                await page.Keyboard.PressAsync("Tab");
+                reached = await play.EvaluateAsync<bool>("link => link.ownerDocument.activeElement === link");
+            }
+
+            Assert.True(reached, "The keyboard did not reach the play link in the frame.");
+            await Assertions.Expect(play).ToHaveCSSAsync("outline-style", "solid");
+            await Assertions.Expect(play).ToHaveCSSAsync("outline-color", Yellow);
+            Assert.Empty(visit.OffSiteRequests);
+            await page.Keyboard.PressAsync("Enter");
+        }
+        else
+        {
+            await play.ClickAsync();
+        }
+
+        // The frame is sent to the player of this video, once; the window stays on the post.
+        await Assertions.Expect(page.Locator("main article.post .entry-content iframe")).ToHaveCountAsync(1);
+        for (var waited = 0; waited < 50 && visit.OffSiteRequests.Count == 0; waited++)
+        {
+            await Task.Delay(100);
+        }
+
+        Assert.Equal([player], visit.OffSiteRequests);
+        Assert.Equal([player], visit.FramesSentOffSite);
+        Assert.Equal(path, visit.Location);
+        // (The frame carries the show's title; the 2018 posts write theirs with WordPress's dash.)
+        await Assertions.Expect(page.GetByRole(AriaRole.Heading, new() { Level = 1 })).ToContainTextAsync(title.Split(" - ")[0]);
+    }
+
+    /// <summary>
+    /// A listing shows its posts whole, so the home page and the podcast's category have a frame for each of ten
+    /// episodes. All ten wait: reading the page to its end asks no other host for anything.
+    /// </summary>
+    [Theory]
+    [InlineData("/", Visit.DesktopWidth)]
+    [InlineData("/", Visit.PhoneWidth)]
+    [InlineData("/category/podcast/", Visit.PhoneWidth)]
+    public async Task AListingOfEpisodesShowsTenVideosThatAllWait(string path, int width)
+    {
+        await using var visit = await chromium.VisitAsync(site.BaseAddress, width);
+        var page = visit.Page;
+
+        await page.GotoAsync(path);
+
+        var frames = page.Locator("main article.post .entry-content iframe");
+        await Assertions.Expect(frames).ToHaveCountAsync(10);
+        // Frames further down are made when the reader gets near them: go to each.
+        for (var index = 0; index < 10; index++)
+        {
+            await frames.Nth(index).ScrollIntoViewIfNeededAsync();
+            var inside = frames.Nth(index).ContentFrame;
+            await Assertions.Expect(inside.GetByRole(AriaRole.Link)).ToHaveAttributeAsync("href", new Regex("^https://www\\.youtube-nocookie\\.com/embed/[A-Za-z0-9_-]{11}\\?autoplay=1$"));
+            Assert.True(await inside.Locator("img").EvaluateAsync<bool>("img => img.decode().then(() => img.naturalWidth >= 320)"), $"The poster of video {index + 1} on {path} did not load.");
+            var box = (await frames.Nth(index).BoundingBoxAsync())!;
+            Assert.InRange(box.Width / box.Height, 1.76, 1.79);
+            Assert.True(box.X >= 0 && box.X + box.Width <= width, $"Video {index + 1} on {path} is wider than the screen.");
+        }
+
+        Assert.Equal(10, await frames.EvaluateAllAsync<int>("frames => new Set(frames.map(frame => frame.srcdoc.match(/embed\\/([A-Za-z0-9_-]{11})/)[1])).size"));
+        Assert.True(await visit.EvaluateAsync<bool>("document.documentElement.scrollWidth <= document.documentElement.clientWidth"), $"{path} is wider than the screen.");
         Assert.Empty(visit.OffSiteRequests);
         Assert.Empty(visit.FailedRequests);
     }
@@ -499,7 +617,7 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         Assert.True(await player.EvaluateAsync<bool>("audio => audio.controls && audio.preload === 'none' && !audio.autoplay && audio.readyState === 0 && audio.paused"), "The player did not wait for the reader.");
         await Assertions.Expect(body.GetByRole(AriaRole.Link, new() { Name = "Download this episode" })).ToHaveAttributeAsync("href", recording);
         await Assertions.Expect(body).ToContainTextAsync("(MP3, 43:12, 42.2 MB)");
-        await Assertions.Expect(body.Locator("iframe, script")).ToHaveCountAsync(0);
+        await Assertions.Expect(body.Locator("iframe[src], script")).ToHaveCountAsync(0);
         Assert.Empty(visit.OffSiteRequests);
         Assert.Empty(visit.FailedRequests);
     }
@@ -982,6 +1100,9 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         await page.Keyboard.PressAsync("Shift+Tab");
         await page.Keyboard.PressAsync("Shift+Tab");
         await page.Keyboard.PressAsync("Enter");
+        // Asked until it is so: read at once, the address can still be the one before the press (seen once, with
+        // ten video frames on the home page).
+        await Assertions.Expect(page).ToHaveURLAsync(new Regex("/#content$"));
         Assert.Equal("/#content", visit.Location + new Uri(page.Url).Fragment);
         await Assertions.Expect(page.Locator("main")).ToBeFocusedAsync();
     }
