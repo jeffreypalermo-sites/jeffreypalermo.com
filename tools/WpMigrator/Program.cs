@@ -12,10 +12,17 @@ using JeffreyPalermo.Tools.WpMigrator;
 //   localize <content-dir> <manifest-file>           images that bodies load from other hosts → content/uploads/external/
 //   recover  <content-dir> <manifest-file>           pictures a reader can no longer reach: links to pictures on other
 //                                                    hosts, pictures on this site that lead nowhere, uploads listed as lost
-var usable = args.Length == 4 ? args[0] is not ("localize" or "recover") : args.Length == 3 && args[0] is "fetch" or "localize" or "recover";
+// One command adds to content/: a post for each episode of the podcast that the site has none for.
+//   podcast  <feed> <content-dir> [<videos>]         the show's RSS feed → content/posts/ and the catalog
+//                                                    content/archive/podcast-episodes.json; <videos> is the list of the
+//                                                    show's YouTube channel (its Atom feed, or lines of id⇥title⇥date).
+//                                                    <feed> and <videos> are an address or a file.
+var usable = args.Length == 4
+    ? args[0] is not ("localize" or "recover")
+    : args.Length == 3 && args[0] is "fetch" or "localize" or "recover" or "podcast";
 if (!usable)
 {
-    Console.Error.WriteLine("usage: fetch <site> <raw-dir> | convert <raw-dir> <content-dir> <manifest> | media <site> <content-dir> <manifest> | localize <content-dir> <manifest> | recover <content-dir> <manifest>");
+    Console.Error.WriteLine("usage: fetch <site> <raw-dir> | convert <raw-dir> <content-dir> <manifest> | media <site> <content-dir> <manifest> | localize <content-dir> <manifest> | recover <content-dir> <manifest> | podcast <feed> <content-dir> [<videos>]");
     return 2;
 }
 
@@ -90,10 +97,27 @@ switch (args[0])
         return 0;
     }
 
+    case "podcast":
+    {
+        // One request for the feed and one for the list of videos: nothing else is asked of either host.
+        using var http = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
+        http.DefaultRequestHeaders.UserAgent.ParseAdd("jeffreypalermo.com-podcast/1.0");
+        var feed = PodcastFeed.Parse(await ReadAsync(http, args[1]));
+        var videos = args.Length == 4 ? PodcastVideos.Parse(await ReadAsync(http, args[3])) : [];
+        var report = await PodcastPosts.AddAsync(feed, videos, new ContentLayout(args[2]));
+        Console.Write(PodcastPosts.Describe(report));
+        return report.Problems.Count == 0 ? 0 : 1;
+    }
+
     default:
         Console.Error.WriteLine($"unknown command '{args[0]}'");
         return 2;
 }
+
+static async Task<string> ReadAsync(HttpClient http, string addressOrFile) =>
+    addressOrFile.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || addressOrFile.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
+        ? await http.GetStringAsync(new Uri(addressOrFile))
+        : await File.ReadAllTextAsync(addressOrFile);
 
 static HttpClient CreateClient(string site)
 {

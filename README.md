@@ -12,7 +12,7 @@ See [MODERNIZATION-PLAN.md](MODERNIZATION-PLAN.md) for the analysis, options con
 | `src/Core` | Domain: content records, legacy URL classification, slug normalization. No dependencies. |
 | `src/Infrastructure` | Loads `content/` into the domain (front matter, Markdown, archives); URL contract file format. |
 | `src/UI.Server` | ASP.NET Core host: legacy-URL middleware, pages (Razor components in `Components/`, the stylesheet and fonts in `wwwroot/_assets/`), feeds, sitemaps, composition root. |
-| `tools/WpMigrator` | One-time WordPress.com → git migration. Done: the site is frozen ([ADR-0010](docs/adr/0010-the-wordpress-site-is-frozen.md)). Its `localize` and `recover` commands still work on `content/` as it is. |
+| `tools/WpMigrator` | One-time WordPress.com → git migration. Done: the site is frozen ([ADR-0010](docs/adr/0010-the-wordpress-site-is-frozen.md)). Its `localize` and `recover` commands still work on `content/` as it is, and its `podcast` command adds a post for each new episode of the podcast ([ADR-0020](docs/adr/0020-the-podcasts-episodes-are-posts.md)). |
 | `tools/UrlContract` | Captures how the live WordPress site answers every known URL. |
 | `content/` | Posts, pages, comments, archive metadata, and uploads. **Publishing = merging a PR.** |
 | `migration/raw/` | The WordPress REST snapshot that `content/` was generated from. |
@@ -137,6 +137,34 @@ That is 73 files and 2,744,813 bytes, none in Git LFS. The Wayback Machine's ind
 than once that day; what it had not answered for was left and asked for again by a later run. The run after the
 last one changed no file.
 
+## The podcast's episodes
+
+Every episode of the AI DevOps Podcast (the Azure DevOps Podcast until 2025) is a post, dated as the show published
+it ([ADR-0020](docs/adr/0020-the-podcasts-episodes-are-posts.md)). One command adds the posts the site does not
+have yet. Run it after a new episode is out, and merge what it wrote:
+
+```bash
+yt-dlp --flat-playlist --print "%(id)s\t%(title)s" "https://www.youtube.com/playlist?list=PLp-3JZMhh8i0Qf6XcXj-3inW6bUHB2hpX" > migration/podcast-videos.tsv
+dotnet run --project tools/WpMigrator -- podcast http://feed.azuredevops.show/rss content migration/podcast-videos.tsv
+```
+
+`podcast` reads the show's feed, which holds every episode since the first of September 2018, with one request.
+For each episode that `content/archive/podcast-episodes.json` (the catalog) does not list, it writes
+`content/posts/{yyyy}/{mm}/{slug}.md`: the show's own notes as Markdown, the browser's player with a link to the
+recording, a link to the episode's video on YouTube when the list of videos has exactly one with the episode's
+number and title, and a link to the episode's page on the show's site. The list of videos is the show's playlist
+(the first line above; without it no video is linked) or the channel's Atom feed. It adds the episode to the
+catalog and counts the categories anew. An episode the site had a post for already (001 to 007, written on
+WordPress in 2018) is listed in the catalog and its post is left alone. A post is written once: from then on it is
+edited in git, and a second run changes no file. The one thing a later run adds to a post it wrote is the link to
+a video that has turned up since. It prints what it found, per year, and what a person should look at: a video it
+could not match for certain (the channel has some twice), an address that was taken. It exits 1 when it could not
+do something it should have.
+
+The posts are in the categories `Podcast`, `DevOps` and the show's name when the episode was published:
+`Azure DevOps Podcast` up to episode 368, `AI DevOps Podcast` from 369. They have no tags: the show gives its
+episodes no keywords, and the site does not tag people. A keyword that is a tag of the site would become one.
+
 ## Run the site locally
 
 ```bash
@@ -171,16 +199,19 @@ The build treats warnings as errors.
   headings, titles, page addresses, the tag cloud), front matter round-trips, content layout, HTML cleaning, link
   rewriting, what a body loads from another host and where its copy is kept, which pictures a body shows or links
   to on this site and which of them lead nowhere, the links of a body and the pictures they stand around, what the
-  Wayback Machine is asked and which capture is taken, contract file format, the Onion dependency rule, the delivery system's contract in `build.yml`,
+  Wayback Machine is asked and which capture is taken, what the podcast's feed says of an episode, show notes as
+  Markdown that renders as the show wrote them, which video is an episode's, contract file format, the Onion dependency rule, the delivery system's contract in `build.yml`,
   how the facts of a build reach the image and which file `/_build` believes, what each kind of answer says
   to the caches, and what the look's stylesheet may not do (move, fix or stick anything, fetch anything but the
   site's two font files, set text on a ground it does not stand out from, hide the keyboard's focus, grow large).
 - **Integration tests:** the real `content/` tree loaded into the domain; the site in-process: every kind of page in
   the site layout, the markup the stylesheet rests on (the menu in the header, search in a box of its own, the page
-  being read marked in the menu, no class in the stylesheet that the site never writes), a crawl from `/` that must reach all 966 posts by following links, and a replay of all 9,337 URLs
+  being read marked in the menu, no class in the stylesheet that the site never writes), a crawl from `/` that must reach all 1,380 posts by following links, and a replay of all 9,337 URLs
   of `url-contract.tsv`; the fetch → convert → media pipeline and the URL prober against a stubbed WordPress HTTP
   server and the real file system; `localize` and `recover` against stand-ins for Photon, the hosts and the
-  Wayback Machine, writing to a temp content tree; every picture of every body asked of the site itself; the `Cache-Control` of every kind of answer; the scripts run for real,
+  Wayback Machine, writing to a temp content tree; the `podcast` command writing to a temp content tree, and the
+  repository's episodes against their catalog (one post each, the show's date, a player that waits, nothing
+  loaded from another host); every picture of every body asked of the site itself; the `Cache-Control` of every kind of answer; the scripts run for real,
   `scripts/Write-BuildFacts.ps1` and `deploy/deploy.ps1` (against a stand-in for the Azure CLI) among them; the
   Bicep file compiled, and what it deploys with and without host names; the site under its custom host names.
   These need the Azure CLI (`az bicep build`, a local compile).
@@ -192,7 +223,8 @@ The build treats warnings as errors.
   the home page (the navy masthead, the posts, the index beside them), a post,
   older and newer, the index, search (which finds the About page too), posts whose pictures came from other
   hosts or from the blog's earlier platforms, a click on a picture that used to lead to WordPress.com's image CDN,
-  podcast posts and a video post whose players wait for the reader, a page that is not found, a phone-sized
+  podcast posts and a video post whose players wait for the reader, an episode with its notes, its player and
+  the link to its video, the podcast's category, a page that is not found, a phone-sized
   screen (one column, search above the posts, code that scrolls in its own block), the keyboard and its focus ring,
   the contrast of every piece of text, Home, About and search on the first screen, and that nothing on a page moves
   or sticks. Requests to any other host are refused and fail the test. Set `JPCOM_IMAGE` to test an image
