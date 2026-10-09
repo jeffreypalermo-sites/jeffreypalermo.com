@@ -144,8 +144,9 @@ dotnet run --project src/UI.Server
 ```
 
 Then open <http://localhost:5062>. The Development settings point `Site:ContentPath` at `../../content`. The pages
-have the look and the navigation of the WordPress site ([ADR-0009](docs/adr/0009-the-wordpress-look-and-navigation.md)):
-Razor components rendered on the server, one stylesheet, no script.
+have the navigation of the WordPress site ([ADR-0009](docs/adr/0009-the-wordpress-look-and-navigation.md)) and the
+look "Masthead", in Clear Measure's colours ([ADR-0019](docs/adr/0019-the-masthead-look.md)): Razor components
+rendered on the server, one stylesheet, no script, nothing that moves.
 
 As the container that is delivered (needs Docker, and Git LFS for the video under `content/uploads`):
 
@@ -171,10 +172,12 @@ The build treats warnings as errors.
   rewriting, what a body loads from another host and where its copy is kept, which pictures a body shows or links
   to on this site and which of them lead nowhere, the links of a body and the pictures they stand around, what the
   Wayback Machine is asked and which capture is taken, contract file format, the Onion dependency rule, the delivery system's contract in `build.yml`,
-  how the facts of a build reach the image and which file `/_build` believes, and what each kind of answer says
-  to the caches.
+  how the facts of a build reach the image and which file `/_build` believes, what each kind of answer says
+  to the caches, and what the look's stylesheet may not do (move, fix or stick anything, fetch anything but the
+  site's two font files, set text on a ground it does not stand out from, hide the keyboard's focus, grow large).
 - **Integration tests:** the real `content/` tree loaded into the domain; the site in-process: every kind of page in
-  the site layout, a crawl from `/` that must reach all 966 posts by following links, and a replay of all 9,337 URLs
+  the site layout, the markup the stylesheet rests on (the menu in the header, search in a box of its own, the page
+  being read marked in the menu, no class in the stylesheet that the site never writes), a crawl from `/` that must reach all 966 posts by following links, and a replay of all 9,337 URLs
   of `url-contract.tsv`; the fetch → convert → media pipeline and the URL prober against a stubbed WordPress HTTP
   server and the real file system; `localize` and `recover` against stand-ins for Photon, the hosts and the
   Wayback Machine, writing to a temp content tree; every picture of every body asked of the site itself; the `Cache-Control` of every kind of answer; the scripts run for real,
@@ -185,11 +188,14 @@ The build treats warnings as errors.
   image built from the `Dockerfile` and run with `docker run`. Each replays the URL contract over real HTTP. The
   image is built as the Build builds it, the facts of the build first, and must answer them at `/_build`. It must
   tell the caches how long to keep each kind of answer, and never to keep health, version or build. A real
-  browser (Chromium, driven by Playwright for .NET) then reads the container's site as a reader would: home, a post,
-  older and newer, the sidebar, search (which finds the About page too), posts whose pictures came from other
+  browser (Chromium, driven by Playwright for .NET) then reads the container's site as a reader would: the look of
+  the home page (the navy masthead, the posts, the index beside them), a post,
+  older and newer, the index, search (which finds the About page too), posts whose pictures came from other
   hosts or from the blog's earlier platforms, a click on a picture that used to lead to WordPress.com's image CDN,
   podcast posts and a video post whose players wait for the reader, a page that is not found, a phone-sized
-  screen, the keyboard. Requests to any other host are refused and fail the test. Set `JPCOM_IMAGE` to test an image
+  screen (one column, search above the posts, code that scrolls in its own block), the keyboard and its focus ring,
+  the contrast of every piece of text, Home, About and search on the first screen, and that nothing on a page moves
+  or sticks. Requests to any other host are refused and fail the test. Set `JPCOM_IMAGE` to test an image
   that is already built, as the Build workflow does.
 
 The browser tests use the Chromium build of their Playwright version (1.58: `chromium-1208` under

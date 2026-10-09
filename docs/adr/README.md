@@ -10,7 +10,7 @@
 | [0006](0006-deliver-through-the-demo-environment-kit.md) | Deliver through the demo-environment-kit GitOps system | Accepted; who creates the site's runtime changed by 0007 |
 | [0007](0007-the-site-owns-its-runtime.md) | The site owns its runtime; the system gives it the pipeline | Accepted |
 | [0008](0008-eleven-regions-behind-front-door.md) | Eleven regions behind Azure Front Door, in rotation, each scaling to zero | Accepted |
-| [0009](0009-the-wordpress-look-and-navigation.md) | Keep the WordPress site's look and navigation; Razor components rendered from the existing routes | Accepted |
+| [0009](0009-the-wordpress-look-and-navigation.md) | Keep the WordPress site's look and navigation; Razor components rendered from the existing routes | Accepted; the look superseded by 0019 |
 | [0010](0010-the-wordpress-site-is-frozen.md) | The WordPress site is frozen; content is edited in git | Accepted |
 | [0011](0011-the-systems-dashboard-reads-the-site.md) | The system's health dashboard reads the site from the browser | Accepted |
 | [0012](0012-the-site-publishes-its-build-facts.md) | The site publishes the facts of its build: the Build writes them, the image carries them, `/_build` answers them | Accepted |
@@ -20,6 +20,7 @@
 | [0016](0016-the-dns-zone-as-code.md) | The domain's DNS is an Azure DNS zone, as code: every record of the inventory, an alias of the Front Door at the top, a stack of its own that never deletes; created before it is delegated, and delegated by a person | Accepted |
 | [0017](0017-a-picture-leads-to-a-file-or-the-post-says-it-is-gone.md) | A picture on this site leads to a file, or the load fails; the uploads listed as lost are the exception; `recover` finds what the Wayback Machine has, and a picture no source has gives way to a note | Accepted |
 | [0018](0018-the-environments-own-names.md) | Every environment has a name of its own in `jeffreypalermo.ceo`: `www.` for production and `uat.` as custom domains of their Front Doors, `tdd.` as a forwarding at GoDaddy; uat's name is the rehearsal of the DNS move | Accepted |
+| [0019](0019-the-masthead-look.md) | The look is "Masthead", in Clear Measure's colours: a navy masthead with a yellow rule, the posts set like articles, the index beside them. One stylesheet for the markup, the navigation and the addresses of 0009; no script, no new font, nothing that moves | Accepted |
 
 The overall design is in [docs/architecture](../architecture/README.md). The one runbook is
 [docs/runbooks/dns-cutover.md](../runbooks/dns-cutover.md): moving `jeffreypalermo.com` to the new site.

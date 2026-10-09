@@ -15,10 +15,17 @@ switch (args)
         using var http = new HttpClient(new HttpClientHandler { AllowAutoRedirect = false }) { BaseAddress = new Uri(baseUrl), Timeout = TimeSpan.FromSeconds(60) };
         var entries = UrlContractFile.Read(await File.ReadAllTextAsync(contractFile));
         var exceptions = UrlContractRules.ReadExceptions(await File.ReadAllTextAsync(exceptionsFile));
-        var violations = await new UrlContractVerifier(http).VerifyAsync(entries, exceptions, Parallelism(args, 8));
+        var verifier = new UrlContractVerifier(http);
+        var violations = await verifier.VerifyAsync(entries, exceptions, Parallelism(args, 8));
         foreach (var violation in violations)
         {
             Console.WriteLine(violation);
+        }
+
+        if (verifier.SentAgainNote is { } note)
+        {
+            // Said also when the replay passes: a gateway that drops requests is worth knowing about.
+            Console.WriteLine(note);
         }
 
         Console.WriteLine($"{entries.Count} URLs checked, {violations.Count} violations, {exceptions.Count} reviewed exceptions");
