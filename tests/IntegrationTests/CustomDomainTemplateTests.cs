@@ -101,20 +101,31 @@ public sealed class CustomDomainTemplateTests
         Assert.False((bool)template.Evaluate(template.Root.GetProperty("variables").GetProperty("customDomain"))!);
     }
 
-    /// <summary>The day of the DNS move: the canonical host, and the two names the site redirects to it.</summary>
+    /// <summary>
+    /// Production, with the settings as they are: the canonical host and production's own name, which have pages,
+    /// and the two names the site redirects to the canonical host.
+    /// </summary>
     [Fact]
     public async Task TheHostNamesOfTheDayAddADomainEachAndARouteForEachWayTheSiteAnswers()
     {
-        var template = (await CompiledTemplate.CompileAsync()).With(("frontDoor", true), ("regions", Regions(11)), ("hostNames", Names(Apex)), ("redirectHostNames", Names(WwwAndFeeds)));
+        using var settings = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Join(TestPaths.RepositoryRoot, "deploy", "settings.json")));
+        var prod = settings.RootElement.GetProperty("environments").GetProperty("prod");
+        var listed = prod.GetProperty("hostNames").EnumerateArray().Select(name => name.GetString()!).ToArray();
+        string[] pages = [.. listed.Except(WwwAndFeeds)];
+        Assert.Equal([.. Apex, .. WwwAndFeeds, "www.jeffreypalermo.ceo"], listed);
+        Assert.Equal([.. Apex, "www.jeffreypalermo.ceo"], pages);
+        Assert.Equal(11, prod.GetProperty("regions").GetArrayLength());
+
+        var template = (await CompiledTemplate.CompileAsync()).With(("frontDoor", prod.GetProperty("frontDoor").GetBoolean()), ("regions", Regions(11)), ("hostNames", Names(pages)), ("redirectHostNames", Names(WwwAndFeeds)));
         var module = template.Module(TheModule(template));
         var instances = module.Resources.ToDictionary(CompiledTemplate.Kind, module.Instances);
 
         Assert.Equal(1, template.Instances(TheModule(template)));
         Assert.Equal(3, instances.Count);
-        Assert.Equal(3, instances["customDomains *"]);
+        Assert.Equal(4, instances["customDomains *"]);
         Assert.Equal(1, instances["routes web-hosts"]);
         Assert.Equal(1, instances["routes web-redirects"]);
-        Assert.Equal(3, module.OutputItems("hostNames"));
+        Assert.Equal(4, module.OutputItems("hostNames"));
         // What was there before is there as before.
         Assert.Equal([1, 11, 1, 1, 11, 1], template.Resources.Where(resource => BeforeHostNames.Contains(CompiledTemplate.Kind(resource))).Select(template.Instances));
     }
@@ -195,7 +206,6 @@ public sealed class CustomDomainTemplateTests
     /// </summary>
     [Theory]
     [InlineData("uat", "uat.jeffreypalermo.ceo", 2)]
-    [InlineData("prod", "www.jeffreypalermo.ceo", 11)]
     public async Task AnEnvironmentsOwnNameAddsOneDomainAndOneRouteAndLeavesTheEndpointsOwnRouteAsItIs(string environment, string name, int regions)
     {
         using var settings = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Join(TestPaths.RepositoryRoot, "deploy", "settings.json")));

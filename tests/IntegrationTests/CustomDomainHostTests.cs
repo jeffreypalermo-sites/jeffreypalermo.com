@@ -59,7 +59,10 @@ public sealed class CustomDomainHostTests : IClassFixture<SiteFactory>, IDisposa
         Assert.Equal(Kept, CacheControl(response));
     }
 
-    /// <summary>Every host name the settings list for an environment, with the environment that lists it.</summary>
+    /// <summary>
+    /// Every host name the settings list for an environment that is no name of the canonical host's domain, with the
+    /// environment that lists it: the environments' own names (ADR-0018).
+    /// </summary>
     public static TheoryData<string, string> ListedHostNames()
     {
         using var settings = JsonDocument.Parse(File.ReadAllText(Path.Join(TestPaths.RepositoryRoot, "deploy", "settings.json")));
@@ -68,7 +71,10 @@ public sealed class CustomDomainHostTests : IClassFixture<SiteFactory>, IDisposa
         {
             foreach (var name in environment.Value.TryGetProperty("hostNames", out var names) ? names.EnumerateArray().Select(name => name.GetString()!).ToArray() : [])
             {
-                listed.Add(environment.Name, name);
+                if (name != CanonicalHost() && !name.EndsWith($".{CanonicalHost()}", StringComparison.Ordinal))
+                {
+                    listed.Add(environment.Name, name);
+                }
             }
         }
 
