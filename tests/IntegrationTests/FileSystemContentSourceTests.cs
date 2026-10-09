@@ -13,6 +13,30 @@ public sealed class FileSystemContentSourceTests : IDisposable
 
     public void Dispose() => Directory.Delete(_root, recursive: true);
 
+    /// <summary>
+    /// Jeffrey's four LinkedIn articles, which he exported and asked to have as posts (2026-10-09): each under its
+    /// own title, on the day and time LinkedIn says it was published, leading back to where it was published first.
+    /// </summary>
+    [Theory]
+    [InlineData("AI\u2011Driven DevOps Architecture", "2026-01-17T02:36:00Z", "2026-01-16T20:36:00", "https://www.linkedin.com/pulse/aidriven-devops-architecture-jeffrey-palermo-qqzqc")]
+    [InlineData("The Mindset Shift Required for AI\u2011Driven Development", "2026-01-16T16:52:00Z", "2026-01-16T10:52:00", "https://www.linkedin.com/pulse/mindset-shift-required-aidriven-development-jeffrey-palermo-iatxc")]
+    [InlineData("Help! My software developer just quit", "2017-03-08T18:57:00Z", "2017-03-08T12:57:00", "https://www.linkedin.com/pulse/help-my-software-developer-just-quit-jeffrey-palermo")]
+    [InlineData("Your guide to custom software - for the non-tech company", "2017-03-08T19:00:00Z", "2017-03-08T13:00:00", "https://www.linkedin.com/pulse/your-guide-custom-software-non-tech-company-jeffrey-palermo")]
+    public async Task ALinkedInArticleIsAPostOnTheDayItWasPublished(string title, string publishedUtc, string published, string address)
+    {
+        var site = await new FileSystemContentSource(new ContentLayout(Path.Join(RepositoryRoot(), "content")), "test").LoadAsync();
+
+        var post = Assert.Single(site.Posts, candidate => candidate.Title == title);
+
+        Assert.Equal(DateTime.Parse(publishedUtc, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AdjustToUniversal), post.PublishedUtc);
+        Assert.Equal(DateTime.Parse(published, System.Globalization.CultureInfo.InvariantCulture), post.Published);
+        Assert.Equal("jeffreypalermo", post.AuthorSlug);
+        Assert.Contains("blog", post.CategorySlugs);
+        Assert.Contains($"<em>Originally published on <a href=\"{address}\">LinkedIn</a>.</em>", post.HtmlBody, StringComparison.Ordinal);
+        Assert.DoesNotContain("<img", post.HtmlBody, StringComparison.Ordinal);
+        Assert.DoesNotContain("<iframe", post.HtmlBody, StringComparison.Ordinal);
+    }
+
     [Fact]
     public async Task TheRepositoryContentLoadsAndSatisfiesEveryInvariant()
     {
@@ -22,7 +46,7 @@ public sealed class FileSystemContentSourceTests : IDisposable
         var site = await source.LoadAsync();
         stopwatch.Stop();
 
-        Assert.Equal(1380, site.Posts.Count);
+        Assert.Equal(1384, site.Posts.Count);
         Assert.Single(site.Pages);
         Assert.Equal(275, site.Attachments.Count);
         Assert.Equal(2708, site.Posts.Sum(p => p.Comments.Count));

@@ -4,7 +4,7 @@
     "taxonomy": "category",
     "slug": "blog",
     "name": "Blog",
-    "count": 326
+    "count": 330
   },
   {
     "id": 643871096,
@@ -18,14 +18,14 @@
     "taxonomy": "category",
     "slug": "devops",
     "name": "DevOps",
-    "count": 424
+    "count": 426
   },
   {
     "id": 643871099,
     "taxonomy": "category",
     "slug": "architecture",
     "name": "Architecture",
-    "count": 1
+    "count": 2
   },
   {
     "id": 643871100,
@@ -95,7 +95,7 @@
     "taxonomy": "post_tag",
     "slug": "managing",
     "name": "Managing",
-    "count": 12
+    "count": 14
   },
   {
     "id": 35890,
@@ -228,21 +228,21 @@
     "taxonomy": "post_tag",
     "slug": "devops",
     "name": "devops",
-    "count": 1
+    "count": 3
   },
   {
     "id": 643871095,
     "taxonomy": "post_tag",
     "slug": "clear-measure",
     "name": "clear measure",
-    "count": 5
+    "count": 7
   },
   {
     "id": 1,
     "taxonomy": "author",
     "slug": "jeffreypalermo",
     "name": "Jeffrey Palermo",
-    "count": 1380
+    "count": 1384
   },
   {
     "id": 4,

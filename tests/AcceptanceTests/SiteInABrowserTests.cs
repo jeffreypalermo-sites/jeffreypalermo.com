@@ -943,7 +943,7 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         Assert.Equal(0, await visit.EvaluateAsync<int>("window.scrollY"));
 
         // Posts by date and by tag are on the page too: every month and every tag.
-        await Assertions.Expect(page.GetByRole(AriaRole.Navigation, new() { Name = "Archives" }).GetByRole(AriaRole.Link)).ToHaveCountAsync(210);
+        await Assertions.Expect(page.GetByRole(AriaRole.Navigation, new() { Name = "Archives" }).GetByRole(AriaRole.Link)).ToHaveCountAsync(211);
         await Assertions.Expect(page.Locator("aside .tagcloud a")).ToHaveCountAsync(25);
     }
 
@@ -1056,7 +1056,7 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
 
     private static async Task TabUntilAsync(IPage page, string selector)
     {
-        // The index lists a link for every month that has a post: 210 of them.
+        // The index lists a link for every month that has a post: 211 of them.
         for (var presses = 0; presses < 400; presses++)
         {
             await page.Keyboard.PressAsync("Tab");
