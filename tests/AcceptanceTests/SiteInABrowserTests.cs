@@ -129,7 +129,7 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         Assert.StartsWith(SiteTitle, await page.TitleAsync(), StringComparison.Ordinal);
         await Assertions.Expect(page.Locator("header.site-header .site-title")).ToHaveTextAsync(SiteTitle);
         await Assertions.Expect(page.Locator("header.site-header .site-description")).ToContainTextAsync("Clear Measure Chief Architect");
-        await Assertions.Expect(page.GetByRole(AriaRole.Navigation, new() { Name = "Main menu" }).GetByRole(AriaRole.Link)).ToHaveCountAsync(6);
+        await Assertions.Expect(page.GetByRole(AriaRole.Navigation, new() { Name = "Main menu" }).GetByRole(AriaRole.Link)).ToHaveTextAsync(["Home", "Blog", "AI DevOps Podcast", "About Jeffrey Palermo", "Onion Architecture", "Clear Measure, Inc.", "Books"]);
         await Assertions.Expect(page.GetByRole(AriaRole.Heading, new() { Name = "Recent Updates", Level = 1 })).ToBeVisibleAsync();
         await Assertions.Expect(page.Locator("main article.post")).ToHaveCountAsync(10);
 
@@ -522,13 +522,13 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
     }
 
     /// <summary>
-    /// A listing shows its posts whole, so the home page and the podcast's category have a frame for each of ten
-    /// episodes. All ten wait: reading the page to its end asks no other host for anything.
+    /// A listing shows its posts whole, so a page of the home page's posts and the podcast's category have a frame
+    /// for each of ten episodes. All ten wait: reading the page to its end asks no other host for anything.
     /// </summary>
     [Theory]
-    [InlineData("/", Visit.DesktopWidth)]
-    [InlineData("/", Visit.PhoneWidth)]
-    [InlineData("/category/podcast/", Visit.PhoneWidth)]
+    [InlineData("/page/3/", Visit.DesktopWidth)]
+    [InlineData("/page/3/", Visit.PhoneWidth)]
+    [InlineData("/category/ai-devops-podcast/", Visit.PhoneWidth)]
     public async Task AListingOfEpisodesShowsTenVideosThatAllWait(string path, int width)
     {
         await using var visit = await chromium.VisitAsync(site.BaseAddress, width);
@@ -793,6 +793,28 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         await menu.GetByRole(AriaRole.Link, new() { Name = "Onion Architecture" }).ClickAsync();
         await visit.ArrivesAtAsync("/tag/onion-architecture/");
 
+        // The podcast: every episode, under the show's present name (ADR-0021).
+        await menu.GetByRole(AriaRole.Link, new() { Name = "AI DevOps Podcast" }).ClickAsync();
+        await visit.ArrivesAtAsync("/category/ai-devops-podcast/");
+        await Assertions.Expect(page.GetByRole(AriaRole.Heading, new() { Level = 1 })).ToHaveTextAsync("Category Archives: AI DevOps Podcast");
+        await Assertions.Expect(menu.Locator("[aria-current=page]")).ToHaveTextAsync("AI DevOps Podcast");
+        await Assertions.Expect(page.Locator("main article.post")).ToHaveCountAsync(10);
+        await Assertions.Expect(page.Locator("main article.post .entry-title a").First).ToHaveTextAsync("Sam Nasr: AI Transformation - Episode 422");
+
+        // The books: the posts about Jeffrey's own, the newest first.
+        await menu.GetByRole(AriaRole.Link, new() { Name = "Books" }).ClickAsync();
+        await visit.ArrivesAtAsync("/tag/books/");
+        await Assertions.Expect(page.GetByRole(AriaRole.Heading, new() { Level = 1 })).ToHaveTextAsync("Tag Archives: Books");
+        await Assertions.Expect(menu.Locator("[aria-current=page]")).ToHaveTextAsync("Books");
+        await Assertions.Expect(page.Locator("main article.post .entry-title a").First).ToHaveTextAsync("The Five Pillars: Leadership for Effective Custom Software");
+        await Assertions.Expect(page.Locator("main article.post .entry-title a").Nth(1)).ToHaveTextAsync(".NET DevOps for Azure");
+        var cover = page.Locator("main article.post").First.Locator(".entry-content img");
+        await Assertions.Expect(cover).ToHaveAttributeAsync("src", "/wp-content/uploads/2026/10/the-five-pillars.jpg");
+        Assert.True(await cover.EvaluateAsync<bool>("img => img.decode().then(() => img.naturalWidth === 300 && img.naturalHeight === 300)"), "The book's cover did not load.");
+        await Assertions.Expect(menu.GetByRole(AriaRole.Link, new() { Name = ".NET DevOps for Azure" })).ToHaveCountAsync(0);
+        Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
+
         await menu.GetByRole(AriaRole.Link, new() { Name = "Home" }).ClickAsync();
         await Assertions.Expect(page.GetByRole(AriaRole.Heading, new() { Level = 1 })).ToHaveTextAsync("Recent Updates");
         Assert.Equal("/", visit.Location);
@@ -840,6 +862,9 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
     [InlineData(PodcastEpisode)]
     [InlineData(NewestEpisode)]
     [InlineData("/category/podcast/")]
+    [InlineData("/category/ai-devops-podcast/")]
+    [InlineData("/tag/books/")]
+    [InlineData("/2026/10/the-five-pillars-leadership-for-effective-custom-software/")]
     // The longest unbroken word of any episode: an address of 100 characters, written out as text.
     [InlineData("/2026/05/ryan-riley-development-process-using-ai-episode-403/")]
     [InlineData(VideoEpisode)]
@@ -944,7 +969,7 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
 
         // Posts by date and by tag are on the page too: every month and every tag.
         await Assertions.Expect(page.GetByRole(AriaRole.Navigation, new() { Name = "Archives" }).GetByRole(AriaRole.Link)).ToHaveCountAsync(211);
-        await Assertions.Expect(page.Locator("aside .tagcloud a")).ToHaveCountAsync(25);
+        await Assertions.Expect(page.Locator("aside .tagcloud a")).ToHaveCountAsync(26);
     }
 
     /// <summary>

@@ -41,12 +41,13 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         Assert.StartsWith("/_assets/site.css", Assert.Single(page.QuerySelectorAll("link[rel=stylesheet]")).GetAttribute("href"), StringComparison.Ordinal);
         Assert.NotNull(page.QuerySelector("meta[name=viewport]"));
 
-        // Header: the site's name and tagline, and the menu the WordPress site had.
+        // Header: the site's name and tagline, and the menu: the WordPress site's, with the podcast and the books
+        // (ADR-0021).
         Assert.Equal(SiteTitle, page.Text("header.site-header .site-title a[href='/']"));
         Assert.StartsWith("Jeffrey Palermo, Microsoft MVP", page.Text("header.site-header .site-description"), StringComparison.Ordinal);
         Assert.Equal(
-            ["/", "/category/blog/", "/about/", "/tag/onion-architecture/", "https://www.clear-measure.com", "https://bookauthority.org/books/new-azure-devops-books"],
-            page.QuerySelectorAll("header nav[aria-label='Main menu'] a").Select(a => a.GetAttribute("href")));
+            [("Home", "/"), ("Blog", "/category/blog/"), ("AI DevOps Podcast", "/category/ai-devops-podcast/"), ("About Jeffrey Palermo", "/about/"), ("Onion Architecture", "/tag/onion-architecture/"), ("Clear Measure, Inc.", "https://www.clear-measure.com"), ("Books", "/tag/books/")],
+            page.QuerySelectorAll("header nav[aria-label='Main menu'] a").Select(a => (a.TextContent, a.GetAttribute("href")!)));
 
         // Main column, sidebar, footer.
         Assert.Single(page.QuerySelectorAll("main#content"));
@@ -55,7 +56,7 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         Assert.Equal(("get", "/search/"), (sidebar.QuerySelector("form[role=search]")?.GetAttribute("method"), sidebar.QuerySelector("form[role=search]")?.GetAttribute("action")));
         Assert.NotNull(sidebar.QuerySelector("form[role=search] input[type=search][name=q]"));
         Assert.Equal("/_assets/authors/jeffreypalermo-profile.jpg", sidebar.QuerySelector(".widget-profile img[alt='Jeffrey Palermo']")?.GetAttribute("src"));
-        Assert.Equal(25, sidebar.QuerySelectorAll(".widget-tags .tagcloud a").Length);
+        Assert.Equal(26, sidebar.QuerySelectorAll(".widget-tags .tagcloud a").Length);
         Assert.Equal(211, sidebar.QuerySelectorAll("nav.widget-archives li a").Length);
         Assert.Equal(("/2026/10/", "October 2026"), (sidebar.Href("nav.widget-archives li a"), sidebar.QuerySelector("nav.widget-archives li a")?.TextContent));
         Assert.Equal(SiteTitle, page.Text("footer.site-footer a[href='/']"));
@@ -214,6 +215,77 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         Assert.Empty(named.Except(written).Order(StringComparer.Ordinal));
     }
 
+    /// <summary>
+    /// The menu's two listings (ADR-0021): every episode of the podcast under the show's present name, and the posts
+    /// about Jeffrey's own books under the tag Books, the newest first: The Five Pillars, .NET DevOps for Azure and
+    /// the three editions of ASP.NET MVC in Action.
+    /// </summary>
+    [Fact]
+    public async Task TheMenusPodcastListsEveryEpisodeAndItsBooksListThePostsAboutHisBooks()
+    {
+        using var client = factory.ClientFor();
+
+        var podcast = await client.GetPageAsync("/category/ai-devops-podcast/");
+        Assert.Equal("Category Archives: AI DevOps Podcast", podcast.Text("h1.page-title"));
+        Assert.Equal("Sam Nasr: AI Transformation - Episode 422", podcast.QuerySelectorAll("main article.post h2.entry-title a")[0].TextContent);
+        // 421 episodes, ten to a page: the last page holds the first episode alone.
+        var last = await client.GetPageAsync("/category/ai-devops-podcast/page/43/");
+        Assert.Equal("Buck Hodges on the introduction to Azure DevOps Services – Episode 001", Assert.Single(last.QuerySelectorAll("main article.post h2.entry-title a")).TextContent);
+        await client.GetPageAsync("/category/ai-devops-podcast/page/44/", HttpStatusCode.NotFound);
+        // The category of the show's earlier name answers as it did: the contract has its address.
+        Assert.Equal("Category Archives: Azure DevOps Podcast", (await client.GetPageAsync("/category/azure-devops-podcast/")).Text("h1.page-title"));
+
+        var books = await client.GetPageAsync("/tag/books/");
+        Assert.Equal("Tag Archives: Books", books.Text("h1.page-title"));
+        Assert.Equal($"Books | {SiteTitle}", books.Title);
+        Assert.Equal(
+            [
+                "/2026/10/the-five-pillars-leadership-for-effective-custom-software/",
+                "/2020/01/net-devops-for-azure/",
+                "/2019/05/jeffrey-palermo-on-net-devops-for-azure-episode-35/",
+                "/2010/04/read-all-of-asp-net-mvc-2-in-action-now-while-you-wait-for-the-printed-book/",
+                "/2010/03/asp-net-mvc-in-action-podcast-with-deep-fried-bytes-crew/",
+                "/2010/01/mvc-2-in-action-book-conducting-public-reviews/",
+                "/2009/12/infoq-interview-on-asp-net-mvc-in-action-now-published/",
+                "/2009/09/asp-net-mvc-in-action-spotted-at-barnes-and-noble/",
+                "/2009/09/asp-net-mvc-in-action-arrived-at-my-doorstep-today/",
+                "/2009/08/50-discount-code-on-asp-net-mvc-in-action-expires-today/",
+            ],
+            books.QuerySelectorAll("main article.post h2.entry-title a").Select(a => a.GetAttribute("href")));
+        var older = await client.GetPageAsync("/tag/books/page/2/");
+        Assert.Equal(10, older.QuerySelectorAll("main article.post").Length);
+        Assert.Equal("/2008/02/announcing-asp-net-mvc-in-action-from-manning/", older.QuerySelectorAll("main article.post h2.entry-title a")[^1].GetAttribute("href"));
+        Assert.Null(older.Href("main nav.post-navigation .nav-previous a"));
+        Assert.Equal("Books ( 20 )", string.Join(' ', books.QuerySelector("main article.post .entry-tags a")!.TextContent.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)));
+        Assert.Contains(books.QuerySelectorAll("aside .tagcloud a"), tag => tag.GetAttribute("href") == "/tag/books/" && tag.TextContent == "Books");
+    }
+
+    /// <summary>
+    /// The post about The Five Pillars: the title as the book has it, the cover from the site's own uploads, the
+    /// publisher's description as a quotation, and the two places to get it. Nothing from another host.
+    /// </summary>
+    [Fact]
+    public async Task ThePostAboutTheFivePillarsSaysWhatItsSourcesSay()
+    {
+        var page = await factory.ClientFor().GetPageAsync("/2026/10/the-five-pillars-leadership-for-effective-custom-software/");
+        var body = page.QuerySelector("main article.post .entry-content")!;
+
+        Assert.Equal("The Five Pillars: Leadership for Effective Custom Software", page.Text("main article.post h1.entry-title"));
+        Assert.Equal(["Blog"], page.QuerySelectorAll("main article.post .entry-categories a").Select(a => a.TextContent));
+        Assert.Equal("/tag/books/", page.Href("main article.post .entry-tags a"));
+        var cover = Assert.Single(body.QuerySelectorAll("img"));
+        Assert.Equal("/wp-content/uploads/2026/10/the-five-pillars.jpg", cover.GetAttribute("src"));
+        Assert.Contains("The Five Pillars", cover.GetAttribute("alt"), StringComparison.Ordinal);
+        var quoted = Assert.Single(body.QuerySelectorAll("blockquote"));
+        Assert.StartsWith("Offering a critical guide for CEOs, CTOs, and all stakeholders weary of software failures", quoted.Text("p:first-child"), StringComparison.Ordinal);
+        Assert.Contains("Clarity, Quality, Stability, Speed, and Leadership", quoted.TextContent, StringComparison.Ordinal);
+        Assert.Equal(["Create Clarity", "Establish Quality", "Achieve Stability", "Increase Speed", "Optimize the Team"], body.QuerySelectorAll("ol > li").Select(li => li.TextContent.Trim()));
+        Assert.Equal(
+            ["https://www.audible.com/pd/The-Five-Pillars-Audiobook/B0DQY2KV98", "https://clearmeasure.com/thefivepillars/"],
+            body.QuerySelectorAll("a").Select(a => a.GetAttribute("href")));
+        Assert.Empty(body.QuerySelectorAll("script, iframe, video, audio"));
+    }
+
     [Fact]
     public async Task EveryMenuEntryOnTheSiteLeadsToAPage()
     {
@@ -222,7 +294,7 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
 
         var own = home.QuerySelectorAll("nav[aria-label='Main menu'] a").Select(a => a.GetAttribute("href")!).Where(href => href.StartsWith('/')).ToList();
 
-        Assert.Equal(4, own.Count);
+        Assert.Equal(["/", "/category/blog/", "/category/ai-devops-podcast/", "/about/", "/tag/onion-architecture/", "/tag/books/"], own);
         foreach (var href in own)
         {
             var page = await client.GetPageAsync(href);
@@ -297,10 +369,10 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
     {
         using var client = factory.ClientFor();
 
-        var newest = await client.GetPageAsync("/2026/10/sam-nasr-ai-transformation-episode-422/");
+        var newest = await client.GetPageAsync("/2026/10/the-five-pillars-leadership-for-effective-custom-software/");
         var oldest = await client.GetPageAsync((await client.GetPageAsync("/page/139/")).QuerySelectorAll("h2.entry-title a")[^1].GetAttribute("href")!);
 
-        Assert.Equal(("/2026/09/mark-michaelis-mastering-the-agentic-coding-workflow-episode-421/", null), (newest.Href(".nav-previous a"), newest.Href(".nav-next a")));
+        Assert.Equal(("/2026/10/sam-nasr-ai-transformation-episode-422/", null), (newest.Href(".nav-previous a"), newest.Href(".nav-next a")));
         Assert.Null(oldest.Href(".nav-previous a"));
         Assert.NotNull(oldest.Href(".nav-next a"));
     }
@@ -315,10 +387,15 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         Assert.StartsWith($"{SiteTitle} | Jeffrey Palermo, Microsoft MVP", page.Title, StringComparison.Ordinal);
         Assert.Equal("/", page.Href("link[rel=canonical]"));
         Assert.Equal(10, posts.Length);
-        // The newest posts are episodes of the podcast: each is dated as the show published it, in the site's local time.
-        Assert.Equal(("/2026/10/sam-nasr-ai-transformation-episode-422/", "Sam Nasr: AI Transformation - Episode 422"), (posts[0].Href("h2.entry-title a"), posts[0].Text("h2.entry-title a")));
-        Assert.Equal("3:00 am on October 5, 2026", posts[0].Text("time.entry-date"));
-        Assert.Contains("Sam Nasr is a Senior Software Engineer and Trainer", posts[0].Text(".entry-content"), StringComparison.Ordinal);
+        // The newest post is the one about the book The Five Pillars, of 2026-10-09 (ADR-0021).
+        Assert.Equal(("/2026/10/the-five-pillars-leadership-for-effective-custom-software/", "The Five Pillars: Leadership for Effective Custom Software"), (posts[0].Href("h2.entry-title a"), posts[0].Text("h2.entry-title a")));
+        Assert.Equal("8:00 am on October 9, 2026", posts[0].Text("time.entry-date"));
+        Assert.Equal("/tag/books/", posts[0].Href(".entry-tags a"));
+        Assert.Equal("/wp-content/uploads/2026/10/the-five-pillars.jpg", posts[0].QuerySelector(".entry-content img")?.GetAttribute("src"));
+        // The posts after it are episodes of the podcast: each is dated as the show published it, in the site's local time.
+        Assert.Equal(("/2026/10/sam-nasr-ai-transformation-episode-422/", "Sam Nasr: AI Transformation - Episode 422"), (posts[1].Href("h2.entry-title a"), posts[1].Text("h2.entry-title a")));
+        Assert.Equal("3:00 am on October 5, 2026", posts[1].Text("time.entry-date"));
+        Assert.Contains("Sam Nasr is a Senior Software Engineer and Trainer", posts[1].Text(".entry-content"), StringComparison.Ordinal);
         Assert.All(posts, post =>
         {
             Assert.StartsWith("/20", post.Href("h2.entry-title a"), StringComparison.Ordinal);
@@ -347,7 +424,7 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
     [InlineData("/2008/page/2/", "/2008/page/3/", "/2008/")]
     [InlineData("/2008/07/page/2/", null, "/2008/07/")]
     [InlineData("/category/blog/", "/category/blog/page/2/", null)]
-    [InlineData("/category/blog/page/33/", null, "/category/blog/page/32/")]
+    [InlineData("/category/blog/page/34/", null, "/category/blog/page/33/")]
     [InlineData("/author/jeffreypalermo/page/2/", "/author/jeffreypalermo/page/3/", "/author/jeffreypalermo/")]
     [InlineData("/tag/tips-tricks/page/5/", null, "/tag/tips-tricks/page/4/")]
     [InlineData("/search/?q=onion", "/search/?q=onion&page=2", null)]
@@ -618,7 +695,7 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         Assert.Equal("noindex, follow", page.QuerySelector("meta[name=robots]")?.GetAttribute("content"));
         Assert.NotNull(page.QuerySelector("main form[role=search] input[name=q]"));
         Assert.Equal(
-            ["/2026/10/sam-nasr-ai-transformation-episode-422/", "/2026/09/mark-michaelis-mastering-the-agentic-coding-workflow-episode-421/", "/2026/09/justin-martin-commanding-fleets-of-ai-agents-episode-420/"],
+            ["/2026/10/the-five-pillars-leadership-for-effective-custom-software/", "/2026/10/sam-nasr-ai-transformation-episode-422/", "/2026/09/mark-michaelis-mastering-the-agentic-coding-workflow-episode-421/"],
             page.QuerySelectorAll("main section[aria-labelledby=not-found-recent] a").Take(3).Select(a => a.GetAttribute("href")));
         Assert.Equal(5, page.QuerySelectorAll("main section[aria-labelledby=not-found-recent] a").Length);
         Assert.Equal("DevOps (426)", string.Join(' ', page.QuerySelector("main section[aria-labelledby=not-found-categories] li")!.TextContent.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)));

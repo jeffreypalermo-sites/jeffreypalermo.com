@@ -4,7 +4,7 @@
     "taxonomy": "category",
     "slug": "blog",
     "name": "Blog",
-    "count": 330
+    "count": 331
   },
   {
     "id": 643871096,
@@ -46,7 +46,7 @@
     "taxonomy": "category",
     "slug": "ai-devops-podcast",
     "name": "AI DevOps Podcast",
-    "count": 53
+    "count": 421
   },
   {
     "id": 264,
@@ -238,11 +238,18 @@
     "count": 7
   },
   {
+    "id": 643871096,
+    "taxonomy": "post_tag",
+    "slug": "books",
+    "name": "Books",
+    "count": 20
+  },
+  {
     "id": 1,
     "taxonomy": "author",
     "slug": "jeffreypalermo",
     "name": "Jeffrey Palermo",
-    "count": 1384
+    "count": 1385
   },
   {
     "id": 4,

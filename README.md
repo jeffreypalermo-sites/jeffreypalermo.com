@@ -166,9 +166,10 @@ since: the link, in a post it wrote, and the frame at the top of any post of the
 could not match for certain (the channel has some twice), an address that was taken. It exits 1 when it could not
 do something it should have.
 
-The posts are in the categories `Podcast`, `DevOps` and the show's name when the episode was published:
-`Azure DevOps Podcast` up to episode 368, `AI DevOps Podcast` from 369. They have no tags: the show gives its
-episodes no keywords, and the site does not tag people. A keyword that is a tag of the site would become one.
+The posts are in the categories `Podcast`, `DevOps` and `AI DevOps Podcast`, the show's present name, which the
+menu leads to ([ADR-0021](docs/adr/0021-the-menu-leads-to-the-podcast-and-the-books.md)); episodes 1 to 368 are
+also in `Azure DevOps Podcast`, as the show was called then. They have no tags: the show gives its episodes no
+keywords, and the site does not tag people. A keyword that is a tag of the site would become one.
 
 ## Run the site locally
 
@@ -177,7 +178,9 @@ dotnet run --project src/UI.Server
 ```
 
 Then open <http://localhost:5062>. The Development settings point `Site:ContentPath` at `../../content`. The pages
-have the navigation of the WordPress site ([ADR-0009](docs/adr/0009-the-wordpress-look-and-navigation.md)) and the
+have the navigation of the WordPress site ([ADR-0009](docs/adr/0009-the-wordpress-look-and-navigation.md)), with a
+menu that also leads to the podcast and to the posts about Jeffrey's books
+([ADR-0021](docs/adr/0021-the-menu-leads-to-the-podcast-and-the-books.md)), and the
 look "Masthead", in Clear Measure's colours ([ADR-0019](docs/adr/0019-the-masthead-look.md)): Razor components
 rendered on the server, one stylesheet, no script, nothing that moves.
 

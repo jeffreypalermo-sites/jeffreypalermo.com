@@ -61,16 +61,12 @@ public static class PodcastShow
     public const string Author = "jeffreypalermo";
     public const string PodcastCategory = "podcast";
     public const string DevOpsCategory = "devops";
-    public const string AzureDevOpsPodcastCategory = "azure-devops-podcast";
+    /// <summary>
+    /// The category every episode is in, under the show's present name, so that its listing is the whole show
+    /// (ADR-0021). The episodes published as the Azure DevOps Podcast keep that category beside it.
+    /// </summary>
     public const string AiDevOpsPodcastCategory = "ai-devops-podcast";
     public const string AiDevOpsPodcastName = "AI DevOps Podcast";
-
-    /// <summary>
-    /// The first episode published as the AI DevOps Podcast. The feed does not say when the show's name changed: on
-    /// 2025-09-23 and 2025-09-25 the show saved 352 of its episodes again, and episode 369, of 2025-09-29, is the
-    /// first one published after that.
-    /// </summary>
-    public const int FirstAiDevOpsEpisode = 369;
 
     /// <summary>The show's site. It answers over HTTP only: its certificate does not name it.</summary>
     public const string Site = "http://aidevopspodcast.clear-measure.com/";
@@ -94,8 +90,6 @@ public static class PodcastShow
 
     /// <summary>The site's local time (ADR-0002: <c>date</c> is local, as WordPress showed it): US Central.</summary>
     public static TimeZoneInfo SiteTimeZone { get; } = FindTimeZone();
-
-    public static string ShowCategory(int episode) => episode >= FirstAiDevOpsEpisode ? AiDevOpsPodcastCategory : AzureDevOpsPodcastCategory;
 
     /// <summary>The episode's page on the show's site; the site's front page when the feed gives no page for it.</summary>
     public static string Page(PodcastEpisode episode)
@@ -363,7 +357,7 @@ public static partial class PodcastPosts
                 DateUtc = DateTime.SpecifyKind(episode.PublishedUtc, DateTimeKind.Utc),
                 Format = ContentFormat.Markdown,
                 Author = PodcastShow.Author,
-                Categories = [.. new[] { PodcastShow.ShowCategory(episode.Number), PodcastShow.DevOpsCategory, PodcastShow.PodcastCategory }.Order(StringComparer.Ordinal)],
+                Categories = [PodcastShow.AiDevOpsPodcastCategory, PodcastShow.DevOpsCategory, PodcastShow.PodcastCategory],
                 Tags = [.. episode.Keywords.Select(keyword => tagsByName.GetValueOrDefault(keyword)).OfType<string>().Distinct().Order(StringComparer.Ordinal)],
                 Excerpt = notes.Text.Length > 0 ? ShowNotes.Excerpt(notes.Text) : null,
             };
