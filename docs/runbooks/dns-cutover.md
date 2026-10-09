@@ -171,6 +171,13 @@ How the name is made, what Jeffrey enters and how it is checked:
   `https://uat.jeffreypalermo.ceo/` answers `200` with the release of `uat`, `x-cache: TCP_MISS` and then `TCP_HIT`;
 - the next deployment to `uat` prints `validation Approved`, no `TXT` line, and empties the edge for the name too.
 
+**Seen on 2026-10-09.** Jeffrey entered the two records for `uat` at GoDaddy; public DNS had them at 05:16 UTC.
+The Front Door said `Approved` 25 minutes later and `Succeeded` within 37, and `https://uat.jeffreypalermo.ceo/`
+answered `200` as the release of `uat` with a certificate that verifies, `x-cache: TCP_MISS` and then `TCP_HIT`.
+Production's own name, `www.jeffreypalermo.ceo`, entered at the same minute, took between one and two hours to be
+approved and to get its certificate: allow that long for the three names of this domain. Not yet seen when this
+was written: a deployment's log saying `validation Approved` and emptying the edge for the name.
+
 Two things the rehearsal does not show, because they are only true of this domain: a record entered at
 WordPress.com beside its wildcard ([Before the day](#before-the-day), step 5), and the zone's own records.
 
