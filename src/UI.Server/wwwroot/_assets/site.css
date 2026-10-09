@@ -1,28 +1,70 @@
 /*
- * The look of jeffreypalermo.com as it was on WordPress.com (theme "P2 Breathe"), written for this site (ADR-0009).
- * Sizes are in rem with 1rem = 10px, as the theme had them, so the page still follows the reader's font size.
- * Colours: the theme's blue (#3498db) and grey (#888) are too faint for small text on white, so links and dates
- * use darker shades of the same hues. Change them here.
+ * The look of jeffreypalermo.com: "Masthead" (ADR-0019), which Jeffrey chose on 2026-10-08. A navy masthead across
+ * the page with a yellow rule under it, the posts set like articles on the left, the index of the site (search,
+ * the author, tags, every month) on the right. It is written for the markup ADR-0009 gave the site and changes none
+ * of it.
+ *
+ * Nothing moves and nothing is fetched but the two Noto Serif files beside this one: no script, no image, no
+ * transition, animation or transform, nothing fixed or sticky. Tests hold each of these (StylesheetTests).
+ *
+ * Colours: the ones named --cm-* are Clear Measure's, read from the CSS of clearmeasure.com on 2026-10-08 (ADR-0019
+ * lists where each was read). The others are neutrals and shades derived for this site, and say so. A ratio in a
+ * comment is the WCAG contrast against the ground the colour is used on; text needs 4.5:1.
  */
 
 :root {
-  --page: #f1f1f1;
-  --panel: #fafafa;
-  --paper: #fff;
-  --text: #555;
-  --strong-text: #222;
-  --muted: #6b6b6b;
-  --link: #2672a4;
-  --link-hover: #1d5a82;
-  --accent: #2672a4;
-  --rule: #bbb;
-  --faint-rule: #ddd;
-  --serif: "Noto Serif", Georgia, "Times New Roman", serif;
-  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-  --mono: Monaco, Consolas, "Andale Mono", "DejaVu Sans Mono", "Courier New", monospace;
+  --cm-navy: #004B87;   /* CM secondary. On white 8.9:1 */
+  --cm-blue: #0085CA;   /* CM primary. On white 4.0:1: rules and focus rings, never small text */
+  --cm-yellow: #EECB1A; /* CM accent. Navy on it 5.6:1 */
+  --cm-deep: #043E6C;   /* CM deep navy. White on it 11.0:1 */
+  --cm-ink: #1A3A5C;    /* CM heading and text navy. On white 11.6:1 */
+  --cm-text: #565656;   /* CM body grey. On white 7.3:1 */
+  --cm-mist: #F1F2F3;   /* CM section background */
+  --cm-sky: #CFEAFF;    /* CM footer text. On navy 7.2:1 */
+  --cm-line: #E2E2E5;   /* CM border */
+
+  --bg: #FFFFFF;
+  --ink: #222222;        /* derived: body text, a neutral. On white 15.9:1 */
+  --ink-strong: var(--cm-ink);
+  --muted: var(--cm-text);
+  --link: var(--cm-navy);
+  --link-hover: var(--cm-ink);
+  --focus: var(--cm-blue);
+  --accent: var(--cm-yellow);
+  --on-accent: var(--cm-ink);
+  --rule: var(--cm-line);
+  --label: var(--cm-navy);
+  --label-font: 700 0.75rem/1.3 var(--font-ui);
+  --label-tracking: 0.12em;
+  --section-rule: 4px solid var(--cm-navy);
+
+  /* Code. The values written as hex here are derived: none of them is Clear Measure's. */
+  --code-bg: var(--cm-mist);
+  --code-alt: #E6E9EC;   /* derived: every second line of a numbered listing */
+  --code-rule: var(--cm-line);
+  --code-edge: var(--cm-blue);
+  --code-ink: #1B2733;   /* derived. On the code ground 13.5:1 */
+  --code-num: #56616B;   /* derived: line numbers. On a striped line 5.2:1 */
+  --code-kw: var(--cm-navy);
+  --code-str: #9B1C1C;   /* derived: strings. On a striped line 6.7:1 */
+  --code-rem: #2F6B4F;   /* derived: comments. On a striped line 5.2:1 */
+  --code-tag: #7A2E0E;   /* derived: markup. On the code ground 8.4:1 */
+
+  --font-display: "Noto Serif", Georgia, "Times New Roman", serif;
+  --font-body: "Noto Serif", Georgia, "Times New Roman", serif;
+  /* Clear Measure sets its site in Futura; these are the faces a reader already has that come closest. */
+  --font-ui: Futura, "Futura PT", "Century Gothic", "Avenir Next", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Cascadia Code", "SF Mono", Menlo, Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace;
+  --body-size: 1.125rem;
+  --body-leading: 1.7;
+
+  --column: 41rem;  /* about 70 characters of body text */
+  --rail: 18rem;
+  --gap: 3.5rem;
+  --edge: max(1.25rem, calc((100% - var(--column) - var(--gap) - var(--rail)) / 2));
 }
 
-/* Noto Serif, the theme's typeface, served by the site itself (SIL Open Font License 1.1, see fonts/OFL.txt). */
+/* Noto Serif, served by the site itself (SIL Open Font License 1.1, see fonts/OFL.txt). */
 @font-face {
   font-family: "Noto Serif";
   font-style: normal;
@@ -39,34 +81,39 @@
   src: url("fonts/noto-serif-latin-italic.woff2") format("woff2");
 }
 
-/* Base */
+/* ---------- Base ---------- */
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  /* No motion. This stylesheet defines none, and nothing an old post body carries may bring its own. */
+  animation: none !important;
+  transition: none !important;
 }
 
 html {
-  font-size: 62.5%;
+  font-size: 100%;
   overflow-y: scroll;
+  scroll-behavior: auto;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
-  background: var(--page);
-  color: var(--text);
-  font-family: var(--serif);
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.4;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  line-height: var(--body-leading);
 }
 
 a {
   color: var(--link);
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.18em;
 }
 
 a:hover,
@@ -74,25 +121,19 @@ a:active {
   color: var(--link-hover);
 }
 
+/* Keyboard focus: a thick ring in a colour that stands out from the surface it is on. */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible {
-  outline: 2px solid var(--link-hover);
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
-}
-
-h1,
-h2,
-h3,
-h4 {
-  font-weight: 400;
 }
 
 b,
 strong,
 dt,
 th {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 img {
@@ -112,231 +153,581 @@ img {
 }
 
 .skip-link:focus {
-  top: 5px;
-  left: 5px;
+  top: 8px;
+  left: 8px;
   z-index: 100;
   width: auto;
   height: auto;
-  padding: 15px 23px 14px;
+  padding: 0.8rem 1.1rem;
   clip-path: none;
-  background: var(--page);
-  box-shadow: 0 0 2px 2px rgb(0 0 0 / 60%);
-  font-size: 1.4rem;
-  font-weight: 600;
-}
-
-/* Layout: the main column on the left, the header and the sidebar in a quarter-width column on the right. */
-
-.site {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 25%;
-  grid-template-rows: auto 1fr auto;
-  grid-template-areas:
-    "content header"
-    "content sidebar"
-    "footer footer";
-  column-gap: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 60px 20px 40px;
-}
-
-.site-header {
-  grid-area: header;
-  background: var(--panel);
-}
-
-.content-area {
-  grid-area: content;
-  font-size: 1.3rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: 700 1rem/1 var(--font-ui);
+  text-decoration: none;
 }
 
 .content-area:focus {
   outline: none;
 }
 
+/* ---------- Layout: a full-width masthead, the posts on the left, the index of the site on the right ---------- */
+
+.site {
+  display: grid;
+  grid-template-columns: minmax(1.25rem, 1fr) minmax(0, var(--column)) var(--gap) var(--rail) minmax(1.25rem, 1fr);
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "header header header header header"
+    ". content . sidebar ."
+    "footer footer footer footer footer";
+  min-height: 100vh;
+}
+
+.content-area {
+  grid-area: content;
+  padding-block: 2.75rem 4rem;
+}
+
 .widget-area {
+  display: flex;
+  flex-direction: column;
   grid-area: sidebar;
-  font-size: 1.2rem;
+  padding-block: 2.75rem 4rem;
+  font-family: var(--font-ui);
+  font-size: 0.9375rem;
+  line-height: 1.5;
 }
 
-.site-footer {
-  grid-area: footer;
-}
+/* ---------- Masthead ---------- */
 
-/* Header */
-
-.site-branding {
-  padding: 12px;
+.site-header {
+  grid-area: header;
+  padding: 2.25rem var(--edge) 0;
+  border-bottom: 6px solid var(--cm-yellow);
+  background: var(--cm-navy);
+  color: #fff;
+  --focus: var(--cm-yellow);
 }
 
 .site-title {
   margin: 0;
-  padding-bottom: 5px;
-  font-size: 2.2rem;
-  line-height: 1.5;
+  font: 700 2.75rem/1.1 var(--font-display);
+  letter-spacing: -0.015em;
 }
 
 .site-title a {
-  color: #000;
+  color: #fff;
+  text-decoration: none;
 }
 
 .site-title a:hover {
-  color: var(--link);
+  color: var(--cm-yellow);
 }
 
 .site-description {
-  margin: 5px 0 0;
-  color: var(--strong-text);
-  font-family: var(--sans);
-  font-size: 1.3rem;
-  font-weight: 300;
+  max-width: 46rem;
+  margin: 0.6rem 0 0;
+  color: var(--cm-sky);
+  font: 400 0.9375rem/1.45 var(--font-ui);
 }
 
-/* The menu runs across the top of the page, above both columns. */
 .site-menu {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  padding: 0 20px;
-  background: rgb(255 255 255 / 75%);
-  font-family: var(--sans);
-  font-size: 1.2rem;
-  line-height: 1.6;
+  margin-top: 1.5rem;
+  border-top: 1px solid rgb(255 255 255 / 25%);
+  font: 700 0.8125rem/1.2 var(--font-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .site-menu ul {
   display: flex;
   flex-wrap: wrap;
-  margin: 0;
+  margin: 0 -0.9rem;
   padding: 0;
   list-style: none;
 }
 
 .site-menu a {
   display: block;
-  padding: 8px 1.2em;
-  white-space: nowrap;
-}
-
-.site-menu a:hover,
-.site-menu a[aria-current="page"] {
-  background: var(--accent);
+  padding: 1rem 0.9rem 0.95rem;
   color: #fff;
+  text-decoration: none;
 }
 
-/* Main column */
+.site-menu a:hover {
+  background: var(--cm-yellow);
+  color: var(--cm-ink);
+}
+
+/* Where the reader is: the menu entry of the page being read carries a yellow bar. */
+.site-menu a[aria-current="page"] {
+  box-shadow: inset 0 -5px 0 var(--cm-yellow);
+  color: var(--cm-yellow);
+}
+
+.site-menu a[aria-current="page"]:hover {
+  color: var(--cm-ink);
+}
+
+.site-menu a:focus-visible {
+  outline-offset: -3px;
+}
+
+/* ---------- Headings of a page ---------- */
 
 .page-header {
-  margin: 0 15px;
+  margin-bottom: 2rem;
 }
 
+/* On a listing the heading says which list this is ("Monthly Archives: July 2008"); the posts carry the big type. */
 .page-title {
-  margin: 0.4em 0 1.1em;
-  font-size: 2.86rem;
-  line-height: 1.1;
+  margin: 0;
+  padding-top: 0.7rem;
+  border-top: var(--section-rule);
+  color: var(--label);
+  font: var(--label-font);
+  font-size: 0.8125rem;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
 }
 
-.single .content-area {
-  padding-top: 29px;
+.page-title span {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--ink-strong);
+  font: 700 2.5rem/1.1 var(--font-display);
+  letter-spacing: -0.015em;
+  text-transform: none;
+  overflow-wrap: break-word;
 }
 
-.post,
-.page {
-  margin: 0 0 30px;
-  padding: 5px;
-  background: var(--paper);
+/* A standing page such as About: its title is the headline. */
+body.page .page-title {
+  padding-top: 1rem;
+  color: var(--ink-strong);
+  font: 700 3rem/1.08 var(--font-display);
+  letter-spacing: -0.02em;
+  text-transform: none;
+  text-wrap: balance;
+}
+
+/* ---------- A post ---------- */
+
+.content-area > article {
+  margin: 0 0 3rem;
+}
+
+/* A rule between one listed post, or page, and the next. */
+.content-area > article + article {
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--rule);
 }
 
 .entry-header {
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
 }
 
+/* The dateline above the headline. */
 .entry-meta {
-  font-size: 1.365rem;
-  font-weight: 700;
-  line-height: 36px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.6rem;
+  align-items: center;
+  color: var(--muted);
+  font: 400 0.8125rem/1.4 var(--font-ui);
+  letter-spacing: 0.04em;
 }
 
 .entry-meta .avatar {
-  float: left;
-  width: 36px;
-  height: 36px;
-  margin-right: 10px;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 50%;
 }
 
 .entry-author {
-  font-family: var(--sans);
-  font-size: 1.638rem;
+  color: var(--ink-strong);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
 }
 
-.entry-date,
-.comment-date,
-.entry-terms {
-  color: var(--muted);
-  font-size: 0.8em;
-  font-weight: 400;
-  line-height: 1.2;
+.entry-author:hover {
+  text-decoration: underline;
 }
 
-.entry-date,
-.comment-date {
-  margin-left: 0.3em;
-  text-decoration: underline dotted var(--faint-rule);
-  text-underline-offset: 3px;
+.entry-date {
   white-space: nowrap;
 }
 
 .entry-terms {
-  margin-left: 46px;
-  padding-bottom: 0.9em;
-}
-
-.entry-terms + .entry-terms {
-  margin-top: -0.3em;
-}
-
-/* Beside their grey label these links need more than their colour to stand out. */
-.entry-terms a {
-  text-decoration: underline;
+  flex-basis: 100%;
 }
 
 .entry-title {
-  clear: both;
-  margin: 0.4em 0;
-  font-size: 2.86rem;
-  line-height: 1.1;
+  margin: 0.6rem 0 0;
+  color: var(--ink-strong);
+  font: 700 2.125rem/1.15 var(--font-display);
+  letter-spacing: -0.015em;
   overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+h1.entry-title {
+  font-size: 2.875rem;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+/* The newest post on a listing leads the page. */
+.home .page-header + .post .entry-title {
+  font-size: 2.875rem;
+  line-height: 1.08;
 }
 
 .entry-title a {
   color: inherit;
+  text-decoration: none;
 }
 
 .entry-title a:hover {
-  color: var(--link);
+  color: var(--cm-navy);
+  text-decoration: underline;
+  text-decoration-color: var(--cm-yellow);
+  text-decoration-thickness: 0.16em;
+  text-underline-offset: 0.14em;
 }
 
 .entry-footer {
   clear: both;
-  padding: 0.8em 0 0.4em;
-  color: var(--muted);
-  font-size: 1.2rem;
+  margin-top: 1rem;
+  font: 700 0.8125rem/1.4 var(--font-ui);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
-/*
- * Post, page and comment bodies are twenty years of HTML written elsewhere: Word pastes, fixed-width tables, code
- * with long lines, images of any size. Whatever does not fit scrolls inside its own box and never widens the page.
+/* ---------- Older and newer ---------- */
+
+.post-navigation {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: space-between;
+  margin-top: 2.5rem;
+  padding-top: 1.1rem;
+  border-top: var(--section-rule);
+  font: 700 1rem/1.35 var(--font-ui);
+}
+
+.post-navigation div {
+  flex: 1 1 50%;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.post-navigation a {
+  text-decoration: none;
+}
+
+.post-navigation a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--cm-yellow);
+  text-decoration-thickness: 0.16em;
+}
+
+.nav-next {
+  text-align: right;
+}
+
+/* ---------- The index of the site: search, the author, tags, months ---------- */
+
+.widget {
+  margin: 0 0 2.5rem;
+}
+
+.widget-search {
+  order: -1;
+}
+
+.widget-title {
+  margin: 0 0 0.9rem;
+  padding-top: 0.6rem;
+  border-top: var(--section-rule);
+  color: var(--label);
+  font: var(--label-font);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+}
+
+.widget ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.widget p {
+  margin: 0;
+}
+
+.widget-feeds {
+  order: 9;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.widget-profile {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  column-gap: 1rem;
+  align-items: center;
+  padding-top: 1.25rem;
+  border-top: var(--section-rule);
+}
+
+.widget-profile .profile-portrait {
+  display: block;
+  grid-row: 1 / 3;
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-name {
+  align-self: end;
+  margin: 0;
+  color: var(--ink-strong);
+  font: 700 1.25rem/1.2 var(--font-display);
+}
+
+.widget-profile p {
+  align-self: start;
+  font-size: 0.875rem;
+}
+
+/* Tags as equal chips: the old cloud's smallest sizes were too small to read or to tap. */
+.tagcloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tagcloud a {
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--cm-navy);
+  color: var(--cm-navy);
+  font-size: 0.8125rem !important;
+  line-height: 1.3;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.tagcloud a:hover {
+  background: var(--cm-navy);
+  color: #fff;
+}
+
+/* Every month since April 2004, in two columns. */
+.widget-archives ul {
+  columns: 2;
+  column-gap: 1.25rem;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.widget-archives li {
+  padding: 0.2rem 0;
+  break-inside: avoid;
+}
+
+.widget-archives a {
+  text-decoration: none;
+}
+
+.widget-archives a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Search ---------- */
+
+.search-form {
+  display: flex;
+}
+
+.search-form input {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0.6rem 0.75rem;
+  border: 2px solid var(--cm-navy);
+  border-right: 0;
+  border-radius: 0;
+  background: #fff;
+  color: var(--ink);
+  font: 400 1rem/1.3 var(--font-ui);
+}
+
+.search-form button {
+  padding: 0.6rem 1rem;
+  border: 2px solid var(--cm-navy);
+  border-radius: 0;
+  background: var(--cm-navy);
+  color: #fff;
+  font: 700 0.8125rem/1.3 var(--font-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.search-form button:hover {
+  background: var(--cm-yellow);
+  color: var(--cm-ink);
+}
+
+/* ---------- Nothing found, and an address that leads nowhere ---------- */
+
+.no-results .search-form,
+.not-found .search-form {
+  max-width: 28rem;
+  margin: 1.25rem 0 2rem;
+}
+
+.not-found .widget {
+  margin: 0 0 2rem;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+}
+
+.not-found .widget li {
+  padding: 0.2rem 0;
+}
+
+.not-found .widget .archive-years {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  grid-area: footer;
+  gap: 0.25rem 1.5rem;
+  justify-content: space-between;
+  padding: 1.5rem var(--edge);
+  background: var(--cm-deep);
+  color: var(--cm-sky);
+  font: 400 0.875rem/1.5 var(--font-ui);
+  --focus: var(--cm-yellow);
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+.site-info a {
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ---------- Narrow screens: one column. Masthead, search, posts, then the rest of the index. ---------- */
+
+@media (max-width: 62rem) {
+  .site {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .site-header {
+    padding-top: 1.5rem;
+  }
+
+  .site-title {
+    font-size: 2rem;
+  }
+
+  .content-area {
+    order: 2;
+    padding: 2rem 1.25rem 1rem;
+  }
+
+  /* The sidebar's boxes take their own places in the column, so that search can stand above the posts. */
+  .widget-area {
+    display: contents;
+  }
+
+  .widget {
+    order: 3;
+    margin-inline: 1.25rem;
+  }
+
+  .widget-search {
+    order: 1;
+    margin: 1.5rem 1.25rem 0;
+  }
+
+  .widget-search .widget-title {
+    display: none;
+  }
+
+  .widget-feeds {
+    order: 4;
+  }
+
+  .site-footer {
+    order: 5;
+  }
+
+  .widget-archives ul {
+    columns: 3 8rem;
+  }
+}
+
+@media (max-width: 34rem) {
+  body {
+    font-size: 1.0625rem;
+  }
+
+  .site-menu {
+    font-size: 0.75rem;
+  }
+
+  .site-menu a {
+    padding: 0.8rem 0.9rem 0.75rem;
+  }
+
+  .entry-title,
+  .page-title span {
+    font-size: 1.75rem;
+  }
+
+  h1.entry-title,
+  .home .page-header + .post .entry-title,
+  body.page .page-title {
+    font-size: 2.125rem;
+  }
+}
+
+/* ---------- Post, page and comment bodies ----------
+ * Twenty years of HTML written elsewhere: Word pastes, fixed-width tables, code with long lines, images of any
+ * size. Whatever does not fit scrolls inside its own box and never widens the page. The small side padding keeps
+ * the focus ring of a link at the edge from being cut off by that scroll box.
  */
+
 .entry-content,
 .comment-content {
-  overflow-x: auto;
   overflow-wrap: break-word;
-  font-size: 1.365rem;
-  line-height: 1.6;
+}
+
+.entry-content {
+  margin-inline: -5px;
+  padding-inline: 5px;
+  overflow-x: auto;
 }
 
 .entry-content::after {
@@ -347,152 +738,216 @@ img {
 
 .entry-content p,
 .comment-content p {
-  margin: 0 0 1.2em;
-}
-
-.entry-content p:empty {
-  margin: 0;
-}
-
-.entry-content a,
-.comment-content a {
-  text-decoration: underline;
+  margin: 0 0 1.25em;
 }
 
 .entry-content h1,
-.entry-content h2 {
-  margin: 0.4em 0 1.1em;
-  font-size: 2em;
-  line-height: 1.2;
-}
-
+.entry-content h2,
 .entry-content h3,
 .entry-content h4,
 .entry-content h5,
 .entry-content h6 {
-  margin: 20px 0;
+  margin: 2em 0 0.6em;
+  color: var(--ink-strong);
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.entry-content h1,
+.entry-content h2 {
+  font-size: 1.5em;
 }
 
 .entry-content h3 {
-  font-size: 1.6em;
-  line-height: 1.4;
+  font-size: 1.25em;
 }
 
-.entry-content h4 {
-  font-size: 1.4em;
-  line-height: 1.4;
+.entry-content h4,
+.entry-content h5,
+.entry-content h6 {
+  font-size: 1.05em;
+}
+
+.entry-content > :first-child {
+  margin-top: 0;
 }
 
 .entry-content ul,
-.entry-content ol,
-.comment-content ul,
-.comment-content ol {
-  margin: 0 0 1.2em 25px;
-  padding: 0;
+.entry-content ol {
+  margin: 0 0 1.25em;
+  padding: 0 0 0 1.5em;
+}
+
+.entry-content li {
+  margin-bottom: 0.35em;
+}
+
+/* Posts from the blog's earlier platforms have a line break between the items of a list: it is not a gap to keep. */
+.entry-content ul > br,
+.entry-content ol > br {
+  display: none;
 }
 
 .entry-content li > ul,
 .entry-content li > ol {
-  margin-bottom: 0;
+  margin: 0.35em 0 0;
 }
 
 .entry-content dd {
-  margin: 0 1.2em 1.2em;
+  margin: 0 0 1.25em 1.5em;
 }
 
-.entry-content blockquote,
-.comment-content blockquote {
-  margin: 0 0 1.2em;
-  padding: 1.2em 1.2em 0;
+.entry-content blockquote {
+  margin: 0 0 1.25em;
+  padding: 0.25em 0 0.25em 1.25em;
   overflow: auto;
-  background: var(--page);
-  color: var(--strong-text);
+  border-left: 4px solid var(--accent);
+  color: var(--ink-strong);
   font-style: italic;
 }
 
-.entry-content blockquote em,
-.comment-content blockquote em {
+.entry-content blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.entry-content blockquote em {
   font-style: normal;
 }
 
-/* Old posts set "overflow: visible" on their code blocks in a style attribute; a long line scrolls in the block instead. */
+/* Code. Old posts set colours, padding and "overflow: visible" in a style attribute; this stylesheet decides instead,
+   so a long line scrolls inside its block on a phone and the block looks the same in every post. */
 .entry-content pre,
 .comment-content pre {
   max-width: 100%;
-  margin: 0 0 1.2em;
-  padding: 1.2em;
+  margin: 0 0 1.25rem;
+  padding: 1rem 1.125rem !important;
   overflow: auto !important;
-  background: var(--page);
-  color: var(--strong-text);
-  font-family: var(--mono);
-  font-size: 1.1rem;
-  line-height: 1.4;
+  border: 1px solid var(--code-rule) !important;
+  border-left: 4px solid var(--code-edge) !important;
+  background: var(--code-bg) !important;
+  color: var(--code-ink) !important;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  tab-size: 4;
 }
 
 .entry-content code,
-.entry-content kbd,
 .entry-content tt,
 .comment-content code {
-  font-family: var(--mono);
-  font-size: 0.8em;
+  font-family: var(--font-mono);
+  font-size: 0.875em;
 }
 
 .entry-content :not(pre) > code,
 .comment-content :not(pre) > code {
-  padding: 0.4em 0.65em;
-  border-radius: 3px;
-  background: var(--page);
-  color: var(--strong-text);
+  padding: 0.1em 0.35em;
+  border: 1px solid var(--code-rule);
+  background: var(--code-bg);
+  color: var(--code-ink);
+}
+
+/* The "csharpcode" formatter of the 2007-2011 posts wrote every line as its own <pre>: one block, lines that
+   touch, the line numbers and the keywords in the site's colours. */
+.entry-content div.csharpcode {
+  display: grid;
+  /* One column as wide as the longest line: the stripe of every second line runs the whole width the block scrolls. */
+  grid-template-columns: minmax(max-content, 1fr);
+  margin: 0 0 1.25rem;
+  padding: 0.75rem 0;
+  overflow-x: auto;
+  border: 1px solid var(--code-rule);
+  border-left: 4px solid var(--code-edge);
+  background: var(--code-bg);
+  color: var(--code-ink);
+}
+
+.entry-content div.csharpcode pre {
+  max-width: none;
+  margin: 0;
+  padding: 0 1.125rem !important;
+  overflow: visible !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.entry-content div.csharpcode pre.alt {
+  background: var(--code-alt) !important;
+}
+
+.entry-content .lnum,
+.entry-content .ColorLineNumber {
+  color: var(--code-num);
+  user-select: none;
+}
+
+.entry-content .kwrd,
+.entry-content .ColorCSKeyword {
+  color: var(--code-kw);
+}
+
+.entry-content .str {
+  color: var(--code-str);
+}
+
+.entry-content .rem,
+.entry-content .ColorCSComment {
+  color: var(--code-rem);
+  font-style: italic;
+}
+
+.entry-content .html,
+.entry-content .attr,
+.entry-content .asp,
+.entry-content .ColorStartHtmlTag,
+.entry-content .ColorEndHtmlTag,
+.entry-content .ColorControlTag {
+  color: var(--code-tag);
 }
 
 .entry-content hr {
-  height: 1px;
-  margin: 0 0 1.2em;
+  height: 2px;
+  margin: 2em 0;
   border: 0;
-  background: var(--faint-rule);
+  background: var(--rule);
 }
 
+/* A table wider than the column scrolls on its own. */
 .entry-content table {
+  display: block;
+  width: max-content;
   max-width: 100%;
-  margin: 0 0 1.2em;
-  border-top: 1px solid var(--faint-rule);
+  margin: 0 0 1.25em;
+  overflow-x: auto;
   border-spacing: 0;
+  border-collapse: collapse;
+  font-size: 0.9375em;
 }
 
 .entry-content td,
 .entry-content th {
-  padding: 1em;
-  border-bottom: 1px solid var(--page);
+  padding: 0.5em 0.75em;
+  border: 1px solid var(--rule);
   text-align: left;
   vertical-align: top;
 }
 
-.entry-content td:first-child,
-.entry-content th:first-child {
-  padding-left: 0;
+.entry-content th {
+  background: var(--code-bg);
+  color: var(--ink-strong);
 }
 
-.entry-content td:last-child,
-.entry-content th:last-child {
-  padding-right: 0;
-}
-
-.entry-content .alignleft {
-  float: left;
-  margin-right: 1.5em;
-}
-
-.entry-content .alignright {
-  float: right;
-  margin-left: 1.5em;
-}
-
+.entry-content .alignleft,
 .entry-content img[align="left"] {
-  margin: 20px 20px 20px 0;
+  float: left;
+  margin: 0.35em 1.5em 1em 0;
 }
 
+.entry-content .alignright,
 .entry-content img[align="right"] {
-  margin: 20px 0 20px 20px;
+  float: right;
+  margin: 0.35em 0 1em 1.5em;
 }
 
 .entry-content .aligncenter {
@@ -503,10 +958,9 @@ img {
 }
 
 .entry-content iframe,
-.entry-content embed,
-.entry-content object,
 .entry-content video,
-.entry-content audio {
+.entry-content audio,
+.entry-content [style*="width"] {
   max-width: 100%;
 }
 
@@ -514,28 +968,51 @@ img {
   height: auto;
 }
 
-.entry-content .wp-caption {
-  max-width: 100%;
-  margin: 10px;
-  padding-top: 4px;
-  border: 1px solid var(--faint-rule);
-  background: var(--panel);
-  text-align: center;
-}
-
 .entry-content figure {
   max-width: 100%;
-  margin: 0 0 1.2em;
+  margin: 0 0 1.25em;
 }
 
-/* Comments */
+.entry-content figcaption,
+.entry-content .picture-lost {
+  color: var(--muted);
+  font-size: 0.875em;
+}
+
+/* On a phone a floated picture leaves a few characters of text beside it: let it stand alone. */
+@media (max-width: 30rem) {
+  .entry-content .alignleft,
+  .entry-content .alignright,
+  .entry-content img[align="left"],
+  .entry-content img[align="right"] {
+    float: none !important;
+    display: block;
+    margin: 0.75em 0 1em;
+  }
+
+  .entry-content pre,
+  .entry-content div.csharpcode {
+    font-size: 0.8125rem;
+  }
+}
+
+/* ---------- Comments (archived, read-only) ---------- */
 
 .comments-area {
-  margin: 0;
-  padding: 20px 15px;
-  background: var(--paper);
-  font-size: 1.365rem;
-  line-height: 1.6;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: var(--section-rule);
+  font-size: 0.9375em;
+}
+
+.comments-area::before {
+  display: block;
+  margin-bottom: 1.25rem;
+  color: var(--label);
+  font: var(--label-font);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  content: "Comments";
 }
 
 .comment-list,
@@ -546,301 +1023,86 @@ img {
 }
 
 .comment-list .children {
-  padding-left: 1.5em;
+  margin-left: 0.25rem;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--rule);
+}
+
+.comment {
+  margin-bottom: 1.5rem;
 }
 
 .comment-meta {
-  margin-left: 45px;
-  font-size: 1.433rem;
-  font-weight: 700;
-  line-height: 1.8;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.75rem;
+  align-items: baseline;
+  font-family: var(--font-ui);
+  font-size: 0.9375rem;
+  line-height: 1.4;
 }
 
 /* Commenters have no picture: the site asks no other service for one. */
 .comment-meta .avatar {
-  float: left;
-  width: 32px;
-  height: 32px;
-  margin: 5px 0 0 -42px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 50% 38%, #fff 0 19%, transparent 20%),
-    radial-gradient(ellipse at 50% 108%, #fff 0 42%, transparent 43%),
-    #c3c4c7;
+  display: none;
 }
 
 .comment-author {
-  display: inline-block;
   max-width: 100%;
+  color: var(--ink-strong);
+  font-weight: 700;
   overflow-wrap: anywhere;
 }
 
-.comment-content {
-  margin-left: 45px;
-  padding-right: 1.6em;
-  font-size: 1.433rem;
+a.comment-author {
+  color: var(--link);
+}
+
+.comment-date {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  white-space: nowrap;
 }
 
 .comment-content p {
-  margin: 1.2em 0;
+  margin: 0.5em 0 0.9em;
 }
 
 .comment:target {
-  outline: 2px solid var(--faint-rule);
-  outline-offset: 4px;
+  outline: 3px solid var(--accent);
+  outline-offset: 6px;
 }
 
 .no-comments {
-  margin: 1.2em 0;
+  margin: 1.5rem 0 0;
+  color: var(--muted);
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
 }
 
-/* Older and newer */
-
-.post-navigation {
-  display: flex;
-  gap: 15px;
-  justify-content: space-between;
-  padding: 15px;
-  border-top: 1px solid var(--rule);
-}
-
-.single .post-navigation {
-  background: var(--paper);
-}
-
-.post-navigation div {
-  flex: 1 1 50%;
-  min-width: 0;
-  overflow-wrap: break-word;
-}
-
-.nav-next {
-  text-align: right;
-}
-
-/* Sidebar */
-
-.widget {
-  margin: 0 0 20px;
-  padding: 1.2em;
-  background: var(--panel);
-}
-
-.widget-title {
-  margin: 0 0 0.4em;
-  font-size: 1.9em;
-  line-height: 1.4;
-}
-
-.widget ul {
-  margin: 0;
-  padding: 0;
-  font-size: 1.05em;
-  line-height: 1.6;
-  list-style: none;
-}
-
-.widget li {
-  padding: 5px 10px 5px 0;
-}
-
-.widget p {
-  margin: 0;
-  font-size: 1.05em;
-  line-height: 1.6;
-}
-
-.widget-profile .profile-portrait {
-  display: block;
-  width: 100%;
-}
-
-.profile-name {
-  margin: 1em 0 0.5em;
-  font-size: 1.4em;
-  line-height: 1.4;
-}
-
-.tagcloud a {
-  overflow-wrap: break-word;
-}
-
-/* Search */
-
-.search-form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  align-items: center;
-}
-
-.search-form input {
-  flex: 0 1 165px;
-  min-width: 0;
-  padding: 5px;
-  border: 1px solid var(--faint-rule);
-  background: #fff;
-  color: var(--strong-text);
-  font-family: var(--serif);
-  font-size: 1.3rem;
-}
-
-.search-form button {
-  padding: 0.6em 1em 0.4em;
-  border: 1px solid #eee;
-  border-radius: 2px;
-  background: #eee;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 50%), inset 0 15px 17px rgb(255 255 255 / 50%), inset 0 -5px 12px rgb(0 0 0 / 5%);
-  color: rgb(0 0 0 / 80%);
-  font-family: var(--sans);
-  font-size: 1.2rem;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.widget-area .search-form input {
-  flex: 1 1 0;
-}
-
-.search-form button:hover {
-  border-color: #ccc;
-}
-
-/* Search results that found nothing, and the page for an address that leads nowhere. */
-
-.no-results,
-.not-found {
-  padding-bottom: 15px;
-}
-
-.no-results p {
-  font-size: 1.365rem;
-  line-height: 1.6;
-}
-
-.not-found .widget {
-  margin: 0 0 20px;
-  padding: 1.2em;
-  font-size: 1.3rem;
-}
-
-.not-found .search-form {
-  margin-bottom: 20px;
-}
-
+/* The lists of the not-found page stand inside a post body: they keep the look of the index, not of a post. */
 .not-found .widget-title {
-  margin: 20px 0;
-  font-size: 2.6rem;
+  margin: 0 0 0.75rem;
+  color: var(--label);
+  font: var(--label-font);
+  letter-spacing: var(--label-tracking);
 }
 
 .not-found .widget ul {
-  margin: 0 0 1.2em 25px;
-  list-style: disc;
-}
-
-.not-found .widget li {
+  margin: 0;
   padding: 0;
 }
 
-.not-found .widget p {
-  margin: 0 0 1.2em;
-}
-
-.not-found .widget .archive-years {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 16px;
-  margin-left: 0;
-  list-style: none;
-}
-
-/* Footer */
-
-.site-footer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 20px;
-  justify-content: space-between;
-  margin-top: 20px;
-  padding: 1px 20px;
-  border-top: 1px solid rgb(0 0 0 / 10%);
-  background: rgb(255 255 255 / 80%);
-  line-height: 25px;
-}
-
-.site-footer p {
+.not-found .widget li {
   margin: 0;
 }
 
-.site-info a {
-  color: #111;
-  font-size: 1.4rem;
-  font-weight: 700;
-}
-
-.site-credits {
-  color: var(--muted);
-  font-size: 1.2rem;
-}
-
-/* Narrow screens: one column. Title, menu, posts, then the sidebar. */
-
-@media (max-width: 876px) {
-  .site {
-    display: block;
-    padding: 20px 20px 40px;
-  }
-
-  .site-header {
-    margin-bottom: 20px;
-    background: none;
-  }
-
-  .site-branding {
-    margin-bottom: 10px;
-    padding: 0;
-  }
-
-  .site-description {
-    margin-top: 0;
-    line-height: 1;
-  }
-
-  .site-menu {
-    position: static;
-  }
-
-  .site-menu ul {
-    display: block;
-  }
-
-  .site-menu a {
-    padding: 0.1em 0 0.1em 0.5em;
-    white-space: normal;
-  }
-
-  .widget-area {
-    margin-top: 30px;
-  }
-}
-
-@media (max-width: 550px) {
-  .entry-title {
-    font-size: 1.95rem;
-  }
-
-  .comments-area {
-    padding-left: 0;
-  }
-
-  .comment-list .children {
-    padding-left: 1em;
-  }
-}
+/* ---------- Print ---------- */
 
 @media print {
   body {
     background: #fff;
+    color: #000;
   }
 
   .site {
