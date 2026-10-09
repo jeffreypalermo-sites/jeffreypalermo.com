@@ -56,8 +56,8 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         Assert.NotNull(sidebar.QuerySelector("form[role=search] input[type=search][name=q]"));
         Assert.Equal("/_assets/authors/jeffreypalermo-profile.jpg", sidebar.QuerySelector(".widget-profile img[alt='Jeffrey Palermo']")?.GetAttribute("src"));
         Assert.Equal(25, sidebar.QuerySelectorAll(".widget-tags .tagcloud a").Length);
-        Assert.Equal(116, sidebar.QuerySelectorAll("nav.widget-archives li a").Length);
-        Assert.Equal(("/2020/01/", "January 2020"), (sidebar.Href("nav.widget-archives li a"), sidebar.QuerySelector("nav.widget-archives li a")?.TextContent));
+        Assert.Equal(210, sidebar.QuerySelectorAll("nav.widget-archives li a").Length);
+        Assert.Equal(("/2026/10/", "October 2026"), (sidebar.Href("nav.widget-archives li a"), sidebar.QuerySelector("nav.widget-archives li a")?.TextContent));
         Assert.Equal(SiteTitle, page.Text("footer.site-footer a[href='/']"));
 
         // Accessibility basics: a skip link first, landmarks, and one heading that names the page.
@@ -297,10 +297,10 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
     {
         using var client = factory.ClientFor();
 
-        var newest = await client.GetPageAsync("/2020/01/net-devops-for-azure/");
-        var oldest = await client.GetPageAsync((await client.GetPageAsync("/page/97/")).QuerySelectorAll("h2.entry-title a")[^1].GetAttribute("href")!);
+        var newest = await client.GetPageAsync("/2026/10/sam-nasr-ai-transformation-episode-422/");
+        var oldest = await client.GetPageAsync((await client.GetPageAsync("/page/138/")).QuerySelectorAll("h2.entry-title a")[^1].GetAttribute("href")!);
 
-        Assert.Equal(("/2020/01/net-devops-bootcamp/", null), (newest.Href(".nav-previous a"), newest.Href(".nav-next a")));
+        Assert.Equal(("/2026/09/mark-michaelis-mastering-the-agentic-coding-workflow-episode-421/", null), (newest.Href(".nav-previous a"), newest.Href(".nav-next a")));
         Assert.Null(oldest.Href(".nav-previous a"));
         Assert.NotNull(oldest.Href(".nav-next a"));
     }
@@ -315,9 +315,10 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         Assert.StartsWith($"{SiteTitle} | Jeffrey Palermo, Microsoft MVP", page.Title, StringComparison.Ordinal);
         Assert.Equal("/", page.Href("link[rel=canonical]"));
         Assert.Equal(10, posts.Length);
-        Assert.Equal(("/2020/01/net-devops-for-azure/", ".NET DevOps for Azure"), (posts[0].Href("h2.entry-title a"), posts[0].Text("h2.entry-title a")));
-        Assert.Equal("4:09 pm on January 9, 2020", posts[0].Text("time.entry-date"));
-        Assert.Contains("free eCopy of Chapter 3", posts[0].Text(".entry-content"), StringComparison.Ordinal);
+        // The newest posts are episodes of the podcast: each is dated as the show published it, in the site's local time.
+        Assert.Equal(("/2026/10/sam-nasr-ai-transformation-episode-422/", "Sam Nasr: AI Transformation - Episode 422"), (posts[0].Href("h2.entry-title a"), posts[0].Text("h2.entry-title a")));
+        Assert.Equal("3:00 am on October 5, 2026", posts[0].Text("time.entry-date"));
+        Assert.Contains("Sam Nasr is a Senior Software Engineer and Trainer", posts[0].Text(".entry-content"), StringComparison.Ordinal);
         Assert.All(posts, post =>
         {
             Assert.StartsWith("/20", post.Href("h2.entry-title a"), StringComparison.Ordinal);
@@ -341,7 +342,7 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
     [InlineData("/", "/page/2/", null)]
     [InlineData("/page/2/", "/page/3/", "/")]
     [InlineData("/page/50/", "/page/51/", "/page/49/")]
-    [InlineData("/page/97/", null, "/page/96/")]
+    [InlineData("/page/138/", null, "/page/137/")]
     [InlineData("/2008/", "/2008/page/2/", null)]
     [InlineData("/2008/page/2/", "/2008/page/3/", "/2008/")]
     [InlineData("/2008/07/page/2/", null, "/2008/07/")]
@@ -350,7 +351,7 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
     [InlineData("/author/jeffreypalermo/page/2/", "/author/jeffreypalermo/page/3/", "/author/jeffreypalermo/")]
     [InlineData("/tag/tips-tricks/page/5/", null, "/tag/tips-tricks/page/4/")]
     [InlineData("/search/?q=onion", "/search/?q=onion&page=2", null)]
-    [InlineData("/search/?q=onion&page=2", null, "/search/?q=onion")]
+    [InlineData("/search/?q=onion&page=4", null, "/search/?q=onion&page=3")]
     [InlineData("/search/?q=asp.net%20mvc&page=2", "/search/?q=asp.net%20mvc&page=3", "/search/?q=asp.net%20mvc")]
     public async Task AListingLinksToOlderAndNewerPosts(string path, string? older, string? newer)
     {
@@ -375,7 +376,7 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
 
     [Theory]
     [InlineData("/2008/", "Yearly Archives: 2008", "2008 | " + SiteTitle, 10)]
-    [InlineData("/2020/01/", "Monthly Archives: January 2020", "January | 2020 | " + SiteTitle, 2)]
+    [InlineData("/2020/01/", "Monthly Archives: January 2020", "January | 2020 | " + SiteTitle, 6)]
     [InlineData("/2008/07/29/", "Daily Archives: July 29, 2008", "29 | July | 2008 | " + SiteTitle, 1)]
     [InlineData("/tag/onion-architecture/", "Tag Archives: onion architecture", "onion architecture | " + SiteTitle, 4)]
     [InlineData("/category/blog/", "Category Archives: Blog", "Blog | " + SiteTitle, 10)]
@@ -413,9 +414,10 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         Assert.Equal("Search Results for: onion architecture", page.Text("h1.page-title"));
         Assert.Equal($"onion architecture | Search Results | {SiteTitle}", page.Title);
         Assert.Equal("noindex, follow", page.QuerySelector("meta[name=robots]")?.GetAttribute("content"));
-        // Ten to a page: nine posts and the About page, which has both words too.
-        Assert.Equal(9, posts.Length);
-        Assert.Equal("/about/", Assert.Single(page.QuerySelectorAll("main article.page")).Href("h2.entry-title a"));
+        // Ten to a page. The About page has both words too: it stands among the posts by its date (July 2018), which
+        // is on a later page since the podcast's episodes are posts.
+        Assert.Equal(10, posts.Length);
+        Assert.Empty(page.QuerySelectorAll("main article.page"));
         Assert.Equal(
             ["/2013/08/onion-architecture-part-4-after-four-years/", "/2013/07/onion-architecture-for-distributed-systems-at-austin-code-camp-2013/", "/2008/08/the-onion-architecture-part-3/", "/2008/07/the-onion-architecture-part-2/", Onion],
             posts.Take(5).Select(post => post.Href("h2.entry-title a")));
@@ -426,17 +428,17 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
     }
 
     /// <summary>
-    /// The first page WordPress listed for "onion", in its order: the posts with the word in their title, then the
-    /// rest newest first, the About page (July 2018) among them. A page shows its title and its excerpt, and no
-    /// author, date or terms: it has none.
+    /// A search for "onion", in WordPress's order: the posts with the word in their title, then the rest newest
+    /// first, the About page (July 2018) among them, after the podcast's episodes of later years and before the
+    /// posts of earlier ones. A page shows its title and its excerpt, and no author, date or terms: it has none.
     /// </summary>
     [Theory]
     [InlineData("/search/?q=onion")]
     [InlineData("/?s=onion")]
     public async Task SearchFindsTheAboutPageWhereWordPressListedIt(string path)
     {
-        var page = await factory.ClientFor().GetPageAsync(path);
-        var found = page.QuerySelectorAll("main article.post, main article.page");
+        using var client = factory.ClientFor();
+        var page = await client.GetPageAsync(path);
 
         Assert.Equal(
             [
@@ -445,14 +447,19 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
                 "/2008/08/the-onion-architecture-part-3/",
                 "/2008/07/the-onion-architecture-part-2/",
                 Onion,
+                "/2023/01/a-2023-happy-new-year-and-2022-review-episode-226/",
+                "/2022/09/steve-smith-domain-driven-design-and-architecture-episode-209/",
+                "/2021/01/architectures-for-2021-and-beyond-episode-125/",
                 "/2020/01/net-devops-for-azure/",
-                "/2018/11/my-current-favorite-private-build-script/",
-                "/about/",
-                "/2014/01/aliasql-the-new-name-in-automated-database-change-management/",
-                "/2008/11/the-myth-of-self-organizing-teams/",
+                "/2019/10/glenn-condron-on-new-capabilities-in-net-episode-58/",
             ],
-            found.Select(article => article.Href("h2.entry-title a")));
-        var about = found[7];
+            page.QuerySelectorAll("main article.post, main article.page").Select(article => article.Href("h2.entry-title a")));
+
+        var found = (await client.GetPageAsync("/search/?q=onion&page=4")).QuerySelectorAll("main article.post, main article.page");
+        Assert.Equal(
+            ["/about/", "/2014/01/aliasql-the-new-name-in-automated-database-change-management/", "/2008/11/the-myth-of-self-organizing-teams/"],
+            found.Take(3).Select(article => article.Href("h2.entry-title a")));
+        var about = found[0];
         Assert.Equal(("page", "post-1303"), (about.ClassName, about.Id));
         Assert.Equal("About Jeffrey Palermo", about.Text("h2.entry-title"));
         Assert.Equal("bookmark", about.QuerySelector("h2.entry-title a")?.GetAttribute("rel"));
@@ -460,7 +467,7 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         Assert.StartsWith("I first started working in custom software as a programmer in 1997.", excerpt, StringComparison.Ordinal);
         Assert.EndsWith("[…]", excerpt, StringComparison.Ordinal);
         Assert.Empty(about.QuerySelectorAll(".entry-meta, .entry-author, time, .entry-terms, .entry-footer, .entry-content img, .entry-content a"));
-        Assert.Equal(9, page.QuerySelectorAll("main article.post").Length);
+        Assert.Equal(5, found.Count(article => article.ClassName == "post"));
     }
 
     [Fact]
@@ -608,11 +615,11 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         Assert.Equal("noindex, follow", page.QuerySelector("meta[name=robots]")?.GetAttribute("content"));
         Assert.NotNull(page.QuerySelector("main form[role=search] input[name=q]"));
         Assert.Equal(
-            ["/2020/01/net-devops-for-azure/", "/2020/01/net-devops-bootcamp/", "/2018/11/my-current-favorite-private-build-script/"],
+            ["/2026/10/sam-nasr-ai-transformation-episode-422/", "/2026/09/mark-michaelis-mastering-the-agentic-coding-workflow-episode-421/", "/2026/09/justin-martin-commanding-fleets-of-ai-agents-episode-420/"],
             page.QuerySelectorAll("main section[aria-labelledby=not-found-recent] a").Take(3).Select(a => a.GetAttribute("href")));
         Assert.Equal(5, page.QuerySelectorAll("main section[aria-labelledby=not-found-recent] a").Length);
-        Assert.Equal("Blog (326)", string.Join(' ', page.QuerySelector("main section[aria-labelledby=not-found-categories] li")!.TextContent.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)));
-        Assert.Equal(["/2020/", "/2018/", "/2016/"], page.QuerySelectorAll("main .archive-years a").Take(3).Select(a => a.GetAttribute("href")));
+        Assert.Equal("DevOps (424)", string.Join(' ', page.QuerySelector("main section[aria-labelledby=not-found-categories] li")!.TextContent.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)));
+        Assert.Equal(["/2026/", "/2025/", "/2024/"], page.QuerySelectorAll("main .archive-years a").Take(3).Select(a => a.GetAttribute("href")));
         Assert.Equal("/2004/", page.QuerySelectorAll("main .archive-years a")[^1].GetAttribute("href"));
     }
 
@@ -624,7 +631,7 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
 
         var years = notFound.QuerySelectorAll("main .archive-years a").Select(a => a.GetAttribute("href")!).ToList();
 
-        Assert.Equal(15, years.Count);
+        Assert.Equal(22, years.Count);
         foreach (var year in years)
         {
             Assert.StartsWith("Yearly Archives:", (await client.GetPageAsync(year)).Text("h1.page-title"), StringComparison.Ordinal);

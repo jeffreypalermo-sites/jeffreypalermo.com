@@ -22,7 +22,7 @@ public sealed class FileSystemContentSourceTests : IDisposable
         var site = await source.LoadAsync();
         stopwatch.Stop();
 
-        Assert.Equal(966, site.Posts.Count);
+        Assert.Equal(1380, site.Posts.Count);
         Assert.Single(site.Pages);
         Assert.Equal(275, site.Attachments.Count);
         Assert.Equal(2708, site.Posts.Sum(p => p.Comments.Count));

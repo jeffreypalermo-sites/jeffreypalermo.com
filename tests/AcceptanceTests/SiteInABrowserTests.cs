@@ -23,6 +23,7 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
     private const string NumberedCode = "/2010/01/constructor-over-injection-anti-pattern/";
     private const string NoSuchPage = "/no-such-page-anywhere-at-all/";
     private const string PodcastEpisode = "/2018/09/donovan-brown-on-how-to-use-azure-devops-services-episode-002/";
+    private const string NewestEpisode = "/2026/10/sam-nasr-ai-transformation-episode-422/";
     private const string VideoEpisode = "/2018/10/palermo-pamphlet-launch-episode-001/";
     private const string LocalVideo = "/wp-content/uploads/external/videos.files.wordpress.com/HMwzTDe7/palermo-pamphlet-001-10-10-2018.mp4";
 
@@ -266,16 +267,19 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
 
         await visit.ArrivesAtAsync("/search/?q=onion+architecture");
         await Assertions.Expect(page.GetByRole(AriaRole.Heading, new() { Level = 1 })).ToHaveTextAsync("Search Results for: onion architecture");
-        // Ten to a page: nine posts and the About page, which has both words too.
+        // Ten to a page: the posts with the words in their title first, then the newest that have them anywhere.
         await Assertions.Expect(page.Locator("main article")).ToHaveCountAsync(10);
-        await Assertions.Expect(page.Locator("main article.post")).ToHaveCountAsync(9);
+        await Assertions.Expect(page.Locator("main article.post")).ToHaveCountAsync(10);
         await page.Locator("main").GetByRole(AriaRole.Link, new() { Name = "The Onion Architecture : part 1", Exact = true }).ClickAsync();
         await visit.ArrivesAtAsync(Onion1);
         await Assertions.Expect(page.GetByRole(AriaRole.Heading, new() { Level = 1 })).ToHaveTextAsync("The Onion Architecture : part 1");
         Assert.Empty(visit.OffSiteRequests);
     }
 
-    /// <summary>WordPress's search found pages too: "onion" listed the About page among the posts.</summary>
+    /// <summary>
+    /// WordPress's search found pages too: "1997" lists the About page among the posts, by its date. (For "onion"
+    /// it is on a later page, behind the podcast's episodes of later years.)
+    /// </summary>
     [Fact]
     public async Task SearchFindsTheAboutPage()
     {
@@ -284,10 +288,10 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         await page.GotoAsync("/");
         var box = page.Locator("aside").GetByRole(AriaRole.Searchbox, new() { Name = "Search" });
 
-        await box.FillAsync("onion");
+        await box.FillAsync("1997");
         await box.PressAsync("Enter");
 
-        await visit.ArrivesAtAsync("/search/?q=onion");
+        await visit.ArrivesAtAsync("/search/?q=1997");
         var about = page.Locator("main article.page");
         await Assertions.Expect(about).ToHaveCountAsync(1);
         await Assertions.Expect(about.Locator(".entry-content")).ToContainTextAsync("I first started working in custom software as a programmer in 1997.");
@@ -385,6 +389,51 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         await Assertions.Expect(body).ToContainTextAsync("(MP3, 45:24, 43.6 MB)");
         await Assertions.Expect(body).Not.ToContainTextAsync("[iframe");
         await Assertions.Expect(body.Locator("iframe, script")).ToHaveCountAsync(0);
+        Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
+    }
+
+    /// <summary>
+    /// An episode of the podcast that the <c>podcast</c> command made a post of: the show's notes, the browser's own
+    /// player, which waits for the reader, and plain links to the recording, to the video on YouTube and to the
+    /// episode's page on the show's site. The page asks no other host for anything; YouTube is one click away.
+    /// </summary>
+    [Fact]
+    public async Task AnEpisodeOfThePodcastIsAPostWithItsNotesItsPlayerAndALinkToItsVideo()
+    {
+        const string recording = "https://traffic.libsyn.com/secure/azuredevops/Episode_422.mp3";
+        await using var visit = await chromium.VisitAsync(site.BaseAddress);
+        var page = visit.Page;
+
+        var response = await page.GotoAsync(NewestEpisode);
+
+        Assert.Equal(200, response!.Status);
+        await Assertions.Expect(page.GetByRole(AriaRole.Heading, new() { Level = 1 })).ToHaveTextAsync("Sam Nasr: AI Transformation - Episode 422");
+        await Assertions.Expect(page.Locator("main article.post time.entry-date")).ToHaveTextAsync("3:00 am on October 5, 2026");
+        await Assertions.Expect(page.Locator("main article.post .entry-categories a")).ToHaveTextAsync(["AI DevOps Podcast", "DevOps", "Podcast"]);
+        var body = page.Locator("main article.post .entry-content");
+        await Assertions.Expect(body).ToContainTextAsync("Sam Nasr is a Senior Software Engineer and Trainer at NIS Technologies");
+        var player = body.Locator("audio");
+        await Assertions.Expect(player).ToHaveCountAsync(1);
+        await Assertions.Expect(player).ToBeVisibleAsync();
+        await Assertions.Expect(player).ToHaveAttributeAsync("src", recording);
+        Assert.True(await player.EvaluateAsync<bool>("audio => audio.controls && audio.preload === 'none' && !audio.autoplay && audio.readyState === 0 && audio.paused"), "The player did not wait for the reader.");
+        await Assertions.Expect(body.GetByRole(AriaRole.Link, new() { Name = "Download this episode" })).ToHaveAttributeAsync("href", recording);
+        await Assertions.Expect(body).ToContainTextAsync("(MP3, 29:15, 42.2 MB)");
+        await Assertions.Expect(body.GetByRole(AriaRole.Link, new() { Name = "Watch this episode on YouTube" })).ToHaveAttributeAsync("href", "https://www.youtube.com/watch?v=rABMYlE2DG0");
+        await Assertions.Expect(body.GetByRole(AriaRole.Link, new() { Name = "This episode on the AI DevOps Podcast site" })).ToHaveAttributeAsync("href", "http://aidevopspodcast.clear-measure.com/sam-nasr-ai-transformation-episode-422");
+        await Assertions.Expect(body.Locator("iframe, script, img, video")).ToHaveCountAsync(0);
+        Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
+
+        // The category of the podcast lists the episodes, newest first, ten to a page, each with its own player.
+        await page.Locator("main article.post .entry-categories").GetByRole(AriaRole.Link, new() { Name = "Podcast", Exact = true }).ClickAsync();
+        await visit.ArrivesAtAsync("/category/podcast/");
+        await Assertions.Expect(page.GetByRole(AriaRole.Heading, new() { Level = 1 })).ToHaveTextAsync("Category Archives: Podcast");
+        await Assertions.Expect(page.Locator("main article.post")).ToHaveCountAsync(10);
+        await Assertions.Expect(page.Locator("main article.post .entry-title a").First).ToHaveTextAsync("Sam Nasr: AI Transformation - Episode 422");
+        await Assertions.Expect(page.Locator("main article.post audio")).ToHaveCountAsync(10);
+        Assert.True(await visit.EvaluateAsync<bool>("[...document.querySelectorAll('audio')].every(audio => audio.preload === 'none' && audio.readyState === 0)"), "A player of the listing did not wait for the reader.");
         Assert.Empty(visit.OffSiteRequests);
         Assert.Empty(visit.FailedRequests);
     }
@@ -671,6 +720,10 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
     [InlineData("/about/")]
     [InlineData(NoSuchPage)]
     [InlineData(PodcastEpisode)]
+    [InlineData(NewestEpisode)]
+    [InlineData("/category/podcast/")]
+    // The longest unbroken word of any episode: an address of 100 characters, written out as text.
+    [InlineData("/2026/05/ryan-riley-development-process-using-ai-episode-403/")]
     [InlineData(VideoEpisode)]
     [InlineData("/search/?q=onion")]
     public async Task OnAPhoneThePageIsOneColumnAndNeverWiderThanTheScreen(string path)
@@ -772,7 +825,7 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         Assert.Equal(0, await visit.EvaluateAsync<int>("window.scrollY"));
 
         // Posts by date and by tag are on the page too: every month and every tag.
-        await Assertions.Expect(page.GetByRole(AriaRole.Navigation, new() { Name = "Archives" }).GetByRole(AriaRole.Link)).ToHaveCountAsync(116);
+        await Assertions.Expect(page.GetByRole(AriaRole.Navigation, new() { Name = "Archives" }).GetByRole(AriaRole.Link)).ToHaveCountAsync(210);
         await Assertions.Expect(page.Locator("aside .tagcloud a")).ToHaveCountAsync(25);
     }
 
@@ -885,7 +938,8 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
 
     private static async Task TabUntilAsync(IPage page, string selector)
     {
-        for (var presses = 0; presses < 200; presses++)
+        // The index lists a link for every month that has a post: 210 of them.
+        for (var presses = 0; presses < 400; presses++)
         {
             await page.Keyboard.PressAsync("Tab");
             if (await page.EvaluateAsync<bool>("selector => document.activeElement.matches(selector)", selector))
