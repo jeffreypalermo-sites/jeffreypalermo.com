@@ -1,6 +1,7 @@
 # ADR-0009: Keep the WordPress site's look and navigation; render them with Razor components from the existing routes
 
-- **Status:** Accepted
+- **Status:** Accepted; the look superseded by [ADR-0019](0019-the-masthead-look.md). The markup, the navigation
+  and how the pages are rendered stand
 - **Date:** 2026-10-06
 - **Builds on:** [ADR-0005](0005-blazor-static-ssr.md) (static server-side rendering, no client runtime) and
   [ADR-0004](0004-legacy-url-resolution-in-core.md) (the routes are proven by the URL contract).

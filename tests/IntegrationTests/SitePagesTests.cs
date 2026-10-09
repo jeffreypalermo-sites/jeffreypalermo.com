@@ -1,12 +1,14 @@
 using System.Net;
 using System.Text.RegularExpressions;
 using AngleSharp.Dom;
+using JeffreyPalermo.Infrastructure.Content;
 
 namespace JeffreyPalermo.IntegrationTests;
 
 /// <summary>
-/// The pages of UI.Server in-process: every kind of page in the site layout, with the look's stylesheet and the
-/// navigation the WordPress site had (ADR-0009), and nothing asked of another host.
+/// The pages of UI.Server in-process: every kind of page in the site layout, with the navigation the WordPress site
+/// had (ADR-0009) and the stylesheet of the look (ADR-0019), which rests on that markup, and nothing asked of another
+/// host.
 /// </summary>
 public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<SiteFactory>
 {
@@ -111,6 +113,105 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
             Assert.True(file.StatusCode == HttpStatusCode.OK, $"{path} answered {(int)file.StatusCode}.");
             Assert.Equal(mediaType, file.Content.Headers.ContentType?.MediaType);
         }
+    }
+
+    /// <summary>
+    /// The look puts the menu in the masthead and the search box at the top of the index, and on a narrow screen it
+    /// lifts the search box above the posts (ADR-0019). The stylesheet can do that only while the markup is this:
+    /// header, posts, sidebar and footer side by side in the page's frame, the menu inside the header, and the search
+    /// form in a box of its own among the sidebar's boxes.
+    /// </summary>
+    [Theory]
+    [InlineData("/", HttpStatusCode.OK)]
+    [InlineData(Onion, HttpStatusCode.OK)]
+    [InlineData("/2008/07/", HttpStatusCode.OK)]
+    [InlineData("/tag/onion-architecture/", HttpStatusCode.OK)]
+    [InlineData("/about/", HttpStatusCode.OK)]
+    [InlineData("/5_button_blue_big/", HttpStatusCode.OK)]
+    [InlineData("/search/?q=onion", HttpStatusCode.OK)]
+    [InlineData(NoSuchPage, HttpStatusCode.NotFound)]
+    public async Task TheMenuAndSearchAreWhereTheStylesheetLooksForThemOnEveryKindOfPage(string path, HttpStatusCode status)
+    {
+        var page = await factory.ClientFor().GetPageAsync(path, status);
+
+        var frame = Assert.Single(page.QuerySelectorAll("body > div.site"));
+        Assert.Equal(
+            ["header.site-header", "main.content-area", "aside.widget-area", "footer.site-footer"],
+            frame.Children.Select(part => $"{part.LocalName}.{part.ClassName}"));
+
+        // The masthead: the site's name, then the menu, whose first entry is Home and which leads to About.
+        var header = frame.Children[0];
+        Assert.Equal(["div.site-branding", "nav.site-menu"], header.Children.Select(part => $"{part.LocalName}.{part.ClassName}"));
+        var menu = header.QuerySelectorAll("nav.site-menu > ul > li > a").ToList();
+        Assert.Equal(("/", "Home"), (menu[0].GetAttribute("href"), menu[0].TextContent));
+        Assert.Contains(menu, entry => entry.GetAttribute("href") == "/about/");
+
+        // The index: every box of the sidebar is a "widget", and one of them holds the search form and nothing else.
+        var boxes = frame.Children[2].Children.ToList();
+        Assert.All(boxes, box => Assert.Contains("widget", box.ClassList));
+        var search = Assert.Single(boxes, box => box.ClassList.Contains("widget-search"));
+        Assert.Equal(["h2.widget-title", "form.search-form"], search.Children.Select(part => $"{part.LocalName}.{part.ClassName}"));
+        Assert.NotNull(search.QuerySelector("form.search-form[role=search] input[type=search][name=q]"));
+        Assert.NotNull(search.QuerySelector("form.search-form button[type=submit]"));
+        Assert.Equal(
+            ["widget-feeds", "widget-search", "widget-profile", "widget-tags", "widget-archives"],
+            boxes.Select(box => box.ClassList.Single(name => name.StartsWith("widget-", StringComparison.Ordinal))));
+    }
+
+    /// <summary>Where the reader is: the menu entry of the page being read says so, and the stylesheet marks it.</summary>
+    [Theory]
+    [InlineData("/", "Home")]
+    [InlineData("/about/", "About Jeffrey Palermo")]
+    [InlineData("/category/blog/", "Blog")]
+    [InlineData("/tag/onion-architecture/", "Onion Architecture")]
+    [InlineData(Onion, null)]
+    [InlineData("/2008/07/", null)]
+    [InlineData("/search/?q=onion", null)]
+    public async Task TheMenuMarksThePageBeingRead(string path, string? entry)
+    {
+        using var client = factory.ClientFor();
+        var page = await client.GetPageAsync(path);
+        var css = await client.GetStringAsync(new Uri("/_assets/site.css", UriKind.Relative));
+
+        var current = page.QuerySelectorAll("nav.site-menu a[aria-current]").ToList();
+
+        Assert.Equal(entry is null ? [] : [(entry, "page")], current.Select(link => (link.TextContent, link.GetAttribute("aria-current")!)));
+        Assert.Contains(".site-menu a[aria-current=\"page\"] {", css, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// The stylesheet is written for this site's markup. Every class it names is one the components write on some
+    /// kind of page, or one that a post, a page or a comment carries in its body: a rule for anything else is a rule
+    /// nothing can match.
+    /// </summary>
+    [Fact]
+    public async Task TheStylesheetNamesNoClassTheSiteNeverWrites()
+    {
+        using var client = factory.ClientFor();
+        var css = CssComment().Replace(await client.GetStringAsync(new Uri("/_assets/site.css", UriKind.Relative)), string.Empty);
+        var named = CssClass().Matches(CssBlock().Replace(css, "{}")).Select(match => match.Groups["name"].Value).ToHashSet(StringComparer.Ordinal);
+
+        var written = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var (path, status) in new[]
+        {
+            ("/", HttpStatusCode.OK), (Onion, HttpStatusCode.OK), ("/2008/07/", HttpStatusCode.OK), ("/about/", HttpStatusCode.OK), ("/5_button_blue_big/", HttpStatusCode.OK),
+            ("/search/?q=onion", HttpStatusCode.OK), ("/search/?q=zzzzqqqq", HttpStatusCode.OK), (NoSuchPage, HttpStatusCode.NotFound),
+            // A post whose comments answer one another.
+            ("/2018/08/applying-41-architecture-blueprints-to-continuous-delivery/", HttpStatusCode.OK),
+        })
+        {
+            var page = await client.GetPageAsync(path, status);
+            written.UnionWith(page.QuerySelectorAll("[class]").Where(element => element.ParentElement?.Closest(SitePages.Bodies) is null || element.Closest(".not-found") is not null).SelectMany(element => element.ClassList));
+        }
+
+        var site = await new FileSystemContentSource(new ContentLayout(TestPaths.Content), "test").LoadAsync();
+        var bodies = site.Posts.Select(post => post.HtmlBody)
+            .Concat(site.Pages.Select(standing => standing.HtmlBody))
+            .Concat(site.Posts.SelectMany(post => post.Comments).Select(comment => comment.ContentHtml));
+        written.UnionWith(bodies.SelectMany(body => ClassAttribute().Matches(body)).SelectMany(match => match.Groups["names"].Value.Split(' ', StringSplitOptions.RemoveEmptyEntries)));
+
+        Assert.True(named.Count > 60, $"Only {named.Count} classes were read from the stylesheet.");
+        Assert.Empty(named.Except(written).Order(StringComparer.Ordinal));
     }
 
     [Fact]
@@ -541,4 +642,17 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
 
     [GeneratedRegex("""url\(\s*["']?(?<url>[^"')]+)["']?\s*\)""")]
     private static partial Regex CssUrl();
+
+    [GeneratedRegex(@"/\*.*?\*/", RegexOptions.Singleline)]
+    private static partial Regex CssComment();
+
+    /// <summary>A block of declarations: what is left without them is the selectors.</summary>
+    [GeneratedRegex(@"\{[^{}]*\}")]
+    private static partial Regex CssBlock();
+
+    [GeneratedRegex(@"\.(?<name>[A-Za-z_][A-Za-z0-9_-]*)")]
+    private static partial Regex CssClass();
+
+    [GeneratedRegex("""\sclass\s*=\s*["'](?<names>[^"']*)["']""")]
+    private static partial Regex ClassAttribute();
 }
