@@ -4,35 +4,35 @@
     "taxonomy": "category",
     "slug": "blog",
     "name": "Blog",
-    "count": 326
+    "count": 330
   },
   {
     "id": 643871096,
     "taxonomy": "category",
     "slug": "azure-devops-podcast",
     "name": "Azure DevOps Podcast",
-    "count": 1
+    "count": 369
   },
   {
     "id": 643871098,
     "taxonomy": "category",
     "slug": "devops",
     "name": "DevOps",
-    "count": 10
+    "count": 426
   },
   {
     "id": 643871099,
     "taxonomy": "category",
     "slug": "architecture",
     "name": "Architecture",
-    "count": 1
+    "count": 2
   },
   {
     "id": 643871100,
     "taxonomy": "category",
     "slug": "podcast",
     "name": "Podcast",
-    "count": 8
+    "count": 422
   },
   {
     "id": 643871101,
@@ -40,6 +40,13 @@
     "slug": "palermo-pamphlet",
     "name": "Palermo Pamphlet",
     "count": 3
+  },
+  {
+    "id": 643871102,
+    "taxonomy": "category",
+    "slug": "ai-devops-podcast",
+    "name": "AI DevOps Podcast",
+    "count": 53
   },
   {
     "id": 264,
@@ -88,7 +95,7 @@
     "taxonomy": "post_tag",
     "slug": "managing",
     "name": "Managing",
-    "count": 12
+    "count": 14
   },
   {
     "id": 35890,
@@ -221,21 +228,21 @@
     "taxonomy": "post_tag",
     "slug": "devops",
     "name": "devops",
-    "count": 1
+    "count": 3
   },
   {
     "id": 643871095,
     "taxonomy": "post_tag",
     "slug": "clear-measure",
     "name": "clear measure",
-    "count": 5
+    "count": 7
   },
   {
     "id": 1,
     "taxonomy": "author",
     "slug": "jeffreypalermo",
     "name": "Jeffrey Palermo",
-    "count": 966
+    "count": 1384
   },
   {
     "id": 4,

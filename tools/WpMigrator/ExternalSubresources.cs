@@ -17,7 +17,10 @@ public enum SubresourceKind
     /// </summary>
     Media,
 
-    /// <summary>Another host's page inside this one: <c>iframe</c>.</summary>
+    /// <summary>
+    /// Another host's page inside this one: <c>iframe</c>. Also whatever the document of a frame that stands in the
+    /// page itself (<c>srcdoc</c>) loads from another host. It is reported and never rewritten.
+    /// </summary>
     Frame,
 
     /// <summary>A <c>script</c>.</summary>
@@ -219,6 +222,13 @@ public static partial class ExternalSubresources
                 break;
             case "iframe" or "frame":
                 Whole("src", SubresourceKind.Frame);
+                // A frame's document may stand in the page itself. What that document loads from another host is
+                // loaded with the page all the same; a link in it is not, as in the page.
+                if (attributes.TryGetValue("srcdoc", out var document))
+                {
+                    found.AddRange(Find(WebUtility.HtmlDecode(document.Text)).Select(inner => new ExternalSubresource(SubresourceKind.Frame, inner.Address, document.Index, 0)));
+                }
+
                 break;
             case "script":
                 Whole("src", SubresourceKind.Script);
