@@ -75,6 +75,7 @@ public sealed class Visit : IAsyncDisposable
 
     private readonly IBrowserContext _context;
     private readonly List<string> _offSite = [];
+    private readonly List<string> _framesSentOffSite = [];
     private readonly List<string> _failed = [];
 
     private Visit(IBrowserContext context, IPage page)
@@ -87,6 +88,12 @@ public sealed class Visit : IAsyncDisposable
 
     /// <summary>Every request the pages made to a host other than the site.</summary>
     public IReadOnlyList<string> OffSiteRequests => _offSite;
+
+    /// <summary>
+    /// The requests among <see cref="OffSiteRequests"/> that were a frame inside the page being sent to another
+    /// host's page: what a click on a link in a frame's own document does. Refused like every other.
+    /// </summary>
+    public IReadOnlyList<string> FramesSentOffSite => _framesSentOffSite;
 
     /// <summary>Every request to the site that did not answer 2xx or 3xx, as <c>status url</c>.</summary>
     public IReadOnlyList<string> FailedRequests => _failed;
@@ -101,6 +108,10 @@ public sealed class Visit : IAsyncDisposable
             lock (visit._offSite)
             {
                 visit._offSite.Add(route.Request.Url);
+                if (route.Request.IsNavigationRequest && route.Request.Frame.ParentFrame is not null)
+                {
+                    visit._framesSentOffSite.Add(route.Request.Url);
+                }
             }
 
             try

@@ -43,6 +43,10 @@ Checked on 2026-10-07, one request each:
 - **Such a player is not a request to another host.** `WpMigrator localize` and the test that pins what bodies load
   from other hosts read `preload="none"` without `autoplay` as a link the reader clicks. A player without it, and
   a poster, are loaded with the page and are reported.
+- **A video on YouTube waits in the same way since 2026-10-09** ([ADR-0020](0020-the-podcasts-episodes-are-posts.md)):
+  a frame without an address, whose document is in the page itself and holds the site's own poster inside a link
+  to YouTube's player. `localize` and the same test read what such a document loads as loaded with the page, and
+  its link as a link.
 - **A shortcode as text fails the content validation** (`Shortcodes` in Core): a post that needs a player gets this
   markup, written by hand.
 

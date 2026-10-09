@@ -99,12 +99,13 @@ switch (args[0])
 
     case "podcast":
     {
-        // One request for the feed and one for the list of videos: nothing else is asked of either host.
+        // One request for the feed and one for the list of videos, and one or two to YouTube's picture host for the
+        // poster of each video whose frame is new, a second apart.
         using var http = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
         http.DefaultRequestHeaders.UserAgent.ParseAdd("jeffreypalermo.com-podcast/1.0");
         var feed = PodcastFeed.Parse(await ReadAsync(http, args[1]));
         var videos = args.Length == 4 ? PodcastVideos.Parse(await ReadAsync(http, args[3])) : [];
-        var report = await PodcastPosts.AddAsync(feed, videos, new ContentLayout(args[2]));
+        var report = await PodcastPosts.AddAsync(feed, videos, new ContentLayout(args[2]), new PodcastPosters(http, TimeSpan.FromSeconds(1)).FetchAsync);
         Console.Write(PodcastPosts.Describe(report));
         return report.Problems.Count == 0 ? 0 : 1;
     }
