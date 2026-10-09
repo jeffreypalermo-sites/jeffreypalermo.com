@@ -211,7 +211,7 @@ The build treats warnings as errors.
   site's two font files, set text on a ground it does not stand out from, hide the keyboard's focus, grow large).
 - **Integration tests:** the real `content/` tree loaded into the domain; the site in-process: every kind of page in
   the site layout, the markup the stylesheet rests on (the menu in the header, search in a box of its own, the page
-  being read marked in the menu, no class in the stylesheet that the site never writes), a crawl from `/` that must reach all 1,380 posts by following links, and a replay of all 9,337 URLs
+  being read marked in the menu, no class in the stylesheet that the site never writes), a crawl from `/` that must reach all 1,384 posts by following links, and a replay of all 9,337 URLs
   of `url-contract.tsv`; the fetch → convert → media pipeline and the URL prober against a stubbed WordPress HTTP
   server and the real file system; `localize` and `recover` against stand-ins for Photon, the hosts and the
   Wayback Machine, writing to a temp content tree; the `podcast` command writing to a temp content tree, and the

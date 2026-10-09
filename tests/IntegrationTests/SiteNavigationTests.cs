@@ -56,7 +56,7 @@ public sealed class SiteNavigationTests(SiteFactory factory, ITestOutputHelper o
 
         var reached = expected.Where(pages.Contains).ToList();
         output.WriteLine($"Crawled {pages.Count} pages from / over {links} navigation links; reached {reached.Count} of {expected.Count} posts.");
-        Assert.Equal(1380, expected.Count);
+        Assert.Equal(1384, expected.Count);
         Assert.Empty(broken);
         Assert.Empty(expected.Except(pages));
     }
@@ -76,8 +76,8 @@ public sealed class SiteNavigationTests(SiteFactory factory, ITestOutputHelper o
         }
 
         output.WriteLine($"{pages} pages of older posts list {listed.Count} posts.");
-        Assert.Equal(138, pages);
-        Assert.Equal(1380, listed.Count);
+        Assert.Equal(139, pages);
+        Assert.Equal(1384, listed.Count);
         Assert.Equal(EveryPostPermalink(), listed.ToHashSet());
     }
 
@@ -105,8 +105,8 @@ public sealed class SiteNavigationTests(SiteFactory factory, ITestOutputHelper o
         }
 
         output.WriteLine($"Previous links walk {walked.Count} posts; {backLinks} next links lead back.");
-        Assert.Equal(1380, walked.Count);
-        Assert.Equal(1379, backLinks);
+        Assert.Equal(1384, walked.Count);
+        Assert.Equal(1383, backLinks);
         Assert.Equal(EveryPostPermalink(), walked.ToHashSet());
     }
 
@@ -129,7 +129,7 @@ public sealed class SiteNavigationTests(SiteFactory factory, ITestOutputHelper o
         }
 
         output.WriteLine($"{months.Count} monthly archives list {listed.Count} posts.");
-        Assert.Equal(210, months.Count);
+        Assert.Equal(211, months.Count);
         Assert.Equal(EveryPostPermalink(), listed);
     }
 

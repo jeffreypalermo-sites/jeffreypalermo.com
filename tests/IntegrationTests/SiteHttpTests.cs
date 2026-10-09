@@ -87,7 +87,7 @@ public sealed class SiteHttpTests(SiteFactory factory) : IClassFixture<SiteFacto
         XNamespace ns = "http://www.sitemaps.org/schemas/sitemap/0.9";
         var locations = xml.Descendants(ns + "loc").Select(l => l.Value).ToList();
 
-        Assert.Equal(1380, locations.Count);
+        Assert.Equal(1384, locations.Count);
         Assert.Contains("https://jeffreypalermo.com" + Onion, locations);
     }
 
