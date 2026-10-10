@@ -1130,6 +1130,230 @@ public sealed class DeployScriptTests : IDisposable
         Assert.Empty(Calls());
     }
 
+    private const string EdgeLogQuery = "AzureDiagnostics | where TimeGenerated > ago(1h) and Category == \"FrontDoorAccessLog\" | summarize answers = count() by status = iff(isnotempty(httpStatusCode_s), httpStatusCode_s, tostring(toint(httpStatusCode_d))) | order by status asc";
+
+    /// <summary>
+    /// The access log of the Front Door (ADR-0022), with the settings as they are: the stack is asked for it with
+    /// the days and the cap of the settings, and the deployment says where the log is and gives the query to paste,
+    /// before the purge, so it is there whatever comes after.
+    /// </summary>
+    [Theory]
+    [InlineData("uat", "log-jpcom-uat-edge", UatWorkspaceId)]
+    [InlineData("prod", "log-jpcom-prod-edge", ProdWorkspaceId)]
+    public async Task WhereTheSettingsAskForItTheStackKeepsTheAccessLogAndTheDeploymentSaysWhereItIs(string environment, string workspace, string workspaceId)
+    {
+        UatBehindItsFrontDoor();
+        if (environment == "prod")
+        {
+            ProdBehindItsFrontDoor();
+        }
+
+        var result = await DeployAsync(environment);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        var parameters = StackParameters();
+        Assert.Equal(JsonValueKind.True, parameters.GetProperty("edgeLogs").GetProperty("value").ValueKind);
+        Assert.Equal(JsonValueKind.Number, parameters.GetProperty("edgeLogsRetentionDays").GetProperty("value").ValueKind);
+        Assert.Equal(30, parameters.GetProperty("edgeLogsRetentionDays").GetProperty("value").GetInt32());
+        Assert.Equal(1, parameters.GetProperty("edgeLogsDailyCapGb").GetProperty("value").GetInt32());
+        Assert.Contains("behind Front Door", result.Output, StringComparison.Ordinal);
+        Assert.Contains(", with its access log\n", result.Output, StringComparison.Ordinal);
+
+        Assert.Contains($"Access log of the Front Door (ADR-0022): the workspace {workspace} in rg-test keeps what readers got at the edge, one line per request, for 30 days; at most 1 GB a day. A request is there some minutes after it was answered.\n", result.Output, StringComparison.Ordinal);
+        Assert.Contains($"  In the Azure portal: https://portal.azure.com/#resource{workspaceId}/logs\n", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  The answers of the last hour by status code (paste it there; 0 is a region that did not answer in time, 499 a reader who left):\n", result.Output, StringComparison.Ordinal);
+        Assert.Contains($"    {EdgeLogQuery}\n", result.Output, StringComparison.Ordinal);
+        Assert.True(result.Output.IndexOf("Access log of the Front Door", StringComparison.Ordinal) < result.Output.IndexOf("Emptying the Front Door's cache", StringComparison.Ordinal), result.Output);
+
+        // Nothing more is asked of Azure for it: the workspace and its setting are in the site's one stack.
+        Assert.Single(Calls(), call => call.StartsWith("stack group create --name stack-jpcom-", StringComparison.Ordinal) && call.Contains("-web ", StringComparison.Ordinal));
+        Assert.DoesNotContain(Calls(), call => call.Contains("monitor", StringComparison.OrdinalIgnoreCase) || call.Contains("OperationalInsights", StringComparison.OrdinalIgnoreCase) || call.Contains("keys", StringComparison.OrdinalIgnoreCase));
+    }
+
+    /// <summary>The days and the cap of the settings reach the stack and the line a person reads.</summary>
+    [Fact]
+    public async Task TheDaysAndTheCapAreTheOnesOfTheSettings()
+    {
+        UatBehindItsFrontDoor();
+        var folder = DeployFolderWith(settings => settings["environments"]!["uat"]!["edgeLogs"] = JsonNode.Parse("""{ "enabled": true, "retentionDays": 90, "dailyCapGb": 3 }"""));
+
+        var result = await DeployAsync("uat", deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(90, StackParameters().GetProperty("edgeLogsRetentionDays").GetProperty("value").GetInt32());
+        Assert.Equal(3, StackParameters().GetProperty("edgeLogsDailyCapGb").GetProperty("value").GetInt32());
+        Assert.Contains("for 90 days; at most 3 GB a day.", result.Output, StringComparison.Ordinal);
+    }
+
+    /// <summary>Only "enabled" given: 30 days and 1 GB, which are also the template's own.</summary>
+    [Fact]
+    public async Task WithoutDaysAndCapTheLogIsKeptThirtyDaysAndTakesOneGbADay()
+    {
+        UatBehindItsFrontDoor();
+        var folder = DeployFolderWith(settings => settings["environments"]!["uat"]!["edgeLogs"] = JsonNode.Parse("""{ "enabled": true }"""));
+
+        var result = await DeployAsync("uat", deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.True(StackParameters().GetProperty("edgeLogs").GetProperty("value").GetBoolean());
+        Assert.Equal(30, StackParameters().GetProperty("edgeLogsRetentionDays").GetProperty("value").GetInt32());
+        Assert.Equal(1, StackParameters().GetProperty("edgeLogsDailyCapGb").GetProperty("value").GetInt32());
+        Assert.Contains("for 30 days; at most 1 GB a day.", result.Output, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Switched off by a pull request, or never asked for: the stack is told so, which makes it delete the workspace
+    /// it held, and the deployment says nothing about a log. tdd, as it is, has no such setting.
+    /// </summary>
+    [Theory]
+    [InlineData("uat", """{ "enabled": false, "retentionDays": 30, "dailyCapGb": 1 }""")]
+    [InlineData("uat", """{ "enabled": false }""")]
+    [InlineData("uat", null)]
+    [InlineData("prod", null)]
+    [InlineData("tdd", "as it is")]
+    public async Task SwitchedOffOrNotAskedForTheStackIsToldSoAndNothingIsSaidAboutALog(string environment, string? edgeLogs)
+    {
+        UatBehindItsFrontDoor();
+        ExpressEnvironment("cae-jpcom-tdd-eus2");
+        if (environment == "prod")
+        {
+            ProdBehindItsFrontDoor();
+        }
+
+        var folder = edgeLogs == "as it is" ? null : DeployFolderWith(settings =>
+        {
+            var place = (JsonObject)settings["environments"]![environment]!;
+            place.Remove("edgeLogs");
+            if (edgeLogs is not null)
+            {
+                place["edgeLogs"] = JsonNode.Parse(edgeLogs);
+            }
+        });
+
+        var result = await DeployAsync(environment, deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Equal(JsonValueKind.False, StackParameters().GetProperty("edgeLogs").GetProperty("value").ValueKind);
+        Assert.DoesNotContain("access log", result.Output, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("AzureDiagnostics", result.Output, StringComparison.Ordinal);
+        // The stack does the deleting, as for everything that leaves its template: the script deletes nothing itself.
+        // (The zone's own stack says "denyDelete": it lets nobody delete.)
+        Assert.DoesNotContain(Calls(), call => call.Contains("delete", StringComparison.OrdinalIgnoreCase) && !call.Contains("--action-on-unmanage deleteResources --deny-settings-mode denyWriteAndDelete", StringComparison.Ordinal) && !call.Contains("--action-on-unmanage detachAll --deny-settings-mode denyDelete", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task TheAccessLogForAnEnvironmentWithoutAFrontDoorStopsTheDeploymentBeforeAzureIsAsked()
+    {
+        var folder = DeployFolderWith(settings => settings["environments"]!["tdd"]!["edgeLogs"] = JsonNode.Parse("""{ "enabled": true, "retentionDays": 30, "dailyCapGb": 1 }"""));
+
+        var result = await DeployAsync("tdd", deployFolder: folder);
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Contains("FAIL the access log (edgeLogs) of 'tdd' in settings.json cannot be deployed; nothing was deployed:", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  'tdd' has no Front Door, and the access log is the Front Door's", result.Output, StringComparison.Ordinal);
+        Assert.Empty(Calls());
+    }
+
+    /// <summary>Switched off, an environment without a Front Door may carry the setting: nothing is asked for.</summary>
+    [Fact]
+    public async Task TheAccessLogSwitchedOffForAnEnvironmentWithoutAFrontDoorIsNoProblem()
+    {
+        ExpressEnvironment("cae-jpcom-tdd-eus2");
+        var folder = DeployFolderWith(settings => settings["environments"]!["tdd"]!["edgeLogs"] = JsonNode.Parse("""{ "enabled": false }"""));
+
+        var result = await DeployAsync("tdd", deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.False(StackParameters().GetProperty("edgeLogs").GetProperty("value").GetBoolean());
+    }
+
+    [Theory]
+    [InlineData("true", "edgeLogs must be { \"enabled\": true or false, \"retentionDays\": <days>, \"dailyCapGb\": <GB> }")]
+    [InlineData("\"on\"", "edgeLogs must be { \"enabled\": true or false")]
+    [InlineData("{ \"retentionDays\": 30 }", "edgeLogs must be { \"enabled\": true or false")]
+    [InlineData("{ \"enabled\": \"true\" }", "edgeLogs must be { \"enabled\": true or false")]
+    [InlineData("{ \"enabled\": true, \"retentionDays\": 7 }", "retentionDays '7' is not a whole number of days from 30 to 730, which is what a Log Analytics workspace takes")]
+    [InlineData("{ \"enabled\": true, \"retentionDays\": 731 }", "retentionDays '731' is not a whole number of days from 30 to 730")]
+    [InlineData("{ \"enabled\": true, \"retentionDays\": 30.5 }", "retentionDays '30.5' is not a whole number of days from 30 to 730")]
+    [InlineData("{ \"enabled\": true, \"retentionDays\": \"30\" }", "retentionDays '30' is not a whole number of days from 30 to 730")]
+    [InlineData("{ \"enabled\": false, \"retentionDays\": 7 }", "retentionDays '7' is not a whole number of days from 30 to 730")]
+    [InlineData("{ \"enabled\": true, \"dailyCapGb\": 0 }", "dailyCapGb '0' is not a whole number of GB from 1 to 100")]
+    [InlineData("{ \"enabled\": true, \"dailyCapGb\": 0.5 }", "dailyCapGb '0.5' is not a whole number of GB from 1 to 100")]
+    [InlineData("{ \"enabled\": true, \"dailyCapGb\": 101 }", "dailyCapGb '101' is not a whole number of GB from 1 to 100")]
+    [InlineData("{ \"enabled\": true, \"dailyCapGb\": null }", "dailyCapGb '' is not a whole number of GB from 1 to 100")]
+    public async Task ASettingOfTheAccessLogThatCannotBeDeployedStopsTheDeploymentBeforeAzureIsAsked(string edgeLogs, string problem)
+    {
+        var folder = DeployFolderWith(settings => settings["environments"]!["uat"]!["edgeLogs"] = JsonNode.Parse(edgeLogs));
+
+        var result = await DeployAsync("uat", deployFolder: folder);
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Contains("FAIL the access log (edgeLogs) of 'uat' in settings.json cannot be deployed; nothing was deployed:", result.Output, StringComparison.Ordinal);
+        Assert.Contains($"  {problem}", result.Output, StringComparison.Ordinal);
+        Assert.Empty(Calls());
+    }
+
+    [Fact]
+    public async Task EveryProblemWithTheAccessLogIsNamedAtOnce()
+    {
+        var folder = DeployFolderWith(settings => settings["environments"]!["tdd"]!["edgeLogs"] = JsonNode.Parse("""{ "enabled": true, "retentionDays": 7, "dailyCapGb": 0 }"""));
+
+        var result = await DeployAsync("tdd", deployFolder: folder);
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Contains("  retentionDays '7' is not", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  dailyCapGb '0' is not", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  'tdd' has no Front Door, and the access log is the Front Door's", result.Output, StringComparison.Ordinal);
+        Assert.Empty(Calls());
+    }
+
+    /// <summary>
+    /// A stack that does not name the workspace (its outputs are those of a template before this one): said in one
+    /// line, and the deployment goes on to empty the cache. The log must not stand between a release and its readers.
+    /// </summary>
+    [Theory]
+    [InlineData("")]
+    [InlineData(null)]
+    public async Task AStackThatDoesNotNameItsWorkspaceIsSaidAndFailsNothing(string? workspaceId)
+    {
+        UatBehindItsFrontDoor();
+        var stack = JsonNode.Parse(File.ReadAllText(Path.Join(_state, "stack-show.json")))!;
+        ((JsonObject)stack["outputs"]!).Remove("edgeLogWorkspaceId");
+        if (workspaceId is not null)
+        {
+            stack["outputs"]!["edgeLogWorkspaceId"] = new JsonObject { ["value"] = workspaceId };
+        }
+
+        File.WriteAllText(Path.Join(_state, "stack-show.json"), stack.ToJsonString());
+
+        var result = await DeployAsync("uat");
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Contains("The settings ask for the access log of the Front Door, but stack-jpcom-uat-web does not name its workspace: look at the stack's outputs.", result.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("AzureDiagnostics", result.Output, StringComparison.Ordinal);
+        Assert.EndsWith("PASS the Front Door's cache is emptied: readers get release 1.2.3", result.Output.TrimEnd(), StringComparison.Ordinal);
+    }
+
+    /// <summary>A stack Azure refuses for the log is refused whole, and not applied again: the release is not deployed.</summary>
+    [Fact]
+    public async Task AStackAzureRefusesForTheWorkspaceIsNotAppliedAgain()
+    {
+        UatBehindItsFrontDoor();
+        File.WriteAllText(Path.Join(_state, "stack-fails"), "(MissingSubscriptionRegistration) The subscription is not registered to use namespace 'Microsoft.OperationalInsights'.");
+
+        var result = await DeployAsync("uat", retryPauseSeconds: 30);
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Single(Calls(), call => call.StartsWith("stack group create", StringComparison.Ordinal));
+        Assert.Contains("Not tried again: no second attempt changes MissingSubscriptionRegistration.", result.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("Access log of the Front Door", result.Output, StringComparison.Ordinal);
+    }
+
     private void ExpressEnvironment(string name) => File.WriteAllText(Path.Join(_state, $"environment-{name}"), "Succeeded\nExpress\n");
 
     /// <summary>uat as it is after an earlier deployment: both regions, and a stack that names them and the Front Door.</summary>
@@ -1143,9 +1367,15 @@ public sealed class DeployScriptTests : IDisposable
                   { "code": "eus2", "location": "eastus2", "app": "ca-jpcom-uat-web-eus2", "url": "{{_region.Url}}" },
                   { "code": "gwc", "location": "germanywestcentral", "app": "ca-jpcom-uat-web-gwc", "url": "{{_region.Url}}/" } ] },
                 "frontDoorUrl": { "value": "https://jpcom-uat-abc123.z02.azurefd.net" },
-                "frontDoorEndpointId": { "value": "{{EndpointId}}" } } }
+                "frontDoorEndpointId": { "value": "{{EndpointId}}" },
+                "edgeLogWorkspaceId": { "value": "{{UatWorkspaceId}}" } } }
             """);
     }
+
+    /// <summary>The workspace that holds the access log of uat's Front Door (ADR-0022), as the stack names it.</summary>
+    private const string UatWorkspaceId = "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/rg-test/providers/Microsoft.OperationalInsights/workspaces/log-jpcom-uat-edge";
+
+    private const string ProdWorkspaceId = "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/rg-test/providers/Microsoft.OperationalInsights/workspaces/log-jpcom-prod-edge";
 
     /// <summary>A call without the names of the temporary files it was given, which differ from attempt to attempt.</summary>
     private static string WithoutTemporaryFiles(string call) => System.Text.RegularExpressions.Regex.Replace(call, @"@\S+", "@file");
@@ -1205,6 +1435,7 @@ public sealed class DeployScriptTests : IDisposable
                 "regions": { "value": [ { "code": "eus2", "location": "eastus2", "app": "ca-jpcom-prod-web-eus2", "url": "{{_region.Url}}" } ] },
                 "frontDoorUrl": { "value": "https://jpcom-prod-d8e7.z02.azurefd.net" },
                 "frontDoorEndpointId": { "value": "{{ProdEndpointId}}" },
+                "edgeLogWorkspaceId": { "value": "{{ProdWorkspaceId}}" },
                 "hostNames": { "value": [ {{string.Join(',', domains).Replace("jpcom-uat-abc123.z02.azurefd.net", "jpcom-prod-d8e7.z02.azurefd.net", StringComparison.Ordinal)}} ] } } }
             """);
         File.WriteAllText(Path.Join(_state, "dns-show.json"), $$"""

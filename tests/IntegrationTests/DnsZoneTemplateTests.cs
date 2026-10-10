@@ -252,7 +252,8 @@ public sealed class DnsZoneTemplateTests
         Assert.DoesNotContain("Microsoft.Network", site.Root.GetRawText(), StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("dnsZone", site.Root.GetRawText(), StringComparison.OrdinalIgnoreCase);
         Assert.Equal(
-            ["system", "environmentName", "version", "registryServer", "pullIdentityId", "regions", "frontDoor", "port", "hostNames", "redirectHostNames"],
+            // The last three are the access log's (ADR-0022): nothing of DNS was added with them.
+            ["system", "environmentName", "version", "registryServer", "pullIdentityId", "regions", "frontDoor", "port", "hostNames", "redirectHostNames", "edgeLogs", "edgeLogsRetentionDays", "edgeLogsDailyCapGb"],
             site.Root.GetProperty("parameters").EnumerateObject().Select(parameter => parameter.Name));
     }
 
