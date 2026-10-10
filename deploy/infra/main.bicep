@@ -34,7 +34,7 @@ param hostNames array = []
 @description('Host names that the site answers with a redirect to the canonical host: www. and feeds. of it.')
 param redirectHostNames array = []
 
-@description('True: the Front Door\'s access log is kept in a Log Analytics workspace (ADR-0022). Needs the Front Door.')
+@description('True: the Front Door\'s access log is kept in a Log Analytics workspace (ADR-0023). Needs the Front Door.')
 param edgeLogs bool = false
 
 @description('How many days the workspace keeps a line of the access log before it deletes it.')
@@ -225,7 +225,7 @@ resource route 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = if (fro
   }
 }
 
-// The access log of the Front Door (ADR-0022): what a reader got at the edge, one line per request. A workspace of the
+// The access log of the Front Door (ADR-0023): what a reader got at the edge, one line per request. A workspace of the
 // environment's own, and the one diagnostic setting that sends the log there. Only the access log: the Front Door
 // sends no probes (ADR-0008) and has no firewall, so those two logs would stay empty, and no metric is exported.
 // Deployed only when the environment's settings ask for it. Switched off, both conditions are false and this
@@ -307,6 +307,6 @@ output frontDoorEndpointId string = frontDoor ? endpoint!.id : ''
 // What DNS needs for every host name, which deploy.ps1 prints: the TXT record that proves the name is the owner's
 // (while the validation has not passed), and where the name's address record points. No host name: an empty list.
 output hostNames array = customDomain ? customDomains!.outputs.hostNames : []
-// Where the access log of the Front Door is (ADR-0022), which deploy.ps1 prints: the workspace's resource ID. Not its
+// Where the access log of the Front Door is (ADR-0023), which deploy.ps1 prints: the workspace's resource ID. Not its
 // key. No access log: an empty text.
 output edgeLogWorkspaceId string = edgeLog ? edgeLogWorkspace.id : ''

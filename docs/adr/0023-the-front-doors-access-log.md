@@ -1,4 +1,4 @@
-# ADR-0022: The Front Door's access log is kept, in a workspace of the site's own stack
+# ADR-0023: The Front Door's access log is kept, in a workspace of the site's own stack
 
 - **Status:** Accepted
 - **Date:** 2026-10-09
@@ -149,7 +149,7 @@ Nothing is missing.
 | # | When | Check | Command | Expected |
 |---|---|---|---|---|
 | 1 | The first deployment of this change to `tdd` | Without a Front Door nothing is new | the deployment's log | `PASS stack-jpcom-tdd-web`, and no line "Access log of the Front Door" |
-| 2 | The first deployment to `uat` | Azure takes the workspace and the diagnostic setting from the deploy identity, in a stack with deny settings | the deployment's log | `PASS stack-jpcom-uat-web`, then `Access log of the Front Door (ADR-0022): the workspace log-jpcom-uat-edge in rg-jpcom-nonprod keeps …`, a portal address and the query |
+| 2 | The first deployment to `uat` | Azure takes the workspace and the diagnostic setting from the deploy identity, in a stack with deny settings | the deployment's log | `PASS stack-jpcom-uat-web`, then `Access log of the Front Door (ADR-0023): the workspace log-jpcom-uat-edge in rg-jpcom-nonprod keeps …`, a portal address and the query |
 | 3 | After it | The setting sends the access log, and only that | `az monitor diagnostic-settings list --resource <uat profile id> --query "[].{name:name, workspace:workspaceId, logs:logs[?enabled].category, metrics:metrics[?enabled].category}"` | one setting `access-log`, the workspace `log-jpcom-uat-edge`, `FrontDoorAccessLog` alone, no metric |
 | 4 | After it | The workspace is as the settings say, and its keys are off | `az resource show --ids <uat workspace id> --query "properties.{sku:sku.name, days:retentionInDays, cap:workspaceCapping.dailyQuotaGb, keysOff:features.disableLocalAuth}"` | `PerGB2018`, 30, 1, true |
 | 5 | Some minutes after a request to uat's address | Lines arrive, and the query reads them | the portal address the deployment printed, the query pasted | a row `200` at least. **This is where it is first seen which of the two status columns the Front Door fills**, and whether the portal address opens the Logs page |

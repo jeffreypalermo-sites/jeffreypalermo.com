@@ -4,7 +4,7 @@ using JeffreyPalermo.UnitTests.Architecture;
 namespace JeffreyPalermo.UnitTests.Delivery;
 
 /// <summary>
-/// The Front Door's access log is kept (ADR-0022): a setting per environment, a workspace and one diagnostic setting
+/// The Front Door's access log is kept (ADR-0023): a setting per environment, a workspace and one diagnostic setting
 /// in the site's own stack. These tests pin what was decided: which environments have it, that it is the access log
 /// and nothing else, that no key leaves, that switching it off is the stack's deletion and no third stack, and that
 /// the script says where the log is. <c>EdgeLogsTemplateTests</c> works out the compiled template;
@@ -18,7 +18,7 @@ public class EdgeLogsContractTests
 
     private static readonly string Site = File.ReadAllText(Path.Join(Root, "deploy", "infra", "main.bicep"));
 
-    private static readonly string Decision = File.ReadAllText(Path.Join(Root, "docs", "adr", "0022-the-front-doors-access-log.md"));
+    private static readonly string Decision = File.ReadAllText(Path.Join(Root, "docs", "adr", "0023-the-front-doors-access-log.md"));
 
     private static JsonElement Environments() =>
         JsonDocument.Parse(File.ReadAllText(Path.Join(Root, "deploy", "settings.json"))).RootElement.GetProperty("environments");
@@ -85,7 +85,7 @@ public class EdgeLogsContractTests
     }
 
     /// <summary>
-    /// Where the workspace lives was decided (ADR-0022): in the site's stack, which deletes what leaves its template.
+    /// Where the workspace lives was decided (ADR-0023): in the site's stack, which deletes what leaves its template.
     /// Not in the zone's stack, and not in a third one.
     /// </summary>
     [Fact]
@@ -122,7 +122,7 @@ public class EdgeLogsContractTests
     [Fact]
     public void TheScriptSaysWhereTheLogIsBeforeItEmptiesTheCacheAndGivesAQueryByStatusCode()
     {
-        var said = Deploy.IndexOf("Write-Host \"Access log of the Front Door (ADR-0022): the workspace ", StringComparison.Ordinal);
+        var said = Deploy.IndexOf("Write-Host \"Access log of the Front Door (ADR-0023): the workspace ", StringComparison.Ordinal);
         var applied = Deploy.IndexOf("Write-Host \"PASS ${stack}: release $Version in ", StringComparison.Ordinal);
         var purged = Deploy.IndexOf("Write-Host \"Emptying the Front Door's cache: ", StringComparison.Ordinal);
 
@@ -137,7 +137,7 @@ public class EdgeLogsContractTests
     [Fact]
     public void TheDecisionRecordSaysWhatIsKeptWhereAndWhatSwitchingOffDoes()
     {
-        Assert.StartsWith("# ADR-0022: ", Decision, StringComparison.Ordinal);
+        Assert.StartsWith("# ADR-0023: ", Decision, StringComparison.Ordinal);
         Assert.Contains("`\"edgeLogs\": { \"enabled\": true, \"retentionDays\": 30, \"dailyCapGb\": 1 }`", Decision, StringComparison.Ordinal);
         Assert.Contains("**Access log only.**", Decision, StringComparison.Ordinal);
         Assert.Contains("**Chosen: the site's stack, with the consequence stated.**", Decision, StringComparison.Ordinal);
@@ -161,9 +161,9 @@ public class EdgeLogsContractTests
         var index = File.ReadAllText(Path.Join(Root, "docs", "adr", "README.md"));
         var architecture = File.ReadAllText(Path.Join(Root, "docs", "architecture", "README.md"));
 
-        Assert.Contains("| [0022](0022-the-front-doors-access-log.md) | The Front Door's access log is kept", index, StringComparison.Ordinal);
+        Assert.Contains("| [0023](0023-the-front-doors-access-log.md) | The Front Door's access log is kept", index, StringComparison.Ordinal);
         Assert.Contains("| Access log of the Front Door, `log-jpcom-<env>-edge` |", architecture, StringComparison.Ordinal);
-        Assert.Contains("[ADR-0022](../adr/0022-the-front-doors-access-log.md)", architecture, StringComparison.Ordinal);
-        Assert.Contains("The access log of the Front Door (edgeLogs, ADR-0022; uat and production)", Deploy[..Deploy.IndexOf("[CmdletBinding()]", StringComparison.Ordinal)], StringComparison.Ordinal);
+        Assert.Contains("[ADR-0023](../adr/0023-the-front-doors-access-log.md)", architecture, StringComparison.Ordinal);
+        Assert.Contains("The access log of the Front Door (edgeLogs, ADR-0023; uat and production)", Deploy[..Deploy.IndexOf("[CmdletBinding()]", StringComparison.Ordinal)], StringComparison.Ordinal);
     }
 }

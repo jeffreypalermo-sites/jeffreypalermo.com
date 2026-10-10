@@ -1133,7 +1133,7 @@ public sealed class DeployScriptTests : IDisposable
     private const string EdgeLogQuery = "AzureDiagnostics | where TimeGenerated > ago(1h) and Category == \"FrontDoorAccessLog\" | summarize answers = count() by status = iff(isnotempty(httpStatusCode_s), httpStatusCode_s, tostring(toint(httpStatusCode_d))) | order by status asc";
 
     /// <summary>
-    /// The access log of the Front Door (ADR-0022), with the settings as they are: the stack is asked for it with
+    /// The access log of the Front Door (ADR-0023), with the settings as they are: the stack is asked for it with
     /// the days and the cap of the settings, and the deployment says where the log is and gives the query to paste,
     /// before the purge, so it is there whatever comes after.
     /// </summary>
@@ -1160,7 +1160,7 @@ public sealed class DeployScriptTests : IDisposable
         Assert.Contains("behind Front Door", result.Output, StringComparison.Ordinal);
         Assert.Contains(", with its access log\n", result.Output, StringComparison.Ordinal);
 
-        Assert.Contains($"Access log of the Front Door (ADR-0022): the workspace {workspace} in rg-test keeps what readers got at the edge, one line per request, for 30 days; at most 1 GB a day. A request is there some minutes after it was answered.\n", result.Output, StringComparison.Ordinal);
+        Assert.Contains($"Access log of the Front Door (ADR-0023): the workspace {workspace} in rg-test keeps what readers got at the edge, one line per request, for 30 days; at most 1 GB a day. A request is there some minutes after it was answered.\n", result.Output, StringComparison.Ordinal);
         Assert.Contains($"  In the Azure portal: https://portal.azure.com/#resource{workspaceId}/logs\n", result.Output, StringComparison.Ordinal);
         Assert.Contains("  The answers of the last hour by status code (paste it there; 0 is a region that did not answer in time, 499 a reader who left):\n", result.Output, StringComparison.Ordinal);
         Assert.Contains($"    {EdgeLogQuery}\n", result.Output, StringComparison.Ordinal);
@@ -1372,7 +1372,7 @@ public sealed class DeployScriptTests : IDisposable
             """);
     }
 
-    /// <summary>The workspace that holds the access log of uat's Front Door (ADR-0022), as the stack names it.</summary>
+    /// <summary>The workspace that holds the access log of uat's Front Door (ADR-0023), as the stack names it.</summary>
     private const string UatWorkspaceId = "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/rg-test/providers/Microsoft.OperationalInsights/workspaces/log-jpcom-uat-edge";
 
     private const string ProdWorkspaceId = "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/rg-test/providers/Microsoft.OperationalInsights/workspaces/log-jpcom-prod-edge";

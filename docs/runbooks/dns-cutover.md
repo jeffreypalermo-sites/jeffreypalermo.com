@@ -349,10 +349,10 @@ Before it: every check of [Before the day](#before-the-day) has passed, step 7 l
    `cache-control: private, max-age=300` and `x-cache: CONFIG_NOCACHE`; `301` to `https://jeffreypalermo.com/feed/`.
 6. **See what readers get at the edge.** The checks above ask from one machine. The Front Door's access log has
    a line for every request of every reader, some minutes after it was answered
-   ([ADR-0022](../adr/0022-the-front-doors-access-log.md)). The last production deployment's log says where it is:
+   ([ADR-0023](../adr/0023-the-front-doors-access-log.md)). The last production deployment's log says where it is:
 
    ```text
-   Access log of the Front Door (ADR-0022): the workspace log-jpcom-prod-edge in <prod group> keeps what readers got at the edge, one line per request, for 30 days; at most 1 GB a day. A request is there some minutes after it was answered.
+   Access log of the Front Door (ADR-0023): the workspace log-jpcom-prod-edge in <prod group> keeps what readers got at the edge, one line per request, for 30 days; at most 1 GB a day. A request is there some minutes after it was answered.
      In the Azure portal: https://portal.azure.com/#resource<workspace id>/logs
      The answers of the last hour by status code (paste it there; 0 is a region that did not answer in time, 499 a reader who left):
        <the query below>
@@ -373,7 +373,7 @@ Before it: every check of [Before the day](#before-the-day) has passed, step 7 l
 
    No rows at all: a line takes some minutes; and before the first reader's resolver has let go of the old name
    servers, only the checks of this runbook have asked. If the workspace's page shows a banner that its daily cap
-   was reached, the log takes nothing more until the next day (ADR-0022, "Cost and limits").
+   was reached, the log takes nothing more until the next day (ADR-0023, "Cost and limits").
 7. **Send one message to the domain's mailbox from outside.**
 
    Check: it arrives.

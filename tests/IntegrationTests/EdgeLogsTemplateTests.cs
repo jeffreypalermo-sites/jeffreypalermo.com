@@ -3,7 +3,7 @@ using System.Text.Json;
 namespace JeffreyPalermo.IntegrationTests;
 
 /// <summary>
-/// The access log of the Front Door in <c>deploy/infra/main.bicep</c> (ADR-0022), on the template as the Bicep
+/// The access log of the Front Door in <c>deploy/infra/main.bicep</c> (ADR-0023), on the template as the Bicep
 /// compiler writes it. An environment whose settings do not ask for the log must be as it was without this part: so
 /// the first thing to prove is that switched off the template deploys what it deployed before, resource for
 /// resource. Then: switched on it adds a workspace and one diagnostic setting, which sends the access log and

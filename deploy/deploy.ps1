@@ -45,7 +45,7 @@
     servers. Entering them at the registrar is the move, and a person's step; until then nobody asks the zone, and
     nothing here changes what the public DNS answers.
 
-    The access log of the Front Door (edgeLogs, ADR-0022; uat and production): the site's stack then also holds a
+    The access log of the Front Door (edgeLogs, ADR-0023; uat and production): the site's stack then also holds a
     Log Analytics workspace, log-<system>-<environment>-edge, and the one diagnostic setting that sends the Front
     Door's access log there: one line for every request a reader made, with the status code the edge answered. The
     settings say how many days a line is kept and how many GB the workspace takes in a day. After the stack the
@@ -130,7 +130,7 @@ if ($dnsZone -and $dnsZone -cnotmatch '^(?=.{4,253}$)([a-z0-9]([a-z0-9-]{0,61}[a
     exit 1
 }
 
-# The access log of the Front Door (ADR-0022), when the environment's settings ask for it. Checked before anything is
+# The access log of the Front Door (ADR-0023), when the environment's settings ask for it. Checked before anything is
 # asked of Azure.
 $edgeLogs = $false
 $edgeLogsRetentionDays = 30
@@ -406,7 +406,7 @@ function Publish-DnsZone {
     Write-Host "  Entering these at the registrar is the move, and a person's step (docs/runbooks/dns-cutover.md). Until then the zone's records are only prepared: nobody asks this zone."
 }
 
-# What a person pastes to see what readers got (ADR-0022). The Front Door's log lands in the table AzureDiagnostics,
+# What a person pastes to see what readers got (ADR-0023). The Front Door's log lands in the table AzureDiagnostics,
 # where the status code is a text or a number, depending on what the workspace saw first: the query takes either.
 $edgeLogQuery = 'AzureDiagnostics | where TimeGenerated > ago(1h) and Category == "FrontDoorAccessLog" | summarize answers = count() by status = iff(isnotempty(httpStatusCode_s), httpStatusCode_s, tostring(toint(httpStatusCode_d))) | order by status asc'
 
@@ -430,7 +430,7 @@ $parametersFile = Join-Path ([IO.Path]::GetTempPath()) "parameters-$stack-$([Gui
         # Wrapped again where they are used: a list of one would otherwise be written as a text, and none as null.
         hostNames         = @{ value = @($pageHostNames) }
         redirectHostNames = @{ value = @($redirectHostNames) }
-        # The access log of the Front Door (ADR-0022): whether, how many days a line is kept, how many GB a day.
+        # The access log of the Front Door (ADR-0023): whether, how many days a line is kept, how many GB a day.
         edgeLogs              = @{ value = $edgeLogs }
         edgeLogsRetentionDays = @{ value = $edgeLogsRetentionDays }
         edgeLogsDailyCapGb    = @{ value = $edgeLogsDailyCapGb }
@@ -561,13 +561,13 @@ if ($customDomains.Count -gt 0) {
     }
 }
 
-# The access log of the Front Door (ADR-0022), where the settings ask for it: where it is, and one query to paste.
+# The access log of the Front Door (ADR-0023), where the settings ask for it: where it is, and one query to paste.
 # Printed at every deployment, and before the purge like the host names, so it is there whatever comes after: a
 # deployment that fails further down is one more reason to look. Nothing here fails a deployment.
 if ($edgeLogs) {
     $workspaceId = [string] (Get-StackOutput -Outputs $outputs -Name 'edgeLogWorkspaceId')
     if ($workspaceId) {
-        Write-Host "Access log of the Front Door (ADR-0022): the workspace $($workspaceId.Split('/')[-1]) in $resourceGroup keeps what readers got at the edge, one line per request, for $edgeLogsRetentionDays days; at most $edgeLogsDailyCapGb GB a day. A request is there some minutes after it was answered."
+        Write-Host "Access log of the Front Door (ADR-0023): the workspace $($workspaceId.Split('/')[-1]) in $resourceGroup keeps what readers got at the edge, one line per request, for $edgeLogsRetentionDays days; at most $edgeLogsDailyCapGb GB a day. A request is there some minutes after it was answered."
         Write-Host "  In the Azure portal: https://portal.azure.com/#resource$workspaceId/logs"
         Write-Host "  The answers of the last hour by status code (paste it there; 0 is a region that did not answer in time, 499 a reader who left):"
         Write-Host "    $edgeLogQuery"

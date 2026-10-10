@@ -57,7 +57,7 @@ public sealed class CustomDomainTemplateTests
         var added = Assert.Single(template.Resources, KnowsOfHostNames);
         Assert.Equal(TheModule(template).GetRawText(), added.GetRawText());
         Assert.Equal(0, template.Instances(added));
-        // Beside it only the two resources of the access log (ADR-0022), which EdgeLogsTemplateTests holds.
+        // Beside it only the two resources of the access log (ADR-0023), which EdgeLogsTemplateTests holds.
         Assert.Equal(
             [.. BeforeHostNames, "workspaces *", "diagnosticSettings *", "deployments *"],
             template.Resources.Select(CompiledTemplate.Kind));

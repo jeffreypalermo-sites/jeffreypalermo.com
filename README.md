@@ -171,6 +171,10 @@ menu leads to ([ADR-0021](docs/adr/0021-the-menu-leads-to-the-podcast-and-the-bo
 also in `Azure DevOps Podcast`, as the show was called then. They have no tags: the show gives its episodes no
 keywords, and the site does not tag people. A keyword that is a tag of the site would become one.
 
+The home page and the site's own feeds (`/feed/`, `/feed/atom/`) leave the episodes out: they list what Jeffrey
+wrote ([ADR-0022](docs/adr/0022-the-home-page-and-the-feed-leave-out-the-episodes.md)). Every other listing has
+them, and the menu's "AI DevOps Podcast" lists them all.
+
 ## Run the site locally
 
 ```bash
@@ -214,7 +218,8 @@ The build treats warnings as errors.
   site's two font files, set text on a ground it does not stand out from, hide the keyboard's focus, grow large).
 - **Integration tests:** the real `content/` tree loaded into the domain; the site in-process: every kind of page in
   the site layout, the markup the stylesheet rests on (the menu in the header, search in a box of its own, the page
-  being read marked in the menu, no class in the stylesheet that the site never writes), a crawl from `/` that must reach all 1,384 posts by following links, and a replay of all 9,337 URLs
+  being read marked in the menu, no class in the stylesheet that the site never writes), a crawl from `/` that must reach all 1,385 posts by following links (the home listing holds every post that is no
+  episode of the podcast once, and no episode), and a replay of all 9,337 URLs
   of `url-contract.tsv`; the fetch → convert → media pipeline and the URL prober against a stubbed WordPress HTTP
   server and the real file system; `localize` and `recover` against stand-ins for Photon, the hosts and the
   Wayback Machine, writing to a temp content tree; the `podcast` command writing to a temp content tree, and the

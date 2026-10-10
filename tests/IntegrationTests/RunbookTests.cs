@@ -95,7 +95,7 @@ public sealed partial class RunbookTests
     }
 
     /// <summary>
-    /// The day's look at what readers get at the edge (ADR-0022): the query in the runbook is the one the script
+    /// The day's look at what readers get at the edge (ADR-0023): the query in the runbook is the one the script
     /// prints, letter for letter, and the lines the runbook quotes are the script's.
     /// </summary>
     [Fact]
@@ -108,11 +108,11 @@ public sealed partial class RunbookTests
         Assert.Contains($"   ```kusto\n   {query}\n   ```", day, StringComparison.Ordinal);
         Assert.Contains("**See what readers get at the edge.**", day, StringComparison.Ordinal);
         Assert.Contains("Check: rows `200` and `301`", day, StringComparison.Ordinal);
-        Assert.Contains("[ADR-0022](../adr/0022-the-front-doors-access-log.md)", day, StringComparison.Ordinal);
+        Assert.Contains("[ADR-0023](../adr/0023-the-front-doors-access-log.md)", day, StringComparison.Ordinal);
 
         // What the runbook says the deployment prints, with production's values where the script has its own.
-        Assert.Contains("Access log of the Front Door (ADR-0022): the workspace log-jpcom-prod-edge in <prod group> keeps what readers got at the edge, one line per request, for 30 days; at most 1 GB a day. A request is there some minutes after it was answered.", day, StringComparison.Ordinal);
-        Assert.Contains("Write-Host \"Access log of the Front Door (ADR-0022): the workspace $($workspaceId.Split('/')[-1]) in $resourceGroup keeps what readers got at the edge, one line per request, for $edgeLogsRetentionDays days; at most $edgeLogsDailyCapGb GB a day. A request is there some minutes after it was answered.\"", Deploy, StringComparison.Ordinal);
+        Assert.Contains("Access log of the Front Door (ADR-0023): the workspace log-jpcom-prod-edge in <prod group> keeps what readers got at the edge, one line per request, for 30 days; at most 1 GB a day. A request is there some minutes after it was answered.", day, StringComparison.Ordinal);
+        Assert.Contains("Write-Host \"Access log of the Front Door (ADR-0023): the workspace $($workspaceId.Split('/')[-1]) in $resourceGroup keeps what readers got at the edge, one line per request, for $edgeLogsRetentionDays days; at most $edgeLogsDailyCapGb GB a day. A request is there some minutes after it was answered.\"", Deploy, StringComparison.Ordinal);
         Assert.Contains("     In the Azure portal: https://portal.azure.com/#resource<workspace id>/logs", day, StringComparison.Ordinal);
         Assert.Contains("Write-Host \"  In the Azure portal: https://portal.azure.com/#resource$workspaceId/logs\"", Deploy, StringComparison.Ordinal);
         const string paste = "  The answers of the last hour by status code (paste it there; 0 is a region that did not answer in time, 499 a reader who left):";

@@ -5,11 +5,18 @@ public sealed record ArchiveFilter
 {
     public static ArchiveFilter All { get; } = new();
 
+    /// <summary>
+    /// What the home page and the site's own feeds list: every post that is not an episode of the podcast
+    /// (<see cref="PodcastEpisodes"/>).
+    /// </summary>
+    public static ArchiveFilter Home { get; } = new() { WithoutEpisodes = true };
+
     public int? Year { get; private init; }
     public int? Month { get; private init; }
     public int? Day { get; private init; }
     public string? Taxonomy { get; private init; }
     public string? TermSlug { get; private init; }
+    public bool WithoutEpisodes { get; private init; }
 
     public static ArchiveFilter ForDate(int year, int? month = null, int? day = null)
     {
@@ -26,7 +33,8 @@ public sealed record ArchiveFilter
     public bool Matches(Post post)
     {
         ArgumentNullException.ThrowIfNull(post);
-        return (Year is null || post.Published.Year == Year)
+        return !(WithoutEpisodes && PodcastEpisodes.IsEpisode(post))
+            && (Year is null || post.Published.Year == Year)
             && (Month is null || post.Published.Month == Month)
             && (Day is null || post.Published.Day == Day)
             && Taxonomy switch
