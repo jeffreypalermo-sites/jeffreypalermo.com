@@ -11,6 +11,7 @@
     },
     "uat": {
       "frontDoor": true,
+      "edgeLogs": { "enabled": true, "retentionDays": 30, "dailyCapGb": 1 },
       "hostNames": ["uat.jeffreypalermo.ceo"],
       "regions": [
         { "location": "eastus2", "code": "eus2" },
@@ -21,6 +22,7 @@
       "frontDoor": true,
       "hostNames": ["jeffreypalermo.com", "www.jeffreypalermo.com", "feeds.jeffreypalermo.com", "www.jeffreypalermo.ceo"],
       "dnsZone": "jeffreypalermo.com",
+      "edgeLogs": { "enabled": true, "retentionDays": 30, "dailyCapGb": 1 },
       "regions": [
         { "location": "eastus2", "code": "eus2" },
         { "location": "westus2", "code": "wus2" },

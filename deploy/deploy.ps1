@@ -45,6 +45,14 @@
     servers. Entering them at the registrar is the move, and a person's step; until then nobody asks the zone, and
     nothing here changes what the public DNS answers.
 
+    The access log of the Front Door (edgeLogs, ADR-0023; uat and production): the site's stack then also holds a
+    Log Analytics workspace, log-<system>-<environment>-edge, and the one diagnostic setting that sends the Front
+    Door's access log there: one line for every request a reader made, with the status code the edge answered. The
+    settings say how many days a line is kept and how many GB the workspace takes in a day. After the stack the
+    script prints where the log is and a query that counts the answers of the last hour by status code. A line is
+    there some minutes after its request. Switched off in the settings, the stack deletes the workspace and what it
+    holds, like everything that leaves its template.
+
     A step against Azure that fails is run once more after a pause: the platform fails by itself at times (the first
     production deployment of the regions: "(500 InternalError): managed identity bootstrap failed"; hours later the
     same deployment passed). It is not run again when the error says the request itself is wrong or not allowed,
@@ -120,6 +128,41 @@ $dnsZone = if ($place.ContainsKey('dnsZone')) { "$($place['dnsZone'])".Trim().To
 if ($dnsZone -and $dnsZone -cnotmatch '^(?=.{4,253}$)([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$') {
     Write-Host "FAIL the DNS zone of '$Environment' in settings.json, '$dnsZone', is not a domain name; nothing was deployed"
     exit 1
+}
+
+# The access log of the Front Door (ADR-0023), when the environment's settings ask for it. Checked before anything is
+# asked of Azure.
+$edgeLogs = $false
+$edgeLogsRetentionDays = 30
+$edgeLogsDailyCapGb = 1
+if ($place.ContainsKey('edgeLogs')) {
+    $asked = $place['edgeLogs']
+    $problems = @()
+    if ($asked -isnot [System.Collections.IDictionary] -or -not $asked.Contains('enabled') -or $asked['enabled'] -isnot [bool]) {
+        $problems += 'edgeLogs must be { "enabled": true or false, "retentionDays": <days>, "dailyCapGb": <GB> }'
+    }
+    else {
+        $edgeLogs = [bool] $asked['enabled']
+        # A whole number as JSON gives it: not a text, not a fraction.
+        if ($asked.Contains('retentionDays')) {
+            $days = $asked['retentionDays']
+            if (($days -is [int] -or $days -is [long]) -and $days -ge 30 -and $days -le 730) { $edgeLogsRetentionDays = [int] $days }
+            else { $problems += "retentionDays '$days' is not a whole number of days from 30 to 730, which is what a Log Analytics workspace takes" }
+        }
+        if ($asked.Contains('dailyCapGb')) {
+            $cap = $asked['dailyCapGb']
+            if (($cap -is [int] -or $cap -is [long]) -and $cap -ge 1 -and $cap -le 100) { $edgeLogsDailyCapGb = [int] $cap }
+            else { $problems += "dailyCapGb '$cap' is not a whole number of GB from 1 to 100" }
+        }
+        if ($edgeLogs -and -not [bool] $place.frontDoor) {
+            $problems += "'$Environment' has no Front Door, and the access log is the Front Door's"
+        }
+    }
+    if ($problems.Count -gt 0) {
+        Write-Host "FAIL the access log (edgeLogs) of '$Environment' in settings.json cannot be deployed; nothing was deployed:"
+        $problems | ForEach-Object { Write-Host "  $_" }
+        exit 1
+    }
 }
 $system = [string] $facts.system
 $resourceGroup = [string] $facts.resourceGroup
@@ -363,10 +406,14 @@ function Publish-DnsZone {
     Write-Host "  Entering these at the registrar is the move, and a person's step (docs/runbooks/dns-cutover.md). Until then the zone's records are only prepared: nobody asks this zone."
 }
 
+# What a person pastes to see what readers got (ADR-0023). The Front Door's log lands in the table AzureDiagnostics,
+# where the status code is a text or a number, depending on what the workspace saw first: the query takes either.
+$edgeLogQuery = 'AzureDiagnostics | where TimeGenerated > ago(1h) and Category == "FrontDoorAccessLog" | summarize answers = count() by status = iff(isnotempty(httpStatusCode_s), httpStatusCode_s, tostring(toint(httpStatusCode_d))) | order by status asc'
+
 # 2. The apps, and the Front Door, as one stack.
 $stack = "stack-$system-$Environment-web"
 $frontDoor = [bool] $place.frontDoor
-Write-Host "Applying $stack in ${resourceGroup}: $($regions.Count) region(s) run $($facts.registryServer)/$system/web:$Version$(if ($frontDoor) { ', behind Front Door' })$(if ($hostNames.Count -gt 0) { ", as $($hostNames -join ', ')" })"
+Write-Host "Applying $stack in ${resourceGroup}: $($regions.Count) region(s) run $($facts.registryServer)/$system/web:$Version$(if ($frontDoor) { ', behind Front Door' })$(if ($hostNames.Count -gt 0) { ", as $($hostNames -join ', ')" })$(if ($edgeLogs) { ', with its access log' })"
 $parametersFile = Join-Path ([IO.Path]::GetTempPath()) "parameters-$stack-$([Guid]::NewGuid().ToString('N')).json"
 @{
     '$schema'      = 'https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#'
@@ -383,6 +430,10 @@ $parametersFile = Join-Path ([IO.Path]::GetTempPath()) "parameters-$stack-$([Gui
         # Wrapped again where they are used: a list of one would otherwise be written as a text, and none as null.
         hostNames         = @{ value = @($pageHostNames) }
         redirectHostNames = @{ value = @($redirectHostNames) }
+        # The access log of the Front Door (ADR-0023): whether, how many days a line is kept, how many GB a day.
+        edgeLogs              = @{ value = $edgeLogs }
+        edgeLogsRetentionDays = @{ value = $edgeLogsRetentionDays }
+        edgeLogsDailyCapGb    = @{ value = $edgeLogsDailyCapGb }
     }
 } | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $parametersFile -Encoding utf8NoBOM
 
@@ -507,6 +558,22 @@ if ($customDomains.Count -gt 0) {
         else {
             Write-Host "    CNAME  $name  $($domain.target)"
         }
+    }
+}
+
+# The access log of the Front Door (ADR-0023), where the settings ask for it: where it is, and one query to paste.
+# Printed at every deployment, and before the purge like the host names, so it is there whatever comes after: a
+# deployment that fails further down is one more reason to look. Nothing here fails a deployment.
+if ($edgeLogs) {
+    $workspaceId = [string] (Get-StackOutput -Outputs $outputs -Name 'edgeLogWorkspaceId')
+    if ($workspaceId) {
+        Write-Host "Access log of the Front Door (ADR-0023): the workspace $($workspaceId.Split('/')[-1]) in $resourceGroup keeps what readers got at the edge, one line per request, for $edgeLogsRetentionDays days; at most $edgeLogsDailyCapGb GB a day. A request is there some minutes after it was answered."
+        Write-Host "  In the Azure portal: https://portal.azure.com/#resource$workspaceId/logs"
+        Write-Host "  The answers of the last hour by status code (paste it there; 0 is a region that did not answer in time, 499 a reader who left):"
+        Write-Host "    $edgeLogQuery"
+    }
+    else {
+        Write-Host "The settings ask for the access log of the Front Door, but $stack does not name its workspace: look at the stack's outputs."
     }
 }
 

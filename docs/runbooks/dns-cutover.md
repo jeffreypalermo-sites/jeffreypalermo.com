@@ -31,6 +31,7 @@ Placeholders used below:
 | `<ns1>` … `<ns4>` | The zone's four name servers, like `ns1-04.azure-dns.com.` | the lines after `PASS stack-jpcom-prod-dns` in a production deployment |
 | `<zone id>` | The resource ID of the zone: `<production's resource group ID>/providers/Microsoft.Network/dnsZones/jeffreypalermo.com` | the stack `stack-jpcom-prod-dns`, output `zoneId` |
 | `<prod group>` | Production's resource group | the pipeline's context; the zone's ID names it |
+| `<workspace id>` | The resource ID of the workspace that holds production's access log: `<production's resource group ID>/providers/Microsoft.OperationalInsights/workspaces/log-jpcom-prod-edge` | the stack `stack-jpcom-prod-web`, output `edgeLogWorkspaceId`; the line "In the Azure portal" of a production deployment has it |
 
 ## DNS today
 
@@ -346,10 +347,37 @@ Before it: every check of [Before the day](#before-the-day) has passed, step 7 l
 
    Check: `301` to `https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/` with
    `cache-control: private, max-age=300` and `x-cache: CONFIG_NOCACHE`; `301` to `https://jeffreypalermo.com/feed/`.
-6. **Send one message to the domain's mailbox from outside.**
+6. **See what readers get at the edge.** The checks above ask from one machine. The Front Door's access log has
+   a line for every request of every reader, some minutes after it was answered
+   ([ADR-0023](../adr/0023-the-front-doors-access-log.md)). The last production deployment's log says where it is:
+
+   ```text
+   Access log of the Front Door (ADR-0023): the workspace log-jpcom-prod-edge in <prod group> keeps what readers got at the edge, one line per request, for 30 days; at most 1 GB a day. A request is there some minutes after it was answered.
+     In the Azure portal: https://portal.azure.com/#resource<workspace id>/logs
+     The answers of the last hour by status code (paste it there; 0 is a region that did not answer in time, 499 a reader who left):
+       <the query below>
+   ```
+
+   Open the address, signed in to Azure, and paste the query:
+
+   ```kusto
+   AzureDiagnostics | where TimeGenerated > ago(1h) and Category == "FrontDoorAccessLog" | summarize answers = count() by status = iff(isnotempty(httpStatusCode_s), httpStatusCode_s, tostring(toint(httpStatusCode_d))) | order by status asc
+   ```
+
+   Check: rows `200` and `301`, and `404` for addresses the old site did not have either. No row `0`, and no row
+   from `500` to `599` that keeps growing when the query is run again: `0` is a request no region answered in
+   time, `503` and `504` a region that did not start. A few `499` are readers who left. To see the lines an error
+   row is made of, with every column the log has (the host name, the address, the edge location, what went
+   wrong), replace everything from `summarize` on by
+   `where httpStatusCode_s startswith "5" or httpStatusCode_d >= 500 | take 100`.
+
+   No rows at all: a line takes some minutes; and before the first reader's resolver has let go of the old name
+   servers, only the checks of this runbook have asked. If the workspace's page shows a banner that its daily cap
+   was reached, the log takes nothing more until the next day (ADR-0023, "Cost and limits").
+7. **Send one message to the domain's mailbox from outside.**
 
    Check: it arrives.
-7. **Add the name to the nightly check**: `https://jeffreypalermo.com` into the repository variable
+8. **Add the name to the nightly check**: `https://jeffreypalermo.com` into the repository variable
    `ENVIRONMENT_URLS`, beside the three addresses that are there.
 
    Check: the next run of the workflow `Verify environments` lists four `PASS` lines.

@@ -57,7 +57,10 @@ public sealed class CustomDomainTemplateTests
         var added = Assert.Single(template.Resources, KnowsOfHostNames);
         Assert.Equal(TheModule(template).GetRawText(), added.GetRawText());
         Assert.Equal(0, template.Instances(added));
-        Assert.Equal(BeforeHostNames.Length + 1, template.Resources.Count());
+        // Beside it only the two resources of the access log (ADR-0023), which EdgeLogsTemplateTests holds.
+        Assert.Equal(
+            [.. BeforeHostNames, "workspaces *", "diagnosticSettings *", "deployments *"],
+            template.Resources.Select(CompiledTemplate.Kind));
     }
 
     /// <summary>
@@ -95,7 +98,7 @@ public sealed class CustomDomainTemplateTests
         var template = (await CompiledTemplate.CompileAsync()).With(("frontDoor", true), ("regions", Regions(2)), ("hostNames", Names()), ("redirectHostNames", Names()));
         var outputs = template.Root.GetProperty("outputs").EnumerateObject().ToList();
 
-        Assert.Equal(["regions", "frontDoorUrl", "frontDoorEndpointId", "hostNames"], outputs.Select(output => output.Name));
+        Assert.Equal(["regions", "frontDoorUrl", "frontDoorEndpointId", "hostNames", "edgeLogWorkspaceId"], outputs.Select(output => output.Name));
         Assert.All(outputs.Where(output => output.Name != "hostNames"), output => Assert.False(KnowsOfHostNames(output.Value), $"The output {output.Name} depends on the host names."));
         // if(false, <the module's output>, createArray()): the empty list.
         Assert.False((bool)template.Evaluate(template.Root.GetProperty("variables").GetProperty("customDomain"))!);
