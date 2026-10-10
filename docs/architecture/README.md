@@ -326,7 +326,7 @@ no rendered page in memory: the Front Door's edge is the cache._
 
 | Route | Component / endpoint |
 |---|---|
-| `/`, `/page/{n}/` | `ListingPage`: "Recent Updates", ten whole posts, older and newer |
+| `/`, `/page/{n}/` | `ListingPage`: "Recent Updates", ten whole posts, older and newer. Every post that is not an episode of the podcast (`ArchiveFilter.Home`, [ADR-0022](../adr/0022-the-home-page-and-the-feed-leave-out-the-episodes.md)); `/feed/` and `/feed/atom/` list the same |
 | `/{year}/{month}/{slug}/` | `PostPage`: date, author, categories and tags, body, archived comments threaded at their `#comment-{id}` anchors, previous and next post |
 | `/{year}/`, `/{year}/{month}/`, `/{year}/{month}/{day}/` (+ `/page/{n}/`) | `ListingPage`: "Yearly", "Monthly" or "Daily Archives" |
 | `/tag/{slug}/`, `/category/{slug}/`, `/author/{slug}/`, `/type/{slug}/` (+ `/page/{n}/`) | `ListingPage`: "Tag", "Category" or "Author Archives" |

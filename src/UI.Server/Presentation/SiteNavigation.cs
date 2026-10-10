@@ -22,7 +22,8 @@ public sealed class SiteNavigation(SiteContent site, IClock clock)
 
     public IReadOnlyList<TermUsage> Categories => _categories ??= site.TermsInUse(Now, Taxonomies.Category);
 
-    public IReadOnlyList<Post> RecentPosts(int count) => [.. site.Published(Now, ArchiveFilter.All, 1).Items.Take(count)];
+    /// <summary>The newest posts as the home page lists them: no episodes of the podcast.</summary>
+    public IReadOnlyList<Post> RecentPosts(int count) => [.. site.Published(Now, ArchiveFilter.Home, 1).Items.Take(count)];
 
     public Term? Category(string slug) => site.FindTerm(Taxonomies.Category, slug);
 

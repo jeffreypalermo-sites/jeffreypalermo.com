@@ -100,6 +100,30 @@ public sealed class SiteHttpTests(SiteFactory factory) : IClassFixture<SiteFacto
         Assert.Equal("https://jeffreypalermo.com/2026/10/the-five-pillars-leadership-for-effective-custom-software/", xml.Descendants("item").First().Element("link")!.Value);
     }
 
+    /// <summary>
+    /// The site's own feeds list what the home page lists: no episode of the podcast (ADR-0022). The podcast's
+    /// category has its feed, with the newest episodes.
+    /// </summary>
+    [Fact]
+    public async Task TheSitesFeedsListNoEpisodeOfThePodcastAndTheCategorysFeedListsThem()
+    {
+        using var client = factory.ClientFor();
+        XNamespace atom = "http://www.w3.org/2005/Atom";
+        var home = (await client.GetPageAsync("/")).QuerySelectorAll("main article.post h2.entry-title a").Select(a => "https://jeffreypalermo.com" + a.GetAttribute("href")).ToList();
+
+        var rss = XDocument.Parse(await client.GetStringAsync(new Uri("/feed/", UriKind.Relative))).Descendants("item").Select(item => item.Element("link")!.Value).ToList();
+        var entries = XDocument.Parse(await client.GetStringAsync(new Uri("/feed/atom/", UriKind.Relative))).Descendants(atom + "entry").Select(entry => entry.Element(atom + "link")!.Attribute("href")!.Value).ToList();
+        var podcast = XDocument.Parse(await client.GetStringAsync(new Uri("/category/ai-devops-podcast/feed/", UriKind.Relative))).Descendants("item").Select(item => item.Element("title")!.Value).ToList();
+
+        Assert.Equal(home, rss);
+        Assert.Equal(home, entries);
+        Assert.Equal(10, rss.Count);
+        Assert.DoesNotContain(rss.Concat(entries), link => link.Contains("-episode-4", StringComparison.Ordinal));
+        Assert.Equal(["/2026/10/the-five-pillars-leadership-for-effective-custom-software/", "/2026/01/ai-driven-devops-architecture/"], rss.Take(2).Select(link => new Uri(link).AbsolutePath));
+        Assert.Equal(10, podcast.Count);
+        Assert.Equal("Sam Nasr: AI Transformation - Episode 422", podcast[0]);
+    }
+
     [Theory]
     [InlineData("/wp-content/uploads/2018/06/image257b0257d255b61255d1.png", "image/png")]
     [InlineData("/wp-content/uploads/2018/06/image257b0257d255b61255d1.png?w=300", "image/png")]

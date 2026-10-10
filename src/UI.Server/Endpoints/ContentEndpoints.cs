@@ -83,7 +83,7 @@ internal static class ContentEndpoints
 
     private static IResult Home(SiteContent site, IClock clock, SiteOptions options, int page)
     {
-        var posts = site.Published(clock.UtcNow, ArchiveFilter.All, page);
+        var posts = site.Published(clock.UtcNow, ArchiveFilter.Home, page);
         return page > 1 && posts.Items.Count == 0 ? Pages.NotFound() : Pages.Render<ListingPage>(Listings.Home(options, posts));
     }
 

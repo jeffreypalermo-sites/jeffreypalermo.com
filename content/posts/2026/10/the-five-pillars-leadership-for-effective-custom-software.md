@@ -17,11 +17,9 @@ comments_open: false
 
 *The Five Pillars: Leadership for Effective Custom Software* is a book by Jeffrey Palermo.
 
-The publisher's description, as the audiobook's listing at Audible gives it:
+From the publisher's description, as the audiobook's listing at Audible gives it:
 
 > Offering a critical guide for CEOs, CTOs, and all stakeholders weary of software failures costing their companies dearly, Jeffrey Palermo uses his book to address the pervasive issues in software development that threaten business continuity and growth. This five-step process to ensure software success starts with a stark reminder of how poor software can cripple even the largest enterprises. Jeffrey draws from extensive industry experience, spanning Fortune 100s to startups, unveiling the pitfalls of ineffective software, and the practical solutions needed to avoid them.
->
-> From debunking misconceptions about software development to dissecting the critical pillars of effective software—Clarity, Quality, Stability, Speed, and Leadership—this book promises a clear, actionable roadmap for transforming software projects from potential liabilities into strategic assets. Jeffrey’s insights are not just for tech experts but for any leader invested in safeguarding their company's future through reliable, high-performing software teams.
 
 The five pillars, as Clear Measure's resource page for the book names them:
 
