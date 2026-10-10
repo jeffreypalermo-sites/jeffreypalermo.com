@@ -165,9 +165,49 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
         Assert.InRange(main.Width, 560, 700);
         await Assertions.Expect(page.Locator("aside").GetByRole(AriaRole.Heading, new() { Name = "Archives" })).ToBeVisibleAsync();
         await Assertions.Expect(page.Locator("aside .widget-profile img")).ToHaveJSPropertyAsync("complete", true);
+        // Every picture, also one further down that the browser fetches only when the reader gets near it.
+        await visit.EvaluateAsync<int>(LoadEveryPicture);
         Assert.True(await visit.EvaluateAsync<bool>("[...document.images].every(image => image.complete && image.naturalWidth > 0)"), "An image on the home page did not load.");
 
         Assert.Empty(visit.OffSiteRequests);
+        Assert.Empty(visit.FailedRequests);
+    }
+
+    /// <summary>
+    /// The home page lists what Jeffrey wrote and no episode of the podcast, which comes out every week and had
+    /// buried it (ADR-0022). The episodes are one press away, in the menu.
+    /// </summary>
+    [Fact]
+    public async Task TheHomePageListsNoEpisodeOfThePodcastAndTheMenuLeadsToThem()
+    {
+        await using var visit = await chromium.VisitAsync(site.BaseAddress);
+        var page = visit.Page;
+        await page.GotoAsync("/");
+        var titles = page.Locator("main article.post .entry-title a");
+
+        await Assertions.Expect(titles).ToHaveCountAsync(10);
+        await Assertions.Expect(titles.First).ToHaveTextAsync("The Five Pillars: Leadership for Effective Custom Software");
+        await Assertions.Expect(titles.Nth(1)).ToHaveAttributeAsync("href", "/2026/01/ai-driven-devops-architecture/");
+        await Assertions.Expect(titles.Nth(3)).ToHaveTextAsync(".NET DevOps for Azure");
+        await Assertions.Expect(page.Locator("main div.episode-video")).ToHaveCountAsync(0);
+        await Assertions.Expect(page.Locator("main article.post .entry-title a[href*='-episode-4']")).ToHaveCountAsync(0);
+
+        // The second page goes on with 2018, where a page of the newest posts used to be ten episodes of 2026.
+        await page.GetByRole(AriaRole.Link, new() { Name = "Older posts" }).ClickAsync();
+        await visit.ArrivesAtAsync("/page/2/");
+        await Assertions.Expect(page.Locator("main article.post time.entry-date").First).ToContainTextAsync("2018");
+        await Assertions.Expect(page.Locator("main div.episode-video")).ToHaveCountAsync(0);
+
+        await page.GetByRole(AriaRole.Navigation, new() { Name = "Main menu" }).GetByRole(AriaRole.Link, new() { Name = "AI DevOps Podcast" }).ClickAsync();
+        await visit.ArrivesAtAsync("/category/ai-devops-podcast/");
+        await Assertions.Expect(page.Locator("main article.post .entry-title a").First).ToHaveTextAsync("Sam Nasr: AI Transformation - Episode 422");
+        await Assertions.Expect(page.Locator("main div.episode-video")).ToHaveCountAsync(10);
+
+        // A post still leads to the posts before and after it by date, episodes too.
+        await page.GotoAsync("/2026/10/the-five-pillars-leadership-for-effective-custom-software/");
+        await Assertions.Expect(page.GetByRole(AriaRole.Navigation, new() { Name = "Posts before and after this one" }).GetByRole(AriaRole.Link)).ToHaveTextAsync(new Regex("Sam Nasr: AI Transformation - Episode 422"));
+        // (The second page holds a post of 2018 with one of the reviewed YouTube frames, so other hosts are not
+        // counted here; the home page itself asks none, which TheHomePageHasTheSitesLook holds.)
         Assert.Empty(visit.FailedRequests);
     }
 
@@ -522,12 +562,11 @@ public sealed partial class SiteInABrowserTests(ContainerSite site, Chromium chr
     }
 
     /// <summary>
-    /// A listing shows its posts whole, so a page of the home page's posts and the podcast's category have a frame
-    /// for each of ten episodes. All ten wait: reading the page to its end asks no other host for anything.
+    /// A listing shows its posts whole, so a page of the podcast's category has a frame for each of ten episodes. All ten wait: reading the page to its end asks no other host for anything.
     /// </summary>
     [Theory]
-    [InlineData("/page/3/", Visit.DesktopWidth)]
-    [InlineData("/page/3/", Visit.PhoneWidth)]
+    [InlineData("/category/ai-devops-podcast/page/3/", Visit.DesktopWidth)]
+    [InlineData("/category/ai-devops-podcast/page/3/", Visit.PhoneWidth)]
     [InlineData("/category/ai-devops-podcast/", Visit.PhoneWidth)]
     public async Task AListingOfEpisodesShowsTenVideosThatAllWait(string path, int width)
     {

@@ -277,8 +277,15 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         Assert.Equal("/wp-content/uploads/2026/10/the-five-pillars.jpg", cover.GetAttribute("src"));
         Assert.Contains("The Five Pillars", cover.GetAttribute("alt"), StringComparison.Ordinal);
         var quoted = Assert.Single(body.QuerySelectorAll("blockquote"));
-        Assert.StartsWith("Offering a critical guide for CEOs, CTOs, and all stakeholders weary of software failures", quoted.Text("p:first-child"), StringComparison.Ordinal);
-        Assert.Contains("Clarity, Quality, Stability, Speed, and Leadership", quoted.TextContent, StringComparison.Ordinal);
+        // The first paragraph of Audible's description, word for word. Its second names the fifth pillar
+        // "Leadership"; the book's is "Optimize the Team" (Jeffrey), and a quotation is not reworded: it is left out.
+        Assert.Equal(
+            "Offering a critical guide for CEOs, CTOs, and all stakeholders weary of software failures costing their companies dearly, Jeffrey Palermo uses his book to address the pervasive issues in software development that threaten business continuity and growth. "
+            + "This five-step process to ensure software success starts with a stark reminder of how poor software can cripple even the largest enterprises. "
+            + "Jeffrey draws from extensive industry experience, spanning Fortune 100s to startups, unveiling the pitfalls of ineffective software, and the practical solutions needed to avoid them.",
+            quoted.Text("p"));
+        Assert.DoesNotContain("and Leadership", body.TextContent, StringComparison.Ordinal);
+        Assert.Contains("From the publisher's description, as the audiobook's listing at Audible gives it:", body.TextContent, StringComparison.Ordinal);
         Assert.Equal(["Create Clarity", "Establish Quality", "Achieve Stability", "Increase Speed", "Optimize the Team"], body.QuerySelectorAll("ol > li").Select(li => li.TextContent.Trim()));
         Assert.Equal(
             ["https://www.audible.com/pd/The-Five-Pillars-Audiobook/B0DQY2KV98", "https://clearmeasure.com/thefivepillars/"],
@@ -370,8 +377,9 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         using var client = factory.ClientFor();
 
         var newest = await client.GetPageAsync("/2026/10/the-five-pillars-leadership-for-effective-custom-software/");
-        var oldest = await client.GetPageAsync((await client.GetPageAsync("/page/139/")).QuerySelectorAll("h2.entry-title a")[^1].GetAttribute("href")!);
+        var oldest = await client.GetPageAsync((await client.GetPageAsync("/page/97/")).QuerySelectorAll("h2.entry-title a")[^1].GetAttribute("href")!);
 
+        // Before and after a post stands every post by date, episodes of the podcast too (ADR-0022).
         Assert.Equal(("/2026/10/sam-nasr-ai-transformation-episode-422/", null), (newest.Href(".nav-previous a"), newest.Href(".nav-next a")));
         Assert.Null(oldest.Href(".nav-previous a"));
         Assert.NotNull(oldest.Href(".nav-next a"));
@@ -392,10 +400,14 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         Assert.Equal("8:00 am on October 9, 2026", posts[0].Text("time.entry-date"));
         Assert.Equal("/tag/books/", posts[0].Href(".entry-tags a"));
         Assert.Equal("/wp-content/uploads/2026/10/the-five-pillars.jpg", posts[0].QuerySelector(".entry-content img")?.GetAttribute("src"));
-        // The posts after it are episodes of the podcast: each is dated as the show published it, in the site's local time.
-        Assert.Equal(("/2026/10/sam-nasr-ai-transformation-episode-422/", "Sam Nasr: AI Transformation - Episode 422"), (posts[1].Href("h2.entry-title a"), posts[1].Text("h2.entry-title a")));
-        Assert.Equal("3:00 am on October 5, 2026", posts[1].Text("time.entry-date"));
-        Assert.Contains("Sam Nasr is a Senior Software Engineer and Trainer", posts[1].Text(".entry-content"), StringComparison.Ordinal);
+        // The posts after it are what Jeffrey wrote, newest first. The 39 episodes of the podcast published since
+        // the next one are not here (ADR-0022): the menu leads to them.
+        Assert.Equal(
+            ["/2026/01/ai-driven-devops-architecture/", "/2026/01/the-mindset-shift-required-for-ai-driven-development/", "/2020/01/net-devops-for-azure/", "/2020/01/net-devops-bootcamp/"],
+            posts.Skip(1).Take(4).Select(post => post.Href("h2.entry-title a")));
+        Assert.Equal("8:36 pm on January 16, 2026", posts[1].Text("time.entry-date"));
+        Assert.DoesNotContain(posts, post => post.QuerySelector("div.episode-video") is not null || post.Href("h2.entry-title a")!.Contains("-episode-4", StringComparison.Ordinal));
+        Assert.Equal("/category/ai-devops-podcast/", page.QuerySelectorAll("header nav[aria-label='Main menu'] a")[2].GetAttribute("href"));
         Assert.All(posts, post =>
         {
             Assert.StartsWith("/20", post.Href("h2.entry-title a"), StringComparison.Ordinal);
@@ -419,7 +431,7 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
     [InlineData("/", "/page/2/", null)]
     [InlineData("/page/2/", "/page/3/", "/")]
     [InlineData("/page/50/", "/page/51/", "/page/49/")]
-    [InlineData("/page/139/", null, "/page/138/")]
+    [InlineData("/page/97/", null, "/page/96/")]
     [InlineData("/2008/", "/2008/page/2/", null)]
     [InlineData("/2008/page/2/", "/2008/page/3/", "/2008/")]
     [InlineData("/2008/07/page/2/", null, "/2008/07/")]
@@ -695,7 +707,7 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         Assert.Equal("noindex, follow", page.QuerySelector("meta[name=robots]")?.GetAttribute("content"));
         Assert.NotNull(page.QuerySelector("main form[role=search] input[name=q]"));
         Assert.Equal(
-            ["/2026/10/the-five-pillars-leadership-for-effective-custom-software/", "/2026/10/sam-nasr-ai-transformation-episode-422/", "/2026/09/mark-michaelis-mastering-the-agentic-coding-workflow-episode-421/"],
+            ["/2026/10/the-five-pillars-leadership-for-effective-custom-software/", "/2026/01/ai-driven-devops-architecture/", "/2026/01/the-mindset-shift-required-for-ai-driven-development/"],
             page.QuerySelectorAll("main section[aria-labelledby=not-found-recent] a").Take(3).Select(a => a.GetAttribute("href")));
         Assert.Equal(5, page.QuerySelectorAll("main section[aria-labelledby=not-found-recent] a").Length);
         Assert.Equal("DevOps (426)", string.Join(' ', page.QuerySelector("main section[aria-labelledby=not-found-categories] li")!.TextContent.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)));

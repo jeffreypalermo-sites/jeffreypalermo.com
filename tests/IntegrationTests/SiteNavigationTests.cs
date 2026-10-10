@@ -75,10 +75,42 @@ public sealed class SiteNavigationTests(SiteFactory factory, ITestOutputHelper o
             path = page.Href("main nav.post-navigation .nav-previous a");
         }
 
+        // Every post that is not an episode of the podcast, once: 964 on 97 pages, as many pages as the WordPress
+        // site had. No episode is on any of them (ADR-0022).
+        var site = factory.Services.GetRequiredService<SiteContent>();
+        var episodes = site.Posts.Where(PodcastEpisodes.IsEpisode).Select(post => UrlPath.Decode(post.Permalink.Path)).ToHashSet(StringComparer.Ordinal);
         output.WriteLine($"{pages} pages of older posts list {listed.Count} posts.");
-        Assert.Equal(139, pages);
-        Assert.Equal(1385, listed.Count);
-        Assert.Equal(EveryPostPermalink(), listed.ToHashSet());
+        Assert.Equal(97, pages);
+        Assert.Equal(964, listed.Count);
+        Assert.Equal(964, listed.Distinct(StringComparer.Ordinal).Count());
+        Assert.Equal(421, episodes.Count);
+        Assert.DoesNotContain(listed, episodes.Contains);
+        Assert.Equal(EveryPostPermalink().Except(episodes).Order(StringComparer.Ordinal), listed.Order(StringComparer.Ordinal));
+        await client.GetPageAsync("/page/98/", HttpStatusCode.NotFound);
+    }
+
+    /// <summary>
+    /// The episodes are left out of the home listing and of nothing else: their category, which the menu leads to,
+    /// lists all 421, ten to a page.
+    /// </summary>
+    [Fact]
+    public async Task ThePodcastsCategoryFromTheMenuListsEveryEpisodeOnce()
+    {
+        using var client = factory.ClientFor();
+        var home = await client.GetPageAsync("/");
+        var listed = new List<string>();
+        var pages = 0;
+
+        for (var path = home.QuerySelectorAll("header nav[aria-label='Main menu'] a").Single(a => a.TextContent == "AI DevOps Podcast").GetAttribute("href"); path is not null; pages++)
+        {
+            var page = await client.GetPageAsync(path);
+            listed.AddRange(page.QuerySelectorAll("main article.post h2.entry-title a").Select(a => UrlPath.Decode(a.GetAttribute("href")!)));
+            path = page.Href("main nav.post-navigation .nav-previous a");
+        }
+
+        var site = factory.Services.GetRequiredService<SiteContent>();
+        Assert.Equal((43, 421), (pages, listed.Count));
+        Assert.Equal(site.Posts.Where(PodcastEpisodes.IsEpisode).Select(post => UrlPath.Decode(post.Permalink.Path)).Order(StringComparer.Ordinal), listed.Order(StringComparer.Ordinal));
     }
 
     [Fact]
@@ -90,7 +122,15 @@ public sealed class SiteNavigationTests(SiteFactory factory, ITestOutputHelper o
         var backLinks = 0;
 
         string? next = null;
-        for (var path = home.Href("main article.post h2.entry-title a"); path is not null;)
+        // From the newest post of all: the newer of the home page's first and the podcast's first. Previous and next
+        // walk every post by date, episodes too (ADR-0022).
+        var start = home.Href("main article.post h2.entry-title a")!;
+        while ((await client.GetPageAsync(start)).Href("main nav.post-navigation .nav-next a") is { } newer)
+        {
+            start = newer;
+        }
+
+        for (var path = start; path is not null;)
         {
             var page = await client.GetPageAsync(path);
             walked.Add(UrlPath.Decode(path));

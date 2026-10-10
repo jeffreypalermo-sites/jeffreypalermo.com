@@ -25,6 +25,51 @@ public class SiteContentQueryTests
             ["scheduled", "getting-started-with-the-asp-net-mvc-framework", "the-onion-architecture-part-2", "the-onion-architecture-part-1"],
             _site.Posts.Select(p => p.Slug));
 
+    /// <summary>
+    /// The home listing and the site's feeds: every post but the episodes of the podcast (ADR-0022). An episode is
+    /// a post in the show's category, whatever else it is in.
+    /// </summary>
+    [Fact]
+    public void TheHomeListingLeavesOutTheEpisodesOfThePodcastAndNoOtherListingDoes()
+    {
+        var site = Site(
+            posts:
+            [
+                Post("an-article", new DateTime(2026, 1, 16)) with { CategorySlugs = ["blog"] },
+                Post("guest-one-episode-421", new DateTime(2026, 9, 28)) with { CategorySlugs = ["ai-devops-podcast", "devops", "podcast"], TagSlugs = ["books"] },
+                Post("guest-two-episode-422", new DateTime(2026, 10, 5)) with { CategorySlugs = ["ai-devops-podcast", "devops", "podcast"] },
+                Post("why-i-started-the-podcast", new DateTime(2018, 10, 2)) with { CategorySlugs = ["azure-devops-podcast", "blog", "podcast"] },
+                Post("no-categories", new DateTime(2004, 1, 1)),
+            ],
+            terms:
+            [
+                new Term(1, Taxonomies.Author, "jeffreypalermo", "Jeffrey Palermo", 5),
+                new Term(2, Taxonomies.Category, "ai-devops-podcast", "AI DevOps Podcast", 2),
+                new Term(3, Taxonomies.Category, "azure-devops-podcast", "Azure DevOps Podcast", 1),
+                new Term(4, Taxonomies.Category, "blog", "Blog", 2),
+                new Term(5, Taxonomies.Category, "devops", "DevOps", 2),
+                new Term(6, Taxonomies.Category, "podcast", "Podcast", 3),
+                new Term(7, Taxonomies.Tag, "books", "Books", 1),
+            ]);
+        string[] Listed(ArchiveFilter filter) => [.. site.Published(Now, filter, 1).Items.Select(post => post.Slug)];
+
+        Assert.Equal("ai-devops-podcast", PodcastEpisodes.Category);
+        Assert.Equal(["guest-two-episode-422", "guest-one-episode-421"], site.Posts.Where(PodcastEpisodes.IsEpisode).Select(post => post.Slug));
+        Assert.Equal(["an-article", "why-i-started-the-podcast", "no-categories"], Listed(ArchiveFilter.Home));
+        Assert.Equal(3, site.Published(Now, ArchiveFilter.Home, 1).TotalItems);
+        // Everything else lists them as it lists any post.
+        Assert.Equal(["guest-two-episode-422", "guest-one-episode-421", "an-article", "why-i-started-the-podcast", "no-categories"], Listed(ArchiveFilter.All));
+        Assert.Equal(["guest-two-episode-422", "guest-one-episode-421"], Listed(ArchiveFilter.ForTerm(Taxonomies.Category, "ai-devops-podcast")));
+        Assert.Equal(["guest-two-episode-422", "guest-one-episode-421", "why-i-started-the-podcast"], Listed(ArchiveFilter.ForTerm(Taxonomies.Category, "podcast")));
+        Assert.Equal(["guest-one-episode-421"], Listed(ArchiveFilter.ForTerm(Taxonomies.Tag, "books")));
+        Assert.Equal(["guest-two-episode-422", "guest-one-episode-421", "an-article"], Listed(ArchiveFilter.ForDate(2026)));
+        Assert.Equal(5, Listed(ArchiveFilter.ForTerm(Taxonomies.Author, "jeffreypalermo")).Length);
+        Assert.Equal([(2026, 10), (2026, 9), (2026, 1), (2018, 10), (2004, 1)], site.ArchiveMonths(Now).Select(month => (month.Year, month.Month)));
+        // Before and after a post stands every post by date.
+        var article = site.FindPost("/2026/01/an-article/")!;
+        Assert.Equal(("why-i-started-the-podcast", "guest-one-episode-421"), (site.Neighbors(article, Now).Previous?.Slug, site.Neighbors(article, Now).Next?.Slug));
+    }
+
     /// <summary>The one change to what the site serves that no deployment makes (ADR-0013).</summary>
     [Fact]
     public void TheNextChangeIsTheDateOfTheNextPostThatIsNotVisibleYet()

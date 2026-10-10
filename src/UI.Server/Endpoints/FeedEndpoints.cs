@@ -10,6 +10,8 @@ namespace JeffreyPalermo.UI.Server.Endpoints;
 /// <summary>
 /// Feeds at the URLs WordPress published, so existing subscriptions keep working: RSS 2.0 (the default readers
 /// already use) for the site, comments, each post's comments, and each term; Atom at <c>/feed/atom/</c>.
+/// The site's own two feeds list what the home page lists: the posts that are not episodes of the podcast, which
+/// has a feed of its own and its category's feed here (ADR-0022).
 /// </summary>
 internal static class FeedEndpoints
 {
@@ -19,10 +21,10 @@ internal static class FeedEndpoints
     public static void MapFeedEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("/feed", (SiteContent site, IClock clock, IOptions<SiteOptions> options) =>
-            Rss(options.Value, options.Value.SiteTitle, "/", site.Published(clock.UtcNow, ArchiveFilter.All, 1).Items.Select(PostItem)));
+            Rss(options.Value, options.Value.SiteTitle, "/", site.Published(clock.UtcNow, ArchiveFilter.Home, 1).Items.Select(PostItem)));
 
         app.MapGet("/feed/atom", (SiteContent site, IClock clock, IOptions<SiteOptions> options) =>
-            Atom(options.Value, site.Published(clock.UtcNow, ArchiveFilter.All, 1).Items));
+            Atom(options.Value, site.Published(clock.UtcNow, ArchiveFilter.Home, 1).Items));
 
         app.MapGet("/comments/feed", (SiteContent site, IClock clock, IOptions<SiteOptions> options) =>
             Rss(options.Value, $"Comments for {options.Value.SiteTitle}", "/", site.Posts
