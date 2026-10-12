@@ -1,7 +1,8 @@
 {
   "port": 8080,
   "pullIdentity": "id-{system}-{environment}-app",
-  "canonicalHost": "jeffreypalermo.com",
+  "canonicalHost": "www.jeffreypalermo.ceo",
+  "redirectHosts": { "sameAddress": [], "feed": [] },
   "environments": {
     "tdd": {
       "frontDoor": false,

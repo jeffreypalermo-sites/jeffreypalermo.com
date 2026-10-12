@@ -8,15 +8,42 @@ namespace JeffreyPalermo.Core.Urls;
 /// Decides what every incoming URL means, so 22 years of links keep working (ADR-0004). A pure function over
 /// <see cref="SiteContent"/>: ordered, named rules; the first that applies wins. Canonical URLs pass through to routing.
 /// </summary>
-public sealed partial class LegacyUrlResolver(string canonicalHost)
+/// <remarks>
+/// Two rules are decided by the host the visitor asked for, and apply only to the hosts they are given: a host
+/// answered with the same address on the canonical host, and a host answered with the canonical host's feed. The
+/// site is given none (ADR-0024): every host that reaches it is answered with the pages.
+/// </remarks>
+public sealed partial class LegacyUrlResolver
 {
+    private readonly string _canonicalHost;
+    private readonly HashSet<string> _sameAddressHosts;
+    private readonly HashSet<string> _feedHosts;
+
+    /// <param name="canonicalHost">The host the redirects by host lead to.</param>
+    /// <param name="sameAddressHosts">Hosts answered with a redirect to the same address on the canonical host.</param>
+    /// <param name="feedHosts">Hosts answered with a redirect to the canonical host's feed.</param>
+    public LegacyUrlResolver(string canonicalHost, IEnumerable<string>? sameAddressHosts = null, IEnumerable<string>? feedHosts = null)
+    {
+        ArgumentNullException.ThrowIfNull(canonicalHost);
+        _canonicalHost = canonicalHost.ToLowerInvariant();
+        _sameAddressHosts = Hosts(sameAddressHosts);
+        _feedHosts = Hosts(feedHosts);
+        if (_sameAddressHosts.Contains(_canonicalHost) || _feedHosts.Contains(_canonicalHost))
+        {
+            throw new ArgumentException($"The canonical host {_canonicalHost} cannot be redirected to itself.", nameof(canonicalHost));
+        }
+    }
+
+    private static HashSet<string> Hosts(IEnumerable<string>? hosts) =>
+        new((hosts ?? []).Select(host => host.ToLowerInvariant()), StringComparer.Ordinal);
+
     /// <summary>Shortest slug fragment worth guessing from; WordPress guessed from single letters, which only finds noise.</summary>
     public const int MinimumGuessLength = 3;
 
-    /// <summary>The rule that sends <c>www.</c> to the canonical host.</summary>
+    /// <summary>The rule that sends a host to the same address on the canonical host (once <c>www.</c> of it).</summary>
     public const string HostWwwRule = "host-www";
 
-    /// <summary>The rule that sends <c>feeds.</c> to the canonical host's feed.</summary>
+    /// <summary>The rule that sends a host to the canonical host's feed (once <c>feeds.</c> of it, the FeedBurner name).</summary>
     public const string HostFeedsRule = "host-feeds";
 
     private static readonly UrlResolution Home = new UrlResolution.PassThrough("home");
@@ -95,13 +122,13 @@ public sealed partial class LegacyUrlResolver(string canonicalHost)
     private UrlResolution.Redirect? HostRule(UrlRequest request)
     {
         var host = request.Host.ToLowerInvariant();
-        if (host == "www." + canonicalHost)
+        if (_sameAddressHosts.Contains(host))
         {
-            return new UrlResolution.Redirect($"https://{canonicalHost}{request.PathAndQuery}", HostWwwRule);
+            return new UrlResolution.Redirect($"https://{_canonicalHost}{request.PathAndQuery}", HostWwwRule);
         }
 
-        return host == "feeds." + canonicalHost
-            ? new UrlResolution.Redirect($"https://{canonicalHost}/feed/", HostFeedsRule)
+        return _feedHosts.Contains(host)
+            ? new UrlResolution.Redirect($"https://{_canonicalHost}/feed/", HostFeedsRule)
             : null;
     }
 

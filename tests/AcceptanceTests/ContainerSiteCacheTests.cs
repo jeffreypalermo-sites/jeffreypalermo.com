@@ -59,18 +59,21 @@ public sealed partial class ContainerSiteTests
         Assert.Equal("no-store", Assert.Single(response.Headers.NonValidated["Cache-Control"]));
     }
 
+    /// <summary>The image redirects no host (ADR-0024), so the rule is held in a container given the hosts of the move.</summary>
     [Fact]
     public async Task TheContainerKeepsARedirectTheHostDecidedOutOfSharedCaches()
     {
-        using var client = site.Client();
-        using var request = new HttpRequestMessage(HttpMethod.Get, new Uri("/2008/07/the-onion-architecture-part-1/", UriKind.Relative));
-        request.Headers.Host = "www.jeffreypalermo.com";
+        await WithASecondContainerAsync(TheHostsOfTheMove, async client =>
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Get, new Uri("/2008/07/the-onion-architecture-part-1/", UriKind.Relative));
+            request.Headers.Host = "www.jeffreypalermo.com";
 
-        using var response = await client.SendAsync(request);
+            using var response = await client.SendAsync(request);
 
-        Assert.Equal(HttpStatusCode.MovedPermanently, response.StatusCode);
-        Assert.Equal("https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/", response.Headers.Location?.OriginalString);
-        Assert.Equal("private, max-age=300", Assert.Single(response.Headers.NonValidated["Cache-Control"]));
+            Assert.Equal(HttpStatusCode.MovedPermanently, response.StatusCode);
+            Assert.Equal("https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/", response.Headers.Location?.OriginalString);
+            Assert.Equal("private, max-age=300", Assert.Single(response.Headers.NonValidated["Cache-Control"]));
+        });
     }
 
     /// <summary>

@@ -316,7 +316,7 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         var post = Assert.Single(page.QuerySelectorAll("main article.post"));
 
         Assert.Equal($"The Onion Architecture : part 1 | {SiteTitle}", page.Title);
-        Assert.Equal(Onion, page.Href("link[rel=canonical]"));
+        Assert.Equal(SiteFactory.CanonicalOrigin + Onion, page.Href("link[rel=canonical]"));
         Assert.Equal("post-945", post.Id);
         Assert.Equal("The Onion Architecture : part 1", post.Text("h1.entry-title"));
         Assert.Equal("8:08 am on July 29, 2008", post.Text("time.entry-date"));
@@ -393,7 +393,7 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
 
         Assert.Equal("Recent Updates", page.Text("h1.page-title"));
         Assert.StartsWith($"{SiteTitle} | Jeffrey Palermo, Microsoft MVP", page.Title, StringComparison.Ordinal);
-        Assert.Equal("/", page.Href("link[rel=canonical]"));
+        Assert.Equal(SiteFactory.CanonicalOrigin + "/", page.Href("link[rel=canonical]"));
         Assert.Equal(10, posts.Length);
         // The newest post is the one about the book The Five Pillars, of 2026-10-09 (ADR-0021).
         Assert.Equal(("/2026/10/the-five-pillars-leadership-for-effective-custom-software/", "The Five Pillars: Leadership for Effective Custom Software"), (posts[0].Href("h2.entry-title a"), posts[0].Text("h2.entry-title a")));
@@ -450,7 +450,7 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
         Assert.Equal((older, newer), (navigation.Href(".nav-previous a"), navigation.Href(".nav-next a")));
         Assert.Equal(older is null ? string.Empty : "← Older posts", string.Join(' ', navigation.QuerySelector(".nav-previous")!.TextContent.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)));
         Assert.Equal(newer is null ? string.Empty : "Newer posts →", string.Join(' ', navigation.QuerySelector(".nav-next")!.TextContent.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)));
-        Assert.Equal(path, page.Href("link[rel=canonical]"));
+        Assert.Equal(SiteFactory.CanonicalOrigin + path, page.Href("link[rel=canonical]"));
     }
 
     [Theory]
@@ -610,7 +610,7 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
 
         Assert.Equal("About Jeffrey Palermo", page.Text("h1.page-title"));
         Assert.Equal($"About Jeffrey Palermo | {SiteTitle}", page.Title);
-        Assert.Equal("/about/", page.Href("link[rel=canonical]"));
+        Assert.Equal(SiteFactory.CanonicalOrigin + "/about/", page.Href("link[rel=canonical]"));
         Assert.Contains("Chief Architect of Clear Measure", page.Text("main article.page .entry-content"), StringComparison.Ordinal);
         Assert.Empty(page.QuerySelectorAll("main nav.post-navigation, main #comments"));
     }
@@ -625,7 +625,7 @@ public sealed partial class SitePagesTests(SiteFactory factory) : IClassFixture<
 
         Assert.Equal("Clear Measure: Azure DevOps", topLevel.Text("h1.entry-title"));
         Assert.Equal("/wp-content/uploads/2018/06/5_button_blue_big.jpg", topLevel.QuerySelector("main .attachment-file img")?.GetAttribute("src"));
-        Assert.Equal("/5_button_blue_big/", topLevel.Href("link[rel=canonical]"));
+        Assert.Equal(SiteFactory.CanonicalOrigin + "/5_button_blue_big/", topLevel.Href("link[rel=canonical]"));
         Assert.Equal("/wp-content/uploads/2015/08/image_7.png", underAPost.QuerySelector("main .attachment-file img")?.GetAttribute("src"));
         Assert.StartsWith("/2015/08/", underAPost.Href("main .entry-footer a"), StringComparison.Ordinal);
     }

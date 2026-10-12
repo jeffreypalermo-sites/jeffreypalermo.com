@@ -3,8 +3,10 @@
 **State on 2026-10-12: prepared, and not planned.** Jeffrey decided on 2026-10-12 that the site stays at
 `jeffreypalermo.ceo` ([ADR-0018](../adr/0018-the-environments-own-names.md)) and that `jeffreypalermo.com` stays
 with WordPress.com. Production listed the three names of this domain for one deployment that day (step 4 below)
-and they were taken out again by the next; no record was entered anywhere. Everything below is how the move would
-go if it is decided again. What was decided and prepared on 2026-10-08: Jeffrey decided how the domain reaches the site
+and they were taken out again by the next; no record was entered anywhere. The site now calls itself
+`www.jeffreypalermo.ceo` in its feeds, sitemaps, `robots.txt` and canonical links, and redirects no host
+([ADR-0024](../adr/0024-the-canonical-host-is-www-jeffreypalermo-ceo.md)). Everything below is how the move would
+go if it is decided again; its step 4 says which settings it begins with. What was decided and prepared on 2026-10-08: Jeffrey decided how the domain reaches the site
 ([ADR-0016](../adr/0016-the-dns-zone-as-code.md)): its DNS moves to an Azure DNS zone, and the bare domain is an
 alias of production's Front Door there. The zone is code. Nothing public has changed: the registrar still names
 WordPress.com's name servers, and readers and mail go where they went.
@@ -210,11 +212,20 @@ Each step is done when its check passes. None of them changes what a reader gets
 
    Check: the two GoDaddy hosts with 0 and 10, the SPF text, the DMARC text: what
    `dig +noall +answer MX jeffreypalermo.com` and the others give from public DNS.
-4. **A pull request lists the host names for production.** Two files:
+4. **A pull request lists the host names for production, and makes the domain the site's own name again.** Since
+   [ADR-0024](../adr/0024-the-canonical-host-is-www-jeffreypalermo-ceo.md) the site calls itself
+   `www.jeffreypalermo.ceo` and redirects no host, so the move begins with the settings it was prepared with:
    - `deploy/settings.json`, in `"prod"`:
      `"hostNames": ["jeffreypalermo.com", "www.jeffreypalermo.com", "feeds.jeffreypalermo.com"]`
-   - `tests/UnitTests/Delivery/CustomDomainContractTests.cs`: the test that says which environment lists which
-     host names. Make it say what production has now.
+     (whether `www.jeffreypalermo.ceo` stays beside them is part of deciding the move again)
+   - `deploy/settings.json`, at the top: `"canonicalHost": "jeffreypalermo.com"` and
+     `"redirectHosts": { "sameAddress": ["www.jeffreypalermo.com"], "feed": ["feeds.jeffreypalermo.com"] }`
+   - `src/UI.Server/SiteOptions.cs`: the same canonical host and the same two lists, as the site's own defaults
+   - `tests/UnitTests/Delivery/CustomDomainContractTests.cs`: the tests that say which environment lists which
+     host names, and that hold the settings equal to the site's. Make them say what production has now.
+
+   Every check below that asks `www.` or `feeds.` for a redirect, or the domain for the contract, is written for
+   those settings. `ContainerSiteTests` runs the checks without DNS against a container that is given them.
 
    Merge it when the Build is green, and deploy the release through `tdd` and `uat` to `prod`, as any release.
 

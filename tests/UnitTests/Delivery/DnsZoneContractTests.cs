@@ -22,12 +22,13 @@ public class DnsZoneContractTests
         JsonDocument.Parse(File.ReadAllText(Path.Join(Root, "deploy", "settings.json"))).RootElement;
 
     [Fact]
-    public void OnlyProductionNamesAZoneAndItIsTheDomainOfTheSite()
+    public void OnlyProductionNamesAZoneAndItIsTheDomainThatStayedWithWordPress()
     {
         var environments = Settings().GetProperty("environments");
 
         Assert.Equal("jeffreypalermo.com", environments.GetProperty("prod").GetProperty("dnsZone").GetString());
-        Assert.Equal(new SiteOptions().CanonicalHost, environments.GetProperty("prod").GetProperty("dnsZone").GetString());
+        // The zone is prepared for a move that is not planned. The site's canonical host is no name of it (ADR-0024).
+        Assert.DoesNotContain("jeffreypalermo.com", new SiteOptions().CanonicalHost, StringComparison.Ordinal);
         Assert.False(environments.GetProperty("tdd").TryGetProperty("dnsZone", out _));
         Assert.False(environments.GetProperty("uat").TryGetProperty("dnsZone", out _));
     }

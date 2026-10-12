@@ -10,7 +10,8 @@
     <title>@Title</title>
     @if (CanonicalPath is not null)
     {
-        <link rel="canonical" href="@CanonicalPath">
+        @* On the canonical host, whatever host the page was read under: a copy at another name points there (ADR-0024). *@
+        <link rel="canonical" href="@Options.Value.AbsoluteUrl(CanonicalPath)">
     }
     @if (!Index)
     {
@@ -57,7 +58,7 @@
     [Parameter, EditorRequired]
     public string Title { get; set; } = string.Empty;
 
-    /// <summary>The page's own address; null for a page that has none (not found).</summary>
+    /// <summary>The page's own address, as a path; null for a page that has none (not found).</summary>
     [Parameter]
     public string? CanonicalPath { get; set; }
 
