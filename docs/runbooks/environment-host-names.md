@@ -123,11 +123,11 @@ Both names are CNAMEs of their endpoint, so the Front Door renews their certific
 
 ## What the names are not
 
-- **Not the canonical host.** The site's feeds, sitemaps and `robots.txt` name `jeffreypalermo.com` under every
-  name. A page's own `rel="canonical"` link is relative, so under `www.jeffreypalermo.ceo` it names that host: to a
-  search engine the name is a second copy of the site until that is changed (ADR-0014, "Consequences").
-- **Not redirected.** `www.jeffreypalermo.ceo` is answered with the pages: the site redirects `www.` and `feeds.`
-  of `jeffreypalermo.com` only.
+- **uat's and tdd's names are not the canonical host; production's is**
+  ([ADR-0024](../adr/0024-the-canonical-host-is-www-jeffreypalermo-ceo.md)). Under every name the site's feeds,
+  sitemaps, `robots.txt` and each page's `rel="canonical"` link name `https://www.jeffreypalermo.ceo/…`: a copy of
+  a page at uat's name or at an `azurefd.net` address tells a search engine where the page lives.
+- **Not redirected.** Every name is answered with the pages: the site redirects no host.
 - **Not in the DNS zone** `jeffreypalermo.com`, which holds no record of another domain.
 
 ## Giving a name up

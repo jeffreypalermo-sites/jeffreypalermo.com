@@ -18,16 +18,25 @@ public sealed class PublishedSiteTests(PublishedSite site, ITestOutputHelper out
         await UrlContractReplay.AssertEveryLegacyUrlWorksAsync(client, output, "on the published site", () => Task.FromResult(site.Log));
     }
 
+    /// <summary>
+    /// The site as it ships redirects no host and names production's name under every one (ADR-0024). The two rules
+    /// by host are held over real HTTP by <c>ContainerSiteTests</c>, in a container that is given hosts to redirect.
+    /// </summary>
     [Theory]
-    [InlineData("www.jeffreypalermo.com", "/2008/07/the-onion-architecture-part-1/", "https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/")]
-    [InlineData("feeds.jeffreypalermo.com", "/jeffreypalermo", "https://jeffreypalermo.com/feed/")]
-    public async Task SecondaryHostsRedirectOverRealHttp(string host, string path, string location)
+    [InlineData("www.jeffreypalermo.ceo")]
+    [InlineData("uat.jeffreypalermo.ceo")]
+    [InlineData("www.www.jeffreypalermo.ceo")]
+    [InlineData("feeds.jeffreypalermo.ceo")]
+    [InlineData("www.jeffreypalermo.com")]
+    [InlineData("feeds.jeffreypalermo.com")]
+    public async Task UnderEveryHostThePublishedSiteAnswersWithThePageAndNamesTheCanonicalHost(string host)
     {
         using var client = site.Client(host);
-        using var response = await client.GetAsync(new Uri(path, UriKind.Relative));
+        using var response = await client.GetAsync(new Uri("/2008/07/the-onion-architecture-part-1/", UriKind.Relative));
 
-        Assert.Equal(HttpStatusCode.MovedPermanently, response.StatusCode);
-        Assert.Equal(location, response.Headers.Location?.OriginalString);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Null(response.Headers.Location);
+        Assert.Contains("<link rel=\"canonical\" href=\"https://www.jeffreypalermo.ceo/2008/07/the-onion-architecture-part-1/\"", await response.Content.ReadAsStringAsync(), StringComparison.Ordinal);
     }
 
     /// <summary>The published output holds no <c>build-facts.json</c>: only an image the Build made carries one (ADR-0012).</summary>

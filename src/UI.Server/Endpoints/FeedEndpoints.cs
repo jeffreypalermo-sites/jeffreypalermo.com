@@ -18,6 +18,13 @@ internal static class FeedEndpoints
     private const string RssContentType = "application/rss+xml; charset=utf-8";
     private const int FeedSize = 10;
 
+    /// <summary>
+    /// What an item's identifier begins with. A feed reader knows an item by its identifier, and one that changes
+    /// makes the item new to every subscriber. It is the item's address as this site first published it, and it
+    /// stays that when the canonical host changes (ADR-0024): an identifier, marked as not a link.
+    /// </summary>
+    internal static readonly Uri IdentifierBase = new("https://jeffreypalermo.com/");
+
     public static void MapFeedEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("/feed", (SiteContent site, IClock clock, IOptions<SiteOptions> options) =>
@@ -72,7 +79,10 @@ internal static class FeedEndpoints
                 writer.WriteStartElement("item");
                 writer.WriteElementString("title", item.Title);
                 writer.WriteElementString("link", Absolute(options, item.Path));
-                writer.WriteElementString("guid", Absolute(options, item.Path));
+                writer.WriteStartElement("guid");
+                writer.WriteAttributeString("isPermaLink", "false");
+                writer.WriteString(Identifier(item.Path));
+                writer.WriteEndElement();
                 writer.WriteElementString("pubDate", item.Date.ToString("r", CultureInfo.InvariantCulture));
                 writer.WriteElementString("description", item.Description);
                 writer.WriteEndElement();
@@ -91,13 +101,13 @@ internal static class FeedEndpoints
         {
             writer.WriteStartElement("feed", ns);
             writer.WriteElementString("title", ns, options.SiteTitle);
-            writer.WriteElementString("id", ns, Absolute(options, "/"));
+            writer.WriteElementString("id", ns, Identifier("/"));
             writer.WriteElementString("updated", ns, (posts.Count > 0 ? posts[0].PublishedUtc : DateTime.UnixEpoch).ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture));
             foreach (var post in posts)
             {
                 writer.WriteStartElement("entry", ns);
                 writer.WriteElementString("title", ns, post.Title);
-                writer.WriteElementString("id", ns, Absolute(options, post.Permalink.Path));
+                writer.WriteElementString("id", ns, Identifier(post.Permalink.Path));
                 writer.WriteStartElement("link", ns);
                 writer.WriteAttributeString("href", Absolute(options, post.Permalink.Path));
                 writer.WriteEndElement();
@@ -122,7 +132,9 @@ internal static class FeedEndpoints
         return builder.ToString();
     }
 
-    internal static string Absolute(SiteOptions options, string path) => new Uri(options.BaseUri, path).AbsoluteUri;
+    internal static string Absolute(SiteOptions options, string path) => options.AbsoluteUrl(path);
+
+    private static string Identifier(string path) => new Uri(IdentifierBase, path).AbsoluteUri;
 
     private sealed class StringWriterWithEncoding(StringBuilder builder) : StringWriter(builder, CultureInfo.InvariantCulture)
     {

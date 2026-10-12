@@ -23,7 +23,11 @@ builder.Services.AddSingleton<ISiteContentSource>(services =>
 
 // The read model is immutable for the life of the process (ADR-0002); loading it fails fast on invalid content.
 builder.Services.AddSingleton(services => services.GetRequiredService<ISiteContentSource>().LoadAsync().GetAwaiter().GetResult());
-builder.Services.AddSingleton(services => new LegacyUrlResolver(services.GetRequiredService<IOptions<SiteOptions>>().Value.CanonicalHost));
+builder.Services.AddSingleton(services =>
+{
+    var options = services.GetRequiredService<IOptions<SiteOptions>>().Value;
+    return new LegacyUrlResolver(options.CanonicalHost, options.HostsRedirectedToTheSameAddress, options.HostsRedirectedToTheFeed);
+});
 
 // What the Build measured about this release (ADR-0012), read once: the image never changes under a running process.
 builder.Services.AddSingleton(services =>

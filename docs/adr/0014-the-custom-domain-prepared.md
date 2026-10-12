@@ -1,7 +1,11 @@
 # ADR-0014: The custom domain is prepared and switched off
 
 - **Status:** Accepted. The choice it left to Jeffrey, the top of the zone, is taken: option A, in
-  [ADR-0016](0016-the-dns-zone-as-code.md)
+  [ADR-0016](0016-the-dns-zone-as-code.md). The canonical host and the hosts the site redirects are changed by
+  [ADR-0024](0024-the-canonical-host-is-www-jeffreypalermo-ceo.md): the canonical host is
+  `www.jeffreypalermo.ceo`, the hosts answered with a redirect are stated in the settings instead of derived (none
+  is), and a page's canonical link is absolute. What this record says of `jeffreypalermo.com`, `www.` and `feeds.`
+  describes the move that is prepared and not planned
 - **Date:** 2026-10-08
 - **Carries out** what [ADR-0008](0008-eleven-regions-behind-front-door.md) left for later ("Not done here: the
   custom domain"), up to the point where DNS changes. The DNS move itself waits for Jeffrey.

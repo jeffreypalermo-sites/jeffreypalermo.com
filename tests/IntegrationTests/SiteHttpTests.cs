@@ -19,16 +19,35 @@ public sealed class SiteHttpTests(SiteFactory factory) : IClassFixture<SiteFacto
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal("text/html", response.Content.Headers.ContentType?.MediaType);
         Assert.Contains("<title>The Onion Architecture : part 1 | Programming with Palermo</title>", html, StringComparison.Ordinal);
-        Assert.Contains($"<link rel=\"canonical\" href=\"{Onion}\"", html, StringComparison.Ordinal);
+        Assert.Contains($"<link rel=\"canonical\" href=\"https://www.jeffreypalermo.ceo{Onion}\"", html, StringComparison.Ordinal);
         Assert.Contains("id=\"comment-", html, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// As deployed the site is given no host to redirect (ADR-0024). Whatever the host's first label, the request is
+    /// answered with the page at its address.
+    /// </summary>
+    [Theory]
+    [InlineData("www.jeffreypalermo.com", Onion + "?x=1")]
+    [InlineData("feeds.jeffreypalermo.com", Onion)]
+    [InlineData("www.www.jeffreypalermo.ceo", Onion)]
+    [InlineData("feeds.www.jeffreypalermo.ceo", Onion)]
+    [InlineData("jeffreypalermo.ceo", Onion)]
+    public async Task AsDeployedNoHostIsRedirected(string host, string path)
+    {
+        using var response = await factory.ClientFor(host).GetAsync(new Uri(path, UriKind.Relative));
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Null(response.Headers.Location);
     }
 
     [Theory]
     [InlineData("www.jeffreypalermo.com", Onion + "?x=1", "https://jeffreypalermo.com" + Onion + "?x=1")]
     [InlineData("feeds.jeffreypalermo.com", "/jeffreypalermo", "https://jeffreypalermo.com/feed/")]
-    public async Task RedirectsSecondaryHostsToTheCanonicalSite(string host, string path, string location)
+    public async Task AHostTheSiteIsGivenToRedirectIsRedirectedToTheCanonicalSite(string host, string path, string location)
     {
-        using var response = await factory.ClientFor(host).GetAsync(new Uri(path, UriKind.Relative));
+        using var given = factory.WithTheHostsOfTheMove();
+        using var response = await given.ClientFor(host).GetAsync(new Uri(path, UriKind.Relative));
 
         Assert.Equal(HttpStatusCode.MovedPermanently, response.StatusCode);
         Assert.Equal(location, response.Headers.Location?.OriginalString);
@@ -88,7 +107,8 @@ public sealed class SiteHttpTests(SiteFactory factory) : IClassFixture<SiteFacto
         var locations = xml.Descendants(ns + "loc").Select(l => l.Value).ToList();
 
         Assert.Equal(1385, locations.Count);
-        Assert.Contains("https://jeffreypalermo.com" + Onion, locations);
+        Assert.Contains("https://www.jeffreypalermo.ceo" + Onion, locations);
+        Assert.All(locations, location => Assert.StartsWith("https://www.jeffreypalermo.ceo/", location, StringComparison.Ordinal));
     }
 
     [Fact]
@@ -97,7 +117,7 @@ public sealed class SiteHttpTests(SiteFactory factory) : IClassFixture<SiteFacto
         var xml = XDocument.Parse(await factory.ClientFor().GetStringAsync(new Uri("/feed/", UriKind.Relative)));
 
         Assert.Equal(10, xml.Descendants("item").Count());
-        Assert.Equal("https://jeffreypalermo.com/2026/10/the-five-pillars-leadership-for-effective-custom-software/", xml.Descendants("item").First().Element("link")!.Value);
+        Assert.Equal("https://www.jeffreypalermo.ceo/2026/10/the-five-pillars-leadership-for-effective-custom-software/", xml.Descendants("item").First().Element("link")!.Value);
     }
 
     /// <summary>
@@ -109,7 +129,7 @@ public sealed class SiteHttpTests(SiteFactory factory) : IClassFixture<SiteFacto
     {
         using var client = factory.ClientFor();
         XNamespace atom = "http://www.w3.org/2005/Atom";
-        var home = (await client.GetPageAsync("/")).QuerySelectorAll("main article.post h2.entry-title a").Select(a => "https://jeffreypalermo.com" + a.GetAttribute("href")).ToList();
+        var home = (await client.GetPageAsync("/")).QuerySelectorAll("main article.post h2.entry-title a").Select(a => SiteFactory.CanonicalOrigin + a.GetAttribute("href")).ToList();
 
         var rss = XDocument.Parse(await client.GetStringAsync(new Uri("/feed/", UriKind.Relative))).Descendants("item").Select(item => item.Element("link")!.Value).ToList();
         var entries = XDocument.Parse(await client.GetStringAsync(new Uri("/feed/atom/", UriKind.Relative))).Descendants(atom + "entry").Select(entry => entry.Element(atom + "link")!.Attribute("href")!.Value).ToList();

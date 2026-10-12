@@ -6,7 +6,9 @@ namespace JeffreyPalermo.IntegrationTests;
 
 /// <summary>
 /// The site behind Azure Front Door: the app is addressed by its own origin host, and the host the visitor asked for
-/// arrives in <c>X-Forwarded-Host</c>, believed only with this site's Front Door ID.
+/// arrives in <c>X-Forwarded-Host</c>, believed only with this site's Front Door ID. Whether it was believed shows
+/// where the host decides the answer, so the site is given the hosts of the move to redirect
+/// (<see cref="SiteHosts.WithTheHostsOfTheMove"/>): as deployed it redirects none (ADR-0024).
 /// </summary>
 public sealed class FrontDoorHostTests : IClassFixture<SiteFactory>
 {
@@ -16,7 +18,7 @@ public sealed class FrontDoorHostTests : IClassFixture<SiteFactory>
     private readonly WebApplicationFactory<Program> _behindFrontDoor;
 
     public FrontDoorHostTests(SiteFactory factory) =>
-        _behindFrontDoor = factory.WithWebHostBuilder(builder => builder.UseSetting("Site:FrontDoorId", FrontDoorId));
+        _behindFrontDoor = factory.WithTheHostsOfTheMove(builder => builder.UseSetting("Site:FrontDoorId", FrontDoorId));
 
     [Theory]
     [InlineData("www.jeffreypalermo.com", "/2008/07/the-onion-architecture-part-1/", "https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/")]
@@ -60,7 +62,8 @@ public sealed class FrontDoorHostTests : IClassFixture<SiteFactory>
     public async Task WithoutAFrontDoorNoForwardedHostIsBelieved()
     {
         using var plain = new SiteFactory();
-        using var client = plain.ClientFor(OriginHost);
+        using var given = plain.WithTheHostsOfTheMove();
+        using var client = given.ClientFor(OriginHost);
         using var request = new HttpRequestMessage(HttpMethod.Get, new Uri("/2008/07/the-onion-architecture-part-1/", UriKind.Relative));
         request.Headers.TryAddWithoutValidation("X-Forwarded-Host", "www.jeffreypalermo.com");
         request.Headers.TryAddWithoutValidation("X-Azure-FDID", FrontDoorId);

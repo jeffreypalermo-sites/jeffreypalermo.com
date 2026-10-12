@@ -12,7 +12,11 @@ public class LegacyUrlResolverTests
 
     private static readonly Term VideoFormat = new(1, Taxonomies.PostFormat, "video", "Video", 1);
 
-    private readonly LegacyUrlResolver _resolver = new(Host);
+    /// <summary>
+    /// The two rules by host are held with the hosts a move of jeffreypalermo.com would state. The site itself
+    /// states none (ADR-0024): see <see cref="WithNoHostStatedEveryHostIsAnsweredWithThePages"/>.
+    /// </summary>
+    private readonly LegacyUrlResolver _resolver = new(Host, ["www.jeffreypalermo.com"], ["Feeds.JeffreyPalermo.com"]);
 
     private readonly SiteContent _site = Site(
         posts:
@@ -173,6 +177,53 @@ public class LegacyUrlResolverTests
         Assert.False(LegacyUrlResolver.DecidedByHost(Resolve("/?p=999999")));
         Assert.False(LegacyUrlResolver.DecidedByHost(_resolver.Resolve(new UrlRequest("jpcom-prod-d8e7htexeqewe0hr.z02.azurefd.net", Onion1), _site)));
     }
+
+    /// <summary>
+    /// The site as it is deployed (ADR-0024): the canonical host begins with www., no host is stated for either
+    /// rule, and none is derived. Every name is answered with the pages: the canonical host, uat's own name, the
+    /// names the rules once derived, and the names of the domain that stayed with WordPress.com.
+    /// </summary>
+    [Theory]
+    [InlineData("www.jeffreypalermo.ceo")]
+    [InlineData("uat.jeffreypalermo.ceo")]
+    [InlineData("jeffreypalermo.ceo")]
+    [InlineData("www.www.jeffreypalermo.ceo")]
+    [InlineData("feeds.www.jeffreypalermo.ceo")]
+    [InlineData("feeds.jeffreypalermo.ceo")]
+    [InlineData("jeffreypalermo.com")]
+    [InlineData("www.jeffreypalermo.com")]
+    [InlineData("feeds.jeffreypalermo.com")]
+    [InlineData("jpcom-prod-d8e7htexeqewe0hr.z02.azurefd.net")]
+    public void WithNoHostStatedEveryHostIsAnsweredWithThePages(string host)
+    {
+        var deployed = new LegacyUrlResolver("www.jeffreypalermo.ceo");
+
+        Assert.Equal(new UrlResolution.PassThrough("canonical"), deployed.Resolve(new UrlRequest(host, Onion1), _site));
+        Assert.Equal(new UrlResolution.PassThrough("home"), deployed.Resolve(new UrlRequest(host, "/"), _site));
+    }
+
+    /// <summary>Only a stated host is redirected: www. and feeds. of the canonical host mean nothing by themselves.</summary>
+    [Fact]
+    public void AHostIsRedirectedBecauseItIsStatedNotBecauseOfItsFirstLabel()
+    {
+        var resolver = new LegacyUrlResolver("www.jeffreypalermo.ceo", ["jeffreypalermo.ceo"], ["old-feed.example"]);
+
+        Assert.Equal(
+            new UrlResolution.Redirect("https://www.jeffreypalermo.ceo/2008/07/the-onion-architecture-part-1/?x=1", "host-www"),
+            resolver.Resolve(new UrlRequest("JeffreyPalermo.ceo", Onion1, "x=1"), _site));
+        Assert.Equal(
+            new UrlResolution.Redirect("https://www.jeffreypalermo.ceo/feed/", "host-feeds"),
+            resolver.Resolve(new UrlRequest("old-feed.example", "/jeffreypalermo"), _site));
+        Assert.All((string[])["www.jeffreypalermo.ceo", "www.www.jeffreypalermo.ceo", "feeds.www.jeffreypalermo.ceo", "feeds.jeffreypalermo.ceo"], host =>
+            Assert.False(LegacyUrlResolver.DecidedByHost(resolver.Resolve(new UrlRequest(host, Onion1), _site))));
+    }
+
+    /// <summary>A canonical host that is redirected to itself would be a loop: refused when the site starts.</summary>
+    [Theory]
+    [InlineData(new[] { "WWW.jeffreypalermo.ceo" }, new string[0])]
+    [InlineData(new string[0], new[] { "www.jeffreypalermo.ceo" })]
+    public void TheCanonicalHostCannotBeAHostThatIsRedirected(string[] sameAddress, string[] feed) =>
+        Assert.Throws<ArgumentException>(() => new LegacyUrlResolver("www.jeffreypalermo.ceo", sameAddress, feed));
 
     [Fact]
     public void LeavesOtherHostsAloneSoPreviewRevisionsWork() =>

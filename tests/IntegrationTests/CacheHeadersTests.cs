@@ -129,7 +129,8 @@ public sealed class CacheHeadersTests(SiteFactory factory) : IClassFixture<SiteF
 
     /// <summary>
     /// The same address is a redirect on <c>www.</c> and a page on the canonical host. The redirect says "private", so
-    /// no cache that serves more than one reader keeps it, and it can never be served for the canonical host.
+    /// no cache that serves more than one reader keeps it, and it can never be served for the canonical host. The
+    /// site is deployed with no host to redirect (ADR-0024); the rule is held with the hosts of the move.
     /// </summary>
     [Theory]
     [InlineData("www.jeffreypalermo.com", Onion, "https://jeffreypalermo.com" + Onion)]
@@ -137,7 +138,8 @@ public sealed class CacheHeadersTests(SiteFactory factory) : IClassFixture<SiteF
     [InlineData("feeds.jeffreypalermo.com", "/jeffreypalermo", "https://jeffreypalermo.com/feed/")]
     public async Task ARedirectTheHostDecidedIsKeptByTheReadersBrowserOnly(string host, string path, string location)
     {
-        using var response = await factory.ClientFor(host).GetAsync(new Uri(path, UriKind.Relative));
+        using var given = factory.WithTheHostsOfTheMove();
+        using var response = await given.ClientFor(host).GetAsync(new Uri(path, UriKind.Relative));
 
         Assert.Equal(HttpStatusCode.MovedPermanently, response.StatusCode);
         Assert.Equal(location, response.Headers.Location?.OriginalString);
@@ -148,7 +150,7 @@ public sealed class CacheHeadersTests(SiteFactory factory) : IClassFixture<SiteF
     public async Task TheSameAddressIsKeptForTheCanonicalHostAndNotSharedForWwwThroughTheFrontDoor()
     {
         const string frontDoorId = "11111111-2222-3333-4444-555555555555";
-        using var behindFrontDoor = factory.WithWebHostBuilder(builder => builder.UseSetting("Site:FrontDoorId", frontDoorId));
+        using var behindFrontDoor = factory.WithTheHostsOfTheMove(builder => builder.UseSetting("Site:FrontDoorId", frontDoorId));
         using var client = behindFrontDoor.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, BaseAddress = new Uri("https://ca-jpcom-prod-web-eus2.example.azurecontainerapps.io/") });
 
         async Task<HttpResponseMessage> AskAsync(string visitorHost)

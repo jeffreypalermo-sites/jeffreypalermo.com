@@ -459,7 +459,7 @@ public sealed class DeployScriptTests : IDisposable
             Domain("jeffreypalermo.com", kept: true, "Pending", token: "token-for-the-apex"),
             Domain("www.jeffreypalermo.com", kept: false, "Pending", token: "token-for-www"),
             Domain("feeds.jeffreypalermo.com", kept: false, "Submitting"));
-        var folder = DeployFolderWithHostNames("uat", "www.jeffreypalermo.com", "jeffreypalermo.com", "feeds.jeffreypalermo.com");
+        var folder = DeployFolderOfTheMove("uat", "www.jeffreypalermo.com", "jeffreypalermo.com", "feeds.jeffreypalermo.com");
 
         var result = await DeployAsync("uat", deployFolder: folder);
 
@@ -494,7 +494,7 @@ public sealed class DeployScriptTests : IDisposable
             Domain("jeffreypalermo.com", kept: true, "Approved"),
             Domain("www.jeffreypalermo.com", kept: false, "Approved"),
             Domain("feeds.jeffreypalermo.com", kept: false, "Approved"));
-        var folder = DeployFolderWithHostNames("uat", "jeffreypalermo.com", "www.jeffreypalermo.com", "feeds.jeffreypalermo.com");
+        var folder = DeployFolderOfTheMove("uat", "jeffreypalermo.com", "www.jeffreypalermo.com", "feeds.jeffreypalermo.com");
 
         var result = await DeployAsync("uat", deployFolder: folder);
 
@@ -547,6 +547,51 @@ public sealed class DeployScriptTests : IDisposable
         Assert.Contains("    CNAME  uat.jeffreypalermo.ceo  jpcom-uat-abc123.z02.azurefd.net", result.Output, StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// ADR-0024: with the settings as they are, the canonical host begins with www. and no name is stated as a
+    /// redirect. Every listed name goes to the template as a name with pages: production's own, and the names the
+    /// script once derived from the canonical host.
+    /// </summary>
+    [Theory]
+    [InlineData("www.jeffreypalermo.ceo")]
+    [InlineData("www.www.jeffreypalermo.ceo")]
+    [InlineData("feeds.www.jeffreypalermo.ceo")]
+    [InlineData("feeds.jeffreypalermo.ceo")]
+    [InlineData("www.jeffreypalermo.com")]
+    public async Task WithTheSettingsAsTheyAreEveryListedNameHasPagesAndNoneIsARedirect(string name)
+    {
+        UatWithCustomDomains(Domain(name, kept: true, "Pending", token: "t"));
+        var folder = DeployFolderWithHostNames("uat", name);
+
+        var result = await DeployAsync("uat", deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Equal([name], StackParameters().GetProperty("hostNames").GetProperty("value").EnumerateArray().Select(listed => listed.GetString()));
+        Assert.Equal(0, StackParameters().GetProperty("redirectHostNames").GetProperty("value").GetArrayLength());
+        Assert.Contains($"  {name}: validation Pending; answered with pages, kept at the edge", result.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("answered with a redirect", result.Output, StringComparison.Ordinal);
+    }
+
+    /// <summary>Settings that state no redirect hosts at all (as before ADR-0024) redirect none: nothing is derived.</summary>
+    [Fact]
+    public async Task SettingsWithoutRedirectHostsGiveEveryNamePages()
+    {
+        UatWithCustomDomains(Domain("www.jeffreypalermo.com", kept: true, "Pending", token: "t"));
+        var folder = DeployFolderWith(settings =>
+        {
+            settings["canonicalHost"] = "jeffreypalermo.com";
+            settings.AsObject().Remove("redirectHosts");
+            settings["environments"]!["uat"]!["hostNames"] = new JsonArray("www.jeffreypalermo.com");
+        });
+
+        var result = await DeployAsync("uat", deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(["www.jeffreypalermo.com"], StackParameters().GetProperty("hostNames").GetProperty("value").EnumerateArray().Select(listed => listed.GetString()));
+        Assert.Equal(0, StackParameters().GetProperty("redirectHostNames").GetProperty("value").GetArrayLength());
+    }
+
     [Fact]
     public async Task HostNamesForAnEnvironmentWithoutAFrontDoorStopTheDeploymentBeforeAzureIsAsked()
     {
@@ -585,7 +630,7 @@ public sealed class DeployScriptTests : IDisposable
     [Fact]
     public async Task AHostNameListedTwiceStopsTheDeployment()
     {
-        var folder = DeployFolderWithHostNames("uat", "jeffreypalermo.com", "www.jeffreypalermo.com", "WWW.jeffreypalermo.com");
+        var folder = DeployFolderOfTheMove("uat", "jeffreypalermo.com", "www.jeffreypalermo.com", "WWW.jeffreypalermo.com");
 
         var result = await DeployAsync("uat", deployFolder: folder);
 
@@ -600,7 +645,7 @@ public sealed class DeployScriptTests : IDisposable
     [InlineData("feeds.jeffreypalermo.com")]
     public async Task AHostNameThatRedirectsNeedsTheCanonicalHostBesideIt(string name)
     {
-        var folder = DeployFolderWithHostNames("uat", name);
+        var folder = DeployFolderOfTheMove("uat", name);
 
         var result = await DeployAsync("uat", deployFolder: folder);
 
@@ -612,7 +657,7 @@ public sealed class DeployScriptTests : IDisposable
     [Fact]
     public async Task EveryProblemWithTheHostNamesIsNamedAtOnce()
     {
-        var folder = DeployFolderWithHostNames("tdd", "www.jeffreypalermo.com", "not a name");
+        var folder = DeployFolderOfTheMove("tdd", "www.jeffreypalermo.com", "not a name");
 
         var result = await DeployAsync("tdd", deployFolder: folder);
 
@@ -691,7 +736,7 @@ public sealed class DeployScriptTests : IDisposable
             Domain("jeffreypalermo.com", kept: true, "Pending", token: "token-for-the-apex"),
             Domain("www.jeffreypalermo.com", kept: false, "Approved", token: "token-for-www"),
             Domain("feeds.jeffreypalermo.com", kept: false, "Submitting"));
-        var folder = DeployFolderWithHostNames("prod", "jeffreypalermo.com", "www.jeffreypalermo.com", "feeds.jeffreypalermo.com");
+        var folder = DeployFolderOfTheMove("prod", "jeffreypalermo.com", "www.jeffreypalermo.com", "feeds.jeffreypalermo.com");
 
         var result = await DeployAsync("prod", deployFolder: folder);
 
@@ -730,7 +775,7 @@ public sealed class DeployScriptTests : IDisposable
             Domain("jeffreypalermo.com", kept: true, "Pending", token: "token-for-the-apex"),
             Domain("notjeffreypalermo.com", kept: true, "Pending", token: "token-for-another-domain"),
             Domain("site.example.org", kept: true, "Pending", token: "token-for-a-third"));
-        var folder = DeployFolderWithHostNames("prod", "www.jeffreypalermo.com", "jeffreypalermo.com", "notjeffreypalermo.com", "site.example.org");
+        var folder = DeployFolderOfTheMove("prod", "www.jeffreypalermo.com", "jeffreypalermo.com", "notjeffreypalermo.com", "site.example.org");
 
         var result = await DeployAsync("prod", deployFolder: folder);
 
@@ -1044,7 +1089,7 @@ public sealed class DeployScriptTests : IDisposable
             Domain("jeffreypalermo.com", kept: true, "PendingRevalidation", token: "the-token-of-the-day"),
             Domain("www.jeffreypalermo.com", kept: false, "PendingRevalidation", token: "the-token-of-www"));
         TheFrontDoorGivesANewToken("jeffreypalermo.com", "the-token-for-the-new-certificate");
-        var folder = DeployFolderWithHostNames("prod", "jeffreypalermo.com", "www.jeffreypalermo.com");
+        var folder = DeployFolderOfTheMove("prod", "jeffreypalermo.com", "www.jeffreypalermo.com");
 
         var result = await DeployAsync("prod", deployFolder: folder);
 
@@ -1377,6 +1422,18 @@ public sealed class DeployScriptTests : IDisposable
     /// </summary>
     private string DeployFolderWithHostNames(string environment, params string[] hostNames) =>
         DeployFolderWith(settings => settings["environments"]![environment]!["hostNames"] = new JsonArray([.. hostNames.Select(name => JsonValue.Create(name))]));
+
+    /// <summary>
+    /// The settings as a move of jeffreypalermo.com would state them (ADR-0024: prepared, not planned): that domain
+    /// the canonical host, and its www. and feeds. the two names answered with a redirect.
+    /// </summary>
+    private string DeployFolderOfTheMove(string environment, params string[] hostNames) =>
+        DeployFolderWith(settings =>
+        {
+            settings["canonicalHost"] = "jeffreypalermo.com";
+            settings["redirectHosts"] = new JsonObject { ["sameAddress"] = new JsonArray("www.jeffreypalermo.com"), ["feed"] = new JsonArray("feeds.jeffreypalermo.com") };
+            settings["environments"]![environment]!["hostNames"] = new JsonArray([.. hostNames.Select(name => JsonValue.Create(name))]);
+        });
 
     /// <summary>The <c>deploy/</c> folder as the release's package carries it, with its settings changed for a test.</summary>
     private string DeployFolderWith(Action<JsonNode> change)

@@ -28,9 +28,10 @@
          release and readers get it whatever Azure says about the zone.
 
     Host names (ADR-0014, docs/runbooks/dns-cutover.md): each gets a custom domain of the Front Door with a
-    certificate it manages. A name the site answers with its pages (the canonical host) gets a route like the
-    endpoint's own, with the cache. www. and feeds. of the canonical host, which the site answers with a redirect,
-    get a route without a cache. After the stack the script prints, for every host name, what DNS needs: the TXT
+    certificate it manages. A name the site answers with its pages gets a route like the endpoint's own, with the
+    cache. A name the site answers with a redirect to the canonical host (redirectHosts in settings.json, the same
+    lists the site has; none since ADR-0024) gets a route without a cache. After the stack the script prints, for
+    every host name, what DNS needs: the TXT
     record that proves the name is the owner's, and where its address record points. A name that waits for its
     records fails nothing: it is not purged, not verified, and the endpoint's own address serves as before. A token
     is good for seven days. When the Front Door has given up on one (or wants a new one for a certificate it does
@@ -90,8 +91,11 @@ $place = $settings.environments[$Environment]
 # Always a list: none, one name and several all come out of settings.json differently.
 $hostNames = @(@(if ($place.ContainsKey('hostNames')) { $place['hostNames'] }) | ForEach-Object { ([string] $_).Trim().ToLowerInvariant() })
 $canonicalHost = if ($settings.ContainsKey('canonicalHost')) { ([string] $settings['canonicalHost']).ToLowerInvariant() } else { '' }
-# The site answers these two with a redirect to the canonical host (the rules host-www and host-feeds).
-$redirectHosts = @(if ($canonicalHost) { "www.$canonicalHost"; "feeds.$canonicalHost" })
+# The names the site answers with a redirect to the canonical host (the rules host-www and host-feeds), as the
+# settings state them. The site is given the same two lists (ADR-0024); they are empty, so every name has pages.
+$statedRedirects = if ($settings.ContainsKey('redirectHosts')) { $settings['redirectHosts'] } else { @{} }
+$redirectHosts = @(@(foreach ($kind in 'sameAddress', 'feed') { if ($statedRedirects.ContainsKey($kind)) { $statedRedirects[$kind] } }) |
+        ForEach-Object { ([string] $_).Trim().ToLowerInvariant() })
 if ($hostNames.Count -gt 0) {
     $problems = @()
     if (-not [bool] $place.frontDoor) {

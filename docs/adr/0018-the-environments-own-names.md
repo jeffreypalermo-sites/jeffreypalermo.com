@@ -1,6 +1,9 @@
 # ADR-0018: Every environment has a name of its own in jeffreypalermo.ceo
 
-- **Status:** Accepted
+- **Status:** Accepted. Its first consequence, the second copy of the site to a search engine, is closed by
+  [ADR-0024](0024-the-canonical-host-is-www-jeffreypalermo-ceo.md): `www.jeffreypalermo.ceo` is the canonical host,
+  and every page names it in an absolute canonical link. The site redirects no host, so "the site redirects `www.`
+  of `jeffreypalermo.com` only" no longer holds
 - **Date:** 2026-10-08
 - **Builds on:** [ADR-0014](0014-the-custom-domain-prepared.md) (host names per environment) and
   [ADR-0016](0016-the-dns-zone-as-code.md), whose rehearsal it replaces.
