@@ -145,7 +145,7 @@ public sealed partial class RunbookTests
     public void TheHostNamesRunbookNamesTheTwoRecordsOfEachName(string environment, string hostName, string label)
     {
         using var settings = System.Text.Json.JsonDocument.Parse(File.ReadAllText(Path.Join(TestPaths.RepositoryRoot, "deploy", "settings.json")));
-        var name = Assert.Single(settings.RootElement.GetProperty("environments").GetProperty(environment).GetProperty("hostNames").EnumerateArray().Select(listed => listed.GetString()!), listed => listed.EndsWith(".jeffreypalermo.ceo", StringComparison.Ordinal));
+        var name = Assert.Single(settings.RootElement.GetProperty("environments").GetProperty(environment).GetProperty("hostNames").EnumerateArray()).GetString()!;
 
         Assert.Equal(hostName, name);
         Assert.Contains($"| TXT | `_dnsauth.{label}` | the token of", HostNames, StringComparison.Ordinal);
