@@ -1,12 +1,13 @@
 # Runbook: moving jeffreypalermo.com to the new site
 
-**State: under way. Production lists its three host names** in `deploy/settings.json`
-([Before the day](#before-the-day), step 4: the pull request that wrote this line). The first production
-deployment of that release creates the three custom domains and prints their tokens, which are good for seven
-days; steps 5 to 8 follow it. Jeffrey decided how the domain reaches the site
+**State on 2026-10-12: prepared, and not planned.** Jeffrey decided on 2026-10-12 that the site stays at
+`jeffreypalermo.ceo` ([ADR-0018](../adr/0018-the-environments-own-names.md)) and that `jeffreypalermo.com` stays
+with WordPress.com. Production listed the three names of this domain for one deployment that day (step 4 below)
+and they were taken out again by the next; no record was entered anywhere. Everything below is how the move would
+go if it is decided again. What was decided and prepared on 2026-10-08: Jeffrey decided how the domain reaches the site
 ([ADR-0016](../adr/0016-the-dns-zone-as-code.md)): its DNS moves to an Azure DNS zone, and the bare domain is an
-alias of production's Front Door there. The zone is code. Nothing public changes before [the day](#the-day): the
-registrar still names WordPress.com's name servers, and readers and mail go where they went.
+alias of production's Front Door there. The zone is code. Nothing public has changed: the registrar still names
+WordPress.com's name servers, and readers and mail go where they went.
 
 What the move is: `jeffreypalermo.com`, `www.jeffreypalermo.com` and `feeds.jeffreypalermo.com` stop being
 answered by WordPress.com and are answered by production's Azure Front Door. Mail for the domain is not part of it
@@ -209,15 +210,13 @@ Each step is done when its check passes. None of them changes what a reader gets
 
    Check: the two GoDaddy hosts with 0 and 10, the SPF text, the DMARC text: what
    `dig +noall +answer MX jeffreypalermo.com` and the others give from public DNS.
-4. **Production lists the host names.** Done in the repository, by the pull request that wrote this line:
-   - `deploy/settings.json`, in `"prod"`: `jeffreypalermo.com`, `www.jeffreypalermo.com` and
-     `feeds.jeffreypalermo.com`, beside production's own name `www.jeffreypalermo.ceo` (ADR-0018), which stays.
+4. **A pull request lists the host names for production.** Two files:
+   - `deploy/settings.json`, in `"prod"`:
+     `"hostNames": ["jeffreypalermo.com", "www.jeffreypalermo.com", "feeds.jeffreypalermo.com"]`
    - `tests/UnitTests/Delivery/CustomDomainContractTests.cs`: the test that says which environment lists which
-     host names says what production has now.
+     host names. Make it say what production has now.
 
-   What is left of this step: deploy that release through `tdd` and `uat` to `prod`, as any release. Steps 1 to 3
-   come first. The seven days of the tokens start with the production deployment: deploy when Jeffrey can enter
-   the records of step 5 within the week.
+   Merge it when the Build is green, and deploy the release through `tdd` and `uat` to `prod`, as any release.
 
    Check: production's deployment passes, and its log has, for each of the three names:
 
@@ -408,8 +407,7 @@ Before it: every check of [Before the day](#before-the-day) has passed, step 7 l
 ## Going back
 
 **Before the day** no reader has moved, and nothing has to be undone at once. To undo the preparation: a pull
-request takes the three names of this domain out of `"prod"` in `settings.json` (and the test); production's own
-name `www.jeffreypalermo.ceo` stays. The next deployment removes the
+request takes the host names out of `"prod"` in `settings.json` (and the test). The next deployment removes the
 three custom domains, and the zone answers the three names as they were. Delete the three TXT records at
 WordPress.com.
 
@@ -427,8 +425,7 @@ Check: `dig +noall +answer jeffreypalermo.com A` gives `192.0.78.168` and `192.0
 `curl -s -o /dev/null -D - https://jeffreypalermo.com/ | grep -i '^host-header'` says `host-header: WordPress.com`
 (as it did on 2026-10-08).
 
-- **Then the pull request**, before anything is deployed: take the three names of this domain out of `"prod"` in
-  `settings.json`.
+- **Then the pull request**, before anything is deployed: take the host names out of `"prod"` in `settings.json`.
   A deployment writes what the code says, and while the code lists the names it gives them to the Front Door
   again.
 - This works while the WordPress.com site exists and still has the domain: the 30 days of [After](#after).

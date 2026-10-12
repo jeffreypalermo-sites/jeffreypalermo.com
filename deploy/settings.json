@@ -20,7 +20,7 @@
     },
     "prod": {
       "frontDoor": true,
-      "hostNames": ["jeffreypalermo.com", "www.jeffreypalermo.com", "feeds.jeffreypalermo.com", "www.jeffreypalermo.ceo"],
+      "hostNames": ["www.jeffreypalermo.ceo"],
       "dnsZone": "jeffreypalermo.com",
       "edgeLogs": { "enabled": true, "retentionDays": 30, "dailyCapGb": 1 },
       "regions": [
