@@ -137,6 +137,18 @@ jobs:
           packages: octopus-packages/${{ vars.SYSTEM_SLUG }}-${{ vars.DEPLOYABLE_NAME }}.${{ steps.version.outputs.version }}.zip
           overwrite_mode: IgnoreIfExists
 
+      # The commit's time goes into the release with its notes: the system's delivery facts (lead time) read it there
+      # and need not ask this repository for it, which they could not if it were private. Read with this run's own
+      # token, which reads this repository and no other.
+      - name: Read the commit's time
+        id: commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          committed=$(gh api "repos/${{ github.repository }}/commits/${{ github.event.workflow_run.head_sha }}" --jq .commit.committer.date)
+          echo "committed=$committed" >> "$GITHUB_OUTPUT"
+
       - name: Create the release
         uses: OctopusDeploy/create-release-action@v4
         with:
@@ -144,4 +156,4 @@ jobs:
           release_number: ${{ steps.version.outputs.version }}
           package_version: ${{ steps.version.outputs.version }}
           ignore_existing: true
-          release_notes: "Build ${{ github.event.workflow_run.html_url }} of ${{ github.event.workflow_run.head_sha }}"
+          release_notes: "Build ${{ github.event.workflow_run.html_url }} of ${{ github.event.workflow_run.head_sha }}, committed ${{ steps.commit.outputs.committed }}"
