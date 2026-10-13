@@ -59,6 +59,8 @@ public class CachePolicyTests
     [InlineData("/_version")]
     [InlineData("/_version/")]
     [InlineData("/_build")]
+    [InlineData("/_telemetry")]
+    [InlineData("/_telemetry/")]
     public void WhatTheRunningSiteSaysAboutItselfIsNeverKept(string path)
     {
         Assert.Equal("no-store", CachePolicy.CacheControl("GET", path, 200, decidedByHost: false, untilNextChange: null));
@@ -70,6 +72,7 @@ public class CachePolicyTests
     [InlineData("/_versions/")]
     [InlineData("/_buildings/")]
     [InlineData("/_healthy/")]
+    [InlineData("/_telemetry-of-something-else")]
     public void OtherAddressesThatStartAlikeAreKept(string path) =>
         Assert.Equal(Kept, CachePolicy.CacheControl("GET", path, 200, decidedByHost: false, untilNextChange: null));
 

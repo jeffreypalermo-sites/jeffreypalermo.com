@@ -10,15 +10,13 @@ namespace JeffreyPalermo.UI.Server;
 /// </summary>
 public sealed class FrontDoorHostMiddleware(RequestDelegate next, IOptions<SiteOptions> options)
 {
-    private const string FrontDoorIdHeader = "X-Azure-FDID";
     private const string ForwardedHostHeader = "X-Forwarded-Host";
 
     private readonly string _frontDoorId = options.Value.FrontDoorId;
 
     public Task InvokeAsync(HttpContext context)
     {
-        if (_frontDoorId.Length > 0
-            && string.Equals(context.Request.Headers[FrontDoorIdHeader], _frontDoorId, StringComparison.OrdinalIgnoreCase)
+        if (FrontDoorRequest.IsFromThisSitesFrontDoor(context.Request, _frontDoorId)
             && context.Request.Headers[ForwardedHostHeader].ToString() is { Length: > 0 } forwarded
             && HostString.FromUriComponent(forwarded) is { HasValue: true } host
             && Uri.CheckHostName(host.Host) != UriHostNameType.Unknown)

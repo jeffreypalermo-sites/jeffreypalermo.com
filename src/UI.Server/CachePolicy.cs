@@ -1,4 +1,5 @@
 using System.Globalization;
+using JeffreyPalermo.Core.Traffic;
 
 namespace JeffreyPalermo.UI.Server;
 
@@ -46,9 +47,10 @@ public static class CachePolicy
             return NoStore;
         }
 
-        // Health, version and build: asked many times in a row by a deployment's verification, which must see the
-        // release that runs now (ADR-0011, ADR-0012).
-        if (IsAboutTheRunningSite(path))
+        // Health, version, build and the counts of the last minute: asked many times in a row by a deployment's
+        // verification, which must see the release that runs now, and true only for the instance that answered
+        // (ADR-0011, ADR-0012, ADR-0025).
+        if (RequestKinds.IsAboutTheRunningSite(path))
         {
             return NoStore;
         }
@@ -75,15 +77,6 @@ public static class CachePolicy
         }
 
         return $"public, max-age={Seconds(Browser, untilNextChange)}, s-maxage={Seconds(Edge, untilNextChange)}";
-    }
-
-    /// <summary><c>/_health/…</c>, <c>/_version</c> and <c>/_build</c>, but not the files under <c>/_assets/</c>.</summary>
-    private static bool IsAboutTheRunningSite(string path)
-    {
-        var first = path.AsSpan().TrimStart('/');
-        var end = first.IndexOf('/');
-        first = end < 0 ? first : first[..end];
-        return first is "_health" or "_version" or "_build";
     }
 
     private static string Seconds(TimeSpan lifetime, TimeSpan? untilNextChange)

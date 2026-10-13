@@ -109,6 +109,7 @@ public sealed class CacheHeadersTests(SiteFactory factory) : IClassFixture<SiteF
     [InlineData("/_health/ready")]
     [InlineData("/_version")]
     [InlineData("/_build")]
+    [InlineData("/_telemetry")]
     public async Task WhatTheRunningSiteSaysAboutItselfIsStillNeverKept(string path)
     {
         using var response = await factory.ClientFor().GetAsync(new Uri(path, UriKind.Relative));

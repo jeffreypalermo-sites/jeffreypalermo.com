@@ -2,8 +2,9 @@ namespace JeffreyPalermo.AcceptanceTests;
 
 /// <summary>
 /// The system's health dashboard is a page on another origin whose code asks every node in the visitor's browser
-/// (ADR-0011), and the primary node of each environment for the facts of its build (ADR-0012). A browser hands
-/// such a page an answer only when the answer allows the page's origin.
+/// (ADR-0011), the primary node of each environment for the facts of its build (ADR-0012), and every node for what
+/// it answered in the last minute (ADR-0025). A browser hands such a page an answer only when the answer allows the
+/// page's origin.
 /// </summary>
 public sealed partial class SiteInABrowserTests
 {
@@ -12,12 +13,19 @@ public sealed partial class SiteInABrowserTests
     [InlineData("_health/live")]
     [InlineData("_version")]
     [InlineData("_build")]
+    [InlineData("_telemetry")]
     public async Task APageOnAnotherOriginCanReadAHealthAnswer(string path)
     {
         var answer = await FetchFromAnotherOriginAsync(path);
 
         Assert.DoesNotContain("refused", answer, StringComparison.Ordinal);
-        Assert.Contains(path == "_health/live" ? "ok" : site.Version, answer, StringComparison.Ordinal);
+        var expected = path switch
+        {
+            "_health/live" => "ok",
+            "_telemetry" => "\"windowSeconds\":60",
+            _ => site.Version,
+        };
+        Assert.Contains(expected, answer, StringComparison.Ordinal);
     }
 
     [Theory]
