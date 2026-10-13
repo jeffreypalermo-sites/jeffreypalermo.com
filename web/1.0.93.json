@@ -1,0 +1,43 @@
+{
+  "deployable": "web",
+  "version": "1.0.93",
+  "generated": "2026-10-13T06:37:21Z",
+  "kind": "container image",
+  "process": "dotnet JeffreyPalermo.UI.Server.dll",
+  "entry": "JeffreyPalermo.UI.Server",
+  "assemblies": [
+    {
+      "name": "JeffreyPalermo.UI.Server",
+      "entry": true,
+      "references": [
+        "JeffreyPalermo.Core",
+        "JeffreyPalermo.Infrastructure"
+      ],
+      "packages": []
+    },
+    {
+      "name": "JeffreyPalermo.Core",
+      "entry": false,
+      "references": [],
+      "packages": []
+    },
+    {
+      "name": "JeffreyPalermo.Infrastructure",
+      "entry": false,
+      "references": [
+        "JeffreyPalermo.Core"
+      ],
+      "packages": [
+        {
+          "name": "Markdig",
+          "version": "1.4.0"
+        },
+        {
+          "name": "YamlDotNet",
+          "version": "18.1.0"
+        }
+      ]
+    }
+  ],
+  "truncated": false
+}
