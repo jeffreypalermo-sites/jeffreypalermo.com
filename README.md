@@ -217,7 +217,7 @@ The build treats warnings as errors.
   Wayback Machine is asked and which capture is taken, what the podcast's feed says of an episode, show notes as
   Markdown that renders as the show wrote them, which video is an episode's, contract file format, the Onion dependency rule, the delivery system's contract in `build.yml`,
   how the facts of a build reach the image and which file `/_build` believes, what each kind of answer says
-  to the caches, and what the look's stylesheet may not do (move, fix or stick anything, fetch anything but the
+  to the caches, which request is a check and which is traffic, an instance's count of its last minute, and what the look's stylesheet may not do (move, fix or stick anything, fetch anything but the
   site's two font files, set text on a ground it does not stand out from, hide the keyboard's focus, grow large).
 - **Integration tests:** the real `content/` tree loaded into the domain; the site in-process: every kind of page in
   the site layout, the markup the stylesheet rests on (the menu in the header, search in a box of its own, the page
@@ -227,14 +227,16 @@ The build treats warnings as errors.
   server and the real file system; `localize` and `recover` against stand-ins for Photon, the hosts and the
   Wayback Machine, writing to a temp content tree; the `podcast` command writing to a temp content tree, and the
   repository's episodes against their catalog (one post each, the show's date, a player that waits, nothing
-  loaded from another host); every picture of every body asked of the site itself; the `Cache-Control` of every kind of answer; the scripts run for real,
+  loaded from another host); every picture of every body asked of the site itself; the `Cache-Control` of every kind of answer; what each kind of request does to the numbers of `/_telemetry`; the scripts run for real,
   `scripts/Write-BuildFacts.ps1` and `deploy/deploy.ps1` (against a stand-in for the Azure CLI) among them; the
   Bicep file compiled, and what it deploys with and without host names; the site under its custom host names.
   These need the Azure CLI (`az bicep build`, a local compile).
 - **Full-system tests** (`tests/AcceptanceTests`, need Docker): the published app as a real process, and the container
   image built from the `Dockerfile` and run with `docker run`. Each replays the URL contract over real HTTP. The
   image is built as the Build builds it, the facts of the build first, and must answer them at `/_build`. It must
-  tell the caches how long to keep each kind of answer, and never to keep health, version or build. A real
+  tell the caches how long to keep each kind of answer, and never to keep health, version, build or the counts.
+  A second container, given a Front Door ID, must count what it answered through the Front Door and directly
+  at `/_telemetry`. A real
   browser (Chromium, driven by Playwright for .NET) then reads the container's site as a reader would: the look of
   the home page (the navy masthead, the posts, the index beside them), a post,
   older and newer, the index, search (which finds the About page too), posts whose pictures came from other
@@ -260,6 +262,9 @@ pwsh tests/AcceptanceTests/bin/Release/net10.0/playwright.ps1 install chromium
 `.github/workflows/build.yml` runs every test layer and keeps the tested image as the artifact `container-image`.
 The image carries the facts of its build, which the site answers at `/_build`: version, commit, lines of code,
 tests, coverage, complexity ([ADR-0012](docs/adr/0012-the-site-publishes-its-build-facts.md)).
+Every running instance says at `/_telemetry` how many requests it answered in the last minute, through the Front
+Door and directly: numbers only, which the system's dashboard reads from each region
+([ADR-0025](docs/adr/0025-each-instance-counts-its-last-minute.md)).
 From there the system `jpcom` takes over: its Release pushes that image and creates an Octopus release, which is
 promoted through `tdd`, `uat` and `prod`. Every night `.github/workflows/verify-environments.yml` replays the URL
 contract against each environment (`scripts/verify-environments.sh`). See [ADR-0006](docs/adr/0006-deliver-through-the-demo-environment-kit.md)

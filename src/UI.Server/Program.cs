@@ -1,5 +1,6 @@
 using JeffreyPalermo.Core;
 using JeffreyPalermo.Core.Content;
+using JeffreyPalermo.Core.Traffic;
 using JeffreyPalermo.Core.Urls;
 using JeffreyPalermo.Infrastructure;
 using JeffreyPalermo.Infrastructure.Content;
@@ -14,6 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection(SiteOptions.Section));
 builder.Services.AddSingleton<IClock, SystemClock>();
+
+// This instance's own count of what it answered in the last minute (ADR-0025). In memory only.
+builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddSingleton<RequestTally>();
 builder.Services.AddSingleton<ISiteContentSource>(services =>
 {
     var options = services.GetRequiredService<IOptions<SiteOptions>>().Value;
@@ -47,6 +52,9 @@ var app = builder.Build();
 var siteOptions = app.Services.GetRequiredService<IOptions<SiteOptions>>().Value;
 var site = app.Services.GetRequiredService<SiteContent>();
 Log.ContentLoaded(app.Logger, site.Version, site.Posts.Count, site.Attachments.Count);
+
+// The count begins with the process, not with its first request: /_telemetry says since when.
+_ = app.Services.GetRequiredService<RequestTally>();
 var buildFactsPath = BuildFactsPath(siteOptions, app.Environment);
 if (app.Services.GetRequiredService<BuildFacts>().Measured)
 {
@@ -59,6 +67,9 @@ else
 
 // Outermost: every answer says what a cache may do with it and which release gave it (ADR-0013).
 app.UseMiddleware<CacheHeadersMiddleware>();
+
+// Around everything that answers, the failure below included: each answer is counted once, as what it was.
+app.UseMiddleware<RequestTallyMiddleware>();
 
 // A request that fails is answered 500 with nothing in it, logged, and marked as never to be kept by a cache.
 // On a developer's machine the page that shows the exception answers instead.

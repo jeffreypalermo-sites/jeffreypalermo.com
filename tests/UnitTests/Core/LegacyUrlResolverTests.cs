@@ -112,6 +112,7 @@ public class LegacyUrlResolverTests
     [InlineData("/robots.txt", "canonical")]
     [InlineData("/search/", "canonical")]
     [InlineData("/_health/ready", "canonical")]
+    [InlineData("/_telemetry", "canonical")]
     [InlineData("/_assets/site.css", "canonical")]
     [InlineData("/_assets/authors/contact", "canonical")] // the site's own files are never guessed at, though a post is called "contact"
     [InlineData("/wp-content/uploads/2018/06/a.png?w=300", "media")]

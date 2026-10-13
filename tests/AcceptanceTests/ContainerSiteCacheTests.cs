@@ -50,6 +50,7 @@ public sealed partial class ContainerSiteTests
     [InlineData("/_health/ready")]
     [InlineData("/_version")]
     [InlineData("/_build")]
+    [InlineData("/_telemetry")]
     public async Task TheContainersHealthVersionAndBuildAnswersAreNeverKept(string path)
     {
         using var client = site.Client();
