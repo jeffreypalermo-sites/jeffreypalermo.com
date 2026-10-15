@@ -402,7 +402,10 @@ of one environment. `tdd` runs in one region, `uat` in two and `prod` in eleven,
 environment and a container app of its own (`cae-jpcom-<env>-<code>`, `ca-jpcom-<env>-web-<code>`); `uat` and `prod`
 have an Azure Front Door in front that rotates over their regions. `deploy/settings.json` lists the regions. The
 Front Door's route keeps what the site allows at its edge, by address and query string, and compresses text; every
-deployment empties it ([ADR-0013](../adr/0013-the-front-door-keeps-the-sites-answers.md))._
+deployment empties it ([ADR-0013](../adr/0013-the-front-door-keeps-the-sites-answers.md)). While
+`deploy/settings.json` says `"dormant": true` the fleet sleeps, and neither has its Front Door, host name or access
+log: the stack deletes them, and the regions answer at their own addresses
+([ADR-0026](../adr/0026-the-site-sleeps-without-its-front-doors.md))._
 
 ```mermaid
 flowchart TB
