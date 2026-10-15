@@ -16,17 +16,19 @@ public class BuildFactsContractTests
     private static readonly string Root = DependencyRuleTests.RepositoryRoot();
 
     [Theory]
-    [InlineData("dotnet test tests/UnitTests ")]
-    [InlineData("dotnet test tests/IntegrationTests ")]
+    [InlineData("Invoke-Step 'Unit tests' @('test', 'tests/UnitTests', ")]
+    [InlineData("Invoke-Step 'Integration tests' @('test', 'tests/IntegrationTests', ")]
     public void TheTestsWriteTheirResultsAndTheirCoverageWhereTheArtifactIsTakenFrom(string command)
     {
+        // The private build runs the tests (ADR-0027); job test runs the private build, then keeps TestResults.
         var steps = Build.Steps("test");
-        var tested = steps.FindIndex(step => Workflow.Run(step).StartsWith(command, StringComparison.Ordinal));
+        var built = steps.FindIndex(step => Workflow.Run(step) == PrivateBuildCommand);
         var uploaded = steps.FindIndex(step => Workflow.With(step, "name") == "test-results");
+        var tested = PrivateBuildLine(command);
 
-        Assert.True(tested >= 0 && tested < uploaded, "Expected the tests, then the upload of the artifact test-results.");
-        Assert.Contains(" --logger trx --results-directory TestResults ", Workflow.Run(steps[tested]), StringComparison.Ordinal);
-        Assert.EndsWith(" --collect \"${COVERAGE}\"", Workflow.Run(steps[tested]), StringComparison.Ordinal);
+        Assert.True(built >= 0 && built < uploaded, "Expected the private build, then the upload of the artifact test-results.");
+        Assert.Contains(", '--no-build', '--logger', 'trx', '--results-directory', 'TestResults', ", tested, StringComparison.Ordinal);
+        Assert.EndsWith(", '--collect', $coverage)", tested, StringComparison.Ordinal);
         Assert.Equal("TestResults", Workflow.With(steps[uploaded], "path"));
     }
 
@@ -35,11 +37,38 @@ public class BuildFactsContractTests
     {
         // OpenCover keeps every branch path, so two runs can be taken together; the script reads *.opencover.xml.
         // Without the exclusion the generated regular expressions under obj/ would be most of the lines.
-        var coverage = Workflow.Scalar((YamlMappingNode)Build.Jobs()["test"]["env"], "COVERAGE");
-
-        Assert.Equal("XPlat Code Coverage;Format=opencover;ExcludeByFile=**/obj/**", coverage);
+        Assert.Equal("$coverage = 'XPlat Code Coverage;Format=opencover;ExcludeByFile=**/obj/**'", PrivateBuildLine("$coverage = "));
         Assert.Contains("-Filter '*.opencover.xml'", Script(), StringComparison.Ordinal);
         Assert.Contains("-Filter '*.trx'", Script(), StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// The one command of the private build (ADR-0027; the demo-environment-kit's decisions 0028 and 0046): job test
+    /// runs it as a developer types it, and nothing else that compiles or tests, so the integration build has no
+    /// definition of the build of its own. The command the word names is the command the step runs.
+    /// </summary>
+    [Fact]
+    public void JobTestRunsThePrivateBuildAndNoBuildOfItsOwn()
+    {
+        var runs = Build.Steps("test").Select(Workflow.Run).Where(run => run.Length > 0).ToList();
+
+        Assert.Contains(PrivateBuildCommand, runs);
+        Assert.Equal($"$command = '{PrivateBuildCommand}'", PrivateBuildLine("$command = "));
+        Assert.All(Build.Jobs().Keys, job => Assert.DoesNotContain(Build.Steps(job), step => Regex.IsMatch(Workflow.Run(step), @"dotnet (build|test) (JeffreyPalermo\.slnx|tests/(UnitTests|IntegrationTests))\b")));
+    }
+
+    [Fact]
+    public void ThePrivateBuildCompilesThenTestsThenWritesItsWord()
+    {
+        // In this order, each stopping the run when it fails: a word is written only by a run that passed.
+        string[] steps = ["Invoke-Step 'Compile' ", "Invoke-Step 'Unit tests' ", "Invoke-Step 'Integration tests' ", "'private-build.json'"];
+        var at = steps.Select(step => PrivateBuild().IndexOf(step, StringComparison.Ordinal)).ToList();
+
+        Assert.All(at, index => Assert.True(index > 0));
+        Assert.Equal(at.Order(), at);
+        Assert.Contains("exit $LASTEXITCODE", PrivateBuild(), StringComparison.Ordinal);
+        Assert.Contains("[ordered]@{ command = $command } | ConvertTo-Json", PrivateBuild(), StringComparison.Ordinal);
+        Assert.Contains("Set-StrictMode -Version Latest", PrivateBuild(), StringComparison.Ordinal);
     }
 
     [Fact]
@@ -78,8 +107,8 @@ public class BuildFactsContractTests
         Assert.EndsWith(" -OutputPath build-facts.json", run, StringComparison.Ordinal);
 
         // A release whose facts lack what job test measured is not built: the wait for it would buy nothing. Named one
-        // by one: tests at three levels, the coverage, and the static analysis.
-        Assert.Contains(" -Require tests.unit, tests.integration, tests.acceptance, coverage, analysis ", run, StringComparison.Ordinal);
+        // by one: tests at three levels, the coverage, the static analysis, and the private build's word (ADR-0027).
+        Assert.Contains(" -Require tests.unit, tests.integration, tests.acceptance, coverage, analysis, build ", run, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -87,21 +116,15 @@ public class BuildFactsContractTests
     {
         // The compile is the static analysis. Its log is the evidence of what it found: it goes with the test
         // results, where the script looks for *.msbuild.log. Summary makes MSBuild end the log with its count.
-        var steps = Build.Steps("test");
-        var compiled = steps.FindIndex(step => Workflow.Scalar(step, "name") == "Compile");
-        var uploaded = steps.FindIndex(step => Workflow.With(step, "name") == "test-results");
-
-        Assert.True(compiled >= 0 && compiled < uploaded, "Expected the compile, then the upload of the artifact test-results.");
         Assert.Equal(
-            "dotnet build JeffreyPalermo.slnx --configuration Release \"-flp:LogFile=TestResults/compile.msbuild.log;Verbosity=minimal;Summary\"",
-            Workflow.Run(steps[compiled]));
-        Assert.Equal("TestResults", Workflow.With(steps[uploaded], "path"));
+            "Invoke-Step 'Compile' @('build', 'JeffreyPalermo.slnx', '--configuration', 'Release', '-flp:LogFile=TestResults/compile.msbuild.log;Verbosity=minimal;Summary')",
+            PrivateBuildLine("Invoke-Step 'Compile' "));
         Assert.Contains("-Filter '*.msbuild.log'", Script(), StringComparison.Ordinal);
 
         // No step compiles the solution a second time for the tests: what they ran is what the log is about.
         Assert.All(
-            steps.Where(step => Workflow.Run(step).StartsWith("dotnet test ", StringComparison.Ordinal)),
-            step => Assert.Contains(" --no-build ", Workflow.Run(step), StringComparison.Ordinal));
+            PrivateBuild().Split('\n').Where(line => line.Contains("@('test', ", StringComparison.Ordinal)),
+            line => Assert.Contains(", '--no-build', ", line, StringComparison.Ordinal));
     }
 
     [Fact]
@@ -115,7 +138,7 @@ public class BuildFactsContractTests
         Assert.Contains("<AnalysisLevel>latest-recommended</AnalysisLevel>", settings, StringComparison.Ordinal);
 
         string[] switches = ["TreatWarningsAsErrors", "NoWarn", "WarningsNotAsErrors", "AnalysisLevel", "RunAnalyzers", "EnableNETAnalyzers", "warnaserror", "nowarn"];
-        var compiling = Directory.EnumerateFiles(Workflow.Directory, "*.yml").Append(Path.Join(Root, "Dockerfile")).Append(Path.Join(Root, "scripts", "build-deploy-package.sh"));
+        var compiling = Directory.EnumerateFiles(Workflow.Directory, "*.yml").Append(Path.Join(Root, "Dockerfile")).Append(Path.Join(Root, "scripts", "build-deploy-package.sh")).Append(Path.Join(Root, "build.ps1"));
         Assert.All(compiling, file => Assert.All(switches, name => Assert.DoesNotContain(name, File.ReadAllText(file), StringComparison.OrdinalIgnoreCase)));
     }
 
@@ -205,6 +228,15 @@ public class BuildFactsContractTests
         Assert.DoesNotContain("acceptance = 'acceptancetests.dll'", Script(), StringComparison.Ordinal);
         Assert.Matches(@"(?m)^\s*acceptance\s*=\s*\$Declared$", Script());
     }
+
+    /// <summary>The private build's command, as a developer types it and as job test runs it.</summary>
+    private const string PrivateBuildCommand = "pwsh ./build.ps1";
+
+    private static string PrivateBuild() => File.ReadAllText(Path.Join(Root, "build.ps1"));
+
+    /// <summary>The one line of <c>build.ps1</c> that starts, after its indent, with <paramref name="start"/>.</summary>
+    private static string PrivateBuildLine(string start) =>
+        Assert.Single(PrivateBuild().Split('\n').Select(line => line.Trim()), line => line.StartsWith(start, StringComparison.Ordinal));
 
     private static string Script() => File.ReadAllText(Path.Join(Root, "scripts", "Write-BuildFacts.ps1"));
 }

@@ -21,12 +21,15 @@ public sealed class ContainerSite : IAsyncLifetime
     /// What <c>build.yml</c> requires of the facts before it builds the image, as <c>-File</c> passes a list. Not the
     /// coverage: these tests are not the Build, and what stands in for its results holds none.
     /// </summary>
-    private const string RequiredOfTheFacts = "tests.unit,tests.integration,tests.acceptance,analysis";
+    private const string RequiredOfTheFacts = "tests.unit,tests.integration,tests.acceptance,analysis,build";
 
     private string? _builtImage;
     private string? _container;
 
     public string Image { get; private set; } = string.Empty;
+
+    /// <summary>True when these tests built the image (at a desk); false when the Build named the image it made.</summary>
+    public bool BuiltHere => _builtImage is not null;
 
     /// <summary>The version the image was built with: build argument <c>VERSION</c>, which the Build workflow also writes as a label.</summary>
     public string Version { get; private set; } = string.Empty;
@@ -128,7 +131,8 @@ public sealed class ContainerSite : IAsyncLifetime
 
     /// <summary>
     /// What job <c>test</c> of the Build hands to job <c>image</c>, stood in for: the results of one unit test and of
-    /// one integration test that passed, and the log of a compile that found nothing.
+    /// one integration test that passed, the log of a compile that found nothing, and the private build's word
+    /// (ADR-0027), as <c>build.ps1</c> writes it when it passes.
     /// </summary>
     private static void StandInResults(string folder)
     {
@@ -156,6 +160,7 @@ public sealed class ContainerSite : IAsyncLifetime
 
             Time Elapsed 00:00:01.00
             """);
+        File.WriteAllText(Path.Join(folder, "private-build.json"), "{\n  \"command\": \"pwsh ./build.ps1\"\n}\n");
     }
 
     /// <summary>A client that does not follow redirects.</summary>

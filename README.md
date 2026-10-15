@@ -203,11 +203,14 @@ docker run --rm --publish 8080:8080 jpcom
 ## Build and test
 
 ```bash
-dotnet build JeffreyPalermo.slnx -c Release
-dotnet test JeffreyPalermo.slnx -c Release
+pwsh ./build.ps1
 ```
 
-The build treats warnings as errors.
+That is the private build, and the Build's first job runs the same command
+([ADR-0027](docs/adr/0027-one-command-is-the-private-build.md)): the compile in Release, which treats warnings as
+errors, then the unit and the integration tests, with their results and coverage under `TestResults`. Run it before
+a push. When it passes it writes `TestResults/private-build.json`, the word from which the build's facts name it.
+The full-system tests run apart: `dotnet test tests/AcceptanceTests -c Release` (below).
 
 - **Unit tests:** URL classification and resolution, slug normalization, the domain's invariants and queries
   (previous and next post, archive months, terms in use, search over posts and pages, comment threads), which bracketed text is a shortcode, how pages word things (dates,
@@ -261,7 +264,8 @@ pwsh tests/AcceptanceTests/bin/Release/net10.0/playwright.ps1 install chromium
 
 `.github/workflows/build.yml` runs every test layer and keeps the tested image as the artifact `container-image`.
 The image carries the facts of its build, which the site answers at `/_build`: version, commit, lines of code,
-tests, coverage, complexity ([ADR-0012](docs/adr/0012-the-site-publishes-its-build-facts.md)).
+tests, coverage, complexity ([ADR-0012](docs/adr/0012-the-site-publishes-its-build-facts.md)), and the private build
+that made it, `pwsh ./build.ps1`, run by the Build ([ADR-0027](docs/adr/0027-one-command-is-the-private-build.md)).
 Every running instance says at `/_telemetry` how many requests it answered in the last minute, through the Front
 Door and directly: numbers only, which the system's dashboard reads from each region
 ([ADR-0025](docs/adr/0025-each-instance-counts-its-last-minute.md)).

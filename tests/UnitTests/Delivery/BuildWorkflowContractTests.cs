@@ -91,10 +91,13 @@ public class BuildWorkflowContractTests
     [Fact]
     public void EveryTestLayerRuns()
     {
+        // The unit and the integration tests run in the private build, which job test runs (ADR-0027).
         var commands = Build.Jobs().SelectMany(job => Build.Steps(job.Key)).Select(Workflow.Run).ToList();
+        var privateBuild = File.ReadAllText(Path.Join(Architecture.DependencyRuleTests.RepositoryRoot(), "build.ps1"));
 
-        Assert.Contains(commands, run => run.StartsWith("dotnet test tests/UnitTests ", StringComparison.Ordinal));
-        Assert.Contains(commands, run => run.StartsWith("dotnet test tests/IntegrationTests ", StringComparison.Ordinal));
+        Assert.Contains("pwsh ./build.ps1", commands);
+        Assert.Contains("Invoke-Step 'Unit tests' @('test', 'tests/UnitTests', ", privateBuild, StringComparison.Ordinal);
+        Assert.Contains("Invoke-Step 'Integration tests' @('test', 'tests/IntegrationTests', ", privateBuild, StringComparison.Ordinal);
         Assert.Contains(commands, run => run.StartsWith("dotnet test tests/AcceptanceTests ", StringComparison.Ordinal));
     }
 

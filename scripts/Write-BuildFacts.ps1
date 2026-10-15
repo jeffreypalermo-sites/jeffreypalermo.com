@@ -37,6 +37,13 @@
                                  is the .NET analyzers: analysisLevel and warningsAsErrors are read from
                                  Directory.Build.props. suppressions counts what the files git tracks switch off
                                  (see Get-Suppressions). Null without a log: a count nobody made is not zero
+      build                      the private build that made the results (ADR-0027; the demo-environment-kit's
+                                 decisions 0028 and 0046): command, ranBy and run. From private-build.json under
+                                 -ResultsPath, the word ./build.ps1 writes when it passes. On GitHub Actions, and only
+                                 when -Workflow runs the command, ranBy is "integration" and run is buildUrl, the
+                                 address of the Build's run; elsewhere ranBy is "private" and run is null. Null without
+                                 a word, with a word that names no command of one line, or on GitHub Actions when the
+                                 workflow does not run the command it names
 
     -Require names what the caller needs measured: a section (coverage) or one part of it (tests.unit). When one of
     them is null the script writes nothing and ends with exit code 1.
@@ -64,7 +71,10 @@ param(
     [switch] $DownloadArtifacts,
     # What must not be null, for example: tests.unit, coverage, analysis.
     [string[]] $Require = @(),
-    [string] $RepositoryRoot = ''
+    [string] $RepositoryRoot = '',
+    # The Build workflow that must run the private build's command for the facts to say the integration build ran it.
+    # Default: .github/workflows/build.yml of -RepositoryRoot.
+    [string] $Workflow = ''
 )
 
 Set-StrictMode -Version Latest
@@ -352,6 +362,64 @@ function Get-Methods {
         })
 }
 
+# The private build's word: the command it names, or why it names none. The rule is the kit's
+# (.github/private-build/add-private-build.ps1 of its app template): 1 to 200 printable characters on one line.
+function Read-PrivateBuildCommand {
+    param([IO.FileInfo] $File)
+    $word = try { [IO.File]::ReadAllText($File.FullName) | ConvertFrom-Json -AsHashtable -NoEnumerate } catch { $null }
+    if ($word -isnot [Collections.IDictionary]) { return @{ Command = ''; Why = "$($File.Name) is no JSON object" } }
+    $command = $word['command'] -is [string] ? ([string] $word['command']).Trim() : ''
+    if ($command.Length -lt 1 -or $command.Length -gt 200 -or $command -cnotmatch '^[\x20-\x7E]+$') {
+        return @{ Command = ''; Why = "$($File.Name) names no ""command"" of 1 to 200 printable characters on one line" }
+    }
+    return @{ Command = $command; Why = '' }
+}
+
+# True when a step of the workflow runs the command on a line of its run: as the step's value (run: <command>) or as a
+# line of a block (run: |). Spaces are compared as one; a comment runs nothing.
+function Test-WorkflowRuns {
+    param([string] $Path, [string] $Command)
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) { return $false }
+    $wanted = ($Command -replace '\s+', ' ').Trim()
+    $inRun = $false; $indent = 0
+    foreach ($line in [IO.File]::ReadLines($Path)) {
+        $key = [regex]::Match($line, '^(\s*)(?:-\s+)?run:\s*(.*)$')
+        if ($key.Success) {
+            $indent = $key.Groups[1].Length
+            $value = $key.Groups[2].Value.Trim() -replace '^([''"])(.*)\1$', '$2'
+            $inRun = $value -match '^[|>][+-]?$'
+            if (-not $inRun -and ($value -replace '\s+', ' ') -ceq $wanted) { return $true }
+            continue
+        }
+        if ($inRun -and $line -match '^\s*$') { continue }
+        if ($inRun -and ($line -replace '^(\s*).*$', '$1').Length -gt $indent) {
+            if (($line -replace '\s+', ' ').Trim() -ceq $wanted) { return $true }
+            continue
+        }
+        $inRun = $false
+    }
+    return $false
+}
+
+function Get-BuildFacts {
+    param([IO.FileInfo[]] $Words, [string] $WorkflowPath, [AllowNull()] [string] $RunUrl)
+    if ($Words.Count -eq 0) { return $null }
+    if ($Words.Count -gt 1) {
+        Write-Host "The results hold $($Words.Count) private-build.json files: no private build is named."
+        return $null
+    }
+    $named = Read-PrivateBuildCommand $Words[0]
+    if (-not $named.Command) { Write-Host "No private build is named: $($named.Why)."; return $null }
+    if ($env:GITHUB_ACTIONS -ne 'true' -or -not $RunUrl) {
+        return [ordered]@{ command = $named.Command; ranBy = 'private'; run = $null }
+    }
+    if (-not (Test-WorkflowRuns $WorkflowPath $named.Command)) {
+        Write-Host "No private build is named: $WorkflowPath does not run ""$($named.Command)"", the command the word names."
+        return $null
+    }
+    return [ordered]@{ command = $named.Command; ranBy = 'integration'; run = $RunUrl }
+}
+
 function Get-Sum {
     param([object[]] $Items, [string] $Property)
     return [long] (($Items | Measure-Object -Property $Property -Sum).Sum ?? 0)
@@ -365,6 +433,7 @@ function Get-Percent {
 if (-not $RepositoryRoot) { $RepositoryRoot = Join-Path $PSScriptRoot '..' }
 $RepositoryRoot = (Resolve-Path -LiteralPath $RepositoryRoot).Path
 if (-not $RunId) { $RunId = [string] $env:GITHUB_RUN_ID }
+if (-not $Workflow) { $Workflow = Join-Path $RepositoryRoot '.github' 'workflows' 'build.yml' }
 $github = ($env:GITHUB_SERVER_URL -and $env:GITHUB_REPOSITORY) ? "$($env:GITHUB_SERVER_URL.TrimEnd('/'))/$env:GITHUB_REPOSITORY" : $null
 
 $downloaded = $null
@@ -391,6 +460,9 @@ try {
     $trx = @($found ? (Get-ChildItem -LiteralPath $ResultsPath -Recurse -File -Filter '*.trx' | Sort-Object FullName) : @())
     $coverage = @($found ? (Get-ChildItem -LiteralPath $ResultsPath -Recurse -File -Filter '*.opencover.xml' | Sort-Object FullName) : @())
     $logs = @($found ? (Get-ChildItem -LiteralPath $ResultsPath -Recurse -File -Filter '*.msbuild.log' | Sort-Object FullName) : @())
+    $words = @($found ? (Get-ChildItem -LiteralPath $ResultsPath -Recurse -File -Filter 'private-build.json' | Sort-Object FullName) : @())
+    $buildUrl = ($github -and $RunId) ? "$github/actions/runs/$RunId" : $null
+    $made = Get-BuildFacts $words $Workflow $buildUrl
     $tests = Get-TestFacts $trx (Get-DeclaredAcceptance $RepositoryRoot)
     $methods = @(Get-Methods $coverage)
     $compile = Get-CompileFacts $logs
@@ -413,13 +485,14 @@ $facts = [ordered]@{
     commit     = $Commit ? $Commit : $null
     commitUrl  = ($github -and $Commit) ? "$github/commit/$Commit" : $null
     builtAt    = $moment.ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", [Globalization.CultureInfo]::InvariantCulture)
-    buildUrl   = ($github -and $RunId) ? "$github/actions/runs/$RunId" : $null
+    buildUrl   = $buildUrl
     code       = $null -eq $tracked ? $null : (Get-CodeFacts $RepositoryRoot $tracked)
     tests      = $tests
     coverage   = $null
     complexity = $null
     crap       = $null
     analysis   = $null
+    build      = $made
 }
 if ($methods.Count -gt 0) {
     $lines = Get-Sum $methods 'Lines'
@@ -484,6 +557,7 @@ if ($facts.coverage) { $said += "$($facts.coverage.linePercent) % of lines and $
 if ($facts.complexity) { $said += "complexity $($facts.complexity.average) on average, $($facts.complexity.max) at most, in $($facts.complexity.methods) methods" }
 if ($facts.crap) { $said += "CRAP $($facts.crap.max) at most, $($facts.crap.overThreshold) over $crapThreshold" }
 if ($null -ne $facts.analysis) { $said += "$($facts.analysis.problems) problems in the compile of $($facts.analysis.projects) projects, $($facts.analysis.suppressions ?? 'uncounted') suppressions" }
+if ($null -ne $facts.build) { $said += "built by ""$($facts.build.command)"", run by the $($facts.build.ranBy -ceq 'integration' ? 'integration build' : 'developer')" }
 $nothing = @($facts.Keys | Where-Object { $null -eq $facts[$_] })
 if ($nothing.Count -gt 0) { $said += "null: $($nothing -join ', ')" }
 Write-Host "$OutputPath`: $($said -join '; ')"
