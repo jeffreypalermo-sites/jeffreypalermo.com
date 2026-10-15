@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# A stand-in for the .NET CLI, for the tests that run ./build.ps1, the private build (PrivateBuildScriptTests). It
+# logs every call to $DOTNET_STUB_STATE/calls.log, and fails, with exit code 3, the call whose arguments contain
+# $DOTNET_STUB_FAIL when that is set.
+set -euo pipefail
+
+state="${DOTNET_STUB_STATE:?DOTNET_STUB_STATE is the folder this stand-in logs to}"
+printf '%s\n' "$*" >> "$state/calls.log"
+if [ -n "${DOTNET_STUB_FAIL:-}" ] && [[ "$*" == *"$DOTNET_STUB_FAIL"* ]]; then
+  echo "stand-in: $* fails" >&2
+  exit 3
+fi

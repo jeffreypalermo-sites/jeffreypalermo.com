@@ -5,6 +5,7 @@
 #
 # The image carries what the Build measured (build-facts.json, ADR-0012), so it is built after the tests: job image
 # needs job test, reads its results and writes the facts before `docker build`. The site answers them at /_build.
+# Job test runs the private build, `pwsh ./build.ps1`, and nothing else of the compile and the tests (ADR-0027).
 #
 # The kit keeps this file instead of its generic Build because the image needs the Git LFS files (the video under
 # content/uploads). What release.yml and the kit rely on, pinned by BuildWorkflowContractTests:
@@ -32,10 +33,6 @@ jobs:
     name: Unit and integration tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    env:
-      # coverlet.collector, in the format that keeps every branch path, so the two runs can be taken together
-      # (scripts/Write-BuildFacts.ps1). Generated code under obj/ is not the site's code.
-      COVERAGE: XPlat Code Coverage;Format=opencover;ExcludeByFile=**/obj/**
     steps:
       - uses: actions/checkout@v6.0.1
 
@@ -43,16 +40,12 @@ jobs:
         with:
           global-json-file: global.json
 
-      # The compile is the static analysis: the .NET analyzers run in it and a warning is an error
-      # (Directory.Build.props). Its log goes with the test results, and the facts count what it found (ADR-0012).
-      - name: Compile
-        run: dotnet build JeffreyPalermo.slnx --configuration Release "-flp:LogFile=TestResults/compile.msbuild.log;Verbosity=minimal;Summary"
-
-      - name: Unit tests
-        run: dotnet test tests/UnitTests --configuration Release --no-build --logger trx --results-directory TestResults --collect "${COVERAGE}"
-
-      - name: Integration tests
-        run: dotnet test tests/IntegrationTests --configuration Release --no-build --logger trx --results-directory TestResults --collect "${COVERAGE}"
+      # The private build (ADR-0027): the one command a developer runs before a push, run here as it is typed. It
+      # compiles, which is the static analysis (the .NET analyzers, a warning is an error, Directory.Build.props), and
+      # runs the unit and the integration tests with coverage, all into TestResults, the compile's log among them. When
+      # it passes it writes TestResults/private-build.json, its word, from which the facts name the command (ADR-0012).
+      - name: Private build
+        run: pwsh ./build.ps1
 
       # The site's own infrastructure code (deploy/, ADR-0007) must compile without a diagnostic before it is released.
       - name: Compile the infrastructure code
@@ -100,8 +93,9 @@ jobs:
 
       # What this release was built from and what job test measured, written beside the Dockerfile, which copies it
       # into the image. The results stay outside the checkout: TestResults is for the full-system tests below.
-      # A release without tests at three levels and an analysis is not built. The acceptance level is declared: the
-      # URL contract, which the pipeline replays against the first environment after this Build.
+      # A release without tests at three levels, an analysis and the private build's word (ADR-0027) is not built.
+      # The acceptance level is declared: the URL contract, which the pipeline replays against the first environment
+      # after this Build.
       - name: Download the test results
         uses: actions/download-artifact@v8
         with:
@@ -110,7 +104,7 @@ jobs:
 
       - name: Write the build facts
         shell: pwsh
-        run: ./scripts/Write-BuildFacts.ps1 -Version $env:VERSION -ResultsPath (Join-Path $env:RUNNER_TEMP test-results) -Require tests.unit, tests.integration, tests.acceptance, coverage, analysis -OutputPath build-facts.json
+        run: ./scripts/Write-BuildFacts.ps1 -Version $env:VERSION -ResultsPath (Join-Path $env:RUNNER_TEMP test-results) -Require tests.unit, tests.integration, tests.acceptance, coverage, analysis, build -OutputPath build-facts.json
 
       - name: Build the image
         run: |

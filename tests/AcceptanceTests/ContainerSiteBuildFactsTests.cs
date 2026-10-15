@@ -101,4 +101,34 @@ public sealed partial class ContainerSiteTests
         Assert.True(analysis.GetProperty("projects").GetInt32() > 0, body);
         Assert.Equal(analysis.GetProperty("suppressed").EnumerateObject().Sum(kind => kind.Value.GetInt32()), analysis.GetProperty("suppressions").GetInt32());
     }
+
+    /// <summary>
+    /// As the fleet reads it ("Private build", the demo-environment-kit's decision 0028): <c>build.command</c> names
+    /// the private build's command and <c>build.ranBy</c> is <c>integration</c> for an image the Build made, with
+    /// <c>run</c> the address of that Build's run (ADR-0027). An image built here, at a desk, says the developer ran
+    /// it and names no run: the facts never claim an integration build that did not happen.
+    /// </summary>
+    [Fact]
+    public async Task TheImageNamesThePrivateBuildThatMadeIt()
+    {
+        using var client = site.Client();
+
+        var body = await client.GetStringAsync(new Uri("/_build", UriKind.Relative));
+
+        using var facts = JsonDocument.Parse(body);
+        var build = facts.RootElement.GetProperty("build");
+        Assert.Equal(["command", "ranBy", "run"], build.EnumerateObject().Select(part => part.Name));
+        Assert.Equal("pwsh ./build.ps1", build.GetProperty("command").GetString());
+        if (site.BuiltHere)
+        {
+            Assert.Equal("private", build.GetProperty("ranBy").GetString());
+            Assert.Equal(JsonValueKind.Null, build.GetProperty("run").ValueKind);
+        }
+        else
+        {
+            Assert.Equal("integration", build.GetProperty("ranBy").GetString());
+            Assert.Equal(facts.RootElement.GetProperty("buildUrl").GetString(), build.GetProperty("run").GetString());
+            Assert.Matches("^https://github\\.com/[^/]+/[^/]+/actions/runs/[0-9]+$", build.GetProperty("run").GetString());
+        }
+    }
 }

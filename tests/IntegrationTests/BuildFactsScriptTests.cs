@@ -124,9 +124,9 @@ public sealed class BuildFactsScriptTests : IDisposable
         var builtAt = DateTimeOffset.Parse(root.GetProperty("builtAt").GetString()!, CultureInfo.InvariantCulture);
         Assert.InRange(builtAt, before, DateTimeOffset.UtcNow.AddSeconds(1));
         Assert.All(
-            (string[])["commit", "commitUrl", "buildUrl", "code", "tests", "coverage", "complexity", "crap", "analysis"],
+            (string[])["commit", "commitUrl", "buildUrl", "code", "tests", "coverage", "complexity", "crap", "analysis", "build"],
             name => Assert.True(root.GetProperty(name).ValueKind == JsonValueKind.Null, $"{name} is {root.GetProperty(name)}, not null."));
-        Assert.Contains("null: commit, commitUrl, buildUrl, code, tests, coverage, complexity, crap, analysis", result.Output, StringComparison.Ordinal);
+        Assert.Contains("null: commit, commitUrl, buildUrl, code, tests, coverage, complexity, crap, analysis, build", result.Output, StringComparison.Ordinal);
     }
 
     /// <summary>
@@ -136,19 +136,20 @@ public sealed class BuildFactsScriptTests : IDisposable
     [Fact]
     public async Task TheFactsHaveTheNamesAndTypesTheDashboardReads()
     {
-        await TrackedTreeAsync(Contract(rows: 5), BuildSettings);
+        await TrackedTreeAsync(Contract(rows: 5), BuildSettings, RunsThePrivateBuild);
         TestResults(Results);
         Coverage(Results);
         CompileLog(Results, warnings: 0, errors: 0, "Site", "Site.Tests");
+        Word(Results, PrivateBuild);
 
-        var result = await WriteAsync(GitHub, "-Version", "1.2.3", "-Commit", Commit, "-RunId", "77", "-ResultsPath", Results, "-RepositoryRoot", Tree);
+        var result = await WriteAsync(InTheBuild, "-Version", "1.2.3", "-Commit", Commit, "-RunId", "77", "-ResultsPath", Results, "-RepositoryRoot", Tree);
 
         Assert.True(result.ExitCode == 0, result.ToString());
         using var facts = Facts();
         var root = facts.RootElement;
         Assert.Equal(JsonValueKind.Object, root.ValueKind);
         Assert.Equal(
-            ["version", "commit", "commitUrl", "builtAt", "buildUrl", "code", "tests", "coverage", "complexity", "crap", "analysis"],
+            ["version", "commit", "commitUrl", "builtAt", "buildUrl", "code", "tests", "coverage", "complexity", "crap", "analysis", "build"],
             root.EnumerateObject().Select(property => property.Name));
 
         Assert.All((string[])["version", "commit"], name => Assert.Equal(JsonValueKind.String, root.GetProperty(name).ValueKind));
@@ -197,6 +198,156 @@ public sealed class BuildFactsScriptTests : IDisposable
         Assert.All((string[])["problems", "projects", "suppressions"], name => Assert.True(analysis.GetProperty(name).TryGetInt32(out _), name));
         var suppressed = Section(analysis, "suppressed", "noWarn", "warningsNotAsErrors", "pragmaWarningDisable", "suppressMessage", "editorconfigNone", "analyzersOff");
         Assert.All(suppressed.EnumerateObject(), kind => Assert.True(kind.Value.TryGetInt32(out _), kind.Name));
+
+        // The fleet reads build.command, a string, and build.ranBy, "integration" (the kit's decision 0028).
+        var build = Section(root, "build", "command", "ranBy", "run");
+        Assert.All(build.EnumerateObject(), part => Assert.Equal(JsonValueKind.String, part.Value.ValueKind));
+    }
+
+    /// <summary>
+    /// The private build's word, taken into the facts in the Build (ADR-0027): the command it names, run by the
+    /// integration build, and the address of the Build's run. That is what the fleet reads as "Private build" met.
+    /// </summary>
+    [Fact]
+    public async Task InTheBuildTheWordSaysTheIntegrationBuildRanTheCommand()
+    {
+        await TrackedTreeAsync(RunsThePrivateBuild);
+        Word(Path.Join(Results, "test-results"), PrivateBuild);
+
+        var result = await WriteAsync(InTheBuild, "-RunId", "77", "-ResultsPath", Results, "-RepositoryRoot", Tree, "-Require", "build");
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        using var facts = Facts();
+        var build = facts.RootElement.GetProperty("build");
+        Assert.Equal("pwsh ./build.ps1", build.GetProperty("command").GetString());
+        Assert.Equal("integration", build.GetProperty("ranBy").GetString());
+        Assert.Equal("https://github.example/owner/site/actions/runs/77", build.GetProperty("run").GetString());
+        Assert.Equal(facts.RootElement.GetProperty("buildUrl").GetString(), build.GetProperty("run").GetString());
+        Assert.Contains("built by \"pwsh ./build.ps1\", run by the integration build", result.Output, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("      - name: Private build\n        run: |\n          echo first\n          pwsh   ./build.ps1\n")]
+    [InlineData("      - run: 'pwsh ./build.ps1'\n")]
+    public async Task AWorkflowMayRunTheCommandInABlockOrQuoted(string steps)
+    {
+        await TrackedTreeAsync((".github/workflows/build.yml", Workflow(steps)));
+        Word(Results, PrivateBuild);
+
+        var result = await WriteAsync(InTheBuild, "-RunId", "77", "-ResultsPath", Results, "-RepositoryRoot", Tree, "-Require", "build");
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        using var facts = Facts();
+        Assert.Equal("integration", facts.RootElement.GetProperty("build").GetProperty("ranBy").GetString());
+    }
+
+    /// <summary>
+    /// The facts never say the integration build ran a command its workflow does not run: a Build with a definition
+    /// of the build of its own names no private build, and one that requires it is not built.
+    /// </summary>
+    [Theory]
+    [InlineData("      - run: dotnet build JeffreyPalermo.slnx\n")]
+    [InlineData("      # run: pwsh ./build.ps1\n      - run: dotnet test\n")]
+    [InlineData("      - run: |\n          # pwsh ./build.ps1\n          dotnet test\n")]
+    [InlineData("      - run: pwsh ./build.ps1 -Skip\n")]
+    public async Task InTheBuildAWorkflowThatDoesNotRunTheCommandNamesNoPrivateBuild(string steps)
+    {
+        await TrackedTreeAsync((".github/workflows/build.yml", Workflow(steps)));
+        Word(Results, PrivateBuild);
+
+        var result = await WriteAsync(InTheBuild, "-RunId", "77", "-ResultsPath", Results, "-RepositoryRoot", Tree, "-Require", "build");
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Contains("does not run \"pwsh ./build.ps1\", the command the word names.", result.Output, StringComparison.Ordinal);
+        Assert.Contains("FAIL the build facts lack build", result.Output, StringComparison.Ordinal);
+        Assert.False(File.Exists(Output), "Facts that lack a required section must not be written.");
+    }
+
+    /// <summary>At a desk the facts say a developer ran the command, and name no run: none was made.</summary>
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task AtADeskTheWordSaysTheDeveloperRanTheCommand(bool github)
+    {
+        await TrackedTreeAsync(RunsThePrivateBuild);
+        Word(Results, PrivateBuild);
+
+        // On a desk with GitHub's names set but no GitHub Actions, no run is claimed either.
+        var result = await WriteAsync(github ? GitHub : NoGitHub, "-RunId", github ? "77" : string.Empty, "-ResultsPath", Results, "-RepositoryRoot", Tree);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        using var facts = Facts();
+        var build = facts.RootElement.GetProperty("build");
+        Assert.Equal("pwsh ./build.ps1", build.GetProperty("command").GetString());
+        Assert.Equal("private", build.GetProperty("ranBy").GetString());
+        Assert.Equal(JsonValueKind.Null, build.GetProperty("run").ValueKind);
+    }
+
+    [Theory]
+    [InlineData("not json", "private-build.json is no JSON object")]
+    [InlineData("[\"pwsh ./build.ps1\"]", "private-build.json is no JSON object")]
+    [InlineData("{ \"command\": \"\" }", "private-build.json names no \"command\" of 1 to 200 printable characters on one line")]
+    [InlineData("{ \"command\": 7 }", "private-build.json names no \"command\" of 1 to 200 printable characters on one line")]
+    [InlineData("{ \"command\": \"pwsh ./build.ps1\\nrm -rf /\" }", "private-build.json names no \"command\" of 1 to 200 printable characters on one line")]
+    public async Task AWordThatNamesNoCommandNamesNoPrivateBuild(string word, string why)
+    {
+        await TrackedTreeAsync(RunsThePrivateBuild);
+        Word(Results, word);
+
+        var result = await WriteAsync(InTheBuild, "-RunId", "77", "-ResultsPath", Results, "-RepositoryRoot", Tree);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Contains($"No private build is named: {why}.", result.Output, StringComparison.Ordinal);
+        using var facts = Facts();
+        Assert.Equal(JsonValueKind.Null, facts.RootElement.GetProperty("build").ValueKind);
+    }
+
+    [Fact]
+    public async Task TwoWordsNameNoPrivateBuild()
+    {
+        await TrackedTreeAsync(RunsThePrivateBuild);
+        Word(Path.Join(Results, "one"), PrivateBuild);
+        Word(Path.Join(Results, "two"), PrivateBuild);
+
+        var result = await WriteAsync(InTheBuild, "-RunId", "77", "-ResultsPath", Results, "-RepositoryRoot", Tree);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Contains("The results hold 2 private-build.json files: no private build is named.", result.Output, StringComparison.Ordinal);
+        using var facts = Facts();
+        Assert.Equal(JsonValueKind.Null, facts.RootElement.GetProperty("build").ValueKind);
+    }
+
+    /// <summary>The kit's convention: the word read from the artifact test-results of the Build run.</summary>
+    [Fact]
+    public async Task TheWordIsReadFromTheArtifactsOfTheBuildRun()
+    {
+        await TrackedTreeAsync(RunsThePrivateBuild);
+        var state = Path.Join(_work, "gh");
+        Word(Path.Join(state, "artifacts", "test-results"), PrivateBuild);
+
+        var result = await WriteAsync(InTheBuild.Append(new("GH_STUB_STATE", state)), "-DownloadArtifacts", "-RunId", "77", "-RepositoryRoot", Tree, "-Require", "build");
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        using var facts = Facts();
+        Assert.Equal("integration", facts.RootElement.GetProperty("build").GetProperty("ranBy").GetString());
+    }
+
+    /// <summary>
+    /// This repository's own Build runs the command its private build names in its word, so the facts of the Build
+    /// say the integration build ran it.
+    /// </summary>
+    [Fact]
+    public async Task ThisRepositorysBuildRunsThePrivateBuildItsWordNames()
+    {
+        var command = File.ReadLines(Path.Join(TestPaths.RepositoryRoot, "build.ps1")).Single(line => line.StartsWith("$command = ", StringComparison.Ordinal));
+        Word(Results, $"{{ \"command\": \"{command["$command = '".Length..^1]}\" }}");
+
+        var result = await WriteAsync(InTheBuild, "-RunId", "77", "-ResultsPath", Results, "-Require", "build");
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        using var facts = Facts();
+        Assert.Equal("pwsh ./build.ps1", facts.RootElement.GetProperty("build").GetProperty("command").GetString());
+        Assert.Equal("integration", facts.RootElement.GetProperty("build").GetProperty("ranBy").GetString());
     }
 
     /// <summary>
@@ -532,6 +683,24 @@ public sealed class BuildFactsScriptTests : IDisposable
         new("GITHUB_SERVER_URL", "https://github.example"),
         new("GITHUB_REPOSITORY", "owner/site"),
     ];
+
+    /// <summary>On GitHub Actions, in a run: what the Build's job image has in its environment.</summary>
+    private static readonly KeyValuePair<string, string>[] InTheBuild = [.. GitHub, new("GITHUB_ACTIONS", "true")];
+
+    /// <summary>The word ./build.ps1 writes when it passes.</summary>
+    private const string PrivateBuild = "{\n  \"command\": \"pwsh ./build.ps1\"\n}\n";
+
+    private static string Workflow(string steps) => $"name: Build\non:\n  push:\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n{steps}";
+
+    /// <summary>A Build whose job test runs the private build.</summary>
+    private static readonly (string Path, string Text) RunsThePrivateBuild =
+        (".github/workflows/build.yml", Workflow("      - uses: actions/checkout@v6.0.1\n\n      - name: Private build\n        run: pwsh ./build.ps1\n"));
+
+    private static void Word(string folder, string text)
+    {
+        Directory.CreateDirectory(folder);
+        File.WriteAllText(Path.Join(folder, "private-build.json"), text);
+    }
 
     private JsonDocument Facts() => JsonDocument.Parse(File.ReadAllText(Output));
 

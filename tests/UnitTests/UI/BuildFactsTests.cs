@@ -19,6 +19,18 @@ public class BuildFactsTests
         Assert.Equal(file, facts.Json);
     }
 
+    [Fact]
+    public void ThePrivateBuildsWordIsAnsweredAsTheBuildWroteIt()
+    {
+        // The fleet reads build.command and build.ranBy from /_build (ADR-0027): the site adds and drops nothing.
+        const string file = """{ "version": "1.0.41", "build": { "command": "pwsh ./build.ps1", "ranBy": "integration", "run": "https://github.com/o/r/actions/runs/7" } }""";
+
+        var facts = BuildFacts.From(file, Release);
+
+        Assert.True(facts.Measured);
+        Assert.Equal(file, facts.Json);
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData("")]
