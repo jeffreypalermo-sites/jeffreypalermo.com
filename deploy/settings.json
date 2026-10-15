@@ -1,4 +1,5 @@
 {
+  "dormant": true,
   "port": 8080,
   "pullIdentity": "id-{system}-{environment}-app",
   "canonicalHost": "www.jeffreypalermo.ceo",

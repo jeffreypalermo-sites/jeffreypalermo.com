@@ -54,6 +54,14 @@
     there some minutes after its request. Switched off in the settings, the stack deletes the workspace and what it
     holds, like everything that leaves its template.
 
+    Dormant ("dormant": true at the top of settings.json, ADR-0026): Jeffrey hibernated the fleet on 2026-10-15, and a
+    Front Door has no free tier. Every environment is then deployed as if its settings named no Front Door, no host
+    name and no access log: the site's stack deletes the Front Door profile with its endpoint, routes and custom
+    domains, and the access log's workspace. The regions run the release as always, at their own addresses, and scale
+    to zero. The host names do not answer. The DNS zone is applied as always, with no name answered by a Front Door,
+    and keeps its records. The settings keep every value that was decided, and are checked as they are: "dormant":
+    false and a promotion through uat and prod bring the Front Doors back.
+
     A step against Azure that fails is run once more after a pause: the platform fails by itself at times (the first
     production deployment of the regions: "(500 InternalError): managed identity bootstrap failed"; hours later the
     same deployment passed). It is not run again when the error says the request itself is wrong or not allowed,
@@ -168,11 +176,48 @@ if ($place.ContainsKey('edgeLogs')) {
         exit 1
     }
 }
+
+# Dormant (ADR-0026), when the settings say so. Checked before anything is asked of Azure. What it leaves out was
+# checked above as the settings decided it: waking finds it deployable.
+$dormant = $false
+if ($settings.ContainsKey('dormant')) {
+    if ($settings['dormant'] -isnot [bool]) {
+        Write-Host "FAIL settings.json says `"dormant`": $(ConvertTo-Json -InputObject $settings['dormant'] -Compress), which is not true or false; nothing was deployed"
+        exit 1
+    }
+    $dormant = [bool] $settings['dormant']
+}
 $system = [string] $facts.system
 $resourceGroup = [string] $facts.resourceGroup
 $subscription = ([string] (az account show --query id --output tsv)).Trim()
 $group = "/subscriptions/$subscription/resourceGroups/$resourceGroup"
 $pullIdentityName = ([string] $settings.pullIdentity).Replace('{system}', $system).Replace('{environment}', $Environment)
+
+# While dormant (ADR-0026) the environment is deployed without its Front Door, and so without its host names and its
+# access log, which are the Front Door's. The site's stack deletes what it held of them; the DNS zone stays.
+$frontDoor = [bool] $place.frontDoor -and -not $dormant
+if ($dormant) {
+    $leftOut = @(
+        if ([bool] $place.frontDoor) { "its Front Door afd-$system-$Environment" }
+        if ($hostNames.Count -gt 0) { "its host name$(if ($hostNames.Count -gt 1) { 's' }) $($hostNames -join ', ')" }
+        if ($edgeLogs) { "its access log log-$system-$Environment-edge" }
+    )
+    if ($leftOut.Count -eq 0) {
+        Write-Host "Dormant (settings.json, ADR-0026): $Environment has no Front Door, host name or access log to leave out, and is deployed as always."
+    }
+    else {
+        $listed = if ($leftOut.Count -eq 1) { $leftOut[0] } else { "$($leftOut[0..($leftOut.Count - 2)] -join ', ') and $($leftOut[-1])" }
+        Write-Host "Dormant (settings.json, ADR-0026): $Environment is deployed without $listed. The site's stack deletes what it held of them."
+        Write-Host "  $(if ($hostNames.Count -gt 0) { "$($hostNames -join ', ') does not answer" } else { 'Its Front Door does not answer' }) until `"dormant`" is false and a release is promoted again. The regions answer at their own addresses."
+    }
+    if ($dnsZone) {
+        Write-Host "  The DNS zone $dnsZone is applied as always, with no name answered by a Front Door: it keeps its records."
+    }
+    $hostNames = @()
+    $pageHostNames = @()
+    $redirectHostNames = @()
+    $edgeLogs = $false
+}
 
 # 1. The express environment of every region.
 # Always a list: an environment with one region would otherwise be a single table, and its Count the table's keys.
@@ -416,7 +461,6 @@ $edgeLogQuery = 'AzureDiagnostics | where TimeGenerated > ago(1h) and Category =
 
 # 2. The apps, and the Front Door, as one stack.
 $stack = "stack-$system-$Environment-web"
-$frontDoor = [bool] $place.frontDoor
 Write-Host "Applying $stack in ${resourceGroup}: $($regions.Count) region(s) run $($facts.registryServer)/$system/web:$Version$(if ($frontDoor) { ', behind Front Door' })$(if ($hostNames.Count -gt 0) { ", as $($hostNames -join ', ')" })$(if ($edgeLogs) { ', with its access log' })"
 $parametersFile = Join-Path ([IO.Path]::GetTempPath()) "parameters-$stack-$([Guid]::NewGuid().ToString('N')).json"
 @{

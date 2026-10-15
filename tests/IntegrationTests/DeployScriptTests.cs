@@ -1380,6 +1380,174 @@ public sealed class DeployScriptTests : IDisposable
         Assert.DoesNotContain("Access log of the Front Door", result.Output, StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// Dormant (ADR-0026): Jeffrey hibernated the fleet on 2026-10-15, and a Front Door has no free tier. uat is
+    /// deployed as if its settings named no Front Door, no host name and no access log, so the site's stack, which
+    /// deletes what leaves its template, deletes the profile with its endpoint, routes and custom domain, and the
+    /// log's workspace. The regions run the release as always.
+    /// </summary>
+    [Fact]
+    public async Task WhileDormantUatIsDeployedWithoutItsFrontDoorItsHostNameAndItsAccessLog()
+    {
+        UatBehindItsFrontDoor();
+
+        var result = await DeployAsync("uat", deployFolder: DormantDeployFolder());
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        var parameters = StackParameters();
+        Assert.False(parameters.GetProperty("frontDoor").GetProperty("value").GetBoolean());
+        Assert.Empty(Texts(parameters, "hostNames"));
+        Assert.Empty(Texts(parameters, "redirectHostNames"));
+        Assert.Equal(JsonValueKind.False, parameters.GetProperty("edgeLogs").GetProperty("value").ValueKind);
+        Assert.Equal(2, parameters.GetProperty("regions").GetProperty("value").GetArrayLength());
+
+        // The stack does the deleting, as for everything that leaves its template: the script deletes nothing itself.
+        var stack = Assert.Single(Calls(), call => call.StartsWith("stack group create", StringComparison.Ordinal));
+        Assert.Contains("--name stack-jpcom-uat-web --resource-group rg-test", stack, StringComparison.Ordinal);
+        Assert.Contains("--action-on-unmanage deleteResources --deny-settings-mode denyWriteAndDelete", stack, StringComparison.Ordinal);
+        Assert.DoesNotContain(Calls(), call => call.Contains("delete", StringComparison.OrdinalIgnoreCase) && !call.Contains("--action-on-unmanage deleteResources --deny-settings-mode denyWriteAndDelete", StringComparison.Ordinal));
+
+        Assert.Contains("Dormant (settings.json, ADR-0026): uat is deployed without its Front Door afd-jpcom-uat, its host name uat.jeffreypalermo.ceo and its access log log-jpcom-uat-edge. The site's stack deletes what it held of them.\n", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  uat.jeffreypalermo.ceo does not answer until \"dormant\" is false and a release is promoted again. The regions answer at their own addresses.\n", result.Output, StringComparison.Ordinal);
+        Assert.Contains("Applying stack-jpcom-uat-web in rg-test: 2 region(s) run registry.example/jpcom/web:1.2.3\n", result.Output, StringComparison.Ordinal);
+
+        // Nothing of a Front Door is asked for: no outputs to read, no purge, no token, no log, no zone.
+        Assert.DoesNotContain(Calls(), call => call.StartsWith("stack group show", StringComparison.Ordinal));
+        Assert.DoesNotContain(Calls(), call => call.StartsWith("resource invoke-action", StringComparison.Ordinal));
+        Assert.DoesNotContain(Calls(), call => call.Contains("-dns", StringComparison.Ordinal));
+        Assert.Empty(_region.Requests);
+        Assert.DoesNotContain("Host names", result.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("AzureDiagnostics", result.Output, StringComparison.Ordinal);
+        Assert.EndsWith("PASS stack-jpcom-uat-web: release 1.2.3 in eus2, gwc", result.Output.TrimEnd(), StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Dormant in production: its Front Door goes, and the DNS zone stays. The zone's stack is applied as always,
+    /// last, detaching and never deleting, as for an environment without a Front Door: the records of the inventory,
+    /// mail first, and no name answered by a Front Door.
+    /// </summary>
+    [Fact]
+    public async Task WhileDormantProductionKeepsItsDnsZone()
+    {
+        ProdBehindItsFrontDoor();
+
+        var result = await DeployAsync("prod", deployFolder: DormantDeployFolder());
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        var calls = Calls().Where(call => !call.StartsWith("rest ", StringComparison.Ordinal) && !call.StartsWith("account ", StringComparison.Ordinal)).Select(WithoutTemporaryFiles).ToList();
+        Assert.Equal(3, calls.Count);
+        Assert.StartsWith("stack group create --name stack-jpcom-prod-web ", calls[0], StringComparison.Ordinal);
+        Assert.StartsWith("stack group create --name stack-jpcom-prod-dns --resource-group rg-test --template-file ", calls[1], StringComparison.Ordinal);
+        Assert.Contains($"{Path.Join("infra", "dns-zone.bicep")} --parameters @file --action-on-unmanage detachAll --deny-settings-mode denyDelete --deny-settings-excluded-principals principal-1 --yes --output none", calls[1], StringComparison.Ordinal);
+        Assert.StartsWith("stack group show --name stack-jpcom-prod-dns --resource-group rg-test", calls[2], StringComparison.Ordinal);
+
+        var parameters = StackParameters();
+        Assert.False(parameters.GetProperty("frontDoor").GetProperty("value").GetBoolean());
+        Assert.Equal(11, parameters.GetProperty("regions").GetProperty("value").GetArrayLength());
+        Assert.Empty(Texts(parameters, "hostNames"));
+        Assert.Equal(JsonValueKind.False, parameters.GetProperty("edgeLogs").GetProperty("value").ValueKind);
+
+        var zone = ZoneParameters();
+        Assert.Equal("jeffreypalermo.com", zone.GetProperty("zoneName").GetProperty("value").GetString());
+        Assert.Empty(Texts(zone, "hostLabels"));
+        Assert.Equal(string.Empty, zone.GetProperty("frontDoorEndpointId").GetProperty("value").GetString());
+        Assert.Equal(string.Empty, zone.GetProperty("frontDoorHostName").GetProperty("value").GetString());
+        Assert.Empty(Texts(zone, "validationLabels"));
+        Assert.Empty(Texts(zone, "validationTokens"));
+
+        Assert.Contains("Dormant (settings.json, ADR-0026): prod is deployed without its Front Door afd-jpcom-prod, its host name www.jeffreypalermo.ceo and its access log log-jpcom-prod-edge. The site's stack deletes what it held of them.\n", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  www.jeffreypalermo.ceo does not answer until \"dormant\" is false and a release is promoted again.", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  The DNS zone jeffreypalermo.com is applied as always, with no name answered by a Front Door: it keeps its records.\n", result.Output, StringComparison.Ordinal);
+        Assert.Contains("PASS stack-jpcom-prod-dns: the zone jeffreypalermo.com holds its records. Its name servers:", result.Output, StringComparison.Ordinal);
+        Assert.EndsWith("  Entering these at the registrar is the move, and a person's step (docs/runbooks/dns-cutover.md). Until then the zone's records are only prepared: nobody asks this zone.", result.Output.TrimEnd(), StringComparison.Ordinal);
+    }
+
+    /// <summary>tdd has no Front Door to leave out: dormant, it is deployed as it always is, and the log says so.</summary>
+    [Fact]
+    public async Task WhileDormantTddIsDeployedAsAlways()
+    {
+        ExpressEnvironment("cae-jpcom-tdd-eus2");
+
+        var result = await DeployAsync("tdd", deployFolder: DormantDeployFolder());
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        Assert.False(StackParameters().GetProperty("frontDoor").GetProperty("value").GetBoolean());
+        Assert.Contains("Dormant (settings.json, ADR-0026): tdd has no Front Door, host name or access log to leave out, and is deployed as always.\n", result.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("does not answer", result.Output, StringComparison.Ordinal);
+        Assert.EndsWith("PASS stack-jpcom-tdd-web: release 1.2.3 in eus2", result.Output.TrimEnd(), StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Dormant, the settings are still checked as they were decided: what could not be deployed awake stops the
+    /// deployment now, not on the day the site is woken.
+    /// </summary>
+    [Fact]
+    public async Task WhileDormantTheDecidedSettingsAreCheckedAsTheyAre()
+    {
+        var folder = DeployFolderWith(settings =>
+        {
+            settings["dormant"] = true;
+            settings["environments"]!["uat"]!["hostNames"] = new JsonArray("uat.jeffreypalermo.ceo", "uat.jeffreypalermo.ceo");
+        });
+
+        var result = await DeployAsync("uat", deployFolder: folder);
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Contains("FAIL the host names of 'uat' in settings.json cannot be deployed; nothing was deployed:", result.Output, StringComparison.Ordinal);
+        Assert.Contains("  'uat.jeffreypalermo.ceo' is listed 2 times", result.Output, StringComparison.Ordinal);
+        Assert.Empty(Calls());
+    }
+
+    [Theory]
+    [InlineData("\"yes\"")]
+    [InlineData("1")]
+    [InlineData("null")]
+    public async Task ADormantThatIsNotTrueOrFalseStopsTheDeploymentBeforeAzureIsAsked(string dormant)
+    {
+        var folder = DeployFolderWith(settings => settings["dormant"] = JsonNode.Parse(dormant));
+
+        var result = await DeployAsync("uat", deployFolder: folder);
+
+        Assert.Equal(1, result.ExitCode);
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Contains($"FAIL settings.json says \"dormant\": {dormant}, which is not true or false; nothing was deployed", result.Output, StringComparison.Ordinal);
+        Assert.Empty(Calls());
+    }
+
+    /// <summary>
+    /// Woken (<c>"dormant": false</c>), or without the line at all: what the settings decided, with the Front Door,
+    /// its name and its log, and the purge.
+    /// </summary>
+    [Theory]
+    [InlineData(false)]
+    [InlineData(null)]
+    public async Task AwakeUatIsDeployedBehindItsFrontDoorAsTheSettingsSay(bool? dormant)
+    {
+        UatBehindItsFrontDoor();
+        var folder = DeployFolderWith(settings =>
+        {
+            if (dormant is { } stated)
+            {
+                settings["dormant"] = stated;
+            }
+        });
+
+        var result = await DeployAsync("uat", deployFolder: folder);
+
+        Assert.True(result.ExitCode == 0, result.ToString());
+        Assert.Equal(string.Empty, result.Error);
+        Assert.True(StackParameters().GetProperty("frontDoor").GetProperty("value").GetBoolean());
+        Assert.Equal(["uat.jeffreypalermo.ceo"], Texts(StackParameters(), "hostNames"));
+        Assert.True(StackParameters().GetProperty("edgeLogs").GetProperty("value").GetBoolean());
+        Assert.Contains("2 region(s) run registry.example/jpcom/web:1.2.3, behind Front Door, as uat.jeffreypalermo.ceo, with its access log\n", result.Output, StringComparison.Ordinal);
+        Assert.DoesNotContain("Dormant", result.Output, StringComparison.Ordinal);
+        Assert.Single(Calls(), call => call.StartsWith("resource invoke-action --action purge", StringComparison.Ordinal));
+    }
+
     private void ExpressEnvironment(string name) => File.WriteAllText(Path.Join(_state, $"environment-{name}"), "Succeeded\nExpress\n");
 
     /// <summary>uat as it is after an earlier deployment: both regions, and a stack that names them and the Front Door.</summary>
@@ -1435,7 +1603,10 @@ public sealed class DeployScriptTests : IDisposable
             settings["environments"]![environment]!["hostNames"] = new JsonArray([.. hostNames.Select(name => JsonValue.Create(name))]);
         });
 
-    /// <summary>The <c>deploy/</c> folder as the release's package carries it, with its settings changed for a test.</summary>
+    /// <summary>
+    /// The <c>deploy/</c> folder as the release's package carries it, awake, with its settings changed for a test.
+    /// Awake: whatever the repository's settings say of <c>dormant</c> (ADR-0026), a test that wants it says so.
+    /// </summary>
     private string DeployFolderWith(Action<JsonNode> change)
     {
         var folder = Path.Join(_state, "deploy");
@@ -1448,10 +1619,14 @@ public sealed class DeployScriptTests : IDisposable
         }
 
         var settings = JsonNode.Parse(File.ReadAllText(Path.Join(folder, "settings.json")))!;
+        settings.AsObject().Remove("dormant");
         change(settings);
         File.WriteAllText(Path.Join(folder, "settings.json"), settings.ToJsonString());
         return folder;
     }
+
+    /// <summary>The <c>deploy/</c> folder with the settings as they were decided, dormant (ADR-0026).</summary>
+    private string DormantDeployFolder() => DeployFolderWith(settings => settings["dormant"] = true);
 
     private const string ProdEndpointId = "/subscriptions/00000000-0000-0000-0000-000000000001/resourceGroups/rg-test/providers/Microsoft.Cdn/profiles/afd-jpcom-prod/afdEndpoints/jpcom-prod";
 
@@ -1532,6 +1707,8 @@ public sealed class DeployScriptTests : IDisposable
 
     private async Task<ScriptResult> DeployAsync(string environment, int retryPauseSeconds = 0, int timeoutSeconds = 60, string? deployFolder = null)
     {
+        // Without a folder of its own, a test deploys the repository's settings awake: what they decided.
+        deployFolder ??= DeployFolderWith(_ => { });
         var context = Path.Join(_state, "context.json");
         await File.WriteAllTextAsync(context, """
             {
@@ -1542,7 +1719,7 @@ public sealed class DeployScriptTests : IDisposable
             """);
 
         var start = new ProcessStartInfo("pwsh") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
-        foreach (var argument in (string[])["-NoProfile", "-NonInteractive", "-File", Path.Join(deployFolder ?? Path.Join(TestPaths.RepositoryRoot, "deploy"), "deploy.ps1"), "-Environment", environment, "-Version", "1.2.3", "-Context", context, "-RetryPauseSeconds", $"{retryPauseSeconds}", "-TimeoutSeconds", $"{timeoutSeconds}"])
+        foreach (var argument in (string[])["-NoProfile", "-NonInteractive", "-File", Path.Join(deployFolder, "deploy.ps1"), "-Environment", environment, "-Version", "1.2.3", "-Context", context, "-RetryPauseSeconds", $"{retryPauseSeconds}", "-TimeoutSeconds", $"{timeoutSeconds}"])
         {
             start.ArgumentList.Add(argument);
         }
