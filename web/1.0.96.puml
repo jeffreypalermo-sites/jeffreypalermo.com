@@ -1,0 +1,21 @@
+@startuml
+!pragma layout smetana
+!include <C4/C4_Component>
+HIDE_STEREOTYPE()
+skinparam wrapWidth 900
+skinparam maxMessageSize 300
+skinparam nodesep 40
+skinparam ranksep 60
+UpdateElementStyle("component", $bgColor="#eceff1", $fontColor="#1c2b33", $borderColor="#455a64")
+UpdateElementStyle("system", $bgColor="#37474f", $fontColor="#ffffff", $borderColor="#263238")
+System(process, "dotnet JeffreyPalermo.UI.Server.dll", "The process the container image starts")
+Boundary(app, "web 1.0.96", "Assemblies of the application") {
+  Component(a_JeffreyPalermo_UI_Server, "JeffreyPalermo.UI.Server", $descr="no NuGet package of its own")
+  Component(a_JeffreyPalermo_Core, "JeffreyPalermo.Core", $descr="no NuGet package of its own")
+  Component(a_JeffreyPalermo_Infrastructure, "JeffreyPalermo.Infrastructure", $descr="Markdig 1.4.0\nYamlDotNet 18.1.0")
+}
+Rel(process, a_JeffreyPalermo_UI_Server, "starts")
+Rel(a_JeffreyPalermo_UI_Server, a_JeffreyPalermo_Core, "references")
+Rel(a_JeffreyPalermo_UI_Server, a_JeffreyPalermo_Infrastructure, "references")
+Rel(a_JeffreyPalermo_Infrastructure, a_JeffreyPalermo_Core, "references")
+@enduml
